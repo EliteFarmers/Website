@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FormattedText from '$comp/items/formatted-text.svelte';
+	import { cn } from '$lib/utils';
 	import * as Popover from '$ui/popover';
 	import CircleDollarSign from '@lucide/svelte/icons/circle-dollar-sign';
 
@@ -10,9 +11,10 @@
 		list?: Record<string, { count: number; cost: number }>;
 		small?: boolean;
 		children?: import('svelte').Snippet;
+		class?: string;
 	}
 
-	let { coins, breakdown, small, children, title = 'Coins', list }: Props = $props();
+	let { coins, breakdown, small, children, title = 'Coins', list, class: className }: Props = $props();
 
 	let readable = $derived(Math.round(coins).toLocaleString());
 
@@ -26,7 +28,9 @@
 				: undefined
 	);
 
-	let items = $derived(itemList?.sort(([, a], [, b]) => b.cost - a.cost) ?? []);
+	let items = $derived(
+		itemList?.sort(([, a], [, b]) => b.cost - a.cost).filter(([, value]) => value.cost !== 0) ?? []
+	);
 </script>
 
 {#if items.length <= 0}
@@ -39,7 +43,12 @@
 {:else}
 	<Popover.Mobile>
 		{#snippet trigger()}
-			<div class="bg-completed/60 relative flex h-full min-h-6 flex-row items-center gap-1.5 rounded-md px-0.5">
+			<div
+				class={cn(
+					'bg-completed/60 relative flex h-full min-h-6 flex-row items-center gap-1.5 rounded-md px-0.5',
+					className
+				)}
+			>
 				<CircleDollarSign class="size-5" />
 				<span
 					class="relative {small
@@ -84,7 +93,7 @@
 				<p>Total</p>
 				<p>{Math.round(coins).toLocaleString()}</p>
 			</div>
-			<div class="break-words">
+			<div class="wrap-break-word">
 				{@render children?.()}
 			</div>
 		</div>

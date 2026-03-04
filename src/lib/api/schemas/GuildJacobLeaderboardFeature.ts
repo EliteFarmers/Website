@@ -15,6 +15,7 @@ export interface GuildJacobLeaderboardFeature {
 	maxLeaderboards: number;
 	blockedRoles: DiscordRole[];
 	blockedUsers: bigint[];
+	blockedPlayerUuids: string[];
 	requiredRoles: DiscordRole[];
 	excludedParticipations: string[];
 	excludedTimespans: ExcludedTimespan[];

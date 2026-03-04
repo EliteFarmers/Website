@@ -10,6 +10,9 @@
 		Pumpkin: 'border-pumpkin',
 		'Sugar Cane': 'border-sugarcane',
 		Wheat: 'border-wheat',
+		Sunflower: 'border-sunflower',
+		Moonflower: 'border-moonflower',
+		'Wild Rose': 'border-wildrose',
 	};
 
 	const ghostColors: Record<string, string> = {
@@ -23,6 +26,9 @@
 		Pumpkin: 'border-pumpkin/50',
 		'Sugar Cane': 'border-sugarcane/50',
 		Wheat: 'border-wheat/50',
+		Sunflower: 'border-sunflower/50',
+		Moonflower: 'border-moonflower/50',
+		'Wild Rose': 'border-wildrose/50',
 	};
 </script>
 

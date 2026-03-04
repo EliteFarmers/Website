@@ -1,4 +1,4 @@
-import { disableContestPingsPings, updateContestPings } from '$lib/api';
+import { deleteContestPings, updateContestPings } from '$lib/api';
 import { CanManageGuild } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
@@ -49,6 +49,9 @@ export const actions: Actions = {
 				cocoaBeans: (data.get('cocoa') as string) ?? null,
 				sugarCane: (data.get('cane') as string) ?? null,
 				netherWart: (data.get('wart') as string) ?? null,
+				sunflower: (data.get('sunflower') as string) ?? null,
+				moonflower: (data.get('moonflower') as string) ?? null,
+				wildrose: (data.get('wildrose') as string) ?? null,
 			},
 		};
 
@@ -72,12 +75,10 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const { response, error: e } = await disableContestPingsPings(guildId, { reason: 'Manually disabled' }).catch(
-			(e) => {
-				console.log(e);
-				throw error(500, 'Internal Server Error');
-			}
-		);
+		const { response, error: e } = await deleteContestPings(guildId, { reason: 'Manually disabled' }).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e ?? 'Unknown error' });

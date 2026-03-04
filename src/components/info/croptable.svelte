@@ -7,7 +7,7 @@
 </script>
 
 <div class="scrollbar-none flex w-full overflow-x-auto">
-	<table class="w-full max-w-4xl min-w-48 flex-grow-1">
+	<table class="w-full max-w-4xl min-w-48 grow">
 		<thead>
 			<tr class="bg-muted-variant">
 				<th class="text-left">Crop</th>

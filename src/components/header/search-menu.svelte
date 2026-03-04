@@ -5,6 +5,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { beforeNavigate, goto } from '$app/navigation';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { getLeaderboardList } from '$lib/remote';
 	import { Button, type ButtonProps } from '$ui/button';
 	import * as Command from '$ui/command';
@@ -142,7 +143,7 @@
 						value={player ?? ''}
 						onSelect={() => runCommand(() => goto(`/@${player}${destination}`))}
 					>
-						{player}
+						{@render listItem(player)}
 					</Command.Item>
 				{:else}
 					{#if searchStr == ''}
@@ -162,3 +163,10 @@
 		</Command.List>
 	</ScrollArea>
 </Command.Dialog>
+
+{#snippet listItem(ign: string)}
+	<div class="flex flex-row items-center gap-2">
+		<PlayerHead class="size-6 rounded-sm" uuid={ign} />
+		{ign}
+	</div>
+{/snippet}

@@ -1,5 +1,5 @@
 import { SortHypixelGuildsBy } from '$lib/api';
-import { getHypixelGuildsList } from '$lib/remote/guilds.remote';
+import { cache } from '$lib/servercache';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ url }) => {
@@ -22,12 +22,7 @@ export const load = (async ({ url }) => {
 		sortBy = SortHypixelGuildsBy.skyblockExperienceAverage;
 	}
 
-	const { guilds, total } = await getHypixelGuildsList({
-		sortBy: sortBy as SortHypixelGuildsBy,
-		descending: true,
-		pageSize,
-		page,
-	});
+	const cached = cache.topguilds;
 
-	return { guilds, total, page: page - 1, pageSize, sortBy };
+	return { ...cached, page: page - 1, pageSize, sortBy };
 }) satisfies PageServerLoad;

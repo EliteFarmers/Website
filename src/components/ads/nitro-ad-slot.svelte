@@ -9,9 +9,10 @@
 		createDiv?: boolean;
 		config: Record<string, unknown>;
 		onCreated?: (el: HTMLDivElement | null) => void;
+		recreateOnRouteChange?: boolean;
 	}
 
-	let { ...rest }: Props = $props();
+	let { recreateOnRouteChange = true, ...rest }: Props = $props();
 
 	let displayAds = $state(true);
 
@@ -22,7 +23,11 @@
 </script>
 
 {#if displayAds}
-	{#key page.route.id}
+	{#if recreateOnRouteChange}
+		{#key page.route.id}
+			<NitroAdLogic {...rest} />
+		{/key}
+	{:else}
 		<NitroAdLogic {...rest} />
-	{/key}
+	{/if}
 {/if}

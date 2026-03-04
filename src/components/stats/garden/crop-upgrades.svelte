@@ -50,11 +50,11 @@
 				{/snippet}
 				<div class="flex flex-col gap-1">
 					<p class="font-semibold">{name}</p>
-					<p class="max-w-xs break-words whitespace-normal">
+					<p class="max-w-xs wrap-break-word whitespace-normal">
 						<span class="font-semibold">{getCopperSpentCropUpgrades(level).toLocaleString()}</span> Copper
 						Spent <br />
 					</p>
-					<p class="max-w-xs break-words whitespace-normal">
+					<p class="max-w-xs wrap-break-word whitespace-normal">
 						<span class="font-semibold">{getCropUpgradeCopperCost(level).toLocaleString()}</span> Copper Until
 						Max
 					</p>

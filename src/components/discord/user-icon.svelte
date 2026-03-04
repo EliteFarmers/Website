@@ -22,6 +22,7 @@
 {:else}
 	<img
 		loading="lazy"
+		data-discord-avatar=""
 		class="{className} rounded-full"
 		src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.webp?size={size}&animated=true"
 		alt="User Icon"

@@ -15,7 +15,7 @@
 		{#if rank !== -1}
 			<a
 				class="bg-card hover:bg-muted max-w-fit rounded-md p-1 lg:p-1"
-				href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}"
+				href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}?fallback={rank}"
 			>
 				<span class="text-completed mx-1 font-mono text-2xl font-semibold">
 					<span class="mr-0.5 text-lg">#</span>{rank}

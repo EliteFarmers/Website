@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
 	import type { PageProps } from './$types';
 	import ArticlePill from './article-pill.svelte';
@@ -12,7 +13,7 @@
 
 <Head
 	title="Articles"
-	description="Browse articles on elitebot.dev! See Hypixel Skyblock Farming news, site updates, and more."
+	description="Browse articles on {page.url.hostname}! See Hypixel Skyblock Farming news, site updates, and more."
 />
 
 <main class="@container flex flex-col items-center">

@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { PUBLIC_STRAPI_API_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import type { StrapiCover } from '$lib/api/cms';
 	import type { HTMLAttributes } from 'svelte/elements';
+	const { PUBLIC_STRAPI_API_URL } = env;
 
 	interface Props extends HTMLAttributes<HTMLImageElement> {
 		cover: StrapiCover;
@@ -40,6 +41,9 @@
 	const src = $derived.by(() => {
 		if (!cover) return '/images/default-farming-news.png';
 		const formats = cover.formats ?? null;
+		if (formats && formats.medium && formats.medium.url) return `${base}${formats.medium.url}`;
+		if (formats && formats.small && formats.small.url) return `${base}${formats.small.url}`;
+		if (formats && formats.thumbnail && formats.thumbnail.url) return `${base}${formats.thumbnail.url}`;
 		if (formats && formats.large && formats.large.url) return `${base}${formats.large.url}`;
 		if (cover.url) return `${base}${cover.url}`;
 		return '/images/default-farming-news.png';

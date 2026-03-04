@@ -3,14 +3,17 @@
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
 	import Head from '$comp/head.svelte';
 	import InventorySelect from '$comp/items/inventories/inventory-select.svelte';
+	import SackContents from '$comp/items/sack-contents.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import Collections from '$comp/stats/collections.svelte';
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
 	import Skills from '$comp/stats/skills.svelte';
+	import { env } from '$env/dynamic/public';
 	import { CROP_UNICODE_EMOJIS } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
+	import { buildProfilePageLdJson } from '$lib/seo/profile-page';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
@@ -40,9 +43,9 @@
 
 	const topCollections = $derived(ctx.collections?.toSorted((a, b) => b.weight - a.weight).slice(0, 3));
 
-	let description = $derived(
+	const description = $derived(
 		`🌾 Farming Weight - ${weightStr}` +
-			`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
+			`${weightRank > 0 ? ` (#${weightRank.toLocaleString()})` : ''}\n` +
 			`📜 Farming Level - ${farmingXp.level}` +
 			`${(ctx.ranks?.farming?.rank ?? -1) > 0 ? ` (#${ctx.ranks?.farming?.rank?.toLocaleString()})` : ''}\n` +
 			`⠀⤷ ${(member?.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
@@ -62,16 +65,37 @@
 				})
 				.join('\n') ?? '')
 	);
+
+	const canonicalPath = $derived(`/@${ctx.ign ?? ''}/${encodeURIComponent(profile?.profileName ?? '')}`);
+	const canonicalRoot = $derived(env.PUBLIC_CANONICAL_URL || env.PUBLIC_HOST_URL || page.url.origin);
+	const canonicalUrl = $derived.by(
+		() => `${canonicalRoot}${canonicalPath.startsWith('/') ? '' : '/'}${canonicalPath}`
+	);
+
+	const profileTitle = $derived(`${ctx.ignMeta} (${profile?.profileName}) | Stats`);
+	const ldJson = $derived.by(() =>
+		buildProfilePageLdJson({
+			title: profileTitle,
+			description,
+			url: canonicalUrl,
+			ign: ctx.ign ?? undefined,
+			ignMeta: ctx.ignMeta ?? undefined,
+			uuid: uuid ?? undefined,
+			profileName: profile?.profileName ?? undefined,
+			profileId: profile?.profileId ?? undefined,
+			gameMode: profile?.gameMode ?? undefined,
+		})
+	);
 </script>
 
 <Head
-	title="{ctx.ignMeta} ({profile?.profileName}) | Farming Weight"
+	title={profileTitle}
 	{description}
 	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(profile?.profileName ?? '')}"
->
-	<link rel="preload" href="/images/cropatlas.webp" as="image" />
-</Head>
+	{ldJson}
+	keywords="farming, skyblock profile, skyblock, Hypixel, elite skyblock, elite farmers"
+/>
 
 <section class="my-2 mb-16 flex items-center justify-center" id="Skills">
 	<div class="flex w-full max-w-7xl flex-1">
@@ -94,6 +118,6 @@
 </section>
 
 <InventorySelect />
-<!-- <SackContents /> -->
+<SackContents />
 <JacobInfo />
 <Breakdown />

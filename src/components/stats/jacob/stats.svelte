@@ -48,7 +48,7 @@
 			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if firstPlacesRank !== -1}
 					<a
-						href="/leaderboard/firstplace/{page.params.id}-{page.params.profile}"
+						href="/leaderboard/firstplace/{page.params.id}-{page.params.profile}?fallback={firstPlacesRank}"
 						class="pd-0.5 bg-card hover:bg-muted rounded-md px-1.5"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
@@ -66,7 +66,8 @@
 			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if participationsRank !== -1}
 					<a
-						href="/leaderboard/participations/{page.params.id}-{page.params.profile}"
+						href="/leaderboard/participations/{page.params.id}-{page.params
+							.profile}?fallback={participationsRank}"
 						class="pd-0.5 bg-card hover:bg-muted rounded-md px-1.5"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"

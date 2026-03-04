@@ -13,7 +13,8 @@ export type Skill =
 	| 'taming'
 	| 'carpentry'
 	| 'runecrafting'
-	| 'social';
+	| 'social'
+	| 'hunting';
 
 export interface RawProfileResponse {
 	success: boolean;

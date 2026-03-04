@@ -12,6 +12,12 @@ export interface ItemRequirement {
 	type: string;
 	/** @nullable */
 	skill?: string | null;
+	/** @nullable */
+	data_key?: string | null;
+	/** @nullable */
+	value?: string | null;
+	/** @nullable */
+	operator?: string | null;
 	level: number;
 	[key: string]: unknown;
 }

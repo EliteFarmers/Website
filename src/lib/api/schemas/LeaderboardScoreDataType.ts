@@ -12,7 +12,7 @@ export type LeaderboardScoreDataType = (typeof LeaderboardScoreDataType)[keyof t
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LeaderboardScoreDataType = {
-	Double: 0,
-	Long: 1,
-	Decimal: 2,
+	Double: 'Double',
+	Long: 'Long',
+	Decimal: 'Decimal',
 } as const;

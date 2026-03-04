@@ -24,4 +24,6 @@ export interface AuthResponseDto {
 	 * @nullable
 	 */
 	pending_confirmation?: AuthResponseDtoPendingConfirmation;
+	/** If this is the user's first login */
+	first_login: boolean;
 }

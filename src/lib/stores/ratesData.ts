@@ -1,6 +1,5 @@
 import { browser } from '$app/environment';
-import { Crop, ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
-import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
+import { ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 import * as z from 'zod';
@@ -12,44 +11,31 @@ interface RatesData {
 	communityCenter: number;
 	selectedPet?: string;
 	strength: number;
-	exported: Record<Crop, boolean>;
 	useTemp: boolean;
 	temp: Required<TemporaryFarmingFortune>;
 	sprayedPlot: boolean;
 	infestedPlotProbability?: number;
 	zorroMode: ZorroMode;
 	bzMode: 'order' | 'insta';
-	attributes: Record<string, number>;
+	rosewaterFlasks: number;
 }
 
 export const MissingRatesDataSchema = z.object({
 	communityCenter: z.number().optional(),
 	strength: z.number().optional(),
-	exported: z.record(z.enum(Object.values(Crop)), z.boolean().optional()).optional(),
-	attributes: z.record(z.string(), z.number()).optional(),
+	flasks: z.number().optional(),
 	from: z.string().optional(),
 });
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 6,
+	v: 8,
 	settings: false,
 	communityCenter: 0,
 	strength: 0,
 	bzMode: 'order',
-	exported: {
-		[Crop.Cactus]: false,
-		[Crop.Carrot]: false,
-		[Crop.CocoaBeans]: false,
-		[Crop.Melon]: false,
-		[Crop.Mushroom]: false,
-		[Crop.NetherWart]: false,
-		[Crop.Potato]: false,
-		[Crop.Pumpkin]: false,
-		[Crop.SugarCane]: false,
-		[Crop.Wheat]: false,
-	} as Record<Crop, boolean>,
 	useTemp: true,
+	rosewaterFlasks: 0,
 	temp: {
 		pestTurnIn: 0,
 		harvestPotion: false,
@@ -62,13 +48,7 @@ const defaultData = {
 	},
 	sprayedPlot: true,
 	infestedPlotProbability: 0.2,
-	axed: false,
 	zorroMode: ZorroMode.Normal,
-	attributes: Object.fromEntries(
-		Object.entries(FARMING_ATTRIBUTE_SHARDS)
-			.filter((a) => a[1].effect === 'rates' || a[1].effect === 'fortune')
-			.map((a) => [a[0], 0])
-	),
 } as RatesData;
 
 export function initRatesData(data = defaultData) {
@@ -77,6 +57,9 @@ export function initRatesData(data = defaultData) {
 
 		if (savedRatesData) {
 			data = JSON.parse(savedRatesData) as RatesData;
+
+			// Add in any missing fields from defaultData
+			data = { ...defaultData, ...data, v: defaultData.v };
 		}
 	}
 
@@ -99,7 +82,7 @@ export function getRatesData() {
 			rates = defaultData;
 		}
 
-		return rates;
+		return { ...defaultData, ...rates, v: defaultData.v };
 	});
 
 	if (store) return store;

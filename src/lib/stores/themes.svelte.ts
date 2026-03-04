@@ -47,6 +47,8 @@ export const themes = [
 	{ name: 'Dark', class: 'dark' as const, isDark: true },
 	{ name: 'Shallow Coast', class: 'sea' as const, isDark: false },
 	{ name: 'Vampire', class: 'vampire' as const, isDark: true },
+	{ name: 'Retro Light', class: 'retro-light' as const, isDark: false },
+	{ name: 'Retro Dark', class: 'retro-dark' as const, isDark: true },
 ] satisfies ThemeInfo[];
 export type ThemeClass = (typeof themes)[number]['class'];
 

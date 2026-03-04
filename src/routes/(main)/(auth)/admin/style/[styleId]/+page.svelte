@@ -32,7 +32,7 @@
 	let deleteStyleModal = $state(false);
 	let showLeaderboardName = new PersistedState('showleaderboardname', false);
 
-	let badge = $state(data.badges?.[0]?.image?.url ?? undefined);
+	let badge = $derived(data.badges?.[0]?.image?.url ?? undefined);
 	let rank = $state(1000);
 	let showBadge = $state(false);
 	let badgeUrl = $derived(showBadge ? badge : undefined);

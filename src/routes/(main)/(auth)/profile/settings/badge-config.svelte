@@ -9,8 +9,8 @@
 
 	let { badges }: Props = $props();
 
-	let items = $state(badges.filter((badge) => badge.visible));
-	let hidden = $state(badges.filter((badge) => !badge.visible));
+	let items = $derived(badges.filter((badge) => badge.visible));
+	let hidden = $derived(badges.filter((badge) => !badge.visible));
 
 	function handle(e: CustomEvent<DndEvent<UserBadgeDto>>) {
 		items = e.detail.items;

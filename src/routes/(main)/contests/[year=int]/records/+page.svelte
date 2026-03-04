@@ -14,11 +14,14 @@
 		potato: 'Potato',
 		pumpkin: 'Pumpkin',
 		melon: 'Melon',
+		moonflower: 'Moonflower',
 		cocoa: 'Cocoa Beans',
 		cactus: 'Cactus',
 		cane: 'Sugar Cane',
 		mushroom: 'Mushroom',
+		sunflower: 'Sunflower',
 		wart: 'Nether Wart',
+		wildrose: 'Wild Rose',
 	};
 
 	let crops = $derived(

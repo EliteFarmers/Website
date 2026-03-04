@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FloatingVideo from '$comp/ads/floating-video.svelte';
 	import FooterAd from '$comp/ads/footer-ad.svelte';
 	import Footer from '$comp/footer/footer.svelte';
 	import Announcements from '$comp/header/announcements.svelte';
@@ -8,7 +9,6 @@
 	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
 	import FooterItems from '$comp/siderail/footer-items.svelte';
 	import Siderail from '$comp/siderail/siderail.svelte';
-	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import * as Sidebar from '$ui/sidebar';
 	import type { LayoutData } from './$types';
 	import Content from './content.svelte';
@@ -19,12 +19,10 @@
 	}
 
 	let { children, data }: Props = $props();
-
-	const adCtx = getAdCtx();
 </script>
 
 <Sidebar.Provider open={data.sidebar}>
-	<Sidebar.Root collapsible="icon" class="z-50" style="margin-bottom: {adCtx.bottomAnchorSize.height}px;">
+	<Sidebar.Root collapsible="icon" class="z-50">
 		<AppSidebar>
 			<FavoritedLinks />
 			<UpcomingEvents events={data.cache?.events} />
@@ -47,4 +45,5 @@
 			<Footer />
 		</Sidebar.Inset>
 	</div>
+	<FloatingVideo />
 </Sidebar.Provider>

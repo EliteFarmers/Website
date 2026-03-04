@@ -3,16 +3,19 @@
 	import Head from '$comp/head.svelte';
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import MainSearch from '$comp/stats/main-search.svelte';
-	import { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { getArticlesPaginated } from '$lib/remote/articles.remote';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
 	import ScrollArea from '$ui/scroll-area/scroll-area.svelte';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import CircleDollarSign from '@lucide/svelte/icons/circle-dollar-sign';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import type { PageData } from './$types';
 	import ArticlePill from './articles/article-pill.svelte';
 	import ArticleSkeleton from './articles/article-skeleton.svelte';
+	const { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } = env;
 
 	interface Props {
 		data: PageData;
@@ -44,6 +47,53 @@
 				<Serverbar guild={data.eliteGuild} lazy={false} />
 			</div>
 		{/if}
+
+		<div class="flex max-w-4xl flex-col gap-4 md:flex-row">
+			<a
+				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
+				href="/fortune"
+			>
+				<div class="bg-progress/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
+				<div class="bg-progress/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
+
+				<div class="relative z-10 flex flex-col gap-6">
+					<div class="flex flex-col gap-2">
+						<div class="text-primary flex items-center gap-2">
+							<CircleDollarSign class="h-5 w-5" />
+							<span class="font-bold tracking-wider uppercase">Cheapest Fortune</span>
+						</div>
+						<span class="text-foreground"
+							>View your cheapest fortune upgrades and farming fortune progress!</span
+						>
+					</div>
+				</div>
+
+				<div class="group-hover:animate-bounce-horizontal relative z-10 flex flex-col items-center gap-4">
+					<ArrowRight class="size-6" />
+				</div>
+			</a>
+			<a
+				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
+				href="/shop"
+			>
+				<div class="bg-primary/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
+				<div class="bg-primary/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
+
+				<div class="relative z-10 flex flex-col gap-6">
+					<div class="flex flex-col gap-2">
+						<div class="text-primary flex items-center gap-2">
+							<ShoppingCart class="h-5 w-5" />
+							<span class="font-bold tracking-wider uppercase">Shop</span>
+						</div>
+						<span class="text-foreground">Check out the cosmetics shop to support the website!</span>
+					</div>
+				</div>
+
+				<div class="group-hover:animate-bounce-horizontal relative z-10 flex flex-col items-center gap-4">
+					<ArrowRight class="size-6" />
+				</div>
+			</a>
+		</div>
 
 		<div class="flex max-w-full flex-col gap-4">
 			<h2 class="text-3xl">Recent Articles</h2>
@@ -156,22 +206,16 @@
 				</Card.Root>
 				<Card.Root class="max-w-md">
 					<Card.Header>
-						<Card.Title class="text-xl">Purchase Crop Stickers!</Card.Title>
+						<Card.Title class="text-xl">Get Profile Badges!</Card.Title>
 					</Card.Header>
 					<Card.Content>
 						<p class="mb-6 w-full text-lg">
-							Directly support the art on Elite by purchasing crop stickers! All proceeds go to the
-							artist, and you get a cool sticker!
+							Check out and collect the different badges available on the website! These show up on your
+							stats page!
 						</p>
 						<div class="flex justify-center">
-							<Button
-								href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers"
-								class="w-fit font-semibold"
-								target="_blank"
-								variant="secondary"
-								rel="noopener nofollow"
-							>
-								Open Lumini's Shop
+							<Button href="/info/badges" class="w-fit font-semibold" variant="secondary">
+								View Badges
 								<ExternalLink class="ml-2" size={20} />
 							</Button>
 						</div>
@@ -183,7 +227,7 @@
 
 	<section class="mt-4 mb-10 flex justify-center">
 		<div class="flex w-[90%] flex-col items-center gap-2 sm:w-[70%] md:w-[50%]" data-sveltekit-preload-data="tap">
-			<h1 class="w-full p-4 text-center text-3xl">Top Farmers</h1>
+			<h2 class="w-full p-4 text-center text-3xl">Top Farmers</h2>
 			{#await data.lb}
 				<p>Loading...</p>
 			{:then lb}

@@ -120,16 +120,6 @@
 							/>
 						</div>
 						<div class="space-y-2">
-							<Label>Wheat Ping Role</Label>
-							<RoleSelect
-								roles={data.guild.roles}
-								triggerClass="w-full max-w-sm justify-between"
-								value={pings.cropPingRoles?.wheat ?? ''}
-								placeholder="Select a role for Wheat"
-								name="wheat"
-							/>
-						</div>
-						<div class="space-y-2">
 							<Label>Melon Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
@@ -139,8 +129,16 @@
 								name="melon"
 							/>
 						</div>
-					</div>
-					<div class="flex flex-1 flex-col gap-1">
+						<div class="space-y-2">
+							<Label>Moonflower Ping Role</Label>
+							<RoleSelect
+								roles={data.guild.roles}
+								triggerClass="w-full max-w-sm justify-between"
+								value={pings.cropPingRoles?.moonflower ?? ''}
+								placeholder="Select a role for Moonflower"
+								name="moonflower"
+							/>
+						</div>
 						<div class="space-y-2">
 							<Label>Pumpkin Ping Role</Label>
 							<RoleSelect
@@ -161,6 +159,8 @@
 								name="mushroom"
 							/>
 						</div>
+					</div>
+					<div class="flex flex-1 flex-col gap-1">
 						<div class="space-y-2">
 							<Label>Cocoa Beans Ping Role</Label>
 							<RoleSelect
@@ -189,6 +189,36 @@
 								value={pings.cropPingRoles?.netherWart ?? ''}
 								placeholder="Select a role for Nether Wart"
 								name="wart"
+							/>
+						</div>
+						<div class="space-y-2">
+							<Label>Sunflower Ping Role</Label>
+							<RoleSelect
+								roles={data.guild.roles}
+								triggerClass="w-full max-w-sm justify-between"
+								value={pings.cropPingRoles?.sunflower ?? ''}
+								placeholder="Select a role for Sunflower"
+								name="sunflower"
+							/>
+						</div>
+						<div class="space-y-2">
+							<Label>Wheat Ping Role</Label>
+							<RoleSelect
+								roles={data.guild.roles}
+								triggerClass="w-full max-w-sm justify-between"
+								value={pings.cropPingRoles?.wheat ?? ''}
+								placeholder="Select a role for Wheat"
+								name="wheat"
+							/>
+						</div>
+						<div class="space-y-2">
+							<Label>Wild Rose Ping Role</Label>
+							<RoleSelect
+								roles={data.guild.roles}
+								triggerClass="w-full max-w-sm justify-between"
+								value={pings.cropPingRoles?.wildRose ?? ''}
+								placeholder="Select a role for Wild Rose"
+								name="wildrose"
 							/>
 						</div>
 					</div>

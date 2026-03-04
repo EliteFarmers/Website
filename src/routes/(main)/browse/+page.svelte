@@ -2,8 +2,9 @@
 	import Event from '$comp/discord/event.svelte';
 	import Serverbar from '$comp/discord/serverbar.svelte';
 	import Head from '$comp/head.svelte';
-	import { PUBLIC_COMMUNITY_ID } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import type { PageData } from './$types';
+	const { PUBLIC_COMMUNITY_ID } = env;
 
 	interface Props {
 		data: PageData;

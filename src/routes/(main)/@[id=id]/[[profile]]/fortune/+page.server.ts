@@ -1,12 +1,12 @@
 import { updateFortuneSettings } from '$lib/api';
 import { MissingRatesDataSchema } from '$lib/stores/ratesData';
 import { fail } from '@sveltejs/kit';
+import { normalizeChipId } from 'farming-weight';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ url }) => {
 	const data = url.searchParams.get('data');
 	if (!data) {
-		console.log(url.searchParams);
 		return {};
 	}
 
@@ -40,17 +40,20 @@ export const actions: Actions = {
 
 		const strength = +(data.get('strength') ?? 0);
 		const communityCenter = +(data.get('community') ?? 0);
+		const rosewaterFlasks = +(data.get('flasks') ?? 0);
 
 		const shards = {} as Record<string, number>;
-		const exported = {} as Record<string, boolean>;
+		const chips = {} as Record<string, number>;
 
 		for (const [key, value] of data.entries()) {
 			if (key.startsWith('SHARD_')) {
 				shards[key] = +(value as string);
 			}
-			if (key.startsWith('exported.')) {
-				const cropKey = key.split('.')[1];
-				exported[cropKey] = value === 'true';
+			if (key.endsWith('_GARDEN_CHIP')) {
+				const normalized = normalizeChipId(key);
+				if (normalized) {
+					chips[normalized] = +(value as string);
+				}
 			}
 		}
 
@@ -58,7 +61,8 @@ export const actions: Actions = {
 			strength: strength,
 			communityCenter: communityCenter,
 			attributes: shards,
-			exported: exported,
+			chips: chips,
+			rosewaterFlasks: rosewaterFlasks,
 		});
 
 		if (e) {

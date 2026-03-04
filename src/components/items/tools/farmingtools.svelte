@@ -15,8 +15,8 @@
 	const ctx = getStatsContext();
 
 	const garden = $derived(ctx.garden);
-	let shown = $state(10 - (ctx.member.current?.events?.length ?? 0));
-	let currentShown = $state(10 - (ctx.member.current?.events?.length ?? 0));
+	let shown = $state(13 - (ctx.member.current?.events?.length ?? 0));
+	let currentShown = $state(13 - (ctx.member.current?.events?.length ?? 0));
 
 	let actualTools = $state<FT[]>([]);
 

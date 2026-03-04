@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
+	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import HeadLdJson from './head-ld-json.svelte';
 
 	interface Props {
@@ -17,7 +18,7 @@
 	let {
 		title,
 		keywords = 'farming, profile, skyblock, weight, calculate, Hypixel, elite, leaderboards, skyblock leaderboards',
-		imageUrl = `${PUBLIC_HOST_URL}/favicon.webp`,
+		imageUrl = `${env.PUBLIC_HOST_URL}/favicon.webp`,
 		description,
 		children,
 		twitterCardType,
@@ -25,16 +26,40 @@
 		ldJson = undefined,
 	}: Props = $props();
 
-	const canonicalUrl = $derived(
-		canonicalPath?.startsWith('http')
-			? canonicalPath
-			: PUBLIC_HOST_URL + (canonicalPath?.startsWith('/') ? '' : '/') + canonicalPath
+	const pageCtx = getPageCtx();
+
+	const canonicalRoot = $derived(env.PUBLIC_CANONICAL_URL || env.PUBLIC_HOST_URL || page.url.origin);
+
+	const canonicalUrl = $derived.by(() => {
+		if (canonicalPath) {
+			const isFullUrl = canonicalPath.startsWith('http');
+
+			if (isFullUrl) {
+				return env.PUBLIC_CANONICAL_URL
+					? canonicalPath.replace(env.PUBLIC_HOST_URL, env.PUBLIC_CANONICAL_URL)
+					: canonicalPath;
+			}
+
+			return canonicalRoot + (canonicalPath.startsWith('/') ? '' : '/') + canonicalPath;
+		}
+
+		return canonicalRoot + page.url.pathname;
+	});
+
+	const imgUrl = $derived(
+		imageUrl?.startsWith('http')
+			? imageUrl
+			: env.PUBLIC_HOST_URL + (imageUrl?.startsWith('/') ? '' : '/') + imageUrl
 	);
+
+	$effect(() => {
+		pageCtx.title = title ?? 'Elite | Skyblock Farming Weight';
+	});
 </script>
 
 <svelte:head>
-	<title>{title ?? 'Elite | Skyblock Farming Weight'}</title>
-	<meta property="og:title" content={title ?? 'Elite | Skyblock Farming Weight'} />
+	<title>{title || pageCtx.title}</title>
+	<meta property="og:title" content={title || pageCtx.title} />
 
 	<meta property="twitter:card" content={twitterCardType ?? 'summary'} />
 
@@ -46,15 +71,13 @@
 
 	<meta name="keywords" content={keywords} />
 
-	{#if imageUrl}
-		<meta property="twitter:image" content={imageUrl} />
-		<meta property="og:image" content={imageUrl} />
+	{#if imgUrl}
+		<meta property="twitter:image" content={imgUrl} />
+		<meta property="og:image" content={imgUrl} />
 	{/if}
 
-	{#if canonicalPath}
-		<meta property="og:url" content={canonicalUrl ?? page.url.toString()} />
-		<link rel="canonical" href={canonicalUrl} />
-	{/if}
+	<meta property="og:url" content={canonicalUrl} />
+	<link rel="canonical" href={canonicalUrl} />
 
 	{#if ldJson}
 		<HeadLdJson content={ldJson} />

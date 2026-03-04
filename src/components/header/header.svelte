@@ -32,7 +32,13 @@
 		<NavBreadcrumb />
 	</div>
 	<div class="flex items-center justify-between gap-2 md:justify-end">
-		<Button variant="ghost" class="px-3 py-1" onclick={toggleFavorite}>
+		<Button
+			variant="ghost"
+			class="px-3 py-1"
+			onclick={toggleFavorite}
+			aria-label={favorites.favorited ? 'Remove this page from favorites' : 'Add this page to favorites'}
+			aria-pressed={favorites.favorited}
+		>
 			<Heart class={favorites.favorited ? 'fill-destructive text-destructive' : ''}></Heart>
 		</Button>
 		{#if sidebar.isMobile}
@@ -41,6 +47,7 @@
 				class="bg-card order-4 border px-3 py-4"
 				variant="outline"
 				size="sm"
+				aria-label="Open player search"
 			>
 				<Search />
 			</Button>

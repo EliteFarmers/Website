@@ -23,13 +23,19 @@ export const veliteDirPath = path.join(__dirname, '.velite');
 export default defineConfig({
 	plugins: plugins.filter((p) => p !== null) as PluginOption[],
 	optimizeDeps: {
-		exclude: ['@napi-rs/canvas', 'isomorphic-dompurify'],
+		exclude: ['@napi-rs/canvas', 'isomorphic-dompurify', 'farming-weight'],
+	},
+	ssr: {
+		noExternal: ['farming-weight'],
 	},
 	server: {
-		allowedHosts: ['.elitebot.dev', '.kaeso.dev'],
+		allowedHosts: ['.elitebot.dev', '.kaeso.dev', '.eliteskyblock.com'],
 		fs: {
-			allow: [veliteDirPath],
+			allow: [veliteDirPath, path.resolve(__dirname, 'packages')],
 		},
+	},
+	preview: {
+		port: 5173,
 	},
 	resolve: {
 		alias: {
@@ -39,6 +45,7 @@ export default defineConfig({
 			$db: path.resolve('./src/database'),
 			$lib: path.resolve('./src/lib'),
 			$params: path.resolve('./src/params'),
+			'farming-weight': path.resolve(__dirname, 'packages/farming-weight/src'),
 		},
 	},
 	build: {

@@ -29,8 +29,8 @@
 	let loading = $state(false);
 	let deleteProductImageModal = $state(false);
 
-	let selectedColors = $state<string[]>(data.product?.features?.embedColors ?? []);
-	let selectedFlags = $state<string[]>(data.product?.features?.flags ?? []);
+	let selectedColors = $derived<string[]>(data.product?.features?.embedColors ?? []);
+	let selectedFlags = $derived<string[]>(data.product?.features?.flags ?? []);
 	let selectedImageId = $state('');
 
 	let styles = $derived(

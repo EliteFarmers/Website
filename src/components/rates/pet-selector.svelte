@@ -6,7 +6,7 @@
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import * as Popover from '$ui/popover';
-	import Menu from '@lucide/svelte/icons/menu';
+	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { FarmingPets, type FarmingPet } from 'farming-weight';
 
@@ -36,20 +36,26 @@
 	);
 
 	let activeId = $state({
+		[FarmingPets.RoseDragon]: grouped[FarmingPets.RoseDragon]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.MooshroomCow]: grouped[FarmingPets.MooshroomCow]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Elephant]: grouped[FarmingPets.Elephant]?.at(0)?.pet.uuid ?? undefined,
-		[FarmingPets.Bee]: grouped[FarmingPets.Bee]?.at(0)?.pet.uuid ?? undefined,
+		[FarmingPets.Mosquito]: grouped[FarmingPets.Mosquito]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Rabbit]: grouped[FarmingPets.Rabbit]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Slug]: grouped[FarmingPets.Slug]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Hedgehog]: grouped[FarmingPets.Hedgehog]?.at(0)?.pet.uuid ?? undefined,
+		[FarmingPets.Bee]: grouped[FarmingPets.Bee]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Chicken]: grouped[FarmingPets.Chicken]?.at(0)?.pet.uuid ?? undefined,
-		[FarmingPets.Mosquito]: grouped[FarmingPets.Mosquito]?.at(0)?.pet.uuid ?? undefined,
+		[FarmingPets.Pig]: grouped[FarmingPets.Pig]?.at(0)?.pet.uuid ?? undefined,
 	} as Record<string, string | undefined>);
 
 	const groups = $derived(
 		Object.entries(activeId)
 			.filter(([, v]) => v)
 			.slice(0, show)
+	);
+
+	const selectedPetBreakdown = $derived(
+		$player.selectedPet ? $player.selectedPet.getFullBreakdown($player) : undefined
 	);
 
 	function onSelectedChange(type: string, pet: FarmingPet) {
@@ -68,7 +74,7 @@
 	<div class="flex w-full items-center justify-between px-1 pt-2">
 		<p class="text-lg font-semibold">Farming Pet</p>
 		{#if $player.selectedPet}
-			<FortuneBreakdown breakdown={$player.selectedPet.breakdown} />
+			<FortuneBreakdown breakdown={selectedPetBreakdown} />
 		{:else}
 			<FortuneBreakdown total={0} />
 		{/if}
@@ -88,7 +94,7 @@
 					<div class="flex h-full flex-1 flex-row items-center">
 						<DropdownMenu.Root>
 							<DropdownMenu.Trigger class={buttonVariants({ variant: 'ghost' })}>
-								<Menu size={20} />
+								<ArrowLeftRight size={20} />
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content class="max-w-xl">
 								<DropdownMenu.Label>Swap {pet.info.name} Pet</DropdownMenu.Label>
@@ -138,7 +144,7 @@
 							</Popover.Mobile>
 						{/if}
 						{#key $player}
-							<FortuneBreakdown breakdown={pet.breakdown} />
+							<FortuneBreakdown breakdown={pet.getFullBreakdown($player)} />
 						{/key}
 					</div>
 				</div>

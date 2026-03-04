@@ -8,9 +8,11 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 import type { ItemGemstoneSlotCosts } from './ItemGemstoneSlotCosts';
+import type { ItemRequirement } from './ItemRequirement';
 
 export interface ItemGemstoneSlot {
 	/** @nullable */
 	slot_type?: string | null;
 	costs: ItemGemstoneSlotCosts[];
+	requirements: ItemRequirement[];
 }

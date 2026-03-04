@@ -8,10 +8,11 @@
 	interface Props {
 		item: ItemDto | EliteItemDto;
 		title?: boolean;
+		otherDebugData?: unknown | null;
 		children?: import('svelte').Snippet;
 	}
 
-	let { item, title = true, children }: Props = $props();
+	let { item, title = true, otherDebugData = null, children }: Props = $props();
 
 	let showDebugInfo = $state(false);
 </script>
@@ -56,5 +57,10 @@
 		<div class="bg-card text-primary mt-2 rounded-md p-2 text-sm">
 			<pre class="break-all whitespace-pre-wrap">{JSON.stringify(item, null, 2)}</pre>
 		</div>
+		{#if otherDebugData}
+			<div class="bg-card text-primary mt-2 rounded-md p-2 text-sm">
+				<pre class="break-all whitespace-pre-wrap">{JSON.stringify(otherDebugData, null, 2)}</pre>
+			</div>
+		{/if}
 	{/if}
 </div>

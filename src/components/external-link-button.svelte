@@ -15,7 +15,7 @@
 </script>
 
 <a {href} class={cn('text-link decoration-link inline-block', className)} {...rest}>
-	<span class="flex flex-row items-center gap-1">
+	<span>
 		{#if text}
 			<span>{text}</span>
 		{:else}
@@ -24,7 +24,7 @@
 			</span>
 		{/if}
 		{#if icon}
-			<ExternalLink size={16} class="mt-0.5" />
+			<ExternalLink size={16} class="inline" />
 		{/if}
 	</span>
 </a>

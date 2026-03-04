@@ -1,7 +1,8 @@
 <script lang="ts">
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { type PrimitiveAnchorAttributes, cn } from '$lib/utils.js';
+	const { PUBLIC_HOST_URL } = env;
 
 	let { class: className, children, href, ...restProps }: PrimitiveAnchorAttributes = $props();
 

@@ -1,14 +1,43 @@
+<script lang="ts" module>
+	import { Crop } from 'farming-weight';
+
+	export const MinionIds: Record<Crop, string> = {
+		[Crop.Cactus]: 'CACTUS_GENERATOR_',
+		[Crop.Carrot]: 'CARROT_GENERATOR_',
+		[Crop.CocoaBeans]: 'COCOA_GENERATOR_',
+		[Crop.Melon]: 'MELON_GENERATOR_',
+		[Crop.Mushroom]: 'MUSHROOM_GENERATOR_',
+		[Crop.NetherWart]: 'NETHER_WARTS_GENERATOR_',
+		[Crop.Potato]: 'POTATO_GENERATOR_',
+		[Crop.Pumpkin]: 'PUMPKIN_GENERATOR_',
+		[Crop.SugarCane]: 'SUGAR_CANE_GENERATOR_',
+		[Crop.Wheat]: 'WHEAT_GENERATOR_',
+		[Crop.Sunflower]: 'SUNFLOWER_GENERATOR_',
+		[Crop.Moonflower]: 'SUNFLOWER_GENERATOR_',
+		[Crop.WildRose]: 'FLOWER_GENERATOR_',
+		[Crop.Seeds]: 'WHEAT_GENERATOR_',
+	};
+
+	export const MinionNames: Partial<Record<Crop, string>> = {
+		[Crop.Sunflower]: 'Sunflower',
+		[Crop.Moonflower]: 'Sunflower',
+		[Crop.WildRose]: 'Flower',
+	};
+</script>
+
 <script lang="ts">
 	import * as Popover from '$ui/popover';
 
 	interface Props {
 		name: string;
-		index: number;
+		crop: Crop;
 		tierField: number;
 		size?: 'sm' | 'md';
 	}
 
-	let { name, index, tierField, size = 'md' }: Props = $props();
+	let { name, crop, tierField, size = 'md' }: Props = $props();
+
+	let minionName = $derived(MinionIds[crop]);
 
 	// Turn tierField into its binary representation
 	let tiersString = $derived(tierField?.toString(2).substring(0, 12) ?? '');
@@ -17,6 +46,15 @@
 	// Add 0s to the end of the array if it's less than 12 in length
 	$effect(() => {
 		while (tiers.length < 12) tiers.push('0');
+	});
+
+	let highestTier = $derived.by(() => {
+		for (let i = tiers.length - 1; i >= 0; i--) {
+			if (tiers[i] === '1') {
+				return i + 1;
+			}
+		}
+		return 1;
 	});
 </script>
 
@@ -27,7 +65,7 @@
 				? 'size-12 sm:size-16 md:size-20'
 				: 'size-10 sm:size-12 md:size-16'}"
 		>
-			<div class="image" style="background-position: 100% {1000 - 100 * index}%;"></div>
+			<div class="image" style="background-image: url(/api/item/{minionName}{highestTier});"></div>
 			<div class="tier-border">
 				{#each tiers as tier, i (i)}
 					<div
@@ -41,7 +79,7 @@
 	{/snippet}
 
 	<div class="flex max-w-lg flex-col items-center justify-center">
-		<div class="mx-4 my-2 text-center text-lg">Unlocked {name} Minion Tiers</div>
+		<div class="mx-4 my-2 text-center text-lg">Unlocked {MinionNames[crop] ?? name} Minion Tiers</div>
 		<div class="grid max-w-52 grid-cols-6 items-center justify-center gap-1">
 			{#each tiers as tier, i (i)}
 				<div
@@ -89,8 +127,7 @@
 
 	.image {
 		@apply inline-block aspect-square w-16 rounded-lg;
-		background-image: url(/images/cropatlas.webp);
-		background-size: 200% 1000%;
+		background-size: cover;
 		z-index: 3;
 	}
 </style>

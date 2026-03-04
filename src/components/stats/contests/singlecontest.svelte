@@ -48,7 +48,7 @@
 		</span>
 		<ScrollArea bind:viewRef={area} class="h-[29.62rem] w-full rounded-md border" type="always">
 			<div class="flex w-full flex-col justify-center space-y-2 sm:w-104">
-				{#each sorted as participant, i (participant.playerUuid ?? i)}
+				{#each sorted as participant, i (i)}
 					<Participation entry={participant} />
 				{/each}
 			</div>

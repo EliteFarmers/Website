@@ -11,4 +11,5 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 export interface ItemRodPartAttribute {
 	/** @nullable */
 	part?: string | null;
+	donated_museum: boolean;
 }

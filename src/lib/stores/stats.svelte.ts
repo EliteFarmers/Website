@@ -47,11 +47,22 @@ export class PlayerStats {
 		selectedProfile: ProfileDetailsDto;
 		profiles: ProfileDetails[];
 		style?: WeightStyleWithDataDto;
+		initialMember?: ProfileMemberDto;
+		initialRanks?: LeaderboardRanksResponse;
+		bot?: boolean;
 	}) {
 		this.setValues(data);
 	}
 
-	async setValues({ account, selectedProfile, profiles, style }: ConstructorParameters<typeof PlayerStats>[0]) {
+	async setValues({
+		account,
+		selectedProfile,
+		profiles,
+		style,
+		initialMember,
+		initialRanks,
+		bot,
+	}: ConstructorParameters<typeof PlayerStats>[0]) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;
@@ -62,24 +73,36 @@ export class PlayerStats {
 			ratesData.update((data) => {
 				data.communityCenter = this.fortuneSettings?.communityCenter ?? data.communityCenter;
 				data.strength = this.fortuneSettings?.strength ?? data.strength;
-				data.attributes = this.fortuneSettings?.attributes ?? data.attributes;
-				data.exported = (this.fortuneSettings?.exported as Record<Crop, boolean>) ?? data.exported;
+				data.rosewaterFlasks = this.fortuneSettings?.rosewaterFlasks ?? data.rosewaterFlasks;
 				return data;
 			});
 		}
 
-		const memberData = getProfileMember({
-			playerUuid: account.id,
-			profileUuid: selectedProfile?.profileId ?? '',
-		});
+		if (initialMember || bot) {
+			this.#member = {
+				current: initialMember,
+				loading: false,
+				error: null,
+			} as RemoteQuery<ProfileMemberDto>;
+		} else {
+			this.#member = getProfileMember({
+				playerUuid: account.id,
+				profileUuid: selectedProfile?.profileId ?? '',
+			});
+		}
 
-		const memberRanks = getMemberRanks({
-			playerUuid: account.id,
-			profileUuid: selectedProfile?.profileId ?? '',
-		});
-
-		this.#ranks = memberRanks;
-		this.member = memberData;
+		if (initialRanks || bot) {
+			this.#ranks = {
+				current: initialRanks,
+				loading: false,
+				error: null,
+			} as RemoteQuery<LeaderboardRanksResponse>;
+		} else {
+			this.#ranks = getMemberRanks({
+				playerUuid: account.id,
+				profileUuid: selectedProfile?.profileId ?? '',
+			});
+		}
 
 		$effect(() => {
 			this.#tools = this.#member.current?.farmingWeight.inventory?.tools ?? [];

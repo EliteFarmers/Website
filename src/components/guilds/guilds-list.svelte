@@ -43,13 +43,13 @@
 	type GuildSort = (typeof SortHypixelGuildsBy)[keyof typeof SortHypixelGuildsBy];
 
 	const columns = $derived(getColumns());
-	let tableData = $state(guilds);
+	let tableData = $derived(guilds);
 	let isLoading = $state(false);
 	let errorMessage = $state<string | null>(null);
 	let activeRequest = 0;
-	let pageIndex = $state(page ?? 0);
-	let pageSize = $state(pSize ?? DEFAULT_PAGE_SIZE);
-	let totalGuilds = $state<number | null>(total);
+	let pageIndex = $derived(page ?? 0);
+	let pageSize = $derived(pSize ?? DEFAULT_PAGE_SIZE);
+	let totalGuilds = $derived<number | null>(total);
 	let sorting = $derived(defaultSorting);
 
 	function normalizeSorting(sorting: SortingState): SortingState {

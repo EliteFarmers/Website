@@ -1,7 +1,7 @@
-import { afterNavigate } from '$app/navigation';
 import { page } from '$app/state';
+import { getPageCtx } from '$lib/hooks/page.svelte';
 import { PersistedState } from 'runed';
-import { getContext, setContext, untrack } from 'svelte';
+import { getContext, setContext } from 'svelte';
 
 export interface FavoritedLink {
 	href: string;
@@ -14,23 +14,27 @@ export class Favorites {
 	#currentFavorited = $derived.by(() => {
 		return this.#favorites.current.some((favorite) => favorite.href === page.url.pathname);
 	});
-	#currentPage = $state<FavoritedLink | undefined>();
 	#override = $state<FavoritedLink | undefined>();
+	#pageCtx = getPageCtx();
+	currentPage = $derived.by(() => {
+		if (this.#override && this.#override.href === page.url.pathname) {
+			this.#override.name ||= this.#pageCtx.title;
+
+			return this.#override;
+		}
+
+		return {
+			href: page.url.pathname,
+			name: this.#pageCtx.title,
+		};
+	});
+	key = $state(0);
 
 	constructor() {
-		$effect.root(() => {
-			untrack(() => {
-				afterNavigate(() => {
-					this.#currentPage = {
-						href: page.url.pathname,
-						name: document.title,
-					};
-
-					if (this.#override?.href !== page.url.pathname) {
-						this.#override = undefined;
-					}
-				});
-			});
+		$effect.pre(() => {
+			if (this.#override?.href !== page.url.pathname) {
+				this.#override = undefined;
+			}
 		});
 	}
 
@@ -40,10 +44,6 @@ export class Favorites {
 
 	get favorited() {
 		return this.#currentFavorited;
-	}
-
-	get currentPage() {
-		return this.#override ?? this.#currentPage;
 	}
 
 	setPage(favorite: FavoritedLink) {
@@ -56,18 +56,22 @@ export class Favorites {
 		}
 		this.removeFavorite(favorite.href);
 		this.#favorites.current = [...this.current, favorite];
+		this.key = this.key + 1;
 	}
 
 	removeFavorite(href: string) {
 		if (this.current.some((favorite) => favorite.href === href)) {
 			this.#favorites.current = this.current.filter((favorite) => favorite.href !== href);
+			this.key = this.key + 1;
 			return true;
 		}
+		this.key = this.key + 1;
 		return false;
 	}
 
 	setFavorites(favorites: FavoritedLink[]) {
 		this.#favorites.current = favorites;
+		this.key = this.key + 1;
 	}
 }
 

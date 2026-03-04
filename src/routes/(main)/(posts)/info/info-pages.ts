@@ -1,4 +1,5 @@
 import HeartHandshake from '@lucide/svelte/icons/heart-handshake';
+import History from '@lucide/svelte/icons/history';
 import ServerCog from '@lucide/svelte/icons/server-cog';
 import TicketX from '@lucide/svelte/icons/ticket-x';
 import UserRound from '@lucide/svelte/icons/user-round';
@@ -29,5 +30,10 @@ export const INFO_CATEGORIES = [
 		title: 'Credits',
 		slug: 'credits',
 		icon: HeartHandshake,
+	},
+	{
+		title: 'Recap',
+		slug: 'recap',
+		icon: History,
 	},
 ];

@@ -22,7 +22,9 @@
 </script>
 
 <div
-	class="bg-background relative mx-auto mt-4 w-full max-w-5xl overflow-clip rounded-xl border-2 bg-no-repeat lg:mt-16 @md:mt-8 @md:aspect-[4.8/1]"
+	class="bg-background {style
+		? 'dark text-primary'
+		: ''} relative mx-auto mt-4 w-full max-w-5xl overflow-clip rounded-xl border-2 bg-no-repeat lg:mt-16 @md:mt-8 @md:aspect-[4.8/1]"
 >
 	<canvas
 		{@attach (element) => {
@@ -40,15 +42,15 @@
 				: ''}"
 		>
 			<img
-				class="hidden h-full flex-1 self-center object-contain @md:ml-8 @md:inline-block @md:flex-none"
-				src="https://mc-heads.net/body/{ctx.uuid}"
+				class="hidden h-full flex-1 self-center object-contain @lg:ml-8 @lg:inline-block @lg:flex-none"
+				src="https://skins.mcstats.com/body/front/{ctx.uuid}"
 				alt="User's Minecraft appearance"
 			/>
-			<div class="block @md:hidden">
+			<div class="block @lg:hidden">
 				<PlayerHead uuid={ctx.uuid} size="2xl" />
 			</div>
 			<div class="flex h-full flex-col items-start justify-center gap-1">
-				<div class="hidden flex-row items-center gap-2 pt-2 @md:flex">
+				<div class="hidden flex-row items-center gap-2 pt-2 @lg:flex">
 					<div class={!style ? 'rounded-md border' : ''}>
 						<PlayerName
 							bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
@@ -102,7 +104,7 @@
 {#snippet rankLink(small = false)}
 	<a
 		class="hover:bg-muted flex h-full max-w-fit flex-col items-center justify-center rounded-md p-0.5 lg:p-1"
-		href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}"
+		href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}?fallback={rank}"
 		style="background-color: {small
 			? 'inherit'
 			: bg}; border-color: transparent; background-opacity: 0.8; color: {(!small

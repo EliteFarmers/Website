@@ -60,12 +60,6 @@
 	);
 
 	const favorites = getFavoritesContext();
-	favorites.setPage({
-		icon: data.guild?.icon?.url ?? undefined,
-		name: (data.event.name ?? 'Event') + ' Leaderboard',
-		href: page.url.pathname,
-	});
-
 	const crumbs = $derived<Crumb[]>([
 		{
 			name: 'Events',
@@ -83,6 +77,12 @@
 	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
 		breadcrumb.setBreadcrumbs(crumbs);
+
+		favorites.setPage({
+			icon: data.guild?.icon?.url ?? undefined,
+			name: (data.event.name ?? 'Event') + ' Leaderboard',
+			href: page.url.pathname,
+		});
 	});
 </script>
 

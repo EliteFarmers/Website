@@ -14,6 +14,7 @@
 		items
 			.sort((a, b) => b.fortune - a.fortune)
 			.reduce<Record<string, FarmingEquipment>>((acc, item) => {
+				if (!item.slot) return acc;
 				if (!acc[item.slot]) {
 					acc[item.slot] = item;
 				}

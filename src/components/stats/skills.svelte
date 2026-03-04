@@ -95,6 +95,12 @@
 								loading={ctx.member.loading}
 								progress={getLevelProgress('runecrafting', skills?.runecrafting ?? 0)}
 							/>
+							<Skillbar
+								name="Social"
+								rank={ranks?.social?.rank}
+								loading={ctx.member.loading}
+								progress={getLevelProgress('social', skills?.social ?? 0)}
+							/>
 						</div>
 						<div class="flex max-w-2xl flex-1 flex-col gap-2">
 							<Skillbar
@@ -122,11 +128,21 @@
 								progress={getLevelProgress('carpentry', skills?.carpentry ?? 0)}
 							/>
 							<Skillbar
-								name="Social"
-								rank={ranks?.social?.rank}
+								name="Hunting"
+								rank={ranks?.hunting?.rank}
 								loading={ctx.member.loading}
-								progress={getLevelProgress('social', skills?.social ?? 0)}
+								progress={getLevelProgress('hunting', skills?.hunting ?? 0)}
 							/>
+							{#if ctx.selectedProfile?.members?.length && ctx.selectedProfile.members.length > 1}
+								<Skillbar
+									name="Co-op Social"
+									rank={ranks?.['coop-social']?.rank}
+									loading={ctx.member.loading}
+									progress={getLevelProgress('social', ctx.member.current?.socialXp ?? 0)}
+								/>
+							{:else}
+								<div class="flex-1"></div>
+							{/if}
 						</div>
 					</div>
 				</div>

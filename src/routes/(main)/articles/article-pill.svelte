@@ -12,6 +12,7 @@
 		<StrapiImage
 			cover={article.cover}
 			alt={article.title}
+			sizes="(max-width: 639px) 100vw, 24rem"
 			class="aspect-video w-full rounded-md bg-black object-cover opacity-85 transition-all duration-300 ease-in-out group-hover:opacity-100"
 		/>
 		<div
@@ -20,6 +21,9 @@
 			<ArticleAuthor {article} />
 			{#if article.releasedAt}
 				<div class="flex flex-row items-center gap-2 text-sm">
+					{#if new Date(article.releasedAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
+						<span class="text-completed text-sm font-semibold">NEW</span>
+					{/if}
 					<DateDisplay timestamp={new Date(article.releasedAt).getTime()} />
 				</div>
 			{/if}

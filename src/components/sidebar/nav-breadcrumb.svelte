@@ -135,6 +135,9 @@
 	{#if crumb.icon}
 		{@const Icon = crumb.icon as Component}
 		<Icon class="size-4" {...crumb.data} />
+		{#if !crumb.name && !crumb.snippet}
+			<span class="sr-only">{crumb.tooltip ?? 'Home'}</span>
+		{/if}
 	{/if}
 	{#if crumb.snippet}
 		{@render crumb.snippet?.(crumb)}

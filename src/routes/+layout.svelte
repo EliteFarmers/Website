@@ -5,14 +5,14 @@
 	import PageToast from '$comp/page-toast.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
 	import { initAdContext } from '$lib/hooks/ads.svelte';
-	import { initGlobalContext } from '$lib/hooks/global.svelte';
+	import { getGlobalContext, initGlobalContext } from '$lib/hooks/global.svelte';
 	import { IsHover } from '$lib/hooks/is-hover.svelte';
 	import { initPageContext } from '$lib/hooks/page.svelte';
 	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { initRatesData } from '$lib/stores/ratesData';
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
 	import { initThemeContext } from '$lib/stores/themes.svelte';
-	import { setContext } from 'svelte';
+	import { setContext, untrack } from 'svelte';
 	import '../app.css';
 	import type { LayoutData } from './$types';
 
@@ -26,7 +26,7 @@
 	let isHover = $state(new IsHover());
 	setContext('isHover', isHover);
 
-	initGlobalContext({ session: data.session, announcements: data.cache?.announcements ?? [] });
+	initGlobalContext((() => ({ session: data.session, announcements: data.cache?.announcements ?? [] }))());
 	initThemeContext();
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -34,6 +34,13 @@
 	initFavoritesContext();
 	initPageContext();
 	initAdContext();
+
+	const gbl = getGlobalContext();
+
+	$effect.pre(() => {
+		const newData = { session: data.session, announcements: data.cache?.announcements ?? [] };
+		untrack(() => gbl.setValues(newData));
+	});
 
 	// Force hard navigation if the websites was updated
 	beforeNavigate(({ to, willUnload }) => {

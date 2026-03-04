@@ -8,12 +8,14 @@
 	import LeaderboardPaginationLocal from '$comp/leaderboards/pagination-local.svelte';
 	import type { GuildMembersLeaderboard, LeaderboardEntry } from '$lib/api/elite';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { getGuildMembersLeaderboard } from '$lib/remote/guilds.remote';
 	import { Button } from '$ui/button';
 	import ComboBox from '$ui/combobox/combo-box.svelte';
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import Hourglass from '@lucide/svelte/icons/hourglass';
+	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import SquareActivity from '@lucide/svelte/icons/square-activity';
 	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
@@ -22,36 +24,42 @@
 
 	let { data }: PageProps = $props();
 
-	const leaderboardLookup = (data.leaderboards?.leaderboards ?? {}) as Record<string, LeaderboardInfo>;
-	const leaderboardOptions = Object.values(leaderboardLookup)
-		.sort((a, b) => {
-			if (a.category !== b.category) {
-				return (a.category ?? '').localeCompare(b.category ?? '');
-			}
-			if (a.order !== undefined && b.order !== undefined && a.order !== b.order) {
-				return a.order - b.order;
-			}
-			return a.title.localeCompare(b.title);
-		})
-		.map((info) => ({
-			value: info.id,
-			label: `${info.category ?? 'Leaderboards'} • ${info.title}${info.suffix ?? ''}`,
-		}));
+	const leaderboardLookup = $derived(data.leaderboards?.leaderboards ?? {}) as Record<string, LeaderboardInfo>;
+	const leaderboardOptions = $derived(
+		Object.values(leaderboardLookup)
+			.sort((a, b) => {
+				if (a.category !== b.category) {
+					return (a.category ?? '').localeCompare(b.category ?? '');
+				}
+				if (a.order !== undefined && b.order !== undefined && a.order !== b.order) {
+					return a.order - b.order;
+				}
+				return a.title.localeCompare(b.title);
+			})
+			.map((info) => ({
+				value: info.id,
+				label: `${info.category ?? 'Leaderboards'} • ${info.title}${info.suffix ?? ''}`,
+			}))
+	);
 
-	const defaultSelected =
+	const defaultSelected = $derived(
 		(data.selectedLeaderboardId && leaderboardLookup[data.selectedLeaderboardId]
 			? data.selectedLeaderboardId
 			: leaderboardLookup[DEFAULT_LEADERBOARD_ID]
 				? DEFAULT_LEADERBOARD_ID
-				: leaderboardOptions[0]?.value) ?? '';
+				: leaderboardOptions[0]?.value) ?? ''
+	);
 
-	let selected = $state(defaultSelected);
-	let leaderboardData = $state<GuildMembersLeaderboard | null>(data.initialLeaderboard ?? null);
+	let selected = $derived(defaultSelected);
+	let leaderboardData = $derived<GuildMembersLeaderboard | null>(data.initialLeaderboard ?? null);
 	let loading = $state(false);
-	let interval = $state<string | undefined>(data.selectedInterval ?? data.initialLeaderboard?.interval ?? undefined);
-	let mode = $state<'classic' | 'ironman' | 'island' | undefined>(data.selectedMode);
-	let removed = $state<0 | 1 | 2 | undefined>(data.selectedRemoved);
+	let interval = $derived<string | undefined>(
+		data.selectedInterval ?? data.initialLeaderboard?.interval ?? undefined
+	);
+	let mode = $derived<'classic' | 'ironman' | 'island' | undefined>(data.selectedMode);
+	let removed = $derived<0 | 1 | 2 | undefined>(data.selectedRemoved);
 
+	const gbl = getGlobalContext();
 	const entries = $derived.by<LeaderboardEntry[]>(() => leaderboardData?.entries ?? []);
 	const pageSize = 20;
 	let currentPage = $state(1);
@@ -286,11 +294,25 @@
 
 	{#if totalPages >= 1}
 		<div class="flex flex-col items-center gap-2 lg:flex-row lg:justify-between">
-			<div class="lg:flex-1">
+			<div class="flex flex-col items-center gap-2 sm:flex-row lg:flex-1">
 				{#if selectedInfo && totalEntries}
+					{#if gbl.user?.settings.features?.hideShopPromotions !== true}
+						<Button
+							href="/shop"
+							variant="outline"
+							class="relative flex flex-row items-center gap-2 overflow-hidden text-sm"
+						>
+							<div class="bg-primary/15 absolute -top-24 -right-24 h-32 w-32 rounded-full blur-xl"></div>
+							<div
+								class="bg-primary/10 absolute -bottom-24 -left-24 h-32 w-32 rounded-full blur-xl"
+							></div>
+							<ShoppingCart class="size-4" />
+							Buy Cosmetics!
+						</Button>
+					{/if}
 					<p class="text-muted-foreground text-sm">
 						Showing {currentOffset.toLocaleString()} - {currentEnd.toLocaleString()} of
-						{totalEntries.toLocaleString()} members.
+						{totalEntries.toLocaleString()} entries.
 					</p>
 				{/if}
 			</div>

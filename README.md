@@ -7,6 +7,12 @@ The best way to check a player's farming skill/weight in Hypixel skyblock.
 **Community Discord:** https://elitebot.dev/discord \
 **Development/Support Discord:** https://elitebot.dev/support
 
+## Licensing
+
+This project is licensed under the GPL-3.0 license. See the [LICENSE](./LICENSE) file for details.
+
+Folders under `packages/` may have different licenses, see the respective LICENSE files in those folders for details.
+
 ## Developing
 
 Note that this website requires the backend API to be running as well. You can find the repository for that [here](https://github.com/EliteFarmers/API). You _can_ use the actual API at https://api.elitebot.dev, but your access to that will be limited by the ratelimiting policies, and won't be suitable for work with any admin routes because you won't have the permissions needed.

@@ -1,4 +1,11 @@
-import { setAdminRole, setEventFeature, setGuildPublic, setInvite, setJacobFeature } from '$lib/api';
+import {
+	requestGuildRefresh,
+	setAdminRole,
+	setEventFeature,
+	setGuildPublic,
+	setInvite,
+	setJacobFeature,
+} from '$lib/api';
 import { error, fail, type Actions, type NumericRange } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -140,6 +147,24 @@ export const actions: Actions = {
 
 		if (!response.ok || e) {
 			const msg = e || 'Failed to set events!';
+			return fail(response.status as NumericRange<400, 499>, { error: msg });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	updateServer: async ({ params, locals }) => {
+		const guildId = params.id;
+		const { session, access_token: token } = locals;
+		if (!session?.perms.admin || !token || !guildId) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const { response, error: e } = await requestGuildRefresh(guildId, {});
+
+		if (!response.ok || e) {
+			const msg = e || 'Failed to update server!';
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}
 

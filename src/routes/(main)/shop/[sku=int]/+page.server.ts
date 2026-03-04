@@ -3,27 +3,26 @@ import { getSelectedMember } from '$lib/remote';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ params, parent }) => {
-	const { products, session } = await parent();
-
+export const load = (async ({ params, locals }) => {
+	const products = locals.cache?.products ?? [];
 	const product = products?.find((p) => p.id === params.sku);
 
 	if (!product) {
 		error(404, 'Product Not Found');
 	}
 
-	if (!session?.uuid) {
+	if (!locals.session?.uuid) {
 		return {
 			product: product,
 		};
 	}
 
-	const weight = await getSelectedMember({ playerUuid: session.uuid });
+	const weight = await getSelectedMember({ playerUuid: locals.session.uuid });
 
 	return {
 		product: product,
-		uuid: session.uuid,
-		ign: session.ign,
+		uuid: locals.session.uuid,
+		ign: locals.session.ign,
 		weight: weight?.farmingWeight,
 	};
 }) satisfies PageServerLoad;

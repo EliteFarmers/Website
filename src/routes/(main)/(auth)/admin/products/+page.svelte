@@ -2,14 +2,14 @@
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
 	import Product from '$comp/monetization/product.svelte';
-	import { PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { Button } from '$ui/button';
 	import * as Command from '$ui/command';
 	import { ScrollArea } from '$ui/scroll-area';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import Settings from '@lucide/svelte/icons/settings';
 	import type { PageData } from './$types';
-
+	const { PUBLIC_DISCORD_CLIENT_ID } = env;
 	interface Props {
 		data: PageData;
 	}

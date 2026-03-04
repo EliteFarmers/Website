@@ -1,7 +1,9 @@
 import type { Crumb } from '$lib/hooks/page.svelte';
 import Badge from '@lucide/svelte/icons/badge';
+import BookOpen from '@lucide/svelte/icons/book-open';
 import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 import Command from '@lucide/svelte/icons/command';
+import FileText from '@lucide/svelte/icons/file-text';
 import Layers from '@lucide/svelte/icons/layers';
 import Megaphone from '@lucide/svelte/icons/megaphone';
 import Package from '@lucide/svelte/icons/package';
@@ -24,37 +26,6 @@ export interface NavGroup {
 	auth?: boolean;
 }
 
-export const NAV_PAGES = [
-	{
-		name: 'Home',
-		href: '/',
-	},
-	{
-		name: 'Info',
-		href: '/info',
-	},
-	{
-		name: 'Browse',
-		href: '/browse',
-	},
-	{
-		name: 'Contests',
-		href: '/contests',
-	},
-	{
-		name: 'Top Players',
-		href: '/leaderboard',
-	},
-	{
-		name: 'Shop',
-		href: '/shop',
-	},
-	{
-		name: 'Gems',
-		href: '/gems',
-	},
-] as NavItem[];
-
 export const PROFILE_NAV_PAGES = [
 	{
 		icon: UserPen,
@@ -67,53 +38,21 @@ export const PROFILE_NAV_PAGES = [
 		href: '/profile/settings',
 	},
 	{
+		icon: FileText,
+		name: 'My Guides',
+		href: '/profile/guides',
+	},
+	{
+		icon: BookOpen,
+		name: 'Bookmarks',
+		href: '/profile/bookmarks',
+	},
+	{
 		icon: ServerCog,
 		name: 'Discord Servers',
 		href: '/profile/servers',
 	},
 ] as Crumb[];
-
-export const MOBILE_NAV = [
-	{
-		title: 'Main Pages',
-		items: NAV_PAGES,
-	},
-	{
-		title: 'Player Profile',
-		items: PROFILE_NAV_PAGES,
-		auth: true,
-	},
-	{
-		title: 'Player Profile',
-		items: [
-			{
-				name: 'Login',
-				href: '/login',
-			},
-		],
-		auth: false,
-	},
-] as NavGroup[];
-
-export const SHOP_NAV_PAGES = [
-	{
-		name: 'Overview',
-		href: '/shop',
-	},
-	{
-		name: 'Premium',
-		href: '/shop/premium',
-	},
-	{
-		name: 'Weight Styles',
-		href: '/shop/styles',
-	},
-	{
-		name: 'Manage Account',
-		href: '/profile/settings',
-		auth: true,
-	},
-] as NavItem[];
 
 export const ADMIN_NAV_PAGES = [
 	{
@@ -125,6 +64,11 @@ export const ADMIN_NAV_PAGES = [
 		icon: Megaphone,
 		name: 'Announce',
 		href: '/admin/announcements',
+	},
+	{
+		icon: FileText,
+		name: 'Guides',
+		href: '/admin/guides',
 	},
 	{
 		icon: Badge,

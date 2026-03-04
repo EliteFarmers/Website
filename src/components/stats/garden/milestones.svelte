@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { GardenDto, LeaderboardRanksResponse } from '$lib/api';
 	import { API_CROP_TO_CROP } from '$lib/constants/crops';
-	import { getCropMilestones } from 'farming-weight';
+	import { getCropMilestones, type LevelingStats } from 'farming-weight';
 	import MilestoneBar from './milestone-bar.svelte';
 
 	interface Props {
@@ -11,34 +11,30 @@
 	}
 
 	let { garden = undefined, ranks = undefined, overflow = $bindable(false) }: Props = $props();
+	let highestSort = $state(true);
 
 	let milestones = $derived(
-		Object.entries(getCropMilestones((garden?.crops ?? {}) as Record<string, number>, overflow))
+		Object.entries(getCropMilestones((garden?.crops ?? {}) as Record<string, number>, overflow)).sort(
+			highestSort ? sorter : (a, b) => a[0].localeCompare(b[0])
+		)
 	);
-	let highestSort = $state(true);
-	let list = $derived(sortList());
 
 	function swap() {
 		highestSort = !highestSort;
-		list = sortList();
 	}
 
 	function swapOverflow() {
 		overflow = !overflow;
 	}
 
-	function sortList() {
-		return highestSort
-			? milestones?.sort((a, b) => {
-					if (b[1].level === a[1].level) {
-						if (b[1].ratio === a[1].ratio) {
-							return b[1].total - a[1].total;
-						}
-						return b[1].ratio - a[1].ratio;
-					}
-					return b[1].level - a[1].level;
-				})
-			: milestones?.sort((a, b) => a[0].localeCompare(b[0]));
+	function sorter(a: [string, LevelingStats], b: [string, LevelingStats]) {
+		if (b[1].level === a[1].level) {
+			if (b[1].ratio === a[1].ratio) {
+				return b[1].total - a[1].total;
+			}
+			return b[1].ratio - a[1].ratio;
+		}
+		return b[1].level - a[1].level;
 	}
 
 	function getCropKey(crop: string) {
@@ -59,7 +55,7 @@
 		<h3 class="mt-1.5 text-lg leading-none font-semibold">Crop Milestones</h3>
 	</div>
 	<div class="flex w-full flex-col gap-2">
-		{#each list as [crop, leveling] (crop)}
+		{#each milestones as [crop, leveling] (crop)}
 			{@const key = getCropKey(crop)}
 			<MilestoneBar {crop} {leveling} {key} rank={ranks?.[key + '-milestone']?.rank} />
 		{/each}

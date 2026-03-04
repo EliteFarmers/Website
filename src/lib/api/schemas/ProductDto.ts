@@ -47,4 +47,9 @@ export interface ProductDto {
 	isSubscription: boolean;
 	isGuildSubscription: boolean;
 	isUserSubscription: boolean;
+	/**
+	 * Product release date
+	 * @nullable
+	 */
+	releasedAt?: string | null;
 }

@@ -11,7 +11,9 @@ import type { NetworthBreakdownCategories } from './NetworthBreakdownCategories'
 
 export interface NetworthBreakdown {
 	networth: number;
-	unsoulboundNetworth: number;
+	liquidNetworth: number;
+	functionalNetworth: number;
+	liquidFunctionalNetworth: number;
 	purse: number;
 	bank: number;
 	personalBank: number;

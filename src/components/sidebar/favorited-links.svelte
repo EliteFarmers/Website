@@ -50,37 +50,47 @@
 	}
 </script>
 
-{#if favorites.current?.length}
+{#if favorites.current?.length && Array.isArray(favorites.current)}
 	<Sidebar.Group data-sveltekit-preload-data="tap">
 		<Collapsible.Root bind:open={menuOpen} class="group/collapsible" onOpenChange={openChanged}>
 			{#snippet child({ props })}
 				<Sidebar.MenuItem {...props}>
 					<Collapsible.Trigger>
 						{#snippet child({ props })}
-							<div class="flex flex-row items-center">
-								<Button
-									variant={editing ? 'secondary' : 'ghost'}
-									size="sm"
-									class="text-sidebar-foreground/70 h-8 px-2 py-0 group-data-[state=collapsed]:hidden"
-									onclick={onEdit}
-								>
-									<Settings class="transition-transform duration-200 {editing ? 'rotate-90' : ''}" />
-								</Button>
-								<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
-									{#snippet tooltipContent()}
-										Favorites
-									{/snippet}
-									{#if !sidebar.open && !sidebar.isMobile}
-										<ChevronRight
-											class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-										/>
-									{/if}
-									<span>Favorites</span>
+							<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
+								{#snippet tooltipContent()}
+									Favorites
+								{/snippet}
+								{#if !sidebar.open && !sidebar.isMobile}
 									<ChevronRight
 										class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
 									/>
-								</Sidebar.MenuButton>
-							</div>
+								{/if}
+								<span
+									role="button"
+									tabindex="0"
+									class="hover:text-foreground cursor-pointer p-0 group-data-[state=collapsed]:hidden"
+									onclick={(e) => {
+										e.stopPropagation();
+										onEdit();
+									}}
+									onkeydown={(e) => {
+										if (e.key === 'Enter' || e.key === ' ') {
+											e.stopPropagation();
+											e.preventDefault();
+											onEdit();
+										}
+									}}
+								>
+									<Settings
+										class="size-4 transition-transform duration-200 {editing ? 'rotate-90' : ''}"
+									/>
+								</span>
+								<span>Favorites</span>
+								<ChevronRight
+									class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+								/>
+							</Sidebar.MenuButton>
 						{/snippet}
 					</Collapsible.Trigger>
 					<Collapsible.Content>
@@ -97,9 +107,11 @@
 									{/each}
 								</div>
 							{:else}
-								{#each favorites.current as favorite, i (i)}
-									{@render favoriteLink(favorite)}
-								{/each}
+								{#key favorites.key}
+									{#each favorites.current as favorite, i (i)}
+										{@render favoriteLink(favorite)}
+									{/each}
+								{/key}
 							{/if}
 						</Sidebar.Menu>
 					</Collapsible.Content>

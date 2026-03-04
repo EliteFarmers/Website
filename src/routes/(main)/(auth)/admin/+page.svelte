@@ -33,6 +33,10 @@
 <div class="my-16 flex flex-col justify-start gap-2">
 	<h1 class="mb-16 text-4xl">Admin Panel</h1>
 
+	<div class="mb-8">
+		<Button href="/admin/audit-logs" variant="secondary">View Audit Logs</Button>
+	</div>
+
 	{#if form?.error}
 		<p class="text-destructive text-lg">{form.error}</p>
 	{/if}

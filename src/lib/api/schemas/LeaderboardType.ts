@@ -12,7 +12,7 @@ export type LeaderboardType = (typeof LeaderboardType)[keyof typeof LeaderboardT
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LeaderboardType = {
-	Current: 0,
-	Weekly: 1,
-	Monthly: 2,
+	Current: 'Current',
+	Weekly: 'Weekly',
+	Monthly: 'Monthly',
 } as const;

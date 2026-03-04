@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { PUBLIC_COMMUNITY_INVITE, PUBLIC_WEIGHT_REQ } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { Button } from 'bits-ui';
 	import { createEventDispatcher } from 'svelte';
+	const { PUBLIC_COMMUNITY_INVITE, PUBLIC_WEIGHT_REQ } = env;
 
 	const dispatch = createEventDispatcher();
 

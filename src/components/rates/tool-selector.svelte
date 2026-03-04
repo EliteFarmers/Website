@@ -1,8 +1,9 @@
 <script lang="ts">
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
+	import { PROPER_CROP_NAME, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
-	import { getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
+	import * as Select from '$ui/select';
 	import type { FarmingTool } from 'farming-weight';
 	import Toolconfig from './toolconfig.svelte';
 
@@ -28,25 +29,77 @@
 	let show = $state(2);
 	let tools = $derived(toolList ?? $player.tools);
 
-	let filtered = $derived(
-		tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']).slice(0, show)
+	const cropOptions = $derived.by(() =>
+		Object.keys(DEFAULT_SELECTED_CROPS)
+			.sort((a, b) => a.localeCompare(b))
+			.map((crop) => ({ value: crop, label: crop, img: PROPER_CROP_TO_IMG[crop] }))
 	);
+
+	const selectedCrop = $derived(
+		Object.entries($selectedCrops)
+			.find(([, value]) => value)?.[0]
+			?.toString() ?? ''
+	);
+
+	let filtered = $derived(
+		tools
+			.filter((tool) => tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? '']))
+			.slice(0, show)
+	);
+
+	let breakdown = $derived.by(() => {
+		const targetCrop = selectedCropKey ?? selectedCrop;
+		if (
+			$player.selectedTool &&
+			$player.selectedTool.crops.some((crop) => crop === targetCrop || PROPER_CROP_NAME[crop] === targetCrop)
+		) {
+			return $player.selectedTool.fortuneBreakdown;
+		}
+		return undefined;
+	});
 </script>
 
 <div class="flex w-full flex-col items-center gap-4 rounded-md border p-4">
 	<div class="flex w-full items-center justify-between">
-		<p class="text-lg font-semibold">Farming Tool</p>
-		{#if $player.selectedTool && $player.selectedTool.crop === selectedCropKey}
-			<FortuneBreakdown breakdown={$player.selectedTool?.fortuneBreakdown} />
-		{:else}
-			<FortuneBreakdown total={0} />
-		{/if}
+		<div class="flex flex-row items-center gap-2">
+			<p class="text-lg font-semibold">Farming Tool</p>
+			<Select.Simple
+				size="sm"
+				class="h-8"
+				options={cropOptions}
+				value={selectedCrop || undefined}
+				placeholder="Crop"
+				change={(crop?: string) => {
+					if (!crop) return;
+					selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [crop]: true });
+				}}
+			>
+				{#snippet trigger(option)}
+					<div class="flex flex-row items-center gap-1">
+						{#if option?.img}
+							<img src={option.img} alt={option.label} class="h-5 w-5 rounded-sm" />
+						{:else}
+							<span>{option?.label ?? 'Crop'}</span>
+						{/if}
+					</div>
+				{/snippet}
+				{#snippet option(option)}
+					<div class="flex flex-row items-center gap-1">
+						{#if option?.img}
+							<img src={option.img} alt={option.label} class="h-5 w-5 rounded-sm" />
+						{/if}
+						<span>{option?.label ?? 'Crop'}</span>
+					</div>
+				{/snippet}
+			</Select.Simple>
+		</div>
+		<FortuneBreakdown {breakdown} />
 	</div>
 	<hr class="w-full" />
 	<div class="-mx-2 mb-2 flex w-full flex-col gap-2">
 		{#each filtered as tool (tool.item.uuid)}
 			{@const selected = selectedToolId === tool.item.uuid}
-			{#if tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
+			{#if tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? ''])}
 				<button
 					onclick={() => {
 						selectedToolId = tool.item.uuid ?? undefined;
@@ -63,7 +116,7 @@
 		{:else}
 			<p class="text-muted-foreground text-sm">No matching tools found!</p>
 		{/each}
-		{#if $player.tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']).length > 2}
+		{#if $player.tools.filter((tool) => tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? ''])).length > 2}
 			<button
 				onclick={toggleShow}
 				class="hover:bg-card/50 flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm"

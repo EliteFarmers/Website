@@ -13,4 +13,5 @@ export interface ApiAccessDto {
 	collections: boolean;
 	skills: boolean;
 	vault: boolean;
+	museum: boolean;
 }

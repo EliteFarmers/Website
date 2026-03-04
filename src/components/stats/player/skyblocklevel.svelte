@@ -19,7 +19,7 @@
 			{#if rank !== -1}
 				<a
 					href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.current?.profileName ??
-						ctx.selectedProfile?.profileName}"
+						ctx.selectedProfile?.profileName}?fallback={rank}"
 					class="bg-card hover:bg-muted rounded-md px-1.5"
 				>
 					<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"

@@ -142,29 +142,41 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		order: 4,
 		icon: '/images/crops/melon.png',
 	},
-	mushroom: {
+	moonflower: {
 		order: 5,
+		icon: '/images/crops/moonflower.png',
+	},
+	mushroom: {
+		order: 6,
 		icon: '/images/crops/mushroom.png',
 	},
 	netherwart: {
-		order: 6,
+		order: 7,
 		icon: '/images/crops/netherwart.png',
 	},
 	potato: {
-		order: 7,
+		order: 8,
 		icon: '/images/crops/potato.png',
 	},
 	pumpkin: {
-		order: 8,
+		order: 9,
 		icon: '/images/crops/pumpkin.png',
 	},
 	sugarcane: {
-		order: 9,
+		order: 10,
 		icon: '/images/crops/sugarcane.png',
 	},
+	sunflower: {
+		order: 11,
+		icon: '/images/crops/sunflower.png',
+	},
 	wheat: {
-		order: 10,
+		order: 12,
 		icon: '/images/crops/wheat.png',
+	},
+	wildrose: {
+		order: 13,
+		icon: '/images/crops/wildrose.png',
 	},
 	alchemy: {
 		order: 1,
@@ -215,36 +227,48 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		order: 4,
 		icon: '/images/pests/earthworm.png',
 	},
-	slug: {
+	firefly: {
 		order: 5,
+		icon: '/images/pests/firefly.png',
+	},
+	slug: {
+		order: 6,
 		icon: '/images/pests/slug.png',
 	},
 	beetle: {
-		order: 6,
+		order: 7,
 		icon: '/images/pests/beetle.png',
 	},
 	locust: {
-		order: 7,
+		order: 8,
 		icon: '/images/pests/locust.png',
 	},
 	rat: {
-		order: 8,
+		order: 9,
 		icon: '/images/pests/rat.png',
 	},
 	mosquito: {
-		order: 9,
+		order: 10,
 		icon: '/images/pests/mosquito.png',
 	},
+	dragonfly: {
+		order: 11,
+		icon: '/images/pests/dragonfly.png',
+	},
 	fly: {
-		order: 10,
+		order: 12,
 		icon: '/images/pests/fly.png',
 	},
+	mantis: {
+		order: 13,
+		icon: '/images/pests/mantis.png',
+	},
 	mouse: {
-		order: 11,
+		order: 14,
 		icon: '/images/pests/mouse.png',
 	},
 	pests: {
-		order: 12,
+		order: 15,
 	},
 	'cactus-milestone': {
 		order: 1,

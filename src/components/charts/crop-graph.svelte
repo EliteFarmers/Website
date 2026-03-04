@@ -51,10 +51,13 @@
 		wart: 'var(--color-netherwart)',
 		mushroom: 'var(--color-mushroom)',
 		cocoa: 'var(--color-cocoa)',
+		sunflower: 'var(--color-sunflower)',
+		moonflower: 'var(--color-moonflower)',
+		wildrose: 'var(--color-wildrose)',
 	};
 </script>
 
-<div class="m-2 h-[200px] rounded dark:scheme-dark">
+<div class="m-2 h-50 rounded dark:scheme-dark">
 	<Chart
 		{data}
 		x="date"
@@ -119,12 +122,12 @@
 					<div>
 						<p>{getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)} Collection</p>
 						<p class="font-mono">{(+data.value).toLocaleString()}</p>
-						{#if pests}
-							<p class="first-letter:capitalize">
-								{CROP_TO_PEST[getCropFromName(crop) ?? Crop.Wheat]} Kills
-							</p>
-							<p class="font-mono">{(+data.pests).toLocaleString()}</p>
-						{/if}
+						<!-- {#if pests} -->
+						<p class="first-letter:capitalize">
+							{CROP_TO_PEST[getCropFromName(crop) ?? Crop.Wheat]} Kills
+						</p>
+						<p class="font-mono">{(+data.pests).toLocaleString()}</p>
+						<!-- {/if} -->
 					</div>
 				{/snippet}
 			</Tooltip.Root>

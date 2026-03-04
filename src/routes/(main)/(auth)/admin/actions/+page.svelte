@@ -78,6 +78,15 @@
 			</SettingListItem>
 			<SettingSeperator />
 			<SettingListItem
+				title="Sync Redis Leaderboards"
+				description="Completely rebuild all Redis leaderboards from the database."
+			>
+				<form method="post" action="?/syncRedisLbs" class="flex flex-col gap-2" use:enhance>
+					<Button type="submit" class="w-24" variant="destructive">Sync</Button>
+				</form>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem
 				title="Clear Upcoming Contests"
 				description="Clear upcoming jacob's contests if wrong data was submitted."
 			>

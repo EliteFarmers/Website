@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { page } from '$app/state';
 import Home from '@lucide/svelte/icons/home';
 import { getContext, setContext, untrack, type Component, type Snippet } from 'svelte';
@@ -31,6 +32,7 @@ export class Breadcrumb {
 	#overridePath = $state<string | null>(null);
 	#breadcrumbsOverride = $state<Crumb[] | null>(null);
 	#above = $state<boolean>(true);
+	#title = $state<string>('');
 
 	constructor() {
 		$effect.pre(() => {
@@ -68,6 +70,17 @@ export class Breadcrumb {
 
 	get breadcrumbsOverride() {
 		return this.#breadcrumbsOverride;
+	}
+
+	get title() {
+		if (browser) {
+			return this.#title || document.title || 'Untitled';
+		}
+		return this.#title;
+	}
+
+	set title(title: string) {
+		this.#title = title;
 	}
 
 	setBreadcrumbs(crumbs: Crumb[], useHome = true) {

@@ -17,7 +17,7 @@
 
 	{#if progress?.progress?.length}
 		<div class="grid gap-2 md:grid-cols-2">
-			{#each progress.progress as p (p.name + p.fortune + (progress?.item?.uuid ?? ''))}
+			{#each progress.progress as p (p.name + p.current + (progress?.item?.uuid ?? ''))}
 				<FortuneProgress progress={p} barBg="bg-card" />
 			{/each}
 		</div>

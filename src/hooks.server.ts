@@ -1,9 +1,11 @@
-import { PUBLIC_HOST_URL } from '$env/static/public';
+import { env as privateEnv } from '$env/dynamic/private';
+import { env } from '$env/dynamic/public';
 import { FetchUserSession } from '$lib/api/auth';
 import { cache, initCachedItems } from '$lib/servercache';
 import * as Sentry from '@sentry/sveltekit';
 import { redirect, type Handle, type ServerInit } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+const { PUBLIC_HOST_URL } = env;
 
 export const init: ServerInit = async () => {
 	initCachedItems();
@@ -29,13 +31,16 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, re
 
 	// Fetch the user session
 	if (locals.access_token && locals.refresh_token) {
-		locals.session = await FetchUserSession(event.cookies);
+		try {
+			locals.session = await FetchUserSession(event.cookies);
+		} catch {
+			// Ignore errors fetching session
+		}
 		locals.access_token = cookies.get('access_token');
 		locals.refresh_token = cookies.get('refresh_token');
 	}
 
 	if (locals.session?.pending_confirmation && event.url.pathname !== '/login/confirm') {
-		console.log('Redirecting to confirmation page for ID:', locals.session.pending_confirmation.id);
 		redirect(
 			307,
 			`/login/confirm?id=${locals.session.pending_confirmation.id}&redirect=${encodeURIComponent(event.url.pathname)}`
@@ -56,7 +61,16 @@ async function ResolveWithSecurityHeaders(
 	resolve: Parameters<Handle>[0]['resolve'],
 	event: Parameters<Handle>[0]['event']
 ): Promise<ReturnType<Handle>> {
-	const response = await resolve(event);
+	const response = await resolve(event, {
+		transformPageChunk: ({ html }) => {
+			const isAdFree = event.locals.session?.flags?.includes('AD_FREE');
+			const shouldShowAds = !isAdFree && !event.locals.bot;
+			if (shouldShowAds) {
+				return html.replace('%elite.adscript%', privateEnv.AD_SCRIPT || '');
+			}
+			return html.replace('%elite.adscript%', '');
+		},
+	});
 
 	// Security headers
 	response.headers.set('X-Frame-Options', 'SAMEORIGIN');

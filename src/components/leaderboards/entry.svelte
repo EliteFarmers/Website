@@ -35,9 +35,9 @@
 		namePrefix,
 	}: Props = $props();
 
-	let ign = $state(entry.ign);
+	let ign = $derived(entry.ign);
 	let amount = $derived(entry.amount);
-	let profile = $state(entry.profile);
+	let profile = $derived(entry.profile);
 	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
 	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);
 
@@ -75,16 +75,19 @@
 </script>
 
 <div
-	class="bg-background group relative flex h-14 w-full max-w-xl flex-col items-center justify-center overflow-clip rounded-md border bg-no-repeat sm:h-16"
+	class="bg-background group {style
+		? 'dark text-primary'
+		: ''} relative flex h-14 w-full max-w-xl flex-col items-center justify-center overflow-clip rounded-md border bg-no-repeat sm:h-16"
 	style="justify-content: {style?.background?.align ?? 'center'};"
 	data-sveltekit-preload-data="tap"
 >
 	{#if hasStyle}
 		{@const img = style?.background?.imageUrl}
-		<!-- svelte-ignore a11y_missing_attribute -->
 		<img
 			loading="lazy"
 			src={img ?? `/api/lb-style/${entry.meta?.leaderboard?.styleId}/bg.webp`}
+			alt=""
+			aria-hidden="true"
 			class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img ? 'h-full' : ''}"
 		/>
 		<div class="absolute inset-0 rounded-sm bg-linear-to-r from-black/20 via-transparent to-black/20"></div>

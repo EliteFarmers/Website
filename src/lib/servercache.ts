@@ -1,23 +1,31 @@
 import { building, dev } from '$app/environment';
-import { ELITE_API_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+import { env as publicEnv } from '$env/dynamic/public';
 import fs from 'fs/promises';
 import {
 	getAnnouncement,
 	getAuctionHouseProducts,
 	getBazaarProducts,
+	getHypixelGuilds,
+	getLeaderboard,
 	getLeaderboards,
 	getProducts,
+	getPublicGuild,
 	getSkyblockItems,
 	getStyles,
 	getTeamWordList,
 	getUpcomingEvents,
 	skyblockGemShop,
+	SortHypixelGuildsBy,
 	type AnnouncementDto,
 	type AuctionHouseDto,
 	type EventDetailsDto,
 	type EventTeamsWordListDto,
 	type GetBazaarProductsResponse,
 	type GetSkyblockItemsResponse,
+	type GuildDetailsDto,
+	type HypixelGuildDetailsDto,
+	type LeaderboardDto,
 	type ProductDto,
 	type SkyblockGemShopsResponse,
 	type WeightStyleWithDataDto,
@@ -25,6 +33,8 @@ import {
 import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
 import { mdToHtml } from './md';
+const { ELITE_API_URL } = env;
+const { PUBLIC_COMMUNITY_ID } = publicEnv;
 
 const cacheEntries = {
 	events: {
@@ -73,6 +83,25 @@ const cacheEntries = {
 		update: async () => {
 			const { data } = await getLeaderboards();
 			return parseLeaderboards(data);
+		},
+	},
+	homepageLeaderboard: {
+		interval: 900, // 15 minutes
+		data: null as LeaderboardDto | null,
+		update: async () => {
+			const { data } = await getLeaderboard('farmingweight', { offset: 0, limit: 10 }).catch(() => ({
+				data: null,
+			}));
+			return data ?? null;
+		},
+	},
+	communityGuild: {
+		interval: 900, // 15 minutes
+		data: null as GuildDetailsDto | null,
+		update: async () => {
+			if (!PUBLIC_COMMUNITY_ID) return null;
+			const { data } = await getPublicGuild(PUBLIC_COMMUNITY_ID).catch(() => ({ data: null }));
+			return data ?? null;
 		},
 	},
 	bazaar: {
@@ -129,6 +158,20 @@ const cacheEntries = {
 			return await fetchAllArticleCategories();
 		},
 	},
+	topguilds: {
+		data: { guilds: [], total: 0 } as {
+			guilds: HypixelGuildDetailsDto[];
+			total: number | null;
+		},
+		update: async () => {
+			const { data } = await getHypixelGuilds({
+				sortBy: SortHypixelGuildsBy.skyblockExperienceAverage,
+				page: 1,
+				pageSize: 10,
+			}).catch(() => ({ data: undefined }));
+			return { guilds: data?.guilds ?? [], total: data?.totalGuilds ?? null };
+		},
+	},
 };
 
 export const cache = {
@@ -150,6 +193,12 @@ export const cache = {
 	get leaderboards() {
 		return cacheEntries.leaderboards.data;
 	},
+	get homepageLeaderboard() {
+		return cacheEntries.homepageLeaderboard.data;
+	},
+	get communityGuild() {
+		return cacheEntries.communityGuild.data;
+	},
 	get bazaar() {
 		return cacheEntries.bazaar.data;
 	},
@@ -170,6 +219,9 @@ export const cache = {
 	},
 	get categories() {
 		return cacheEntries.categories.data;
+	},
+	get topguilds() {
+		return cacheEntries.topguilds.data;
 	},
 };
 

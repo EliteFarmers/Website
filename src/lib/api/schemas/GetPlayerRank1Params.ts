@@ -26,10 +26,18 @@ export type GetPlayerRank1Params = {
 	 */
 	previous?: number | null;
 	/**
-	 * Start at a specified rank for upcoming players
-	 * @nullable
-	 */
+ * Start at a specified rank for upcoming players.
+Use AtAmount instead for better lookups.
+ * @nullable
+ */
 	atRank?: number | null;
+	/**
+ * Start at a specified score threshold for upcoming players.
+Pass your locally tracked score to get upcoming players
+without needing to calculate the correct rank.
+ * @nullable
+ */
+	atAmount?: number | null;
 	/**
 	 * Time interval key of a monthly leaderboard. Format: yyyy-MM
 	 * @nullable

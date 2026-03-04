@@ -3,6 +3,8 @@
 	import Head from '$comp/head.svelte';
 	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
+	import GardenChips from '$comp/stats/garden/garden-chips.svelte';
+	import Greenhouse from '$comp/stats/garden/greenhouse.svelte';
 	import Milestones from '$comp/stats/garden/milestones.svelte';
 	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
 	import Plots from '$comp/stats/garden/plots.svelte';
@@ -75,11 +77,11 @@
 							{/snippet}
 							<div class="flex flex-col gap-1">
 								<p class="font-semibold">All Crops</p>
-								<p class="max-w-xs break-words whitespace-normal">
+								<p class="max-w-xs wrap-break-word whitespace-normal">
 									<span class="font-semibold">{totalCopperSpent.toLocaleString()}</span> Total Copper
 									Spent <br />
 								</p>
-								<p class="max-w-xs break-words whitespace-normal">
+								<p class="max-w-xs wrap-break-word whitespace-normal">
 									<span class="font-semibold"
 										>{(CROP_UPGRADES_MAX_COST - totalCopperSpent).toLocaleString()}</span
 									> Total Copper Until Max
@@ -90,9 +92,14 @@
 					</div>
 				</div>
 
-				<div class="flex flex-col gap-2 text-lg">
+				<div class="flex flex-wrap gap-2 text-lg">
 					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 						Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
+					</div>
+					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+						DNA Analysis Milestone • <span class="font-semibold"
+							>{ctx.member.current?.unparsed?.dnaMilestone ?? 0} / 6</span
+						>
 					</div>
 				</div>
 
@@ -109,7 +116,8 @@
 						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 							{#if ranks['visitors-accepted']?.rank > 0}
 								<a
-									href="/leaderboard/visitors-accepted/{page.params.id}-{page.params.profile}"
+									href="/leaderboard/visitors-accepted/{page.params.id}-{page.params
+										.profile}?fallback={ranks['visitors-accepted']?.rank}"
 									class="bg-card hover:bg-muted rounded-md px-1.5"
 								>
 									<span class="text-sm">#</span><span class="text-md"
@@ -138,6 +146,10 @@
 			</div>
 		</div>
 	</section>
+
+	<Greenhouse />
+
+	<GardenChips />
 
 	<ComposterUpgrades />
 

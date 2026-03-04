@@ -1,23 +1,51 @@
-import { error } from '@sveltejs/kit';
+import { getPlayerLeaderboardRanks, getWithTimeout } from '$lib/api';
+import { getProfileMember, getProfilesAccount } from '$lib/remote';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ parent, locals }) => {
-	const { account, profile, session } = await parent();
-	const authorized = session?.perms?.support;
+export const load: LayoutServerLoad = async ({ params, locals }) => {
+	const profileDataPromise = getProfilesAccount({
+		id: params.id,
+		profile: params.profile,
+	});
 
-	if (!account.id || !account.name || !profile.profileId) {
-		throw error(404, 'Player not found');
-	}
+	if (locals.bot) {
+		const profileData = await profileDataPromise;
 
-	if (account.settings?.nameStyle?.id) {
-		const style = locals.cache?.styleLookup?.[account.settings.nameStyle?.id];
+		if (profileData.account?.id && profileData.profile?.profileId) {
+			const [memberData, ranksData] = await Promise.all([
+				getProfileMember({
+					playerUuid: profileData.account.id,
+					profileUuid: profileData.profile.profileId ?? '',
+				}),
+				getWithTimeout(
+					(signal) =>
+						getPlayerLeaderboardRanks(
+							profileData.account.id,
+							profileData.profile.profileId ?? '',
+							undefined,
+							{
+								signal,
+							}
+						).then((res) => res.data),
+					500
+				),
+			]);
+
+			return {
+				profileData,
+				ssrProfileData: profileData,
+				ssrMemberData: memberData ?? undefined,
+				ssrRanksData: ranksData ?? undefined,
+			};
+		}
+
 		return {
-			authorized,
-			style: style ?? undefined,
+			profileData,
+			ssrProfileData: profileData,
 		};
 	}
 
 	return {
-		authorized,
+		profileData: profileDataPromise,
 	};
-}) satisfies LayoutServerLoad;
+};

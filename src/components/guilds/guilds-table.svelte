@@ -53,9 +53,9 @@
 	}: DataTableProps<TData, TValue> = $props();
 
 	let rowSelection = $state<RowSelectionState>({});
-	let columnVisibility = $state<VisibilityState>(initialVisibility);
-	let columnFilters = $state<ColumnFiltersState>(initialFilters);
-	let sorting = $state<SortingState>(initialSorting);
+	let columnVisibility = $derived<VisibilityState>(initialVisibility);
+	let columnFilters = $derived<ColumnFiltersState>(initialFilters);
+	let sorting = $derived<SortingState>(initialSorting);
 	const pagination = $derived.by(() => ({ pageIndex, pageSize }));
 	const table = createSvelteTable({
 		get data() {
@@ -78,9 +78,9 @@
 				return pagination;
 			},
 		},
-		columns,
+		columns: (() => columns)(),
 		enableRowSelection: true,
-		manualPagination,
+		manualPagination: (() => manualPagination)(),
 		get pageCount() {
 			return pageCount;
 		},
@@ -122,7 +122,7 @@
 		},
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		...(manualPagination ? {} : { getPaginationRowModel: getPaginationRowModel() }),
+		...(() => (manualPagination ? {} : { getPaginationRowModel: getPaginationRowModel() }))(),
 		getSortedRowModel: getSortedRowModel(),
 		getFacetedRowModel: getFacetedRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),

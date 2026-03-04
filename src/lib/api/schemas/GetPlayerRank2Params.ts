@@ -29,6 +29,10 @@ export type GetPlayerRank2Params = {
 	/**
 	 * @nullable
 	 */
+	atAmount?: number | null;
+	/**
+	 * @nullable
+	 */
 	interval?: string | null;
 	/**
 	 * @nullable

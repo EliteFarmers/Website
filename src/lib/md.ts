@@ -1,7 +1,8 @@
-import { ORIGIN } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import DOMPurify from 'isomorphic-dompurify';
 import { parse, parseInline } from 'marked';
 import { createRawSnippet } from 'svelte';
+const { ORIGIN } = env;
 
 if (!ORIGIN) {
 	// This is just to make sure this module can't be imported into the browser

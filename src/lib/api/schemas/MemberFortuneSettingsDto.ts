@@ -8,15 +8,17 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 import type { MemberFortuneSettingsDtoAttributes } from './MemberFortuneSettingsDtoAttributes';
-import type { MemberFortuneSettingsDtoExported } from './MemberFortuneSettingsDtoExported';
+import type { MemberFortuneSettingsDtoChips } from './MemberFortuneSettingsDtoChips';
 
 export interface MemberFortuneSettingsDto {
 	/** Amount of strength used for mooshroom fortune */
 	strength: number;
 	/** Community center farming fortune level */
 	communityCenter: number;
+	/** Consumed Filled Rosewater Flasks */
+	rosewaterFlasks: number;
 	/** Attribute shards */
 	attributes: MemberFortuneSettingsDtoAttributes;
-	/** Exported crops */
-	exported: MemberFortuneSettingsDtoExported;
+	/** Garden chips */
+	chips: MemberFortuneSettingsDtoChips;
 }

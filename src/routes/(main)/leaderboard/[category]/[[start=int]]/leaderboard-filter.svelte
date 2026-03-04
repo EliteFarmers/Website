@@ -14,6 +14,7 @@
 	type Props = {
 		query: string;
 		title: string;
+		disabled?: boolean;
 		options: {
 			label: string;
 			value: string;
@@ -23,7 +24,7 @@
 		}[];
 	};
 
-	let { query, title, options }: Props = $props();
+	let { query, title, options, disabled = false }: Props = $props();
 
 	let selectedValue = $derived(page.url.searchParams.get(query) ?? '');
 </script>
@@ -31,7 +32,7 @@
 <Popover.Root>
 	<Popover.Trigger>
 		{#snippet child({ props })}
-			<Button {...props} variant="outline" size="sm" class="h-8 border-dashed">
+			<Button {...props} variant="outline" size="sm" class="h-8 border-dashed" {disabled}>
 				<Funnel />
 				{title}
 				{#if selectedValue}
@@ -50,7 +51,7 @@
 			</Button>
 		{/snippet}
 	</Popover.Trigger>
-	<Popover.Content class="w-[200px] p-0" align="start">
+	<Popover.Content class="w-50 p-0" align="start">
 		<Command.Root>
 			<!-- <Command.Input placeholder={title} /> -->
 			<Command.List>

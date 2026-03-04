@@ -10,6 +10,12 @@
 
 	onMount(async () => {
 		ctx.user = data.user;
+
+		if (data.firstLogin) {
+			goto(data.redirect ? '/onboarding?redirect=' + encodeURIComponent(data.redirect) : '/onboarding');
+			return;
+		}
+
 		goto(data.redirect ?? '/');
 	});
 </script>

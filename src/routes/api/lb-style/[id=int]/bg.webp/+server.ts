@@ -1,13 +1,15 @@
+import { env } from '$env/dynamic/public';
 import { cache } from '$lib/servercache';
 import { getLeaderboardBackground } from '$lib/styles/render';
 import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+const { PUBLIC_HOST_URL } = env;
 
 export async function OPTIONS() {
 	return new Response(null, {
 		headers: {
-			'Access-Control-Allow-Origin': 'elitebot.dev',
+			'Access-Control-Allow-Origin': PUBLIC_HOST_URL.replace('https://', ''),
 			'Access-Control-Allow-Methods': 'GET, OPTIONS',
 		},
 	});
@@ -31,13 +33,13 @@ export const GET: RequestHandler = async ({ params, setHeaders }) => {
 
 	setHeaders({
 		'Cache-Control': 'max-age=3600, public',
-		'Access-Control-Allow-Origin': 'elitebot.dev',
+		'Access-Control-Allow-Origin': PUBLIC_HOST_URL.replace('https://', ''),
 	});
 
 	return new Response(new Uint8Array(buffer), {
 		headers: {
 			'Content-Type': 'image/webp',
-			'Access-Control-Allow-Origin': 'elitebot.dev',
+			'Access-Control-Allow-Origin': PUBLIC_HOST_URL.replace('https://', ''),
 		},
 	});
 };

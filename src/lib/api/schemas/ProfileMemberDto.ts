@@ -8,6 +8,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 import type { ApiAccessDto } from './ApiAccessDto';
+import type { ProfileMemberNetworthDto } from './ProfileMemberNetworthDto';
 import type { ProfileMemberDtoMeta } from './ProfileMemberDtoMeta';
 import type { ProfileMemberDtoCollections } from './ProfileMemberDtoCollections';
 import type { ProfileMemberDtoCollectionTiers } from './ProfileMemberDtoCollectionTiers';
@@ -19,6 +20,7 @@ import type { JacobDataDto } from './JacobDataDto';
 import type { FarmingWeightDto } from './FarmingWeightDto';
 import type { ProfileMemberDtoGarden } from './ProfileMemberDtoGarden';
 import type { SkillsDto } from './SkillsDto';
+import type { ProfileMemberDataDto } from './ProfileMemberDataDto';
 import type { ChocolateFactoryDto } from './ChocolateFactoryDto';
 import type { ProfileEventMemberDto } from './ProfileEventMemberDto';
 import type { HypixelInventoryOverviewDto } from './HypixelInventoryOverviewDto';
@@ -32,6 +34,8 @@ export interface ProfileMemberDto {
 	socialXp: number;
 	purse: number;
 	bankBalance: number;
+	personalBank: number;
+	networth: ProfileMemberNetworthDto;
 	/** @nullable */
 	meta?: ProfileMemberDtoMeta;
 	collections: ProfileMemberDtoCollections;
@@ -45,10 +49,12 @@ export interface ProfileMemberDto {
 	/** @nullable */
 	garden?: ProfileMemberDtoGarden;
 	skills: SkillsDto;
+	memberData: ProfileMemberDataDto;
 	chocolateFactory: ChocolateFactoryDto;
 	events: ProfileEventMemberDto[];
 	inventories: HypixelInventoryOverviewDto[];
 	isSelected: boolean;
 	wasRemoved: boolean;
 	lastUpdated: bigint;
+	lastDataChanged: bigint;
 }

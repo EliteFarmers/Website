@@ -1,4 +1,5 @@
-import { PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
+import { env } from '$env/dynamic/public';
+const { PUBLIC_DISCORD_REDIRECT_ROUTE } = env;
 import { getAcceptConfirmationUrl, login } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
@@ -78,12 +79,14 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		path: '/',
 	});
 
+	const first = loginResponse.first_login ? '&first=true' : '';
+
 	if (loginResponse.pending_confirmation) {
 		throw redirect(
 			307,
-			`/login/confirm?id=${loginResponse.pending_confirmation.id}&redirect=${redirectTo}&attempt=${attemptCount}`
+			`/login/confirm?id=${loginResponse.pending_confirmation.id}&redirect=${redirectTo}&attempt=${attemptCount}${first}`
 		);
 	}
 
-	redirect(307, `/login?success=true&redirect=${redirectTo}&attempt=${attemptCount}`);
+	redirect(307, `/login?success=true&redirect=${redirectTo}&attempt=${attemptCount}${first}`);
 };

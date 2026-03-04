@@ -20,4 +20,5 @@ export interface SkillsDto {
 	runecrafting: number;
 	taming: number;
 	social: number;
+	hunting: number;
 }

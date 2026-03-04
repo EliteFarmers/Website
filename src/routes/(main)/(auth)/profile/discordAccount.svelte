@@ -30,7 +30,7 @@
 		<UserIcon
 			user={account}
 			size={512}
-			class="bg-card pointer-events-none absolute bottom-0 left-4 z-30 size-44 translate-y-16 overflow-hidden rounded-full p-2 select-none"
+			class="bg-card pointer-events-none absolute bottom-0 left-4 z-30 size-32 translate-y-16 overflow-hidden rounded-full select-none"
 		/>
 	</div>
 	<div class="relative mt-16 flex flex-row items-center gap-4 p-4">

@@ -42,6 +42,7 @@
 {:else}
 	<ResponsiveImage
 		image={guild.icon}
+		data-discord-avatar=""
 		loading="lazy"
 		class="w-{size} h-{size} rounded-md {className ?? ''}"
 		alt="Server Icon"

@@ -73,6 +73,7 @@ export const DEFAULT_SKILL_CAPS = {
 	carpentry: 50,
 	runecrafting: 25,
 	social: 25,
+	hunting: 25,
 };
 
 export const CONDITIONAL_SKILL_CAPS = {

@@ -12,6 +12,7 @@
 		variant = 'sidebar',
 		collapsible = 'offcanvas',
 		class: className,
+		style,
 		children,
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
@@ -22,11 +23,13 @@
 
 	const sidebar = useSidebar();
 	const adCtx = getAdCtx();
+	const bottomMargin = $derived(adCtx.bottomAnchorSize.height);
 </script>
 
 {#if collapsible === 'none'}
 	<div
 		class={cn('bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col', className)}
+		{style}
 		bind:this={ref}
 		{...restProps}
 	>
@@ -46,7 +49,7 @@
 				<Sheet.Title>Sidebar</Sheet.Title>
 				<Sheet.Description>Displays the mobile sidebar.</Sheet.Description>
 			</Sheet.Header>
-			<div class="flex h-full w-full flex-col" style="margin-bottom: {adCtx.bottomAnchorSize.height}px;">
+			<div class="flex h-full w-full flex-col" style="margin-bottom: {bottomMargin}px;">
 				{@render children?.()}
 			</div>
 		</Sheet.Content>
@@ -76,7 +79,7 @@
 		<div
 			data-slot="sidebar-container"
 			class={cn(
-				'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
+				'fixed top-0 z-10 hidden w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
 				side === 'left'
 					? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
 					: 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -86,6 +89,7 @@
 					: 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
 				className
 			)}
+			style={`${style ? `${style}; ` : ''}bottom: ${bottomMargin}px;`}
 			{...restProps}
 		>
 			<div

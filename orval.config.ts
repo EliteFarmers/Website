@@ -39,6 +39,22 @@ export default defineConfig({
 			namingConvention: 'PascalCase',
 			override: {
 				useBigInt: true,
+				zod: {
+					coerce: {
+						param: ['boolean', 'bigint'],
+						query: ['boolean', 'bigint'],
+						body: ['boolean', 'bigint'],
+						header: ['boolean', 'bigint'],
+						response: ['boolean', 'bigint'],
+					},
+					generate: {
+						param: true,
+						body: true,
+						response: false,
+						query: true,
+						header: true,
+					},
+				},
 				transformer: './src/lib/api/util/zod-transformer.ts',
 			},
 		},

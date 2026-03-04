@@ -27,37 +27,39 @@
 	{@render collapsed?.()}
 {:else}
 	<Sidebar.Group data-sveltekit-preload-data="tap">
-		<Collapsible.Root {open} class="group/collapsible">
-			{#snippet child({ props })}
-				<Sidebar.MenuItem {...props}>
-					<Collapsible.Trigger>
-						{#snippet child({ props })}
-							<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
-								{#snippet tooltipContent()}
-									<span class="inline-block first-letter:capitalize">{title}</span>
-								{/snippet}
-								{#if !sidebar.open && !sidebar.isMobile}
+		<Sidebar.Menu>
+			<Collapsible.Root {open} class="group/collapsible">
+				{#snippet child({ props })}
+					<Sidebar.MenuItem {...props}>
+						<Collapsible.Trigger>
+							{#snippet child({ props })}
+								<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
+									{#snippet tooltipContent()}
+										<span class="inline-block first-letter:capitalize">{title}</span>
+									{/snippet}
+									{#if !sidebar.open && !sidebar.isMobile}
+										<ChevronRight
+											class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+										/>
+									{/if}
+									<span>{title}</span>
 									<ChevronRight
 										class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
 									/>
-								{/if}
-								<span>{title}</span>
-								<ChevronRight
-									class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-								/>
-							</Sidebar.MenuButton>
-						{/snippet}
-					</Collapsible.Trigger>
-					<Collapsible.Content>
-						<Sidebar.Menu>
-							{#each items as mainItem, i (i)}
-								{@render content(mainItem, i === items.length - 1)}
-							{/each}
-						</Sidebar.Menu>
-					</Collapsible.Content>
-				</Sidebar.MenuItem>
-			{/snippet}
-		</Collapsible.Root>
+								</Sidebar.MenuButton>
+							{/snippet}
+						</Collapsible.Trigger>
+						<Collapsible.Content>
+							<Sidebar.Menu>
+								{#each items as mainItem, i (i)}
+									{@render content(mainItem, i === items.length - 1)}
+								{/each}
+							</Sidebar.Menu>
+						</Collapsible.Content>
+					</Sidebar.MenuItem>
+				{/snippet}
+			</Collapsible.Root>
+		</Sidebar.Menu>
 	</Sidebar.Group>
 {/if}
 

@@ -9,5 +9,5 @@
 {:else if node.children.length === 1 && node.children[0].type === 'text' && node.children[0].text === ''}
 	<br />
 {:else}
-	<p class="leading-7 not-first:mt-6"><InlineRenderer nodes={node.children} {modifiers} /></p>
+	<p class="leading-7 wrap-break-word not-first:mt-6"><InlineRenderer nodes={node.children} {modifiers} /></p>
 {/if}

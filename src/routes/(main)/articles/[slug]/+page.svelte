@@ -1,25 +1,27 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
 	import type { RootNode } from '$comp/blocks/blocks';
 	import Head from '$comp/head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
-	import { PUBLIC_HOST_URL, PUBLIC_STRAPI_API_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import ArticleAuthor from '../article-author.svelte';
 	import type { PageProps } from './$types';
+	const { PUBLIC_HOST_URL, PUBLIC_STRAPI_API_URL } = env;
 
 	let { data }: PageProps = $props();
 
 	const article = $derived(data.article);
 
-	const page = getPageCtx();
+	const pageCtx = getPageCtx();
 	const crumbs = $derived([
 		{ name: 'Articles', href: '/articles' },
 		{ name: article.title ?? 'Untitled Article', href: `/articles/${article.slug}` },
 	]);
 
 	$effect(() => {
-		page.setBreadcrumbs(crumbs);
+		pageCtx.setBreadcrumbs(crumbs);
 	});
 
 	const fullCoverUrl = $derived(
@@ -45,11 +47,11 @@
 		},
 		author: {
 			'@type': 'Person',
-			name: article.author?.name || 'elitebot.dev Team',
+			name: article.author?.name || `${page.url.hostname} Team`,
 		},
 		publisher: {
 			'@type': 'Organization',
-			name: 'elitebot.dev',
+			name: page.url.hostname,
 			logo: {
 				'@type': 'ImageObject',
 				url: `${PUBLIC_HOST_URL}/favicon.webp`, // Replace with your actual logo URL
@@ -62,7 +64,7 @@
 
 <Head
 	title={article.metaTitle ?? article.title ?? 'Elite | Skyblock Farming Weight'}
-	description={article.metaDescription ?? article.summary ?? 'Read this article on elitebot.dev!'}
+	description={article.metaDescription ?? article.summary ?? `Read this article on ${page.url.hostname}!`}
 	imageUrl={fullCoverUrl}
 	canonicalPath="/articles/{article.slug}"
 	twitterCardType="summary_large_image"
@@ -91,6 +93,9 @@
 		<ArticleAuthor {article}>
 			{#if article.releasedAt}
 				<DateDisplay timestamp={new Date(article.releasedAt).getTime()} />
+				{#if new Date(article.releasedAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
+					<span class="text-completed text-sm font-semibold">NEW</span>
+				{/if}
 			{/if}
 		</ArticleAuthor>
 

@@ -20,5 +20,9 @@ export interface NetworthResult {
 	calculation?: NetworthCalculation[] | null;
 	soulbound: boolean;
 	cosmetic: boolean;
-	unsoulboundNetworth: number;
+	liquidNetworth: number;
+	functionalNetworth: number;
+	liquidFunctionalNetworth: number;
+	cosmeticValue: number;
+	illiquidValue: number;
 }

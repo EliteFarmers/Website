@@ -31,6 +31,7 @@ export default ts.config(
 		},
 		rules: {
 			'svelte/no-navigation-without-resolve': 'off', // To be fixed later
+			'svelte/no-unused-svelte-ignore': 'off',
 		},
 	},
 	{
@@ -43,12 +44,19 @@ export default ts.config(
 			'node_modules',
 			'static',
 			'.velite',
+			'packages/',
 		],
 	},
 	{
 		files: ['**/*.ts', '**/*.svelte'],
 		rules: {
 			'no-undef': 'off', // TypeScript checks for this already
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: ['farming-weight/dist/*'],
+				},
+			],
 		},
 	}
 );
