@@ -8,13 +8,14 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export type GetBlockTextureParams = {
+export type SearchBazaarProductsParams = {
 	/**
 	 * @nullable
 	 */
-	packs?: string | null;
+	query?: string | null;
 	/**
 	 * @nullable
 	 */
-	face?: string | null;
+	category?: string | null;
+	limit: number;
 };

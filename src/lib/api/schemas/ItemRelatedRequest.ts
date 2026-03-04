@@ -8,6 +8,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export interface ApproveCommentRequest {
+export interface ItemRelatedRequest {
 	[key: string]: unknown;
 }
