@@ -19,7 +19,8 @@
 		useButton = true,
 		class: className,
 		search: searchStr = $bindable(''),
-		cmd: command = (skyblockId: string) => goto(`/auctions/${skyblockId}`),
+		cmd: command = (skyblockId: string) =>
+			goto(`/markets/item/${encodeURIComponent(skyblockId)}`),
 		...rest
 	}: ButtonProps & {
 		open?: boolean;

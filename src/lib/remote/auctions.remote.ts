@@ -2,11 +2,11 @@ import { query } from '$app/server';
 import {
 	getAuctionHouseOverview,
 	getAuctionPriceHistory,
-	getAuctionVariants,
 	getItemEndedAuctions as getItemEndedAuctionsApi,
 	getPopularAuctions,
 	type GetAuctionPriceHistoryResponse,
 } from '$lib/api';
+import { cache } from '$lib/servercache';
 import * as z from 'zod';
 
 export const getAuctionsOverview = query(async () => {
@@ -24,13 +24,23 @@ export const getItemEndedAuctions = query(z.string(), async (itemId: string) => 
 	return response.data;
 });
 
-// interface AuctionItemPriceHistory {
-
-// }
+export const getItemEndedAuctionsByVariant = query(
+	z.object({
+		itemId: z.string(),
+		variant: z.string().optional(),
+		limit: z.number().int().positive().optional(),
+	}),
+	async ({ itemId, variant, limit }) => {
+		const response = await getItemEndedAuctionsApi(itemId, {
+			limit: limit ?? 10,
+			variant,
+		});
+		return response.data;
+	}
+);
 
 export const getAuctionItem = query(z.string(), async (itemId: string) => {
-	const response = await getAuctionVariants(itemId);
-	const variants = response.data?.variants ?? [];
+	const variants = cache.auctions?.items?.[itemId] ?? [];
 
 	const result = {
 		variants: variants,
@@ -39,8 +49,7 @@ export const getAuctionItem = query(z.string(), async (itemId: string) => {
 
 	for (const variant of variants) {
 		const key = variant.variantKey ? variant.variantKey : 'default';
-		console.log('Fetching history for variant:', key);
-		result.history[key] = (await getAuctionPriceHistory(variant.skyblockId, key)).data;
+		result.history[key] = (await getAuctionPriceHistory(itemId, key).catch(() => null))?.data;
 	}
 
 	return result;

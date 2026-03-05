@@ -393,3 +393,17 @@ export function getStatColor(stat: Stat, ratio: number): string | null {
 			return 'bg-muted';
 	}
 }
+
+/**
+ * Formats a given Skyblock Item ID into a readable name.
+ * Ex: ENCHANTED_PORK -> Enchanted Pork
+ * @param itemId The item ID to format
+ * @returns The formatted item name
+ */
+export function formatItemIdToName(itemId?: string | null): string {
+	if (!itemId) return '';
+	return itemId
+		.split('_')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(' ');
+}

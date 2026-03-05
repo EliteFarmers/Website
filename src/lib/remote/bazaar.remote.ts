@@ -3,42 +3,59 @@ import {
 	getBazaarOverview as getBazaarOverviewApi,
 	getBazaarProduct,
 	getBazaarProductHistory,
-	getBazaarProducts,
+	searchBazaarProducts as searchBazaarProductsApi,
 } from '$lib/api';
+import { cache } from '$lib/servercache';
 import * as z from 'zod';
-
-export const getAllBazaarProducts = query(async () => {
-	const response = await getBazaarProducts();
-	const products = response?.data?.products ?? {};
-	return Object.entries(products).map(([key, value]) => ({
-		productId: key,
-		...value,
-	}));
-});
 
 export const getBazaarOverview = query(async () => {
 	const response = await getBazaarOverviewApi();
 	return response.data;
 });
 
-export const getBazaarItem = query(z.string(), async (itemId: string) => {
-	console.log(`Fetching bazaar item: ${itemId}`);
-	try {
-		const productResponse = await getBazaarProduct(itemId);
-		const historyResponse = await getBazaarProductHistory(itemId, { timespan: '1w' });
-
-		if (!productResponse.data) {
-			throw new Error('Product not found');
+export const searchBazaarProducts = query(
+	z.object({
+		query: z.string(),
+		limit: z.number().int().positive().optional(),
+	}),
+	async ({ query, limit }) => {
+		const trimmed = query.trim();
+		if (!trimmed) {
+			return [];
 		}
 
-		console.log(`Fetched bazaar item: ${itemId}`, productResponse.data, historyResponse.data);
+		const response = await searchBazaarProductsApi({
+			query: trimmed,
+			limit: limit ?? 60,
+		});
 
-		return {
-			product: productResponse.data.product,
-			history: historyResponse.data,
-		};
-	} catch (error) {
-		console.error(`Error fetching bazaar item ${itemId}:`, error);
-		throw error;
+		return (response.data?.products ?? []).map((product) => ({
+			productId: product.itemId,
+			...product.summary,
+		}));
 	}
+);
+
+export const getBazaarItem = query(z.string(), async (itemId: string) => {
+	const upperItemId = itemId.toUpperCase();
+	const resolvedItemId = cache.bazaar?.products?.[itemId] ? itemId : upperItemId;
+
+	const cachedProduct = cache.bazaar?.products?.[resolvedItemId];
+
+	let product = cachedProduct;
+	if (!product?.orders) {
+		const productResponse = await getBazaarProduct(resolvedItemId).catch(() => null);
+		product = productResponse?.data?.product ?? product;
+	}
+
+	if (!product) {
+		return null;
+	}
+
+	const historyResponse = await getBazaarProductHistory(resolvedItemId, { timespan: '1w' }).catch(() => null);
+
+	return {
+		product,
+		history: historyResponse?.data ?? null,
+	};
 });
