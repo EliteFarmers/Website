@@ -10,19 +10,19 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 import type { InventoryItemMetaResponseNetworth } from './InventoryItemMetaResponseNetworth';
 
 export interface InventoryItemMetaResponse {
-	/**
-	 * Texture Pack ID where the item texture is located
-	 * @nullable
-	 */
-	packId?: string | null;
-	/**
-	 * Variant key for price lookups
-	 * @nullable
-	 */
-	variantKey?: string | null;
-	/**
-	 * Networth calculation result for this item
-	 * @nullable
-	 */
-	networth?: InventoryItemMetaResponseNetworth;
+  /**
+   * Texture Pack ID where the item texture is located
+   * @nullable
+   */
+  packId?: string | null;
+  /**
+   * Variant key for price lookups
+   * @nullable
+   */
+  variantKey?: string | null;
+  /**
+   * Networth calculation result for this item
+   * @nullable
+   */
+  networth?: InventoryItemMetaResponseNetworth;
 }
