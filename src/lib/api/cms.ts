@@ -5,22 +5,41 @@ import qs from 'qs';
 import * as z from 'zod';
 const { STRAPI_API_URL, STRAPI_TOKEN } = env;
 
+function logCmsError(message: string, error?: unknown) {
+	if (!STRAPI_TOKEN || !STRAPI_API_URL) {
+		return;
+	}
+
+	if (error === undefined) {
+		console.error(message);
+		return;
+	}
+
+	console.error(message, error);
+}
+
 export async function fetchCmsData<T>(endpoint: string): Promise<T | null> {
 	if (!STRAPI_TOKEN || !STRAPI_API_URL) {
 		return null;
 	}
 
-	const res = await fetch(`${STRAPI_API_URL}/api${endpoint}`, {
-		headers: {
-			Authorization: `Bearer ${STRAPI_TOKEN}`,
-		},
-	});
+	try {
+		const res = await fetch(`${STRAPI_API_URL}/api${endpoint}`, {
+			headers: {
+				Authorization: `Bearer ${STRAPI_TOKEN}`,
+			},
+		});
 
-	if (!res.ok) {
-		throw new Error(`Failed to fetch CMS data from ${endpoint}: ${res.status} ${res.statusText}`);
+		if (!res.ok) {
+			logCmsError(`Failed to fetch CMS data from ${endpoint}: ${res.status} ${res.statusText}`);
+			return null;
+		}
+
+		return await (res.json() as Promise<T>);
+	} catch (error) {
+		logCmsError(`Failed to fetch CMS data from ${endpoint}:`, error);
+		return null;
 	}
-
-	return await (res.json() as Promise<T>);
 }
 
 export async function fetchArticleBySlug(slug: string) {
@@ -54,11 +73,11 @@ export async function fetchArticleBySlug(slug: string) {
 
 	const data = await fetchCmsData<z.infer<typeof articleGetArticlesResponse>>(`/articles?${query}`);
 
-	if (data?.data.length === 0) {
+	if (!data?.data?.length) {
 		return null;
 	}
 
-	return data?.data[0];
+	return data.data[0] ?? null;
 }
 
 const formatSchema = z.object({
@@ -146,51 +165,56 @@ const paginatedArticlesResponseSchema = z.object({
  * @returns
  */
 export async function fetchArticlesPaginated(page: number, pageSize: number, ascending = false, category?: string) {
-	const query = qs.stringify(
-		{
-			pagination: {
-				page: page,
-				pageSize: pageSize,
-			},
-			sort: ['releasedAt:' + (ascending ? 'asc' : 'desc')],
-			filters: category ? { categories: { slug: { $eq: category } } } : undefined,
-			fields: ['title', 'releasedAt', 'summary', 'slug', 'lastUpdated'],
-			populate: {
-				cover: true,
-				author: {
-					fields: ['name'],
-					populate: {
-						avatar: {
-							fields: ['url'],
+	try {
+		const query = qs.stringify(
+			{
+				pagination: {
+					page: page,
+					pageSize: pageSize,
+				},
+				sort: ['releasedAt:' + (ascending ? 'asc' : 'desc')],
+				filters: category ? { categories: { slug: { $eq: category } } } : undefined,
+				fields: ['title', 'releasedAt', 'summary', 'slug', 'lastUpdated'],
+				populate: {
+					cover: true,
+					author: {
+						fields: ['name'],
+						populate: {
+							avatar: {
+								fields: ['url'],
+							},
 						},
 					},
-				},
-				categories: {
-					fields: ['name', 'slug'],
-				},
-				tags: {
-					fields: ['name', 'slug'],
+					categories: {
+						fields: ['name', 'slug'],
+					},
+					tags: {
+						fields: ['name', 'slug'],
+					},
 				},
 			},
-		},
-		{
-			encodeValuesOnly: true,
+			{
+				encodeValuesOnly: true,
+			}
+		);
+
+		const data = await fetchCmsData<unknown>(`/articles?${query}`);
+
+		if (!data) {
+			return null;
 		}
-	);
 
-	const data = await fetchCmsData<unknown>(`/articles?${query}`);
+		const parsed = paginatedArticlesResponseSchema.safeParse(data);
+		if (!parsed.success) {
+			logCmsError('Failed to parse paginated articles:', parsed.error);
+			return null;
+		}
 
-	if (!data) {
+		return parsed.data;
+	} catch (error) {
+		logCmsError('Failed to fetch paginated articles:', error);
 		return null;
 	}
-
-	const parsed = paginatedArticlesResponseSchema.safeParse(data);
-	if (!parsed.success) {
-		console.error('Failed to parse paginated articles:', parsed.error);
-		throw new Error('Failed to parse paginated articles');
-	}
-
-	return parsed.data;
 }
 
 export async function fetchBusinessInfo() {
@@ -219,32 +243,37 @@ export async function fetchBusinessInfo() {
 }
 
 export async function fetchAllArticleCategories() {
-	const query = qs.stringify(
-		{
-			sort: ['name:asc'],
-			fields: ['name', 'slug'],
-			// Check that only categories with at least one article are returned
-			filters: { articles: { id: { $notNull: true } } },
-			populate: {
-				articles: { fields: ['id'] },
+	try {
+		const query = qs.stringify(
+			{
+				sort: ['name:asc'],
+				fields: ['name', 'slug'],
+				// Check that only categories with at least one article are returned
+				filters: { articles: { id: { $notNull: true } } },
+				populate: {
+					articles: { fields: ['id'] },
+				},
 			},
-		},
-		{
-			encodeValuesOnly: true,
+			{
+				encodeValuesOnly: true,
+			}
+		);
+
+		const data = await fetchCmsData<{ data: unknown }>(`/categories?${query}`);
+
+		if (!data?.data) {
+			return null;
 		}
-	);
 
-	const data = await fetchCmsData<{ data: unknown }>(`/categories?${query}`);
+		const parsed = z.array(flatTaxonomyItemSchema).safeParse(data.data);
+		if (!parsed.success) {
+			logCmsError('Failed to parse article categories:', parsed.error);
+			return null;
+		}
 
-	if (!data?.data) {
+		return parsed.data;
+	} catch (error) {
+		logCmsError('Failed to fetch article categories:', error);
 		return null;
 	}
-
-	const parsed = z.array(flatTaxonomyItemSchema).safeParse(data.data);
-	if (!parsed.success) {
-		console.error('Failed to parse article categories:', parsed.error);
-		throw new Error('Failed to parse article categories');
-	}
-
-	return parsed.data;
 }

@@ -4,12 +4,29 @@
 	import { fade } from 'svelte/transition';
 	import type { LayoutData } from './$types';
 	import Content from './content.svelte';
+	import NoProfiles from './no-profiles.svelte';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
+
+	type ProfileData = Awaited<LayoutData['profileData']>;
+
+	function isNoProfiles(
+		data: ProfileData | LayoutData['ssrProfileData'] | undefined
+	): data is ProfileData & { noProfiles: true } {
+		return !!data && 'noProfiles' in data && data.noProfiles === true;
+	}
+
+	function isError(
+		data: ProfileData | LayoutData['ssrProfileData'] | undefined
+	): data is { code: number; error: string } {
+		return !!data && 'code' in data && 'error' in data;
+	}
 </script>
 
 {#if data.ssrProfileData}
-	{#if data.ssrProfileData?.code || data.ssrProfileData?.error}
+	{#if isNoProfiles(data.ssrProfileData)}
+		<NoProfiles account={data.ssrProfileData.account} />
+	{:else if isError(data.ssrProfileData)}
 		{@render profileError(data.ssrProfileData)}
 	{:else}
 		<Content
@@ -30,7 +47,9 @@
 			<p class="font-semibold">Loading data...</p>
 		</div>
 	{:then profile}
-		{#if profile.code || profile.error}
+		{#if isNoProfiles(profile)}
+			<NoProfiles account={profile.account} />
+		{:else if isError(profile)}
 			{@render profileError(profile)}
 		{:else}
 			<Content data={profile as Exclude<typeof profile, { code: number; error: string }>}>
