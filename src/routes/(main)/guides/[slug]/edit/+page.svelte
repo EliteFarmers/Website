@@ -50,6 +50,7 @@
 	let skyblockIconId = $state('');
 	let tags = $state<string[]>([]);
 	let guideId = $state<number | null>(null);
+	let concurrencyVersion = $state(1);
 
 	// UI state
 	let isSaving = $state(false);
@@ -72,6 +73,7 @@
 			markdownContent = g.content;
 			tags = g.tags || [];
 			skyblockIconId = g.iconSkyblockId || '';
+			concurrencyVersion = g.concurrencyVersion || 1;
 
 			// Try to detect if content is JSON blocks format
 			if (g.content && g.content.trim().startsWith('[')) {
@@ -94,7 +96,9 @@
 
 			saveStatus = 'saving';
 			saveTimeout = setTimeout(async () => {
-				await handleSave();
+				if (saveStatus !== 'saving') {
+					await handleSave();
+				}
 			}, 3000); // Auto-save after 3 seconds of inactivity
 		}
 	});
@@ -121,6 +125,7 @@
 				markdownContent: contentToSave,
 				iconSkyblockId: skyblockIconId || undefined,
 				tags: tags.length > 0 ? tags : undefined,
+				concurrency: concurrencyVersion,
 			});
 
 			if (result.error) {
@@ -129,6 +134,7 @@
 			}
 
 			markdownContent = contentToSave;
+			concurrencyVersion = result.version || concurrencyVersion;
 
 			saveStatus = 'saved';
 			lastSaveTime = new Date();
@@ -166,6 +172,7 @@
 					title,
 					description,
 					markdownContent,
+					concurrency: concurrencyVersion,
 				});
 
 				if (saveResult.error) {
@@ -342,7 +349,7 @@
 						<Editor
 							content={markdownContent}
 							onChange={(blocks) => (editorContent = blocks)}
-							class="min-h-[500px]"
+							class="min-h-125"
 						/>
 					{/if}
 				</TabsContent>

@@ -5,7 +5,7 @@
 	import X from '@lucide/svelte/icons/x';
 </script>
 
-<Head title="Elite Farmers Recap" description="Check out your recap for the past year!" />
+<Head title="Elite Skyblock Recap" description="Check out your recap for the past year!" />
 
 <div
 	class="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-linear-to-b from-zinc-900 to-black p-8 text-white"
@@ -72,5 +72,5 @@
 	</div>
 
 	<!-- Footer -->
-	<div class="absolute bottom-4 w-full text-center text-xs text-white/20 md:bottom-8">Elite Farmers &copy; 2025</div>
+	<div class="absolute bottom-4 w-full text-center text-xs text-white/20 md:bottom-8">EliteSkyblock.com</div>
 </div>

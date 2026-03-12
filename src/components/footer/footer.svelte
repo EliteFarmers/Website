@@ -41,7 +41,7 @@
 			<Button variant="link" rel="nofollow noreferrer noopener" class="h-8 p-0" href={PUBLIC_COMMUNITY_INVITE}
 				>Elite Farmers Discord</Button
 			>
-			<Button variant="link" class="h-8 p-0" href="/wiki">Elite Farmers Wiki</Button>
+			<Button variant="link" class="h-8 p-0" href="/wiki">Elite Skyblock Wiki</Button>
 			<Button variant="link" rel="nofollow noreferrer noopener" class="h-8 p-0" href="https://hypixel.net/forums"
 				>Hypixel Forums</Button
 			>

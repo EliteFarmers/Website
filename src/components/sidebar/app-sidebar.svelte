@@ -25,7 +25,7 @@
 		<Sidebar.MenuItem>
 			<Sidebar.MenuButton size="lg">
 				{#snippet tooltipContent()}
-					Elite Farmers
+					Elite Skyblock
 				{/snippet}
 				{#snippet child({ props })}
 					<a
@@ -37,7 +37,7 @@
 						)}
 					>
 						<img src="/favicon.webp" class="aspect-square max-w-8" alt="Elite Logo" />
-						<span class="px-1 leading-none font-semibold sm:text-lg md:text-xl">Elite Farmers</span>
+						<span class="px-1 font-semibold tracking-tight sm:text-lg md:text-xl">Elite Skyblock</span>
 					</a>
 				{/snippet}
 			</Sidebar.MenuButton>
