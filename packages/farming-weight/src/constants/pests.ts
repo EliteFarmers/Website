@@ -224,7 +224,7 @@ export const CROP_TO_PEST: Record<Crop, Pest> = {
 
 export const PEST_COLLECTION_BRACKETS = [0, 50, 100, 250, 500, 750, 1000];
 
-// Taken from https://api.elitebot.dev/weights/all
+// Taken from https://api.eliteskyblock.com/weights/all
 export const PEST_COLLECTION_ADJUSTMENTS: Omit<Record<Pest, Record<number, number>>, Pest.Mouse> = {
 	mite: {
 		'0': 0,

@@ -8,11 +8,6 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: v1
  */
 
-export type GetPopularAuctionsParams = {
-	/**
-	 * @nullable
-	 */
-	timespan?: string | null;
-	page: number;
-	pageSize: number;
-};
+export interface UpdateGuideResponse {
+	concurrencyVersion: number;
+}

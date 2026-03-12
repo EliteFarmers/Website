@@ -2,10 +2,10 @@
 
 The best way to check a player's farming skill/weight in Hypixel skyblock.
 
-**Website:** https://elitebot.dev/ \
-**Donate:** https://elitebot.dev/donate \
-**Community Discord:** https://elitebot.dev/discord \
-**Development/Support Discord:** https://elitebot.dev/support
+**Website:** https://eliteskyblock.com/ \
+**Donate:** https://eliteskyblock.com/donate \
+**Community Discord:** https://eliteskyblock.com/discord \
+**Development/Support Discord:** https://eliteskyblock.com/support
 
 ## Licensing
 
@@ -15,7 +15,7 @@ Folders under `packages/` may have different licenses, see the respective LICENS
 
 ## Developing
 
-Note that this website requires the backend API to be running as well. You can find the repository for that [here](https://github.com/EliteFarmers/API). You _can_ use the actual API at https://api.elitebot.dev, but your access to that will be limited by the ratelimiting policies, and won't be suitable for work with any admin routes because you won't have the permissions needed.
+Note that this website requires the backend API to be running as well. You can find the repository for that [here](https://github.com/EliteFarmers/API). You _can_ use the actual API at https://api.eliteskyblock.com, but your access to that will be limited by the ratelimiting policies, and won't be suitable for work with any admin routes because you won't have the permissions needed.
 
 1. Clone the repo, open the project, and run `pnpm i` to install dependencies
 
@@ -84,4 +84,4 @@ To create a production version of your app, follow these steps.
 
 In order to deploy this site to an actual domain name, you'd have to change the `ORIGIN` and `PUBLIC_HOST_URL` to your domain name, and follow a tutorial elsewhere and point to this address with something like nginx. (Also add your domain name to Discord OAuth urls).
 
-If you have questions, feel free to join the [support Discord server](https://elitebot.dev/support)!
+If you have questions, feel free to join the [support Discord server](https://eliteskyblock.com/support)!
