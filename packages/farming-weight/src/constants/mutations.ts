@@ -113,7 +113,7 @@ export function getGreenhouseMutationRenderSurface(id: string, fallbackSurface: 
 	return GREENHOUSE_MUTATION_RENDER_MAPPINGS[id]?.surface ?? fallbackSurface;
 }
 
-interface GreenhouseMutation {
+export interface GreenhouseMutation {
 	id: string;
 	type: 'MUTATION';
 	rarity: Rarity;
