@@ -5,7 +5,7 @@
  * A backend API for https://eliteskyblock.com/ that provides Hypixel Skyblock data.
 <br><br>
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
- * OpenAPI spec version: v1
+ * OpenAPI spec version: admin-v1
  */
 import * as zod from 'zod';
 
@@ -59,6 +59,13 @@ export const zodGetAccountFromDiscordParams = zod.object({
  */
 export const zodGetAccountSettingsParams = zod.object({
 	discordId: zod.number(),
+});
+
+/**
+ * @summary Claim a Pending Gift
+ */
+export const zodClaimGiftParams = zod.object({
+	orderId: zod.string(),
 });
 
 /**
@@ -223,6 +230,106 @@ export const zodRefreshHypixelGuildParams = zod.object({
 export const zodUnlinkUserAccountBody = zod.object({
 	discordId: zod.string(),
 	player: zod.string(),
+});
+
+/**
+ * @summary Cancel Tebex Recurring Payment (Admin)
+ */
+export const zodCancelRecurringPaymentParams = zod.object({
+	orderId: zod.string(),
+});
+
+/**
+ * @summary Get Order Detail (Admin)
+ */
+export const zodGetAdminOrderDetailParams = zod.object({
+	orderId: zod.string(),
+});
+
+/**
+ * @summary Get Order Provider Events (Admin)
+ */
+export const zodGetOrderEventsParams = zod.object({
+	orderId: zod.string(),
+});
+
+/**
+ * @summary List Orders (Admin)
+ */
+export const zodGetAdminOrdersQueryParams = zod.object({
+	search: zod.string().nullish(),
+	provider: zod.string().nullish(),
+	status: zod.string().nullish(),
+	providerStatus: zod.string().nullish(),
+	transactionId: zod.string().nullish(),
+	basketIdent: zod.string().nullish(),
+	recurringReference: zod.string().nullish(),
+	buyerId: zod.number().nullish(),
+	recipientId: zod.number().nullish(),
+	recipientGuildId: zod.number().nullish(),
+	offset: zod.number(),
+	limit: zod.number(),
+});
+
+/**
+ * @summary Pause Tebex Recurring Payment (Admin)
+ */
+export const zodPauseRecurringPaymentParams = zod.object({
+	orderId: zod.string(),
+});
+
+export const zodPauseRecurringPaymentBody = zod.object({
+	pausedUntil: zod.iso.datetime({}),
+});
+
+/**
+ * @summary Reconcile Order (Admin)
+ */
+export const zodReconcileOrderParams = zod.object({
+	orderId: zod.string(),
+});
+
+/**
+ * @summary Refresh Tebex Provider State (Admin)
+ */
+export const zodRefreshProviderStateParams = zod.object({
+	orderId: zod.string(),
+});
+
+/**
+ * @summary Refund Tebex Order (Admin)
+ */
+export const zodRefundOrderParams = zod.object({
+	orderId: zod.string(),
+});
+
+/**
+ * @summary Replay Tebex Webhook (Admin)
+ */
+export const zodReplayWebhookParams = zod.object({
+	webhookId: zod.string(),
+});
+
+/**
+ * @summary Resolve Gift Recipient (Admin)
+ */
+export const zodResolveRecipientParams = zod.object({
+	orderId: zod.string(),
+});
+
+export const zodResolveRecipientBody = zod
+	.object({
+		recipientType: zod.string(),
+		minecraftUuid: zod.string().nullish(),
+		guildId: zod.string().nullish(),
+	})
+	.describe('Request to manually resolve a gift recipient.');
+
+/**
+ * @summary Resume Tebex Recurring Payment (Admin)
+ */
+export const zodResumeRecurringPaymentParams = zod.object({
+	orderId: zod.string(),
 });
 
 /**
@@ -2806,6 +2913,99 @@ export const zodRemoveTestEntitlementQueryParams = zod.object({
 });
 
 /**
+ * @summary Get Tebex Product Settings
+ */
+export const zodGetTebexProductSettingsParams = zod.object({
+	productId: zod.string(),
+});
+
+/**
+ * @summary Create or Update Tebex Product Settings
+ */
+export const zodUpsertTebexProductSettingsParams = zod.object({
+	productId: zod.string(),
+});
+
+export const zodUpsertTebexProductSettingsBody = zod.object({
+	enabled: zod.coerce.boolean<boolean>(),
+	supportsGifting: zod.coerce.boolean<boolean>(),
+	config: zod
+		.object({
+			allowGiftUser: zod.coerce.boolean<boolean>(),
+			allowGiftGuild: zod.coerce.boolean<boolean>(),
+			creatorCodeAllowed: zod.coerce.boolean<boolean>(),
+			requiresMinecraftIdentity: zod.coerce.boolean<boolean>(),
+			checkoutNameOverride: zod.string().nullish(),
+			checkoutDescriptionOverride: zod.string().nullish(),
+			imageUrlOverride: zod.string().nullish(),
+			billingType: zod.string().nullish(),
+			billingPeriod: zod.string().nullish(),
+			billingFrequency: zod.number().nullish(),
+			variableData: zod
+				.object({
+					entries: zod.array(
+						zod.object({
+							key: zod.string(),
+							value: zod.string(),
+						})
+					),
+				})
+				.nullish(),
+		})
+		.nullish(),
+});
+
+/**
+ * @summary Create Tebex Checkout Session
+ */
+export const zodHiddenCreateTebexCheckoutBody = zod.object({
+	items: zod.array(
+		zod.object({
+			productId: zod.number(),
+			quantity: zod.number(),
+		})
+	),
+	recipient: zod
+		.object({
+			mode: zod.enum(['Self', 'GiftUser', 'GiftGuild']).nullish(),
+			playerUuidOrIgn: zod.string().nullish(),
+			guildId: zod.number().nullish(),
+			message: zod.string().nullish(),
+		})
+		.nullish(),
+	creatorCode: zod.string().nullish(),
+	country: zod.string().nullish(),
+	fingerprint: zod.string().nullish(),
+});
+
+/**
+ * @summary Update Tebex Checkout Session
+ */
+export const zodHiddenUpdateTebexCheckoutParams = zod.object({
+	orderId: zod.string(),
+});
+
+export const zodHiddenUpdateTebexCheckoutBody = zod.object({
+	items: zod.array(
+		zod.object({
+			productId: zod.number(),
+			quantity: zod.number(),
+		})
+	),
+	recipient: zod
+		.object({
+			mode: zod.enum(['Self', 'GiftUser', 'GiftGuild']).nullish(),
+			playerUuidOrIgn: zod.string().nullish(),
+			guildId: zod.number().nullish(),
+			message: zod.string().nullish(),
+		})
+		.nullish(),
+	creatorCode: zod.string().nullish(),
+	country: zod.string().nullish(),
+	fingerprint: zod.string().nullish(),
+});
+
+/**
  * @summary Delete a notification
  */
 export const zodDeleteNotificationParams = zod.object({
@@ -2827,6 +3027,13 @@ export const zodGetNotificationsQueryParams = zod.object({
  */
 export const zodMarkNotificationReadParams = zod.object({
 	id: zod.string(),
+});
+
+/**
+ * @summary Get Order Status
+ */
+export const zodGetOrderStatusParams = zod.object({
+	orderId: zod.string(),
 });
 
 /**

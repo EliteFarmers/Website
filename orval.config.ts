@@ -4,7 +4,7 @@ import { defineConfig } from 'orval';
 export default defineConfig({
 	elite: {
 		input: {
-			target: process.env.ELITE_API_URL + '/openapi/v1.json',
+			target: process.env.ELITE_API_URL + '/openapi/admin-v1.json',
 		},
 		output: {
 			baseUrl: '${ELITE_API_URL}',
@@ -30,7 +30,7 @@ export default defineConfig({
 	},
 	zod: {
 		input: {
-			target: process.env.ELITE_API_URL + '/openapi/v1.json',
+			target: process.env.ELITE_API_URL + '/openapi/admin-v1.json',
 		},
 		output: {
 			client: 'zod',

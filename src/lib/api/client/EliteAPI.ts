@@ -5,7 +5,7 @@
  * A backend API for https://eliteskyblock.com/ that provides Hypixel Skyblock data.
 <br><br>
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
- * OpenAPI spec version: v1
+ * OpenAPI spec version: admin-v1
  */
 import type {
 	AccountSearchResultDto,
@@ -15,6 +15,8 @@ import type {
 	AddStyleImageParams,
 	AdminEventMemberDto,
 	AdminLinkAccountRequest,
+	AdminOrderDetailDto,
+	AdminOrdersResponseDto,
 	AdminUnlinkAccountRequest,
 	AnnouncementDto,
 	AuctionDto,
@@ -48,6 +50,7 @@ import type {
 	CreateStyleRequest,
 	CreateTagRequest,
 	CreateTeamAdminParams,
+	CreateTebexCheckoutRequest,
 	CreateToolSettingRequest,
 	CropCollectionsDataPointDto,
 	DeleteContestPingsParams,
@@ -75,6 +78,7 @@ import type {
 	FullGuideDto,
 	GardenDto,
 	GetAdminCropGraphsParams,
+	GetAdminOrdersParams,
 	GetAdminSkillGraphsParams,
 	GetAuctionPriceHistoryParams,
 	GetAuctionPriceHistoryResponse,
@@ -131,6 +135,7 @@ import type {
 	GetWeightForProfileParams,
 	GetWeightForProfilesParams,
 	GetWeightForSelectedParams,
+	GetWeights200,
 	GrantTestEntitlementParams,
 	GuideDto,
 	GuildDetailsDto,
@@ -157,6 +162,9 @@ import type {
 	MemberFortuneSettingsDto,
 	MinecraftAccountDto,
 	NetworthBreakdown,
+	OrderStatusDto,
+	PauseRecurringPaymentRequest,
+	PendingGiftDto,
 	PlayerDataDto,
 	PrivateGuildDto,
 	ProblemDetails,
@@ -164,11 +172,15 @@ import type {
 	ProfileDetailsDto,
 	ProfileMemberDto,
 	ProfileNamesDto,
+	ProviderEventDto,
 	PublicGuildDto,
+	ReconciliationResultDto,
 	RejectGuideRequest,
 	RemoveTestEntitlementParams,
 	ReorderCategoryProductsRequest,
 	ReorderIntRequest,
+	ReplayWebhookResponse,
+	ResolveRecipientRequest,
 	SearchAccountsParams,
 	SearchAuctionItemsParams,
 	SearchAuctionItemsResponse,
@@ -190,6 +202,8 @@ import type {
 	SubmitScoreParams,
 	SubmitScoreResponse,
 	TagResponse,
+	TebexCheckoutResponseDto,
+	TebexProductSettingsDto,
 	ToggleRecapVisibilityRequestBody,
 	ToolSettingDto,
 	UpdateBadgeRequestUpdateBadge,
@@ -207,7 +221,9 @@ import type {
 	UpdateUserSettingsDto,
 	UploadCurrentContestsBody,
 	UploadImageDto,
+	UpsertTebexProductSettingsRequest,
 	UserGuideDto,
+	UserOrderDto,
 	UserSettingsDto,
 	VoteCommentRequest,
 	VoteGuideRequest,
@@ -486,6 +502,163 @@ export const getAuthAccount = async (options?: RequestInit) => {
 	return customFetch<getAuthAccountResponse>(getGetAuthAccountUrl(), {
 		...options,
 		method: 'GET',
+	});
+};
+
+/**
+ * @summary Claim a Pending Gift
+ */
+export type claimGiftResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type claimGiftResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type claimGiftResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type claimGiftResponseSuccess = claimGiftResponse204 & {
+	headers: Headers;
+};
+export type claimGiftResponseError = (claimGiftResponse401 | claimGiftResponse403) & {
+	headers: Headers;
+};
+
+export type claimGiftResponse = claimGiftResponseSuccess | claimGiftResponseError;
+
+export const getClaimGiftUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/account/gifts/${orderId}/claim`;
+};
+
+export const claimGift = async (orderId: string, options?: RequestInit) => {
+	return customFetch<claimGiftResponse>(getClaimGiftUrl(orderId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Get Pending Gift Orders
+ */
+export type getPendingGiftsResponse200 = {
+	data: PendingGiftDto[];
+	status: 200;
+};
+
+export type getPendingGiftsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getPendingGiftsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getPendingGiftsResponseSuccess = getPendingGiftsResponse200 & {
+	headers: Headers;
+};
+export type getPendingGiftsResponseError = (getPendingGiftsResponse401 | getPendingGiftsResponse403) & {
+	headers: Headers;
+};
+
+export type getPendingGiftsResponse = getPendingGiftsResponseSuccess | getPendingGiftsResponseError;
+
+export const getGetPendingGiftsUrl = () => {
+	return `${ELITE_API_URL}/account/gifts/pending`;
+};
+
+export const getPendingGifts = async (options?: RequestInit) => {
+	return customFetch<getPendingGiftsResponse>(getGetPendingGiftsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get User Order History
+ */
+export type getUserOrdersResponse200 = {
+	data: UserOrderDto[];
+	status: 200;
+};
+
+export type getUserOrdersResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getUserOrdersResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getUserOrdersResponseSuccess = getUserOrdersResponse200 & {
+	headers: Headers;
+};
+export type getUserOrdersResponseError = (getUserOrdersResponse401 | getUserOrdersResponse403) & {
+	headers: Headers;
+};
+
+export type getUserOrdersResponse = getUserOrdersResponseSuccess | getUserOrdersResponseError;
+
+export const getGetUserOrdersUrl = () => {
+	return `${ELITE_API_URL}/account/orders`;
+};
+
+export const getUserOrders = async (options?: RequestInit) => {
+	return customFetch<getUserOrdersResponse>(getGetUserOrdersUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Reconcile User Purchases
+ */
+export type reconcileUserPurchasesResponse200 = {
+	data: ReconciliationResultDto;
+	status: 200;
+};
+
+export type reconcileUserPurchasesResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type reconcileUserPurchasesResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type reconcileUserPurchasesResponseSuccess = reconcileUserPurchasesResponse200 & {
+	headers: Headers;
+};
+export type reconcileUserPurchasesResponseError = (
+	| reconcileUserPurchasesResponse401
+	| reconcileUserPurchasesResponse403
+) & {
+	headers: Headers;
+};
+
+export type reconcileUserPurchasesResponse =
+	| reconcileUserPurchasesResponseSuccess
+	| reconcileUserPurchasesResponseError;
+
+export const getReconcileUserPurchasesUrl = () => {
+	return `${ELITE_API_URL}/account/purchases/reconcile`;
+};
+
+export const reconcileUserPurchases = async (options?: RequestInit) => {
+	return customFetch<reconcileUserPurchasesResponse>(getReconcileUserPurchasesUrl(), {
+		...options,
+		method: 'POST',
 	});
 };
 
@@ -1357,6 +1530,461 @@ export const unlinkUserAccount = async (
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(adminUnlinkAccountRequest),
+	});
+};
+
+/**
+ * @summary Cancel Tebex Recurring Payment (Admin)
+ */
+export type cancelRecurringPaymentResponse200 = {
+	data: AdminOrderDetailDto;
+	status: 200;
+};
+
+export type cancelRecurringPaymentResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type cancelRecurringPaymentResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type cancelRecurringPaymentResponseSuccess = cancelRecurringPaymentResponse200 & {
+	headers: Headers;
+};
+export type cancelRecurringPaymentResponseError = (
+	| cancelRecurringPaymentResponse401
+	| cancelRecurringPaymentResponse403
+) & {
+	headers: Headers;
+};
+
+export type cancelRecurringPaymentResponse =
+	| cancelRecurringPaymentResponseSuccess
+	| cancelRecurringPaymentResponseError;
+
+export const getCancelRecurringPaymentUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}/cancel-recurring`;
+};
+
+export const cancelRecurringPayment = async (orderId: string, options?: RequestInit) => {
+	return customFetch<cancelRecurringPaymentResponse>(getCancelRecurringPaymentUrl(orderId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Get Order Detail (Admin)
+ */
+export type getAdminOrderDetailResponse200 = {
+	data: AdminOrderDetailDto;
+	status: 200;
+};
+
+export type getAdminOrderDetailResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getAdminOrderDetailResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getAdminOrderDetailResponseSuccess = getAdminOrderDetailResponse200 & {
+	headers: Headers;
+};
+export type getAdminOrderDetailResponseError = (getAdminOrderDetailResponse401 | getAdminOrderDetailResponse403) & {
+	headers: Headers;
+};
+
+export type getAdminOrderDetailResponse = getAdminOrderDetailResponseSuccess | getAdminOrderDetailResponseError;
+
+export const getGetAdminOrderDetailUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}`;
+};
+
+export const getAdminOrderDetail = async (orderId: string, options?: RequestInit) => {
+	return customFetch<getAdminOrderDetailResponse>(getGetAdminOrderDetailUrl(orderId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get Order Provider Events (Admin)
+ */
+export type getOrderEventsResponse200 = {
+	data: ProviderEventDto[];
+	status: 200;
+};
+
+export type getOrderEventsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getOrderEventsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getOrderEventsResponseSuccess = getOrderEventsResponse200 & {
+	headers: Headers;
+};
+export type getOrderEventsResponseError = (getOrderEventsResponse401 | getOrderEventsResponse403) & {
+	headers: Headers;
+};
+
+export type getOrderEventsResponse = getOrderEventsResponseSuccess | getOrderEventsResponseError;
+
+export const getGetOrderEventsUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}/events`;
+};
+
+export const getOrderEvents = async (orderId: string, options?: RequestInit) => {
+	return customFetch<getOrderEventsResponse>(getGetOrderEventsUrl(orderId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary List Orders (Admin)
+ */
+export type getAdminOrdersResponse200 = {
+	data: AdminOrdersResponseDto;
+	status: 200;
+};
+
+export type getAdminOrdersResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getAdminOrdersResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getAdminOrdersResponseSuccess = getAdminOrdersResponse200 & {
+	headers: Headers;
+};
+export type getAdminOrdersResponseError = (getAdminOrdersResponse401 | getAdminOrdersResponse403) & {
+	headers: Headers;
+};
+
+export type getAdminOrdersResponse = getAdminOrdersResponseSuccess | getAdminOrdersResponseError;
+
+export const getGetAdminOrdersUrl = (params: GetAdminOrdersParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/admin/payments/orders?${stringifiedParams}`
+		: `${ELITE_API_URL}/admin/payments/orders`;
+};
+
+export const getAdminOrders = async (params: GetAdminOrdersParams, options?: RequestInit) => {
+	return customFetch<getAdminOrdersResponse>(getGetAdminOrdersUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Pause Tebex Recurring Payment (Admin)
+ */
+export type pauseRecurringPaymentResponse200 = {
+	data: AdminOrderDetailDto;
+	status: 200;
+};
+
+export type pauseRecurringPaymentResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type pauseRecurringPaymentResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type pauseRecurringPaymentResponseSuccess = pauseRecurringPaymentResponse200 & {
+	headers: Headers;
+};
+export type pauseRecurringPaymentResponseError = (
+	| pauseRecurringPaymentResponse401
+	| pauseRecurringPaymentResponse403
+) & {
+	headers: Headers;
+};
+
+export type pauseRecurringPaymentResponse = pauseRecurringPaymentResponseSuccess | pauseRecurringPaymentResponseError;
+
+export const getPauseRecurringPaymentUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}/pause-recurring`;
+};
+
+export const pauseRecurringPayment = async (
+	orderId: string,
+	pauseRecurringPaymentRequest: PauseRecurringPaymentRequest,
+	options?: RequestInit
+) => {
+	return customFetch<pauseRecurringPaymentResponse>(getPauseRecurringPaymentUrl(orderId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(pauseRecurringPaymentRequest),
+	});
+};
+
+/**
+ * @summary Reconcile Order (Admin)
+ */
+export type reconcileOrderResponse200 = {
+	data: ReconciliationResultDto;
+	status: 200;
+};
+
+export type reconcileOrderResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type reconcileOrderResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type reconcileOrderResponseSuccess = reconcileOrderResponse200 & {
+	headers: Headers;
+};
+export type reconcileOrderResponseError = (reconcileOrderResponse401 | reconcileOrderResponse403) & {
+	headers: Headers;
+};
+
+export type reconcileOrderResponse = reconcileOrderResponseSuccess | reconcileOrderResponseError;
+
+export const getReconcileOrderUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}/reconcile`;
+};
+
+export const reconcileOrder = async (orderId: string, options?: RequestInit) => {
+	return customFetch<reconcileOrderResponse>(getReconcileOrderUrl(orderId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Refresh Tebex Provider State (Admin)
+ */
+export type refreshProviderStateResponse200 = {
+	data: AdminOrderDetailDto;
+	status: 200;
+};
+
+export type refreshProviderStateResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type refreshProviderStateResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type refreshProviderStateResponseSuccess = refreshProviderStateResponse200 & {
+	headers: Headers;
+};
+export type refreshProviderStateResponseError = (refreshProviderStateResponse401 | refreshProviderStateResponse403) & {
+	headers: Headers;
+};
+
+export type refreshProviderStateResponse = refreshProviderStateResponseSuccess | refreshProviderStateResponseError;
+
+export const getRefreshProviderStateUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}/refresh-provider-state`;
+};
+
+export const refreshProviderState = async (orderId: string, options?: RequestInit) => {
+	return customFetch<refreshProviderStateResponse>(getRefreshProviderStateUrl(orderId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Refund Tebex Order (Admin)
+ */
+export type refundOrderResponse200 = {
+	data: AdminOrderDetailDto;
+	status: 200;
+};
+
+export type refundOrderResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type refundOrderResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type refundOrderResponseSuccess = refundOrderResponse200 & {
+	headers: Headers;
+};
+export type refundOrderResponseError = (refundOrderResponse401 | refundOrderResponse403) & {
+	headers: Headers;
+};
+
+export type refundOrderResponse = refundOrderResponseSuccess | refundOrderResponseError;
+
+export const getRefundOrderUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}/refund`;
+};
+
+export const refundOrder = async (orderId: string, options?: RequestInit) => {
+	return customFetch<refundOrderResponse>(getRefundOrderUrl(orderId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Replay Tebex Webhook (Admin)
+ */
+export type replayWebhookResponse200 = {
+	data: ReplayWebhookResponse;
+	status: 200;
+};
+
+export type replayWebhookResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type replayWebhookResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type replayWebhookResponseSuccess = replayWebhookResponse200 & {
+	headers: Headers;
+};
+export type replayWebhookResponseError = (replayWebhookResponse401 | replayWebhookResponse403) & {
+	headers: Headers;
+};
+
+export type replayWebhookResponse = replayWebhookResponseSuccess | replayWebhookResponseError;
+
+export const getReplayWebhookUrl = (webhookId: string) => {
+	return `${ELITE_API_URL}/admin/payments/tebex/webhooks/${webhookId}/replay`;
+};
+
+export const replayWebhook = async (webhookId: string, options?: RequestInit) => {
+	return customFetch<replayWebhookResponse>(getReplayWebhookUrl(webhookId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Resolve Gift Recipient (Admin)
+ */
+export type resolveRecipientResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type resolveRecipientResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type resolveRecipientResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type resolveRecipientResponseSuccess = resolveRecipientResponse204 & {
+	headers: Headers;
+};
+export type resolveRecipientResponseError = (resolveRecipientResponse401 | resolveRecipientResponse403) & {
+	headers: Headers;
+};
+
+export type resolveRecipientResponse = resolveRecipientResponseSuccess | resolveRecipientResponseError;
+
+export const getResolveRecipientUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}/resolve-recipient`;
+};
+
+export const resolveRecipient = async (
+	orderId: string,
+	resolveRecipientRequest: ResolveRecipientRequest,
+	options?: RequestInit
+) => {
+	return customFetch<resolveRecipientResponse>(getResolveRecipientUrl(orderId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(resolveRecipientRequest),
+	});
+};
+
+/**
+ * @summary Resume Tebex Recurring Payment (Admin)
+ */
+export type resumeRecurringPaymentResponse200 = {
+	data: AdminOrderDetailDto;
+	status: 200;
+};
+
+export type resumeRecurringPaymentResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type resumeRecurringPaymentResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type resumeRecurringPaymentResponseSuccess = resumeRecurringPaymentResponse200 & {
+	headers: Headers;
+};
+export type resumeRecurringPaymentResponseError = (
+	| resumeRecurringPaymentResponse401
+	| resumeRecurringPaymentResponse403
+) & {
+	headers: Headers;
+};
+
+export type resumeRecurringPaymentResponse =
+	| resumeRecurringPaymentResponseSuccess
+	| resumeRecurringPaymentResponseError;
+
+export const getResumeRecurringPaymentUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/admin/payments/orders/${orderId}/resume-recurring`;
+};
+
+export const resumeRecurringPayment = async (orderId: string, options?: RequestInit) => {
+	return customFetch<resumeRecurringPaymentResponse>(getResumeRecurringPaymentUrl(orderId), {
+		...options,
+		method: 'POST',
 	});
 };
 
@@ -8362,6 +8990,219 @@ export const removeTestEntitlement = async (
 };
 
 /**
+ * @summary Get Tebex Product Settings
+ */
+export type getTebexProductSettingsResponse200 = {
+	data: TebexProductSettingsDto;
+	status: 200;
+};
+
+export type getTebexProductSettingsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getTebexProductSettingsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getTebexProductSettingsResponseSuccess = getTebexProductSettingsResponse200 & {
+	headers: Headers;
+};
+export type getTebexProductSettingsResponseError = (
+	| getTebexProductSettingsResponse401
+	| getTebexProductSettingsResponse403
+) & {
+	headers: Headers;
+};
+
+export type getTebexProductSettingsResponse =
+	| getTebexProductSettingsResponseSuccess
+	| getTebexProductSettingsResponseError;
+
+export const getGetTebexProductSettingsUrl = (productId: string) => {
+	return `${ELITE_API_URL}/admin/products/${productId}/providers/tebex`;
+};
+
+export const getTebexProductSettings = async (productId: string, options?: RequestInit) => {
+	return customFetch<getTebexProductSettingsResponse>(getGetTebexProductSettingsUrl(productId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Create or Update Tebex Product Settings
+ */
+export type upsertTebexProductSettingsResponse200 = {
+	data: TebexProductSettingsDto;
+	status: 200;
+};
+
+export type upsertTebexProductSettingsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type upsertTebexProductSettingsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type upsertTebexProductSettingsResponseSuccess = upsertTebexProductSettingsResponse200 & {
+	headers: Headers;
+};
+export type upsertTebexProductSettingsResponseError = (
+	| upsertTebexProductSettingsResponse401
+	| upsertTebexProductSettingsResponse403
+) & {
+	headers: Headers;
+};
+
+export type upsertTebexProductSettingsResponse =
+	| upsertTebexProductSettingsResponseSuccess
+	| upsertTebexProductSettingsResponseError;
+
+export const getUpsertTebexProductSettingsUrl = (productId: string) => {
+	return `${ELITE_API_URL}/admin/products/${productId}/providers/tebex`;
+};
+
+export const upsertTebexProductSettings = async (
+	productId: string,
+	upsertTebexProductSettingsRequest: UpsertTebexProductSettingsRequest,
+	options?: RequestInit
+) => {
+	return customFetch<upsertTebexProductSettingsResponse>(getUpsertTebexProductSettingsUrl(productId), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(upsertTebexProductSettingsRequest),
+	});
+};
+
+/**
+ * @summary Create Tebex Checkout Session
+ */
+export type hiddenCreateTebexCheckoutResponse200 = {
+	data: TebexCheckoutResponseDto;
+	status: 200;
+};
+
+export type hiddenCreateTebexCheckoutResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type hiddenCreateTebexCheckoutResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type hiddenCreateTebexCheckoutResponseSuccess = hiddenCreateTebexCheckoutResponse200 & {
+	headers: Headers;
+};
+export type hiddenCreateTebexCheckoutResponseError = (
+	| hiddenCreateTebexCheckoutResponse401
+	| hiddenCreateTebexCheckoutResponse403
+) & {
+	headers: Headers;
+};
+
+export type hiddenCreateTebexCheckoutResponse =
+	| hiddenCreateTebexCheckoutResponseSuccess
+	| hiddenCreateTebexCheckoutResponseError;
+
+export const getHiddenCreateTebexCheckoutUrl = () => {
+	return `${ELITE_API_URL}/payments/tebex/checkout`;
+};
+
+export const hiddenCreateTebexCheckout = async (
+	createTebexCheckoutRequest: CreateTebexCheckoutRequest,
+	options?: RequestInit
+) => {
+	return customFetch<hiddenCreateTebexCheckoutResponse>(getHiddenCreateTebexCheckoutUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(createTebexCheckoutRequest),
+	});
+};
+
+/**
+ * @summary Update Tebex Checkout Session
+ */
+export type hiddenUpdateTebexCheckoutResponse200 = {
+	data: TebexCheckoutResponseDto;
+	status: 200;
+};
+
+export type hiddenUpdateTebexCheckoutResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type hiddenUpdateTebexCheckoutResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type hiddenUpdateTebexCheckoutResponseSuccess = hiddenUpdateTebexCheckoutResponse200 & {
+	headers: Headers;
+};
+export type hiddenUpdateTebexCheckoutResponseError = (
+	| hiddenUpdateTebexCheckoutResponse401
+	| hiddenUpdateTebexCheckoutResponse403
+) & {
+	headers: Headers;
+};
+
+export type hiddenUpdateTebexCheckoutResponse =
+	| hiddenUpdateTebexCheckoutResponseSuccess
+	| hiddenUpdateTebexCheckoutResponseError;
+
+export const getHiddenUpdateTebexCheckoutUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/payments/tebex/checkout/${orderId}`;
+};
+
+export const hiddenUpdateTebexCheckout = async (
+	orderId: string,
+	createTebexCheckoutRequest: CreateTebexCheckoutRequest,
+	options?: RequestInit
+) => {
+	return customFetch<hiddenUpdateTebexCheckoutResponse>(getHiddenUpdateTebexCheckoutUrl(orderId), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(createTebexCheckoutRequest),
+	});
+};
+
+/**
+ * @summary Handle Tebex Webhook
+ */
+export type hiddenTebexWebhookResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type hiddenTebexWebhookResponseSuccess = hiddenTebexWebhookResponse204 & {
+	headers: Headers;
+};
+export type hiddenTebexWebhookResponse = hiddenTebexWebhookResponseSuccess;
+
+export const getHiddenTebexWebhookUrl = () => {
+	return `${ELITE_API_URL}/webhooks/tebex`;
+};
+
+export const hiddenTebexWebhook = async (options?: RequestInit) => {
+	return customFetch<hiddenTebexWebhookResponse>(getHiddenTebexWebhookUrl(), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
  * @summary Delete a notification
  */
 export type deleteNotificationResponse204 = {
@@ -8505,6 +9346,44 @@ export const markNotificationRead = async (id: string, options?: RequestInit) =>
 	return customFetch<markNotificationReadResponse>(getMarkNotificationReadUrl(id), {
 		...options,
 		method: 'POST',
+	});
+};
+
+/**
+ * @summary Get Order Status
+ */
+export type getOrderStatusResponse200 = {
+	data: OrderStatusDto;
+	status: 200;
+};
+
+export type getOrderStatusResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getOrderStatusResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getOrderStatusResponseSuccess = getOrderStatusResponse200 & {
+	headers: Headers;
+};
+export type getOrderStatusResponseError = (getOrderStatusResponse401 | getOrderStatusResponse403) & {
+	headers: Headers;
+};
+
+export type getOrderStatusResponse = getOrderStatusResponseSuccess | getOrderStatusResponseError;
+
+export const getGetOrderStatusUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/payments/orders/${orderId}`;
+};
+
+export const getOrderStatus = async (orderId: string, options?: RequestInit) => {
+	return customFetch<getOrderStatusResponse>(getGetOrderStatusUrl(orderId), {
+		...options,
+		method: 'GET',
 	});
 };
 
@@ -11260,6 +12139,32 @@ export const getWeightForProfiles = async (
 	options?: RequestInit
 ) => {
 	return customFetch<getWeightForProfilesResponse>(getGetWeightForProfilesUrl(playerUuid, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Get crop weight constants
+ * @deprecated
+ * @summary Get crop weight constants
+ */
+export type getWeightsResponse200 = {
+	data: GetWeights200;
+	status: 200;
+};
+
+export type getWeightsResponseSuccess = getWeightsResponse200 & {
+	headers: Headers;
+};
+export type getWeightsResponse = getWeightsResponseSuccess;
+
+export const getGetWeightsUrl = () => {
+	return `${ELITE_API_URL}/weights`;
+};
+
+export const getWeights = async (options?: RequestInit) => {
+	return customFetch<getWeightsResponse>(getGetWeightsUrl(), {
 		...options,
 		method: 'GET',
 	});

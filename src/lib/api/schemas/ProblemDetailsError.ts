@@ -5,14 +5,25 @@
  * A backend API for https://eliteskyblock.com/ that provides Hypixel Skyblock data.
 <br><br>
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
- * OpenAPI spec version: v1
+ * OpenAPI spec version: admin-v1
  */
 
+/**
+ * the error details object
+ */
 export interface ProblemDetailsError {
+	/** the name of the error or property of the dto that caused the error */
 	name: string;
+	/** the reason for the error */
 	reason: string;
-	/** @nullable */
+	/**
+	 * the code of the error
+	 * @nullable
+	 */
 	code?: string | null;
-	/** @nullable */
+	/**
+	 * the severity of the error
+	 * @nullable
+	 */
 	severity?: string | null;
 }
