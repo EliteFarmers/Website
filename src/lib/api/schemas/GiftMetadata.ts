@@ -11,4 +11,6 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
 export interface GiftMetadata {
 	/** @nullable */
 	message?: string | null;
+	/** @nullable */
+	claimExpiresAt?: string | null;
 }

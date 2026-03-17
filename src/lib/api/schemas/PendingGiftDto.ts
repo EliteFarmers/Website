@@ -15,10 +15,13 @@ import type { GiftItemDto } from './GiftItemDto';
 export interface PendingGiftDto {
 	orderId: string;
 	buyerId: bigint;
+	buyerName: string;
 	provider: string;
 	orderDate: string;
 	/** @nullable */
 	completedAt?: string | null;
+	/** @nullable */
+	claimExpiresAt?: string | null;
 	/** @nullable */
 	giftMessage?: string | null;
 	items: GiftItemDto[];

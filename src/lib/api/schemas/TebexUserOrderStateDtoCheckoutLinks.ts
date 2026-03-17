@@ -7,8 +7,9 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { TebexUserCheckoutLinksDto } from './TebexUserCheckoutLinksDto';
 
-export interface CheckoutItemDto {
-	productId: string;
-	quantity: number;
-}
+/**
+ * @nullable
+ */
+export type TebexUserOrderStateDtoCheckoutLinks = TebexUserCheckoutLinksDto | null;

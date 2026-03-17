@@ -7,8 +7,9 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { TebexAdminRecurringStateDto } from './TebexAdminRecurringStateDto';
 
-export interface CheckoutItemDto {
-	productId: string;
-	quantity: number;
-}
+/**
+ * @nullable
+ */
+export type TebexUserOrderStateDtoRecurring = TebexAdminRecurringStateDto | null;

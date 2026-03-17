@@ -68,6 +68,56 @@ export const zodClaimGiftParams = zod.object({
 	orderId: zod.string(),
 });
 
+export const zodClaimGiftBody = zod.object({
+	orderItemIds: zod.array(zod.number()),
+});
+
+/**
+ * @summary Decline Pending Gift Items
+ */
+export const zodDeclineGiftParams = zod.object({
+	orderId: zod.string(),
+});
+
+export const zodDeclineGiftBody = zod.object({
+	orderItemIds: zod.array(zod.number()),
+});
+
+/**
+ * @summary Reassign Expired or Returned Gift Items
+ */
+export const zodResendGiftParams = zod.object({
+	orderId: zod.string(),
+});
+
+export const zodResendGiftBody = zod.object({
+	orderItemIds: zod.array(zod.number()),
+	mode: zod.enum(['Self', 'GiftUser', 'GiftGuild']).nullish(),
+	playerUuidOrIgn: zod.string().nullish(),
+	guildId: zod.number().nullish(),
+	message: zod.string().nullish(),
+});
+
+/**
+ * @summary Get User Order Detail
+ */
+export const zodGetUserOrderDetailParams = zod.object({
+	orderId: zod.string(),
+});
+
+/**
+ * @summary Get User Order History
+ */
+export const zodGetUserOrdersQueryParams = zod.object({
+	search: zod.string().nullish(),
+	provider: zod.string().nullish(),
+	status: zod.string().nullish(),
+	relationship: zod.string().nullish(),
+	includeCheckoutStates: zod.coerce.boolean<boolean>(),
+	offset: zod.number(),
+	limit: zod.number(),
+});
+
 /**
  * @summary Search for Minecraft Account
  */
@@ -2961,7 +3011,7 @@ export const zodUpsertTebexProductSettingsBody = zod.object({
 export const zodHiddenCreateTebexCheckoutBody = zod.object({
 	items: zod.array(
 		zod.object({
-			productId: zod.number(),
+			productId: zod.string(),
 			quantity: zod.number(),
 		})
 	),
@@ -2988,7 +3038,7 @@ export const zodHiddenUpdateTebexCheckoutParams = zod.object({
 export const zodHiddenUpdateTebexCheckoutBody = zod.object({
 	items: zod.array(
 		zod.object({
-			productId: zod.number(),
+			productId: zod.string(),
 			quantity: zod.number(),
 		})
 	),

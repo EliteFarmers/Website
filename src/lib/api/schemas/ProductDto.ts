@@ -12,6 +12,7 @@ import type { UnlockedProductFeaturesDto } from './UnlockedProductFeaturesDto';
 import type { WeightStyleLinkedDto } from './WeightStyleLinkedDto';
 import type { ProductDtoThumbnail } from './ProductDtoThumbnail';
 import type { ImageAttachmentDto } from './ImageAttachmentDto';
+import type { ProductDtoTebex } from './ProductDtoTebex';
 
 export interface ProductDto {
 	/** Product ID */
@@ -52,4 +53,9 @@ export interface ProductDto {
 	 * @nullable
 	 */
 	releasedAt?: string | null;
+	/**
+	 * Tebex-specific checkout settings for the product
+	 * @nullable
+	 */
+	tebex?: ProductDtoTebex;
 }

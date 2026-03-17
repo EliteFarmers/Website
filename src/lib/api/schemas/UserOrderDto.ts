@@ -7,23 +7,50 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
-import type { GiftItemDto } from './GiftItemDto';
+import type { UserOrderDtoRecipientSnapshot } from './UserOrderDtoRecipientSnapshot';
+import type { UserOrderDtoGiftMetadata } from './UserOrderDtoGiftMetadata';
+import type { UserOrderDtoTebex } from './UserOrderDtoTebex';
+import type { UserOrderItemDto } from './UserOrderItemDto';
 
-/**
- * Summary of a user's order.
- */
 export interface UserOrderDto {
 	orderId: string;
+	buyerId: bigint;
+	/** @nullable */
+	recipientId?: bigint | null;
+	/** @nullable */
+	recipientGuildId?: bigint | null;
 	status: string;
 	provider: string;
 	/** @nullable */
+	transactionId?: string | null;
+	/** @nullable */
+	basketIdent?: string | null;
+	/** @nullable */
+	recurringReference?: string | null;
+	/** @nullable */
+	providerStatus?: string | null;
+	/** @nullable */
 	purchaseMode?: string | null;
+	/** @nullable */
+	recipientResolutionStatus?: string | null;
 	totalPrice: number;
 	currency: string;
 	orderDate: string;
 	/** @nullable */
 	completedAt?: string | null;
+	/** @nullable */
+	refundedAt?: string | null;
+	/** @nullable */
+	disputedAt?: string | null;
+	isBuyer: boolean;
+	isRecipient: boolean;
 	isGiftSent: boolean;
 	isGiftReceived: boolean;
-	items: GiftItemDto[];
+	/** @nullable */
+	recipientSnapshot?: UserOrderDtoRecipientSnapshot;
+	/** @nullable */
+	giftMetadata?: UserOrderDtoGiftMetadata;
+	/** @nullable */
+	tebex?: UserOrderDtoTebex;
+	items: UserOrderItemDto[];
 }

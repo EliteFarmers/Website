@@ -8,7 +8,24 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-export interface CheckoutItemDto {
-	productId: string;
-	quantity: number;
-}
+export type GetUserOrdersParams = {
+	/**
+	 * @nullable
+	 */
+	search?: string | null;
+	/**
+	 * @nullable
+	 */
+	provider?: string | null;
+	/**
+	 * @nullable
+	 */
+	status?: string | null;
+	/**
+	 * @nullable
+	 */
+	relationship?: string | null;
+	includeCheckoutStates: boolean;
+	offset: number;
+	limit: number;
+};

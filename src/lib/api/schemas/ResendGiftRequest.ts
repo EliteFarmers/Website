@@ -7,8 +7,16 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { ResendGiftRequestMode } from './ResendGiftRequestMode';
 
-export interface CheckoutItemDto {
-	productId: string;
-	quantity: number;
+export interface ResendGiftRequest {
+	orderItemIds: number | string | bigint[];
+	/** @nullable */
+	mode?: ResendGiftRequestMode;
+	/** @nullable */
+	playerUuidOrIgn?: string | null;
+	/** @nullable */
+	guildId?: bigint | null;
+	/** @nullable */
+	message?: string | null;
 }
