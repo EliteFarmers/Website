@@ -9268,45 +9268,45 @@ export const hiddenCreateTebexCheckout = async (
 };
 
 /**
- * @summary Get Current Tebex Checkout Session
+ * @summary Delete Tebex Checkout Session Locally
  */
-export type hiddenGetCurrentTebexCheckoutResponse200 = {
-	data: TebexCurrentCheckoutDto;
-	status: 200;
+export type hiddenDeleteTebexCheckoutResponse204 = {
+	data: void;
+	status: 204;
 };
 
-export type hiddenGetCurrentTebexCheckoutResponse401 = {
+export type hiddenDeleteTebexCheckoutResponse401 = {
 	data: void;
 	status: 401;
 };
 
-export type hiddenGetCurrentTebexCheckoutResponse403 = {
+export type hiddenDeleteTebexCheckoutResponse403 = {
 	data: void;
 	status: 403;
 };
 
-export type hiddenGetCurrentTebexCheckoutResponseSuccess = hiddenGetCurrentTebexCheckoutResponse200 & {
+export type hiddenDeleteTebexCheckoutResponseSuccess = hiddenDeleteTebexCheckoutResponse204 & {
 	headers: Headers;
 };
-export type hiddenGetCurrentTebexCheckoutResponseError = (
-	| hiddenGetCurrentTebexCheckoutResponse401
-	| hiddenGetCurrentTebexCheckoutResponse403
+export type hiddenDeleteTebexCheckoutResponseError = (
+	| hiddenDeleteTebexCheckoutResponse401
+	| hiddenDeleteTebexCheckoutResponse403
 ) & {
 	headers: Headers;
 };
 
-export type hiddenGetCurrentTebexCheckoutResponse =
-	| hiddenGetCurrentTebexCheckoutResponseSuccess
-	| hiddenGetCurrentTebexCheckoutResponseError;
+export type hiddenDeleteTebexCheckoutResponse =
+	| hiddenDeleteTebexCheckoutResponseSuccess
+	| hiddenDeleteTebexCheckoutResponseError;
 
-export const getHiddenGetCurrentTebexCheckoutUrl = () => {
-	return `${ELITE_API_URL}/payments/tebex/checkout/current`;
+export const getHiddenDeleteTebexCheckoutUrl = (orderId: string) => {
+	return `${ELITE_API_URL}/payments/tebex/checkout/${orderId}`;
 };
 
-export const hiddenGetCurrentTebexCheckout = async (options?: RequestInit) => {
-	return customFetch<hiddenGetCurrentTebexCheckoutResponse>(getHiddenGetCurrentTebexCheckoutUrl(), {
+export const hiddenDeleteTebexCheckout = async (orderId: string, options?: RequestInit) => {
+	return customFetch<hiddenDeleteTebexCheckoutResponse>(getHiddenDeleteTebexCheckoutUrl(orderId), {
 		...options,
-		method: 'GET',
+		method: 'DELETE',
 	});
 };
 
@@ -9356,6 +9356,49 @@ export const hiddenUpdateTebexCheckout = async (
 		method: 'PUT',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createTebexCheckoutRequest),
+	});
+};
+
+/**
+ * @summary Get Current Tebex Checkout Session
+ */
+export type hiddenGetCurrentTebexCheckoutResponse200 = {
+	data: TebexCurrentCheckoutDto;
+	status: 200;
+};
+
+export type hiddenGetCurrentTebexCheckoutResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type hiddenGetCurrentTebexCheckoutResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type hiddenGetCurrentTebexCheckoutResponseSuccess = hiddenGetCurrentTebexCheckoutResponse200 & {
+	headers: Headers;
+};
+export type hiddenGetCurrentTebexCheckoutResponseError = (
+	| hiddenGetCurrentTebexCheckoutResponse401
+	| hiddenGetCurrentTebexCheckoutResponse403
+) & {
+	headers: Headers;
+};
+
+export type hiddenGetCurrentTebexCheckoutResponse =
+	| hiddenGetCurrentTebexCheckoutResponseSuccess
+	| hiddenGetCurrentTebexCheckoutResponseError;
+
+export const getHiddenGetCurrentTebexCheckoutUrl = () => {
+	return `${ELITE_API_URL}/payments/tebex/checkout/current`;
+};
+
+export const hiddenGetCurrentTebexCheckout = async (options?: RequestInit) => {
+	return customFetch<hiddenGetCurrentTebexCheckoutResponse>(getHiddenGetCurrentTebexCheckoutUrl(), {
+		...options,
+		method: 'GET',
 	});
 };
 
@@ -10620,6 +10663,58 @@ export const skyblockProduct = async (itemId: string, options?: RequestInit) => 
 	return customFetch<skyblockProductResponse>(getSkyblockProductUrl(itemId), {
 		...options,
 		method: 'GET',
+	});
+};
+
+/**
+ * @summary Upload Category Banner Image
+ */
+export type addCategoryBannerResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type addCategoryBannerResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type addCategoryBannerResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type addCategoryBannerResponseSuccess = addCategoryBannerResponse204 & {
+	headers: Headers;
+};
+export type addCategoryBannerResponseError = (addCategoryBannerResponse401 | addCategoryBannerResponse403) & {
+	headers: Headers;
+};
+
+export type addCategoryBannerResponse = addCategoryBannerResponseSuccess | addCategoryBannerResponseError;
+
+export const getAddCategoryBannerUrl = (categoryId: string | number) => {
+	return `${ELITE_API_URL}/shop/category/${categoryId}/banner`;
+};
+
+export const addCategoryBanner = async (
+	categoryId: string | number,
+	uploadImageDto: UploadImageDto,
+	options?: RequestInit
+) => {
+	const formData = new FormData();
+	if (uploadImageDto.title !== undefined && uploadImageDto.title !== null) {
+		formData.append(`title`, uploadImageDto.title);
+	}
+	if (uploadImageDto.description !== undefined && uploadImageDto.description !== null) {
+		formData.append(`description`, uploadImageDto.description);
+	}
+	formData.append(`image`, uploadImageDto.image);
+
+	return customFetch<addCategoryBannerResponse>(getAddCategoryBannerUrl(categoryId), {
+		...options,
+		method: 'POST',
+		body: formData,
 	});
 };
 

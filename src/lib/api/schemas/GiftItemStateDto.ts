@@ -11,9 +11,9 @@ import type { GiftItemStateDtoRecipientSnapshot } from './GiftItemStateDtoRecipi
 
 export interface GiftItemStateDto {
 	/** @nullable */
-	recipientId?: bigint | null;
+	recipientId?: string | null;
 	/** @nullable */
-	recipientGuildId?: bigint | null;
+	recipientGuildId?: string | null;
 	/** @nullable */
 	recipientType?: string | null;
 	/** @nullable */
@@ -23,4 +23,6 @@ export interface GiftItemStateDto {
 	/** @nullable */
 	recipientSnapshot?: GiftItemStateDtoRecipientSnapshot;
 	isReassignable: boolean;
+	/** @nullable */
+	canAdminResolveRecipient?: boolean | null;
 }

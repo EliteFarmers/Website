@@ -10,8 +10,8 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
 import type { GiftItemDtoGift } from './GiftItemDtoGift';
 
 export interface GiftItemDto {
-	orderItemId: bigint;
-	productId: bigint;
+	orderItemId: string;
+	productId: string;
 	/** @nullable */
 	productName?: string | null;
 	quantity: number;

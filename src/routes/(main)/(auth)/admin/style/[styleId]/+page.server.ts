@@ -14,7 +14,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals, params }) => {
 	const { access_token: token, session } = locals;
 
-	if (!session || !session.perms.moderator || !token) {
+	if (!session || !session.perms.artist || !token) {
 		throw error(404, 'Not Found');
 	}
 
@@ -42,7 +42,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const body: WeightStyleWithDataDto = {
+		const body: Omit<WeightStyleWithDataDto, 'imageRefs'> = {
 			id: +styleId,
 			name: (data.get('name') as string) || undefined,
 			styleFormatter: (data.get('formatter') as string) || undefined,
@@ -211,12 +211,12 @@ export const actions: Actions = {
 		}
 
 		const image = data.get('image') as string;
-
-		if (!image) {
+		const imageUrl = URL.parse(image);
+		if (!image || !imageUrl?.pathname) {
 			return fail(400, { error: 'Invalid image data.' });
 		}
 
-		const { response, error: e } = await deleteStyleImage(productId, image);
+		const { response, error: e } = await deleteStyleImage(productId, encodeURIComponent(imageUrl.pathname));
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e });

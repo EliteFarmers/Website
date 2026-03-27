@@ -24,6 +24,11 @@ export interface EditCategoryDto {
 	 * @nullable
 	 */
 	description?: string | null;
+	/**
+	 * @maxLength 4096
+	 * @nullable
+	 */
+	longDescription?: string | null;
 	/** @nullable */
 	published?: boolean | null;
 }

@@ -1,4 +1,4 @@
-import { addRoleToUser, getAdmins, getAllProducts, getRoles, removeRoleFromUser } from '$lib/api';
+import { addRoleToUser, getAdmins, getRoles, removeRoleFromUser } from '$lib/api';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -6,24 +6,22 @@ export const load = (async ({ parent, locals }) => {
 	const { session } = await parent();
 	const { access_token: token } = locals;
 
-	if (!session || !session.perms.moderator || !token) {
+	if (!session || !session.perms.viewAdminPages || !token) {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: roles } = await getRoles().catch(() => ({ data: undefined }));
+	const { data: roles } = session.perms.moderator
+		? await getRoles().catch(() => ({ data: undefined }))
+		: { data: undefined };
 
-	if (!roles) {
-		throw error(500, 'Failed to fetch roles');
-	}
-
-	const { data: admins } = await getAdmins().catch(() => ({ data: undefined }));
-	const { data: products } = await getAllProducts().catch(() => ({ data: undefined }));
+	const { data: admins } = session.perms.moderator
+		? await getAdmins().catch(() => ({ data: undefined }))
+		: { data: undefined };
 
 	return {
 		user: locals.user,
 		roles,
 		admins: admins ?? [],
-		products: products ?? [],
 	};
 }) satisfies PageServerLoad;
 

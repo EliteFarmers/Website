@@ -15,8 +15,16 @@ export async function OPTIONS() {
 	});
 }
 
-export const GET: RequestHandler = async ({ params, setHeaders }) => {
+const ALLOWED_WIDTHS = new Set([400, 800, 1280, 1920]);
+
+export const GET: RequestHandler = async ({ params, setHeaders, url }) => {
 	const { id } = params;
+
+	const widthParam = url.searchParams.get('w');
+	const width = widthParam ? parseInt(widthParam, 10) : undefined;
+	if (width !== undefined && !ALLOWED_WIDTHS.has(width)) {
+		error(400, 'Invalid width');
+	}
 
 	const style = cache.styleLookup?.[id];
 	if (!style?.leaderboard || !isValidLeaderboardStyle(style.leaderboard)) {
@@ -25,7 +33,9 @@ export const GET: RequestHandler = async ({ params, setHeaders }) => {
 
 	const buffer = await getLeaderboardBackground(
 		style.leaderboard,
-		isValidWeightStyle(style.data) ? style.data.elements.background : undefined
+		isValidWeightStyle(style.data) ? style.data.elements.background : undefined,
+		width,
+		style.imageRefs
 	);
 	if (!buffer) {
 		error(404, 'Style not found');

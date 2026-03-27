@@ -24,4 +24,8 @@ export const NotificationType = {
 	newReply: 'newReply',
 	shopPurchase: 'shopPurchase',
 	guideSubmitted: 'guideSubmitted',
+	shopRefund: 'shopRefund',
+	giftReceived: 'giftReceived',
+	giftReassignable: 'giftReassignable',
+	giftClaimed: 'giftClaimed',
 } as const;

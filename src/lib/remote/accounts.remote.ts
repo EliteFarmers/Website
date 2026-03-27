@@ -1,6 +1,7 @@
 import { command, getRequestEvent, query } from '$app/server';
 import {
 	getAccount,
+	getAuthAccount,
 	getPlayerRecap,
 	linkOwnAccount,
 	searchAccountsWithDiscord,
@@ -13,6 +14,11 @@ import * as z from 'zod';
 
 export const GetAccount = query(zodGetAccountParams, async (params) => {
 	return await getAccount(params.player);
+});
+
+export const getAuthorizedAccount = query(async () => {
+	const { data: account } = await getAuthAccount();
+	return account;
 });
 
 export const getAccountOptions = query(async () => {

@@ -25,6 +25,7 @@
 			data: isValidWeightStyle(style.data) ? style.data : undefined,
 			badgeUrl: badgeUrl,
 			weightRank: rank,
+			imageRefs: style.imageRefs,
 		});
 	});
 </script>

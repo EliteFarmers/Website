@@ -15,6 +15,8 @@ export interface TebexProductConfig {
 	creatorCodeAllowed: boolean;
 	requiresMinecraftIdentity: boolean;
 	/** @nullable */
+	defaultCreatorCode?: string | null;
+	/** @nullable */
 	checkoutNameOverride?: string | null;
 	/** @nullable */
 	checkoutDescriptionOverride?: string | null;

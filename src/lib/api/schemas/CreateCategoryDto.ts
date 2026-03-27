@@ -18,4 +18,9 @@ export interface CreateCategoryDto {
 	 * @nullable
 	 */
 	description?: string | null;
+	/**
+	 * @maxLength 4096
+	 * @nullable
+	 */
+	longDescription?: string | null;
 }

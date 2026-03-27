@@ -15,7 +15,7 @@
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import { Textarea } from '$ui/textarea';
-	import X from '@lucide/svelte/icons/x';
+	import Trash_2 from '@lucide/svelte/icons/trash-2';
 	import { PersistedState } from 'runed';
 	import { untrack } from 'svelte';
 	import type { ActionData, PageData } from './$types';
@@ -235,6 +235,7 @@
 						uuid={ctx.user?.username ?? 'Steve'}
 						showLeaderboardName={showLeaderboardName.current}
 						styleId={style.id}
+						imageRefs={style.imageRefs}
 					/>
 				</div>
 			{/if}
@@ -282,7 +283,6 @@
 		<div class="mb-2 flex flex-row items-center gap-4">
 			<h2 class="text-xl">Images</h2>
 		</div>
-
 		<div class="mb-4 flex flex-row">
 			{#if style.image}
 				<img
@@ -292,28 +292,41 @@
 				/>
 			{/if}
 			{#each style.images ?? [] as image, i (i)}
-				<div class="flex flex-col items-center gap-2 rounded-md border p-1">
+				{@const ref = Object.entries(style.imageRefs ?? {}).find(([, value]) => value.url === image.url)?.[0]}
+				<div class="flex flex-row items-center gap-2 rounded-md border p-1">
 					<img src={image.url} alt={image.title} class="h-32 w-32 rounded-md object-cover" />
-					{#if image.title}
-						<p>{image.title}</p>
-					{/if}
-					<div class="flex flex-row items-center gap-4">
-						<Button
-							variant="destructive"
-							size="sm"
-							onclick={() => {
-								selectedImageId = image.url ?? '';
-								deleteImageModal = true;
-							}}
+					<div class="flex flex-col gap-2">
+						{#if image.title}
+							<p>{image.title}</p>
+						{/if}
+						<p class="text-sm">Image Reference</p>
+						<span class="text-muted-foreground text-xs"
+							>Use this reference instead of the image url for a responsive image.</span
 						>
-							<X size={16} />
-						</Button>
+						<div class="flex w-fit flex-row items-center rounded-sm border">
+							<CopyToClipboard text={ref} class="px-3" variant="ghost">
+								<span class="pr-1 text-sm font-semibold">Image Ref</span>{ref}
+							</CopyToClipboard>
+						</div>
 
-						<CopyToClipboard text={image.url} class="px-3" variant="outline" />
+						<div class="flex flex-row items-center gap-4">
+							<Button
+								variant="destructive"
+								size="sm"
+								onclick={() => {
+									selectedImageId = image.url ?? '';
+									deleteImageModal = true;
+								}}
+							>
+								<Trash_2 size={16} /> Delete
+							</Button>
+
+							<CopyToClipboard text={image.url} class="px-3" variant="outline">Copy URL</CopyToClipboard>
+						</div>
+						{#if image.description}
+							<p>{image.description}</p>
+						{/if}
 					</div>
-					{#if image.description}
-						<p>{image.description}</p>
-					{/if}
 				</div>
 			{/each}
 			{#if !style.image && !(style.images ?? []).length}

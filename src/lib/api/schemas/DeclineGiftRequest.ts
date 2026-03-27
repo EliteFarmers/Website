@@ -9,5 +9,5 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  */
 
 export interface DeclineGiftRequest {
-	orderItemIds: number | string | bigint[];
+	orderItemIds: string[];
 }

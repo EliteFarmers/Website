@@ -239,6 +239,31 @@
 			</form>
 			<form
 				method="post"
+				action="?/updateTebexSettings"
+				class="bg-card flex flex-1 flex-col gap-4 rounded-md border-2 p-4"
+				use:enhance
+			>
+				<input type="hidden" name="product" value={product.id} />
+
+				<h2 class="text-lg font-semibold">Update Tebex Settings</h2>
+
+				<div class="flex flex-row items-center gap-2">
+					<Switch name="enabled" checked={product.tebex?.enabled ?? false} />
+					<Label>Enable Tebex</Label>
+				</div>
+				<div class="flex flex-row items-center gap-2">
+					<Switch name="gifts" checked={product.tebex?.supportsGifting ?? false} />
+					<Label>Supports Gifting</Label>
+				</div>
+				<div class="flex flex-row items-center gap-2">
+					<Switch name="subscription" checked={product.tebex?.config?.billingType === 'subscription'} />
+					<Label>Subscription</Label>
+				</div>
+
+				<Button type="submit" disabled={loading}>Update</Button>
+			</form>
+			<form
+				method="post"
 				action="?/addImage"
 				enctype="multipart/form-data"
 				class="bg-card flex h-fit flex-1 flex-col gap-4 rounded-md border-2 p-4"

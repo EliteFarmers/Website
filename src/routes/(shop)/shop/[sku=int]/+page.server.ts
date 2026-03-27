@@ -3,24 +3,45 @@ import { getSelectedMember } from '$lib/remote';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ params, locals }) => {
+export const load = (async ({ params, locals, parent }) => {
+	const parentData = await parent();
 	const products = locals.cache?.products ?? [];
 	const product = products?.find((p) => p.id === params.sku);
+	const categories = parentData.categories ?? [];
 
 	if (!product) {
 		error(404, 'Product Not Found');
 	}
 
+	const productCategories = categories.filter((category) =>
+		(category.products ?? []).some((categoryProduct) => categoryProduct.id === product.id)
+	);
+	const primaryCategory = productCategories[0];
+	const relatedProducts = [
+		...new Map(
+			productCategories
+				.flatMap((category) => category.products ?? [])
+				.filter((categoryProduct) => categoryProduct.id !== product.id)
+				.map((categoryProduct) => [categoryProduct.id, categoryProduct])
+		).values(),
+	].slice(0, 4);
+
 	if (!locals.session?.uuid) {
 		return {
-			product: product,
+			product,
+			productCategories,
+			primaryCategory,
+			relatedProducts,
 		};
 	}
 
 	const weight = await getSelectedMember({ playerUuid: locals.session.uuid });
 
 	return {
-		product: product,
+		product,
+		productCategories,
+		primaryCategory,
+		relatedProducts,
 		uuid: locals.session.uuid,
 		ign: locals.session.ign,
 		weight: weight?.farmingWeight,

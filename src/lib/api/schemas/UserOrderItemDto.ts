@@ -12,8 +12,8 @@ import type { UserOrderItemDtoTebexVariables } from './UserOrderItemDtoTebexVari
 import type { UserOrderItemDtoGift } from './UserOrderItemDtoGift';
 
 export interface UserOrderItemDto {
-	orderItemId: bigint;
-	productId: bigint;
+	orderItemId: string;
+	productId: string;
 	/** @nullable */
 	productName?: string | null;
 	quantity: number;

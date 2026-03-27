@@ -12,9 +12,9 @@ export interface TebexUserBasketRowDto {
 	/** @nullable */
 	rowId?: number | null;
 	/** @nullable */
-	orderItemId?: bigint | null;
+	orderItemId?: string | null;
 	/** @nullable */
-	productId?: bigint | null;
+	productId?: string | null;
 	/** @nullable */
 	type?: string | null;
 	quantity: number;

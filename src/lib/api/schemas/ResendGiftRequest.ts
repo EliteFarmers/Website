@@ -10,7 +10,7 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
 import type { ResendGiftRequestMode } from './ResendGiftRequestMode';
 
 export interface ResendGiftRequest {
-	orderItemIds: number | string | bigint[];
+	orderItemIds: string[];
 	/** @nullable */
 	mode?: ResendGiftRequestMode;
 	/** @nullable */

@@ -62,7 +62,7 @@
 						</div>
 
 						<div class="flex flex-row items-center gap-2">
-							<Button href="/shop/{category.slug}" class="m-1" variant="ghost" size="sm">
+							<Button href="/shop/category/{category.slug}" class="m-1" variant="ghost" size="sm">
 								<ExternalLink />
 							</Button>
 							<Button href="/admin/category/{category.slug}" size="sm">

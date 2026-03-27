@@ -54,6 +54,7 @@
 	});
 
 	let style = $derived(isValidLeaderboardStyle(entry?.style) ? entry.style : undefined);
+	const imageRef = $derived(entry.imageRefs?.[style?.background?.imageUrl ?? ''] ?? undefined);
 
 	function getStyles(element: LeaderboardStyleText | undefined, defaultClass: string = ''): string {
 		if (!element) return defaultClass;
@@ -81,14 +82,37 @@
 	data-sveltekit-preload-data="tap"
 >
 	{#if style?.background?.imageUrl || entry.meta?.leaderboard?.styleId}
-		{@const img = style?.background?.imageUrl}
-		<img
-			loading="lazy"
-			src={img ?? `/api/lb-style/${entry.meta?.leaderboard?.styleId}/bg.webp`}
-			alt=""
-			aria-hidden="true"
-			class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img ? 'h-full' : ''}"
-		/>
+		{#if imageRef}
+			{@const srcset = Object.values(imageRef.sources)
+				.map((s) => `${s.url} ${s.width}w`)
+				.join(', ')}
+			<img
+				loading="lazy"
+				src={imageRef.url}
+				{srcset}
+				sizes="(max-width: 400px) 400px, (max-width: 800px) 800px, (max-width: 1280px) 1280px, 1920px"
+				alt=""
+				aria-hidden="true"
+				class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat"
+			/>
+		{:else}
+			{@const img = style?.background?.imageUrl}
+			{@const baseSrc = img ?? `/api/lb-style/${entry.meta?.leaderboard?.styleId}/bg.webp`}
+			{@const srcset = img
+				? undefined
+				: `${baseSrc}?w=400 400w, ${baseSrc}?w=800 800w, ${baseSrc}?w=1280 1280w, ${baseSrc} 1920w`}
+			<img
+				loading="lazy"
+				src={baseSrc}
+				{srcset}
+				sizes={srcset
+					? '(max-width: 400px) 400px, (max-width: 800px) 800px, (max-width: 1280px) 1280px, 1920px'
+					: undefined}
+				alt=""
+				aria-hidden="true"
+				class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img && !srcset ? 'h-full' : ''}"
+			/>
+		{/if}
 		<div class="absolute inset-0 rounded-sm bg-linear-to-r from-black/20 via-transparent to-black/20"></div>
 	{/if}
 	<a

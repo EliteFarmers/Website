@@ -1,16 +1,21 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
 	import Head from '$comp/head.svelte';
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
+	import ProductCard from '$comp/monetization/product-card.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import Badge from '$comp/stats/badge.svelte';
+	import { env } from '$env/dynamic/public';
 	import type { FarmingWeightDto } from '$lib/api';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { type Crumb, getPageCtx } from '$lib/hooks/page.svelte';
+	import { buildShopProductLdJson, shopKeywords } from '$lib/shop/seo';
+	import { getTebex } from '$lib/tebex/index.svelte';
 	import { Button } from '$ui/button';
 	import * as Carousel from '$ui/carousel';
 	import * as Dialog from '$ui/dialog';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import Heart from '@lucide/svelte/icons/heart';
 	import Image from '@lucide/svelte/icons/image';
 	import Info from '@lucide/svelte/icons/info';
@@ -29,9 +34,50 @@
 	let { data }: Props = $props();
 
 	let product = $derived(data.product);
+	let productCategories = $derived(data.productCategories ?? []);
+	let primaryCategory = $derived(data.primaryCategory);
+	let relatedProducts = $derived(data.relatedProducts ?? []);
 	let badge = $derived(data.badges.find((b) => b.id === product.features?.badgeId));
 	let isFree = $derived(!product.price || product.price === 0);
 	let dollars = $derived(((product.price ?? 0) / 100).toFixed(2));
+	const globalContext = getGlobalContext();
+	const tebex = getTebex();
+	const isOwned = $derived.by(() => globalContext.authorized && globalContext.ownsProduct(product.id));
+	const shouldPromptGiftCheckout = $derived(isOwned && !isFree);
+	const supportsGifting = $derived(product.tebex?.supportsGifting ?? false);
+	const canStartGiftCheckout = $derived(!shouldPromptGiftCheckout || supportsGifting);
+	const productAction = $derived(tebex.getProductAction(product.id));
+	const inCurrentCheckout = $derived.by(
+		() => tebex.currentCheckout?.checkoutRequest.items.some((item) => item.productId === product.id) ?? false
+	);
+	const addButtonLabel = $derived.by(() => {
+		if (shouldPromptGiftCheckout) {
+			if (!supportsGifting) {
+				return 'This Item Cannot Be Gifted';
+			}
+
+			if (productAction === 'adding') {
+				return 'Creating Gift Checkout...';
+			}
+
+			return inCurrentCheckout ? 'Review Gift Checkout' : 'Create Gift Checkout';
+		}
+
+		if (productAction === 'adding') {
+			return isFree ? 'Adding Unlock...' : 'Adding to Basket...';
+		}
+
+		return inCurrentCheckout ? 'In Basket' : isFree ? 'Unlock' : 'Add to Basket';
+	});
+	const baseUrl = env.PUBLIC_CANONICAL_URL || env.PUBLIC_HOST_URL || '';
+	const seoDescription = $derived.by(() => {
+		const categoryText = primaryCategory ? ` from the ${primaryCategory.title} collection` : '';
+		return (
+			product.description?.trim() ||
+			`Unlock ${product.name}${categoryText} in the Elite Shop with profile cosmetics, premium flair, and account perks.`
+		);
+	});
+	const ldJson = $derived(buildShopProductLdJson(baseUrl, product, productCategories, seoDescription));
 
 	const crumbs = $derived<Crumb[]>([{ name: 'Shop', href: '/shop' }, { name: product.name }]);
 
@@ -40,36 +86,61 @@
 		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
+	const leadPreviewStyle = $derived.by(() => {
+		if (!product.weightStyles?.length) return null;
+		const style = data.styles.find((s) => s.id === product.weightStyles[0].id);
+		return style?.styleFormatter === 'data' ? style : null;
+	});
+
 	let claimModalOpen = $state(false);
+
+	async function startGiftCheckout() {
+		const checkoutUrl = inCurrentCheckout
+			? '/shop/checkout?gift=1'
+			: `/shop/checkout?gift=1&giftProduct=${encodeURIComponent(product.id)}`;
+		await goto(checkoutUrl);
+	}
 </script>
 
 <Head
-	title={product.name ?? 'Product'}
-	description="Help support development with cosmetics!"
+	title={`${product.name ?? 'Product'} | Elite Shop`}
+	description={seoDescription}
+	keywords={shopKeywords}
 	canonicalPath="/shop/{product.id}"
+	imageUrl={product.thumbnail?.url ?? product.images?.[0]?.url}
+	twitterCardType="summary_large_image"
+	{ldJson}
 />
 
-<div class="container mx-auto max-w-6xl px-4 py-12">
-	<a
-		class="text-muted-foreground hover:text-primary mb-8 flex items-center gap-2 text-sm font-medium transition-colors"
-		href="/shop"
-	>
-		<ArrowLeft size={16} />
-		Back to Shop
-	</a>
+<div class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+	<div class="flex flex-wrap items-center gap-3">
+		<a
+			class="text-muted-foreground hover:text-primary inline-flex items-center gap-2 text-sm font-medium transition-colors"
+			href="/shop"
+			data-sveltekit-preload-data="tap"
+		>
+			<ArrowLeft size={16} />
+			Back to Shop
+		</a>
+		{#if primaryCategory}
+			<a
+				class="border-border/60 bg-background hover:bg-card inline-flex rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+				href="/shop/category/{primaryCategory.slug}"
+				data-sveltekit-preload-data="tap"
+			>
+				View {primaryCategory.title}
+			</a>
+		{/if}
+	</div>
 
 	<div class="grid gap-12 lg:grid-cols-2">
 		<div class="flex flex-col gap-6">
 			<div class="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
-				{#if product.images?.length || (product.weightStyles?.length && data.styles.find((s) => s.id === product.weightStyles[0].id)?.styleFormatter === 'data')}
-					{@const hasPreview =
-						product.weightStyles?.length &&
-						data.styles.find((s) => s.id === product.weightStyles[0].id)?.styleFormatter === 'data'}
-					{@const totalSlides = (product.images?.length ?? 0) + (hasPreview ? 1 : 0)}
+				{#if product.images?.length || leadPreviewStyle}
+					{@const totalSlides = (product.images?.length ?? 0) + (leadPreviewStyle ? 1 : 0)}
 					<Carousel.Root class="w-full">
 						<Carousel.Content>
-							{#if hasPreview}
-								{@const style = data.styles.find((s) => s.id === product.weightStyles[0].id)}
+							{#if leadPreviewStyle}
 								<Carousel.Item>
 									<div class="bg-background flex aspect-video w-full flex-col justify-center p-4">
 										<div class="border-border/50 origin-left rounded-md border p-2 py-3">
@@ -85,10 +156,10 @@
 
 										<div class="my-2 origin-left">
 											<EntryPreview
-												style={style?.leaderboard ?? {}}
+												style={leadPreviewStyle.leaderboard ?? {}}
 												ign={data.ign ?? 'Player'}
 												uuid={data.uuid ?? ''}
-												styleId={+(style?.id ?? 0)}
+												styleId={+(leadPreviewStyle.id ?? 0)}
 											/>
 										</div>
 
@@ -139,22 +210,11 @@
 				{/if}
 			</div>
 
-			<!-- Description -->
-			{#if product.description}
-				<div class="max-w-none">
-					<h3 class="text-lg font-semibold">About This Item</h3>
-					<p class="text-muted-foreground leading-relaxed">
-						{product.description}
-					</p>
-				</div>
-			{/if}
-
 			{#if product.isSubscription}
 				<div class="max-w-none">
-					<h3 class="font-semibold">Subscription Item</h3>
+					<h3 class="font-semibold">Subscription access</h3>
 					<p class="text-muted-foreground text-sm leading-relaxed">
-						This item is a subscription, the perks that you receive will only be active while you have a
-						valid subscription. You can cancel your subscription at any time!
+						These perks stay active while your subscription is live, and you can cancel whenever you want.
 					</p>
 				</div>
 			{/if}
@@ -163,6 +223,11 @@
 		<div class="flex flex-col gap-8">
 			<div>
 				<h1 class="text-4xl font-extrabold tracking-tight lg:text-5xl">{product.name}</h1>
+				{#if product.description}
+					<p class="text-muted-foreground mt-2 max-w-lg text-base leading-relaxed">
+						{product.description}
+					</p>
+				{/if}
 				<div class="mt-4 flex items-baseline gap-2">
 					{#if isFree}
 						<span class="text-3xl font-bold">Free</span>
@@ -174,31 +239,97 @@
 						{/if}
 					{/if}
 				</div>
-			</div>
 
+				{#if productCategories.length}
+					<div class="mt-3 flex flex-wrap gap-2">
+						{#each productCategories as category (category.id)}
+							<a
+								href="/shop/category/{category.slug}"
+								class="border-border/60 bg-background inline-flex rounded-full border px-3 py-1 text-sm font-medium"
+								data-sveltekit-preload-data="tap"
+							>
+								{category.title}
+							</a>
+						{/each}
+					</div>
+				{/if}
+			</div>
 			<div class="flex flex-col gap-4">
-				{#if isFree && product.type == 2}
+				{#if isFree && product.type === 2}
 					<Button onclick={() => (claimModalOpen = true)} size="lg" class="w-full text-lg font-semibold">
 						Unlock Now
 					</Button>
 				{:else}
-					<Button href="/shop/{product.id}/buy" size="lg" class="w-full text-lg font-semibold">
-						{isFree ? 'Unlock' : 'Buy'} on Discord
-						<ExternalLink size={20} class="ml-2" />
+					<Button
+						onclick={() => (shouldPromptGiftCheckout ? startGiftCheckout() : tebex.addToBasket(product.id))}
+						size="lg"
+						class="w-full text-lg font-semibold"
+						disabled={!canStartGiftCheckout ||
+							productAction === 'adding' ||
+							(!shouldPromptGiftCheckout && inCurrentCheckout)}
+					>
+						{addButtonLabel}
 					</Button>
+					{#if shouldPromptGiftCheckout}
+						<Button href="/shop" size="lg" variant="secondary" class="w-full text-lg font-semibold">
+							Continue Shopping
+						</Button>
+					{/if}
 				{/if}
-				{#if isFree}
-					<div class="bg-muted/50 flex items-start gap-3 rounded-lg p-4 text-sm">
+				{#if shouldPromptGiftCheckout}
+					<div class="bg-primary/6 border-primary/20 flex items-start gap-3 rounded-lg border p-4 text-sm">
 						<Info class="text-primary mt-0.5 shrink-0" size={16} />
 						<p class="text-muted-foreground">
-							Discord requires billing info even for free items. You won't be charged.
+							{#if supportsGifting}
+								You already own this item on your account. If you want another copy, start a gift
+								checkout and choose the player on the checkout page.
+							{:else}
+								You already own this item on your account, and this product is not eligible for gift
+								checkout.
+							{/if}
 						</p>
 					</div>
 				{/if}
+				{#if inCurrentCheckout}
+					<div class="bg-muted/50 flex items-start gap-3 rounded-lg p-4 text-sm">
+						<Info class="text-primary mt-0.5 shrink-0" size={16} />
+						<p class="text-muted-foreground">
+							{#if shouldPromptGiftCheckout}
+								This gift item is already in your basket. Open checkout to choose who should receive it.
+							{:else}
+								This item is already in your basket, so it will be included automatically when you
+								checkout.
+							{/if}
+						</p>
+					</div>
+				{/if}
+
+				<div class="border-border/60 bg-card/70 rounded-xl border p-4 text-sm">
+					<p class="text-muted-foreground leading-relaxed">
+						Manage your items in <a href="/profile/purchases" class="text-link hover:underline"
+							>purchase history</a
+						>
+						or equip cosmetics from
+						<a href="/profile/settings" class="text-link hover:underline">profile settings</a>.
+					</p>
+				</div>
 			</div>
 
 			<div class="border-border rounded-xl border p-6">
-				<h3 class="mb-4 text-xl font-semibold">Features Unlocked</h3>
+				<h3 class="mb-4 text-xl font-semibold">What you'll unlock</h3>
+				{#snippet featureRow(Icon: typeof Image, title: string, description: string)}
+					<div class="flex gap-3">
+						<div
+							class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+						>
+							<Icon size={20} />
+						</div>
+						<div>
+							<p class="mb-0.5 leading-none font-medium">{title}</p>
+							<p class="text-muted-foreground text-sm">{description}</p>
+						</div>
+					</div>
+				{/snippet}
 				<div class="flex flex-col gap-4">
 					{#if product.weightStyles?.length}
 						<div class="flex gap-3">
@@ -210,9 +341,8 @@
 							<div>
 								<p class="mb-0.5 leading-none font-medium">Cosmetic Styles</p>
 								<p class="text-muted-foreground text-sm">
-									Unlocks {product.weightStyles.length} style{product.weightStyles.length > 1
-										? 's'
-										: ''} for your profile and commands.
+									Adds {product.weightStyles.length} style{product.weightStyles.length > 1 ? 's' : ''}
+									you can use across Elite.
 								</p>
 							</div>
 						</div>
@@ -257,70 +387,38 @@
 					{/if}
 
 					{#if product.features?.customEmoji}
-						<div class="flex gap-3">
-							<div
-								class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
-							>
-								<Heart size={20} />
-							</div>
-							<div>
-								<p class="mb-0.5 leading-none font-medium">Custom Emoji</p>
-								<p class="text-muted-foreground text-sm">
-									Display a custom emoji next to your name everywhere.
-								</p>
-							</div>
-						</div>
+						{@render featureRow(
+							Heart,
+							'Custom Emoji',
+							'Display a custom emoji next to your name everywhere.'
+						)}
 					{/if}
 
-					<!-- Generic feature list for other items -->
 					{#if product.features?.hideShopPromotions}
-						<div class="flex gap-3">
-							<div
-								class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
-							>
-								<TicketX size={20} />
-							</div>
-							<div>
-								<p class="mb-0.5 leading-none font-medium">Hide Shop Promotions</p>
-								<p class="text-muted-foreground text-sm">Disable shop ads in bot commands.</p>
-							</div>
-						</div>
+						{@render featureRow(TicketX, 'Cleaner commands', 'Hide shop promos in supported bot commands.')}
 					{/if}
 
 					{#if product.features?.weightStyleOverride}
-						<div class="flex gap-3">
-							<div
-								class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
-							>
-								<Replace size={20} />
-							</div>
-							<div>
-								<p class="mb-0.5 leading-none font-medium">Global Style Override</p>
-								<p class="text-muted-foreground text-sm">
-									Your style appears for everyone you look up.
-								</p>
-							</div>
-						</div>
+						{@render featureRow(
+							Replace,
+							'Show your style everywhere',
+							'Use this look whenever someone views your profile.'
+						)}
 					{/if}
 
 					{#if product.features?.moreInfoDefault}
-						<div class="flex gap-3">
-							<div
-								class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
-							>
-								<ScrollText size={20} />
-							</div>
-							<div>
-								<p class="mb-0.5 leading-none font-medium">Default "More Info"</p>
-								<p class="text-muted-foreground text-sm">Always show detailed stats in /weight.</p>
-							</div>
-						</div>
+						{@render featureRow(
+							ScrollText,
+							'Detailed stats by default',
+							'Open /weight with extra detail turned on.'
+						)}
 					{/if}
 
 					<p class="text-muted-foreground text-sm">
-						Equip your purchases in your <a href="/profile/settings" class="text-link hover:underline"
-							>profile settings</a
-						>!
+						Most cosmetics can be equipped any time from <a
+							href="/profile/settings"
+							class="text-link hover:underline">profile settings</a
+						>.
 					</p>
 				</div>
 			</div>
@@ -331,12 +429,12 @@
 		<section id="styles" class="mt-24 scroll-mt-24">
 			<div class="mb-8 flex items-center gap-4">
 				<div class="bg-border h-px flex-1"></div>
-				<h2 class="text-3xl font-bold">Included Styles</h2>
+				<h2 class="text-3xl font-bold">Style previews</h2>
 				<div class="bg-border h-px flex-1"></div>
 			</div>
 
 			<div class="grid gap-8">
-				{#each product.weightStyles.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0) as { id } (id)}
+				{#each [...product.weightStyles].sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0) as { id } (id)}
 					{@const style = data.styles.find((s) => s.id === id)}
 					{#if style}
 						<div class="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
@@ -399,41 +497,34 @@
 			</div>
 		</section>
 	{/if}
+
+	{#if relatedProducts.length}
+		<section class="space-y-6">
+			<div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+				<div>
+					<h2 class="text-3xl font-black tracking-tight sm:text-4xl">You might also like</h2>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+				{#each relatedProducts as relatedProduct (relatedProduct.id)}
+					<ProductCard product={relatedProduct} class="w-full max-w-none" />
+				{/each}
+			</div>
+		</section>
+	{/if}
 </div>
 
 <Dialog.Root bind:open={claimModalOpen}>
 	<Dialog.ScrollContent>
 		<Dialog.Title>Unlock {product.name}</Dialog.Title>
 		<div class="mt-4 flex flex-col gap-4">
-			<p>You can claim this item for free!</p>
+			<p>This item is free — claim it to add it to your account instantly.</p>
 
-			<div class="bg-muted/50 rounded-lg p-4 text-sm">
-				<p class="mb-1 font-semibold">Why two options?</p>
-				<p class="text-muted-foreground">
-					"Unlock on Discord" adds it to your Discord inventory (requires billing info). "Claim Item" adds it
-					directly to your Elite account (no billing info needed).
-				</p>
-			</div>
-
-			<div class="flex w-full flex-col gap-3 pt-2">
-				<form action="?/claim" method="post" class="w-full" use:enhance>
-					<input type="hidden" name="sku" value={product.id} />
-					<Button type="submit" class="w-full font-semibold" variant="secondary" size="lg">
-						Claim Directly
-					</Button>
-				</form>
-
-				<div class="relative flex items-center py-2">
-					<div class="border-border grow border-t"></div>
-					<span class="text-muted-foreground mx-4 shrink-0 text-xs uppercase">Or</span>
-					<div class="border-border grow border-t"></div>
-				</div>
-
-				<Button href="/shop/{product.id}/buy" class="w-full font-semibold" size="lg">
-					{isFree ? 'Unlock' : 'Buy'} on Discord
-					<ExternalLink size={16} class="ml-2" />
-				</Button>
-			</div>
+			<form action="?/claim" method="post" class="w-full" use:enhance>
+				<input type="hidden" name="sku" value={product.id} />
+				<Button type="submit" class="w-full font-semibold" size="lg">Claim Now</Button>
+			</form>
 		</div>
 	</Dialog.ScrollContent>
 </Dialog.Root>

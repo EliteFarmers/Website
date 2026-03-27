@@ -69,7 +69,7 @@ export const zodClaimGiftParams = zod.object({
 });
 
 export const zodClaimGiftBody = zod.object({
-	orderItemIds: zod.array(zod.number()),
+	orderItemIds: zod.array(zod.string()),
 });
 
 /**
@@ -80,7 +80,7 @@ export const zodDeclineGiftParams = zod.object({
 });
 
 export const zodDeclineGiftBody = zod.object({
-	orderItemIds: zod.array(zod.number()),
+	orderItemIds: zod.array(zod.string()),
 });
 
 /**
@@ -91,7 +91,7 @@ export const zodResendGiftParams = zod.object({
 });
 
 export const zodResendGiftBody = zod.object({
-	orderItemIds: zod.array(zod.number()),
+	orderItemIds: zod.array(zod.string()),
 	mode: zod.enum(['Self', 'GiftUser', 'GiftGuild']).nullish(),
 	playerUuidOrIgn: zod.string().nullish(),
 	guildId: zod.number().nullish(),
@@ -2985,6 +2985,7 @@ export const zodUpsertTebexProductSettingsBody = zod.object({
 			allowGiftGuild: zod.coerce.boolean<boolean>(),
 			creatorCodeAllowed: zod.coerce.boolean<boolean>(),
 			requiresMinecraftIdentity: zod.coerce.boolean<boolean>(),
+			defaultCreatorCode: zod.string().nullish(),
 			checkoutNameOverride: zod.string().nullish(),
 			checkoutDescriptionOverride: zod.string().nullish(),
 			imageUrlOverride: zod.string().nullish(),
@@ -3026,6 +3027,13 @@ export const zodHiddenCreateTebexCheckoutBody = zod.object({
 	creatorCode: zod.string().nullish(),
 	country: zod.string().nullish(),
 	fingerprint: zod.string().nullish(),
+});
+
+/**
+ * @summary Delete Tebex Checkout Session Locally
+ */
+export const zodHiddenDeleteTebexCheckoutParams = zod.object({
+	orderId: zod.string(),
 });
 
 /**
@@ -3308,6 +3316,23 @@ export const zodSkyblockProductParams = zod.object({
 });
 
 /**
+ * @summary Upload Category Banner Image
+ */
+export const zodAddCategoryBannerParams = zod.object({
+	categoryId: zod.number(),
+});
+
+export const zodAddCategoryBannerBodyTitleMax = 64;
+
+export const zodAddCategoryBannerBodyDescriptionMax = 512;
+
+export const zodAddCategoryBannerBody = zod.object({
+	title: zod.string().max(zodAddCategoryBannerBodyTitleMax).nullish(),
+	description: zod.string().max(zodAddCategoryBannerBodyDescriptionMax).nullish(),
+	image: zod.instanceof(File),
+});
+
+/**
  * @summary Add Product to Shop Category
  */
 export const zodAddProductToCategoryParams = zod.object({
@@ -3332,10 +3357,13 @@ export const zodCreateCategoryBodySlugMax = 32;
 
 export const zodCreateCategoryBodyDescriptionMax = 512;
 
+export const zodCreateCategoryBodyLongDescriptionMax = 4096;
+
 export const zodCreateCategoryBody = zod.object({
 	title: zod.string().max(zodCreateCategoryBodyTitleMax),
 	slug: zod.string().max(zodCreateCategoryBodySlugMax),
 	description: zod.string().max(zodCreateCategoryBodyDescriptionMax).nullish(),
+	longDescription: zod.string().max(zodCreateCategoryBodyLongDescriptionMax).nullish(),
 });
 
 /**
@@ -3358,10 +3386,13 @@ export const zodUpdateCategoryBodySlugMax = 32;
 
 export const zodUpdateCategoryBodyDescriptionMax = 512;
 
+export const zodUpdateCategoryBodyLongDescriptionMax = 4096;
+
 export const zodUpdateCategoryBody = zod.object({
 	title: zod.string().max(zodUpdateCategoryBodyTitleMax).nullish(),
 	slug: zod.string().max(zodUpdateCategoryBodySlugMax).nullish(),
 	description: zod.string().max(zodUpdateCategoryBodyDescriptionMax).nullish(),
+	longDescription: zod.string().max(zodUpdateCategoryBodyLongDescriptionMax).nullish(),
 	published: zod.coerce.boolean<boolean>().nullish(),
 });
 
@@ -3877,6 +3908,10 @@ export const zodUpdateStyleBodyImagesItemTitleMax = 64;
 
 export const zodUpdateStyleBodyImagesItemDescriptionMax = 512;
 
+export const zodUpdateStyleBodyImageRefsTitleMax = 64;
+
+export const zodUpdateStyleBodyImageRefsDescriptionMax = 512;
+
 export const zodUpdateStyleBody = zod.object({
 	id: zod.number(),
 	styleFormatter: zod.string().max(zodUpdateStyleBodyStyleFormatterMax).nullish(),
@@ -3906,6 +3941,14 @@ export const zodUpdateStyleBody = zod.object({
 					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
 				),
 			url: zod.string().describe('Lowest quality image URL'),
+		})
+		.nullish(),
+	author: zod
+		.object({
+			id: zod.string(),
+			name: zod.string(),
+			avatar: zod.string().nullish(),
+			uuid: zod.string().nullish(),
 		})
 		.nullish(),
 	images: zod.array(
@@ -4283,6 +4326,32 @@ export const zodUpdateStyleBody = zod.object({
 				.nullish(),
 		})
 		.nullish(),
+	imageRefs: zod.record(
+		zod.string(),
+		zod.object({
+			title: zod.string().max(zodUpdateStyleBodyImageRefsTitleMax).nullish().describe('Image title'),
+			description: zod
+				.string()
+				.max(zodUpdateStyleBodyImageRefsDescriptionMax)
+				.nullish()
+				.describe('Image description'),
+			order: zod.number().nullish().describe('Image ordering number'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
+		})
+	),
 });
 
 /**

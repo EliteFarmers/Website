@@ -7,6 +7,7 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { ShopCategoryDtoBannerImage } from './ShopCategoryDtoBannerImage';
 import type { ProductDto } from './ProductDto';
 
 export interface ShopCategoryDto {
@@ -15,6 +16,10 @@ export interface ShopCategoryDto {
 	slug: string;
 	/** @nullable */
 	description?: string | null;
+	/** @nullable */
+	longDescription?: string | null;
+	/** @nullable */
+	bannerImage?: ShopCategoryDtoBannerImage;
 	order: number;
 	published: boolean;
 	products: ProductDto[];

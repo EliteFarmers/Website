@@ -12,11 +12,11 @@ import type { AdminOrderSummaryDtoRecurring } from './AdminOrderSummaryDtoRecurr
 
 export interface AdminOrderSummaryDto {
 	orderId: string;
-	buyerId: bigint;
+	buyerId: string;
 	/** @nullable */
-	recipientId?: bigint | null;
+	recipientId?: string | null;
 	/** @nullable */
-	recipientGuildId?: bigint | null;
+	recipientGuildId?: string | null;
 	status: string;
 	provider: string;
 	/** @nullable */

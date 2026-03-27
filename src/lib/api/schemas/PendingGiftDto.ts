@@ -14,7 +14,7 @@ import type { GiftItemDto } from './GiftItemDto';
  */
 export interface PendingGiftDto {
 	orderId: string;
-	buyerId: bigint;
+	buyerId: string;
 	buyerName: string;
 	provider: string;
 	orderDate: string;
