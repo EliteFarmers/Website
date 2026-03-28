@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
+	import RenderMd from '$comp/markdown/render-md.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
 	import ResponsiveImage from '$comp/responsive-image.svelte';
 	import ArtistCredit from '$comp/shop/artist-credit.svelte';
@@ -70,7 +71,9 @@
 				<h1 class="max-w-3xl text-3xl font-bold sm:text-4xl lg:text-5xl">
 					{heroTitle}
 				</h1>
-				<p class="max-w-2xl text-sm leading-relaxed sm:text-base">{heroDescription}</p>
+				<p class="max-w-2xl text-sm leading-relaxed sm:text-base">
+					{heroDescription}
+				</p>
 			</div>
 
 			{#if artist}
@@ -97,7 +100,9 @@
 
 	{#if data.category.longDescription}
 		<section class="prose prose-neutral dark:prose-invert max-w-3xl">
-			<p class="text-muted-foreground leading-relaxed">{data.category.longDescription}</p>
+			<div class="text-muted-foreground leading-relaxed">
+				<RenderMd content={data.category.longDescription} />
+			</div>
 		</section>
 	{/if}
 

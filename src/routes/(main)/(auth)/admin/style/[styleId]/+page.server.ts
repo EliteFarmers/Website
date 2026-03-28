@@ -63,7 +63,7 @@ export const actions: Actions = {
 			body.data = styleData as WeightStyleWithDataDto['data'];
 		}
 
-		const { error: e, response } = await updateStyle(styleId, body);
+		const { error: e, response } = await updateStyle(styleId, body as WeightStyleWithDataDto);
 
 		if (e) {
 			return fail(response.status, { error: e });
@@ -83,7 +83,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const body: WeightStyleWithDataDto = {
+		const body: Omit<WeightStyleWithDataDto, 'imageRefs'> = {
 			id: +styleId,
 			name: (data.get('name') as string) || undefined,
 			styleFormatter: (data.get('formatter') as string) || undefined,
@@ -103,7 +103,7 @@ export const actions: Actions = {
 			body.leaderboard = styleData as WeightStyleWithDataDto['leaderboard'];
 		}
 
-		const { error: e, response } = await updateStyle(styleId, body);
+		const { error: e, response } = await updateStyle(styleId, body as WeightStyleWithDataDto);
 
 		if (e) {
 			return fail(response.status, { error: e });
@@ -246,6 +246,47 @@ export const actions: Actions = {
 
 		if (e || !response.ok) {
 			return fail(response.status ?? 400, { error: e || 'Failed to reassign style.' });
+		}
+
+		return { success: true };
+	},
+	reuploadImage: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const styleId = data.get('style') as string;
+		const imageUrl = data.get('imageUrl') as string;
+		const title = data.get('title') as string | null;
+		const description = data.get('description') as string | null;
+
+		if (!styleId || isNaN(+styleId)) {
+			return fail(400, { error: 'Invalid style ID.' });
+		}
+
+		const parsedUrl = URL.parse(imageUrl);
+		if (!imageUrl || !parsedUrl?.pathname) {
+			return fail(400, { error: 'Invalid image URL.' });
+		}
+
+		// Download the existing image
+		const imageResponse = await fetch(imageUrl);
+		if (!imageResponse.ok) {
+			return fail(400, { error: 'Failed to download existing image.' });
+		}
+
+		const imageBlob = await imageResponse.blob();
+
+		// Upload the image with original title/description
+		const { response: uploadResponse, error: uploadError } = await addStyleImage(styleId, {
+			image: imageBlob,
+			title: title || undefined,
+			description: description || undefined,
+		});
+
+		if (!uploadResponse.ok || uploadError) {
+			return fail(uploadResponse.status, { error: uploadError || 'Failed to upload image.' });
 		}
 
 		return { success: true };

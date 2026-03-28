@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { LeaderboardStyleEditor, WeightStyleEditor } from '$comp/admin/style-editor';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import Head from '$comp/head.svelte';
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
@@ -8,13 +9,16 @@
 	import type { LeaderboardStyleDataDto, WeightStyleDataDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import type { LeaderboardStyle as LeaderboardStyleType, WeightStyle as WeightStyleType } from '$lib/styles/style';
 	import { leaderboardStyleParse, weightStyleParse } from '$lib/styles/style';
 	import { pending } from '$lib/utils';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
+	import * as Tabs from '$ui/tabs';
 	import { Textarea } from '$ui/textarea';
+	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import Trash_2 from '@lucide/svelte/icons/trash-2';
 	import UserPlus from '@lucide/svelte/icons/user-plus';
 	import { PersistedState } from 'runed';
@@ -39,23 +43,99 @@
 	let showBadge = $state(false);
 	let badgeUrl = $derived(showBadge ? badge : undefined);
 
-	let styleData = $derived(JSON.stringify(data.style.data ?? {}, undefined, 2) + '');
+	// Visual editor state
+	let styleEditorMode = new PersistedState<'visual' | 'json'>('styleEditorMode', 'visual');
+	let leaderboardEditorMode = new PersistedState<'visual' | 'json'>('leaderboardEditorMode', 'visual');
+
+	let weightStyleObj = $derived<WeightStyleType>(
+		structuredClone(data.style.data ?? { elements: { background: {} } }) as WeightStyleType
+	);
+	let leaderboardStyleObj = $derived<LeaderboardStyleType>(
+		structuredClone(data.style.leaderboard ?? {}) as LeaderboardStyleType
+	);
+
+	let styleJsonText = $derived(JSON.stringify(data.style.data ?? {}, undefined, 2));
+	let leaderboardJsonText = $derived(JSON.stringify(data.style.leaderboard ?? {}, undefined, 2));
+
+	// Sync visual editor -> JSON when switching to JSON mode
+	function syncStyleToJson() {
+		styleJsonText = JSON.stringify(weightStyleObj, undefined, 2);
+	}
+	function syncLeaderboardToJson() {
+		leaderboardJsonText = JSON.stringify(leaderboardStyleObj, undefined, 2);
+	}
+
+	// Sync JSON -> visual editor when switching to visual mode
+	function syncJsonToStyle() {
+		try {
+			const parsed = JSON.parse(styleJsonText);
+			const result = weightStyleParse(parsed);
+			if (result.success) {
+				weightStyleObj = result.data as WeightStyleType;
+			}
+		} catch {
+			// Keep current visual state if JSON is invalid
+		}
+	}
+	function syncJsonToLeaderboard() {
+		try {
+			const parsed = JSON.parse(leaderboardJsonText);
+			const result = leaderboardStyleParse(parsed);
+			if (result.success) {
+				leaderboardStyleObj = result.data as LeaderboardStyleType;
+			}
+		} catch {
+			// Keep current visual state if JSON is invalid
+		}
+	}
+
+	// Recursively ensure all numeric values are not undefined (coerce undefined → 0)
+	// JSON.stringify drops undefined, which causes zod to reject required number fields
+	function cleanNumbers(obj: unknown): unknown {
+		if (obj === null || obj === undefined) return obj;
+		if (typeof obj !== 'object') return obj;
+		if (Array.isArray(obj)) return obj.map(cleanNumbers);
+		const result: Record<string, unknown> = {};
+		for (const [key, val] of Object.entries(obj)) {
+			if (val === undefined) continue;
+			result[key] = typeof val === 'object' ? cleanNumbers(val) : val;
+		}
+		// Ensure Position-like objects keep x/y as numbers
+		if ('x' in result && result.x == null) result.x = 0;
+		if ('y' in result && result.y == null) result.y = 0;
+		// Ensure gradient stop position is a number
+		if ('position' in result && 'fill' in result && result.position == null) result.position = 0;
+		return result;
+	}
+
+	// Derive the serialized form data for submission
+	let styleFormData = $derived.by(() => {
+		if (styleEditorMode.current === 'visual') {
+			return JSON.stringify(cleanNumbers(weightStyleObj));
+		}
+		return styleJsonText;
+	});
+	let leaderboardFormData = $derived.by(() => {
+		if (leaderboardEditorMode.current === 'visual') {
+			return JSON.stringify(cleanNumbers(leaderboardStyleObj));
+		}
+		return leaderboardJsonText;
+	});
+
+	// Validation for preview
 	let styleDataValid = $derived.by(() => {
 		try {
-			const s = JSON.parse(styleData);
+			const s = JSON.parse(styleFormData);
 			return weightStyleParse(s);
 		} catch {
 			return undefined;
 		}
 	});
-
-	let leaderboardData = $derived(JSON.stringify(data.style.leaderboard ?? {}, undefined, 2) + '');
 	let leaderboardDataValid = $derived.by(() => {
 		try {
-			const l = JSON.parse(leaderboardData);
+			const l = JSON.parse(leaderboardFormData);
 			return leaderboardStyleParse(l);
 		} catch {
-			console.log('Invalid leaderboard data');
 			return undefined;
 		}
 	});
@@ -185,16 +265,35 @@
 				<input type="hidden" name="style" value={style.id} />
 				<input type="hidden" name="name" value={style.name} />
 				<input type="hidden" name="description" value={style.description} />
+				<input type="hidden" name="data" value={styleFormData} />
 
-				<div class="flex max-w-2xl flex-col items-start gap-2">
-					<Textarea
-						spellcheck={false}
-						writingsuggestions={false}
-						class="h-96 font-mono"
-						name="data"
-						bind:value={styleData}
-					/>
-				</div>
+				<Tabs.Root
+					bind:value={styleEditorMode.current}
+					onValueChange={(v) => {
+						if (v === 'json') syncStyleToJson();
+						else if (v === 'visual') syncJsonToStyle();
+					}}
+				>
+					<Tabs.List>
+						<Tabs.Trigger value="visual">Visual</Tabs.Trigger>
+						<Tabs.Trigger value="json">JSON</Tabs.Trigger>
+					</Tabs.List>
+					<Tabs.Content value="visual">
+						<div class="max-h-128 max-w-2xl overflow-y-auto py-2 pr-2">
+							<WeightStyleEditor bind:value={weightStyleObj} imageRefs={style.imageRefs ?? {}} />
+						</div>
+					</Tabs.Content>
+					<Tabs.Content value="json">
+						<div class="flex max-w-2xl flex-col items-start gap-2">
+							<Textarea
+								spellcheck={false}
+								writingsuggestions={false}
+								class="h-96 font-mono"
+								bind:value={styleJsonText}
+							/>
+						</div>
+					</Tabs.Content>
+				</Tabs.Root>
 
 				<div class="flex flex-row items-center gap-4">
 					<Button class="w-32" type="submit" disabled={loading}>Update</Button>
@@ -260,16 +359,38 @@
 				<input type="hidden" name="style" value={style.id} />
 				<input type="hidden" name="name" value={style.name} />
 				<input type="hidden" name="description" value={style.description} />
+				<input type="hidden" name="data" value={leaderboardFormData} />
 
-				<div class="flex max-w-2xl flex-col items-start gap-2">
-					<Textarea
-						spellcheck={false}
-						writingsuggestions={false}
-						class="h-96 font-mono"
-						name="data"
-						bind:value={leaderboardData}
-					/>
-				</div>
+				<Tabs.Root
+					bind:value={leaderboardEditorMode.current}
+					onValueChange={(v) => {
+						if (v === 'json') syncLeaderboardToJson();
+						else if (v === 'visual') syncJsonToLeaderboard();
+					}}
+				>
+					<Tabs.List>
+						<Tabs.Trigger value="visual">Visual</Tabs.Trigger>
+						<Tabs.Trigger value="json">JSON</Tabs.Trigger>
+					</Tabs.List>
+					<Tabs.Content value="visual">
+						<div class="max-h-128 max-w-2xl overflow-y-auto py-2 pr-2">
+							<LeaderboardStyleEditor
+								bind:value={leaderboardStyleObj}
+								imageRefs={style.imageRefs ?? {}}
+							/>
+						</div>
+					</Tabs.Content>
+					<Tabs.Content value="json">
+						<div class="flex max-w-2xl flex-col items-start gap-2">
+							<Textarea
+								spellcheck={false}
+								writingsuggestions={false}
+								class="h-96 font-mono"
+								bind:value={leaderboardJsonText}
+							/>
+						</div>
+					</Tabs.Content>
+				</Tabs.Root>
 
 				<div class="flex flex-row items-center gap-4">
 					<Button class="w-32" type="submit" disabled={loading}>Update</Button>
@@ -322,6 +443,28 @@
 							>
 								<Trash_2 size={16} /> Delete
 							</Button>
+
+							{#if !ref}
+								<form
+									method="post"
+									action="?/reuploadImage"
+									use:enhance={() => {
+										loading = true;
+										return async ({ result }) => {
+											await applyAction(result);
+											loading = false;
+										};
+									}}
+								>
+									<input type="hidden" name="style" value={style.id} />
+									<input type="hidden" name="imageUrl" value={image.url} />
+									<input type="hidden" name="title" value={image.title ?? ''} />
+									<input type="hidden" name="description" value={image.description ?? ''} />
+									<Button variant="outline" size="sm" type="submit" disabled={loading}>
+										<RefreshCw size={16} /> Reupload
+									</Button>
+								</form>
+							{/if}
 
 							<CopyToClipboard text={image.url} class="px-3" variant="outline">Copy URL</CopyToClipboard>
 						</div>

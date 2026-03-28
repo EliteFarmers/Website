@@ -146,7 +146,7 @@
 			<div class="space-y-2">
 				<Label>Select Role</Label>
 				<Select.Simple
-					options={data.roles.map((p) => ({
+					options={(data.roles ?? []).map((p) => ({
 						value: p,
 						label: `${p}${selectedMember?.roles?.includes(p) ? ' (Active)' : ''}`,
 					}))}
@@ -186,7 +186,7 @@
 			<div class="flex flex-col items-start gap-2">
 				<Label>Role</Label>
 				<Select.Simple
-					options={data.roles.map((p) => ({
+					options={(data.roles ?? []).map((p) => ({
 						value: p,
 						label: p,
 					}))}
