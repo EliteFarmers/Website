@@ -3,6 +3,7 @@
 	import Head from '$comp/head.svelte';
 	import Product from '$comp/monetization/product.svelte';
 	import { env } from '$env/dynamic/public';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { Button } from '$ui/button';
 	import * as Command from '$ui/command';
 	import { ScrollArea } from '$ui/scroll-area';
@@ -10,9 +11,12 @@
 	import Settings from '@lucide/svelte/icons/settings';
 	import type { PageData } from './$types';
 	const { PUBLIC_DISCORD_CLIENT_ID } = env;
+
 	interface Props {
 		data: PageData;
 	}
+
+	const gbl = getGlobalContext();
 
 	let { data }: Props = $props();
 </script>
@@ -33,7 +37,9 @@
 				<ExternalLink size={16} />
 			</Button>
 			<form action="?/refresh" method="post" use:enhance>
-				<Button class="w-fit" type="submit" variant="secondary">Refresh Products</Button>
+				<Button class="w-fit" type="submit" variant="secondary" disabled={!gbl.session?.perms.admin}
+					>Refresh Products</Button
+				>
 			</form>
 		</div>
 

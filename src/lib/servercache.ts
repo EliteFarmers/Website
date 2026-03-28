@@ -5,7 +5,9 @@ import fs from 'fs/promises';
 import {
 	getAnnouncement,
 	getAuctionHouseProducts,
+	getBadges,
 	getBazaarProducts,
+	getCategories,
 	getHypixelGuilds,
 	getLeaderboard,
 	getLeaderboards,
@@ -19,6 +21,7 @@ import {
 	SortHypixelGuildsBy,
 	type AnnouncementDto,
 	type AuctionHouseDto,
+	type BadgeDto,
 	type EventDetailsDto,
 	type EventTeamsWordListDto,
 	type GetBazaarProductsResponse,
@@ -27,8 +30,9 @@ import {
 	type HypixelGuildDetailsDto,
 	type LeaderboardDto,
 	type ProductDto,
+	type ShopCategoryDto,
 	type SkyblockGemShopsResponse,
-	type WeightStyleWithDataDto,
+	type WeightStyleListDto,
 } from './api';
 import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
@@ -45,16 +49,25 @@ const cacheEntries = {
 		},
 	},
 	products: {
-		data: [] as ProductDto[],
+		data: {
+			list: [] as ProductDto[],
+			new: false,
+		},
 		update: async () => {
 			const { data } = await getProducts();
-			return data ?? [];
+			return {
+				list: data ?? [],
+				// Check if any products were released in the last 3 days
+				new: (data ?? []).some((p) =>
+					p.releasedAt ? new Date(p.releasedAt).getTime() > Date.now() - 1000 * 60 * 60 * 24 * 3 : false
+				),
+			};
 		},
 	},
 	styles: {
 		data: {
-			list: [] as WeightStyleWithDataDto[],
-			lookup: {} as Record<string, WeightStyleWithDataDto>,
+			list: [] as WeightStyleListDto[],
+			lookup: {} as Record<string, WeightStyleListDto>,
 		},
 		update: async () => {
 			const { data } = await getStyles();
@@ -66,7 +79,7 @@ const cacheEntries = {
 							acc[style.id] = style;
 							return acc;
 						},
-						{} as Record<string, WeightStyleWithDataDto>
+						{} as Record<string, WeightStyleListDto>
 					) || {},
 			};
 		},
@@ -172,6 +185,20 @@ const cacheEntries = {
 			return { guilds: data?.guilds ?? [], total: data?.totalGuilds ?? null };
 		},
 	},
+	shopCategories: {
+		data: [] as ShopCategoryDto[],
+		update: async () => {
+			const { data } = await getCategories({ includeProducts: true });
+			return data ?? [];
+		},
+	},
+	badges: {
+		data: [] as BadgeDto[],
+		update: async () => {
+			const { data } = await getBadges();
+			return data ?? [];
+		},
+	},
 };
 
 export const cache = {
@@ -223,6 +250,12 @@ export const cache = {
 	get topguilds() {
 		return cacheEntries.topguilds.data;
 	},
+	get shopCategories() {
+		return cacheEntries.shopCategories.data;
+	},
+	get badges() {
+		return cacheEntries.badges.data;
+	},
 };
 
 let intervals: (number | NodeJS.Timeout)[] = [];
@@ -230,7 +263,15 @@ let intervals: (number | NodeJS.Timeout)[] = [];
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
 	try {
-		await Promise.allSettled(Object.values(cacheEntries).map(async (item) => refreshCacheItem(item)));
+		await Promise.allSettled(
+			Object.values(cacheEntries).map(async (item) => {
+				try {
+					await refreshCacheItem(item);
+				} catch (error) {
+					console.error('Error refreshing cache item:', error);
+				}
+			})
+		);
 
 		console.log('Cached items updated successfully.');
 	} catch (error) {

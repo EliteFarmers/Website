@@ -5,7 +5,7 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ params, locals, parent }) => {
 	const parentData = await parent();
-	const products = locals.cache?.products ?? [];
+	const products = locals.cache?.products?.list ?? [];
 	const product = products?.find((p) => p.id === params.sku);
 	const categories = parentData.categories ?? [];
 

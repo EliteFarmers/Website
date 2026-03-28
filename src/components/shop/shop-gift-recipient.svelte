@@ -5,36 +5,9 @@
 	import Gift from '@lucide/svelte/icons/gift';
 	import Search from '@lucide/svelte/icons/search';
 	import UserRound from '@lucide/svelte/icons/user-round';
+	import type { CheckoutState } from '../../routes/(shop)/shop/checkout/checkout.svelte';
 
-	interface Props {
-		giftIntent: 'self' | 'gift';
-		effectiveRecipientIgn: string | null;
-		selfCheckoutUnavailable: boolean;
-		hasNonGiftableItemsForGift: boolean;
-		settingRecipient: boolean;
-		editingGiftRecipient: boolean;
-		onchooseself: () => void;
-		onchoosegift: () => void;
-		onselectrecipient: (ign: string) => void;
-		onstartchanging: () => void;
-		onstopchanging: () => void;
-		oncleargift: () => void;
-	}
-
-	let {
-		giftIntent,
-		effectiveRecipientIgn,
-		selfCheckoutUnavailable,
-		hasNonGiftableItemsForGift,
-		settingRecipient,
-		editingGiftRecipient,
-		onchooseself,
-		onchoosegift,
-		onselectrecipient,
-		onstartchanging,
-		onstopchanging,
-		oncleargift,
-	}: Props = $props();
+	let { checkout }: { checkout: CheckoutState } = $props();
 
 	let giftSearchOpen = $state(false);
 	let giftSearchValue = $state('');
@@ -47,7 +20,7 @@
 	function handleSelectRecipient(ign: string) {
 		giftSearchOpen = false;
 		giftSearchValue = '';
-		onselectrecipient(ign);
+		checkout.selectRecipient(ign);
 	}
 </script>
 
@@ -57,20 +30,22 @@
 	<div class="mt-6 grid gap-3 sm:grid-cols-2">
 		<button
 			type="button"
-			class={giftIntent === 'self'
+			class={checkout.giftIntent === 'self'
 				? 'border-primary bg-primary/5 hover:bg-primary/10 rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60'
-				: 'border-border bg-background hover:bg-card rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60'}
-			onclick={onchooseself}
-			disabled={selfCheckoutUnavailable}
+				: `${checkout.selfCheckoutUnavailable ? 'border-destructive/50 bg-destructive/10' : 'border-border bg-background'}  hover:bg-card rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60`}
+			onclick={() => checkout.chooseSelf()}
+			disabled={checkout.selfCheckoutUnavailable}
 		>
 			<div class="flex items-center gap-3">
-				<div class="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-2xl">
+				<div
+					class="bg-primary/10 text-primary flex aspect-square size-10 items-center justify-center rounded-2xl"
+				>
 					<UserRound class="size-5" />
 				</div>
 				<div>
 					<p class="font-semibold">For my account</p>
 					<p class="text-muted-foreground text-sm">
-						{#if selfCheckoutUnavailable}
+						{#if checkout.selfCheckoutUnavailable}
 							Unavailable because this basket includes something you already own.
 						{:else}
 							Use these items yourself.
@@ -82,14 +57,16 @@
 
 		<button
 			type="button"
-			class={giftIntent === 'gift'
+			class={checkout.giftIntent === 'gift'
 				? 'border-primary bg-primary/5 hover:bg-primary/10 rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60'
 				: 'border-border bg-background hover:bg-card rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60'}
-			onclick={onchoosegift}
-			disabled={hasNonGiftableItemsForGift}
+			onclick={() => checkout.chooseGift()}
+			disabled={checkout.hasNonGiftableItemsForGift}
 		>
 			<div class="flex items-center gap-3">
-				<div class="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-2xl">
+				<div
+					class="bg-primary/10 text-primary flex aspect-square size-10 items-center justify-center rounded-2xl"
+				>
 					<Gift class="size-5" />
 				</div>
 				<div>
@@ -100,18 +77,8 @@
 		</button>
 	</div>
 
-	{#if selfCheckoutUnavailable}
-		<div class="mt-5 rounded-3xl border border-amber-500/20 bg-amber-500/8 p-4">
-			<p class="text-sm font-semibold">This order needs to stay as a gift.</p>
-			<p class="text-muted-foreground mt-1 text-sm leading-relaxed">
-				Your basket includes an item that is already active on your account, so Tebex can only continue once you
-				choose another player as the recipient.
-			</p>
-		</div>
-	{/if}
-
-	{#if hasNonGiftableItemsForGift}
-		<div class="mt-5 rounded-3xl border border-amber-500/20 bg-amber-500/8 p-4">
+	{#if checkout.hasNonGiftableItemsForGift}
+		<div class="border-destructive/20 bg-destructive/10 mt-5 rounded-3xl border p-4">
 			<p class="text-sm font-semibold">This checkout includes items that cannot be gifted.</p>
 			<p class="text-muted-foreground mt-1 text-sm leading-relaxed">
 				Remove the non-giftable item or keep this checkout on your own account.
@@ -120,7 +87,7 @@
 	{/if}
 
 	<div class="mt-5 rounded-3xl border border-dashed p-4">
-		{#if giftIntent === 'self'}
+		{#if checkout.giftIntent === 'self'}
 			<div class="flex items-center gap-3">
 				<div class="bg-muted flex size-11 items-center justify-center rounded-2xl">
 					<UserRound class="text-muted-foreground size-5" />
@@ -130,15 +97,17 @@
 					<p class="text-muted-foreground text-sm">These items will be tied to your own Elite account.</p>
 				</div>
 			</div>
-		{:else if effectiveRecipientIgn}
+		{:else if checkout.effectiveRecipientIgn}
 			<div class="space-y-4">
 				<div class="flex flex-wrap items-center justify-between gap-3">
 					<div class="flex items-center gap-3">
-						<PlayerHead uuid={effectiveRecipientIgn} class="size-11 rounded-md" />
+						<PlayerHead uuid={checkout.effectiveRecipientIgn} class="size-11 rounded-md" />
 						<div>
-							<p class="font-semibold">Gift recipient: {effectiveRecipientIgn}</p>
+							<p class="font-semibold">Gift recipient: {checkout.effectiveRecipientIgn}</p>
 							<p class="text-muted-foreground text-sm">
-								Make sure this is the right player before continuing.
+								Make sure this is the right player before continuing. If you gift items to the wrong
+								account, <a href="/contact" class="underline">contact support</a> with your order details
+								and we'll see if we can help.
 							</p>
 						</div>
 					</div>
@@ -147,25 +116,25 @@
 							variant="outline"
 							size="sm"
 							onclick={() => {
-								onstartchanging();
+								checkout.startChangingRecipient();
 								openGiftSearch();
 							}}
-							disabled={settingRecipient}
+							disabled={checkout.settingRecipient}
 						>
 							Change recipient
 						</Button>
 						<Button
 							variant="ghost"
 							size="sm"
-							onclick={oncleargift}
-							disabled={settingRecipient || selfCheckoutUnavailable}
+							onclick={() => checkout.clearGift()}
+							disabled={checkout.settingRecipient || checkout.selfCheckoutUnavailable}
 						>
 							Buy for me instead
 						</Button>
 					</div>
 				</div>
 
-				{#if editingGiftRecipient}
+				{#if checkout.editingGiftRecipient}
 					<div class="space-y-3 border-t pt-4">
 						<div class="flex items-center justify-between gap-3">
 							<div>
@@ -174,15 +143,15 @@
 									Updating the recipient will keep this order as a gift.
 								</p>
 							</div>
-							<Button variant="ghost" size="sm" onclick={onstopchanging}>
-								Keep {effectiveRecipientIgn}
+							<Button variant="ghost" size="sm" onclick={() => checkout.stopChangingRecipient()}>
+								Keep {checkout.effectiveRecipientIgn}
 							</Button>
 						</div>
 						<Button
 							variant="outline"
 							class="w-full justify-start"
 							onclick={openGiftSearch}
-							disabled={settingRecipient}
+							disabled={checkout.settingRecipient}
 						>
 							<Search class="size-4" />
 							Choose another player
@@ -202,7 +171,7 @@
 					variant="outline"
 					class="w-full justify-start"
 					onclick={openGiftSearch}
-					disabled={settingRecipient}
+					disabled={checkout.settingRecipient}
 				>
 					<Search class="size-4" />
 					Search for a player

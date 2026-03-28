@@ -3,6 +3,7 @@ import type { ProductDto } from '$lib/api';
 import { getGlobalContext } from '$lib/hooks/global.svelte';
 import { getTebex } from '$lib/tebex/index.svelte';
 import { toast } from 'svelte-sonner';
+import { SvelteURL } from 'svelte/reactivity';
 
 export type BasketLineItem = {
 	productId: string;
@@ -56,9 +57,18 @@ export class CheckoutState {
 
 			this.#shouldApplyGiftPrompt = false;
 		});
-	}
 
-	// -- Checkout result --
+		$effect(() => {
+			if (
+				this.pendingGiftProductId &&
+				!this.pendingGiftProductInCheckout &&
+				!this.addingPendingGiftProduct &&
+				this.effectiveRecipientIgn
+			) {
+				this.#addPendingGiftProduct();
+			}
+		});
+	}
 
 	get checkoutResult() {
 		return this.#tebex.checkoutResult;
@@ -88,8 +98,6 @@ export class CheckoutState {
 		return 'Confirm your items and recipient, then continue to payment.';
 	}
 
-	// -- Basket items --
-
 	get checkoutItems(): BasketLineItem[] {
 		const items = this.#tebex.currentCheckout?.checkoutRequest.items ?? [];
 		return items.map((item) => {
@@ -115,8 +123,6 @@ export class CheckoutState {
 		return this.#tebex.currentCheckout?.totalPrice ?? null;
 	}
 
-	// -- Recipient --
-
 	get recipient() {
 		return this.#tebex.currentCheckout?.checkoutRequest.recipient ?? null;
 	}
@@ -132,8 +138,6 @@ export class CheckoutState {
 	get effectiveRecipientIgn() {
 		return this.recipientIgn ?? this.#stagedRecipientIgn;
 	}
-
-	// -- Pending gift product --
 
 	get pendingGiftProductId() {
 		return this.#pageUrl().searchParams.get('giftProduct');
@@ -152,8 +156,6 @@ export class CheckoutState {
 	get hasPendingGiftPlaceholder() {
 		return Boolean(this.pendingGiftProduct && !this.pendingGiftProductInCheckout);
 	}
-
-	// -- Availability --
 
 	get hasCheckoutToReview() {
 		return this.checkoutItems.length > 0 || Boolean(this.pendingGiftProduct);
@@ -182,8 +184,6 @@ export class CheckoutState {
 	get canMutateCheckout() {
 		return this.#tebex.currentCheckout?.canMutate ?? false;
 	}
-
-	// -- Display labels --
 
 	get deliveryLabel() {
 		if (this.giftIntent === 'gift') {
@@ -234,8 +234,6 @@ export class CheckoutState {
 		return true;
 	}
 
-	// -- Helpers --
-
 	#isSelfRecipient(ign: string | null | undefined) {
 		if (!ign || !this.#gbl.session?.ign) return false;
 		return ign.toLowerCase() === this.#gbl.session.ign.toLowerCase();
@@ -253,8 +251,6 @@ export class CheckoutState {
 		}
 		return 'Choose a recipient and this item will be added automatically.';
 	}
-
-	// -- Actions --
 
 	chooseSelf() {
 		if (this.selfCheckoutUnavailable) {
@@ -352,7 +348,7 @@ export class CheckoutState {
 
 	async clearPendingGiftProductPrompt() {
 		if (!this.pendingGiftProductId) return;
-		const nextUrl = new URL(this.#pageUrl());
+		const nextUrl = new SvelteURL(this.#pageUrl());
 		nextUrl.searchParams.delete('giftProduct');
 		await goto(nextUrl, { replaceState: true, noScroll: true, keepFocus: true });
 	}
@@ -390,8 +386,6 @@ export class CheckoutState {
 			this.launchingCheckout = false;
 		}
 	}
-
-	// -- Private --
 
 	async #addPendingGiftProduct(recipientToUse?: string | null) {
 		if (!this.pendingGiftProductId || this.pendingGiftProductInCheckout) return;

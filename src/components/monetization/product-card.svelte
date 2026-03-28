@@ -39,7 +39,7 @@
 				class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
 			/>
 		{:else}
-			<Package size={48} class="text-muted-foreground/50" />
+			<Package size={48} class="text-muted-foreground opacity-50" />
 		{/if}
 		{#if isOwned}
 			<span
@@ -50,7 +50,7 @@
 		{/if}
 		{#if isNew}
 			<span
-				class="bg-destructive shadow-destructive/50 text-primary-foreground absolute top-2 right-2 rounded-full px-2 py-0.5 text-xs font-semibold shadow-md"
+				class="bg-destructive shadow-destructive/50 text-destructive-foreground absolute top-2 right-2 rounded-full px-2 py-0.5 text-xs font-semibold shadow-md"
 				>NEW</span
 			>
 		{/if}

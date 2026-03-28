@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+	import { page } from '$app/state';
 	import NavMain from '$comp/sidebar/nav-main.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
@@ -64,6 +65,12 @@
 						{/if}
 						<ShoppingCart class="text-primary m-0 size-5 p-0" />
 						<span class="text-primary font-semibold">Shop</span>
+						{#if page.data.newProducts}
+							<span
+								class="bg-destructive text-destructive-foreground absolute right-2 rounded-full px-1 text-[10px] font-bold"
+								>NEW</span
+							>
+						{/if}
 					</a>
 				{/snippet}
 			</Sidebar.MenuButton>

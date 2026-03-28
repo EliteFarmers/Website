@@ -15,7 +15,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals, params }) => {
 	const { session, access_token: token } = locals;
 
-	if (!session || !session.perms.moderator || !token) {
+	if (!session || !(session.perms.artist || session.perms.admin) || !token) {
 		throw error(404, 'Not Found');
 	}
 
@@ -83,6 +83,7 @@ export const actions: Actions = {
 		const billingType = subscriptionEnabled ? 'subscription' : 'standard';
 		const billingPeriod = subscriptionEnabled ? 'month' : undefined;
 		const billingFrequency = subscriptionEnabled ? 1 : undefined;
+		const creator = (data.get('creator') as string | undefined)?.trim();
 
 		const body = {
 			enabled: data.get('enabled') === 'true',
@@ -95,6 +96,7 @@ export const actions: Actions = {
 				billingFrequency,
 				billingPeriod,
 				billingType,
+				defaultCreatorCode: creator || undefined,
 			},
 		} satisfies UpsertTebexProductSettingsRequest;
 

@@ -38,7 +38,7 @@
 					{#each storefront.exitLinks as link (link.id)}
 						<a
 							href={link.href}
-							class="border-border/60 bg-background/80 hover:bg-card flex items-start justify-between gap-4 rounded-2xl border p-4 transition-colors"
+							class="border-border/60 bg-background/80 hover:bg-card group flex items-center justify-between gap-4 rounded-2xl border p-4 transition-colors"
 						>
 							<div>
 								<p class="font-semibold">{link.label}</p>
@@ -46,7 +46,7 @@
 									<p class="text-muted-foreground mt-1 text-sm">{link.description}</p>
 								{/if}
 							</div>
-							<ArrowRight class="text-primary size-5 shrink-0" />
+							<ArrowRight class="text-primary group-hover:animate-bounce-horizontal size-5 shrink-0" />
 						</a>
 					{/each}
 				</div>

@@ -233,6 +233,7 @@ import type {
 	UserSettingsDto,
 	VoteCommentRequest,
 	VoteGuideRequest,
+	WeightStyleListDto,
 	WeightStyleWithDataDto,
 	WeightsDto,
 	YearlyContestsDto,
@@ -10808,6 +10809,48 @@ export const removeProductToCategory = async (
 };
 
 /**
+ * @summary Assign Artist to Category
+ */
+export type assignArtistResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type assignArtistResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type assignArtistResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type assignArtistResponseSuccess = assignArtistResponse204 & {
+	headers: Headers;
+};
+export type assignArtistResponseError = (assignArtistResponse401 | assignArtistResponse403) & {
+	headers: Headers;
+};
+
+export type assignArtistResponse = assignArtistResponseSuccess | assignArtistResponseError;
+
+export const getAssignArtistUrl = (categoryId: string | number, accountId: string | bigint | number) => {
+	return `${ELITE_API_URL}/shop/category/${categoryId}/artist/${accountId}`;
+};
+
+export const assignArtist = async (
+	categoryId: string | number,
+	accountId: string | bigint | number,
+	options?: RequestInit
+) => {
+	return customFetch<assignArtistResponse>(getAssignArtistUrl(categoryId, accountId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
  * @summary Create Shop Category
  */
 export type createCategoryResponse204 = {
@@ -11090,6 +11133,44 @@ export const reorderCategoryProducts = async (
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(reorderCategoryProductsRequest),
+	});
+};
+
+/**
+ * @summary Unassign Artist from Category
+ */
+export type unassignArtistResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type unassignArtistResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type unassignArtistResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type unassignArtistResponseSuccess = unassignArtistResponse204 & {
+	headers: Headers;
+};
+export type unassignArtistResponseError = (unassignArtistResponse401 | unassignArtistResponse403) & {
+	headers: Headers;
+};
+
+export type unassignArtistResponse = unassignArtistResponseSuccess | unassignArtistResponseError;
+
+export const getUnassignArtistUrl = (categoryId: string | number) => {
+	return `${ELITE_API_URL}/shop/category/${categoryId}/artist`;
+};
+
+export const unassignArtist = async (categoryId: string | number, options?: RequestInit) => {
+	return customFetch<unassignArtistResponse>(getUnassignArtistUrl(categoryId), {
+		...options,
+		method: 'DELETE',
 	});
 };
 
@@ -11794,7 +11875,7 @@ export const deleteStyleImage = async (styleId: string | number, imagePath: stri
  * @summary Get Shop Styles
  */
 export type getStylesResponse200 = {
-	data: WeightStyleWithDataDto[];
+	data: WeightStyleListDto[];
 	status: 200;
 };
 
@@ -11811,6 +11892,48 @@ export const getStyles = async (options?: RequestInit) => {
 	return customFetch<getStylesResponse>(getGetStylesUrl(), {
 		...options,
 		method: 'GET',
+	});
+};
+
+/**
+ * @summary Reassign Style to a Different Artist
+ */
+export type reassignStyleResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type reassignStyleResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type reassignStyleResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type reassignStyleResponseSuccess = reassignStyleResponse204 & {
+	headers: Headers;
+};
+export type reassignStyleResponseError = (reassignStyleResponse401 | reassignStyleResponse403) & {
+	headers: Headers;
+};
+
+export type reassignStyleResponse = reassignStyleResponseSuccess | reassignStyleResponseError;
+
+export const getReassignStyleUrl = (styleId: string | number, accountId: string | bigint | number) => {
+	return `${ELITE_API_URL}/product/style/${styleId}/artist/${accountId}`;
+};
+
+export const reassignStyle = async (
+	styleId: string | number,
+	accountId: string | bigint | number,
+	options?: RequestInit
+) => {
+	return customFetch<reassignStyleResponse>(getReassignStyleUrl(styleId, accountId), {
+		...options,
+		method: 'POST',
 	});
 };
 

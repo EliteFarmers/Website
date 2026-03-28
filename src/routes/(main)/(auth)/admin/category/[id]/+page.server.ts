@@ -1,9 +1,12 @@
 import {
+	addCategoryBanner,
 	addProductToCategory,
+	assignArtist,
 	getAllProducts,
 	getCategory,
 	removeProductToCategory,
 	reorderCategoryProducts,
+	unassignArtist,
 	updateCategory,
 } from '$lib/api';
 import { error, fail, type Actions } from '@sveltejs/kit';
@@ -12,7 +15,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals, params }) => {
 	const { access_token: token, user, session } = locals;
 
-	if (!session || !session.perms.moderator || !token) {
+	if (!session || !(session.perms.artist || session.perms.admin) || !token) {
 		throw error(404, 'Not Found');
 	}
 
@@ -40,6 +43,7 @@ export const actions: Actions = {
 		const id = data.get('id') as string;
 		const title = data.get('title') as string;
 		const description = data.get('description') as string;
+		const longDescription = data.get('long') as string;
 		const slug = data.get('slug') as string;
 		const published = data.get('published') === 'true';
 
@@ -50,6 +54,7 @@ export const actions: Actions = {
 		const { response, error: e } = await updateCategory(id, {
 			title,
 			description,
+			longDescription,
 			slug,
 			published,
 		});
@@ -130,6 +135,72 @@ export const actions: Actions = {
 
 		if (e || !response.ok) {
 			return fail(response.status ?? 400, { error: e });
+		}
+
+		return { success: true };
+	},
+	uploadBanner: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const categoryId = data.get('category') as string;
+		const image = data.get('image') as Blob;
+		const title = data.get('title') as string;
+
+		if (!categoryId || !image) {
+			return fail(400, { error: 'Invalid banner data.' });
+		}
+
+		const { response, error: e } = await addCategoryBanner(categoryId, {
+			image,
+			title: title || undefined,
+		});
+
+		if (e || !response.ok) {
+			return fail(response.status ?? 400, { error: e || 'Failed to upload banner.' });
+		}
+
+		return { success: true };
+	},
+	assignArtist: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const categoryId = data.get('category') as string;
+		const accountId = data.get('accountId') as string;
+
+		if (!categoryId || !accountId) {
+			return fail(400, { error: 'Invalid category or account ID.' });
+		}
+
+		const { response, error: e } = await assignArtist(categoryId, accountId);
+
+		if (e || !response.ok) {
+			return fail(response.status ?? 400, { error: e || 'Failed to assign artist.' });
+		}
+
+		return { success: true };
+	},
+	unassignArtist: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const categoryId = data.get('category') as string;
+
+		if (!categoryId) {
+			return fail(400, { error: 'Invalid category ID.' });
+		}
+
+		const { response, error: e } = await unassignArtist(categoryId);
+
+		if (e || !response.ok) {
+			return fail(response.status ?? 400, { error: e || 'Failed to unassign artist.' });
 		}
 
 		return { success: true };

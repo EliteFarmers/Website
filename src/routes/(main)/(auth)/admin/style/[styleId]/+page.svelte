@@ -16,6 +16,7 @@
 	import { Label } from '$ui/label';
 	import { Textarea } from '$ui/textarea';
 	import Trash_2 from '@lucide/svelte/icons/trash-2';
+	import UserPlus from '@lucide/svelte/icons/user-plus';
 	import { PersistedState } from 'runed';
 	import { untrack } from 'svelte';
 	import type { ActionData, PageData } from './$types';
@@ -30,6 +31,7 @@
 	let style = $derived(data.style);
 	let loading = $state(false);
 	let deleteStyleModal = $state(false);
+	let reassignAccountId = $state('');
 	let showLeaderboardName = new PersistedState('showleaderboardname', false);
 
 	let badge = $derived(data.badges?.[0]?.image?.url ?? undefined);
@@ -362,6 +364,37 @@
 			</div>
 
 			<Button type="submit" disabled={loading} class="w-fit px-4">Add Image</Button>
+		</form>
+	</section>
+
+	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
+		<div class="mb-2 flex flex-row items-center gap-4">
+			<h2 class="text-xl">Author</h2>
+		</div>
+
+		{#if style.author}
+			<div class="flex flex-row items-center gap-3 rounded-md border p-3">
+				{#if style.author.avatar}
+					<img src={style.author.avatar} alt="{style.author.name}'s avatar" class="h-10 w-10 rounded-full" />
+				{/if}
+				<div class="flex flex-col">
+					<p class="font-semibold">{style.author.name}</p>
+					<p class="text-muted-foreground text-sm">{style.author.id}</p>
+				</div>
+			</div>
+		{:else}
+			<p class="text-muted-foreground">No author assigned to this style.</p>
+		{/if}
+
+		<form method="post" action="?/reassignStyle" class="flex max-w-md flex-col gap-3" use:enhance>
+			<input type="hidden" name="style" value={style.id} />
+			<div class="flex flex-col items-start gap-2">
+				<Label>New Author Discord ID</Label>
+				<Input name="accountId" bind:value={reassignAccountId} placeholder="Discord ID" required />
+			</div>
+			<Button type="submit" class="w-fit" disabled={loading || !reassignAccountId}>
+				<UserPlus size={16} /> Reassign Style
+			</Button>
 		</form>
 	</section>
 

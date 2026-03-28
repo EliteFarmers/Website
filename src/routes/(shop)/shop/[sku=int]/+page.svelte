@@ -5,6 +5,7 @@
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import ArtistCredit from '$comp/shop/artist-credit.svelte';
 	import Badge from '$comp/stats/badge.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { FarmingWeightDto } from '$lib/api';
@@ -60,7 +61,7 @@
 				return 'Creating Gift Checkout...';
 			}
 
-			return inCurrentCheckout ? 'Review Gift Checkout' : 'Create Gift Checkout';
+			return 'Add to Basket';
 		}
 
 		if (productAction === 'adding') {
@@ -160,6 +161,7 @@
 												ign={data.ign ?? 'Player'}
 												uuid={data.uuid ?? ''}
 												styleId={+(leadPreviewStyle.id ?? 0)}
+												imageRefs={leadPreviewStyle.imageRefs}
 											/>
 										</div>
 
@@ -256,8 +258,13 @@
 			</div>
 			<div class="flex flex-col gap-4">
 				{#if isFree && product.type === 2}
-					<Button onclick={() => (claimModalOpen = true)} size="lg" class="w-full text-lg font-semibold">
-						Unlock Now
+					<Button
+						onclick={() => (claimModalOpen = true)}
+						size="lg"
+						class="w-full text-lg font-semibold"
+						disabled={isOwned}
+					>
+						{isOwned ? 'Already Unlocked' : 'Unlock Now'}
 					</Button>
 				{:else}
 					<Button
@@ -440,9 +447,12 @@
 						<div class="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
 							<div class="bg-muted/30 border-b px-6 py-4">
 								<div class="flex items-center justify-between">
-									<div>
+									<div class="flex items-center gap-6">
 										<h3 class="text-xl font-bold">{style.name}</h3>
-										<p class="text-muted-foreground font-mono text-sm">/weight style</p>
+										<pre>{JSON.stringify(style.author, null, 2)}</pre>
+										{#if style.author}
+											<ArtistCredit artist={style.author} />
+										{/if}
 									</div>
 									{#if style.styleFormatter !== 'data'}
 										<span class="text-muted-foreground text-sm italic">Preview unavailable</span>
@@ -482,6 +492,7 @@
 														ign={data.ign ?? 'Player'}
 														uuid={data.uuid ?? ''}
 														styleId={style.id}
+														imageRefs={style.imageRefs}
 													/>
 												</div>
 											</div>
@@ -519,7 +530,7 @@
 	<Dialog.ScrollContent>
 		<Dialog.Title>Unlock {product.name}</Dialog.Title>
 		<div class="mt-4 flex flex-col gap-4">
-			<p>This item is free — claim it to add it to your account instantly.</p>
+			<p>This item is free! Claim it to add it to your account instantly.</p>
 
 			<form action="?/claim" method="post" class="w-full" use:enhance>
 				<input type="hidden" name="sku" value={product.id} />

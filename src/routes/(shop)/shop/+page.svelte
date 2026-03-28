@@ -2,16 +2,12 @@
 	import Head from '$comp/head.svelte';
 	import PremiumBanner from '$comp/monetization/premium-banner.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
+	import ResponsiveImage from '$comp/responsive-image.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { ProductDto, ShopCategoryDto } from '$lib/api';
 	import { buildShopHomeLdJson, shopKeywords } from '$lib/shop/seo';
 	import { getCategoryOverride } from '$lib/shop/storefront';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import Award from '@lucide/svelte/icons/award';
-	import Gift from '@lucide/svelte/icons/gift';
-	import Palette from '@lucide/svelte/icons/palette';
-	import ShieldCheck from '@lucide/svelte/icons/shield-check';
-	import Sparkles from '@lucide/svelte/icons/sparkles';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -19,14 +15,6 @@
 	}
 
 	let { data }: Props = $props();
-
-	const valuePropIcons = {
-		palette: Palette,
-		badge: Award,
-		sparkles: Sparkles,
-		gift: Gift,
-		shield: ShieldCheck,
-	} as const;
 
 	let categories = $derived.by(() => (data.categories ?? []).filter((category) => category.products?.length));
 	let premiumProduct = $derived(data.products.find((product) => product.isSubscription) as ProductDto | undefined);
@@ -75,34 +63,12 @@
 			The Elite Shop
 		</h1>
 		<p class="text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg">
-			Profile styles, badges, and premium perks for your Elite account.
+			Check out cosmetics and premium perks for your Elite Skyblock profile!
 		</p>
-	</section>
-
-	<section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-		{#each data.storefront.valueProps as valueProp (valueProp.id)}
-			{@const Icon = valuePropIcons[valueProp.icon]}
-			<div class="border-border/60 bg-card/70 rounded-[1.75rem] border p-6 shadow-sm">
-				<div class="bg-primary/10 text-primary mb-5 flex size-12 items-center justify-center rounded-2xl">
-					<Icon class="size-5" />
-				</div>
-				<h2 class="text-lg font-bold tracking-tight">{valueProp.title}</h2>
-				<p class="text-muted-foreground mt-2 text-sm leading-relaxed">{valueProp.description}</p>
-			</div>
-		{/each}
 	</section>
 
 	{#if premiumProduct}
 		<section class="space-y-5">
-			<div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-				<div>
-					<h2 class="text-3xl font-black tracking-tight sm:text-4xl">Premium</h2>
-				</div>
-				<p class="text-muted-foreground max-w-xl text-sm leading-relaxed sm:text-right">
-					The full supporter package with exclusive perks.
-				</p>
-			</div>
-
 			<PremiumBanner product={premiumProduct} class="w-full max-w-none" />
 		</section>
 	{/if}
@@ -112,7 +78,6 @@
 			<div>
 				<h2 class="text-3xl font-black tracking-tight sm:text-4xl">Collections</h2>
 			</div>
-			<p class="text-muted-foreground max-w-xl text-sm leading-relaxed">Browse by category.</p>
 		</div>
 
 		<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -127,14 +92,23 @@
 					data-sveltekit-preload-data="tap"
 				>
 					<div class="aspect-video overflow-hidden">
-						<img
-							src={override?.heroImageUrl ??
-								leadProduct?.thumbnail?.url ??
-								leadProduct?.images?.[0]?.url ??
-								'/favicon.webp'}
-							alt={override?.heroTitle ?? category.title}
-							class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-						/>
+						{#if category.bannerImage}
+							<ResponsiveImage
+								image={category.bannerImage}
+								alt={override?.heroTitle ?? category.title}
+								loading="lazy"
+								class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+							/>
+						{:else}
+							<img
+								src={override?.heroImageUrl ??
+									leadProduct?.thumbnail?.url ??
+									leadProduct?.images?.[0]?.url ??
+									'/favicon.webp'}
+								alt={override?.heroTitle ?? category.title}
+								class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+							/>
+						{/if}
 					</div>
 					<div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent"></div>
 					<div class="absolute inset-0 flex flex-col justify-end gap-2 p-5 text-white">

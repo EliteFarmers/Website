@@ -5,7 +5,7 @@ import type { Actions, PageServerLoad } from './$types';
 export const load = (async ({ locals }) => {
 	const { access_token: token, user, session } = locals;
 
-	if (!session || !session.perms.moderator || !token) {
+	if (!session || !(session.perms.artist || session.perms.admin) || !token) {
 		throw error(404, 'Not Found');
 	}
 

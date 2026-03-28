@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
+	import ResponsiveImage from '$comp/responsive-image.svelte';
+	import ArtistCredit from '$comp/shop/artist-credit.svelte';
 	import { env } from '$env/dynamic/public';
 	import { buildShopCategoryLdJson, shopKeywords } from '$lib/shop/seo';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -28,6 +30,8 @@
 	);
 	const baseUrl = env.PUBLIC_CANONICAL_URL || env.PUBLIC_HOST_URL || '';
 	let ldJson = $derived(buildShopCategoryLdJson(baseUrl, data.category, heroImage, seoDescription));
+
+	let artist = $derived(data.category.assignedArtist);
 </script>
 
 <Head
@@ -41,19 +45,37 @@
 />
 
 <div class="mx-auto flex w-full max-w-7xl flex-col gap-14 px-4 py-10 sm:px-6 lg:px-8">
-	<section
-		class="grid gap-6 overflow-hidden rounded-4xl border border-white/10 bg-zinc-950 text-white shadow-2xl lg:grid-cols-[2fr_1fr]"
-	>
-		<div class="relative flex flex-col justify-end gap-4 p-6 sm:p-8 lg:p-12">
-			<div class="bg-primary/20 absolute top-8 left-8 h-28 w-28 rounded-full blur-3xl"></div>
-			<div class="bg-progress/15 absolute right-10 bottom-10 h-36 w-36 rounded-full blur-3xl"></div>
+	<section class="overflow-hidden rounded-4xl border shadow-2xl">
+		{#if data.category.bannerImage}
+			<div class="relative h-48 overflow-hidden sm:h-64 lg:h-80">
+				<div class="absolute inset-0 bg-linear-to-t to-transparent"></div>
+				<ResponsiveImage
+					image={data.category.bannerImage}
+					alt={heroTitle}
+					loading="eager"
+					class="h-full w-full object-cover"
+				/>
+			</div>
+		{:else}
+			<div class="relative h-48 overflow-hidden sm:h-64 lg:h-80">
+				<div class="absolute inset-0 bg-linear-to-t to-transparent"></div>
+				<img src={heroImage} alt={heroTitle} class="h-full w-full object-cover" />
+			</div>
+		{/if}
+
+		<div class="relative flex flex-col gap-4 p-6 sm:p-8 lg:p-12">
+			<div class="bg-primary/20 absolute top-0 left-8 h-28 w-28 -translate-y-1/2 rounded-full blur-3xl"></div>
 
 			<div class="relative space-y-4">
-				<h1 class="max-w-3xl text-3xl font-black tracking-tight text-balance sm:text-4xl lg:text-5xl">
+				<h1 class="max-w-3xl text-3xl font-bold sm:text-4xl lg:text-5xl">
 					{heroTitle}
 				</h1>
-				<p class="max-w-2xl text-sm leading-relaxed text-white/75 sm:text-base">{heroDescription}</p>
+				<p class="max-w-2xl text-sm leading-relaxed sm:text-base">{heroDescription}</p>
 			</div>
+
+			{#if artist}
+				<ArtistCredit {artist} prefix="Category by" />
+			{/if}
 
 			<div class="relative flex flex-wrap gap-3">
 				<a
@@ -65,18 +87,19 @@
 				</a>
 				<a
 					href="#products"
-					class="bg-background/15 inline-flex rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold text-white"
+					class="bg-background/15 inline-flex rounded-full border px-5 py-2.5 text-sm font-semibold"
 				>
 					Browse
 				</a>
 			</div>
 		</div>
-
-		<div class="relative max-h-24 border-t border-white/10 sm:min-h-32 lg:min-h-full lg:border-t-0 lg:border-l">
-			<div class="absolute inset-0 bg-linear-to-br from-transparent via-black/20 to-black/55"></div>
-			<img src={heroImage} alt={heroTitle} class="h-full w-full object-cover" />
-		</div>
 	</section>
+
+	{#if data.category.longDescription}
+		<section class="prose prose-neutral dark:prose-invert max-w-3xl">
+			<p class="text-muted-foreground leading-relaxed">{data.category.longDescription}</p>
+		</section>
+	{/if}
 
 	{#if data.featuredProducts.length}
 		<section class="space-y-6">

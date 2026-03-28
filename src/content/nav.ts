@@ -12,7 +12,6 @@ import Megaphone from '@lucide/svelte/icons/megaphone';
 import Package from '@lucide/svelte/icons/package';
 import Palette from '@lucide/svelte/icons/palette';
 import ServerCog from '@lucide/svelte/icons/server-cog';
-import Settings from '@lucide/svelte/icons/settings';
 import ShieldPlus from '@lucide/svelte/icons/shield-plus';
 import UserPen from '@lucide/svelte/icons/user-pen';
 
@@ -36,7 +35,7 @@ export const PROFILE_NAV_PAGES = [
 		href: '/profile',
 	},
 	{
-		icon: Settings,
+		icon: Palette,
 		name: 'Settings',
 		href: '/profile/settings',
 	},
@@ -96,13 +95,13 @@ export const ADMIN_NAV_PAGES: (Crumb & { exists: (flags: AuthFlags) => boolean }
 		icon: Layers,
 		name: 'Categories',
 		href: '/admin/categories',
-		exists: (flags: AuthFlags) => flags.admin,
+		exists: (flags: AuthFlags) => flags.artist,
 	},
 	{
 		icon: Package,
 		name: 'Products',
 		href: '/admin/products',
-		exists: (flags: AuthFlags) => flags.admin,
+		exists: (flags: AuthFlags) => flags.artist,
 	},
 	{
 		icon: CreditCard,

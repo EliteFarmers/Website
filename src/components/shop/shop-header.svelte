@@ -4,7 +4,7 @@
 	import type { ShopCategoryDto } from '$lib/api';
 	import { getTebex } from '$lib/tebex/index.svelte';
 	import { Button } from '$ui/button';
-	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ShoppingBag from '@lucide/svelte/icons/shopping-bag';
 	import ShopAccountMenu from './shop-account-menu.svelte';
 
@@ -34,24 +34,25 @@
 <header class="border-border/60 bg-background/85 sticky top-0 z-40 border-b backdrop-blur-xl">
 	<div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
 		<div class="flex flex-wrap items-center gap-3">
-			<a href="/shop" class="group flex items-center gap-3" data-sveltekit-preload-data="tap">
-				<div
-					class="from-primary/20 to-primary/5 border-border/60 flex size-11 items-center justify-center rounded-2xl border bg-linear-to-br shadow-sm"
-				>
-					<img src="/favicon.webp" alt="Elite Shop" class="size-7 rounded-md" />
-				</div>
-				<div class="leading-tight">
-					<p class="text-xs font-semibold">Elite</p>
-					<p class="text-lg font-black">Shop</p>
-				</div>
-			</a>
+			<div class="group flex items-center gap-3" data-sveltekit-preload-data="tap">
+				<a href="/shop" class="group flex items-center gap-3">
+					<div
+						class="from-primary/20 to-primary/5 border-border/60 flex size-11 items-center justify-center rounded-2xl border bg-linear-to-br shadow-sm"
+					>
+						<img src="/favicon.webp" alt="Elite Shop" class="size-7 rounded-md" />
+					</div>
+					<div class="leading-tight">
+						<p class="text-xs font-semibold">Elite Skyblock</p>
+						<p class="text-lg font-black">Shop</p>
+					</div>
+				</a>
+				<Button variant="ghost" class="text-muted-foreground hidden sm:inline-flex" href="/">
+					<ChevronLeft class="size-3" />
+					Back to Elite
+				</Button>
+			</div>
 
 			<div class="ml-auto flex items-center gap-2">
-				<Button variant="ghost" class="hidden sm:inline-flex" href="/">
-					Back to Elite
-					<ChevronRight class="size-4" />
-				</Button>
-
 				{#if checkoutItemCount > 0}
 					<Button variant="outline" class="rounded-full px-4" href="/shop/checkout">
 						<ShoppingBag />
@@ -73,31 +74,25 @@
 		</div>
 
 		<nav class="scrollbar-hide -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-			<a
+			<Button
 				href="/shop"
-				class:bg-primary={activePath === '/shop'}
-				class:text-primary-foreground={activePath === '/shop'}
-				class:bg-card={activePath !== '/shop'}
-				class:text-foreground={activePath !== '/shop'}
-				class="border-border/60 hover:bg-card inline-flex rounded-full border px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
+				variant={activePath === '/shop' ? 'default' : 'outline'}
+				class="border-border/60 inline-flex rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
 				data-sveltekit-preload-data="tap"
 			>
 				All Collections
-			</a>
+			</Button>
 
 			{#each shopCategories as category (category.id)}
 				{@const categoryHref = `/shop/category/${category.slug}`}
-				<a
+				<Button
 					href={categoryHref}
-					class:bg-primary={activePath === categoryHref}
-					class:text-primary-foreground={activePath === categoryHref}
-					class:bg-card={activePath !== categoryHref}
-					class:text-foreground={activePath !== categoryHref}
-					class="border-border/60 hover:bg-card inline-flex rounded-full border px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
+					variant={activePath === categoryHref ? 'default' : 'outline'}
+					class="border-border/60 inline-flex rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
 					data-sveltekit-preload-data="tap"
 				>
 					{category.title}
-				</a>
+				</Button>
 			{/each}
 		</nav>
 	</div>

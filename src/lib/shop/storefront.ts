@@ -3,7 +3,6 @@ import type { ProductDto, ShopCategoryDto } from '$lib/api';
 export type ShopStorefrontResponse = {
 	featuredCategorySlugs: string[];
 	featuredProductIds: number[];
-	valueProps: ShopValueProp[];
 	exitLinks: ShopExitLink[];
 	categoryOverrides: ShopCategoryOverride[];
 };
@@ -89,7 +88,8 @@ function buildCategoryOverrides(categories: ShopCategoryDto[]) {
 		});
 }
 
-export function getPlaceholderShopStorefront({ products, categories }: StorefrontInput): ShopStorefrontResponse {
+// Eventually should be backed by the API.
+export function getShopStorefront({ products, categories }: StorefrontInput): ShopStorefrontResponse {
 	const populatedCategories = getPopulatedCategories(categories);
 	const premiumProduct = products.find((product) => product.isSubscription);
 	const newestProducts = getNewestProducts(products);
@@ -107,32 +107,6 @@ export function getPlaceholderShopStorefront({ products, categories }: Storefron
 	return {
 		featuredCategorySlugs,
 		featuredProductIds,
-		valueProps: [
-			{
-				id: 'cosmetics',
-				title: 'Exclusive Cosmetics',
-				description: 'Profile styles, badges, and flair visible across the website and bot.',
-				icon: 'palette',
-			},
-			{
-				id: 'account-sync',
-				title: 'Account-Synced',
-				description: 'Purchases stay on your Elite account and follow you everywhere.',
-				icon: 'shield',
-			},
-			{
-				id: 'hassle-free',
-				title: 'Hassle-Free Checkout',
-				description: 'Add items to your basket and check out in seconds through Tebex — quick, secure, done.',
-				icon: 'gift',
-			},
-			{
-				id: 'collector-upgrades',
-				title: 'Built For Collectors',
-				description: 'Mix and match badges, styles, and premium perks to build your look.',
-				icon: 'sparkles',
-			},
-		],
 		exitLinks: [
 			{
 				id: 'settings',
@@ -143,14 +117,12 @@ export function getPlaceholderShopStorefront({ products, categories }: Storefron
 			{
 				id: 'payments',
 				label: 'Purchase History',
-				description: 'Review active checkouts, gifts, and recurring purchases in one place.',
+				description: 'Review your past purchases and manage subscriptions',
 				href: '/profile/purchases',
 			},
 			{
 				id: 'home',
-				label: 'Back To Elite',
-				description:
-					'Jump back into stats, tools, and the rest of the main website when you are done browsing.',
+				label: 'Back To Elite Skyblock',
 				href: '/',
 			},
 		],

@@ -3349,6 +3349,14 @@ export const zodRemoveProductToCategoryParams = zod.object({
 });
 
 /**
+ * @summary Assign Artist to Category
+ */
+export const zodAssignArtistParams = zod.object({
+	categoryId: zod.number(),
+	accountId: zod.number(),
+});
+
+/**
  * @summary Create Shop Category
  */
 export const zodCreateCategoryBodyTitleMax = 256;
@@ -3441,6 +3449,13 @@ export const zodReorderCategoryProductsBody = zod.object({
 			})
 		)
 		.min(1),
+});
+
+/**
+ * @summary Unassign Artist from Category
+ */
+export const zodUnassignArtistParams = zod.object({
+	categoryId: zod.number(),
 });
 
 /**
@@ -4360,6 +4375,14 @@ export const zodUpdateStyleBody = zod.object({
 export const zodDeleteStyleImageParams = zod.object({
 	styleId: zod.number(),
 	imagePath: zod.string(),
+});
+
+/**
+ * @summary Reassign Style to a Different Artist
+ */
+export const zodReassignStyleParams = zod.object({
+	styleId: zod.number(),
+	accountId: zod.number(),
 });
 
 /**

@@ -4,6 +4,7 @@ import {
 	deleteStyle,
 	deleteStyleImage,
 	getStyle,
+	reassignStyle,
 	updateStyle,
 	type WeightStyleWithDataDto,
 } from '$lib/api';
@@ -220,6 +221,31 @@ export const actions: Actions = {
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e });
+		}
+
+		return { success: true };
+	},
+	reassignStyle: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const styleId = data.get('style') as string;
+		const accountId = data.get('accountId') as string;
+
+		if (!styleId || isNaN(+styleId)) {
+			return fail(400, { error: 'Invalid style ID.' });
+		}
+
+		if (!accountId) {
+			return fail(400, { error: 'Invalid account ID.' });
+		}
+
+		const { response, error: e } = await reassignStyle(styleId, accountId);
+
+		if (e || !response.ok) {
+			return fail(response.status ?? 400, { error: e || 'Failed to reassign style.' });
 		}
 
 		return { success: true };

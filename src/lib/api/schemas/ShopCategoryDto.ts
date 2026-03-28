@@ -8,6 +8,7 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 import type { ShopCategoryDtoBannerImage } from './ShopCategoryDtoBannerImage';
+import type { ShopCategoryDtoAssignedArtist } from './ShopCategoryDtoAssignedArtist';
 import type { ProductDto } from './ProductDto';
 
 export interface ShopCategoryDto {
@@ -20,6 +21,8 @@ export interface ShopCategoryDto {
 	longDescription?: string | null;
 	/** @nullable */
 	bannerImage?: ShopCategoryDtoBannerImage;
+	/** @nullable */
+	assignedArtist?: ShopCategoryDtoAssignedArtist;
 	order: number;
 	published: boolean;
 	products: ProductDto[];
