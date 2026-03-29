@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import Head from '$comp/head.svelte';
 	import type {
 		AdminOrderDetailDto,
@@ -403,13 +404,26 @@
 								{#if order.recipientSnapshot.minecraftUuid}
 									<div>
 										<p class="text-muted-foreground text-xs">Minecraft UUID</p>
-										<p class="font-mono text-xs">{order.recipientSnapshot.minecraftUuid}</p>
+										<div class="flex max-w-fit items-center gap-2">
+											<CopyToClipboard text={order.recipientSnapshot.minecraftUuid} size="sm" />
+											<p class="truncate font-mono text-xs">
+												{order.recipientSnapshot.minecraftUuid}
+											</p>
+										</div>
 									</div>
 								{/if}
 								{#if order.recipientSnapshot.discordUserId}
 									<div>
 										<p class="text-muted-foreground text-xs">Discord User</p>
-										<p class="font-mono text-xs">{order.recipientSnapshot.discordUserId}</p>
+										<div class="flex max-w-fit items-center gap-2">
+											<CopyToClipboard
+												text={order.recipientSnapshot.discordUserId.toLocaleString()}
+												size="sm"
+											/>
+											<p class="truncate font-mono text-xs">
+												{order.recipientSnapshot.discordUserId}
+											</p>
+										</div>
 									</div>
 								{/if}
 								{#if order.recipientSnapshot.guildId}
@@ -537,19 +551,25 @@
 								{#if order.tebex.basketIdent}
 									<div>
 										<p class="text-muted-foreground text-xs">Basket</p>
-										<p class="font-mono text-xs">{order.tebex.basketIdent}</p>
+										<div class="flex max-w-fit items-center gap-2">
+											<CopyToClipboard text={order.tebex.basketIdent} size="sm" />
+											<p class="truncate font-mono text-xs">{order.tebex.basketIdent}</p>
+										</div>
 									</div>
 								{/if}
 								{#if order.tebex.basketUrl}
 									<div>
 										<p class="text-muted-foreground text-xs">Basket URL</p>
-										<a
-											href={order.tebex.basketUrl}
-											target="_blank"
-											class="text-xs break-all underline"
-										>
-											{order.tebex.basketUrl}
-										</a>
+										<div class="flex max-w-fit items-center gap-2">
+											<CopyToClipboard text={order.tebex.basketUrl} size="sm" />
+											<a
+												href={order.tebex.basketUrl}
+												target="_blank"
+												class="truncate text-xs underline"
+											>
+												{order.tebex.basketUrl}
+											</a>
+										</div>
 									</div>
 								{/if}
 								{#if order.tebex.providerStatus}

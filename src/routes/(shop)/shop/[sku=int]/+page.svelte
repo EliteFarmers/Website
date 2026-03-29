@@ -447,9 +447,8 @@
 						<div class="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
 							<div class="bg-muted/30 border-b px-6 py-4">
 								<div class="flex items-center justify-between">
-									<div class="flex items-center gap-6">
+									<div class="flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:items-center">
 										<h3 class="text-xl font-bold">{style.name}</h3>
-										<pre>{JSON.stringify(style.author, null, 2)}</pre>
 										{#if style.author}
 											<ArtistCredit artist={style.author} />
 										{/if}

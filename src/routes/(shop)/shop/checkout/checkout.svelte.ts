@@ -90,7 +90,7 @@ export class CheckoutState {
 
 	get checkoutPageDescription() {
 		if (this.showingCheckoutSuccess) {
-			return 'Your Tebex checkout has been submitted and we are waiting for it to finish syncing.';
+			return 'Your Tebex checkout has been submitted, you should receive an email confirmation shortly!';
 		}
 		if (this.showingCheckoutError) {
 			return 'Your payment was not completed. You can try checkout again or return to the basket.';
@@ -162,7 +162,10 @@ export class CheckoutState {
 	}
 
 	get hasOwnedItemsInCheckout() {
-		return this.checkoutItems.some((item) => item.product && this.#gbl.ownsProduct(item.product.id));
+		return (
+			this.checkoutItems.some((item) => item.product && this.#gbl.ownsProduct(item.product.id)) ||
+			(this.pendingGiftProduct && this.#gbl.ownsProduct(this.pendingGiftProduct.id))
+		);
 	}
 
 	get hasNonGiftableItemsForGift() {

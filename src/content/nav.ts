@@ -51,8 +51,8 @@ export const PROFILE_NAV_PAGES = [
 	},
 	{
 		icon: CreditCard,
-		name: 'Payments',
-		href: '/profile/payments',
+		name: 'Purchases',
+		href: '/profile/purchases',
 	},
 	{
 		icon: Gift,

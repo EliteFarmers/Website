@@ -28,14 +28,14 @@
 				<button
 					{...props}
 					class={cn(
-						'border-border/60 bg-background/80 hover:bg-card inline-flex h-10 items-center gap-2 rounded-full border px-2.5 text-sm font-medium shadow-sm transition-colors',
+						'border-border/60 bg-background/80 hover:bg-card inline-flex h-10 items-center gap-2 rounded-full border px-2 text-sm font-medium shadow-sm transition-colors',
 						className
 					)}
 					aria-label="Open account menu"
 				>
 					<UserIcon user={session} class="size-7 rounded-full" />
 					<span class="hidden max-w-28 truncate sm:inline">{session.ign || session.username}</span>
-					<ChevronDown class="size-4 text-current/70" />
+					<ChevronDown class="hidden size-4 text-current/70 sm:inline" />
 				</button>
 			{/snippet}
 		</DropdownMenu.Trigger>
@@ -47,7 +47,7 @@
 				<Settings />
 				Profile Settings
 			</DropdownMenu.LinkItem>
-			<DropdownMenu.LinkItem href="/profile/payments">
+			<DropdownMenu.LinkItem href="/profile/purchases">
 				<ReceiptText />
 				Purchase History
 			</DropdownMenu.LinkItem>

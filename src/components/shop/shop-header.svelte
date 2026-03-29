@@ -53,6 +53,8 @@
 			</div>
 
 			<div class="ml-auto flex items-center gap-2">
+				<ModeToggle />
+
 				{#if checkoutItemCount > 0}
 					<Button variant="outline" class="rounded-full px-4" href="/shop/checkout">
 						<ShoppingBag />
@@ -64,11 +66,10 @@
 				{:else}
 					<Button variant="outline" class="rounded-full px-4" href="/shop/checkout">
 						<ShoppingBag />
-						Checkout
+						<span class=" hidden text-xs sm:inline">Checkout</span>
 					</Button>
 				{/if}
 
-				<ModeToggle />
 				<ShopAccountMenu />
 			</div>
 		</div>

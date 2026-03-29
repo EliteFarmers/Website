@@ -65,8 +65,8 @@
 					</p>
 				</div>
 				<div class="flex w-full max-w-md flex-col gap-3 sm:flex-row">
-					<Button href="/profile/purchases" size="lg" class="flex-1">View Purchases</Button>
-					<Button href="/shop" variant="outline" size="lg" class="flex-1">Back to Shop</Button>
+					<Button href="/profile/purchases" size="lg" class="min-h-10 flex-1">View Purchases</Button>
+					<Button href="/shop" variant="outline" size="lg" class="min-h-10 flex-1">Back to Shop</Button>
 				</div>
 			</section>
 		{:else if checkout.showingCheckoutError}
