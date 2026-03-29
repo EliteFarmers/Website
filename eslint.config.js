@@ -57,6 +57,7 @@ export default ts.config(
 					patterns: ['farming-weight/dist/*'],
 				},
 			],
+			'no-useless-assignment': 'off', // False positives with bindable
 		},
 	}
 );

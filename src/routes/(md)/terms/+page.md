@@ -1,13 +1,13 @@
 ---
 title: Terms of Service
 description: The Terms of Service for Our Application
-lastUpdated: 2026-01-11
+lastUpdated: 2026-03-28
 blueprint: page
 ---
 
 # Terms of Service
 
-<sub>Last updated: <strong>January 11, 2026</strong></sub>
+<sub>Last updated: <strong>March 28, 2026</strong></sub>
 
 Welcome! These terms are the rules for using our Service. Please read them carefully. By using our Service, you agree to these terms.
 
@@ -15,13 +15,16 @@ Welcome! These terms are the rules for using our Service. Please read them caref
 
 To make sure we're on the same page, here are the definitions of some key terms we use.
 
-- **Service**: This includes our website (`elitebot.dev`), our API (`api.elitebot.dev`), and our Discord application ("Elite Discord Bot").
+- **Service**: This includes our website (`eliteskyblock.com`), our API (`api.eliteskyblock.com`), and our Discord application ("Elite Discord Bot").
 - **We**, **Us**, or **Our**: Refers to Refers to **Elite Network Development LLC**, an Ohio limited liability company, the owner and operator of the Service.
 - **You**: Refers to you, the individual or entity using our Service.
 - **Device**: Any device you use to access the Service, like a computer, phone, or tablet.
 - **Discord**: The third-party communication platform where parts of our Service operate. Your use of Discord is subject to its own terms and policies, which you are responsible for following.
     - [Discord Terms of Service](https://discord.com/terms)
     - [Discord Privacy Policy](https://discord.com/privacy)
+- **Tebex**: The third-party payment platform that processes purchases made through our website shop. Your use of Tebex is subject to its own terms and policies.
+    - [Tebex Checkout Terms of Service](https://checkout.tebex.io/terms)
+    - [Tebex Checkout Privacy Policy](https://checkout.tebex.io/privacy)
 
 ## Using Our Service
 
@@ -51,10 +54,27 @@ You may be able to post content, such as guides and comments ("User Content"), o
 
 ## Purchases and Monetization
 
-All purchases and subscriptions are handled through **Discord's Paid Services**.
+Purchases made through the Service are processed by third-party payment providers. We do not directly collect or store your payment information (such as credit card numbers).
 
-- **Billing is handled by Discord**: We do not process your payment information. By making a purchase, you agree to [Discord's Paid Services Terms](https://discord.com/terms/paid-services-terms). For billing issues or refunds, you must contact Discord directly, though we would also appreciate hearing from you.
-- **Receiving Benefits**: If you purchase a subscription and don't receive your benefits, please try the "Refresh Purchases" button on your website profile. If that doesn't work, contact us for support.
+### Website Shop (Tebex)
+
+Purchases made through our website shop are processed by **Tebex**. When you make a purchase, you interact directly with Tebex's checkout system.
+
+- **Tebex is the Merchant of Record**: Tebex acts as the Merchant of Record for all shop transactions. This means your payment is processed by and your transaction is legally with Tebex.
+- **Billing is handled by Tebex**: By making a purchase through our shop, you agree to [Tebex Checkout Terms of Service](https://checkout.tebex.io/terms). Tebex collects your payment information directly, we never see or store it.
+- **Refunds**: Refund requests for shop purchases should be directed to us through the methods on our [Contact Us](/contact) page. Generally, we have a No Refunds policy. Please reach out and we'll handle your situation on a case-by-case basis at our discretion.
+- **Receiving Benefits**: If you make a purchase and don't receive your benefits, please try the "Refresh Purchases" button on your website profile. If that doesn't work, contact us for support.
+
+### Discord Subscriptions
+
+Some subscriptions may be available through **Discord's Paid Services**.
+
+- **Billing is handled by Discord**: By making a purchase through Discord, you agree to [Discord's Paid Services Terms](https://discord.com/terms/paid-services-terms). For billing issues or refunds related to Discord purchases, you must contact Discord directly, though we would also appreciate hearing from you.
+
+### General
+
+- **Nature of Purchases**: All purchases and subscriptions grant you a limited, personal, non-exclusive, non-transferable, and revocable license to access and use specific digital content or features within the Service. You do not acquire ownership of any digital items, benefits, or features.
+- **Chargebacks and Disputes**: Initiating a chargeback, payment dispute, or reversal of a payment through your bank or payment provider violates these terms. Doing so may result in the immediate termination of your account, revocation of all purchased benefits, and may result in a network-wide ban by Tebex from all stores using their platform.
 - **We Can Revoke Benefits**: We reserve the right to remove any benefits you've received, without a refund, if you violate our terms. We will provide notice if your benefits are changed or canceled.
 
 ## Disclaimers and Limitation of Liability

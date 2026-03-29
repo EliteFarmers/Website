@@ -1,19 +1,19 @@
 ---
 title: Privacy Policy
 description: The Privacy Policy for Our Application
-lastUpdated: 2026-01-11
+lastUpdated: 2026-03-28
 blueprint: page
 ---
 
 # Privacy Policy
 
-<sub>Last updated: <strong>January 11, 2026</strong></sub>
+<sub>Last updated: <strong>March 28, 2026</strong></sub>
 
 This Privacy Policy explains how we collect, use, and protect your information when you use our Service. By using the Service, you agree to the practices described in this policy.
 
 ## The Basics
 
-- **Service**: This includes our website (`elitebot.dev`), our API (`api.elitebot.dev`), and our Discord application ("Elite Discord Bot").
+- **Service**: This includes our website (`eliteskyblock.com`), our API (`api.eliteskyblock.com`), and our Discord application ("Elite Discord Bot").
 - **Personal Data**: Information that can be used to identify you, like your Discord account details.
 - **Public Data**: Information that is publicly visible by design, such as your Minecraft player data or linked accounts.
 - **Usage Data**: Anonymous data collected automatically about how the Service is used.
@@ -37,6 +37,7 @@ When you log in to our Service using Discord, we receive and store limited infor
 
 ### 3. Information from Third-Party Services
 
+- **Tebex Purchases**: If you make a purchase through our website shop, the transaction is processed by Tebex. We share your selected product information and recipient details (such as your Minecraft username) with Tebex to fulfill your order. Tebex collects your payment information directly through their checkout system, we do **not** receive or store your payment details. After a completed transaction, Tebex provides us with basic customer information and non-identifiable transaction data so we can grant you benefits. For more information, see the [Tebex Checkout Privacy Policy](https://checkout.tebex.io/privacy).
 - **Discord Purchases**: If you subscribe to paid features or make other purchases through Discord, Discord provides us with non-identifiable transaction data so we can grant you benefits. We do **not** receive your payment details.
 - **Public Game Data**: Our Service retrieves publicly available data about your Minecraft account from third-party services like the Hypixel API and Mojang APIs.
 
@@ -79,6 +80,7 @@ We do not sell your Personal Data. We only share your information in the followi
 - **Publicly**: Public Data (like your linked Minecraft accounts and game stats) is visible to other users of the Service.
 - **For Legal Reasons**: We may disclose your information if required by law or to protect the rights, property, or safety of our company, our users, or the public.
 - **Business Transfers**: If we are involved in a merger or acquisition, your data may be transferred. We will notify you before this happens.
+- **With Payment Processors**: When you make a purchase through our website shop, we share necessary order information (such as your selected products and recipient Minecraft username) with Tebex to process and fulfill your order. We do not share your Discord account information with Tebex. Tebex's handling of your data is governed by the [Tebex Checkout Privacy Policy](https://checkout.tebex.io/privacy).
 - **With Advertising Partners**: If you consent to advertising cookies, we share data with our advertising partners. This is done to enable personalized advertising and remarketing. This includes:
     - **Google Analytics**: We may use data collected through Google Signals for remarketing purposes, which means you might see ads for our Service on other websites.
     - **NitroPay**: We partner with NitroPay to display third-party advertisements on our website. Details on this are in the section below.
