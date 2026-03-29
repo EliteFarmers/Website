@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import DOMPurify from 'isomorphic-dompurify';
+import { clearWindow, sanitize } from 'isomorphic-dompurify';
 import { parse, parseInline } from 'marked';
 import { createRawSnippet } from 'svelte';
 const { ORIGIN } = env;
@@ -8,10 +8,21 @@ if (!ORIGIN) {
 	// This is just to make sure this module can't be imported into the browser
 }
 
+let lastClearTime = 0;
+
+function clear() {
+	const now = Date.now();
+	if (now - lastClearTime > 1000) {
+		lastClearTime = now;
+		clearWindow();
+	}
+}
+
 export async function mdToHtml(markdown: string) {
 	try {
 		const html = await parse(markdown, { breaks: true });
-		const sanitized = DOMPurify.sanitize(html);
+		const sanitized = sanitize(html);
+		clear();
 
 		return sanitized;
 	} catch (error) {
@@ -23,7 +34,8 @@ export async function mdToHtml(markdown: string) {
 export async function mdToInline(markdown: string) {
 	try {
 		const html = await parseInline(markdown, { breaks: true });
-		const sanitized = DOMPurify.sanitize(html);
+		const sanitized = sanitize(html);
+		clear();
 
 		return sanitized;
 	} catch (error) {
