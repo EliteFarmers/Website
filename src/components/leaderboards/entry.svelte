@@ -110,7 +110,7 @@
 					: undefined}
 				alt=""
 				aria-hidden="true"
-				class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img && !srcset ? 'h-full' : ''}"
+				class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img ? 'h-full' : ''}"
 			/>
 		{/if}
 		<div class="absolute inset-0 rounded-sm bg-linear-to-r from-black/20 via-transparent to-black/20"></div>
