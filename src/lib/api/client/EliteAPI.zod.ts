@@ -1108,6 +1108,35 @@ export const zodGetSelectedMemberParticipationsParams = zod.object({
 });
 
 /**
+ * @summary Get a presigned download URL for any export (admin)
+ */
+export const zodAdminGetDataExportDownloadUrlParams = zod.object({
+	id: zod.string(),
+});
+
+/**
+ * Queues a personal data export for the specified user. Bypasses cooldown restrictions.
+ * @summary Request data export for a user (admin)
+ */
+export const zodAdminRequestDataExportParams = zod.object({
+	userId: zod.string(),
+});
+
+/**
+ * @summary Get a presigned download URL for an export
+ */
+export const zodGetDataExportDownloadUrlParams = zod.object({
+	id: zod.string(),
+});
+
+/**
+ * @summary Get account data export by id
+ */
+export const zodGetDataExportParams = zod.object({
+	id: zod.string(),
+});
+
+/**
  * @summary Add an Event Member to a Team
  */
 export const zodAddTeamMemberAdminParams = zod.object({

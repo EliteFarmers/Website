@@ -5,6 +5,7 @@ import BookOpen from '@lucide/svelte/icons/book-open';
 import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 import Command from '@lucide/svelte/icons/command';
 import CreditCard from '@lucide/svelte/icons/credit-card';
+import FileArchive from '@lucide/svelte/icons/file-archive';
 import FileText from '@lucide/svelte/icons/file-text';
 import Gift from '@lucide/svelte/icons/gift';
 import Layers from '@lucide/svelte/icons/layers';
@@ -126,5 +127,11 @@ export const ADMIN_NAV_PAGES: (Crumb & { exists: (flags: AuthFlags) => boolean }
 		name: 'Actions',
 		href: '/admin/actions',
 		exists: (flags: AuthFlags) => flags.moderator,
+	},
+	{
+		icon: FileArchive,
+		name: 'Exports',
+		href: '/admin/data-exports',
+		exists: (flags: AuthFlags) => flags.admin,
 	},
 ];

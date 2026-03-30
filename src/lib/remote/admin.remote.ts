@@ -1,5 +1,7 @@
 import { command, query } from '$app/server';
 import {
+	adminGetDataExportDownloadUrl,
+	adminRequestDataExport,
 	cancelRecurringPayment,
 	getAdminOrderDetail,
 	getAdminOrders,
@@ -13,6 +15,8 @@ import {
 	replayWebhook,
 	resolveRecipient,
 	resumeRecurringPayment,
+	zodAdminGetDataExportDownloadUrlParams,
+	zodAdminRequestDataExportParams,
 	zodCancelRecurringPaymentParams,
 	zodGetAdminOrderDetailParams,
 	zodGetAdminOrdersQueryParams,
@@ -160,4 +164,18 @@ export const CancelRecurringPayment = command(zodCancelRecurringPaymentParams, a
 	}
 
 	return data;
+});
+
+// --- Admin Data Exports ---
+
+export const AdminGetDataExportDownloadUrl = query(zodAdminGetDataExportDownloadUrlParams, async ({ id }) => {
+	const { ok, data } = await adminGetDataExportDownloadUrl(id);
+	if (!ok) return null;
+	return data;
+});
+
+export const AdminRequestDataExport = command(zodAdminRequestDataExportParams, async ({ userId }) => {
+	const { ok, data, error: problem } = await adminRequestDataExport(userId);
+	if (!ok) return { success: false as const, error: problem };
+	return { success: true as const, data };
 });

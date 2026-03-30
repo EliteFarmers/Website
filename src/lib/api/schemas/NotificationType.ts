@@ -28,4 +28,5 @@ export const NotificationType = {
 	giftReceived: 'giftReceived',
 	giftReassignable: 'giftReassignable',
 	giftClaimed: 'giftClaimed',
+	dataExportReady: 'dataExportReady',
 } as const;

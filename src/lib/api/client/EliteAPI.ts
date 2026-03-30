@@ -54,6 +54,8 @@ import type {
 	CreateTebexCheckoutRequest,
 	CreateToolSettingRequest,
 	CropCollectionsDataPointDto,
+	DataExportDownloadUrlResponse,
+	DataExportStatusResponse,
 	DeclineGiftRequest,
 	DeleteContestPingsParams,
 	DeleteMemberAdminParams,
@@ -3903,6 +3905,251 @@ export const getSelectedMemberParticipations = async (playerUuid: string, option
 	return customFetch<getSelectedMemberParticipationsResponse>(getGetSelectedMemberParticipationsUrl(playerUuid), {
 		...options,
 		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get a presigned download URL for any export (admin)
+ */
+export type adminGetDataExportDownloadUrlResponse200 = {
+	data: DataExportDownloadUrlResponse;
+	status: 200;
+};
+
+export type adminGetDataExportDownloadUrlResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type adminGetDataExportDownloadUrlResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type adminGetDataExportDownloadUrlResponseSuccess = adminGetDataExportDownloadUrlResponse200 & {
+	headers: Headers;
+};
+export type adminGetDataExportDownloadUrlResponseError = (
+	| adminGetDataExportDownloadUrlResponse401
+	| adminGetDataExportDownloadUrlResponse403
+) & {
+	headers: Headers;
+};
+
+export type adminGetDataExportDownloadUrlResponse =
+	| adminGetDataExportDownloadUrlResponseSuccess
+	| adminGetDataExportDownloadUrlResponseError;
+
+export const getAdminGetDataExportDownloadUrlUrl = (id: string) => {
+	return `${ELITE_API_URL}/admin/data-exports/${id}/download`;
+};
+
+export const adminGetDataExportDownloadUrl = async (id: string, options?: RequestInit) => {
+	return customFetch<adminGetDataExportDownloadUrlResponse>(getAdminGetDataExportDownloadUrlUrl(id), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Queues a personal data export for the specified user. Bypasses cooldown restrictions.
+ * @summary Request data export for a user (admin)
+ */
+export type adminRequestDataExportResponse200 = {
+	data: DataExportStatusResponse;
+	status: 200;
+};
+
+export type adminRequestDataExportResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type adminRequestDataExportResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type adminRequestDataExportResponseSuccess = adminRequestDataExportResponse200 & {
+	headers: Headers;
+};
+export type adminRequestDataExportResponseError = (
+	| adminRequestDataExportResponse401
+	| adminRequestDataExportResponse403
+) & {
+	headers: Headers;
+};
+
+export type adminRequestDataExportResponse =
+	| adminRequestDataExportResponseSuccess
+	| adminRequestDataExportResponseError;
+
+export const getAdminRequestDataExportUrl = (userId: string) => {
+	return `${ELITE_API_URL}/admin/data-exports/${userId}`;
+};
+
+export const adminRequestDataExport = async (userId: string, options?: RequestInit) => {
+	return customFetch<adminRequestDataExportResponse>(getAdminRequestDataExportUrl(userId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Get a presigned download URL for an export
+ */
+export type getDataExportDownloadUrlResponse200 = {
+	data: DataExportDownloadUrlResponse;
+	status: 200;
+};
+
+export type getDataExportDownloadUrlResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getDataExportDownloadUrlResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getDataExportDownloadUrlResponseSuccess = getDataExportDownloadUrlResponse200 & {
+	headers: Headers;
+};
+export type getDataExportDownloadUrlResponseError = (
+	| getDataExportDownloadUrlResponse401
+	| getDataExportDownloadUrlResponse403
+) & {
+	headers: Headers;
+};
+
+export type getDataExportDownloadUrlResponse =
+	| getDataExportDownloadUrlResponseSuccess
+	| getDataExportDownloadUrlResponseError;
+
+export const getGetDataExportDownloadUrlUrl = (id: string) => {
+	return `${ELITE_API_URL}/account/data-exports/${id}/download`;
+};
+
+export const getDataExportDownloadUrl = async (id: string, options?: RequestInit) => {
+	return customFetch<getDataExportDownloadUrlResponse>(getGetDataExportDownloadUrlUrl(id), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get account data export by id
+ */
+export type getDataExportResponse200 = {
+	data: DataExportStatusResponse;
+	status: 200;
+};
+
+export type getDataExportResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getDataExportResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getDataExportResponseSuccess = getDataExportResponse200 & {
+	headers: Headers;
+};
+export type getDataExportResponseError = (getDataExportResponse401 | getDataExportResponse403) & {
+	headers: Headers;
+};
+
+export type getDataExportResponse = getDataExportResponseSuccess | getDataExportResponseError;
+
+export const getGetDataExportUrl = (id: string) => {
+	return `${ELITE_API_URL}/account/data-exports/${id}`;
+};
+
+export const getDataExport = async (id: string, options?: RequestInit) => {
+	return customFetch<getDataExportResponse>(getGetDataExportUrl(id), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get latest account data export
+ */
+export type getLatestDataExportResponse200 = {
+	data: DataExportStatusResponse;
+	status: 200;
+};
+
+export type getLatestDataExportResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getLatestDataExportResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getLatestDataExportResponseSuccess = getLatestDataExportResponse200 & {
+	headers: Headers;
+};
+export type getLatestDataExportResponseError = (getLatestDataExportResponse401 | getLatestDataExportResponse403) & {
+	headers: Headers;
+};
+
+export type getLatestDataExportResponse = getLatestDataExportResponseSuccess | getLatestDataExportResponseError;
+
+export const getGetLatestDataExportUrl = () => {
+	return `${ELITE_API_URL}/account/data-exports/latest`;
+};
+
+export const getLatestDataExport = async (options?: RequestInit) => {
+	return customFetch<getLatestDataExportResponse>(getGetLatestDataExportUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Queues a personal data export for the authenticated user. Exports are limited to one request every 30 days.
+ * @summary Request account data export
+ */
+export type requestDataExportResponse200 = {
+	data: DataExportStatusResponse;
+	status: 200;
+};
+
+export type requestDataExportResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type requestDataExportResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type requestDataExportResponseSuccess = requestDataExportResponse200 & {
+	headers: Headers;
+};
+export type requestDataExportResponseError = (requestDataExportResponse401 | requestDataExportResponse403) & {
+	headers: Headers;
+};
+
+export type requestDataExportResponse = requestDataExportResponseSuccess | requestDataExportResponseError;
+
+export const getRequestDataExportUrl = () => {
+	return `${ELITE_API_URL}/account/data-exports`;
+};
+
+export const requestDataExport = async (options?: RequestInit) => {
+	return customFetch<requestDataExportResponse>(getRequestDataExportUrl(), {
+		...options,
+		method: 'POST',
 	});
 };
 
