@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 import type {
 	CreateTebexCheckoutRequest,
 	CreateTebexCheckoutRequestRecipient,
@@ -121,7 +122,12 @@ export class TebexContext {
 	}
 
 	async addToBasket(productId: string, options?: { recipient?: string | null }) {
-		if (this.#gbl.authorized && !this.#initializedCurrentCheckout && !this.loadingCurrentCheckout) {
+		if (!this.#gbl.authorized) {
+			await goto('/login?redirect=' + encodeURIComponent(window.location.pathname));
+			return;
+		}
+
+		if (!this.#initializedCurrentCheckout && !this.loadingCurrentCheckout) {
 			await this.refreshCurrentCheckout();
 		}
 
