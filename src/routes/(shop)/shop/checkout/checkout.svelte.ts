@@ -230,7 +230,8 @@ export class CheckoutState {
 
 	get canCheckout() {
 		if (this.launchingCheckout || this.#tebex.isMutatingCheckout || this.addingPendingGiftProduct) return false;
-		if (this.selfCheckoutBlocked || this.hasNonGiftableItemsForGift) return false;
+		if (this.selfCheckoutBlocked) return false;
+		if (this.giftIntent === 'gift' && this.hasNonGiftableItemsForGift) return false;
 		if (this.giftIntent === 'gift' && !this.effectiveRecipientIgn) return false;
 		if (this.giftIntent === 'gift' && this.#isSelfRecipient(this.effectiveRecipientIgn)) return false;
 		if (this.pendingGiftProduct && !this.pendingGiftProductInCheckout) return false;
