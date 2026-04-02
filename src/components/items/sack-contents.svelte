@@ -4,19 +4,37 @@
 	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
 	import * as Popover from '$comp/ui/popover';
 	import { toReadable } from '$lib/format';
-	import { getItemValues } from '$lib/remote/items.remote';
+	import { getItemValues, type ItemValue } from '$lib/remote/items.remote';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Item from '$ui/item';
 	import { ScrollArea } from '$ui/scroll-area';
+	import { SvelteMap } from 'svelte/reactivity';
 
 	const sellMethods = ['npc', 'ah', 'bazaar'] as const;
 	type SellMethod = (typeof sellMethods)[number];
 
 	const ctx = getStatsContext();
-	const itemValues = $derived(getItemValues(Object.keys(ctx.member.current?.sacks ?? {}).map((itemId) => itemId)));
+	const sackItemIds = $derived(Object.keys(ctx.member.current?.sacks ?? {}));
+	const itemValueCalls = $derived.by(() => {
+		const calls = [];
+		for (let i = 0; i < sackItemIds.length; i += 50) {
+			calls.push(getItemValues(sackItemIds.slice(i, i + 50)));
+		}
+		return calls;
+	});
+
+	const itemValues = $derived.by(() => {
+		const merged = new SvelteMap<string, ItemValue>();
+		for (const valueCall of itemValueCalls) {
+			for (const [itemId, itemValue] of valueCall.current ?? []) {
+				merged.set(itemId, itemValue);
+			}
+		}
+		return merged;
+	});
 
 	function getHighest(itemId: string) {
-		const value = itemValues.current?.get(itemId);
+		const value = itemValues.get(itemId);
 		if (!value) return { method: 'unknown', price: 0 };
 
 		let bestMethod: SellMethod = 'npc';
@@ -50,7 +68,7 @@
 		let length = 0;
 		const valueSum = sacks
 			.map(([itemId, amount]) => {
-				const value = itemValues.current?.get(itemId);
+				const value = itemValues.get(itemId);
 				if (!value) return 0;
 				const bestPrice = getHighest(itemId).price;
 				if (isNaN(bestPrice)) return 0;
@@ -88,7 +106,7 @@
 		<ScrollArea class="flex max-h-80 min-h-0 w-full flex-col rounded-md border">
 			<div class="my-1 flex min-h-0 flex-col">
 				{#each sacks as [itemId, amount] (itemId)}
-					{@const value = itemValues.current?.get(itemId)}
+					{@const value = itemValues.get(itemId)}
 
 					{#if !value}
 						<div

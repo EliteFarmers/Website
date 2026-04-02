@@ -1,6 +1,5 @@
 import {
 	getSelectedProfile,
-	refreshPurchases,
 	updateAccount,
 	updateBadges,
 	type ConfiguredProductFeaturesDto,
@@ -142,19 +141,6 @@ export const actions: Actions = {
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e || 'Failed to update settings!' });
-		}
-
-		return { success: true };
-	},
-	refreshPurchases: async ({ locals }) => {
-		if (!locals.access_token) {
-			throw error(401, 'Unauthorized');
-		}
-
-		const { response, error: e } = await refreshPurchases();
-
-		if (!response.ok || e) {
-			return fail(response.status, { error: e || 'Failed to refresh purchases!' });
 		}
 
 		return { success: true };

@@ -18,7 +18,7 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, re
 	locals.access_token = cookies.get('access_token');
 	locals.refresh_token = cookies.get('refresh_token');
 	locals.cache = cache;
-	locals.ads = !event.route.id?.includes('/(auth)');
+	locals.ads = !event.route.id?.includes('/(auth)') && !event.route.id?.includes('/shop');
 
 	if (locals.access_token) {
 		locals.persistSession = true;
@@ -64,7 +64,7 @@ async function ResolveWithSecurityHeaders(
 	const response = await resolve(event, {
 		transformPageChunk: ({ html }) => {
 			const isAdFree = event.locals.session?.flags?.includes('AD_FREE');
-			const shouldShowAds = !isAdFree && !event.locals.bot;
+			const shouldShowAds = !isAdFree && !event.locals.bot && event.locals.ads;
 			if (shouldShowAds) {
 				return html.replace('%elite.adscript%', privateEnv.AD_SCRIPT || '');
 			}

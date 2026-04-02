@@ -1,7 +1,10 @@
 import { page } from '$app/state';
-import type { AnnouncementDto, AuthorizedAccountDto, NotificationDto } from '$lib/api';
+import type { AnnouncementDto, AuthorizedAccountDto, EntitlementDto, NotificationDto, PendingGiftDto } from '$lib/api';
 import type { AuthSession } from '$lib/api/auth';
+import { getAuthorizedAccount } from '$lib/remote';
+import { ClaimGift, DeclineGift, GetPendingGifts } from '$lib/remote/gifts.remote';
 import { GetNotifications, MarkNotificationRead } from '$lib/remote/notifications.remote';
+import type { RemoteQuery } from '@sveltejs/kit';
 import { PersistedState } from 'runed';
 import { getContext, setContext, tick } from 'svelte';
 
@@ -31,8 +34,19 @@ export class GlobalContext {
 	});
 	#announcements = $state<AnnouncementDto[]>([]);
 	#notifications = $state<NotificationDto[]>([]);
+	#pendingGifts = $state<PendingGiftDto[]>([]);
 	#initialized = $state(false);
 	#packsParam = $state('');
+	#userQuery = $state<RemoteQuery<AuthorizedAccountDto | undefined>>();
+	#accesses = $derived.by(() =>
+		(this.#user?.entitlements ?? []).reduce(
+			(acc, e) => {
+				acc[e.productId] = e;
+				return acc;
+			},
+			{} as Record<string, EntitlementDto>
+		)
+	);
 
 	constructor(data: ConstructorData) {
 		this.setValues(data);
@@ -46,6 +60,8 @@ export class GlobalContext {
 
 				if (this.authorized) {
 					this.loadNotifications();
+					this.loadPendingGifts();
+					this.loadUser();
 				}
 			});
 		});
@@ -53,7 +69,9 @@ export class GlobalContext {
 
 	setValues({ user, session, announcements }: ConstructorData) {
 		this.#session = session ?? undefined;
-		this.user = user;
+		if (user !== undefined) {
+			this.user = user;
+		}
 		this.#announcements = announcements ?? this.#announcements ?? [];
 	}
 
@@ -86,6 +104,7 @@ export class GlobalContext {
 		let dismissed = user?.dismissedAnnouncements ?? this.data.dismissedAnnouncements;
 		if (user) {
 			this.loadNotifications();
+			this.loadPendingGifts();
 		}
 		if (this.#announcements?.length) {
 			// Filter out dismissed announcements that no longer exist
@@ -191,6 +210,44 @@ export class GlobalContext {
 		}
 	}
 
+	get pendingGifts() {
+		return this.#pendingGifts;
+	}
+
+	get hasPendingGifts() {
+		return this.#pendingGifts.length > 0;
+	}
+
+	async loadPendingGifts() {
+		if (!this.authorized) return;
+		try {
+			const data = await GetPendingGifts();
+			if (data) {
+				this.#pendingGifts = data;
+			}
+		} catch (e) {
+			console.error('Failed to load pending gifts', e);
+		}
+	}
+
+	async claimGift(orderId: string, orderItemIds?: string[]) {
+		const result = await ClaimGift({ orderId, orderItemIds });
+
+		// Always refresh pending gifts after a claim attempt to get accurate state
+		await this.loadPendingGifts();
+
+		return result;
+	}
+
+	async declineGift(orderId: string, orderItemIds?: string[]) {
+		const result = await DeclineGift({ orderId, orderItemIds });
+
+		// Always refresh pending gifts after a decline attempt to get accurate state
+		await this.loadPendingGifts();
+
+		return result;
+	}
+
 	ownsAccount(uuid: string) {
 		return this.data?.minecraftAccounts?.some((a) => a === uuid);
 	}
@@ -207,6 +264,21 @@ export class GlobalContext {
 				[key]: version,
 			},
 		};
+	}
+
+	get accesses() {
+		return this.#accesses;
+	}
+
+	ownsProduct(productId: string) {
+		return !!this.#accesses[productId];
+	}
+
+	async loadUser() {
+		if (!this.session?.id || this.session.id === this.user?.id) return;
+
+		this.#userQuery = getAuthorizedAccount();
+		this.user = await this.#userQuery;
 	}
 }
 

@@ -156,8 +156,9 @@ export const updateGuideCommand = command(
 		richBlocks: z.any().optional(),
 		iconSkyblockId: z.string().optional(),
 		tags: z.array(z.string()).optional(),
+		concurrency: z.number(),
 	}),
-	async ({ id, title, description, markdownContent, iconSkyblockId, tags }) => {
+	async ({ id, title, description, markdownContent, iconSkyblockId, tags, concurrency }) => {
 		const event = getRequestEvent();
 		if (!event.locals.access_token) {
 			return { error: 'Unauthorized' };
@@ -167,6 +168,7 @@ export const updateGuideCommand = command(
 			title,
 			description,
 			markdownContent,
+			concurrencyVersion: concurrency,
 		};
 
 		if (iconSkyblockId) {
@@ -184,13 +186,18 @@ export const updateGuideCommand = command(
 		}
 
 		if (!result.ok) {
+			console.error('Update guide failed:', {
+				status: result.response.status,
+				statusText: result.response.statusText,
+				body: request,
+			});
 			return { error: 'Failed to update guide' };
 		}
 
 		// Refresh the guide data after update
 		GetGuide({ slug: '', draft: true }).refresh();
 
-		return { error: null };
+		return { error: null, version: result.data.concurrencyVersion };
 	}
 );
 

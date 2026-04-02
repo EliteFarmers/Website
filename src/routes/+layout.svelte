@@ -2,6 +2,7 @@
 	import { beforeNavigate } from '$app/navigation';
 	import { updated } from '$app/state';
 	import GTag from '$comp/analytics/g-tag.svelte';
+	import GiftNotificationDialog from '$comp/gift-notification-dialog.svelte';
 	import PageToast from '$comp/page-toast.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
 	import { initAdContext } from '$lib/hooks/ads.svelte';
@@ -61,5 +62,6 @@
 {@render children?.()}
 
 <PageToast />
+<GiftNotificationDialog />
 <ThemeWatcher />
 <GTag />

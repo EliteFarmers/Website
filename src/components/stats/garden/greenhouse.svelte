@@ -6,6 +6,7 @@
 	import * as Dialog from '$ui/dialog';
 	import * as Item from '$ui/item';
 	import { compareRarity, getGreenhouseMutationRenderItemId, GREENHOUSE_MUTATIONS } from 'farming-weight';
+	import ProgressBar from '../progress-bar.svelte';
 	import MutationRequirementsGrid from './mutation-requirements-grid.svelte';
 
 	interface MutationSpreadCondition {
@@ -45,6 +46,7 @@
 
 	const ctx = getStatsContext();
 	const garden = $derived(ctx.member.current?.memberData?.garden);
+	const profileGarden = $derived(ctx.member.current?.garden);
 
 	let detailsOpen = $state(false);
 	let selectedMutation = $state<MutationEntry | null>(null);
@@ -160,7 +162,76 @@
 	});
 </script>
 
-<div class="flex w-full max-w-7xl flex-row justify-center">
+<div class="flex w-full max-w-7xl flex-col items-center gap-8">
+	<div class="flex w-full max-w-4xl flex-1 flex-col gap-1">
+		<h3 class="mt-2 mb-4 text-xl leading-none font-semibold">Greenhouse Upgrades</h3>
+		<div class="flex flex-col items-center justify-center gap-6 md:flex-row">
+			<div class="flex flex-col gap-2">
+				<p class="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+					Greenhouse Plant Slots
+				</p>
+				<div class="grid h-fit w-fit grid-cols-10 gap-px">
+					{#each { length: 100 }, index (index)}
+						{@const x = index % 10}
+						{@const y = Math.floor(index / 10)}
+						{@const isFilled = profileGarden?.greenhouseSlots.some((slot) => slot.x === x && slot.z === y)}
+						{@const isCenter = x >= 3 && x <= 6 && y >= 3 && y <= 6 && (x % 3 !== 0 || y % 3 !== 0)}
+						<div
+							class="size-6 rounded-sm {isFilled
+								? 'bg-progress'
+								: isCenter
+									? 'bg-progress/60'
+									: 'bg-muted'}"
+						></div>
+					{/each}
+				</div>
+			</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<Item.Root variant="outline" class="flex w-full flex-row items-center">
+					<ItemRender skyblockId="SEEDS" class="pixelated size-12" />
+					<Item.Content>
+						<Item.Title class="font-semibold">Growth Speed</Item.Title>
+						<Item.Description
+							><ProgressBar
+								class="text-primary"
+								percent={((profileGarden?.gardenUpgrades?.greenhouseGrowthSpeed ?? 0) / 9) * 100}
+								readable="{profileGarden?.gardenUpgrades?.greenhouseGrowthSpeed ?? 0} / 9"
+								barBg="bg-card"
+							/></Item.Description
+						>
+					</Item.Content>
+				</Item.Root>
+				<Item.Root variant="outline" class="flex w-full flex-row items-center">
+					<ItemRender skyblockId="FLOWER_POT_ITEM" class="pixelated size-12" />
+					<Item.Content>
+						<Item.Title class="font-semibold">Plant Yield</Item.Title>
+						<Item.Description
+							><ProgressBar
+								class="text-primary"
+								percent={((profileGarden?.gardenUpgrades?.greenhouseYield ?? 0) / 9) * 100}
+								readable="{profileGarden?.gardenUpgrades?.greenhouseYield ?? 0} / 9"
+								barBg="bg-card"
+							/></Item.Description
+						>
+					</Item.Content>
+				</Item.Root>
+				<Item.Root variant="outline" class="flex w-full flex-row items-center">
+					<ItemRender skyblockId="GRASS" class="pixelated size-12" />
+					<Item.Content>
+						<Item.Title class="font-semibold">Greenhouse Plot Limit</Item.Title>
+						<Item.Description
+							><ProgressBar
+								class="text-primary"
+								percent={((profileGarden?.gardenUpgrades?.greenhousePlotLimit ?? 0) / 2) * 100}
+								readable="{profileGarden?.gardenUpgrades?.greenhousePlotLimit ?? 0} / 2"
+								barBg="bg-card"
+							/></Item.Description
+						>
+					</Item.Content>
+				</Item.Root>
+			</div>
+		</div>
+	</div>
 	<div class="flex w-full max-w-4xl flex-1 flex-col gap-1">
 		<h3 class="mt-2 mb-4 text-xl leading-none font-semibold">Mutations</h3>
 		<div class="flex flex-col gap-5">

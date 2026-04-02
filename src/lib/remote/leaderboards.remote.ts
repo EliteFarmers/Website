@@ -31,12 +31,15 @@ export const getLeaderboardSlice = query(
 			entries: leaderboard.entries.map((entry) => {
 				if (entry.meta?.leaderboard?.styleId === undefined || entry.meta.leaderboard.styleId === null)
 					return entry;
+				const style = cache.styleLookup[entry.meta?.leaderboard?.styleId];
 				return {
 					...entry,
-					style: cache.styleLookup[entry.meta?.leaderboard?.styleId]?.leaderboard ?? undefined,
+					style: style?.leaderboard ?? undefined,
+					imageRefs: style?.imageRefs ?? undefined,
 				};
 			}) as (LeaderboardEntryDto & {
 				style?: WeightStyleWithDataDto['leaderboard'];
+				imageRefs?: WeightStyleWithDataDto['imageRefs'];
 			})[],
 		};
 	}

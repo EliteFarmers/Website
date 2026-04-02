@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
 	import ProductPrice from '$comp/monetization/product-price.svelte';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { type Crumb, getPageCtx } from '$lib/hooks/page.svelte';
 	import { pending } from '$lib/utils';
 	import { Button } from '$ui/button';
@@ -24,6 +25,9 @@
 	}
 
 	let { data, form }: Props = $props();
+
+	const gbl = getGlobalContext();
+	const isAdmin = $derived(gbl.session?.perms.admin ?? false);
 
 	let product = $derived(data.product);
 	let loading = $state(false);
@@ -117,11 +121,11 @@
 			<p class="text-destructive">{form.error}</p>
 		{/if}
 
-		<div class="flex w-full flex-col gap-4 lg:flex-row">
+		<div class="flex w-full flex-col gap-8">
 			<form
 				method="post"
 				action="?/updateProduct"
-				class="bg-card flex flex-1 flex-col gap-4 rounded-md border-2 p-4"
+				class="bg-card flex max-w-2xl flex-col gap-4 rounded-md border-2 p-4"
 				use:enhance
 			>
 				<input type="hidden" name="product" value={product.id} />
@@ -130,12 +134,12 @@
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Product Description</Label>
-					<Textarea name="description" value={product.description} maxlength={1024} />
+					<Textarea name="description" value={product.description} maxlength={1024} disabled={!isAdmin} />
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Product Price (in cents)</Label>
-					<Input name="price" value={product.price} placeholder="299" />
+					<Input name="price" value={product.price} placeholder="299" disabled={!isAdmin} />
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
@@ -148,23 +152,32 @@
 						value={product.features?.badgeId?.toString()}
 						placeholder="Select a badge"
 						name="badge"
+						disabled={!isAdmin}
 					/>
 				</div>
 
 				<div class="flex flex-row items-center gap-2">
-					<Switch name="promotions" checked={product.features?.hideShopPromotions ?? false} />
+					<Switch
+						name="promotions"
+						checked={product.features?.hideShopPromotions ?? false}
+						disabled={!isAdmin}
+					/>
 					<Label>Hide shop promotions</Label>
 				</div>
 				<div class="flex flex-row items-center gap-2">
-					<Switch name="override" checked={product.features?.weightStyleOverride ?? false} />
+					<Switch
+						name="override"
+						checked={product.features?.weightStyleOverride ?? false}
+						disabled={!isAdmin}
+					/>
 					<Label>Apply Weight Style on everyone</Label>
 				</div>
 				<div class="flex flex-row items-center gap-2">
-					<Switch name="info" checked={product.features?.moreInfoDefault ?? false} />
+					<Switch name="info" checked={product.features?.moreInfoDefault ?? false} disabled={!isAdmin} />
 					<Label>"More Info" in weight command by default</Label>
 				</div>
 				<div class="flex flex-row items-center gap-2">
-					<Switch name="emoji" checked={product.features?.customEmoji ?? false} />
+					<Switch name="emoji" checked={product.features?.customEmoji ?? false} disabled={!isAdmin} />
 					<Label>Custom Emoji permissions</Label>
 				</div>
 
@@ -179,6 +192,7 @@
 								onclick={() => {
 									selectedColors = selectedColors.filter((c) => c !== color);
 								}}
+								disabled={!isAdmin}
 							>
 								<X size={16} />
 							</Button>
@@ -193,6 +207,7 @@
 							onclick={() => {
 								selectedColors = [...selectedColors, newColor];
 							}}
+							disabled={!isAdmin}
 						>
 							<Plus size={16} />
 						</Button>
@@ -210,6 +225,7 @@
 								onclick={() => {
 									selectedFlags = selectedFlags.filter((f) => f !== flag);
 								}}
+								disabled={!isAdmin}
 							>
 								<X size={16} />
 							</Button>
@@ -217,13 +233,14 @@
 						</div>
 					{/each}
 					<div class="flex flex-row items-center gap-2">
-						<Input placeholder="Add Flag" bind:value={newFlag} />
+						<Input placeholder="Add Flag" bind:value={newFlag} disabled={!isAdmin} />
 						<Button
 							variant="secondary"
 							size="sm"
 							onclick={() => {
 								selectedFlags = [...selectedFlags, newFlag];
 							}}
+							disabled={!isAdmin}
 						>
 							<Plus size={16} />
 						</Button>
@@ -231,17 +248,58 @@
 				</div>
 
 				<div class="flex flex-row items-center gap-2">
-					<Switch name="available" checked={product.available} />
+					<Switch name="available" checked={product.available} disabled={!isAdmin} />
 					<Label>Product Available</Label>
 				</div>
 
-				<Button type="submit" disabled={loading}>Update</Button>
+				<Button type="submit" disabled={loading || !isAdmin}>Update</Button>
 			</form>
+
+			<form
+				method="post"
+				action="?/updateTebexSettings"
+				class="bg-card flex max-w-2xl flex-col gap-4 rounded-md border-2 p-4"
+				use:enhance
+			>
+				<input type="hidden" name="product" value={product.id} />
+
+				<h2 class="text-lg font-semibold">Update Tebex Settings</h2>
+
+				<div class="flex flex-row items-center gap-2">
+					<Switch name="enabled" checked={product.tebex?.enabled ?? false} disabled={!isAdmin} />
+					<Label>Enable Tebex</Label>
+				</div>
+				<div class="flex flex-row items-center gap-2">
+					<Switch name="gifts" checked={product.tebex?.supportsGifting ?? false} disabled={!isAdmin} />
+					<Label>Supports Gifting</Label>
+				</div>
+				<div class="flex flex-row items-center gap-2">
+					<Switch
+						name="subscription"
+						checked={product.tebex?.config?.billingType === 'subscription'}
+						disabled={!isAdmin}
+					/>
+					<Label>Subscription</Label>
+				</div>
+				<div class="flex flex-col items-start gap-2">
+					<Label>Default Creator Code</Label>
+					<Input
+						name="creator"
+						value={product.tebex?.config?.defaultCreatorCode}
+						maxlength={32}
+						disabled={!isAdmin}
+						placeholder="Assign a default creator code for this product"
+					/>
+				</div>
+
+				<Button type="submit" disabled={loading || !isAdmin}>Update</Button>
+			</form>
+
 			<form
 				method="post"
 				action="?/addImage"
 				enctype="multipart/form-data"
-				class="bg-card flex h-fit flex-1 flex-col gap-4 rounded-md border-2 p-4"
+				class="bg-card flex max-w-2xl flex-col gap-4 rounded-md border-2 p-4"
 				use:pending={loading}
 			>
 				<input type="hidden" name="product" bind:value={product.id} />
@@ -250,28 +308,29 @@
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Image</Label>
-					<Input type="file" name="image" accept=".png" />
+					<Input type="file" name="image" accept=".png" disabled={!isAdmin} />
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Image Title</Label>
-					<Input name="title" placeholder="Title" />
+					<Input name="title" placeholder="Title" disabled={!isAdmin} />
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Image Description</Label>
-					<Input name="description" placeholder="Description" />
+					<Input name="description" placeholder="Description" disabled={!isAdmin} />
 				</div>
 
 				<div class="flex flex-row items-center gap-2">
-					<Switch bind:checked={isThumbnail} />
+					<Switch bind:checked={isThumbnail} disabled={!isAdmin} />
 					<Label>Set as thumbnail</Label>
 					<input type="hidden" name="thumbnail" bind:value={isThumbnail} />
 				</div>
 
-				<Button type="submit" disabled={loading}>Add Image</Button>
+				<Button type="submit" disabled={loading || !isAdmin}>Add Image</Button>
 			</form>
-			<div class="bg-card flex h-fit flex-1 flex-col gap-4 rounded-md border-2 p-4">
+
+			<div class="bg-card flex max-w-2xl flex-col gap-4 rounded-md border-2 p-4">
 				<h2 class="text-lg font-semibold">Unlocked Styles</h2>
 
 				<form method="post" action="?/addCosmetic" class="flex flex-col gap-4" use:pending={loading}>
@@ -280,7 +339,7 @@
 					<div class="flex flex-col items-start gap-2">
 						<Label>Rewarded Cosmetic</Label>
 						<ComboBox
-							disabled={loading}
+							disabled={loading || !isAdmin}
 							options={data.styles.map((b) => ({
 								value: (b.id ?? 0).toString(),
 								label: b.name ?? 'Unknown',
@@ -294,12 +353,12 @@
 					</div>
 
 					<div class="flex flex-row items-center gap-2">
-						<Button type="submit" class="flex-1" disabled={loading}>Add</Button>
+						<Button type="submit" class="flex-1" disabled={loading || !isAdmin}>Add</Button>
 						<Button
 							type="submit"
 							class="flex-1"
 							formaction="?/removeCosmetic"
-							disabled={loading}
+							disabled={loading || !isAdmin}
 							variant="destructive"
 						>
 							Remove
@@ -346,7 +405,7 @@
 			<input type="hidden" name="product" bind:value={product.id} />
 			<input type="hidden" name="image" bind:value={selectedImageId} />
 			<p>Are you sure you want to delete this image?</p>
-			<Button type="submit" disabled={loading} variant="destructive">Delete</Button>
+			<Button type="submit" disabled={loading || !isAdmin} variant="destructive">Delete</Button>
 		</form>
 	</Dialog.Content>
 </Dialog.Root>

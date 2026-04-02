@@ -12,6 +12,11 @@ if (PUBLIC_SENTRY_DSN) {
 		tracesSampleRate: +(PUBLIC_SENTRY_SAMPLE_RATE ?? 0.1),
 		enableLogs: true,
 		environment: dev ? 'development' : 'production',
+		allowUrls: [
+			/https?:\/\/(?:.*?\.)?elitebot\.dev/,
+			/https?:\/\/(?:.*?\.)?kaeso\.dev/,
+			/https?:\/\/(?:.*?\.)?eliteskyblock\.com/,
+		],
 	});
 }
 

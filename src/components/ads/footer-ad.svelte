@@ -62,7 +62,7 @@
 		anchor: 'bottom',
 		anchorBgColor: 'rgb(0 0 0 / 80%)',
 		anchorClose: true,
-		anchorPersistClose: false,
+		anchorPersistClose: true,
 		anchorStickyOffset: 0,
 		report: {
 			enabled: true,

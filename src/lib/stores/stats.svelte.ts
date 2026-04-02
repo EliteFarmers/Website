@@ -5,6 +5,7 @@ import type {
 	PetDto,
 	ProfileDetailsDto,
 	ProfileMemberDto,
+	WeightStyleListDto,
 	WeightStyleWithDataDto,
 } from '$lib/api';
 import type { ProfileDetails } from '$lib/api/elite';
@@ -30,7 +31,7 @@ export class PlayerStats {
 	#fortuneSettings = $derived(
 		this.#account.settings?.fortune?.accounts?.[this.uuid]?.[this.selectedProfile?.profileId ?? ''] ?? null
 	);
-	#style = $state.raw<WeightStyleWithDataDto | undefined>(undefined);
+	#style = $state.raw<WeightStyleWithDataDto | WeightStyleListDto | undefined>(undefined);
 	#ready = $state(false);
 
 	#tools = $state.raw<ItemDto[]>([]);
@@ -46,7 +47,7 @@ export class PlayerStats {
 		account: NonNullable<MinecraftAccountDto>;
 		selectedProfile: ProfileDetailsDto;
 		profiles: ProfileDetails[];
-		style?: WeightStyleWithDataDto;
+		style?: WeightStyleWithDataDto | WeightStyleListDto;
 		initialMember?: ProfileMemberDto;
 		initialRanks?: LeaderboardRanksResponse;
 		bot?: boolean;

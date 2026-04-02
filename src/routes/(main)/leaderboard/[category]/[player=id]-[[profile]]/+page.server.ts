@@ -9,11 +9,13 @@ export const load = (async ({ params, parent, url }) => {
 	const mode = url.searchParams.get('mode')?.toString() ?? undefined;
 	const interval = url.searchParams.get('interval')?.toString() ?? undefined;
 	const removed = url.searchParams.get('removed')?.toString() ?? undefined;
-	const fallbackStr = url.searchParams.get('fallback')?.toString() ?? undefined;
+	const fallbackStr =
+		url.searchParams.get('fallback')?.toString() ?? url.searchParams.get('f')?.toString() ?? undefined;
 	const fallback = isNaN(Number(fallbackStr)) ? undefined : Math.max(Number(fallbackStr) - 10, 1);
 
 	const newSearchParams = new URLSearchParams(url.searchParams);
 	newSearchParams.delete('fallback');
+	newSearchParams.delete('f');
 	const newSearch = newSearchParams.toString() ? `?${newSearchParams.toString()}` : '';
 
 	if (!ign) {

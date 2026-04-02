@@ -94,6 +94,7 @@
 	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(profile?.profileName ?? '')}"
 	{ldJson}
+	keywords="farming, skyblock profile, skyblock, Hypixel, elite skyblock, elite farmers"
 />
 
 <section class="my-2 mb-16 flex items-center justify-center" id="Skills">

@@ -5,7 +5,9 @@ import {
 	getAllProducts,
 	removeCosmeticToProduct,
 	updateProduct,
+	upsertTebexProductSettings,
 	type EditProductDto,
+	type UpsertTebexProductSettingsRequest,
 } from '$lib/api';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
@@ -13,7 +15,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals, params }) => {
 	const { session, access_token: token } = locals;
 
-	if (!session || !session.perms.moderator || !token) {
+	if (!session || !(session.perms.artist || session.perms.admin) || !token) {
 		throw error(404, 'Not Found');
 	}
 
@@ -66,6 +68,43 @@ export const actions: Actions = {
 		if (!response.ok || e) {
 			console.log(e);
 			return fail(response.status, { error: e ?? 'Failed to update product!' });
+		}
+
+		return { success: true };
+	},
+	updateTebexSettings: async ({ locals, request, params }) => {
+		if (!locals.session?.id || !locals.access_token || !params.productId) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+
+		const subscriptionEnabled = data.get('subscription') === 'true';
+		const billingType = subscriptionEnabled ? 'subscription' : 'standard';
+		const billingPeriod = subscriptionEnabled ? 'month' : undefined;
+		const billingFrequency = subscriptionEnabled ? 1 : undefined;
+		const creator = (data.get('creator') as string | undefined)?.trim();
+
+		const body = {
+			enabled: data.get('enabled') === 'true',
+			supportsGifting: data.get('gifts') === 'true',
+			config: {
+				allowGiftGuild: false,
+				allowGiftUser: true,
+				creatorCodeAllowed: true,
+				requiresMinecraftIdentity: false,
+				billingFrequency,
+				billingPeriod,
+				billingType,
+				defaultCreatorCode: creator || undefined,
+			},
+		} satisfies UpsertTebexProductSettingsRequest;
+
+		const { response, error: e } = await upsertTebexProductSettings(params.productId, body);
+
+		if (!response.ok || e) {
+			console.log(e);
+			return fail(response.status, { error: e ?? 'Failed to update Tebex settings!' });
 		}
 
 		return { success: true };

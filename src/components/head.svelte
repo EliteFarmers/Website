@@ -60,6 +60,8 @@
 <svelte:head>
 	<title>{title || pageCtx.title}</title>
 	<meta property="og:title" content={title || pageCtx.title} />
+	<meta property="twitter:title" content={title || pageCtx.title} />
+	<meta property="og:site_name" content="Elite Skyblock" />
 
 	<meta property="twitter:card" content={twitterCardType ?? 'summary'} />
 

@@ -1,26 +1,19 @@
-import { env } from '$env/dynamic/public';
-const { PUBLIC_COMMUNITY_ID } = env;
-import { getPublicGuild } from '$lib/api';
-import { getLeaderboardSlice } from '$lib/remote/leaderboards.remote';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
-	const { data: eliteGuild } = await getPublicGuild(PUBLIC_COMMUNITY_ID).catch(() => ({ data: null }));
-
+export const load: PageServerLoad = ({ locals }) => {
 	const leaderboardInfo = locals.cache?.leaderboards?.leaderboards?.['farmingweight'];
+
 	if (!leaderboardInfo) {
 		return {
 			lb: undefined,
 			leaderboard: undefined,
-			eliteGuild,
+			eliteGuild: locals.cache?.communityGuild,
 		};
 	}
 
-	const leaderboard = getLeaderboardSlice({ leaderboard: 'farmingweight', offset: 0, limit: 10 });
-
 	return {
-		lb: leaderboard,
+		lb: locals.cache?.homepageLeaderboard ?? undefined,
 		leaderboard: leaderboardInfo,
-		eliteGuild,
+		eliteGuild: locals.cache?.communityGuild,
 	};
 };

@@ -12,6 +12,7 @@
 		<StrapiImage
 			cover={article.cover}
 			alt={article.title}
+			sizes="(max-width: 639px) 100vw, 24rem"
 			class="aspect-video w-full rounded-md bg-black object-cover opacity-85 transition-all duration-300 ease-in-out group-hover:opacity-100"
 		/>
 		<div

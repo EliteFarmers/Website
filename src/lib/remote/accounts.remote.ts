@@ -1,6 +1,7 @@
 import { command, getRequestEvent, query } from '$app/server';
 import {
 	getAccount,
+	getAuthAccount,
 	getPlayerRecap,
 	linkOwnAccount,
 	searchAccountsWithDiscord,
@@ -13,6 +14,11 @@ import * as z from 'zod';
 
 export const GetAccount = query(zodGetAccountParams, async (params) => {
 	return await getAccount(params.player);
+});
+
+export const getAuthorizedAccount = query(async () => {
+	const { data: account } = await getAuthAccount();
+	return account;
 });
 
 export const getAccountOptions = query(async () => {
@@ -83,10 +89,18 @@ export const getProfilesAccount = query(
 			return { code: 404, error: 'Player not found' };
 		}
 
+		const style = account.settings?.nameStyle?.id
+			? event.locals.cache?.styleLookup?.[account.settings.nameStyle.id]
+			: undefined;
+
 		const profiles = account.profiles?.filter((p) => p.members?.some((m) => m.uuid === account.id && m.active));
 
 		if (!profiles?.length) {
-			return { code: 404, error: 'No profiles found for ' + account.name };
+			return {
+				account,
+				noProfiles: true as const,
+				style: style ?? undefined,
+			};
 		}
 
 		const selectedProfile = profile
@@ -124,8 +138,7 @@ export const getProfilesAccount = query(
 			return { code: 404, error: 'Player not found' };
 		}
 
-		if (account.settings?.nameStyle?.id) {
-			const style = event.locals.cache?.styleLookup?.[account.settings.nameStyle?.id];
+		if (style) {
 			return {
 				account,
 				profile: selectedProfile,

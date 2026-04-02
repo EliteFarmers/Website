@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { FarmingWeightDto, WeightStyleWithDataDto } from '$lib/api';
+	import type { FarmingWeightDto, WeightStyleListDto, WeightStyleWithDataDto } from '$lib/api';
 	import { createFromData } from '$lib/styles/maker';
 	import { isValidWeightStyle } from '$lib/styles/style';
 
 	interface Props {
-		style: WeightStyleWithDataDto;
+		style: WeightStyleWithDataDto | WeightStyleListDto;
 		ign: string;
 		uuid: string;
 		weight?: FarmingWeightDto | undefined;
@@ -25,6 +25,7 @@
 			data: isValidWeightStyle(style.data) ? style.data : undefined,
 			badgeUrl: badgeUrl,
 			weightRank: rank,
+			imageRefs: style.imageRefs,
 		});
 	});
 </script>

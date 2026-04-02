@@ -9,6 +9,7 @@
 	import { Input } from '$ui/input';
 	import type { Snippet } from 'svelte';
 	import type { ActionData, PageData } from './$types';
+	import DataExport from './data-export.svelte';
 	import DiscordAccount from './discordAccount.svelte';
 	import MinecraftAccount from './minecraftAccount.svelte';
 
@@ -162,6 +163,11 @@
 			</p>
 			<LinkingGuide username={user?.username ?? ''} />
 		</div>
+	{/snippet}
+
+	{@render section(dataExportSection)}
+	{#snippet dataExportSection()}
+		<DataExport />
 	{/snippet}
 </div>
 

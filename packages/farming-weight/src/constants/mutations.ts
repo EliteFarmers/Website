@@ -102,9 +102,7 @@ export const GREENHOUSE_MUTATIONS = Object.fromEntries(
 		},
 	])
 ) as {
-	[K in keyof typeof GREENHOUSE_MUTATIONS_BASE]: (typeof GREENHOUSE_MUTATIONS_BASE)[K] & {
-		rarity: Rarity;
-	};
+	[K in keyof typeof GREENHOUSE_MUTATIONS_BASE]: GreenhouseMutation;
 };
 
 export function getGreenhouseMutationRenderItemId(id: string): string {
@@ -115,7 +113,39 @@ export function getGreenhouseMutationRenderSurface(id: string, fallbackSurface: 
 	return GREENHOUSE_MUTATION_RENDER_MAPPINGS[id]?.surface ?? fallbackSurface;
 }
 
-function getGreenhouseMutationsBase() {
+export interface GreenhouseMutation {
+	id: string;
+	type: 'MUTATION';
+	rarity: Rarity;
+	display: {
+		name: string;
+		minecraftId: string;
+	};
+	growth: {
+		size: [number, number];
+		surface: string;
+		stages: number;
+		requiresWater: boolean;
+	};
+	spreadingConditions?: {
+		type: string;
+		crop?: string;
+		count?: number;
+		range?: string;
+		requirement?: string;
+	}[];
+	drops?: {
+		item: string;
+		amount: number;
+	}[];
+	effects?: Record<string, { value?: number }>;
+	analysis: {
+		baseCost: number;
+		copper: number;
+	};
+}
+
+function getGreenhouseMutationsBase(): Record<string, Omit<GreenhouseMutation, 'rarity'>> {
 	return {
 		zombud: {
 			id: 'ZOMBUD',
@@ -163,6 +193,10 @@ function getGreenhouseMutationsBase() {
 			effects: {
 				EFFECT_SPREAD: {},
 				BONUS_DROPS: {},
+			},
+			analysis: {
+				baseCost: 1000000,
+				copper: 500,
 			},
 		},
 		godseed: {
@@ -256,6 +290,10 @@ function getGreenhouseMutationsBase() {
 				BONUS_DROPS: {},
 				EFFECT_SPREAD: {},
 			},
+			analysis: {
+				baseCost: 1000000,
+				copper: 500,
+			},
 		},
 		choconut: {
 			id: 'CHOCONUT',
@@ -286,6 +324,10 @@ function getGreenhouseMutationsBase() {
 			],
 			effects: {
 				IMMUNITY: {},
+			},
+			analysis: {
+				baseCost: 10000,
+				copper: 5,
 			},
 		},
 		coalroot: {
@@ -333,6 +375,10 @@ function getGreenhouseMutationsBase() {
 				XP_BOOST: {
 					value: 0.2,
 				},
+			},
+			analysis: {
+				baseCost: 80000,
+				copper: 40,
 			},
 		},
 		devourer: {
@@ -385,6 +431,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.3,
 				},
 			},
+			analysis: {
+				baseCost: 10000000,
+				copper: 5000,
+			},
 		},
 		lonelily: {
 			id: 'LONELILY',
@@ -415,6 +465,10 @@ function getGreenhouseMutationsBase() {
 			],
 			effects: {
 				BONUS_DROPS: {},
+			},
+			analysis: {
+				baseCost: 50000,
+				copper: 25,
 			},
 		},
 		soggybud: {
@@ -454,6 +508,10 @@ function getGreenhouseMutationsBase() {
 				WATER_RETAIN: {
 					value: 0.5,
 				},
+			},
+			analysis: {
+				baseCost: 60000,
+				copper: 30,
 			},
 		},
 		ashwreath: {
@@ -496,6 +554,10 @@ function getGreenhouseMutationsBase() {
 				XP_LOSS: {
 					value: -0.2,
 				},
+			},
+			analysis: {
+				baseCost: 10000,
+				copper: 5,
 			},
 		},
 		duskbloom: {
@@ -554,6 +616,10 @@ function getGreenhouseMutationsBase() {
 			effects: {
 				BONUS_DROPS: {},
 			},
+			analysis: {
+				baseCost: 80000,
+				copper: 40,
+			},
 		},
 		dustgrain: {
 			id: 'DUSTGRAIN',
@@ -586,6 +652,10 @@ function getGreenhouseMutationsBase() {
 				HARVEST_BOOST: {
 					value: 0.2,
 				},
+			},
+			analysis: {
+				baseCost: 10000,
+				copper: 5,
 			},
 		},
 		fleshtrap: {
@@ -631,6 +701,10 @@ function getGreenhouseMutationsBase() {
 			],
 			effects: {
 				BONUS_DROPS: {},
+			},
+			analysis: {
+				baseCost: 360000,
+				copper: 180,
 			},
 		},
 		glasscorn: {
@@ -679,6 +753,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.2,
 				},
 			},
+			analysis: {
+				baseCost: 4000000,
+				copper: 2000,
+			},
 		},
 		noctilume: {
 			id: 'NOCTILUME',
@@ -726,6 +804,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.2,
 				},
 			},
+			analysis: {
+				baseCost: 300000,
+				copper: 150,
+			},
 		},
 		scourroot: {
 			id: 'SCOURROOT',
@@ -769,6 +851,10 @@ function getGreenhouseMutationsBase() {
 					value: 0.2,
 				},
 				IMMUNITY: {},
+			},
+			analysis: {
+				baseCost: 10000,
+				copper: 5,
 			},
 		},
 		shadevine: {
@@ -818,6 +904,10 @@ function getGreenhouseMutationsBase() {
 				HARVEST_LOSS: {
 					value: -0.2,
 				},
+			},
+			analysis: {
+				baseCost: 10000,
+				copper: 5,
 			},
 		},
 		snoozling: {
@@ -886,6 +976,10 @@ function getGreenhouseMutationsBase() {
 			effects: {
 				BONUS_DROPS: {},
 			},
+			analysis: {
+				baseCost: 600000,
+				copper: 300,
+			},
 		},
 		timestalk: {
 			id: 'TIMESTALK',
@@ -941,6 +1035,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.2,
 				},
 			},
+			analysis: {
+				baseCost: 19000000,
+				copper: 9500,
+			},
 		},
 		blastberry: {
 			id: 'BLASTBERRY',
@@ -987,6 +1085,10 @@ function getGreenhouseMutationsBase() {
 				XP_LOSS: {
 					value: -0.2,
 				},
+			},
+			analysis: {
+				baseCost: 240000,
+				copper: 120,
 			},
 		},
 		cheesebite: {
@@ -1042,6 +1144,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.2,
 				},
 			},
+			analysis: {
+				baseCost: 80000,
+				copper: 80,
+			},
 		},
 		chloronite: {
 			id: 'CHLORONITE',
@@ -1095,6 +1201,10 @@ function getGreenhouseMutationsBase() {
 			effects: {
 				IMMUNITY: {},
 			},
+			analysis: {
+				baseCost: 40000,
+				copper: 20,
+			},
 		},
 		chocoberry: {
 			id: 'CHOCOBERRY',
@@ -1142,6 +1252,10 @@ function getGreenhouseMutationsBase() {
 					value: 0.5,
 				},
 			},
+			analysis: {
+				baseCost: 60000,
+				copper: 30,
+			},
 		},
 		creambloom: {
 			id: 'CREAMBLOOM',
@@ -1172,6 +1286,10 @@ function getGreenhouseMutationsBase() {
 			],
 			effects: {
 				IMMUNITY: {},
+			},
+			analysis: {
+				baseCost: 60000,
+				copper: 30,
 			},
 		},
 		gloomgourd: {
@@ -1217,6 +1335,10 @@ function getGreenhouseMutationsBase() {
 				},
 				BONUS_DROPS: {},
 			},
+			analysis: {
+				baseCost: 10000,
+				copper: 5,
+			},
 		},
 		shellfruit: {
 			id: 'SHELLFRUIT',
@@ -1246,6 +1368,10 @@ function getGreenhouseMutationsBase() {
 					value: 0.5,
 				},
 				IMMUNITY: {},
+			},
+			analysis: {
+				baseCost: 500000,
+				copper: 250,
 			},
 		},
 		thornshade: {
@@ -1292,6 +1418,10 @@ function getGreenhouseMutationsBase() {
 			effects: {
 				EFFECT_SPREAD: {},
 			},
+			analysis: {
+				baseCost: 80000,
+				copper: 40,
+			},
 		},
 		veilshroom: {
 			id: 'VEILSHROOM',
@@ -1337,6 +1467,10 @@ function getGreenhouseMutationsBase() {
 				WATER_DRAIN: {
 					value: -0.3,
 				},
+			},
+			analysis: {
+				baseCost: 10000,
+				copper: 5,
 			},
 		},
 		all_in_aloe: {
@@ -1385,6 +1519,10 @@ function getGreenhouseMutationsBase() {
 					value: 0.2,
 				},
 			},
+			analysis: {
+				baseCost: 4600000,
+				copper: 2300,
+			},
 		},
 		cindershade: {
 			id: 'CINDERSHADE',
@@ -1432,6 +1570,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.2,
 				},
 			},
+			analysis: {
+				baseCost: 80000,
+				copper: 40,
+			},
 		},
 		jerryflower: {
 			id: 'JERRYFLOWER',
@@ -1445,6 +1587,10 @@ function getGreenhouseMutationsBase() {
 				surface: 'FARMLAND',
 				stages: 10,
 				requiresWater: true,
+			},
+			analysis: {
+				baseCost: 20000,
+				copper: 10,
 			},
 		},
 		phantomleaf: {
@@ -1489,6 +1635,10 @@ function getGreenhouseMutationsBase() {
 				XP_BOOST: {
 					value: 0.2,
 				},
+			},
+			analysis: {
+				baseCost: 3000000,
+				copper: 1500,
 			},
 		},
 		puffercloud: {
@@ -1544,6 +1694,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.3,
 				},
 			},
+			analysis: {
+				baseCost: 1000000,
+				copper: 500,
+			},
 		},
 		startlevine: {
 			id: 'STARTLEVINE',
@@ -1593,6 +1747,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.2,
 				},
 			},
+			analysis: {
+				baseCost: 500000,
+				copper: 250,
+			},
 		},
 		thunderling: {
 			id: 'THUNDERLING',
@@ -1638,6 +1796,10 @@ function getGreenhouseMutationsBase() {
 			effects: {
 				EFFECT_SPREAD: {},
 			},
+			analysis: {
+				baseCost: 800000,
+				copper: 400,
+			},
 		},
 		turtlellini: {
 			id: 'TURTLELLINI',
@@ -1672,6 +1834,10 @@ function getGreenhouseMutationsBase() {
 				},
 				IMMUNITY: {},
 			},
+			analysis: {
+				baseCost: 240000,
+				copper: 120,
+			},
 		},
 		witherbloom: {
 			id: 'WITHERBLOOM',
@@ -1702,6 +1868,10 @@ function getGreenhouseMutationsBase() {
 			],
 			effects: {
 				EFFECT_SPREAD: {},
+			},
+			analysis: {
+				baseCost: 40000,
+				copper: 20,
 			},
 		},
 		chorus_fruit: {
@@ -1752,6 +1922,10 @@ function getGreenhouseMutationsBase() {
 				HARVEST_LOSS: {
 					value: -0.2,
 				},
+			},
+			analysis: {
+				baseCost: 600000,
+				copper: 300,
 			},
 		},
 		// devourer_root: {
@@ -1854,6 +2028,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.2,
 				},
 			},
+			analysis: {
+				baseCost: 160000,
+				copper: 80,
+			},
 		},
 		stoplight_petal: {
 			id: 'STOPLIGHT_PETAL',
@@ -1901,6 +2079,10 @@ function getGreenhouseMutationsBase() {
 					value: -0.2,
 				},
 			},
+			analysis: {
+				baseCost: 4000000,
+				copper: 2000,
+			},
 		},
 		plantboy_advance: {
 			id: 'PLANTBOY_ADVANCE',
@@ -1947,6 +2129,10 @@ function getGreenhouseMutationsBase() {
 				HARVEST_BOOST: {
 					value: 0.2,
 				},
+			},
+			analysis: {
+				baseCost: 700000,
+				copper: 350,
 			},
 		},
 		do_not_eat_shroom: {
@@ -2001,6 +2187,10 @@ function getGreenhouseMutationsBase() {
 				WATER_DRAIN: {
 					value: -0.3,
 				},
+			},
+			analysis: {
+				baseCost: 240000,
+				copper: 120,
 			},
 		},
 	} as const;

@@ -10,9 +10,10 @@
 		styleId?: number;
 		style?: WeightStyleWithDataDto['leaderboard'] | LeaderboardStyle;
 		showLeaderboardName?: boolean;
+		imageRefs?: WeightStyleWithDataDto['imageRefs'];
 	}
 
-	let { ign, uuid, style, showLeaderboardName, styleId }: Props = $props();
+	let { ign, uuid, style, showLeaderboardName, styleId, imageRefs }: Props = $props();
 
 	const entry = $derived({
 		profile: 'Raspberry',
@@ -22,6 +23,7 @@
 		ign,
 		uuid,
 		style,
+		imageRefs,
 		meta: {
 			leaderboard: {
 				styleId: styleId ?? undefined,

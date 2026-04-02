@@ -32,7 +32,7 @@
 					<AnnouncementIcon announcement={a} class="mb-1 inline size-6 md:hidden" />
 					<span class="text-lg font-semibold md:text-xl">{a.title}</span>
 				</span>
-				<span class="text-muted-foreground mt-3 max-w-2xl text-sm sm:mt-1">
+				<span class="text-muted-foreground mt-3 max-w-4xl text-sm sm:mt-1">
 					<RenderHtml content={a.content} />
 				</span>
 			</div>
@@ -41,6 +41,8 @@
 			<Button
 				variant="outline"
 				class="hover:bg-secondary-hover w-full flex-initial rounded-md p-1 sm:flex-1 md:w-fit"
+				aria-label="Dismiss announcement"
+				title="Dismiss announcement"
 				onclick={() => {
 					ctx.dismissAnnouncement(a.id);
 				}}

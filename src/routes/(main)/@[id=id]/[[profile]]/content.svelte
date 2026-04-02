@@ -17,13 +17,16 @@
 	import type { LayoutData } from './$types';
 	import NavCrumbs from './nav-crumbs.svelte';
 
+	type ResolvedProfileData = Awaited<LayoutData['profileData']>;
+	type ValidProfileData = Exclude<ResolvedProfileData, { code: number; error: string } | { noProfiles: true }>;
+
 	let {
 		data,
 		ssrMemberData,
 		ssrRanksData,
 		children,
 	}: {
-		data: Exclude<Awaited<LayoutData['profileData']>, { code: number; error: string }>;
+		data: ValidProfileData;
 		ssrMemberData?: ProfileMemberDto | undefined;
 		ssrRanksData?: LeaderboardRanksResponse | undefined;
 		children: Snippet;

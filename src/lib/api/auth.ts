@@ -15,7 +15,9 @@ export interface AuthFlags {
 	admin: boolean;
 	moderator: boolean;
 	support: boolean;
+	artist: boolean;
 	wiki: boolean;
+	viewAdminPages: boolean;
 }
 
 const refreshLock = new Map<string, Promise<AuthSession | undefined>>();
@@ -101,12 +103,15 @@ function setAuthFlags(session?: AuthSessionDto): AuthSession | undefined {
 	const includesModerator = session.roles.includes('Moderator');
 	const includesSupport = session.roles.includes('Support');
 	const includesWiki = session.roles.includes('Wiki');
+	const includesArtist = session.roles.includes('Artist');
 
 	newSession.perms = {
 		admin: includesAdmin,
 		moderator: includesModerator || includesAdmin,
 		support: includesSupport || includesModerator || includesAdmin,
 		wiki: includesWiki || includesSupport || includesModerator || includesAdmin,
+		artist: includesArtist || includesAdmin,
+		viewAdminPages: includesAdmin || includesModerator || includesArtist,
 	};
 
 	return newSession;

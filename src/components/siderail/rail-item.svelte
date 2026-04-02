@@ -6,6 +6,7 @@
 
 	interface Props extends HTMLAnchorAttributes {
 		img: string;
+		alt?: string;
 		href: string;
 		name: string;
 		class?: string;
@@ -13,7 +14,7 @@
 		absolute?: Snippet;
 	}
 
-	let { img, name, href, class: className = '', absolute, imgClass, ...rest }: Props = $props();
+	let { img, name, href, alt, class: className = '', absolute, imgClass, ...rest }: Props = $props();
 </script>
 
 <a
@@ -23,7 +24,7 @@
 >
 	<div class="flex min-h-12 w-full min-w-0 flex-col justify-start">
 		<div class="@container-normal relative grid min-h-12 w-full items-center justify-center rounded-md">
-			<img src={img} alt={name} class={cn('h-12 w-48 rounded-t-md object-cover', imgClass)} />
+			<img src={img} alt={alt || name} class={cn('h-12 w-48 rounded-t-md object-cover', imgClass)} />
 			{@render absolute?.()}
 		</div>
 		<div class="relative flex w-full flex-row items-center justify-between p-2 text-sm font-semibold">

@@ -22,7 +22,7 @@ export const load = (async ({ locals }) => {
 
 	return {
 		user,
-		subscriptions: locals.cache?.products.filter((p) => p.isSubscription) ?? [],
+		subscriptions: locals.cache?.products?.list?.filter((p) => p.isSubscription) ?? [],
 	};
 }) satisfies PageServerLoad;
 

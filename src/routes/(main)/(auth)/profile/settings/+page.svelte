@@ -4,21 +4,18 @@
 	import EmojiDialog from '$comp/emoji/emoji-dialog.svelte';
 	import Head from '$comp/head.svelte';
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
-	import Product from '$comp/monetization/product.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import SettingHeader from '$comp/settings/setting-header.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import { getThemeContext, themes } from '$lib/stores/themes.svelte';
-	import * as Alert from '$ui/alert';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
 	import type { CarouselAPI } from '$ui/carousel/context.js';
 	import { SelectSimple } from '$ui/select';
 	import { Switch } from '$ui/switch';
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import Menu from '@lucide/svelte/icons/menu';
 	import Moon from '@lucide/svelte/icons/moon';
 	import Pencil from '@lucide/svelte/icons/pencil';
@@ -27,7 +24,7 @@
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 	import { useDebounce } from 'runed';
 	import { onMount } from 'svelte';
-	import type { ActionData, PageData } from './$types';
+	import type { PageData } from './$types';
 	import BadgeConfig from './badge-config.svelte';
 
 	let api = $state<CarouselAPI>();
@@ -52,20 +49,10 @@
 
 	interface Props {
 		data: PageData;
-		form: ActionData;
 	}
 
-	let { data, form }: Props = $props();
+	let { data }: Props = $props();
 	let loading = $state(false);
-
-	let purchases = $derived(
-		Object.values(
-			Object.groupBy(
-				(data.user?.entitlements ?? []).sort((a, b) => (!a.endDate ? 1 : +a.endDate - +(b.endDate ?? 0))),
-				(e) => e.product?.id
-			)
-		).map((p) => p?.[0]) ?? []
-	);
 
 	function mapBadges(accounts: PageData['user']['minecraftAccounts'] = []) {
 		return accounts
@@ -198,57 +185,6 @@
 
 <div class="my-16 flex flex-col justify-start justify-items-center gap-16 lg:flex-row">
 	<section class="flex w-full max-w-3xl flex-col gap-y-16">
-		<section class="bg-card rounded-lg border-2 p-4">
-			<h1 class="mb-4 text-4xl">Purchases</h1>
-
-			{#if purchases && purchases.length > 0}
-				<div class="grid grid-flow-row-dense grid-cols-1 gap-2 md:grid-cols-2">
-					{#each purchases as purchase (purchase?.id)}
-						{#if purchase?.product}
-							<Product product={purchase.product} />
-						{/if}
-					{/each}
-				</div>
-			{/if}
-
-			<Alert.Root class="mt-2">
-				{#if purchases.length === 0}
-					<Alert.Title class="text-lg">You don't have any purchases!</Alert.Title>
-				{/if}
-				<Alert.Description class="flex">
-					<p class="text-base">
-						Check out the <Button href="/shop" variant="link" class="px-0">Shop</Button> or
-					</p>
-					<form
-						action="?/refreshPurchases"
-						method="post"
-						use:enhance={() => {
-							loading = true;
-							return async ({ result }) => {
-								// Wait for a bit so the user can see the loading state
-								await new Promise((r) => setTimeout(r, 500));
-								loading = false;
-								await invalidateAll();
-								await applyAction(result);
-							};
-						}}
-					>
-						<Button type="submit" disabled={loading} variant="link" class="px-0!">
-							{#if loading}
-								<LoaderCircle class="animate-spin" />
-							{:else}
-								Refresh Purchases
-							{/if}
-						</Button>
-					</form>
-
-					{#if form?.error}
-						<p class="text-destructive">{form.error}</p>
-					{/if}
-				</Alert.Description>
-			</Alert.Root>
-		</section>
-
 		<section class="bg-card space-y-4 rounded-lg border-2 p-4">
 			<form
 				action="?/updateSettings"
@@ -341,6 +277,7 @@
 								ign={data.mcAccount?.name ?? ''}
 								uuid={data.mcAccount?.id ?? ''}
 								styleId={selectedLeaderboardStyle.id}
+								imageRefs={data.styles[selectedLeaderboardStyle.id]?.imageRefs}
 							/>
 						{:else}
 							<p class="text-muted-variant text-sm">

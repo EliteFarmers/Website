@@ -21,7 +21,7 @@ export const SIDEBAR_NAV = [
 		icon: Ticket as unknown as Component,
 	},
 	{
-		title: 'Top Players',
+		title: 'Leaderboards',
 		href: '/leaderboard',
 		icon: Trophy as unknown as Component,
 	},

@@ -1,13 +1,18 @@
 import { building, dev } from '$app/environment';
 import { env } from '$env/dynamic/private';
+import { env as publicEnv } from '$env/dynamic/public';
 import fs from 'fs/promises';
 import {
 	getAnnouncement,
 	getAuctionHouseProducts,
+	getBadges,
 	getBazaarProducts,
+	getCategories,
 	getHypixelGuilds,
+	getLeaderboard,
 	getLeaderboards,
 	getProducts,
+	getPublicGuild,
 	getSkyblockItems,
 	getStyles,
 	getTeamWordList,
@@ -16,19 +21,24 @@ import {
 	SortHypixelGuildsBy,
 	type AnnouncementDto,
 	type AuctionHouseDto,
+	type BadgeDto,
 	type EventDetailsDto,
 	type EventTeamsWordListDto,
 	type GetBazaarProductsResponse,
 	type GetSkyblockItemsResponse,
+	type GuildDetailsDto,
 	type HypixelGuildDetailsDto,
+	type LeaderboardDto,
 	type ProductDto,
+	type ShopCategoryDto,
 	type SkyblockGemShopsResponse,
-	type WeightStyleWithDataDto,
+	type WeightStyleListDto,
 } from './api';
 import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
 import { mdToHtml } from './md';
 const { ELITE_API_URL } = env;
+const { PUBLIC_COMMUNITY_ID } = publicEnv;
 
 const cacheEntries = {
 	events: {
@@ -39,16 +49,25 @@ const cacheEntries = {
 		},
 	},
 	products: {
-		data: [] as ProductDto[],
+		data: {
+			list: [] as ProductDto[],
+			new: false,
+		},
 		update: async () => {
 			const { data } = await getProducts();
-			return data ?? [];
+			return {
+				list: data ?? [],
+				// Check if any products were released in the last 3 days
+				new: (data ?? []).some((p) =>
+					p.releasedAt ? new Date(p.releasedAt).getTime() > Date.now() - 1000 * 60 * 60 * 24 * 3 : false
+				),
+			};
 		},
 	},
 	styles: {
 		data: {
-			list: [] as WeightStyleWithDataDto[],
-			lookup: {} as Record<string, WeightStyleWithDataDto>,
+			list: [] as WeightStyleListDto[],
+			lookup: {} as Record<string, WeightStyleListDto>,
 		},
 		update: async () => {
 			const { data } = await getStyles();
@@ -60,7 +79,7 @@ const cacheEntries = {
 							acc[style.id] = style;
 							return acc;
 						},
-						{} as Record<string, WeightStyleWithDataDto>
+						{} as Record<string, WeightStyleListDto>
 					) || {},
 			};
 		},
@@ -77,6 +96,25 @@ const cacheEntries = {
 		update: async () => {
 			const { data } = await getLeaderboards();
 			return parseLeaderboards(data);
+		},
+	},
+	homepageLeaderboard: {
+		interval: 900, // 15 minutes
+		data: null as LeaderboardDto | null,
+		update: async () => {
+			const { data } = await getLeaderboard('farmingweight', { offset: 0, limit: 10 }).catch(() => ({
+				data: null,
+			}));
+			return data ?? null;
+		},
+	},
+	communityGuild: {
+		interval: 900, // 15 minutes
+		data: null as GuildDetailsDto | null,
+		update: async () => {
+			if (!PUBLIC_COMMUNITY_ID) return null;
+			const { data } = await getPublicGuild(PUBLIC_COMMUNITY_ID).catch(() => ({ data: null }));
+			return data ?? null;
 		},
 	},
 	bazaar: {
@@ -147,6 +185,20 @@ const cacheEntries = {
 			return { guilds: data?.guilds ?? [], total: data?.totalGuilds ?? null };
 		},
 	},
+	shopCategories: {
+		data: [] as ShopCategoryDto[],
+		update: async () => {
+			const { data } = await getCategories({ includeProducts: true });
+			return data ?? [];
+		},
+	},
+	badges: {
+		data: [] as BadgeDto[],
+		update: async () => {
+			const { data } = await getBadges();
+			return data ?? [];
+		},
+	},
 };
 
 export const cache = {
@@ -167,6 +219,12 @@ export const cache = {
 	},
 	get leaderboards() {
 		return cacheEntries.leaderboards.data;
+	},
+	get homepageLeaderboard() {
+		return cacheEntries.homepageLeaderboard.data;
+	},
+	get communityGuild() {
+		return cacheEntries.communityGuild.data;
 	},
 	get bazaar() {
 		return cacheEntries.bazaar.data;
@@ -192,6 +250,12 @@ export const cache = {
 	get topguilds() {
 		return cacheEntries.topguilds.data;
 	},
+	get shopCategories() {
+		return cacheEntries.shopCategories.data;
+	},
+	get badges() {
+		return cacheEntries.badges.data;
+	},
 };
 
 let intervals: (number | NodeJS.Timeout)[] = [];
@@ -199,7 +263,15 @@ let intervals: (number | NodeJS.Timeout)[] = [];
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
 	try {
-		await Promise.allSettled(Object.values(cacheEntries).map(async (item) => refreshCacheItem(item)));
+		await Promise.allSettled(
+			Object.values(cacheEntries).map(async (item) => {
+				try {
+					await refreshCacheItem(item);
+				} catch (error) {
+					console.error('Error refreshing cache item:', error);
+				}
+			})
+		);
 
 		console.log('Cached items updated successfully.');
 	} catch (error) {
