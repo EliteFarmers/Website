@@ -28,6 +28,7 @@
 		"lint": "prettier --check . && eslint --max-warnings=0 .",
 		"up": "docker-compose up -d database cache",
 		"down": "docker-compose down",
+        "test": "pnpm -C packages/farming-weight test",
 		"license": "pnpm exec pnpm-licenses generate-disclaimer --output-file=./static/oss.txt",
 		"generate-api": "pnpm orval",
 		"postprocess-api": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.ts && pnpm prettier --write ./src/lib/api/client/EliteAPI.ts ./src/lib/api/schemas",

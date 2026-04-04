@@ -365,6 +365,8 @@
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
 			maxTool: $player.selectedTool?.level === 50,
 			pet: $player.selectedPet,
+			attributes: $player.attributes,
+			chips: $player.options.chips,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
 	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));

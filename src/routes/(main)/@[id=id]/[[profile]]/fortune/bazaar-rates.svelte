@@ -23,7 +23,7 @@
 	let { crop, amount, otherCoins = 0, result }: Props = $props();
 
 	const results = $derived(getPossibleResultsFromCrops(crop, amount));
-	let includeRng = $state(false);
+	let includeRng = $state(true);
 
 	function getSellPrice(bzData: RatesItemPriceData[string]['bazaar'] | undefined) {
 		if (!bzData) return 0;
@@ -119,12 +119,24 @@
 
 		{@const best = craftList[0]}
 
+		{@const rng = Object.fromEntries(
+			Object.entries(result.rngItems ?? {}).map(([item, amount], idx) => {
+				const name = bz?.[item]?.bazaar?.name ?? bz?.[item]?.item?.name ?? `RNG Item ${idx}`;
+				return [name, price(bz, item, amount)];
+			})
+		)}
+		{@const rngTotal = Object.values(rng).reduce((a, b) => a + b, 0)}
+
 		<Accordion.Root type="single" class="w-full" value="bazaar">
 			<Accordion.Item value="bazaar" class="outline-border w-full rounded-md px-2 outline">
 				<Accordion.Trigger class="py-2 hover:no-underline">
 					<div class="flex w-full items-center justify-between gap-2 pr-2">
 						<span class="text-xl font-semibold">Bazaar Profit</span>
-						<CoinsBreakdown coins={Math.floor(best?.total ?? otherCoinsTotal)} />
+						{#key includeRng}
+							<CoinsBreakdown
+								coins={Math.floor((best?.total ?? otherCoinsTotal) + (includeRng ? rngTotal : 0))}
+							/>
+						{/key}
 					</div>
 				</Accordion.Trigger>
 				<Accordion.Content class="pb-2">
@@ -163,19 +175,8 @@
 												>{isBest ? 'Best: ' : ''}{craft.name}</span
 											>
 											{#if includeRng}
-												{@const rng = Object.fromEntries(
-													Object.entries(result.rngItems ?? {}).map(([item, amount], idx) => {
-														const name =
-															bz?.[item]?.bazaar?.name ??
-															bz?.[item]?.item?.name ??
-															`RNG Item ${idx}`;
-														return [name, price(bz, item, amount)];
-													})
-												)}
 												<CoinsBreakdown
-													coins={Math.floor(
-														craft.total + Object.values(rng).reduce((a, b) => a + b, 0)
-													)}
+													coins={Math.floor(craft.total + (rngTotal ?? 0))}
 													breakdown={{
 														[craft.name]: Math.floor(craft.per * craft.items),
 														'Craft Cost': Math.floor(-craft.cost),
@@ -222,7 +223,7 @@
 
 						{#if sellToBazaar.length > 0}
 							<div class="rounded-md border p-2">
-								<p class="text-lg font-semibold">Other Items</p>
+								<p class="text-base font-semibold">Other Items</p>
 								<div class="mt-2 flex flex-col gap-2">
 									{#each sellToBazaar as x (x.itemId)}
 										{@const itemsText =
@@ -259,6 +260,33 @@
 							<p class="text-muted-foreground text-xs">
 								Other drops have no profitable bazaar price over NPC.
 							</p>
+						{/if}
+
+						{#if result.rngItems}
+							<div class="rounded-md border p-2">
+								<p class="text-base font-semibold">RNG Items</p>
+								<div class="mt-2 flex flex-col gap-2">
+									{#each Object.entries(result.rngItems ?? {}) as [itemId, amount] (itemId)}
+										{@const bzData = bz?.[itemId]?.bazaar}
+										{@const name = bzData?.name ?? bz?.[itemId]?.item?.name ?? itemId}
+										{@const itemsText =
+											amount % 1 === 0 ? Math.floor(amount).toLocaleString() : amount.toFixed(2)}
+										{@const per = getSellPrice(bzData)}
+										{@const total = Math.floor(per * amount)}
+										<div class="flex items-start justify-between gap-4">
+											<div class="min-w-0">
+												<p class="truncate text-sm font-semibold">{name}</p>
+												<p class="text-muted-foreground text-xs">
+													{itemsText} @ {Math.floor(per).toLocaleString()} each to bazaar
+												</p>
+											</div>
+											<div class="shrink-0 text-right {includeRng ? '' : 'line-through'}">
+												<p class="text-sm font-semibold">{total.toLocaleString()}</p>
+											</div>
+										</div>
+									{/each}
+								</div>
+							</div>
 						{/if}
 
 						<p class="text-muted-foreground text-xs">

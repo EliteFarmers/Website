@@ -382,7 +382,7 @@ export const MAX_CROP_FORTUNE: Record<Crop, number> = {
 	[Crop.Pumpkin]: 2629.28 + 12,
 	[Crop.SugarCane]: 2629.28,
 	[Crop.Wheat]: 2629.28 + 12,
-	[Crop.Seeds]: 2629.28 - 520.67,
+	[Crop.Seeds]: 2629.28 + 12,
 	[Crop.Sunflower]: 2629.28,
 	[Crop.Moonflower]: 2629.28,
 	[Crop.WildRose]: 2629.28 + 12,
