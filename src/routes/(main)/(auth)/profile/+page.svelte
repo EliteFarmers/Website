@@ -4,9 +4,13 @@
 	import Head from '$comp/head.svelte';
 	import LinkOptions from '$comp/settings/link-options.svelte';
 	import LinkingGuide from '$comp/settings/linking-guide.svelte';
+	import SettingListItem from '$comp/settings/setting-list-item.svelte';
+	import { updateAccountIndexing } from '$lib/remote';
 	import * as AlertDialog from '$ui/alert-dialog';
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
+	import { Switch } from '$ui/switch';
+	import { useDebounce } from 'runed';
 	import type { Snippet } from 'svelte';
 	import type { ActionData, PageData } from './$types';
 	import DataExport from './data-export.svelte';
@@ -41,6 +45,13 @@
 		mcUsername = username;
 		dialogOpen = true;
 	}
+
+	let hideFromIndex = $derived(user?.settings?.misc?.hideFromSearchIndex ?? false);
+	const toggleAccountIndexing = useDebounce((value: boolean) => {
+		updateAccountIndexing(value);
+		loading = false;
+		hideFromIndex = value;
+	}, 500);
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
@@ -168,6 +179,28 @@
 	{@render section(dataExportSection)}
 	{#snippet dataExportSection()}
 		<DataExport />
+	{/snippet}
+
+	{@render section(miscSettings)}
+	{#snippet miscSettings()}
+		<SettingListItem title="Hide from search engines">
+			{#snippet subtitle()}
+				<span class="text-muted-foreground block max-w-md text-sm"
+					>Toggle whether to hide linked accounts from search engine results. May take days to propagate
+					fully.</span
+				>
+			{/snippet}
+			<div class="flex flex-row items-center gap-2">
+				<Switch
+					checked={hideFromIndex}
+					disabled={loading}
+					onCheckedChange={(value) => {
+						loading = true;
+						toggleAccountIndexing(value);
+					}}
+				/>
+			</div>
+		</SettingListItem>
 	{/snippet}
 </div>
 

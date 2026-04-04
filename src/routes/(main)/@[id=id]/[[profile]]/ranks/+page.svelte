@@ -12,6 +12,7 @@
 	title="{ctx.ignMeta} | Ranks"
 	description="See this player's leaderboard ranks in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/ranks"
+	noindex={ctx.hideFromIndex}
 />
 
 <div class="mb-16 flex flex-col items-center gap-8">

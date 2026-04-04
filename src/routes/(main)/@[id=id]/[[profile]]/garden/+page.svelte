@@ -54,6 +54,7 @@
 	title="{ctx.ignMeta} | Garden"
 	description="See this player's garden stats in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/garden"
+	noindex={ctx.hideFromIndex}
 />
 
 <div class="flex w-full flex-col items-center justify-center gap-8">

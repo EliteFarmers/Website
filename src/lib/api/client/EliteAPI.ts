@@ -84,6 +84,8 @@ import type {
 	GetAdminCropGraphsParams,
 	GetAdminOrdersParams,
 	GetAdminSkillGraphsParams,
+	GetAuctionHouseNeu200,
+	GetAuctionHouseNeuParams,
 	GetAuctionPriceHistoryParams,
 	GetAuctionPriceHistoryResponse,
 	GetAuctionResponse,
@@ -10328,6 +10330,43 @@ export const getGetAuctionUrl = (auctionId: string) => {
 
 export const getAuction = async (auctionId: string, options?: RequestInit) => {
 	return customFetch<getAuctionResponse>(getGetAuctionUrl(auctionId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Get lowest BIN prices keyed by NEU internal names. Drop-in replacement for moulberry lowestbin.json. Use ?mode=raw (default) for absolute cheapest BIN or ?mode=smooth for IQR-filtered prices.
+ * @summary Get Lowest BIN Prices (NEU Format)
+ */
+export type getAuctionHouseNeuResponse200 = {
+	data: GetAuctionHouseNeu200;
+	status: 200;
+};
+
+export type getAuctionHouseNeuResponseSuccess = getAuctionHouseNeuResponse200 & {
+	headers: Headers;
+};
+export type getAuctionHouseNeuResponse = getAuctionHouseNeuResponseSuccess;
+
+export const getGetAuctionHouseNeuUrl = (params?: GetAuctionHouseNeuParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/auctions/neu?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/auctions/neu`;
+};
+
+export const getAuctionHouseNeu = async (params?: GetAuctionHouseNeuParams, options?: RequestInit) => {
+	return customFetch<getAuctionHouseNeuResponse>(getGetAuctionHouseNeuUrl(params), {
 		...options,
 		method: 'GET',
 	});

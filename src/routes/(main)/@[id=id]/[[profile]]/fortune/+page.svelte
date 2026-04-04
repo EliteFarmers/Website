@@ -51,6 +51,7 @@
 	title="{ctx.ignMeta} | Farming Fortune"
 	description="See missing fortune upgrades, overall progress, and your expected farming rates in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/fortune"
+	noindex={ctx.hideFromIndex}
 />
 
 {#if ctx.ready}

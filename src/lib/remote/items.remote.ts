@@ -61,7 +61,8 @@ function getSingleItemValue(itemId: string) {
 	const item = cache?.items?.[itemId];
 
 	const npcPrice = bz?.[itemId]?.npc || item?.npc_sell_price || 0;
-	const ahPrices = ah?.[itemId]?.filter((a) => a.lowest > 0).map((a) => a.lowest) ?? [];
+	const ahPrices =
+		ah?.[itemId]?.filter((a) => a.lowest > 0 || a.last > 0).map((a) => (a.lowest > 0 ? a.lowest : a.last)) ?? [];
 	const ahPrice = ahPrices.length > 0 ? Math.min(...ahPrices) : 0;
 	const bazaarPrice = bz?.[itemId]?.averageSellOrder ?? 0;
 

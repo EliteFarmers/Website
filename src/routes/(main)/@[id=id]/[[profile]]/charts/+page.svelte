@@ -263,6 +263,7 @@
 	title="{ctx.ignMeta} | Charts"
 	description="See crop collection charts for Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/charts"
+	noindex={ctx.hideFromIndex}
 />
 
 <div class="flex w-full flex-col items-center justify-center gap-4">

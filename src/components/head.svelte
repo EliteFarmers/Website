@@ -13,6 +13,7 @@
 		canonicalPath?: string;
 		twitterCardType?: 'summary' | 'summary_large_image' | 'app' | 'player' | undefined;
 		ldJson?: unknown;
+		noindex?: boolean;
 	}
 
 	let {
@@ -24,6 +25,7 @@
 		twitterCardType,
 		canonicalPath,
 		ldJson = undefined,
+		noindex = false,
 	}: Props = $props();
 
 	const pageCtx = getPageCtx();
@@ -62,6 +64,12 @@
 	<meta property="og:title" content={title || pageCtx.title} />
 	<meta property="twitter:title" content={title || pageCtx.title} />
 	<meta property="og:site_name" content="Elite Skyblock" />
+
+	{#if noindex}
+		<meta name="robots" content="noindex" />
+	{:else}
+		<meta name="robots" content="index, follow" />
+	{/if}
 
 	<meta property="twitter:card" content={twitterCardType ?? 'summary'} />
 

@@ -12,6 +12,7 @@ import type { UserSettingsDtoWeightStyle } from './UserSettingsDtoWeightStyle';
 import type { UserSettingsDtoLeaderboardStyle } from './UserSettingsDtoLeaderboardStyle';
 import type { UserSettingsDtoNameStyle } from './UserSettingsDtoNameStyle';
 import type { UserSettingsDtoFortune } from './UserSettingsDtoFortune';
+import type { UserSettingsDtoMisc } from './UserSettingsDtoMisc';
 
 export interface UserSettingsDto {
 	/**
@@ -49,4 +50,9 @@ export interface UserSettingsDto {
 	 * @nullable
 	 */
 	fortune?: UserSettingsDtoFortune;
+	/**
+	 * Misc other settings
+	 * @nullable
+	 */
+	misc?: UserSettingsDtoMisc;
 }

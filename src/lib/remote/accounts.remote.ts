@@ -6,6 +6,7 @@ import {
 	linkOwnAccount,
 	searchAccountsWithDiscord,
 	toggleRecapVisibility,
+	updateAccount,
 	zodGetAccountParams,
 } from '$lib/api';
 import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
@@ -154,3 +155,19 @@ export const getProfilesAccount = query(
 		};
 	}
 );
+
+export const updateAccountIndexing = command(z.boolean(), async (hide) => {
+	const event = getRequestEvent();
+	const userId = event.locals.session?.id;
+	if (!userId) {
+		return { code: 401, error: 'Unauthorized' };
+	}
+
+	const { error: e } = await updateAccount({ hideFromSearchIndex: hide });
+
+	if (e) {
+		return { code: 500, error: 'Failed to update account indexing preference' };
+	}
+
+	return { success: true };
+});

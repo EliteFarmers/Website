@@ -26,4 +26,8 @@ export interface AuctionItemDto {
 	lowest7Day: number;
 	/** Volume of prices ued to get lowest 3 day price */
 	lowest7DayVolume: number;
+	/** Last known valid lowest price - persists up to a year after item stops being auctioned */
+	last: number;
+	/** Absolute cheapest current BIN listing (no outlier filtering) */
+	rawLowest: number;
 }

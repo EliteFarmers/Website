@@ -204,6 +204,10 @@ export const zodUpdateAccountBody = zod.object({
 	weightStyleId: zod.number().nullish().describe('Selected weight style for the user'),
 	leaderboardStyleId: zod.number().nullish().describe('Selected leaderboard style for the user'),
 	nameStyleId: zod.number().nullish().describe('Selected name style for the user'),
+	hideFromSearchIndex: zod.coerce
+		.boolean<boolean>()
+		.nullish()
+		.describe('If the user should be hidden from browser search indexing.'),
 });
 
 /**
@@ -3228,6 +3232,21 @@ export const zodToggleRecapVisibilityBody = zod.object({
  */
 export const zodGetAuctionParams = zod.object({
 	auctionId: zod.string(),
+});
+
+/**
+ * Get lowest BIN prices keyed by NEU internal names. Drop-in replacement for moulberry lowestbin.json. Use ?mode=raw (default) for absolute cheapest BIN or ?mode=smooth for IQR-filtered prices.
+ * @summary Get Lowest BIN Prices (NEU Format)
+ */
+export const zodGetAuctionHouseNeuQueryModeDefault = 'raw';
+
+export const zodGetAuctionHouseNeuQueryParams = zod.object({
+	mode: zod
+		.string()
+		.default(zodGetAuctionHouseNeuQueryModeDefault)
+		.describe(
+			'Price mode: \"raw\" for absolute lowest BIN (like moulberry), \"smooth\" for IQR-filtered price. Default: raw.'
+		),
 });
 
 /**

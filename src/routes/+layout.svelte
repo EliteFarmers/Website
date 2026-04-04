@@ -51,14 +51,6 @@
 	});
 </script>
 
-<svelte:head>
-	<meta name="author" content="Kaeso" />
-	<meta name="robots" content="index, follow" />
-
-	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
-	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
-</svelte:head>
-
 {@render children?.()}
 
 <PageToast />
