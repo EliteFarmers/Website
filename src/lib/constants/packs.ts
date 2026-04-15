@@ -9,9 +9,9 @@ export const TEXTURE_PACKS: Record<string, { name: string; author: string; url: 
 		author: 'ic22487',
 		url: 'https://modrinth.com/resourcepack/hypixel-plus',
 	},
-	furfsky: {
-		name: 'FurfSky Reborn',
-		author: 'FurfSky Team',
+	fursky: {
+		name: 'FurSky Reborn',
+		author: 'FurSky Team',
 		url: 'https://modrinth.com/resourcepack/furfsky-reborn',
 	},
 };
