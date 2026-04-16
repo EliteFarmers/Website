@@ -1,42 +1,21 @@
 <script lang="ts">
-	import ItemRender from '$comp/items/item-render.svelte';
-	import type { PetDto } from '$lib/api/schemas/PetDto';
+	import ProfilePetCard from '$comp/items/profile-pet-card.svelte';
 	import { getItems } from '$lib/remote/items.remote';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
-	import * as Item from '$ui/item';
-	import * as Popover from '$ui/popover';
 	import { ScrollArea } from '$ui/scroll-area';
-	import { type FarmingPetType } from 'farming-weight';
 
 	const ctx = getStatsContext();
 
-	function normalizePet(pet: PetDto & FarmingPetType, index: number) {
-		return {
-			key: pet.uuid ?? `${pet.type}-${pet.exp}-${index}`,
-			type: pet.type,
-			name: formatPetName(pet.type),
-			tier: pet.tier ?? 'COMMON',
-			level: pet.level,
-			exp: pet.exp,
-			active: pet.active,
-			heldItem: pet.heldItem ?? null,
-			candyUsed: pet.candyUsed,
-			skin: pet.skin ?? null,
-		};
-	}
-
 	const sortedPets = $derived.by(() => {
-		const pets = [...(ctx.member.current?.pets ?? [])];
+		const pets = ctx.member.current?.pets ?? [];
 
-		return pets
-			.map((pet, index) => normalizePet(pet, index))
-			.sort((a, b) => {
-				const rarityDiff = comparePetRarity(a.tier, b.tier);
-				if (rarityDiff !== 0) return rarityDiff;
-				if (a.active !== b.active) return a.active ? -1 : 1;
-				if (a.level !== b.level) return b.level - a.level;
-				return a.name.localeCompare(b.name);
-			});
+		return pets.toSorted((a, b) => {
+			const rarityDiff = comparePetRarity(a.tier ?? 'COMMON', b.tier ?? 'COMMON');
+			if (rarityDiff !== 0) return rarityDiff;
+			if (a.active !== b.active) return a.active ? -1 : 1;
+			if (a.level !== b.level) return b.level - a.level;
+			return formatPetName(a.type).localeCompare(formatPetName(b.type));
+		});
 	});
 
 	const heldItemIds = $derived(
@@ -55,8 +34,9 @@
 		const groups: Partial<Record<string, Array<(typeof sortedPets)[number]>>> = {};
 
 		for (const pet of sortedPets) {
-			groups[pet.tier] ??= [];
-			groups[pet.tier]?.push(pet);
+			const tier = pet.tier ?? 'COMMON';
+			groups[tier] ??= [];
+			groups[tier]?.push(pet);
 		}
 
 		return Object.entries(groups).sort(([a], [b]) => comparePetRarity(a, b));
@@ -130,85 +110,13 @@
 									{rarity}
 								</p>
 								<div class="grid grid-cols-1 gap-2 md:grid-cols-2">
-									{#each pets as pet (pet.key)}
-										<Popover.Mobile class="max-w-sm p-3">
-											{#snippet child({ props })}
-												<Item.Root
-													{...props}
-													variant="outline"
-													role="button"
-													tabindex={0}
-													class={`relative flex cursor-pointer flex-row items-center transition-colors hover:bg-zinc-500/5 ${pet.active ? 'border-completed' : ''}`}
-												>
-													<ItemRender skyblockId={pet.type} pet class="pixelated size-12" />
-													<Item.Content>
-														<Item.Title class="flex items-center gap-2 font-semibold">
-															<span>{pet.name}</span>
-															{#if pet.active}
-																<span
-																	class="text-completed text-xs font-semibold uppercase"
-																	>Active</span
-																>
-															{/if}
-														</Item.Title>
-														<Item.Description>
-															Level {pet.level}
-															{#if pet.heldItem}
-																• {getHeldItemName(pet.heldItem)}
-															{/if}
-														</Item.Description>
-													</Item.Content>
-												</Item.Root>
-											{/snippet}
-
-											<div class="flex flex-col gap-3">
-												<div class="flex items-center gap-3">
-													<ItemRender skyblockId={pet.type} pet class="pixelated size-14" />
-													<div class="min-w-0">
-														<div class="flex flex-wrap items-center gap-2">
-															<p class="font-semibold">{pet.name}</p>
-															{#if pet.active}
-																<span
-																	class="text-completed text-xs font-semibold uppercase"
-																	>Active Pet</span
-																>
-															{/if}
-														</div>
-														<p class="text-muted-foreground text-sm">
-															{pet.tier} • Level {pet.level}
-														</p>
-													</div>
-												</div>
-												<div class="text-muted-foreground flex flex-col gap-1 text-sm">
-													<p>
-														Held Item: <span class="text-foreground font-medium"
-															>{getHeldItemName(pet.heldItem)}</span
-														>
-													</p>
-													{#if pet.candyUsed > 0}
-														<p>
-															Candy Used: <span class="text-foreground font-medium"
-																>{pet.candyUsed}</span
-															>
-														</p>
-													{/if}
-													<p>
-														Experience: <span class="text-foreground font-medium"
-															>{pet.exp.toLocaleString(undefined, {
-																maximumFractionDigits: 0,
-															})}</span
-														>
-													</p>
-													{#if pet.skin}
-														<p>
-															Skin: <span class="text-foreground font-medium"
-																>{pet.skin}</span
-															>
-														</p>
-													{/if}
-												</div>
-											</div>
-										</Popover.Mobile>
+									{#each pets as pet (pet.uuid ?? `${pet.type}-${pet.exp}`)}
+										<ProfilePetCard
+											{pet}
+											petName={formatPetName(pet.type)}
+											tier={pet.tier ?? 'COMMON'}
+											heldItemName={getHeldItemName(pet.heldItem ?? null)}
+										/>
 									{/each}
 								</div>
 							</div>
