@@ -96,10 +96,7 @@
 				<div
 					class="bg-card flex min-h-48 flex-col items-center justify-center rounded-md border border-dashed px-6 text-center"
 				>
-					<h4 class="text-lg font-semibold">No pets found</h4>
-					<p class="text-muted-foreground mt-1 max-w-md text-sm">
-						This profile does not currently expose any pets in the API response.
-					</p>
+					<p class="text-muted-foreground mt-1 max-w-md text-sm">No pets found</p>
 				</div>
 			{:else}
 				<ScrollArea class="flex max-h-120 min-h-0 w-full flex-col rounded-md border p-3">
