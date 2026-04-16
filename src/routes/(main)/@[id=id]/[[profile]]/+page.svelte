@@ -3,6 +3,7 @@
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
 	import Head from '$comp/head.svelte';
 	import InventorySelect from '$comp/items/inventories/inventory-select.svelte';
+	import ProfilePets from '$comp/items/profile-pets.svelte';
 	import SackContents from '$comp/items/sack-contents.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
@@ -119,6 +120,7 @@
 </section>
 
 <InventorySelect />
+<ProfilePets />
 <SackContents />
 <JacobInfo />
 <Breakdown />
