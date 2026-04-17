@@ -264,8 +264,6 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		}
 	}
 
-	result.npcCoins = Object.values(result.coinSources).reduce((a, b) => a + b, 0);
-
 	if (calcOptions.attributes) {
 		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARDS)) {
 			if (shard.ratesModifier) {
@@ -323,6 +321,8 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			result.coinSources[specialCrop] = Math.round(newAmount.npc);
 		}
 	}
+
+	result.npcCoins = Object.values(result.coinSources).reduce((a, b) => a + b, 0);
 
 	return result;
 }

@@ -302,6 +302,43 @@ test('Multiple rate modifiers stack correctly with multiplicative formula', () =
 	expect(result.rngItems?.['WARTY']).toBeCloseTo(50 * 1.775, 1);
 });
 
+test('Melon NPC total matches the visible coin breakdown when special crop modifiers are active', () => {
+	const result = calculateDetailedDrops({
+		crop: Crop.Melon,
+		blocksBroken: 72_000,
+		farmingFortune: 100,
+		bountiful: true,
+		mooshroom: false,
+		armorPieces: 4,
+		attributes: {
+			crop_bug: 100,
+		},
+	});
+
+	const visibleTotal = Object.values(result.coinSources).reduce((sum, value) => sum + value, 0);
+
+	expect(result.coinSources.Squash).toBe(1_944_000);
+	expect(result.npcCoins).toBe(visibleTotal);
+});
+
+test('Average melon drops keep NPC total in sync with the visible coin breakdown', () => {
+	const result = calculateDetailedAverageDrops({
+		blocksBroken: 72_000,
+		farmingFortune: 100,
+		bountiful: true,
+		mooshroom: false,
+		armorPieces: 4,
+		attributes: {
+			crop_bug: 100,
+		},
+	})[Crop.Melon];
+
+	const visibleTotal = Object.values(result.coinSources).reduce((sum, value) => sum + value, 0);
+
+	expect(result.coinSources.Squash).toBe(1_944_000);
+	expect(result.npcCoins).toBe(visibleTotal);
+});
+
 test('Rate modifiers do not affect results when level is 0', () => {
 	const resultWithZeroLevels = calculateDetailedDrops({
 		crop: Crop.Wheat,
