@@ -238,7 +238,7 @@ export class FarmingPlayer {
 
 		const cropTool = tool ?? this.getSelectedCropTool(crop);
 		if (cropTool) {
-			const toolUpgrades = cropTool.getUpgrades();
+			const toolUpgrades = cropTool.getUpgrades({ stat: CROP_INFO[crop].fortuneType });
 			upgrades.push(...toolUpgrades);
 		} else {
 			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
