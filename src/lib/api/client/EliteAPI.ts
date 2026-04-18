@@ -29,6 +29,7 @@ import type {
 	AuthorizedAccountDto,
 	AuthorizedGuildDto,
 	BadgeDto,
+	BadgeUnlockCondition,
 	BanParticipationRequestBanParticipationRequestBody,
 	BanPlayerRequestBanPlayerRequestBody,
 	BazaarOverviewResponse,
@@ -43,6 +44,7 @@ import type {
 	CreateBadgeRequestCreateBadge,
 	CreateCategoryDto,
 	CreateCommentRequest,
+	CreateConditionRequest,
 	CreateConfirmationDto,
 	CreateEventDto,
 	CreateEventTeamDto,
@@ -189,6 +191,8 @@ import type {
 	ReplayWebhookResponse,
 	ResendGiftRequest,
 	ResolveRecipientRequest,
+	ResourcePackDto,
+	ResourcePackReloadResult,
 	SearchAccountsParams,
 	SearchAuctionItemsParams,
 	SearchAuctionItemsResponse,
@@ -216,6 +220,7 @@ import type {
 	ToggleRecapVisibilityRequestBody,
 	ToolSettingDto,
 	UpdateBadgeRequestUpdateBadge,
+	UpdateConditionRequest,
 	UpdateConfirmationRequest,
 	UpdateContestPingsRequestUpdateContestPings,
 	UpdateEventTeamDto,
@@ -1068,6 +1073,188 @@ export const updateAccount = async (updateUserSettingsDto: UpdateUserSettingsDto
 };
 
 /**
+ * @summary Create a Badge Unlock Condition (Admin)
+ */
+export type createBadgeConditionResponse200 = {
+	data: BadgeUnlockCondition;
+	status: 200;
+};
+
+export type createBadgeConditionResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type createBadgeConditionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type createBadgeConditionResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type createBadgeConditionResponseSuccess = createBadgeConditionResponse200 & {
+	headers: Headers;
+};
+export type createBadgeConditionResponseError = (
+	| createBadgeConditionResponse400
+	| createBadgeConditionResponse401
+	| createBadgeConditionResponse403
+) & {
+	headers: Headers;
+};
+
+export type createBadgeConditionResponse = createBadgeConditionResponseSuccess | createBadgeConditionResponseError;
+
+export const getCreateBadgeConditionUrl = (badgeId: string | number) => {
+	return `${ELITE_API_URL}/admin/badges/${badgeId}/conditions`;
+};
+
+export const createBadgeCondition = async (
+	badgeId: string | number,
+	createConditionRequest: CreateConditionRequest,
+	options?: RequestInit
+) => {
+	return customFetch<createBadgeConditionResponse>(getCreateBadgeConditionUrl(badgeId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(createConditionRequest),
+	});
+};
+
+/**
+ * @summary Delete a Badge Unlock Condition (Admin)
+ */
+export type deleteBadgeConditionResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteBadgeConditionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteBadgeConditionResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type deleteBadgeConditionResponseSuccess = deleteBadgeConditionResponse204 & {
+	headers: Headers;
+};
+export type deleteBadgeConditionResponseError = (deleteBadgeConditionResponse401 | deleteBadgeConditionResponse403) & {
+	headers: Headers;
+};
+
+export type deleteBadgeConditionResponse = deleteBadgeConditionResponseSuccess | deleteBadgeConditionResponseError;
+
+export const getDeleteBadgeConditionUrl = (conditionId: string) => {
+	return `${ELITE_API_URL}/admin/badges/conditions/${conditionId}`;
+};
+
+export const deleteBadgeCondition = async (conditionId: string, options?: RequestInit) => {
+	return customFetch<deleteBadgeConditionResponse>(getDeleteBadgeConditionUrl(conditionId), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * @summary List Badge Unlock Conditions (Admin)
+ */
+export type getBadgeConditionsResponse200 = {
+	data: BadgeUnlockCondition[];
+	status: 200;
+};
+
+export type getBadgeConditionsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getBadgeConditionsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getBadgeConditionsResponseSuccess = getBadgeConditionsResponse200 & {
+	headers: Headers;
+};
+export type getBadgeConditionsResponseError = (getBadgeConditionsResponse401 | getBadgeConditionsResponse403) & {
+	headers: Headers;
+};
+
+export type getBadgeConditionsResponse = getBadgeConditionsResponseSuccess | getBadgeConditionsResponseError;
+
+export const getGetBadgeConditionsUrl = (badgeId: string) => {
+	return `${ELITE_API_URL}/admin/badges/${badgeId}/conditions`;
+};
+
+export const getBadgeConditions = async (badgeId: string, options?: RequestInit) => {
+	return customFetch<getBadgeConditionsResponse>(getGetBadgeConditionsUrl(badgeId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Update a Badge Unlock Condition (Admin)
+ */
+export type updateBadgeConditionResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type updateBadgeConditionResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type updateBadgeConditionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type updateBadgeConditionResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type updateBadgeConditionResponseSuccess = updateBadgeConditionResponse204 & {
+	headers: Headers;
+};
+export type updateBadgeConditionResponseError = (
+	| updateBadgeConditionResponse400
+	| updateBadgeConditionResponse401
+	| updateBadgeConditionResponse403
+) & {
+	headers: Headers;
+};
+
+export type updateBadgeConditionResponse = updateBadgeConditionResponseSuccess | updateBadgeConditionResponseError;
+
+export const getUpdateBadgeConditionUrl = (conditionId: string | number) => {
+	return `${ELITE_API_URL}/admin/badges/conditions/${conditionId}`;
+};
+
+export const updateBadgeCondition = async (
+	conditionId: string | number,
+	updateConditionRequest: UpdateConditionRequest,
+	options?: RequestInit
+) => {
+	return customFetch<updateBadgeConditionResponse>(getUpdateBadgeConditionUrl(conditionId), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(updateConditionRequest),
+	});
+};
+
+/**
  * @summary Add a role to a user
  */
 export type addRoleToUserResponse204 = {
@@ -1594,6 +1781,45 @@ export const getRefreshHypixelGuildUrl = (guildId: string) => {
 
 export const refreshHypixelGuild = async (guildId: string, options?: RequestInit) => {
 	return customFetch<refreshHypixelGuildResponse>(getRefreshHypixelGuildUrl(guildId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * Reloads Minecraft resource packs from disk and clears related output-cache entries.
+ * @summary Reload resource packs
+ */
+export type reloadResourcePacksResponse200 = {
+	data: ResourcePackReloadResult;
+	status: 200;
+};
+
+export type reloadResourcePacksResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type reloadResourcePacksResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type reloadResourcePacksResponseSuccess = reloadResourcePacksResponse200 & {
+	headers: Headers;
+};
+export type reloadResourcePacksResponseError = (reloadResourcePacksResponse401 | reloadResourcePacksResponse403) & {
+	headers: Headers;
+};
+
+export type reloadResourcePacksResponse = reloadResourcePacksResponseSuccess | reloadResourcePacksResponseError;
+
+export const getReloadResourcePacksUrl = () => {
+	return `${ELITE_API_URL}/admin/resourcepacks/reload`;
+};
+
+export const reloadResourcePacks = async (options?: RequestInit) => {
+	return customFetch<reloadResourcePacksResponse>(getReloadResourcePacksUrl(), {
 		...options,
 		method: 'POST',
 	});
@@ -12416,6 +12642,31 @@ export const getGetPetTextureUrl = (petId: string, params?: GetPetTextureParams)
 
 export const getPetTexture = async (petId: string, params?: GetPetTextureParams, options?: RequestInit) => {
 	return customFetch<getPetTextureResponse>(getGetPetTextureUrl(petId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns the currently loaded Minecraft resource packs.
+ * @summary Get resource packs
+ */
+export type getResourcePacksResponse200 = {
+	data: ResourcePackDto[];
+	status: 200;
+};
+
+export type getResourcePacksResponseSuccess = getResourcePacksResponse200 & {
+	headers: Headers;
+};
+export type getResourcePacksResponse = getResourcePacksResponseSuccess;
+
+export const getGetResourcePacksUrl = () => {
+	return `${ELITE_API_URL}/texturepacks`;
+};
+
+export const getResourcePacks = async (options?: RequestInit) => {
+	return customFetch<getResourcePacksResponse>(getGetResourcePacksUrl(), {
 		...options,
 		method: 'GET',
 	});

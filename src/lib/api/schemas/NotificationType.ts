@@ -29,4 +29,5 @@ export const NotificationType = {
 	giftReassignable: 'giftReassignable',
 	giftClaimed: 'giftClaimed',
 	dataExportReady: 'dataExportReady',
+	badgeUnlocked: 'badgeUnlocked',
 } as const;

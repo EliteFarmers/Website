@@ -1,7 +1,8 @@
 <script lang="ts">
 	import PackIcon from '$comp/items/pack-icon.svelte';
-	import { TEXTURE_PACKS } from '$lib/constants/packs';
+	import type { ResourcePackDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
+	import { getTexturePacks } from '$lib/remote/textures.remote';
 	import { getThemeContext, themes } from '$lib/stores/themes.svelte';
 	import { cn } from '$lib/utils';
 	import { buttonVariants } from '$ui/button';
@@ -15,31 +16,66 @@
 	const currentTheme = getThemeContext();
 	const gbl = getGlobalContext();
 
-	let items = $derived(
-		Object.entries(TEXTURE_PACKS)
-			.map(([id], i) => ({ id: i, pack: id }))
-			.sort((a, b) => {
-				const packA = gbl.packs.find((p) => p.id === a.pack);
-				const packB = gbl.packs.find((p) => p.id === b.pack);
-				const orderA = packA ? packA.order : Number.MAX_SAFE_INTEGER;
-				const orderB = packB ? packB.order : Number.MAX_SAFE_INTEGER;
-				return orderA - orderB;
-			})
-	);
+	const packs = getTexturePacks();
 
-	function onconsider(e: CustomEvent<DndEvent<{ id: number; pack: string }>>) {
-		items = e.detail.items;
+	type PackItem = { id: string };
+	type PackZone = 'enabled' | 'available';
+
+	function comparePacks(a: ResourcePackDto, b: ResourcePackDto) {
+		const packA = gbl.packs.find((p) => p.id === a.id);
+		const packB = gbl.packs.find((p) => p.id === b.id);
+		if (packA && packB) return packA.order - packB.order;
+		if (packA) return -1;
+		if (packB) return 1;
+		return a.name.localeCompare(b.name);
 	}
 
-	function onfinalize(e: CustomEvent<DndEvent<{ id: number; pack: string }>>) {
-		items = e.detail.items;
-		gbl.packs = items.map((item, i) => ({
-			id: item.pack,
-			on: true, //gbl.packs.find((p) => p.id === item.pack)?.on ?? false,
-			order: i,
-		}));
-		console.log('updating packs param', gbl.packsParam);
-		gbl.updatePacksParam();
+	function buildPackItems(enabled: boolean) {
+		return [...(packs.current ?? [])]
+			.sort(comparePacks)
+			.filter((pack) => (gbl.packs.find((p) => p.id === pack.id)?.on ?? false) === enabled)
+			.map((pack) => ({ id: pack.id }));
+	}
+
+	let enabledItems = $state<PackItem[]>([]);
+	let availableItems = $state<PackItem[]>([]);
+
+	$effect(() => {
+		enabledItems = buildPackItems(true);
+		availableItems = buildPackItems(false);
+	});
+
+	function updateZone(zone: PackZone, items: PackItem[]) {
+		if (zone === 'enabled') {
+			enabledItems = items;
+			return;
+		}
+
+		availableItems = items;
+	}
+
+	function syncPacks() {
+		gbl.packs = [
+			...enabledItems.map((item, order) => ({
+				id: item.id,
+				on: true,
+				order,
+			})),
+			...availableItems.map((item, index) => ({
+				id: item.id,
+				on: false,
+				order: enabledItems.length + index,
+			})),
+		];
+	}
+
+	function onconsider(zone: PackZone, e: CustomEvent<DndEvent<PackItem>>) {
+		updateZone(zone, e.detail.items);
+	}
+
+	function onfinalize(zone: PackZone, e: CustomEvent<DndEvent<PackItem>>) {
+		updateZone(zone, e.detail.items);
+		syncPacks();
 	}
 </script>
 
@@ -72,57 +108,107 @@
 			</button>
 			<div class="flex w-full flex-col items-center border-t pt-1">
 				<span class="w-full py-1 text-left text-lg font-semibold">Texture Packs</span>
-				<div class="flex w-full flex-col gap-1" use:dragHandleZone={{ items }} {onconsider} {onfinalize}>
-					{#each items as item, i (item.id)}
-						<!-- {@const packSetting = gbl.packs.find((p) => p.id === item.pack)} -->
-						<div class="flex flex-row items-center justify-between rounded-md border p-1 px-2">
-							<div class="flex w-full flex-row items-center gap-1">
-								<div use:dragHandle class="cursor-move rounded-md p-2" aria-label="Drag to reorder">
-									<GripHorizontal size={16} />
-								</div>
-								<a
-									class="flex flex-1 flex-row items-center gap-1 hover:underline"
-									href={TEXTURE_PACKS[item.pack].url}
-									target="_blank"
-									rel="noopener"
-								>
-									<PackIcon packId={item.pack} class="size-10 rounded-sm" />
-									<div class="flex flex-col">
-										<span class="font-medium">{TEXTURE_PACKS[item.pack].name}</span>
-										<span class="text-muted-foreground text-sm"
-											>by {TEXTURE_PACKS[item.pack].author}</span
-										>
+				{#if packs.current}
+					<div class="flex w-full flex-col gap-2">
+						<div class="flex flex-col gap-1">
+							<span class="text-muted-foreground text-sm"
+								>Drag packs here to apply them. Higher packs take priority.</span
+							>
+							<div
+								use:dragHandleZone={{ items: enabledItems, morphDisabled: true }}
+								onconsider={(e) => onconsider('enabled', e)}
+								onfinalize={(e) => onfinalize('enabled', e)}
+								class="flex min-h-16 flex-col gap-1 rounded-md border-2 border-dashed p-2"
+							>
+								{#each enabledItems as item, i (item.id)}
+									{@const pack = packs.current?.find((p) => p.id === item.id)}
+									<div class="flex flex-row items-center justify-between rounded-md border p-1 px-2">
+										<div class="flex w-full flex-row items-center gap-1">
+											<div
+												use:dragHandle
+												class="cursor-move rounded-md p-2"
+												aria-label="Drag to reorder"
+											>
+												<GripHorizontal size={16} />
+											</div>
+											<a
+												class="flex flex-1 flex-row items-center gap-1 hover:underline"
+												href={pack?.downloadUrl}
+												target="_blank"
+												rel="noopener"
+											>
+												<PackIcon
+													packId={item.id}
+													packImg={pack?.iconDataUrl ?? undefined}
+													class="size-10 rounded-sm"
+												/>
+												<div class="flex flex-col">
+													<span class="font-medium">{pack?.name}</span>
+													<span class="text-muted-foreground text-sm"
+														>by {pack?.authors.join(', ')}</span
+													>
+												</div>
+											</a>
+										</div>
+										{#if i === 0}
+											<span class="text-sm whitespace-nowrap"
+												>Top Priority <Check class="inline-block size-4" /></span
+											>
+										{/if}
 									</div>
-								</a>
+								{/each}
+								{#if enabledItems.length === 0}
+									<div
+										class="text-muted-foreground flex min-h-12 max-w-sm items-center justify-center text-sm"
+									>
+										Drag packs from below to enable them!
+									</div>
+								{/if}
 							</div>
-							{#if i == 0}
-								<span class="text-sm whitespace-nowrap"
-									>Selected <Check class="inline-block size-4" /></span
-								>
-							{/if}
-							<!-- <Switch
-								onCheckedChange={(checked) => {
-									const existingPack = packSetting;
-									if (existingPack) {
-										existingPack.on = checked;
-										gbl.updatePacksParam();
-									} else {
-										gbl.packs = [
-											...gbl.packs,
-											{
-												id: item.pack,
-												on: checked,
-												order: gbl.packs.length,
-											},
-										];
-										gbl.updatePacksParam();
-									}
-								}}
-								checked={packSetting?.on ?? false}
-							/> -->
 						</div>
-					{/each}
-				</div>
+
+						<div class="flex flex-col gap-1 rounded-lg">
+							<div class="flex flex-col">
+								<span class="font-medium">Available Packs</span>
+								<span class="text-muted-foreground text-sm"
+									>Keep unused packs here until you want to enable them.</span
+								>
+							</div>
+							<div
+								use:dragHandleZone={{ items: availableItems, morphDisabled: true }}
+								onconsider={(e) => onconsider('available', e)}
+								onfinalize={(e) => onfinalize('available', e)}
+								class="flex min-h-16 flex-wrap gap-1 rounded-md border-2 border-dashed p-2"
+							>
+								{#each availableItems as item (item.id)}
+									{@const pack = packs.current?.find((p) => p.id === item.id)}
+									<div class="flex flex-row items-center justify-between rounded-md border">
+										<div class="flex flex-row items-center gap-1">
+											<div
+												use:dragHandle
+												class="cursor-move rounded-md p-1"
+												aria-label="Drag to enable {pack?.name ?? 'pack'}"
+											>
+												<PackIcon
+													packId={item.id}
+													packImg={pack?.iconDataUrl ?? undefined}
+													class="size-10 rounded-sm"
+												/>
+											</div>
+										</div>
+									</div>
+								{/each}
+								{#if availableItems.length === 0}
+									<div
+										class="text-muted-foreground flex min-h-12 items-center justify-center text-sm"
+									>
+										All loaded packs are enabled.
+									</div>
+								{/if}
+							</div>
+						</div>
+					</div>
+				{/if}
 			</div>
 		</div>
 	</DropdownMenu.Content>
