@@ -2,12 +2,19 @@
 	import { cn } from '$lib/utils';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 
-	interface Props {
-		packId: string;
-		class?: string;
-	}
+	type Props =
+		| {
+				packId: string;
+				packImg?: string;
+				class?: string;
+		  }
+		| {
+				packImg: string;
+				packId?: string;
+				class?: string;
+		  };
 
-	let { packId, class: customClass }: Props = $props();
+	let { packId = undefined, packImg = undefined, class: customClass }: Props = $props();
 	let errored = $state(false);
 	let loading = $state(true);
 	let ref = $state<HTMLImageElement | null>(null);
@@ -33,7 +40,7 @@
 		bind:this={ref}
 		loading="lazy"
 		class="h-full w-full rounded-md p-1 {loading || errored ? 'opacity-0' : 'opacity-100'} aspect-square"
-		src={packId == 'vanilla' ? '/api/item/GRASS.webp?packs=vanilla' : `/api/packicon/${packId}.png`}
+		src={packId == 'vanilla' ? '/api/item/GRASS.webp?packs=vanilla' : (packImg ?? `/api/packicon/${packId}.png`)}
 		alt="Item"
 		onload={onLoad}
 		onerror={() => {

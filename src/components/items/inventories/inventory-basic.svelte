@@ -47,7 +47,7 @@
 			skyblockId: selectedItem?.skyblockId ?? '',
 			slotId: selectedItem ? (subSlot ?? String(selectedItem.slot)) : '',
 			sub: selectedItem ? (subSlot ? String(selectedItem.slot) : undefined) : undefined,
-			packs: gbl.packs.filter((p) => p.on).sort((a, b) => a.order - b.order)[0]?.id,
+			packs: gbl.enabledPackIds.join(',') || undefined,
 		});
 	}
 </script>

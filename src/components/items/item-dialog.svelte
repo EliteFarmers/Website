@@ -1,9 +1,9 @@
 <script lang="ts">
 	import ItemLore from '$comp/items/item-lore.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
-	import type { ItemDto } from '$lib/api';
-	import { TEXTURE_PACKS } from '$lib/constants/packs';
+	import type { ItemDto, ResourcePackDto } from '$lib/api';
 	import { getInventoryItemDetails } from '$lib/remote';
+	import { getTexturePacks } from '$lib/remote/textures.remote';
 	import * as Dialog from '$ui/dialog';
 	import { Skeleton } from '$ui/skeleton';
 	import type { Snippet } from 'svelte';
@@ -16,6 +16,14 @@
 		itemDetails?: ReturnType<typeof getInventoryItemDetails> | null;
 		subInventory?: Snippet;
 	}
+
+	const packs = getTexturePacks();
+	const VANILLA_PACK: Pick<ResourcePackDto, 'id' | 'name' | 'authors' | 'downloadUrl'> = {
+		id: 'vanilla',
+		name: 'Vanilla',
+		authors: ['Mojang'],
+		downloadUrl: 'https://www.minecraft.net/',
+	};
 
 	let {
 		open = $bindable(false),
@@ -101,18 +109,20 @@
 						{/if}
 					</div>
 				{/if}
-				{#if itemDetails?.ready && itemDetails.current.meta?.packId && TEXTURE_PACKS[itemDetails.current.meta.packId]}
-					{@const pack = TEXTURE_PACKS[itemDetails.current.meta.packId]}
+				{#if itemDetails?.ready && itemDetails.current.meta?.packId && packs.current && packs.current.length > 0}
+					{@const pack =
+						packs.current.find((p) => p.id === itemDetails.current.meta?.packId) ??
+						(itemDetails.current.meta.packId === 'vanilla' ? VANILLA_PACK : undefined)}
 					<a
 						class="text-muted-foreground hover:border-border mt-4 mb-4 flex w-fit flex-row items-center gap-2 rounded-md border border-t border-transparent p-2 text-sm"
-						href={pack.url}
+						href={pack?.downloadUrl}
 						target="_blank"
 						rel="noopener"
 					>
 						<PackIcon packId={itemDetails.current.meta.packId} class="size-10" />
 						<div class="flex flex-col items-start">
 							<p class="text-xs">Texture provided by</p>
-							<p class="text-primary underline">{pack.name} by {pack.author}</p>
+							<p class="text-primary underline">{pack?.name} by {pack?.authors.join(', ')}</p>
 						</div>
 					</a>
 				{/if}

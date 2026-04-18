@@ -134,6 +134,13 @@ export class GlobalContext {
 		return this.data.packs ?? [];
 	}
 
+	get enabledPackIds() {
+		return this.packs
+			.filter((p) => p.on && p.id !== 'vanilla')
+			.sort((a, b) => a.order - b.order)
+			.map((p) => p.id);
+	}
+
 	get packsParam() {
 		return this.#packsParam;
 	}
@@ -147,9 +154,7 @@ export class GlobalContext {
 	}
 
 	updatePacksParam() {
-		this.#packsParam = this.packs.length
-			? '?packs=' + this.packs.filter((p) => p.on).sort((a, b) => a.order - b.order)[0]?.id
-			: '';
+		this.#packsParam = this.enabledPackIds.length ? '?packs=' + this.enabledPackIds.join(',') : '';
 	}
 
 	get allAnnouncements() {
