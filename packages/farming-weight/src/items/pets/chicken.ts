@@ -12,7 +12,7 @@ export class ChickenPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Chicken_Pet';
+		return 'https://w.elitesb.gg/Chicken_Pet';
 	}
 
 	override perLevelStats = {

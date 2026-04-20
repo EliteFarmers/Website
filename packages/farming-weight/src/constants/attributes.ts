@@ -30,7 +30,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_WARTYBUG',
 		rarity: Rarity.Legendary,
 		effect: 'rates',
-		wiki: 'https://wiki.hypixel.net/Warty_Bug',
+		wiki: 'https://w.elitesb.gg/Wartybug_Shard',
 		ratesModifier: (current, options) => {
 			if (options.crop !== Crop.NetherWart) return current;
 
@@ -51,7 +51,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_DRAGONFLY',
 		rarity: Rarity.Epic,
 		effect: 'wisdom',
-		wiki: 'https://wiki.hypixel.net/Dragonfly',
+		wiki: 'https://w.elitesb.gg/Dragonfly_Shard',
 		perLevelStats: {
 			[Stat.FarmingWisdom]: {
 				value: 0.5,
@@ -63,7 +63,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_FIREFLY',
 		rarity: Rarity.Epic,
 		effect: 'fortune',
-		wiki: 'https://wiki.hypixel.net/Firefly',
+		wiki: 'https://w.elitesb.gg/Firefly_Shard',
 		active: (options) => {
 			const firefly = getAttributeAmount(options.attributes, 'solar_power');
 			const lunarMoth = getAttributeAmount(options.attributes, 'lunar_power');
@@ -109,7 +109,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_LUNAR_MOTH',
 		rarity: Rarity.Epic,
 		effect: 'fortune',
-		wiki: 'https://wiki.hypixel.net/Lunar_Moth',
+		wiki: 'https://w.elitesb.gg/Lunar_Moth_Shard',
 		active: (options) => {
 			const firefly = getAttributeAmount(options.attributes, 'solar_power');
 			const lunarMoth = getAttributeAmount(options.attributes, 'lunar_power');
@@ -156,14 +156,14 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_LADYBUG',
 		rarity: Rarity.Rare,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Ladybug',
+		wiki: 'https://w.elitesb.gg/Ladybug_Shard',
 	},
 	crop_bug: {
 		name: 'Cropeetle Shard',
 		skyblockId: 'SHARD_CROPEETLE',
 		rarity: Rarity.Rare,
 		effect: 'rates',
-		wiki: 'https://wiki.hypixel.net/Cropeetle',
+		wiki: 'https://w.elitesb.gg/Cropeetle_Shard',
 		ratesModifier: (current, options) => {
 			const level = getShardLevel(Rarity.Rare, getAttributeAmount(options.attributes, 'crop_bug'));
 			if (level <= 0) return current;
@@ -183,14 +183,14 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_INVISIBUG',
 		rarity: Rarity.Rare,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Invisibug',
+		wiki: 'https://w.elitesb.gg/Invisibug_Shard',
 	},
 	infiltration: {
 		name: 'Termite Shard',
 		skyblockId: 'SHARD_TERMITE',
 		rarity: Rarity.Uncommon,
 		effect: 'fortune',
-		wiki: 'https://wiki.hypixel.net/Termite',
+		wiki: 'https://w.elitesb.gg/Termite_Shard',
 		active: (options) => {
 			const opt = 'options' in options ? options.options : options;
 			if (!opt.infestedPlotProbability || opt.infestedPlotProbability <= 0) {
@@ -217,7 +217,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_PRAYING_MANTIS',
 		rarity: Rarity.Uncommon,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Praying_Mantis',
+		wiki: 'https://w.elitesb.gg/Praying_Mantis_Shard',
 	},
 	pest_luck: {
 		// 2% chance for rare pest drops per level
@@ -225,7 +225,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_PEST',
 		rarity: Rarity.Uncommon,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Pest',
+		wiki: 'https://w.elitesb.gg/Pest',
 	},
 	visitor_bait: {
 		// Garden visitors 1% faster per level
@@ -233,7 +233,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_MUDWORM',
 		rarity: Rarity.Common,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Mudworm',
+		wiki: 'https://w.elitesb.gg/Mudworm_Shard',
 	},
 	ultimate_dna: {
 		// 1 farming fortune per level
@@ -241,7 +241,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_GALAXY_FISH',
 		rarity: Rarity.Legendary,
 		effect: 'fortune',
-		wiki: 'https://wiki.hypixel.net/Galaxy_Fish',
+		wiki: 'https://w.elitesb.gg/Galaxy_Fish_Shard',
 		perLevelStats: {
 			[Stat.FarmingFortune]: {
 				value: 1,

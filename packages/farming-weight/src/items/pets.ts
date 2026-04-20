@@ -33,7 +33,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 	YELLOW_BANDANA: {
 		name: 'Yellow Bandana',
-		wiki: 'https://wiki.hypixel.net/Yellow_Bandana',
+		wiki: 'https://w.elitesb.gg/Yellow_Bandana',
 		stats: {
 			[Stat.FarmingFortune]: {
 				name: 'Bandana Fortune',
@@ -43,7 +43,7 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 	},
 	GREEN_BANDANA: {
 		name: 'Green Bandana',
-		wiki: 'https://wiki.hypixel.net/Green_Bandana',
+		wiki: 'https://w.elitesb.gg/Green_Bandana',
 		stats: {
 			[Stat.FarmingFortune]: {
 				name: 'Bandana Fortune',
@@ -53,7 +53,7 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 	},
 	BROWN_BANDANA: {
 		name: 'Brown Bandana',
-		wiki: 'https://wiki.hypixel.net/Brown_Bandana',
+		wiki: 'https://w.elitesb.gg/Brown_Bandana',
 		stats: {
 			[Stat.BonusPestChance]: {
 				name: 'Bandana Pest Chance',

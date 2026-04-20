@@ -72,7 +72,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 	},
 	{
 		name: 'Gemstone Slots',
-		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
+		wiki: () => 'https://w.elitesb.gg/Gemstone_Slot',
 		exists: (upgradeable) => {
 			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
 			const currentInfo = upgradeable.info;

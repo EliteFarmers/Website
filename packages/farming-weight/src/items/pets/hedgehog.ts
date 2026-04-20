@@ -15,7 +15,7 @@ export class HedgehogPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Hedgehog_Pet';
+		return 'https://w.elitesb.gg/Hedgehog_Pet';
 	}
 
 	override perLevelStats = {

@@ -28,7 +28,7 @@ export const ACCESSORY_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAccessory>[]
 	},
 	{
 		name: 'Gemstone Slots',
-		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
+		wiki: () => 'https://w.elitesb.gg/Gemstone_Slot',
 		exists: (upgradeable) => {
 			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
 			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;

@@ -13,7 +13,7 @@ export class BeePet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Bee_Pet';
+		return 'https://w.elitesb.gg/Bee_Pet';
 	}
 
 	override perLevelStats = {

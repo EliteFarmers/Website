@@ -3,7 +3,7 @@ import { Rarity, type RarityRecord } from './reforges.js';
 import { Stat } from './stats.js';
 
 export const GARDEN_CHIP_MAX_LEVEL = 20 as const;
-export const GARDEN_CHIP_WIKI = 'https://wiki.hypixel.net/Garden_Chip' as const;
+export const GARDEN_CHIP_WIKI = 'https://w.elitesb.gg/Garden_Chip' as const;
 
 export type GardenChipId =
 	| 'cropshot'

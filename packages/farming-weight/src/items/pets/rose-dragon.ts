@@ -17,7 +17,7 @@ export class RoseDragonPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Rose_Dragon_Pet';
+		return 'https://w.elitesb.gg/Rose_Dragon_Pet';
 	}
 
 	override maxLevel = 200;

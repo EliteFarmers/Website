@@ -28,7 +28,7 @@ export class FarmArmorHelmet extends BaseItem {
 		return 'Farm Armor Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Farm_Armor';
+		return 'https://w.elitesb.gg/Farm_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -60,7 +60,7 @@ export class FarmArmorChestplate extends BaseItem {
 		return 'Farm Armor Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Farm_Armor';
+		return 'https://w.elitesb.gg/Farm_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -92,7 +92,7 @@ export class FarmArmorLeggings extends BaseItem {
 		return 'Farm Armor Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Farm_Armor';
+		return 'https://w.elitesb.gg/Farm_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -124,7 +124,7 @@ export class FarmArmorBoots extends BaseItem {
 		return 'Farm Armor Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Farm_Armor';
+		return 'https://w.elitesb.gg/Farm_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;

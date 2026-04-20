@@ -14,7 +14,7 @@ export class MelonHelmet extends BaseItem {
 		return 'Melon Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Armor';
+		return 'https://w.elitesb.gg/Melon_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -54,7 +54,7 @@ export class MelonChestplate extends BaseItem {
 		return 'Melon Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Armor';
+		return 'https://w.elitesb.gg/Melon_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -95,7 +95,7 @@ export class MelonLeggings extends BaseItem {
 		return 'Melon Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Armor';
+		return 'https://w.elitesb.gg/Melon_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -136,7 +136,7 @@ export class MelonBoots extends BaseItem {
 		return 'Melon Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Armor';
+		return 'https://w.elitesb.gg/Melon_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;

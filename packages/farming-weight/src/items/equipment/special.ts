@@ -12,7 +12,7 @@ export class ZorrosCape extends BaseItem {
 		return "Zorro's Cape";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Zorro%27s_Cape';
+		return 'https://w.elitesb.gg/Zorro%27s_Cape';
 	}
 	get maxRarity() {
 		return Rarity.Mythic;
@@ -41,7 +41,7 @@ export class PestVest extends BaseItem {
 		return 'Pest Vest';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pest_Vest';
+		return 'https://w.elitesb.gg/Pest_Vest';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;

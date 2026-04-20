@@ -12,7 +12,7 @@ export class CocoaChopper1 extends BaseItem {
 		return 'Cocoa Chopper Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cocoa_Chopper';
+		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -41,7 +41,7 @@ export class CocoaChopper2 extends BaseItem {
 		return 'Cocoa Chopper Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cocoa_Chopper';
+		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -70,7 +70,7 @@ export class CocoaChopper3 extends BaseItem {
 		return 'Cocoa Chopper Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cocoa_Chopper';
+		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
