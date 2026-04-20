@@ -64,7 +64,7 @@ export interface Reforge {
 export const REFORGES: Partial<Record<string, Reforge>> = {
 	bountiful: {
 		name: 'Bountiful',
-		wiki: 'https://wiki.hypixel.net/Golden_Ball',
+		wiki: 'https://w.elitesb.gg/Golden_Ball',
 		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
 		stone: {
 			name: 'Golden Ball',
@@ -118,7 +118,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	},
 	blessed: {
 		name: 'Blessed',
-		wiki: 'https://wiki.hypixel.net/Blessed_Fruit',
+		wiki: 'https://w.elitesb.gg/Blessed_Fruit',
 		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
 		stone: {
 			name: 'Blessed Fruit',
@@ -178,7 +178,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	},
 	earthy: {
 		name: 'Earthy',
-		wiki: 'https://wiki.hypixel.net/Large_Walnut',
+		wiki: 'https://w.elitesb.gg/Large_Walnut',
 		appliesTo: [ReforgeTarget.Axe],
 		stone: {
 			name: 'Large Walnut',
@@ -232,7 +232,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	},
 	bustling: {
 		name: 'Bustling',
-		wiki: 'https://wiki.hypixel.net/SkyMart_Brochure',
+		wiki: 'https://w.elitesb.gg/SkyMart_Brochure',
 		appliesTo: [ReforgeTarget.Armor],
 		stone: {
 			name: 'SkyMart Brochure',
@@ -280,7 +280,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	},
 	mossy: {
 		name: 'Mossy',
-		wiki: 'https://wiki.hypixel.net/Overgrown_Grass',
+		wiki: 'https://w.elitesb.gg/Overgrown_Grass',
 		appliesTo: [ReforgeTarget.Armor],
 		stone: {
 			name: 'Overgrown Grass',
@@ -334,7 +334,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	},
 	blooming: {
 		name: 'Blooming',
-		wiki: 'https://wiki.hypixel.net/Flowering_Bouquet',
+		wiki: 'https://w.elitesb.gg/Flowering_Bouquet',
 		appliesTo: [ReforgeTarget.Armor],
 		stone: {
 			name: 'Flowering Bouquet',
@@ -387,7 +387,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	},
 	rooted: {
 		name: 'Rooted',
-		wiki: 'https://wiki.hypixel.net/Burrowing_Spores',
+		wiki: 'https://w.elitesb.gg/Burrowing_Spores',
 		appliesTo: [ReforgeTarget.Equipment],
 		stone: {
 			name: 'Burrowing Spores',

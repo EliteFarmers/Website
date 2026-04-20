@@ -14,7 +14,7 @@ export class MosquitoPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Mosquito_Pet';
+		return 'https://w.elitesb.gg/Mosquito_Pet';
 	}
 
 	override perLevelStats = {

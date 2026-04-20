@@ -12,7 +12,7 @@ export class CactusKnife1 extends BaseItem {
 		return 'Cactus Knife Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cactus_Knife';
+		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -41,7 +41,7 @@ export class CactusKnife2 extends BaseItem {
 		return 'Cactus Knife Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cactus_Knife';
+		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -70,7 +70,7 @@ export class CactusKnife3 extends BaseItem {
 		return 'Cactus Knife Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cactus_Knife';
+		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;

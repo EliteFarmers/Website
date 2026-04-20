@@ -13,7 +13,7 @@ export class FungiCutter1 extends BaseItem {
 		return 'Fungi Cutter Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fungi_Cutter';
+		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -43,7 +43,7 @@ export class FungiCutter2 extends BaseItem {
 		return 'Fungi Cutter Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fungi_Cutter';
+		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -73,7 +73,7 @@ export class FungiCutter3 extends BaseItem {
 		return 'Fungi Cutter Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fungi_Cutter';
+		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;

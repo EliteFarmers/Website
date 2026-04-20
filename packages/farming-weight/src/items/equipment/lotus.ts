@@ -13,7 +13,7 @@ export class LotusBracelet extends BaseItem {
 		return 'Lotus Bracelet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Lotus_Bracelet';
+		return 'https://w.elitesb.gg/Lotus_Bracelet';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -38,7 +38,7 @@ export class LotusBelt extends BaseItem {
 		return 'Lotus Belt';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Lotus_Belt';
+		return 'https://w.elitesb.gg/Lotus_Belt';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -63,7 +63,7 @@ export class LotusNecklace extends BaseItem {
 		return 'Lotus Necklace';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Lotus_Necklace';
+		return 'https://w.elitesb.gg/Lotus_Necklace';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -88,7 +88,7 @@ export class LotusCloak extends BaseItem {
 		return 'Lotus Cloak';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Lotus_Cloak';
+		return 'https://w.elitesb.gg/Lotus_Cloak';
 	}
 	get maxRarity() {
 		return Rarity.Epic;

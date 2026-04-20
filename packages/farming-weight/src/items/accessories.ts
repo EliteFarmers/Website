@@ -9,7 +9,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 	HELIANTHUS_RELIC: {
 		skyblockId: 'HELIANTHUS_RELIC',
 		name: 'Helianthus Relic',
-		wiki: 'https://wiki.hypixel.net/Helianthus_Relic',
+		wiki: 'https://w.elitesb.gg/Helianthus_Relic',
 		family: 'Fermento',
 		familyOrder: 4,
 		maxRarity: Rarity.Legendary,
@@ -20,7 +20,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 	FERMENTO_ARTIFACT: {
 		skyblockId: 'FERMENTO_ARTIFACT',
 		name: 'Fermento Artifact',
-		wiki: 'https://wiki.hypixel.net/Fermento_Artifact',
+		wiki: 'https://w.elitesb.gg/Fermento_Artifact',
 		family: 'Fermento',
 		familyOrder: 3,
 		upgrade: {
@@ -49,7 +49,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 	SQUASH_RING: {
 		skyblockId: 'SQUASH_RING',
 		name: 'Squash Ring',
-		wiki: 'https://wiki.hypixel.net/Squash_Ring',
+		wiki: 'https://w.elitesb.gg/Squash_Ring',
 		family: 'Fermento',
 		familyOrder: 2,
 		upgrade: {
@@ -75,7 +75,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 	CROPIE_TALISMAN: {
 		skyblockId: 'CROPIE_TALISMAN',
 		name: 'Cropie Talisman',
-		wiki: 'https://wiki.hypixel.net/Cropie_Talisman',
+		wiki: 'https://w.elitesb.gg/Cropie_Talisman',
 		family: 'Fermento',
 		familyOrder: 1,
 		upgrade: {
@@ -97,7 +97,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 	POWER_RELIC: {
 		skyblockId: 'POWER_RELIC',
 		name: 'Relic of Power',
-		wiki: 'https://wiki.hypixel.net/Relic_Of_Power',
+		wiki: 'https://w.elitesb.gg/Relic_of_Power',
 		gemSlots: [
 			{ slot_type: 'JADE', costs: [] },
 			{ slot_type: 'AMBER', costs: [] },
@@ -123,7 +123,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 	MAGIC_8_BALL: {
 		skyblockId: 'MAGIC_8_BALL',
 		name: 'Magic 8 Ball',
-		wiki: 'https://wiki.hypixel.net/Magic_8_Ball',
+		wiki: 'https://w.elitesb.gg/Magic_8_Ball',
 		maxRarity: Rarity.Epic,
 		baseStats: {
 			[Stat.FarmingFortune]: 0, // Effect is special
@@ -132,7 +132,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 	ATMOSPHERIC_FILTER: {
 		skyblockId: 'ATMOSPHERIC_FILTER',
 		name: 'Atmospheric Filter',
-		wiki: 'https://wiki.hypixel.net/Atmospheric_Filter',
+		wiki: 'https://w.elitesb.gg/Atmospheric_Filter',
 		maxRarity: Rarity.Rare,
 		baseStats: {
 			[Stat.FarmingFortune]: 0, // Effect is special

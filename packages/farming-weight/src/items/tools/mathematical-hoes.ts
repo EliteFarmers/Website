@@ -14,7 +14,7 @@ export class GaussCarrotHoe1 extends BaseItem {
 		return 'Gauss Carrot Hoe Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Common_';
+		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -43,7 +43,7 @@ export class GaussCarrotHoe2 extends BaseItem {
 		return 'Gauss Carrot Hoe Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -72,7 +72,7 @@ export class GaussCarrotHoe3 extends BaseItem {
 		return 'Gauss Carrot Hoe Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -92,7 +92,7 @@ export class NewtonNetherWartsHoe1 extends BaseItem {
 		return 'Newton Nether Warts Hoe Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Common_';
+		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -121,7 +121,7 @@ export class NewtonNetherWartsHoe2 extends BaseItem {
 		return 'Newton Nether Warts Hoe Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -150,7 +150,7 @@ export class NewtonNetherWartsHoe3 extends BaseItem {
 		return 'Newton Nether Warts Hoe Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -170,7 +170,7 @@ export class PythagoreanPotatoHoe1 extends BaseItem {
 		return 'Pythagorean Potato Hoe Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Common_';
+		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -199,7 +199,7 @@ export class PythagoreanPotatoHoe2 extends BaseItem {
 		return 'Pythagorean Potato Hoe Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -228,7 +228,7 @@ export class PythagoreanPotatoHoe3 extends BaseItem {
 		return 'Pythagorean Potato Hoe Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -248,7 +248,7 @@ export class TuringSugarCaneHoe1 extends BaseItem {
 		return 'Turing Sugar Cane Hoe Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Common_';
+		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -277,7 +277,7 @@ export class TuringSugarCaneHoe2 extends BaseItem {
 		return 'Turing Sugar Cane Hoe Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -306,7 +306,7 @@ export class TuringSugarCaneHoe3 extends BaseItem {
 		return 'Turing Sugar Cane Hoe Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -326,7 +326,7 @@ export class EuclidsWheatHoe1 extends BaseItem {
 		return "Euclid's Wheat Hoe Mk. I";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Common_';
+		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -355,7 +355,7 @@ export class EuclidsWheatHoe2 extends BaseItem {
 		return "Euclid's Wheat Hoe Mk. II";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -384,7 +384,7 @@ export class EuclidsWheatHoe3 extends BaseItem {
 		return "Euclid's Wheat Hoe Mk. III";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -404,7 +404,7 @@ export class EclipseHoe1 extends BaseItem {
 		return 'Eclipse Hoe Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Eclipse_Hoe#Common_';
+		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -434,7 +434,7 @@ export class EclipseHoe2 extends BaseItem {
 		return 'Eclipse Hoe Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Eclipse_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -464,7 +464,7 @@ export class EclipseHoe3 extends BaseItem {
 		return 'Eclipse Hoe Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Eclipse_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -484,7 +484,7 @@ export class WildRoseHoe1 extends BaseItem {
 		return 'Wild Rose Hoe Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Wild_Rose_Hoe#Common_';
+		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -513,7 +513,7 @@ export class WildRoseHoe2 extends BaseItem {
 		return 'Wild Rose Hoe Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Wild_Rose_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -542,7 +542,7 @@ export class WildRoseHoe3 extends BaseItem {
 		return 'Wild Rose Hoe Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Wild_Rose_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;

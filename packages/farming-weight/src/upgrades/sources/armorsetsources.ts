@@ -22,7 +22,7 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 	{
 		name: 'Armor Set Bonus',
 		exists: () => true,
-		wiki: () => 'https://wiki.hypixel.net/Fermento_Armor#Four_Pieces_',
+		wiki: () => 'https://w.elitesb.gg/Fermento_Armor#Four_Pieces_',
 		max: () => ARMOR_SET_BONUS.FERMENTO?.stats[4]?.[Stat.FarmingFortune] ?? 0,
 		current: (set) =>
 			set.setBonuses.reduce((acc, bonus) => {
@@ -39,7 +39,7 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 	{
 		name: 'Equipment Set Bonus',
 		exists: (set) => set.equipmentSetBonuses.length > 0,
-		wiki: () => 'https://wiki.hypixel.net/Pesthunter%27s_Gloves',
+		wiki: () => 'https://w.elitesb.gg/Pesthunter%27s_Gloves',
 		max: () => 0,
 		current: () => 0,
 		maxStat: (_set, stat) => {

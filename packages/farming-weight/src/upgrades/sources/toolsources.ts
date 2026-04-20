@@ -138,7 +138,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Gemstone Slots',
-		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
+		wiki: () => 'https://w.elitesb.gg/Gemstone_Slot',
 		exists: (upgradeable) => {
 			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
 			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;
@@ -165,7 +165,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Farming For Dummies',
-		wiki: () => 'https://wiki.hypixel.net/Farming_For_Dummies',
+		wiki: () => 'https://w.elitesb.gg/Farming_For_Dummies',
 		exists: (tool) => tool.type !== ReforgeTarget.Sword,
 		max: () => 5,
 		current: (tool) => {
@@ -189,7 +189,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					category: UpgradeCategory.Item,
 					conflictKey: 'farming_for_dummies',
 					repeatable: 5 - count,
-					wiki: 'https://wiki.hypixel.net/Farming_For_Dummies',
+					wiki: 'https://w.elitesb.gg/Farming_For_Dummies',
 					cost: {
 						items: {
 							FARMING_FOR_DUMMIES: 1,
@@ -211,7 +211,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Axed Perk',
-		wiki: () => 'https://wiki.hypixel.net/Essence#Forest_Essence_',
+		wiki: () => 'https://w.elitesb.gg/Essence_Shops#Forest',
 		exists: (tool) => tool.type === ReforgeTarget.Axe,
 		max: (tool) => {
 			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
@@ -256,7 +256,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
 					conflictKey: 'axed_perk',
-					wiki: 'https://wiki.hypixel.net/Essence#Forest_Essence_',
+					wiki: 'https://w.elitesb.gg/Essence_Shops#Forest',
 					cost: {
 						items: {
 							ESSENCE_FOREST: 10_000,
