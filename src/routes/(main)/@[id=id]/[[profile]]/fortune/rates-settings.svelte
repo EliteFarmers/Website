@@ -36,7 +36,7 @@
 	<SettingListItem
 		title="Garden Fortune"
 		description="Community center farming fortune upgrade."
-		wiki="https://wiki.hypixel.net/Elizabeth#Garden_Farming_Fortune_"
+		wiki="https://w.elitesb.gg/Account_%26_Profile_Upgrades#Account_Upgrades"
 	>
 		{#snippet child()}
 			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
@@ -59,7 +59,7 @@
 	<SettingListItem
 		title="Strength"
 		description="Used for Mooshroom Cow ability."
-		wiki="https://wiki.hypixel.net/Strength"
+		wiki="https://w.elitesb.gg/Strength"
 	>
 		<NumberInput
 			class="my-1 h-10 max-w-32"
@@ -75,7 +75,7 @@
 	<SettingListItem
 		title="Filled Rosewater Flasks"
 		description="Amount of Filled Rosewater Flasks you've consumed."
-		wiki="https://wiki.hypixel.net/Rosewater_Flask"
+		wiki="https://w.elitesb.gg/Rosewater_Flask"
 	>
 		{#snippet child()}
 			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
@@ -279,7 +279,7 @@
 	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
 	<span class="text-muted-foreground px-1 text-sm"
 		>Crop that you've brought items to <a
-			href="https://wiki.hypixel.net/Carrolyn"
+			href="https://w.elitesb.gg/Carrolyn"
 			target="_blank"
 			class="text-link underline">Carrolyn</a
 		> for.</span

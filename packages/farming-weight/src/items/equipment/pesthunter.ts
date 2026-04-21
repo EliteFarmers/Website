@@ -12,7 +12,7 @@ export class PesthuntersGloves extends BaseItem {
 		return "Pesthunter's Gloves";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pesthunter%27s_Gloves';
+		return 'https://w.elitesb.gg/Pesthunter%27s_Gloves';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -34,7 +34,7 @@ export class PesthuntersBelt extends BaseItem {
 		return "Pesthunter's Belt";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pesthunter%27s_Belt';
+		return 'https://w.elitesb.gg/Pesthunter%27s_Belt';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -56,7 +56,7 @@ export class PesthuntersNecklace extends BaseItem {
 		return "Pesthunter's Necklace";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pesthunter%27s_Necklace';
+		return 'https://w.elitesb.gg/Pesthunter%27s_Necklace';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -78,7 +78,7 @@ export class PesthuntersCloak extends BaseItem {
 		return "Pesthunter's Cloak";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pesthunter%27s_Cloak';
+		return 'https://w.elitesb.gg/Pesthunter%27s_Cloak';
 	}
 	get maxRarity() {
 		return Rarity.Epic;

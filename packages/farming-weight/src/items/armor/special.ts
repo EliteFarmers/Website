@@ -14,7 +14,7 @@ export class FarmerBoots extends BaseItem {
 		return 'Farmer Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Farmer_Boots';
+		return 'https://w.elitesb.gg/Farmer_Boots';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -58,7 +58,7 @@ export class RanchersBoots extends BaseItem {
 		return "Rancher's Boots";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Rancher%27s_Boots';
+		return 'https://w.elitesb.gg/Rancher%27s_Boots';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -123,7 +123,7 @@ export class LanternHelmet extends BaseItem {
 		return 'Lantern Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Lantern_Helmet';
+		return 'https://w.elitesb.gg/Lantern_Helmet';
 	}
 	get maxRarity() {
 		return Rarity.Rare;

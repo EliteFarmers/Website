@@ -165,6 +165,95 @@ test('Interactive Upgrade: Crop Upgrades and Others', () => {
 	}
 });
 
+test('Interactive Upgrade: Dedication IV uses crop fortune for its increase', () => {
+	const wheatHoe: EliteItemDto = {
+		id: 291,
+		count: 1,
+		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+		uuid: 'dedication-test-hoe-uuid',
+		name: "§aEuclid's Wheat Hoe",
+		lore: [],
+		enchantments: { dedication: 3 },
+		attributes: { modifier: 'blessed' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		tools: [new FarmingTool(wheatHoe)],
+		milestones: {
+			[Crop.Wheat]: 46,
+		},
+	});
+
+	const dedicationUpgrade = player
+		.getCropUpgrades(Crop.Wheat)
+		.find((u) => u.meta?.type === 'enchant' && u.meta?.key === 'dedication' && u.meta?.value === 4);
+
+	expect(dedicationUpgrade).toBeDefined();
+	expect(dedicationUpgrade?.stats?.[Stat.WheatFortune]).toBe(46);
+	expect(dedicationUpgrade?.increase).toBe(46);
+});
+
+test('Interactive Upgrade: Dedication IV is present in the crop upgrades list once', () => {
+	const wheatHoe: EliteItemDto = {
+		id: 291,
+		count: 1,
+		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+		uuid: 'dedication-table-hoe-uuid',
+		name: "§aEuclid's Wheat Hoe",
+		lore: [],
+		enchantments: { dedication: 3 },
+		attributes: { modifier: 'blessed' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		tools: [new FarmingTool(wheatHoe)],
+		selectedCrop: Crop.Wheat,
+		milestones: {
+			[Crop.Wheat]: 46,
+		},
+	});
+
+	const dedicationUpgrades = player
+		.getCropUpgrades(Crop.Wheat)
+		.filter((u) => u.meta?.type === 'enchant' && u.meta?.key === 'dedication' && u.meta?.value === 4);
+
+	expect(dedicationUpgrades).toHaveLength(1);
+	expect(dedicationUpgrades[0]?.increase).toBeGreaterThan(0);
+});
+
+test('Interactive Upgrade: Crop upgrades still include generic Farming Fortune tool upgrades', () => {
+	const wheatHoe: EliteItemDto = {
+		id: 291,
+		count: 1,
+		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+		uuid: 'dedication-reforge-hoe-uuid',
+		name: "§aEuclid's Wheat Hoe",
+		lore: [],
+		enchantments: { dedication: 3 },
+		attributes: { modifier: 'blessed' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		tools: [new FarmingTool(wheatHoe)],
+		milestones: {
+			[Crop.Wheat]: 46,
+		},
+	});
+
+	const cropUpgrades = player.getCropUpgrades(Crop.Wheat);
+	const dedicationUpgrade = cropUpgrades.find(
+		(u) => u.meta?.type === 'enchant' && u.meta?.key === 'dedication' && u.meta?.value === 4
+	);
+	const reforgeUpgrade = cropUpgrades.find((u) => u.meta?.type === 'reforge' && u.meta?.id === 'bountiful');
+
+	expect(dedicationUpgrade?.increase).toBe(46);
+	expect(reforgeUpgrade).toBeDefined();
+	expect(reforgeUpgrade?.increase).toBe(-4);
+});
+
 test('Interactive Upgrade: Buy New Item', () => {
 	// Test buying a Magic 8 Ball (General Upgrade)
 	const player = new FarmingPlayer({

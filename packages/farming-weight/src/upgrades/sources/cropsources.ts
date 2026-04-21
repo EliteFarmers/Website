@@ -67,7 +67,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: 'Exportable Crop',
-		wiki: () => 'https://wiki.hypixel.net/Carrolyn',
+		wiki: () => 'https://w.elitesb.gg/Carrolyn',
 		exists: ({ crop }) => CROP_INFO[crop].exportable === true,
 		max: () => EXPORTABLE_CROP_FORTUNE,
 		current: ({ player, crop }) => {
@@ -97,7 +97,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 					},
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
-					wiki: 'https://wiki.hypixel.net/Carrolyn',
+					wiki: 'https://w.elitesb.gg/Carrolyn',
 					cost: CROP_INFO[crop].exportableCost,
 				},
 			];
@@ -308,7 +308,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	{
 		name: 'Personal Best',
 		exists: () => true,
-		wiki: () => 'https://wiki.hypixel.net/Anita#Personal_Bests',
+		wiki: () => 'https://w.elitesb.gg/Anita#Personal_Bests',
 		max: () => 100,
 		current: ({ player, crop }) => {
 			if (!player.options.personalBestsUnlocked) return 0;
@@ -347,7 +347,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 						[CROP_INFO[crop].fortuneType]: increase,
 					},
 					action: UpgradeAction.Unlock,
-					wiki: 'https://wiki.hypixel.net/Anita#Personal_Bests',
+					wiki: 'https://w.elitesb.gg/Anita#Personal_Bests',
 					category: UpgradeCategory.Anita,
 					cost: {
 						items: {
@@ -370,7 +370,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		exists: ({ player, crop }) => {
 			return !!(player.options.jacobContest?.enabled && player.options.jacobContest.crop === crop);
 		},
-		wiki: () => 'https://wiki.hypixel.net/Overdrive_Chip',
+		wiki: () => 'https://w.elitesb.gg/Overdrive_Chip',
 		max: () => 25,
 		current: ({ player, crop }) => {
 			if (!player.options.jacobContest?.enabled || player.options.jacobContest.crop !== crop) return 0;

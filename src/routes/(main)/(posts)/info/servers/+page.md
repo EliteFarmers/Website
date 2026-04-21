@@ -29,7 +29,7 @@ Click on the gear icon to open up the settings for your server.
 As of now, the only free feature you can setup in your own server are upcoming contest pings.
 
 Contest pings are alerts that send in your Discord server's channel of choice that always send 5 minutes
-before the next [Jacob Contest](https://wiki.hypixel.net/Jacob%27s_Farming_Contest).
+before the next [Jacob Contest](https://w.elitesb.gg/Jacob%27s_Farming_Contest).
 
 You're also able to configure specific roles that are pinged for each crop!
 

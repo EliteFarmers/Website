@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
+	import { adminReloadTexturePacks } from '$lib/remote/textures.remote.js';
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
 	import { SelectSimple } from '$ui/select';
@@ -93,6 +94,12 @@
 				<form method="post" action="?/clearcontests" class="flex flex-col gap-2" use:enhance>
 					<Button type="submit" class="w-24" variant="destructive">Clear<Trash_2 /></Button>
 				</form>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem title="Reload Texture Packs" description="Reload all texture packs.">
+				<div class="flex flex-col gap-2">
+					<Button onclick={() => adminReloadTexturePacks()} class="w-24" variant="destructive">Reload</Button>
+				</div>
 			</SettingListItem>
 		</div>
 	</section>

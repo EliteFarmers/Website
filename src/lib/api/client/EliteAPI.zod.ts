@@ -211,6 +211,58 @@ export const zodUpdateAccountBody = zod.object({
 });
 
 /**
+ * @summary Create a Badge Unlock Condition (Admin)
+ */
+export const zodCreateBadgeConditionParams = zod.object({
+	badgeId: zod.number(),
+});
+
+export const zodCreateBadgeConditionBodyEventNameMin = 0;
+export const zodCreateBadgeConditionBodyEventNameMax = 150;
+
+export const zodCreateBadgeConditionBody = zod.object({
+	eventName: zod.string().min(zodCreateBadgeConditionBodyEventNameMin).max(zodCreateBadgeConditionBodyEventNameMax),
+	conditions: zod
+		.object({
+			rootElement: zod.unknown(),
+		})
+		.nullish(),
+});
+
+/**
+ * @summary Delete a Badge Unlock Condition (Admin)
+ */
+export const zodDeleteBadgeConditionParams = zod.object({
+	conditionId: zod.string(),
+});
+
+/**
+ * @summary List Badge Unlock Conditions (Admin)
+ */
+export const zodGetBadgeConditionsParams = zod.object({
+	badgeId: zod.string(),
+});
+
+/**
+ * @summary Update a Badge Unlock Condition (Admin)
+ */
+export const zodUpdateBadgeConditionParams = zod.object({
+	conditionId: zod.number(),
+});
+
+export const zodUpdateBadgeConditionBodyEventNameMin = 0;
+export const zodUpdateBadgeConditionBodyEventNameMax = 150;
+
+export const zodUpdateBadgeConditionBody = zod.object({
+	eventName: zod.string().min(zodUpdateBadgeConditionBodyEventNameMin).max(zodUpdateBadgeConditionBodyEventNameMax),
+	conditions: zod
+		.object({
+			rootElement: zod.unknown(),
+		})
+		.nullish(),
+});
+
+/**
  * @summary Add a role to a user
  */
 export const zodAddRoleToUserParams = zod.object({

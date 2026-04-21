@@ -15,7 +15,7 @@ export class MelonDicer1 extends BaseItem {
 		return 'Melon Dicer Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Dicer';
+		return 'https://w.elitesb.gg/Melon_Dicer';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -44,7 +44,7 @@ export class MelonDicer2 extends BaseItem {
 		return 'Melon Dicer Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Dicer_2.0';
+		return 'https://w.elitesb.gg/Melon_Dicer_2.0';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -73,7 +73,7 @@ export class MelonDicer3 extends BaseItem {
 		return 'Melon Dicer Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Dicer_3.0';
+		return 'https://w.elitesb.gg/Melon_Dicer_3.0';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -93,7 +93,7 @@ export class PumpkinDicer1 extends BaseItem {
 		return 'Pumpkin Dicer Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pumpkin_Dicer';
+		return 'https://w.elitesb.gg/Pumpkin_Dicer';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -122,7 +122,7 @@ export class PumpkinDicer2 extends BaseItem {
 		return 'Pumpkin Dicer Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pumpkin_Dicer_2.0';
+		return 'https://w.elitesb.gg/Pumpkin_Dicer_2.0';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -151,7 +151,7 @@ export class PumpkinDicer3 extends BaseItem {
 		return 'Pumpkin Dicer Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pumpkin_Dicer_3.0';
+		return 'https://w.elitesb.gg/Pumpkin_Dicer_3.0';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;

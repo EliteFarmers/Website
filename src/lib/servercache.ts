@@ -13,6 +13,7 @@ import {
 	getLeaderboards,
 	getProducts,
 	getPublicGuild,
+	getResourcePacks,
 	getSkyblockItems,
 	getStyles,
 	getTeamWordList,
@@ -30,6 +31,7 @@ import {
 	type HypixelGuildDetailsDto,
 	type LeaderboardDto,
 	type ProductDto,
+	type ResourcePackDto,
 	type ShopCategoryDto,
 	type SkyblockGemShopsResponse,
 	type WeightStyleListDto,
@@ -199,6 +201,13 @@ const cacheEntries = {
 			return data ?? [];
 		},
 	},
+	texturepacks: {
+		data: [] as ResourcePackDto[],
+		update: async () => {
+			const { data } = await getResourcePacks();
+			return (data ?? []) as ResourcePackDto[];
+		},
+	},
 };
 
 export const cache = {
@@ -255,6 +264,9 @@ export const cache = {
 	},
 	get badges() {
 		return cacheEntries.badges.data;
+	},
+	get texturepacks() {
+		return cacheEntries.texturepacks.data;
 	},
 };
 

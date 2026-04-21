@@ -14,7 +14,7 @@ export class SquashHelmet extends BaseItem {
 		return 'Squash Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Squash_Armor';
+		return 'https://w.elitesb.gg/Squash_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -65,7 +65,7 @@ export class SquashChestplate extends BaseItem {
 		return 'Squash Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Squash_Armor';
+		return 'https://w.elitesb.gg/Squash_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -118,7 +118,7 @@ export class SquashLeggings extends BaseItem {
 		return 'Squash Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Squash_Armor';
+		return 'https://w.elitesb.gg/Squash_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -170,7 +170,7 @@ export class SquashBoots extends BaseItem {
 		return 'Squash Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Squash_Armor';
+		return 'https://w.elitesb.gg/Squash_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Rare;

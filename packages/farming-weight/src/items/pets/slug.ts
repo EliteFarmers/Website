@@ -14,7 +14,7 @@ export class SlugPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Slug_Pet';
+		return 'https://w.elitesb.gg/Slug_Pet';
 	}
 
 	override perLevelStats = {

@@ -1,8 +1,25 @@
+import { CROP_INFO } from '../constants/crops.js';
 import { EnchantTierProcurement, FARMING_ENCHANTS, type FarmingEnchant } from '../constants/enchants.js';
 import { Stat } from '../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import type { Upgradeable } from '../fortune/upgradeable.js';
 import { getMaxStatFromEnchant, getStatFromEnchant } from '../util/enchants.js';
+
+const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((crop) => crop.fortuneType));
+
+function getDisplayedIncrease(stats: Partial<Record<Stat, number>> | undefined, stat: Stat): number {
+	if (!stats) return 0;
+
+	if (stat === Stat.FarmingFortune) {
+		return stats[Stat.FarmingFortune] ?? 0;
+	}
+
+	if (CROP_FORTUNE_STATS.has(stat)) {
+		return (stats[stat] ?? 0) + (stats[Stat.FarmingFortune] ?? 0);
+	}
+
+	return stats[stat] ?? 0;
+}
 
 export function getUpgradeableEnchants(upgradeable: Upgradeable, stat: Stat = Stat.FarmingFortune): FortuneUpgrade[] {
 	if (!upgradeable.type) return [];
@@ -65,7 +82,7 @@ export function getUpgradeableEnchant(
 
 		const hasStats = Object.keys(deltaStats).length > 0;
 		const stats = hasStats ? deltaStats : undefined;
-		const increase = stats?.[Stat.FarmingFortune] ?? 0;
+		const increase = getDisplayedIncrease(stats, stat);
 
 		result.push({
 			title: enchant.name + ' 1',
@@ -120,7 +137,7 @@ export function getUpgradeableEnchant(
 
 	const hasStats = Object.keys(deltaStats).length > 0;
 	const stats = hasStats ? deltaStats : undefined;
-	const increase = stats?.[Stat.FarmingFortune] ?? 0;
+	const increase = getDisplayedIncrease(stats, stat);
 
 	const nextEnchant = enchant.levels[applied + 1];
 	if (!nextEnchant) return result;

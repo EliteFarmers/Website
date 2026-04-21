@@ -14,7 +14,7 @@ export class PigPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pig_Pet';
+		return 'https://w.elitesb.gg/Pig_Pet';
 	}
 
 	override perLevelStats = {

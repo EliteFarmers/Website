@@ -103,7 +103,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: 'Attribute Shards',
-		wiki: () => 'https://wiki.hypixel.net/Attributes',
+		wiki: () => 'https://w.elitesb.gg/Attributes',
 		exists: () => true,
 		max: () => {
 			return ATTRIBUTE_FORTUNE_SOURCES.filter(
@@ -493,7 +493,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: 'Magic 8 Ball',
 		exists: () => true,
-		wiki: () => 'https://wiki.hypixel.net/Magic_8_Ball',
+		wiki: () => 'https://w.elitesb.gg/Magic_8_Ball',
 		max: () => 25,
 		active: () => {
 			return {
@@ -519,7 +519,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						action: UpgradeAction.Purchase,
 						purchase: 'MAGIC_8_BALL',
 						category: UpgradeCategory.Item,
-						wiki: 'https://wiki.hypixel.net/Magic_8_Ball',
+						wiki: 'https://w.elitesb.gg/Magic_8_Ball',
 						cost: {
 							items: {
 								MAGIC_8_BALL: 1,
@@ -539,7 +539,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: 'Atmospheric Filter',
 		exists: () => true,
-		wiki: () => 'https://wiki.hypixel.net/Atmospheric_Filter',
+		wiki: () => 'https://w.elitesb.gg/Atmospheric_Filter',
 		max: () => 25,
 		active: () => {
 			return {
@@ -565,7 +565,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					action: UpgradeAction.Purchase,
 					purchase: 'ATMOSPHERIC_FILTER',
 					category: UpgradeCategory.Item,
-					wiki: 'https://wiki.hypixel.net/Atmospheric_Filter',
+					wiki: 'https://w.elitesb.gg/Atmospheric_Filter',
 					cost: {
 						items: {
 							ATMOSPHERIC_FILTER: 1,
