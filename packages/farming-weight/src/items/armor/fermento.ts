@@ -33,7 +33,7 @@ export class FermentoHelmet extends BaseItem {
 		return 'Fermento Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fermento_Armor';
+		return 'https://w.elitesb.gg/Fermento_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -76,7 +76,7 @@ export class FermentoChestplate extends BaseItem {
 		return 'Fermento Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fermento_Armor';
+		return 'https://w.elitesb.gg/Fermento_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -119,7 +119,7 @@ export class FermentoLeggings extends BaseItem {
 		return 'Fermento Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fermento_Armor';
+		return 'https://w.elitesb.gg/Fermento_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -162,7 +162,7 @@ export class FermentoBoots extends BaseItem {
 		return 'Fermento Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fermento_Armor';
+		return 'https://w.elitesb.gg/Fermento_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;

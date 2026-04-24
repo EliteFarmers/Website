@@ -21,7 +21,7 @@ export class RabbitHelmet extends BaseItem {
 		return 'Rabbit Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Rabbit_Armor';
+		return 'https://w.elitesb.gg/Rabbit_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -53,7 +53,7 @@ export class RabbitChestplate extends BaseItem {
 		return 'Rabbit Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Rabbit_Armor';
+		return 'https://w.elitesb.gg/Rabbit_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -85,7 +85,7 @@ export class RabbitLeggings extends BaseItem {
 		return 'Rabbit Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Rabbit_Armor';
+		return 'https://w.elitesb.gg/Rabbit_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -117,7 +117,7 @@ export class RabbitBoots extends BaseItem {
 		return 'Rabbit Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Rabbit_Armor';
+		return 'https://w.elitesb.gg/Rabbit_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;

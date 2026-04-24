@@ -12,7 +12,7 @@ export class BiohazardHelmet extends BaseItem {
 		return 'Biohazard Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Biohazard_Armor';
+		return 'https://w.elitesb.gg/Biohazard_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -38,7 +38,7 @@ export class BiohazardChestplate extends BaseItem {
 		return 'Biohazard Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Biohazard_Armor';
+		return 'https://w.elitesb.gg/Biohazard_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -64,7 +64,7 @@ export class BiohazardLeggings extends BaseItem {
 		return 'Biohazard Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Biohazard_Armor';
+		return 'https://w.elitesb.gg/Biohazard_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -90,7 +90,7 @@ export class BiohazardBoots extends BaseItem {
 		return 'Biohazard Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Biohazard_Armor';
+		return 'https://w.elitesb.gg/Biohazard_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;

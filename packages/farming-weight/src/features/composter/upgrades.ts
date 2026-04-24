@@ -13,7 +13,7 @@ interface ComposterUpgradeInfo {
 export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> = {
 	[ComposterUpgrade.Speed]: {
 		name: 'Composter Speed',
-		wiki: 'https://wiki.hypixel.net/Composter#Composter_Speed_',
+		wiki: 'https://w.elitesb.gg/Composter#Upgrades',
 		current: (level) => (20 * level) / 100,
 		levels: [
 			{
@@ -214,7 +214,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 	},
 	[ComposterUpgrade.MultiDrop]: {
 		name: 'Multi Drop',
-		wiki: 'https://wiki.hypixel.net/Composter#Multi_Drop_',
+		wiki: 'https://w.elitesb.gg/Composter#Upgrades',
 		current: (level) => (3 * level) / 100,
 		levels: [
 			{
@@ -415,7 +415,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 	},
 	[ComposterUpgrade.FuelCap]: {
 		name: 'Fuel Cap',
-		wiki: 'https://wiki.hypixel.net/Composter#Fuel_Cap_',
+		wiki: 'https://w.elitesb.gg/Composter#Upgrades',
 		current: (level) => 30_000 * level + 100_000,
 		levels: [
 			{
@@ -616,7 +616,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 	},
 	[ComposterUpgrade.OrganicMatterCap]: {
 		name: 'Organic Matter Cap',
-		wiki: 'https://wiki.hypixel.net/Composter#Organic_Matter_Cap_',
+		wiki: 'https://w.elitesb.gg/Composter#Upgrades',
 		current: (level) => 30_000 * level + 40_000,
 		levels: [
 			{
@@ -817,7 +817,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 	},
 	[ComposterUpgrade.CostReduction]: {
 		name: 'Cost Reduction',
-		wiki: 'https://wiki.hypixel.net/Composter#Cost_Reduction_',
+		wiki: 'https://w.elitesb.gg/Composter#Upgrades',
 		current: (level) => level / 100,
 		levels: [
 			{

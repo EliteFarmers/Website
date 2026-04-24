@@ -13,7 +13,7 @@ export class BlossomBracelet extends BaseItem {
 		return 'Blossom Bracelet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Blossom_Bracelet';
+		return 'https://w.elitesb.gg/Blossom_Bracelet';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -33,7 +33,7 @@ export class BlossomBelt extends BaseItem {
 		return 'Blossom Belt';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Blossom_Belt';
+		return 'https://w.elitesb.gg/Blossom_Belt';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -53,7 +53,7 @@ export class BlossomNecklace extends BaseItem {
 		return 'Blossom Necklace';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Blossom_Necklace';
+		return 'https://w.elitesb.gg/Blossom_Necklace';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -73,7 +73,7 @@ export class BlossomCloak extends BaseItem {
 		return 'Blossom Cloak';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Blossom_Cloak';
+		return 'https://w.elitesb.gg/Blossom_Cloak';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;

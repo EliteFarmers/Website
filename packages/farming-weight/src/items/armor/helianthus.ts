@@ -29,7 +29,7 @@ export class HelianthusHelmet extends BaseItem {
 		return 'Helianthus Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Helianthus_Armor';
+		return 'https://w.elitesb.gg/Helianthus_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Mythic;
@@ -58,7 +58,7 @@ export class HelianthusChestplate extends BaseItem {
 		return 'Helianthus Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Helianthus_Armor';
+		return 'https://w.elitesb.gg/Helianthus_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Mythic;
@@ -87,7 +87,7 @@ export class HelianthusLeggings extends BaseItem {
 		return 'Helianthus Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Helianthus_Armor';
+		return 'https://w.elitesb.gg/Helianthus_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Mythic;
@@ -116,7 +116,7 @@ export class HelianthusBoots extends BaseItem {
 		return 'Helianthus Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Helianthus_Armor';
+		return 'https://w.elitesb.gg/Helianthus_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Mythic;

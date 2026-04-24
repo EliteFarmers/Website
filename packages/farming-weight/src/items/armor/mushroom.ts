@@ -13,7 +13,7 @@ export class MushroomHelmet extends BaseItem {
 		return 'Mushroom Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Mushroom_Armor';
+		return 'https://w.elitesb.gg/Mushroom_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -44,7 +44,7 @@ export class MushroomChestplate extends BaseItem {
 		return 'Mushroom Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Mushroom_Armor';
+		return 'https://w.elitesb.gg/Mushroom_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -75,7 +75,7 @@ export class MushroomLeggings extends BaseItem {
 		return 'Mushroom Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Mushroom_Armor';
+		return 'https://w.elitesb.gg/Mushroom_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -106,7 +106,7 @@ export class MushroomBoots extends BaseItem {
 		return 'Mushroom Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Mushroom_Armor';
+		return 'https://w.elitesb.gg/Mushroom_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
