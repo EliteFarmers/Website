@@ -63,7 +63,7 @@
 			{#each pages as page (page.href)}
 				{#if page.href !== '/admin'}
 					{@const Icon = page.icon as Component}
-					<Button href={page.href} variant="outline" class="basis-30 justify-start">
+					<Button href={page.href} variant="outline" class="basis-40 justify-start">
 						<Icon class="mr-2" />
 						{page.name}
 					</Button>

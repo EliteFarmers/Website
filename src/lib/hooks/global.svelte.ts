@@ -4,6 +4,7 @@ import type { AuthSession } from '$lib/api/auth';
 import { getAuthorizedAccount } from '$lib/remote';
 import { ClaimGift, DeclineGift, GetPendingGifts } from '$lib/remote/gifts.remote';
 import { GetNotifications, MarkNotificationRead } from '$lib/remote/notifications.remote';
+import type { LocalTexturePackOverride } from '$lib/texture-packs';
 import type { RemoteQuery } from '@sveltejs/kit';
 import { PersistedState } from 'runed';
 import { getContext, setContext, tick } from 'svelte';
@@ -19,8 +20,11 @@ type PersistedData = {
 	settings: AuthorizedAccountDto['settings'];
 	minecraftAccounts?: string[];
 	packs?: { id: string; on: boolean; order: number }[];
+	localTexturePackOverrides?: LocalTexturePackOverride[];
 	newSidebar?: Record<string, number>;
 };
+
+type PackPreference = { id: string; on: boolean; order: number };
 
 export class GlobalContext {
 	#user = $state<AuthorizedAccountDto | undefined>();
@@ -30,6 +34,7 @@ export class GlobalContext {
 		dismissedAnnouncements: [],
 		settings: {},
 		packs: [],
+		localTexturePackOverrides: [],
 		newSidebar: {},
 	});
 	#announcements = $state<AnnouncementDto[]>([]);
@@ -116,6 +121,7 @@ export class GlobalContext {
 			settings: user?.settings ?? this.data.settings,
 			minecraftAccounts: user?.minecraftAccounts?.map((a) => a.id) ?? this.data.minecraftAccounts,
 			packs: this.data.packs ?? [],
+			localTexturePackOverrides: this.data.localTexturePackOverrides ?? [],
 			newSidebar: this.data.newSidebar ?? {},
 		};
 
@@ -134,6 +140,10 @@ export class GlobalContext {
 		return this.data.packs ?? [];
 	}
 
+	get localTexturePackOverrides() {
+		return this.data.localTexturePackOverrides ?? [];
+	}
+
 	get enabledPackIds() {
 		return this.packs
 			.filter((p) => p.on && p.id !== 'vanilla')
@@ -148,13 +158,61 @@ export class GlobalContext {
 	set packs(packs: { id: string; on: boolean; order: number }[]) {
 		this.#data.current = {
 			...this.#data.current,
-			packs,
+			packs: normalizePackPreferences(packs),
 		};
 		this.updatePacksParam();
 	}
 
+	set localTexturePackOverrides(localTexturePackOverrides: LocalTexturePackOverride[]) {
+		this.#data.current = {
+			...this.#data.current,
+			localTexturePackOverrides,
+		};
+	}
+
 	updatePacksParam() {
 		this.#packsParam = this.enabledPackIds.length ? '?packs=' + this.enabledPackIds.join(',') : '';
+	}
+
+	hasPackEnabled(packId: string) {
+		return this.packs.some((pack) => pack.id === packId && pack.on);
+	}
+
+	hasLocalTexturePackOverride(packId: string) {
+		return this.localTexturePackOverrides.some((pack) => pack.id === packId);
+	}
+
+	upsertLocalTexturePackOverride(pack: LocalTexturePackOverride, enable = false) {
+		this.localTexturePackOverrides = [
+			...this.localTexturePackOverrides.filter((existingPack) => existingPack.id !== pack.id),
+			pack,
+		];
+
+		if (enable) {
+			this.enablePack(pack.id);
+		}
+	}
+
+	enablePack(packId: string) {
+		const remaining = this.packs.filter((pack) => pack.id !== packId);
+
+		this.packs = [
+			{
+				id: packId,
+				on: true,
+				order: 0,
+			},
+			...remaining.map((pack, index) => ({
+				id: pack.id,
+				on: pack.on,
+				order: index + 1,
+			})),
+		];
+	}
+
+	removeLocalTexturePackOverride(packId: string) {
+		this.localTexturePackOverrides = this.localTexturePackOverrides.filter((pack) => pack.id !== packId);
+		this.packs = this.packs.filter((pack) => pack.id !== packId);
 	}
 
 	get allAnnouncements() {
@@ -305,4 +363,28 @@ export function getGlobalContext() {
 		throw new Error('Global context not found');
 	}
 	return data;
+}
+
+function normalizePackPreferences(packs: PackPreference[]) {
+	const enabled = packs
+		.filter((pack) => pack.on)
+		.sort((a, b) => a.order - b.order)
+		.map((pack) => ({
+			id: pack.id,
+			on: true,
+			order: 0,
+		}));
+	const disabled = packs
+		.filter((pack) => !pack.on)
+		.sort((a, b) => a.order - b.order)
+		.map((pack) => ({
+			id: pack.id,
+			on: false,
+			order: 0,
+		}));
+
+	return [...enabled, ...disabled].map((pack, order) => ({
+		...pack,
+		order,
+	}));
 }
