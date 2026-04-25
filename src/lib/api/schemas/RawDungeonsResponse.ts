@@ -9,11 +9,16 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  */
 import type { RawDungeonsResponseDungeonTypes } from './RawDungeonsResponseDungeonTypes';
 import type { RawDungeonsResponsePlayerClasses } from './RawDungeonsResponsePlayerClasses';
+import type { RawDungeonsResponseDungeonJournal } from './RawDungeonsResponseDungeonJournal';
 
 export interface RawDungeonsResponse {
 	/** @nullable */
 	dungeon_types?: RawDungeonsResponseDungeonTypes;
 	/** @nullable */
 	player_classes?: RawDungeonsResponsePlayerClasses;
+	/** @nullable */
+	selected_dungeon_class?: string | null;
 	secrets: bigint;
+	/** @nullable */
+	dungeon_journal?: RawDungeonsResponseDungeonJournal;
 }

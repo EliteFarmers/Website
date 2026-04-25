@@ -7,6 +7,8 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { ProfileBankingTransactionDto } from './ProfileBankingTransactionDto';
+import type { ProfileDetailsDtoCommunityUpgrades } from './ProfileDetailsDtoCommunityUpgrades';
 import type { MemberDetailsDto } from './MemberDetailsDto';
 
 export interface ProfileDetailsDto {
@@ -15,6 +17,13 @@ export interface ProfileDetailsDto {
 	gameMode: string;
 	selected: boolean;
 	bankBalance: number;
+	/** Recent bank transactions only. */
+	bankTransactions: ProfileBankingTransactionDto[];
+	/**
+	 * Profile-level community upgrades state
+	 * @nullable
+	 */
+	communityUpgrades?: ProfileDetailsDtoCommunityUpgrades;
 	deleted: boolean;
 	members: MemberDetailsDto[];
 }

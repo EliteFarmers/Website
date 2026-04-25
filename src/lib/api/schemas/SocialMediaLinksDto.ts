@@ -15,4 +15,8 @@ export interface SocialMediaLinksDto {
 	hypixel?: string | null;
 	/** @nullable */
 	youtube?: string | null;
+	/** @nullable */
+	twitter?: string | null;
+	/** @nullable */
+	instagram?: string | null;
 }

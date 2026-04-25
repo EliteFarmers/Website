@@ -11,6 +11,10 @@ import type { ProfileMemberDataDtoAttributes } from './ProfileMemberDataDtoAttri
 import type { ProfileMemberShardDataDto } from './ProfileMemberShardDataDto';
 import type { ProfileMemberGardenDataDto } from './ProfileMemberGardenDataDto';
 
+/**
+ * Per-skill gear bundles indicating which staged catalog items/pets the player owns across
+all parsed inventories.
+ */
 export interface ProfileMemberDataDto {
 	attributes: ProfileMemberDataDtoAttributes;
 	capturedShards: ProfileMemberShardDataDto[];
