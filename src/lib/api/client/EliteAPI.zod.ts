@@ -3173,6 +3173,124 @@ export const zodMarkNotificationReadParams = zod.object({
 });
 
 /**
+ * @summary Approve a pending managed pack version
+ */
+export const zodApproveManagedResourcePackVersionParams = zod.object({
+	packId: zod.string(),
+});
+
+/**
+ * @summary Assign a PackOwner to a managed pack
+ */
+export const zodAssignManagedResourcePackOwnerParams = zod.object({
+	packId: zod.string(),
+	accountId: zod.string(),
+});
+
+/**
+ * @summary Remove a PackOwner from a managed pack
+ */
+export const zodRemoveManagedResourcePackOwnerParams = zod.object({
+	packId: zod.string(),
+	accountId: zod.string(),
+});
+
+/**
+ * Creates a managed resource pack definition backed by a Modrinth project.
+ * @summary Create a managed resource pack
+ */
+export const zodCreateManagedResourcePackBody = zod.object({
+	slug: zod.string(),
+	displayName: zod.string(),
+	directoryName: zod.string(),
+	modrinthProjectUrl: zod.string(),
+	authors: zod.array(zod.string()).nullish(),
+	notes: zod.string().nullish(),
+});
+
+/**
+ * Downloads the selected Modrinth version into isolated staging and validates it in a fresh renderer.
+ * @summary Download and stage a managed pack version
+ */
+export const zodDownloadManagedResourcePackVersionParams = zod.object({
+	packId: zod.string(),
+	versionId: zod.string(),
+});
+
+/**
+ * Returns the audit history for a managed resource pack.
+ * @summary Get managed resource pack audit logs
+ */
+export const zodGetManagedResourcePackAuditLogsParams = zod.object({
+	packId: zod.number(),
+});
+
+export const zodGetManagedResourcePackAuditLogsQueryParams = zod.object({
+	offset: zod.number(),
+	limit: zod.number(),
+});
+
+/**
+ * Returns paginated resource-pack versions from Modrinth, newest first.
+ * @summary List Modrinth versions for a managed pack
+ */
+export const zodGetManagedResourcePackVersionsParams = zod.object({
+	packId: zod.number(),
+});
+
+export const zodGetManagedResourcePackVersionsQueryParams = zod.object({
+	offset: zod.number(),
+	limit: zod.number(),
+});
+
+/**
+ * Returns the managed resource packs available to the authenticated user.
+ * @summary List managed resource packs
+ */
+export const zodListManagedResourcePacksQueryParams = zod.object({
+	pendingOnly: zod.coerce.boolean<boolean>(),
+});
+
+/**
+ * @summary Reject a pending managed pack version
+ */
+export const zodRejectManagedResourcePackVersionParams = zod.object({
+	packId: zod.number(),
+});
+
+export const zodRejectManagedResourcePackVersionBody = zod.object({
+	reason: zod.string().nullish(),
+});
+
+/**
+ * Marks the currently staged version as pending admin approval.
+ * @summary Submit a staged pack version for approval
+ */
+export const zodSubmitManagedResourcePackVersionParams = zod.object({
+	packId: zod.number(),
+});
+
+export const zodSubmitManagedResourcePackVersionBody = zod.object({
+	submissionNotes: zod.string().nullish(),
+});
+
+/**
+ * @summary Update a managed resource pack
+ */
+export const zodUpdateManagedResourcePackParams = zod.object({
+	packId: zod.number(),
+});
+
+export const zodUpdateManagedResourcePackBody = zod.object({
+	slug: zod.string(),
+	displayName: zod.string(),
+	directoryName: zod.string(),
+	modrinthProjectUrl: zod.string(),
+	authors: zod.array(zod.string()).nullish(),
+	notes: zod.string().nullish(),
+});
+
+/**
  * @summary Get Order Status
  */
 export const zodGetOrderStatusParams = zod.object({

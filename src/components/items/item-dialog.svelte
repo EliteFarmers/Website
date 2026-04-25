@@ -2,8 +2,10 @@
 	import ItemLore from '$comp/items/item-lore.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import type { ItemDto, ResourcePackDto } from '$lib/api';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getInventoryItemDetails } from '$lib/remote';
 	import { getTexturePacks } from '$lib/remote/textures.remote';
+	import { mergeTexturePackCatalog } from '$lib/texture-packs';
 	import * as Dialog from '$ui/dialog';
 	import { Skeleton } from '$ui/skeleton';
 	import type { Snippet } from 'svelte';
@@ -17,7 +19,9 @@
 		subInventory?: Snippet;
 	}
 
+	const gbl = getGlobalContext();
 	const packs = getTexturePacks();
+	const availablePacks = $derived.by(() => mergeTexturePackCatalog(packs.current, gbl.localTexturePackOverrides));
 	const VANILLA_PACK: Pick<ResourcePackDto, 'id' | 'name' | 'authors' | 'downloadUrl'> = {
 		id: 'vanilla',
 		name: 'Vanilla',
@@ -109,9 +113,9 @@
 						{/if}
 					</div>
 				{/if}
-				{#if itemDetails?.ready && itemDetails.current.meta?.packId && packs.current && packs.current.length > 0}
+				{#if itemDetails?.ready && itemDetails.current.meta?.packId}
 					{@const pack =
-						packs.current.find((p) => p.id === itemDetails.current.meta?.packId) ??
+						availablePacks.find((p) => p.id === itemDetails.current.meta?.packId) ??
 						(itemDetails.current.meta.packId === 'vanilla' ? VANILLA_PACK : undefined)}
 					<a
 						class="text-muted-foreground hover:border-border mt-4 mb-4 flex w-fit flex-row items-center gap-2 rounded-md border border-t border-transparent p-2 text-sm"
@@ -119,7 +123,15 @@
 						target="_blank"
 						rel="noopener"
 					>
-						<PackIcon packId={itemDetails.current.meta.packId} class="size-10" />
+						{#if pack && 'iconDataUrl' in pack && typeof pack.iconDataUrl === 'string'}
+							<PackIcon
+								packId={itemDetails.current.meta.packId}
+								packImg={pack.iconDataUrl}
+								class="size-10"
+							/>
+						{:else}
+							<PackIcon packId={itemDetails.current.meta.packId} class="size-10" />
+						{/if}
 						<div class="flex flex-col items-start">
 							<p class="text-xs">Texture provided by</p>
 							<p class="text-primary underline">{pack?.name} by {pack?.authors.join(', ')}</p>

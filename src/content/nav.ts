@@ -8,6 +8,7 @@ import CreditCard from '@lucide/svelte/icons/credit-card';
 import FileArchive from '@lucide/svelte/icons/file-archive';
 import FileText from '@lucide/svelte/icons/file-text';
 import Gift from '@lucide/svelte/icons/gift';
+import Image from '@lucide/svelte/icons/image';
 import Layers from '@lucide/svelte/icons/layers';
 import Megaphone from '@lucide/svelte/icons/megaphone';
 import Package from '@lucide/svelte/icons/package';
@@ -70,7 +71,7 @@ export const PROFILE_NAV_PAGES = [
 export const ADMIN_NAV_PAGES: (Crumb & { exists: (flags: AuthFlags) => boolean })[] = [
 	{
 		icon: ShieldPlus,
-		name: 'Moderators',
+		name: 'Admin Panel',
 		href: '/admin',
 		exists: (flags: AuthFlags) => flags.viewAdminPages,
 	},
@@ -103,6 +104,12 @@ export const ADMIN_NAV_PAGES: (Crumb & { exists: (flags: AuthFlags) => boolean }
 		name: 'Products',
 		href: '/admin/products',
 		exists: (flags: AuthFlags) => flags.artist,
+	},
+	{
+		icon: Image,
+		name: 'Textures',
+		href: '/admin/resourcepacks',
+		exists: (flags: AuthFlags) => flags.packowner,
 	},
 	{
 		icon: CreditCard,

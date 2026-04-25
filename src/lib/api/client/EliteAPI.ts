@@ -120,6 +120,8 @@ import type {
 	GetItemsFromBytesRequest,
 	GetItemsFromBytesResponse,
 	GetLeaderboardParams,
+	GetManagedResourcePackAuditLogsParams,
+	GetManagedResourcePackVersionsParams,
 	GetMedalBracketsGraphParams,
 	GetMedalBracketsParams,
 	GetMultiplePlayerRanks200,
@@ -167,7 +169,11 @@ import type {
 	LeaderboardsResponse,
 	LinkedAccountsDto,
 	ListGuidesParams,
+	ListManagedResourcePacksParams,
 	ListToolSettingsParams,
+	ManagedResourcePackAuditLogResponse,
+	ManagedResourcePackDto,
+	ManagedResourcePackVersionListResponse,
 	MemberFortuneSettingsDto,
 	MinecraftAccountDto,
 	NetworthBreakdown,
@@ -185,6 +191,7 @@ import type {
 	PublicGuildDto,
 	ReconciliationResultDto,
 	RejectGuideRequest,
+	RejectManagedResourcePackVersionRequest,
 	RemoveTestEntitlementParams,
 	ReorderCategoryProductsRequest,
 	ReorderIntRequest,
@@ -211,6 +218,7 @@ import type {
 	SkyblockFiresalesResponse,
 	SkyblockGemShopsResponse,
 	SkyblockItemResponse,
+	SubmitManagedResourcePackVersionRequest,
 	SubmitScoreParams,
 	SubmitScoreResponse,
 	TagResponse,
@@ -235,6 +243,7 @@ import type {
 	UpdateUserSettingsDto,
 	UploadCurrentContestsBody,
 	UploadImageDto,
+	UpsertManagedResourcePackBody,
 	UpsertTebexProductSettingsRequest,
 	UserGuideDto,
 	UserOrderDto,
@@ -10046,6 +10055,567 @@ export const markNotificationRead = async (id: string, options?: RequestInit) =>
 	return customFetch<markNotificationReadResponse>(getMarkNotificationReadUrl(id), {
 		...options,
 		method: 'POST',
+	});
+};
+
+/**
+ * @summary Approve a pending managed pack version
+ */
+export type approveManagedResourcePackVersionResponse200 = {
+	data: ManagedResourcePackDto;
+	status: 200;
+};
+
+export type approveManagedResourcePackVersionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type approveManagedResourcePackVersionResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type approveManagedResourcePackVersionResponseSuccess = approveManagedResourcePackVersionResponse200 & {
+	headers: Headers;
+};
+export type approveManagedResourcePackVersionResponseError = (
+	| approveManagedResourcePackVersionResponse401
+	| approveManagedResourcePackVersionResponse403
+) & {
+	headers: Headers;
+};
+
+export type approveManagedResourcePackVersionResponse =
+	| approveManagedResourcePackVersionResponseSuccess
+	| approveManagedResourcePackVersionResponseError;
+
+export const getApproveManagedResourcePackVersionUrl = (packId: string) => {
+	return `${ELITE_API_URL}/admin/resourcepacks/manage/${packId}/approve`;
+};
+
+export const approveManagedResourcePackVersion = async (packId: string, options?: RequestInit) => {
+	return customFetch<approveManagedResourcePackVersionResponse>(getApproveManagedResourcePackVersionUrl(packId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Assign a PackOwner to a managed pack
+ */
+export type assignManagedResourcePackOwnerResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type assignManagedResourcePackOwnerResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type assignManagedResourcePackOwnerResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type assignManagedResourcePackOwnerResponseSuccess = assignManagedResourcePackOwnerResponse204 & {
+	headers: Headers;
+};
+export type assignManagedResourcePackOwnerResponseError = (
+	| assignManagedResourcePackOwnerResponse401
+	| assignManagedResourcePackOwnerResponse403
+) & {
+	headers: Headers;
+};
+
+export type assignManagedResourcePackOwnerResponse =
+	| assignManagedResourcePackOwnerResponseSuccess
+	| assignManagedResourcePackOwnerResponseError;
+
+export const getAssignManagedResourcePackOwnerUrl = (packId: string, accountId: string) => {
+	return `${ELITE_API_URL}/admin/resourcepacks/manage/${packId}/owners/${accountId}`;
+};
+
+export const assignManagedResourcePackOwner = async (packId: string, accountId: string, options?: RequestInit) => {
+	return customFetch<assignManagedResourcePackOwnerResponse>(
+		getAssignManagedResourcePackOwnerUrl(packId, accountId),
+		{
+			...options,
+			method: 'POST',
+		}
+	);
+};
+
+/**
+ * @summary Remove a PackOwner from a managed pack
+ */
+export type removeManagedResourcePackOwnerResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type removeManagedResourcePackOwnerResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type removeManagedResourcePackOwnerResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type removeManagedResourcePackOwnerResponseSuccess = removeManagedResourcePackOwnerResponse204 & {
+	headers: Headers;
+};
+export type removeManagedResourcePackOwnerResponseError = (
+	| removeManagedResourcePackOwnerResponse401
+	| removeManagedResourcePackOwnerResponse403
+) & {
+	headers: Headers;
+};
+
+export type removeManagedResourcePackOwnerResponse =
+	| removeManagedResourcePackOwnerResponseSuccess
+	| removeManagedResourcePackOwnerResponseError;
+
+export const getRemoveManagedResourcePackOwnerUrl = (packId: string, accountId: string) => {
+	return `${ELITE_API_URL}/admin/resourcepacks/manage/${packId}/owners/${accountId}`;
+};
+
+export const removeManagedResourcePackOwner = async (packId: string, accountId: string, options?: RequestInit) => {
+	return customFetch<removeManagedResourcePackOwnerResponse>(
+		getRemoveManagedResourcePackOwnerUrl(packId, accountId),
+		{
+			...options,
+			method: 'DELETE',
+		}
+	);
+};
+
+/**
+ * Creates a managed resource pack definition backed by a Modrinth project.
+ * @summary Create a managed resource pack
+ */
+export type createManagedResourcePackResponse200 = {
+	data: ManagedResourcePackDto;
+	status: 200;
+};
+
+export type createManagedResourcePackResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type createManagedResourcePackResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type createManagedResourcePackResponseSuccess = createManagedResourcePackResponse200 & {
+	headers: Headers;
+};
+export type createManagedResourcePackResponseError = (
+	| createManagedResourcePackResponse401
+	| createManagedResourcePackResponse403
+) & {
+	headers: Headers;
+};
+
+export type createManagedResourcePackResponse =
+	| createManagedResourcePackResponseSuccess
+	| createManagedResourcePackResponseError;
+
+export const getCreateManagedResourcePackUrl = () => {
+	return `${ELITE_API_URL}/admin/resourcepacks/manage`;
+};
+
+export const createManagedResourcePack = async (
+	upsertManagedResourcePackBody: UpsertManagedResourcePackBody,
+	options?: RequestInit
+) => {
+	return customFetch<createManagedResourcePackResponse>(getCreateManagedResourcePackUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(upsertManagedResourcePackBody),
+	});
+};
+
+/**
+ * Downloads the selected Modrinth version into isolated staging and validates it in a fresh renderer.
+ * @summary Download and stage a managed pack version
+ */
+export type downloadManagedResourcePackVersionResponse200 = {
+	data: ManagedResourcePackDto;
+	status: 200;
+};
+
+export type downloadManagedResourcePackVersionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type downloadManagedResourcePackVersionResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type downloadManagedResourcePackVersionResponseSuccess = downloadManagedResourcePackVersionResponse200 & {
+	headers: Headers;
+};
+export type downloadManagedResourcePackVersionResponseError = (
+	| downloadManagedResourcePackVersionResponse401
+	| downloadManagedResourcePackVersionResponse403
+) & {
+	headers: Headers;
+};
+
+export type downloadManagedResourcePackVersionResponse =
+	| downloadManagedResourcePackVersionResponseSuccess
+	| downloadManagedResourcePackVersionResponseError;
+
+export const getDownloadManagedResourcePackVersionUrl = (packId: string, versionId: string) => {
+	return `${ELITE_API_URL}/resourcepacks/manage/${packId}/versions/${versionId}/download`;
+};
+
+export const downloadManagedResourcePackVersion = async (packId: string, versionId: string, options?: RequestInit) => {
+	return customFetch<downloadManagedResourcePackVersionResponse>(
+		getDownloadManagedResourcePackVersionUrl(packId, versionId),
+		{
+			...options,
+			method: 'POST',
+		}
+	);
+};
+
+/**
+ * Returns the audit history for a managed resource pack.
+ * @summary Get managed resource pack audit logs
+ */
+export type getManagedResourcePackAuditLogsResponse200 = {
+	data: ManagedResourcePackAuditLogResponse;
+	status: 200;
+};
+
+export type getManagedResourcePackAuditLogsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getManagedResourcePackAuditLogsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getManagedResourcePackAuditLogsResponseSuccess = getManagedResourcePackAuditLogsResponse200 & {
+	headers: Headers;
+};
+export type getManagedResourcePackAuditLogsResponseError = (
+	| getManagedResourcePackAuditLogsResponse401
+	| getManagedResourcePackAuditLogsResponse403
+) & {
+	headers: Headers;
+};
+
+export type getManagedResourcePackAuditLogsResponse =
+	| getManagedResourcePackAuditLogsResponseSuccess
+	| getManagedResourcePackAuditLogsResponseError;
+
+export const getGetManagedResourcePackAuditLogsUrl = (
+	packId: string | number,
+	params: GetManagedResourcePackAuditLogsParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resourcepacks/manage/${packId}/audit-logs?${stringifiedParams}`
+		: `${ELITE_API_URL}/resourcepacks/manage/${packId}/audit-logs`;
+};
+
+export const getManagedResourcePackAuditLogs = async (
+	packId: string | number,
+	params: GetManagedResourcePackAuditLogsParams,
+	options?: RequestInit
+) => {
+	return customFetch<getManagedResourcePackAuditLogsResponse>(getGetManagedResourcePackAuditLogsUrl(packId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns paginated resource-pack versions from Modrinth, newest first.
+ * @summary List Modrinth versions for a managed pack
+ */
+export type getManagedResourcePackVersionsResponse200 = {
+	data: ManagedResourcePackVersionListResponse;
+	status: 200;
+};
+
+export type getManagedResourcePackVersionsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getManagedResourcePackVersionsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getManagedResourcePackVersionsResponseSuccess = getManagedResourcePackVersionsResponse200 & {
+	headers: Headers;
+};
+export type getManagedResourcePackVersionsResponseError = (
+	| getManagedResourcePackVersionsResponse401
+	| getManagedResourcePackVersionsResponse403
+) & {
+	headers: Headers;
+};
+
+export type getManagedResourcePackVersionsResponse =
+	| getManagedResourcePackVersionsResponseSuccess
+	| getManagedResourcePackVersionsResponseError;
+
+export const getGetManagedResourcePackVersionsUrl = (
+	packId: string | number,
+	params: GetManagedResourcePackVersionsParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resourcepacks/manage/${packId}/versions?${stringifiedParams}`
+		: `${ELITE_API_URL}/resourcepacks/manage/${packId}/versions`;
+};
+
+export const getManagedResourcePackVersions = async (
+	packId: string | number,
+	params: GetManagedResourcePackVersionsParams,
+	options?: RequestInit
+) => {
+	return customFetch<getManagedResourcePackVersionsResponse>(getGetManagedResourcePackVersionsUrl(packId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns the managed resource packs available to the authenticated user.
+ * @summary List managed resource packs
+ */
+export type listManagedResourcePacksResponse200 = {
+	data: ManagedResourcePackDto[];
+	status: 200;
+};
+
+export type listManagedResourcePacksResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type listManagedResourcePacksResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type listManagedResourcePacksResponseSuccess = listManagedResourcePacksResponse200 & {
+	headers: Headers;
+};
+export type listManagedResourcePacksResponseError = (
+	| listManagedResourcePacksResponse401
+	| listManagedResourcePacksResponse403
+) & {
+	headers: Headers;
+};
+
+export type listManagedResourcePacksResponse =
+	| listManagedResourcePacksResponseSuccess
+	| listManagedResourcePacksResponseError;
+
+export const getListManagedResourcePacksUrl = (params: ListManagedResourcePacksParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resourcepacks/manage?${stringifiedParams}`
+		: `${ELITE_API_URL}/resourcepacks/manage`;
+};
+
+export const listManagedResourcePacks = async (params: ListManagedResourcePacksParams, options?: RequestInit) => {
+	return customFetch<listManagedResourcePacksResponse>(getListManagedResourcePacksUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Reject a pending managed pack version
+ */
+export type rejectManagedResourcePackVersionResponse200 = {
+	data: ManagedResourcePackDto;
+	status: 200;
+};
+
+export type rejectManagedResourcePackVersionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type rejectManagedResourcePackVersionResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type rejectManagedResourcePackVersionResponseSuccess = rejectManagedResourcePackVersionResponse200 & {
+	headers: Headers;
+};
+export type rejectManagedResourcePackVersionResponseError = (
+	| rejectManagedResourcePackVersionResponse401
+	| rejectManagedResourcePackVersionResponse403
+) & {
+	headers: Headers;
+};
+
+export type rejectManagedResourcePackVersionResponse =
+	| rejectManagedResourcePackVersionResponseSuccess
+	| rejectManagedResourcePackVersionResponseError;
+
+export const getRejectManagedResourcePackVersionUrl = (packId: string | number) => {
+	return `${ELITE_API_URL}/admin/resourcepacks/manage/${packId}/reject`;
+};
+
+export const rejectManagedResourcePackVersion = async (
+	packId: string | number,
+	rejectManagedResourcePackVersionRequest: RejectManagedResourcePackVersionRequest,
+	options?: RequestInit
+) => {
+	return customFetch<rejectManagedResourcePackVersionResponse>(getRejectManagedResourcePackVersionUrl(packId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(rejectManagedResourcePackVersionRequest),
+	});
+};
+
+/**
+ * Marks the currently staged version as pending admin approval.
+ * @summary Submit a staged pack version for approval
+ */
+export type submitManagedResourcePackVersionResponse200 = {
+	data: ManagedResourcePackDto;
+	status: 200;
+};
+
+export type submitManagedResourcePackVersionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type submitManagedResourcePackVersionResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type submitManagedResourcePackVersionResponseSuccess = submitManagedResourcePackVersionResponse200 & {
+	headers: Headers;
+};
+export type submitManagedResourcePackVersionResponseError = (
+	| submitManagedResourcePackVersionResponse401
+	| submitManagedResourcePackVersionResponse403
+) & {
+	headers: Headers;
+};
+
+export type submitManagedResourcePackVersionResponse =
+	| submitManagedResourcePackVersionResponseSuccess
+	| submitManagedResourcePackVersionResponseError;
+
+export const getSubmitManagedResourcePackVersionUrl = (packId: string | number) => {
+	return `${ELITE_API_URL}/resourcepacks/manage/${packId}/submit`;
+};
+
+export const submitManagedResourcePackVersion = async (
+	packId: string | number,
+	submitManagedResourcePackVersionRequest: SubmitManagedResourcePackVersionRequest,
+	options?: RequestInit
+) => {
+	return customFetch<submitManagedResourcePackVersionResponse>(getSubmitManagedResourcePackVersionUrl(packId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(submitManagedResourcePackVersionRequest),
+	});
+};
+
+/**
+ * @summary Update a managed resource pack
+ */
+export type updateManagedResourcePackResponse200 = {
+	data: ManagedResourcePackDto;
+	status: 200;
+};
+
+export type updateManagedResourcePackResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type updateManagedResourcePackResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type updateManagedResourcePackResponseSuccess = updateManagedResourcePackResponse200 & {
+	headers: Headers;
+};
+export type updateManagedResourcePackResponseError = (
+	| updateManagedResourcePackResponse401
+	| updateManagedResourcePackResponse403
+) & {
+	headers: Headers;
+};
+
+export type updateManagedResourcePackResponse =
+	| updateManagedResourcePackResponseSuccess
+	| updateManagedResourcePackResponseError;
+
+export const getUpdateManagedResourcePackUrl = (packId: string | number) => {
+	return `${ELITE_API_URL}/admin/resourcepacks/manage/${packId}`;
+};
+
+export const updateManagedResourcePack = async (
+	packId: string | number,
+	upsertManagedResourcePackBody: UpsertManagedResourcePackBody,
+	options?: RequestInit
+) => {
+	return customFetch<updateManagedResourcePackResponse>(getUpdateManagedResourcePackUrl(packId), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(upsertManagedResourcePackBody),
 	});
 };
 

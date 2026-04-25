@@ -4,12 +4,15 @@
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getTexturePacks } from '$lib/remote/textures.remote';
 	import { getThemeContext, themes } from '$lib/stores/themes.svelte';
+	import { mergeTexturePackCatalog } from '$lib/texture-packs';
 	import { cn } from '$lib/utils';
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import Check from '@lucide/svelte/icons/check';
 	import GripHorizontal from '@lucide/svelte/icons/grip-horizontal';
 	import PaintBrush from '@lucide/svelte/icons/paintbrush';
+	import Trash_2 from '@lucide/svelte/icons/trash-2';
+	import X from '@lucide/svelte/icons/x';
 	import { dragHandle, dragHandleZone, type DndEvent } from 'svelte-dnd-action';
 	import ThemeOption from './theme-option.svelte';
 
@@ -17,6 +20,7 @@
 	const gbl = getGlobalContext();
 
 	const packs = getTexturePacks();
+	const availablePacks = $derived.by(() => mergeTexturePackCatalog(packs.current, gbl.localTexturePackOverrides));
 
 	type PackItem = { id: string };
 	type PackZone = 'enabled' | 'available';
@@ -31,7 +35,7 @@
 	}
 
 	function buildPackItems(enabled: boolean) {
-		return [...(packs.current ?? [])]
+		return [...availablePacks]
 			.sort(comparePacks)
 			.filter((pack) => (gbl.packs.find((p) => p.id === pack.id)?.on ?? false) === enabled)
 			.map((pack) => ({ id: pack.id }));
@@ -77,6 +81,14 @@
 		updateZone(zone, e.detail.items);
 		syncPacks();
 	}
+
+	function isPreviewPack(packId: string) {
+		return gbl.hasLocalTexturePackOverride(packId);
+	}
+
+	function removePreviewPack(packId: string) {
+		gbl.removeLocalTexturePackOverride(packId);
+	}
 </script>
 
 <DropdownMenu.Root>
@@ -108,29 +120,43 @@
 			</button>
 			<div class="flex w-full flex-col items-center border-t pt-1">
 				<span class="w-full py-1 text-left text-lg font-semibold">Texture Packs</span>
-				{#if packs.current}
+				{#if availablePacks.length}
 					<div class="flex w-full flex-col gap-2">
 						<div class="flex flex-col gap-1">
 							<span class="text-muted-foreground text-sm"
 								>Drag packs here to apply them. Higher packs take priority.</span
 							>
 							<div
-								use:dragHandleZone={{ items: enabledItems, morphDisabled: true }}
+								use:dragHandleZone={{
+									items: enabledItems,
+									morphDisabled: true,
+									useCursorForDetection: true,
+								}}
 								onconsider={(e) => onconsider('enabled', e)}
 								onfinalize={(e) => onfinalize('enabled', e)}
 								class="flex min-h-16 flex-col gap-1 rounded-md border-2 border-dashed p-2"
 							>
 								{#each enabledItems as item, i (item.id)}
-									{@const pack = packs.current?.find((p) => p.id === item.id)}
+									{@const pack = availablePacks.find((p) => p.id === item.id)}
 									<div class="flex flex-row items-center justify-between rounded-md border p-1 px-2">
 										<div class="flex w-full flex-row items-center gap-1">
-											<div
-												use:dragHandle
-												class="cursor-move rounded-md p-2"
-												aria-label="Drag to reorder"
-											>
-												<GripHorizontal size={16} />
-											</div>
+											{#if isPreviewPack(item.id)}
+												<button
+													type="button"
+													class="text-destructive hover:text-destructive/80 inline-flex items-center gap-1 p-2 text-sm whitespace-nowrap"
+													onclick={() => removePreviewPack(item.id)}
+												>
+													<Trash_2 class="size-4" />
+												</button>
+											{:else}
+												<div
+													use:dragHandle
+													class="cursor-move rounded-md p-2"
+													aria-label="Drag to reorder"
+												>
+													<GripHorizontal size={16} />
+												</div>
+											{/if}
 											<a
 												class="flex flex-1 flex-row items-center gap-1 hover:underline"
 												href={pack?.downloadUrl}
@@ -150,11 +176,13 @@
 												</div>
 											</a>
 										</div>
-										{#if i === 0}
-											<span class="text-sm whitespace-nowrap"
-												>Top Priority <Check class="inline-block size-4" /></span
-											>
-										{/if}
+										<div class="ml-3 flex items-center gap-2">
+											{#if i === 0}
+												<span class="text-sm whitespace-nowrap"
+													>Top Priority <Check class="inline-block size-4" /></span
+												>
+											{/if}
+										</div>
 									</div>
 								{/each}
 								{#if enabledItems.length === 0}
@@ -175,19 +203,24 @@
 								>
 							</div>
 							<div
-								use:dragHandleZone={{ items: availableItems, morphDisabled: true }}
+								use:dragHandleZone={{
+									items: availableItems,
+									morphDisabled: true,
+									useCursorForDetection: true,
+								}}
 								onconsider={(e) => onconsider('available', e)}
 								onfinalize={(e) => onfinalize('available', e)}
-								class="flex min-h-16 flex-wrap gap-1 rounded-md border-2 border-dashed p-2"
+								class="flex min-h-16 w-full flex-wrap gap-1 rounded-md border-2 border-dashed p-2"
 							>
 								{#each availableItems as item (item.id)}
-									{@const pack = packs.current?.find((p) => p.id === item.id)}
-									<div class="flex flex-row items-center justify-between rounded-md border">
+									{@const pack = availablePacks.find((p) => p.id === item.id)}
+									<div class="flex flex-col items-center gap-1 rounded-md border p-1">
 										<div class="flex flex-row items-center gap-1">
 											<div
 												use:dragHandle
 												class="cursor-move rounded-md p-1"
 												aria-label="Drag to enable {pack?.name ?? 'pack'}"
+												title={pack?.name}
 											>
 												<PackIcon
 													packId={item.id}
@@ -196,6 +229,16 @@
 												/>
 											</div>
 										</div>
+										{#if isPreviewPack(item.id)}
+											<button
+												type="button"
+												class="text-destructive hover:text-destructive/80 inline-flex items-center gap-1 px-1 text-xs"
+												onclick={() => removePreviewPack(item.id)}
+											>
+												<X class="size-3" />
+												Remove preview
+											</button>
+										{/if}
 									</div>
 								{/each}
 								{#if availableItems.length === 0}

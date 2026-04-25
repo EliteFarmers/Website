@@ -17,6 +17,7 @@ export interface AuthFlags {
 	support: boolean;
 	artist: boolean;
 	wiki: boolean;
+	packowner: boolean;
 	viewAdminPages: boolean;
 }
 
@@ -104,6 +105,7 @@ function setAuthFlags(session?: AuthSessionDto): AuthSession | undefined {
 	const includesSupport = session.roles.includes('Support');
 	const includesWiki = session.roles.includes('Wiki');
 	const includesArtist = session.roles.includes('Artist');
+	const includesPackOwner = session.roles.includes('PackOwner');
 
 	newSession.perms = {
 		admin: includesAdmin,
@@ -111,7 +113,8 @@ function setAuthFlags(session?: AuthSessionDto): AuthSession | undefined {
 		support: includesSupport || includesModerator || includesAdmin,
 		wiki: includesWiki || includesSupport || includesModerator || includesAdmin,
 		artist: includesArtist || includesAdmin,
-		viewAdminPages: includesAdmin || includesModerator || includesArtist,
+		packowner: includesPackOwner || includesAdmin,
+		viewAdminPages: includesAdmin || includesModerator || includesArtist || includesSupport || includesPackOwner,
 	};
 
 	return newSession;
