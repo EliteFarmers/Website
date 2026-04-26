@@ -70,7 +70,7 @@ test('Wheat fortune test', () => {
 		{
 			name: 'Farming Tool',
 			current: 0,
-			max: 465,
+			max: 475,
 			ratio: 0,
 		},
 		{
@@ -139,7 +139,7 @@ test('Potato fortune test', () => {
 		{
 			name: 'Farming Tool',
 			current: 0,
-			max: 465,
+			max: 475,
 			ratio: 0,
 		},
 		{
@@ -189,7 +189,7 @@ test('Nether Wart fortune test', () => {
 		{
 			name: 'Farming Tool',
 			current: 0,
-			max: 465,
+			max: 475,
 			ratio: 0,
 		},
 		{
@@ -248,8 +248,8 @@ test('Carrot fortune test', () => {
 		{
 			name: 'Farming Tool',
 			current: 4,
-			max: 465,
-			ratio: 4 / 465,
+			max: 475,
+			ratio: 4 / 475,
 		},
 		{
 			name: 'Exportable Crop',
@@ -304,7 +304,7 @@ test('Melon fortune test', () => {
 		{
 			name: 'Farming Tool',
 			current: 0,
-			max: 465,
+			max: 475,
 			ratio: 0,
 		},
 		{

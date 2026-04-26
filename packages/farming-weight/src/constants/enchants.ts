@@ -41,7 +41,7 @@ export interface FarmingEnchant {
 const createTurboEnchant = (stat: Stat) => ({
 	appliesTo: [ReforgeTarget.FarmingTool] as const,
 	minLevel: 1,
-	maxLevel: 5,
+	maxLevel: 7,
 	levels: {
 		1: {
 			stats: {
@@ -66,6 +66,28 @@ const createTurboEnchant = (stat: Stat) => ({
 		5: {
 			stats: {
 				[stat]: 25,
+			},
+		},
+		6: {
+			stats: {
+				[stat]: 30,
+			},
+			procurement: EnchantTierProcurement.UpgradeItem,
+			cost: {
+				items: {
+					TURBO_GOURD: 1,
+				},
+			},
+		},
+		7: {
+			stats: {
+				[stat]: 35,
+			},
+			procurement: EnchantTierProcurement.UpgradeItem,
+			cost: {
+				items: {
+					ENCHANTED_TURBO_GOURD: 1,
+				},
 			},
 		},
 	},

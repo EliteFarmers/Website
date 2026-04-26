@@ -142,8 +142,8 @@ test('Test tool fortune sources', () => {
 		{
 			name: 'Turbo-Warts',
 			current: 25,
-			max: 25,
-			ratio: 1,
+			max: 35,
+			ratio: 25 / 35,
 		},
 		{
 			name: 'Crop Fever',
@@ -168,7 +168,69 @@ test('Test tool fortune sources', () => {
 	expect(tool.fortune).toBe(183);
 
 	expect(tool.getProgress().reduce((acc, curr) => acc + curr.current, 0)).toBe(183);
-	expect(tool.getProgress().reduce((acc, curr) => acc + curr.max, 0)).toBe(465);
+	expect(tool.getProgress().reduce((acc, curr) => acc + curr.max, 0)).toBe(475);
+});
+
+test('Turbo enchants upgrade to gourd-backed levels 6 and 7', () => {
+	const level5Tool = new FarmingTool(netherwartHoe);
+	const level6 = level5Tool
+		.getUpgrades({ stat: Stat.NetherWartFortune })
+		.find((u) => u.title === 'Turbo-Warts 6');
+
+	expect(level6).toMatchObject({
+		increase: 5,
+		action: UpgradeAction.LevelUp,
+		category: UpgradeCategory.Enchant,
+		cost: {
+			items: {
+				TURBO_GOURD: 1,
+			},
+		},
+		meta: {
+			type: 'enchant',
+			key: 'turbo_warts',
+			value: 6,
+		},
+	});
+	expect(level6?.stats?.[Stat.NetherWartFortune]).toBe(5);
+
+	const level6Tool = new FarmingTool({
+		...netherwartHoe,
+		enchantments: {
+			...netherwartHoe.enchantments,
+			turbo_warts: 6,
+		},
+	});
+	const level7 = level6Tool
+		.getUpgrades({ stat: Stat.NetherWartFortune })
+		.find((u) => u.title === 'Turbo-Warts 7');
+
+	expect(level7).toMatchObject({
+		increase: 5,
+		action: UpgradeAction.LevelUp,
+		category: UpgradeCategory.Enchant,
+		cost: {
+			items: {
+				ENCHANTED_TURBO_GOURD: 1,
+			},
+		},
+		meta: {
+			type: 'enchant',
+			key: 'turbo_warts',
+			value: 7,
+		},
+	});
+	expect(level7?.stats?.[Stat.NetherWartFortune]).toBe(5);
+	expect(level6Tool.getStat(Stat.NetherWartFortune)).toBe(level5Tool.getStat(Stat.NetherWartFortune) + 5);
+
+	const level7Tool = new FarmingTool({
+		...netherwartHoe,
+		enchantments: {
+			...netherwartHoe.enchantments,
+			turbo_warts: 7,
+		},
+	});
+	expect(level7Tool.getStat(Stat.NetherWartFortune)).toBe(level5Tool.getStat(Stat.NetherWartFortune) + 10);
 });
 
 const t1WheatHoe = {
@@ -284,7 +346,7 @@ test('Tier 1 Wheat Hoe', () => {
 		{
 			name: 'Turbo-Wheat',
 			current: 0,
-			max: 25,
+			max: 35,
 			ratio: 0,
 		},
 		{
@@ -304,7 +366,7 @@ test('Tier 1 Wheat Hoe', () => {
 		},
 	]);
 
-	expect(progress.reduce((acc, curr) => acc + curr.max, 0)).toBe(465);
+	expect(progress.reduce((acc, curr) => acc + curr.max, 0)).toBe(475);
 });
 
 test('Tier 1 Wheat Hoe Upgrades', () => {
