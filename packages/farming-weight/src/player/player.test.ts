@@ -283,3 +283,33 @@ test('Sunset enchantment grants daytime Overbloom and affects player rate calcul
 	expect(moonflowerRates.rareItemBonus).toBe(0);
 	expect(moonflowerRates.rareItemBonusBreakdown.Overbloom).toBeUndefined();
 });
+
+test('Feast enchantment grants tool Overbloom for player rate calculations', () => {
+	const player = new FarmingPlayer({
+		tools: [
+			{
+				id: 293,
+				count: 1,
+				skyblockId: 'THEORETICAL_HOE_WARTS_3',
+				uuid: 'feast-nether-wart-hoe',
+				name: '§6Newton Nether Warts Hoe',
+				lore: [],
+				enchantments: {
+					feast: 5,
+				},
+				attributes: {},
+			},
+		],
+		attributes: {
+			wart_eater: 500,
+		},
+	});
+
+	const tool = player.getBestTool(Crop.NetherWart);
+	expect(tool?.getStat(Stat.Overbloom, Crop.NetherWart)).toBe(2.5);
+
+	const rates = player.getRates(Crop.NetherWart, 100_000);
+	expect(rates.rareItemBonus).toBe(0.025);
+	expect(rates.rareItemBonusBreakdown.Overbloom).toBe(0.025);
+	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.025, 2);
+});

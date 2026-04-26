@@ -294,7 +294,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	pesterminator: {
 		name: 'Pesterminator',
 		appliesTo: [ReforgeTarget.Armor],
-		wiki: 'https://w.elitesb.gg/Pesterminator_Enchantment',
+		wiki: 'https://w.elitesb.gg/Pesterminator',
 		levelRequirement: 10,
 		minLevel: 1,
 		maxLevel: 6,
@@ -347,7 +347,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		name: 'Sunset',
 		id: 'ENCHANTMENT_ULTIMATE_SUNSET',
 		appliesTo: [ReforgeTarget.Armor],
-		wiki: 'https://w.elitesb.gg/Sunset_Enchantment',
+		wiki: 'https://w.elitesb.gg/Sunset',
 		minLevel: 1,
 		maxLevel: 5,
 		levels: {
@@ -497,6 +497,41 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Sunflower,
 		...createTurboEnchant(Stat.SunflowerFortune),
+	},
+	feast: {
+		name: 'Feast',
+		id: 'ENCHANTMENT_FEAST',
+		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		wiki: 'https://w.elitesb.gg/Feast',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				stats: {
+					[Stat.Overbloom]: 0.5,
+				},
+			},
+			2: {
+				stats: {
+					[Stat.Overbloom]: 1,
+				},
+			},
+			3: {
+				stats: {
+					[Stat.Overbloom]: 1.5,
+				},
+			},
+			4: {
+				stats: {
+					[Stat.Overbloom]: 2,
+				},
+			},
+			5: {
+				stats: {
+					[Stat.Overbloom]: 2.5,
+				},
+			},
+		},
 	},
 	ultimate_crop_fever: {
 		name: 'Crop Fever',

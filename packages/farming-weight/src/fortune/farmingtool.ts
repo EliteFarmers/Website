@@ -242,11 +242,12 @@ export class FarmingTool extends UpgradeableBase {
 		this.fortune = this.getFortune();
 	}
 
-	getStat(stat: Stat): number {
+	getStat(stat: Stat, selectedCrop?: Crop): number {
 		let sum = 0;
+		const crops = selectedCrop && this.crops.includes(selectedCrop) ? [selectedCrop] : this.crops;
 
 		// Tool level gives 4 crop-specific fortune per level
-		for (const crop of this.crops) {
+		for (const crop of crops) {
 			if (stat === CROP_INFO[crop]?.fortuneType) {
 				sum += this.level * 4;
 				break;
@@ -277,7 +278,7 @@ export class FarmingTool extends UpgradeableBase {
 			if (!enchantment || !level) continue;
 			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
-			for (const crop of this.crops) {
+			for (const crop of crops) {
 				const val = getStatFromEnchant(level, enchantment, stat, this.options, crop);
 
 				sum += val;
