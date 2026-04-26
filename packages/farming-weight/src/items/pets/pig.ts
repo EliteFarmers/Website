@@ -1,6 +1,7 @@
 import { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
+import { getBestiaryLevel } from '../../util/bestiary.js';
 import { FarmingPetDefinition } from '../base-pet.js';
 import type { FarmingPetAbility } from '../types/pets.js';
 
@@ -23,28 +24,33 @@ export class PigPet extends FarmingPetDefinition {
 			value: 0.25,
 			type: FarmingPetStatType.Base,
 		},
+        [Stat.PotatoFortune]: {
+            name: 'Potato Fortune',
+            value: 0.2,
+            type: FarmingPetStatType.Base,
+        },
 	};
 
 	override abilities: FarmingPetAbility[] = [
-		{
-			name: 'Trample',
-			exists: (_, pet) => pet.rarity === Rarity.Legendary,
-			computed: () => ({}), // No base stats, uses lateComputed
-			lateComputed: (ctx) => {
-				// Apply 0.25x multiplier (75% reduction) to total fortune
-				const reduction = -ctx.baseFortune * 0.75;
+        {
+			name: 'Shining Stampede',
+			exists: (_, pet) => pet.rarity === Rarity.Rare || pet.rarity === Rarity.Epic || pet.rarity === Rarity.Legendary,
+			computed: (ctx, pet) => {
+                const shinyPigKills = ctx.options.bestiaryKills?.['shiny_pig_1'] ?? 0;
+                if (shinyPigKills === 0) {
+                    return {};
+                }
 
-				return {
-					multiplier: 0.25,
-					breakdown: {
-						'Trample (75% Reduction)': {
-							value: reduction,
-							stat: Stat.FarmingFortune,
-							factor: 0.25,
-						},
-					},
-				};
-			},
-		},
+                const bestiaryLevel = getBestiaryLevel(shinyPigKills, 5, 15);
+
+                return {
+                    [Stat.PotatoFortune]: {
+                        name: 'Shining Stampede',
+                        value: (pet.rarity === Rarity.Rare ? 0.04 : 0.05) * pet.level * bestiaryLevel,
+                        type: FarmingPetStatType.Ability,
+                    },
+                };
+            },
+		}
 	];
 }

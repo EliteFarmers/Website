@@ -1,5 +1,4 @@
 import { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
-import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import type { FarmingPet } from '../../fortune/farmingpet.js';
 import type { FarmingPlayer } from '../../player/player.js';
@@ -85,7 +84,7 @@ export class RoseDragonPet extends FarmingPetDefinition {
 		{
 			name: 'Symbiosis',
 			exists: (_, pet) => pet.level >= 200,
-			computed: () => ({}), // No base stats, uses lateComputed
+			computed: () => ({}),
 			lateComputed: (ctx) => {
 				const player = ctx.player as FarmingPlayer | undefined;
 				const pets = player?.pets ?? [];
@@ -96,9 +95,8 @@ export class RoseDragonPet extends FarmingPetDefinition {
 						continue;
 					}
 
-					// FarmingPet instances have level and info with maxRarity
-					const maxRarity = pet.info?.maxRarity ?? Rarity.Legendary;
-					if (pet.level >= 100 && maxRarity === pet.rarity) {
+                    // Max rarity not checked here as Hypixel apparently doesn't look for it
+					if (pet.level >= 100) {
 						maxedPets[pet.type] = 1;
 					}
 				}
