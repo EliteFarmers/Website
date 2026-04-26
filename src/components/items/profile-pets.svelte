@@ -107,7 +107,7 @@
 									{rarity}
 								</p>
 								<div class="grid grid-cols-1 gap-2 md:grid-cols-2">
-									{#each pets as pet (pet.uuid ?? `${pet.type}-${pet.exp}`)}
+									{#each pets as pet (pet.uuid ?? pet)}
 										<ProfilePetCard
 											{pet}
 											petName={formatPetName(pet.type)}
