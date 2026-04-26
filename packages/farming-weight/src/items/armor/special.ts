@@ -144,7 +144,7 @@ export class LanternHelmet extends BaseItem {
 
 	override perLevelStats = {
 		skill: Skill.Farming,
-		appliesTo: [ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		stats: {
 			[Stat.FarmingFortune]: 1,
 		},

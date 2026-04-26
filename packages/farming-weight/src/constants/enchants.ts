@@ -39,7 +39,7 @@ export interface FarmingEnchant {
 }
 
 const createTurboEnchant = (stat: Stat) => ({
-	appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe] as const,
+	appliesTo: [ReforgeTarget.FarmingTool] as const,
 	minLevel: 1,
 	maxLevel: 5,
 	levels: {
@@ -88,7 +88,7 @@ const dedicationEnchantmentComputedStats = (multiplier: number, options: PlayerO
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	harvesting: {
 		name: 'Harvesting',
-		appliesTo: [ReforgeTarget.Hoe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		wiki: 'https://w.elitesb.gg/Enchantments#Harvesting',
 		levelRequirement: 2,
 		minLevel: 1,
@@ -129,7 +129,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 	cultivating: {
 		name: 'Cultivating',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		wiki: 'https://w.elitesb.gg/Enchantments#Cultivating',
 		minLevel: 1,
 		maxLevel: 10,
@@ -210,7 +210,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 	dedication: {
 		name: 'Dedication',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		wiki: 'https://w.elitesb.gg/Enchantments#Dedication',
 		minLevel: 1,
 		maxLevel: 4,
@@ -246,49 +246,6 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			[Stat.SunflowerFortune]: 92,
 			[Stat.MoonflowerFortune]: 92,
 			[Stat.WildRoseFortune]: 92,
-		},
-	},
-	sunder: {
-		name: 'Sunder',
-		appliesTo: [ReforgeTarget.Axe],
-		wiki: 'https://w.elitesb.gg/Enchantments#Sunder',
-		minLevel: 1,
-		maxLevel: 6,
-		levels: {
-			1: {
-				stats: {
-					[Stat.FarmingFortune]: 12.5,
-				},
-				cost: {
-					copper: 10,
-				},
-			},
-			2: {
-				stats: {
-					[Stat.FarmingFortune]: 25,
-				},
-			},
-			3: {
-				stats: {
-					[Stat.FarmingFortune]: 37.5,
-				},
-			},
-			4: {
-				stats: {
-					[Stat.FarmingFortune]: 50,
-				},
-			},
-			5: {
-				stats: {
-					[Stat.FarmingFortune]: 62.5,
-				},
-			},
-			6: {
-				stats: {
-					[Stat.FarmingFortune]: 75,
-				},
-				procurement: EnchantTierProcurement.Loot,
-			},
 		},
 	},
 	pesterminator: {
@@ -501,7 +458,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	feast: {
 		name: 'Feast',
 		id: 'ENCHANTMENT_FEAST',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		wiki: 'https://w.elitesb.gg/Feast',
 		minLevel: 1,
 		maxLevel: 5,
@@ -537,7 +494,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		name: 'Crop Fever',
 		id: 'ENCHANTMENT_ULTIMATE_CROP_FEVER',
 		alwaysInclude: true,
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		wiki: 'https://w.elitesb.gg/Crop_Fever',
 		minLevel: 1,
 		maxLevel: 5,

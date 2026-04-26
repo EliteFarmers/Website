@@ -35,6 +35,7 @@ export function compareRarity(a: Rarity | string, b: Rarity | string) {
 }
 
 export enum ReforgeTarget {
+	FarmingTool = 'Farming Tool',
 	Hoe = 'Hoe',
 	Axe = 'Axe',
 	Armor = 'Armor',
@@ -68,7 +69,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	bountiful: {
 		name: 'Bountiful',
 		wiki: 'https://w.elitesb.gg/Golden_Ball',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		priority: true,
 		stone: {
 			name: 'Golden Ball',
@@ -123,7 +124,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	blessed: {
 		name: 'Blessed',
 		wiki: 'https://w.elitesb.gg/Blessed_Fruit',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		stone: {
 			name: 'Blessed Fruit',
 			id: 'BLESSED_FRUIT',
@@ -183,7 +184,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	earthy: {
 		name: 'Earthy',
 		wiki: 'https://w.elitesb.gg/Large_Walnut',
-		appliesTo: [ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		stone: {
 			name: 'Large Walnut',
 			id: 'LARGE_WALNUT',
@@ -237,7 +238,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	green_thumb: {
 		name: 'Green Thumb',
 		wiki: 'https://w.elitesb.gg/Reforging#Tool',
-		appliesTo: [ReforgeTarget.Hoe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		tiers: {
 			[Rarity.Common]: {
 				stats: {
@@ -293,7 +294,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	robust: {
 		name: 'Robust',
 		wiki: 'https://w.elitesb.gg/Reforging#Tool',
-		appliesTo: [ReforgeTarget.Hoe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		tiers: {
 			[Rarity.Common]: {
 				stats: {

@@ -439,7 +439,7 @@ test('Wild Rose Hoe Upgrades', () => {
 	expect(selfUpgrade).toBeDefined();
 });
 
-const maxedBountifulAxe = {
+const maxedBountifulFarmingTool = {
 	id: 258,
 	count: 1,
 	skyblockId: 'COCO_CHOPPER_3',
@@ -478,8 +478,8 @@ const maxedBountifulAxe = {
 	gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT', PERIDOT_2: 'PERFECT', PERIDOT_3: 'PERFECT' },
 };
 
-test('Maxed Bountiful Axe should not suggest Earthy reforge', () => {
-	const tool = new FarmingTool(maxedBountifulAxe);
+test('Maxed Bountiful farming tool should not suggest Earthy reforge', () => {
+	const tool = new FarmingTool(maxedBountifulFarmingTool);
 
 	const reforges = tool.getUpgrades().filter((u) => u.category === 'reforge');
 
@@ -494,13 +494,13 @@ test('Maxed Bountiful Axe should not suggest Earthy reforge', () => {
 	expect(reforges).toHaveLength(0);
 });
 
-test('Earthy Axe should recommend switching to Bountiful', () => {
-	const earthyAxe = {
-		...maxedBountifulAxe,
-		attributes: { ...maxedBountifulAxe.attributes, modifier: 'earthy' },
+test('Earthy farming tool should recommend switching to Bountiful', () => {
+	const earthyTool = {
+		...maxedBountifulFarmingTool,
+		attributes: { ...maxedBountifulFarmingTool.attributes, modifier: 'earthy' },
 	};
 
-	const tool = new FarmingTool(earthyAxe);
+	const tool = new FarmingTool(earthyTool);
 	const reforges = tool.getUpgrades().filter((u) => u.category === 'reforge');
 
 	const bountiful = reforges.find((u) => u.title === 'Reforge to Bountiful');
@@ -511,168 +511,6 @@ test('Earthy Axe should recommend switching to Bountiful', () => {
 	expect(bountiful?.increase).toBe(-3); // Shows the fortune decrease
 	// Blessed should not be suggested
 	expect(blessed).toBeUndefined();
-});
-
-test('Axed perk should be detected from perks string or number', () => {
-	const axe = {
-		id: 258,
-		count: 1,
-		skyblockId: 'COCO_CHOPPER_3',
-		uuid: 'test-axe-uuid',
-		name: '§6Cocoa Chopper',
-		lore: ['§7Farming Fortune: §a+100', '', '§6§lLEGENDARY AXE'],
-		enchantments: {},
-		attributes: {
-			modifier: 'bountiful',
-			farming_for_dummies_count: '5',
-		},
-	};
-
-	// Test with string "1"
-	const toolWithAxedString = new FarmingTool(axe, {
-		perks: {
-			axed: '1',
-		},
-	});
-
-	expect(toolWithAxedString.hasAxedPerk()).toBe(true);
-	expect(toolWithAxedString.fortuneBreakdown['Axed Perk']).toBeGreaterThan(0);
-
-	const progressString = toolWithAxedString.getProgress();
-	const axedProgressString = progressString.find((p) => p.name === 'Axed Perk');
-	expect(axedProgressString).toBeDefined();
-	expect(axedProgressString?.current).toBeGreaterThan(0);
-
-	// Test with number 1
-	const toolWithAxedNumber = new FarmingTool(axe, {
-		perks: {
-			axed: 1,
-		},
-	});
-
-	expect(toolWithAxedNumber.hasAxedPerk()).toBe(true);
-	expect(toolWithAxedNumber.fortuneBreakdown['Axed Perk']).toBeGreaterThan(0);
-
-	const progressNumber = toolWithAxedNumber.getProgress();
-	const axedProgressNumber = progressNumber.find((p) => p.name === 'Axed Perk');
-	expect(axedProgressNumber).toBeDefined();
-	expect(axedProgressNumber?.current).toBeGreaterThan(0);
-
-	// Without the perk
-	const toolWithoutAxed = new FarmingTool(axe, {
-		perks: {},
-	});
-
-	expect(toolWithoutAxed.hasAxedPerk()).toBe(false);
-	expect(toolWithoutAxed.fortuneBreakdown['Axed Perk']).toBeUndefined();
-
-	const progressWithout = toolWithoutAxed.getProgress();
-	const axedProgressWithout = progressWithout.find((p) => p.name === 'Axed Perk');
-	expect(axedProgressWithout).toBeDefined(); // Still present as an available upgrade
-	expect(axedProgressWithout?.current).toBe(0); // But not active
-	expect(axedProgressWithout?.upgrades).toBeDefined();
-
-	// With number 0
-	const toolWithZero = new FarmingTool(axe, {
-		perks: {
-			axed: 0,
-		},
-	});
-
-	expect(toolWithZero.hasAxedPerk()).toBe(false);
-	expect(toolWithZero.fortuneBreakdown['Axed Perk']).toBeUndefined();
-
-	// With null perk
-	const toolWithNull = new FarmingTool(axe, {
-		perks: {
-			axed: null,
-		},
-	});
-
-	expect(toolWithNull.hasAxedPerk()).toBe(false);
-	expect(toolWithNull.fortuneBreakdown['Axed Perk']).toBeUndefined();
-});
-
-test('Axed perk should not be applied twice in progress', () => {
-	const axe = {
-		id: 258,
-		count: 1,
-		skyblockId: 'COCO_CHOPPER_3',
-		uuid: 'test-axe-uuid',
-		name: '§6Cocoa Chopper',
-		lore: ['§7Farming Fortune: §a+100', '', '§6§lLEGENDARY AXE'],
-		enchantments: {},
-		attributes: {
-			modifier: 'bountiful',
-			farming_for_dummies_count: '5',
-		},
-	};
-
-	const toolWithAxed = new FarmingTool(axe, {
-		perks: {
-			axed: 1,
-		},
-	});
-
-	// Get the base fortune without progress calculation
-	const baseFortune = toolWithAxed.fortune;
-	expect(baseFortune).toBeGreaterThan(0);
-
-	// Get progress which should recalculate fortune
-	const progress = toolWithAxed.getProgress();
-	const axedProgress = progress.find((p) => p.name === 'Axed Perk');
-
-	// The Axed Perk in progress should be 2% of other sources
-	const otherSourcesSum = progress.filter((p) => p.name !== 'Axed Perk').reduce((acc, p) => acc + p.current, 0);
-	const expectedAxed = otherSourcesSum * 0.02;
-
-	expect(axedProgress?.current).toBeCloseTo(expectedAxed, 1);
-
-	// The total fortune should equal the sum of progress items
-	const totalFromProgress = progress.reduce((acc, p) => acc + p.current, 0);
-	expect(baseFortune).toBeCloseTo(totalFromProgress, 1);
-});
-
-test('Axed perk fortune should match between breakdown and progress', () => {
-	const axe = {
-		id: 258,
-		count: 1,
-		skyblockId: 'COCO_CHOPPER_3',
-		uuid: 'test-axe-uuid',
-		name: '§6Cocoa Chopper',
-		lore: [],
-		enchantments: {
-			dedication: 4,
-		},
-		attributes: {
-			modifier: 'bountiful',
-			farming_for_dummies_count: '5',
-		},
-		gems: {},
-	};
-
-	const tool = new FarmingTool(axe, {
-		perks: {
-			axed: 1,
-		},
-	});
-
-	// Check breakdown
-	const breakdownAxed = tool.fortuneBreakdown['Axed Perk'] ?? 0;
-
-	// Get progress
-	const progress = tool.getProgress();
-	const axedFromProgress = progress.find((p) => p.name === 'Axed Perk')?.current ?? 0;
-
-	expect(Math.abs(breakdownAxed - axedFromProgress)).toBeLessThan(0.1);
-
-	// Verify total fortune equals sum of progress
-	const totalFromProgress = progress.reduce((acc, p) => acc + p.current, 0);
-	expect(Math.abs(tool.fortune - totalFromProgress)).toBeLessThan(0.01);
-
-	// Check that Axed Perk only appears once in the progress array
-	const axedPerkCount = progress.filter((p) => p.name === 'Axed Perk').length;
-	expect(axedPerkCount).toBe(1);
 });
 
 test('alwaysInclude enchants should not contribute to max/current totals', () => {

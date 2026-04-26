@@ -15,5 +15,5 @@ export class HoeOfNoTilling extends BaseItem {
 		return Rarity.Rare;
 	}
 
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 }

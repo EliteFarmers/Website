@@ -304,7 +304,7 @@ test('Melon fortune test', () => {
 		{
 			name: 'Farming Tool',
 			current: 0,
-			max: 474.3,
+			max: 465,
 			ratio: 0,
 		},
 		{

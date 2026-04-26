@@ -209,67 +209,6 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 			] as FortuneUpgrade[];
 		},
 	},
-	{
-		name: 'Axed Perk',
-		wiki: () => 'https://w.elitesb.gg/Essence_Shops#Forest',
-		exists: (tool) => tool.type === ReforgeTarget.Axe,
-		max: (tool) => {
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const maxFortune = otherSources.reduce((acc, source) => acc + source.max(tool), 0);
-			return Math.max(0, maxFortune * 0.02);
-		},
-		current: (tool) => {
-			if (!tool.hasAxedPerk()) return 0;
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const fortune = otherSources.reduce((acc, source) => acc + source.current(tool), 0);
-			return Math.max(0, fortune * 0.02);
-		},
-		maxStat: (tool, stat) => {
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const maxFortune = otherSources.reduce((acc, source) => acc + (source.maxStat?.(tool, stat) ?? 0), 0);
-			return Math.max(0, maxFortune * 0.02);
-		},
-		currentStat: (tool, stat) => {
-			if (!tool.hasAxedPerk()) return 0;
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const fortune = otherSources.reduce((acc, source) => acc + (source.currentStat?.(tool, stat) ?? 0), 0);
-			return Math.max(0, fortune * 0.02);
-		},
-		upgrades: (tool) => {
-			if (tool.hasAxedPerk()) return [];
-			const stats: Record<Stat, number> = {
-				[Stat.FarmingFortune]: tool.getStat(Stat.FarmingFortune) * 0.02,
-			} as Record<Stat, number>;
-
-			for (const crop of tool.crops) {
-				const cropStat = CROP_INFO[crop]?.fortuneType;
-				if (cropStat) {
-					stats[cropStat] = tool.getStat(cropStat) * 0.02;
-				}
-			}
-
-			return [
-				{
-					title: 'Axed Perk',
-					increase: tool.fortune * 0.02,
-					stats,
-					action: UpgradeAction.Unlock,
-					category: UpgradeCategory.Misc,
-					conflictKey: 'axed_perk',
-					wiki: 'https://w.elitesb.gg/Essence_Shops#Forest',
-					cost: {
-						items: {
-							ESSENCE_FOREST: 10_000,
-						},
-					},
-					onto: {
-						name: tool.item.name,
-						skyblockId: tool.item.skyblockId,
-					},
-				},
-			] as FortuneUpgrade[];
-		},
-	},
 	...Object.entries(FARMING_ENCHANTS).map(([id, enchant]) => enchantSourceBuilder(id, enchant)),
 ];
 
