@@ -279,8 +279,8 @@ export class FarmingPlayer {
 		return val;
 	}
 
-	getStat(stat: Stat) {
-		const breakdown = this.getStatBreakdown(stat);
+	getStat(stat: Stat, targetCrop?: Crop) {
+		const breakdown = this.getStatBreakdown(stat, targetCrop);
 		return Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 	}
 
@@ -363,7 +363,7 @@ export class FarmingPlayer {
 		for (const piece of this.armorSet.equipment) {
 			if (!piece) continue;
 			for (const targetStat of contributingStats) {
-				const val = piece.getStat(targetStat);
+				const val = piece.getStat(targetStat, targetCrop);
 				add(piece.info.name, val, targetStat);
 			}
 		}
@@ -372,7 +372,7 @@ export class FarmingPlayer {
 		for (const piece of this.armorSet.armor) {
 			if (!piece) continue;
 			for (const targetStat of contributingStats) {
-				const val = piece.getStat(targetStat);
+				const val = piece.getStat(targetStat, targetCrop);
 				add(piece.info.name, val, targetStat);
 			}
 		}
@@ -533,6 +533,10 @@ export class FarmingPlayer {
 			farmingFortune: fortune,
 			bountiful: tool?.bountiful ?? false,
 			mooshroom: this.selectedPet?.type === FarmingPets.MooshroomCow,
+			attributes: this.options.attributes,
+			chips: this.options.chips,
+			pet: this.selectedPet,
+			overbloom: this.getStat(Stat.Overbloom, crop),
 		});
 	}
 

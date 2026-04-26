@@ -270,6 +270,56 @@ test("Rose Dragon Dragon's Gluttony affects rare items only", () => {
 	expect(result.rngItems?.['BURROWING_SPORES']).toBeCloseTo(1 * 1.4, 2);
 });
 
+test('Overbloom increases rare crops and rare item drops', () => {
+	const baseResult = calculateDetailedDrops({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		attributes: {
+			wart_eater: 500,
+		},
+	});
+
+	const overbloomResult = calculateDetailedDrops({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		overbloom: 5,
+		attributes: {
+			wart_eater: 500,
+		},
+	});
+
+	expect(overbloomResult.rareItemBonus).toBe(0.05);
+	expect(overbloomResult.rareItemBonusBreakdown).toStrictEqual({
+		Overbloom: 0.05,
+		'Warty Bug Shard (Base)': 0,
+	});
+	expect(overbloomResult.rngItems?.['WARTY']).toBeCloseTo(50 * 1.05, 2);
+	expect(overbloomResult.items['FERMENTO']).toBeCloseTo((baseResult.items['FERMENTO'] ?? 0) * 1.05, 2);
+
+	const baseMoonflower = calculateDetailedDrops({
+		crop: Crop.Moonflower,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+	});
+
+	const moonflowerWithOverbloom = calculateDetailedDrops({
+		crop: Crop.Moonflower,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		overbloom: 5,
+	});
+
+	expect(moonflowerWithOverbloom.rareItemBonus).toBe(0.05);
+	expect(moonflowerWithOverbloom.rareItemBonusBreakdown.Overbloom).toBe(0.05);
+	expect(moonflowerWithOverbloom.items['HELIANTHUS']).toBeCloseTo((baseMoonflower.items['HELIANTHUS'] ?? 0) * 1.05, 2);
+});
+
 test('Multiple rate modifiers stack correctly with multiplicative formula', () => {
 	const mockPet = new FarmingPet({
 		type: 'ROSE_DRAGON',

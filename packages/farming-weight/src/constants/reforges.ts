@@ -687,6 +687,7 @@ export const STAT_ICONS: Record<Stat, string> = {
 	[Stat.ForagingWisdom]: '☯',
 	[Stat.Pristine]: '✧',
 	[Stat.BonusPestChance]: 'ൠ',
+	[Stat.Overbloom]: '☀',
 	[Stat.CactusFortune]: '☘',
 	[Stat.CarrotFortune]: '☘',
 	[Stat.CocoaBeanFortune]: '☘',

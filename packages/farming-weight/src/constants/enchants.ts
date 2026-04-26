@@ -343,6 +343,41 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
+	ultimate_sunset: {
+		name: 'Sunset',
+		id: 'ENCHANTMENT_ULTIMATE_SUNSET',
+		appliesTo: [ReforgeTarget.Armor],
+		wiki: 'https://w.elitesb.gg/Sunset_Enchantment',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 1),
+				},
+			},
+			2: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 2),
+				},
+			},
+			3: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 3),
+				},
+			},
+			4: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 4),
+				},
+			},
+			5: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 5),
+				},
+			},
+		},
+	},
 	green_thumb: {
 		name: 'Green Thumb',
 		appliesTo: [ReforgeTarget.Equipment],

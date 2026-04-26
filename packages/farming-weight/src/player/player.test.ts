@@ -250,3 +250,36 @@ test('Axed perk should work through FarmingPlayer', () => {
 	expect(axedProgressWithoutPerk?.current).toBe(0);
 	expect(axedProgressWithoutPerk?.upgrades).toBeDefined();
 });
+
+test('Sunset enchantment grants daytime Overbloom and affects player rate calculations', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 300,
+				skyblockId: 'FERMENTO_LEGGINGS',
+				uuid: 'sunset-leggings',
+				name: '§6Fermento Leggings',
+				lore: [],
+				enchantments: {
+					ultimate_sunset: 5,
+				},
+				attributes: {},
+			},
+		],
+		attributes: {
+			wart_eater: 500,
+		},
+	});
+
+	expect(player.getStat(Stat.Overbloom)).toBe(0);
+	expect(player.getStat(Stat.Overbloom, Crop.NetherWart)).toBe(5);
+	expect(player.getStat(Stat.Overbloom, Crop.Moonflower)).toBe(0);
+
+	const rates = player.getRates(Crop.NetherWart, 100_000);
+	expect(rates.rareItemBonusBreakdown.Overbloom).toBe(0.05);
+	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.05, 2);
+
+	const moonflowerRates = player.getRates(Crop.Moonflower, 100_000);
+	expect(moonflowerRates.rareItemBonus).toBe(0);
+	expect(moonflowerRates.rareItemBonusBreakdown.Overbloom).toBeUndefined();
+});

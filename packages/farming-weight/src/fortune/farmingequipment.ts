@@ -1,5 +1,6 @@
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
+import type { Crop } from '../constants/crops.js';
 import { Stat } from '../constants/stats.js';
 import type { FortuneSourceProgress } from '../constants/upgrades.js';
 import type { FarmingArmorInfo } from '../items/armor.js';
@@ -51,7 +52,7 @@ export class FarmingEquipment extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getStat(stat: Stat): number {
+	getStat(stat: Stat, crop?: Crop): number {
 		if (stat === Stat.FarmingFortune) {
 			return this.getFortune();
 		}
@@ -72,7 +73,7 @@ export class FarmingEquipment extends UpgradeableBase {
 			const enchant = FARMING_ENCHANTS[key];
 			if (!enchant || !level || enchant.cropSpecific) continue;
 
-			sum += getStatFromEnchant(level, enchant, stat, this.options);
+			sum += getStatFromEnchant(level, enchant, stat, this.options, crop);
 		}
 
 		return sum;

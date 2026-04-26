@@ -78,12 +78,13 @@ describe('Pet Definitions Integrity', () => {
 		expect(chicken.perLevelStats?.[Stat.FarmingFortune]?.value).toBe(0.5);
 	});
 
-	test('Pig pet has Trample ability', () => {
+	test('Pig pet has Shining Stampede ability', () => {
 		const pig = FARMING_PETS[FarmingPets.Pig];
 		expect(pig.name).toBe('Pig');
 		expect(pig.perLevelStats?.[Stat.Speed]?.value).toBe(0.25);
+		expect(pig.perLevelStats?.[Stat.PotatoFortune]?.value).toBe(0.2);
 		expect(pig.abilities).toHaveLength(1);
-		expect(pig.abilities?.[0].name).toBe('Trample');
+		expect(pig.abilities?.[0].name).toBe('Shining Stampede');
 	});
 
 	test('Mosquito pet has correct stats and abilities', () => {

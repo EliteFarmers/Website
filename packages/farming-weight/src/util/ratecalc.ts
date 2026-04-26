@@ -21,8 +21,9 @@ interface CalculateDropsOptions {
 	dicerLevel?: 1 | 2 | 3;
 	armorPieces?: 1 | 2 | 3 | 4;
 	attributes?: FarmingAttributes | Record<string, number>;
-	chips?: Record<string, number>;
+	chips?: Record<string, number | null | undefined>;
 	pet?: FarmingPet;
+	overbloom?: number;
 }
 
 const crops = [
@@ -288,6 +289,13 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 				modifier.ratesModifier(result, calcOptions, pet);
 			}
 		}
+	}
+
+	const overbloom = calcOptions.overbloom ?? 0;
+	if (overbloom > 0) {
+		const bonus = overbloom * 0.01;
+		result.rareItemBonus += bonus;
+		result.rareItemBonusBreakdown.Overbloom = bonus;
 	}
 
 	if (rng) {
