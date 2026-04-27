@@ -2,7 +2,6 @@ import { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
 import { Stat } from '../../constants/stats.js';
 import type { FarmingPet } from '../../fortune/farmingpet.js';
 import type { FarmingPlayer } from '../../player/player.js';
-import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../../util/ratecalc.js';
 import { FarmingPetDefinition } from '../base-pet.js';
 import type { FarmingPetAbility } from '../types/pets.js';
 
@@ -70,15 +69,14 @@ export class RoseDragonPet extends FarmingPetDefinition {
 		{
 			name: "Dragon's Gluttony",
 			exists: (_, pet) => pet.level >= 101,
-			computed: () => ({}),
-			ratesModifier: (current: DetailedDropsResult, _: CalculateCropDetailedDropsOptions, pet: FarmingPet) => {
-				const chanceIncrease = pet.level * 0.002;
-				if (chanceIncrease <= 0) return current;
-
-				current.rareItemBonus += chanceIncrease;
-				current.rareItemBonusBreakdown["Dragon's Gluttony"] = chanceIncrease;
-
-				return current;
+			computed: (_, pet) => {
+				return {
+					[Stat.Overbloom]: {
+						name: "Dragon's Gluttony",
+						value: pet.level * 0.2,
+						type: FarmingPetStatType.Ability,
+					},
+				};
 			},
 		},
 		{

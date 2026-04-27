@@ -53,6 +53,12 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		breaks: 2,
 		toolXpFactor: 1.5,
 		fortuneType: Stat.CactusFortune,
+		exportable: true,
+		exportableCost: {
+			items: {
+				POTTED_CACTUS: 3000,
+			},
+		},
 		startingTool: 'CACTUS_KNIFE',
 		crafts: [
 			{
@@ -372,7 +378,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 // Base plus crop specific fortune
 // Does not include temporary fortune sources
 export const MAX_CROP_FORTUNE: Record<Crop, number> = {
-	[Crop.Cactus]: 2629.28,
+	[Crop.Cactus]: 2629.28 + 12,
 	[Crop.Carrot]: 2629.28 + 12,
 	[Crop.CocoaBeans]: 2629.28 + 37,
 	[Crop.Melon]: 2629.28,

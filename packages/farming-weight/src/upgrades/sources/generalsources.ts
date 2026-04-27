@@ -797,7 +797,8 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 		},
 		currentStat: (player, stat) => {
 			const level = getChipLevel(player.options.chips?.[chipId]);
-			const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
+			const rarity = getChipRarity(level);
+			const per = chip.statsPerRarity?.[rarity]?.[stat] ?? 0;
 			return per * level;
 		},
 		active: (player) => {
@@ -833,10 +834,14 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 
 			const nextLevel = currentLevel + 1;
 			const deltaStats: Partial<Record<Stat, number>> = {};
+			const currentRarity = getChipRarity(currentLevel);
 			const nextRarity = getChipRarity(nextLevel);
 			for (const [k, v] of Object.entries(chip.statsPerRarity?.[nextRarity] ?? {})) {
 				const stat = k as Stat;
-				if (v && v !== 0) deltaStats[stat] = v;
+				const before = (chip.statsPerRarity?.[currentRarity]?.[stat] ?? 0) * currentLevel;
+				const after = (v ?? 0) * nextLevel;
+				const diff = after - before;
+				if (diff !== 0) deltaStats[stat] = diff;
 			}
 
 			return [

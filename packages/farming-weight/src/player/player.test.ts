@@ -246,3 +246,45 @@ test('Feast enchantment grants tool Overbloom for player rate calculations', () 
 	expect(rates.rareItemBonusBreakdown.Overbloom).toBe(0.025);
 	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.025, 2);
 });
+
+test('Rarefinder chip grants Overbloom for player rate calculations', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			rarefinder: 20,
+		},
+		attributes: {
+			wart_eater: 500,
+		},
+	});
+
+	expect(player.getStat(Stat.Overbloom)).toBe(60);
+
+	const rates = player.getRates(Crop.NetherWart, 100_000);
+	expect(rates.rareItemBonus).toBeCloseTo(0.6, 4);
+	expect(rates.rareItemBonusBreakdown.Overbloom).toBeCloseTo(0.6, 4);
+	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.6, 2);
+});
+
+test('Rose Dragon grants Overbloom for player rate calculations', () => {
+	const player = new FarmingPlayer({
+		pets: [
+			{
+				uuid: 'rose-dragon-overbloom',
+				type: 'ROSE_DRAGON',
+				exp: 10 ** 20,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+		],
+	});
+
+	expect(player.getStat(Stat.Overbloom)).toBe(40);
+
+	const rates = player.getRates(Crop.Mushroom, 250_000);
+	expect(rates.rareItemBonus).toBeCloseTo(0.4, 4);
+	expect(rates.rareItemBonusBreakdown.Overbloom).toBeCloseTo(0.4, 4);
+	expect(rates.rngItems?.['BURROWING_SPORES']).toBeCloseTo(1 * 1.4, 2);
+});

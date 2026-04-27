@@ -328,6 +328,32 @@ test('Melon fortune test', () => {
 	]);
 });
 
+test('Cactus exportable crop test', () => {
+	const player = new FarmingPlayer({
+		exportableCrops: {
+			[Crop.Cactus]: true,
+		},
+	});
+
+	const progress = player.getCropProgress(Crop.Cactus);
+	const exportable = progress.find((p) => p.name === 'Exportable Crop');
+
+	expect(exportable).toBeDefined();
+	expect(exportable?.current).toBe(12);
+	expect(exportable?.max).toBe(12);
+	expect(exportable?.ratio).toBe(1);
+
+	const locked = new FarmingPlayer({});
+	const upgrade = locked.getCropUpgrades(Crop.Cactus).find((u) => u.title === 'Exportable Crop');
+
+	expect(upgrade).toBeDefined();
+	expect(upgrade?.cost).toStrictEqual({
+		items: {
+			POTTED_CACTUS: 3000,
+		},
+	});
+});
+
 test('Cropie talisman test', () => {
 	const player = new FarmingPlayer({
 		cropUpgrades: {
