@@ -23,4 +23,5 @@ export interface PestsDto {
 	dragonfly: number;
 	firefly: number;
 	mantis: number;
+	lunarMoth: number;
 }

@@ -30,4 +30,6 @@ export const NotificationType = {
 	giftClaimed: 'giftClaimed',
 	dataExportReady: 'dataExportReady',
 	badgeUnlocked: 'badgeUnlocked',
+	managedPackApproved: 'managedPackApproved',
+	managedPackOwnershipAssigned: 'managedPackOwnershipAssigned',
 } as const;

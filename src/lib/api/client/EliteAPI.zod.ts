@@ -2701,6 +2701,16 @@ export const zodUpdateGuildPurchasesParams = zod.object({
 });
 
 /**
+ * Crowd-sourced current Harvest Feast data.
+ * @summary Upload current Harvest Feast crops
+ */
+export const zodUploadCurrentHarvestFeastBody = zod.object({
+	current: zod.array(zod.string()),
+	next: zod.record(zod.string(), zod.number().nullable()),
+	isGrandFeast: zod.coerce.boolean<boolean>(),
+});
+
+/**
  * @summary Get Hypixel Guild
  */
 export const zodGetHypixelGuildParams = zod.object({
@@ -3405,6 +3415,22 @@ export const zodGetAuctionParams = zod.object({
 });
 
 /**
+ * Get NEU lowest-BIN averages over a fixed history window using hourly lowest-BIN history buckets. Supported windows: 1day, 3day, 7day.
+ * @summary Get Average Lowest BIN Prices (NEU Format)
+ */
+export const zodGetAuctionHouseNeuAverageLowestBinParams = zod.object({
+	window: zod.string().describe('Average lowest-BIN window. Supported values: 1day, 3day, 7day.'),
+});
+
+/**
+ * Get the same average lowest-BIN NEU payload as /resources/auctions/neu/average-lbin/{window}. Only use this if you need to, the normal endpoint already supports gzip data transfer.
+ * @summary Get Average Lowest BIN Prices (NEU Format, Gzip File)
+ */
+export const zodGetAuctionHouseNeuAverageLowestBinGzipParams = zod.object({
+	window: zod.string(),
+});
+
+/**
  * Get lowest BIN prices keyed by NEU internal names. Drop-in replacement for moulberry lowestbin.json. Use ?mode=raw (default) for absolute cheapest BIN or ?mode=smooth for IQR-filtered prices.
  * @summary Get Lowest BIN Prices (NEU Format)
  */
@@ -3417,6 +3443,16 @@ export const zodGetAuctionHouseNeuQueryParams = zod.object({
 		.describe(
 			'Price mode: \"raw\" for absolute lowest BIN (like moulberry), \"smooth\" for IQR-filtered price. Default: raw.'
 		),
+});
+
+/**
+ * Get the same lowest BIN data as /resources/auctions/neu, but in a gzip file. Only use this if you need to, the normal endpoint already supports gzip data transfer.
+ * @summary Get Lowest BIN Prices (NEU Format, Gzip File)
+ */
+export const zodGetAuctionHouseNeuGzipQueryModeDefault = 'raw';
+
+export const zodGetAuctionHouseNeuGzipQueryParams = zod.object({
+	mode: zod.string().default(zodGetAuctionHouseNeuGzipQueryModeDefault),
 });
 
 /**
