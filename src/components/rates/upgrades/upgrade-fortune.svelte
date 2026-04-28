@@ -26,7 +26,7 @@
 		Stat.WildRoseFortune,
 	]);
 
-	// Primary display stat (FarmingFortune or the first crop fortune)
+	// Primary display stat (FarmingFortune, then crop fortune, then any other non-zero stat)
 	const primaryStat = $derived.by(() => {
 		if (!upgrade.stats) return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 		const ff = upgrade.stats[Stat.FarmingFortune];
@@ -38,6 +38,15 @@
 				return { stat, value: value as number };
 			}
 		}
+		// Fall back to the largest non-zero non-fortune stat (e.g. Overbloom)
+		let best: { stat: Stat; value: number } | undefined;
+		for (const [statKey, value] of Object.entries(upgrade.stats)) {
+			if (!value) continue;
+			if (!best || Math.abs(value as number) > Math.abs(best.value)) {
+				best = { stat: statKey as Stat, value: value as number };
+			}
+		}
+		if (best) return best;
 		return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 	});
 
@@ -56,7 +65,11 @@
 	});
 
 	// const hasContent = $derived(primaryStat.value !== 0 || otherStats.length > 0 || upgrade.max);
-	const headerValue = $derived(upgrade.increase ?? primaryStat.value);
+	const headerValue = $derived(
+		primaryStat.stat !== Stat.FarmingFortune && primaryStat.value !== 0
+			? primaryStat.value
+			: (upgrade.increase ?? primaryStat.value)
+	);
 
 	const isNegative = $derived(headerValue < 0);
 	const maxOnly = $derived(headerValue === 0 && upgrade.max && upgrade.max > 0);

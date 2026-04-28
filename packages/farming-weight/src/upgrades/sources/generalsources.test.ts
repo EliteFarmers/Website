@@ -1,4 +1,7 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../../constants/stats.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
 import { FarmingPlayer } from '../../player/player.js';
 
 test('General fortune sources', () => {
@@ -49,8 +52,8 @@ test('General fortune sources', () => {
 		{
 			name: 'Garden Bestiary',
 			current: 6 * 0.4,
-			max: 94,
-			ratio: (6 * 0.4) / 94,
+			max: 100,
+			ratio: (6 * 0.4) / 100,
 		},
 		{
 			name: 'Anita Bonus Fortune',
@@ -75,6 +78,12 @@ test('General fortune sources', () => {
 			name: 'Helianthus Relic',
 			current: 0,
 			max: 40,
+			ratio: 0,
+		},
+		{
+			name: 'Freshly Baked Heirloom',
+			current: 0,
+			max: 0,
 			ratio: 0,
 		},
 		{
@@ -114,5 +123,71 @@ test('General fortune sources', () => {
 			max: 5,
 			ratio: 0,
 		},
+		{
+			name: 'Fortunate Feasting',
+			current: 0,
+			max: 25,
+			ratio: 0,
+		},
 	]);
+});
+
+test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Shards', () => {
+	// Cropeetle is Rare. Leveling thresholds: [1, 2, 3, 3, 4, 4, 5, 6, 8, 12]
+	// 13 shards = level 5 (1+2+3+3+4 = 13). Each level grants +2 Overbloom.
+	const player = new FarmingPlayer({
+		attributes: { crop_bug: 13 },
+	});
+
+	const progress = player.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const attributeShards = progress.find((p) => p.name === 'Attribute Shards');
+	expect(attributeShards).toBeDefined();
+
+	// Cropeetle (Rare, max level 10) provides 20 Overbloom max and we are at 10.
+	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 10,
+		max: 20,
+	});
+
+	// Drilling into Attribute Shards should reveal the Cropeetle shard with Overbloom progress.
+	const cropeetle = attributeShards?.progress?.find((p) => p.name === 'Cropeetle Shard');
+	expect(cropeetle).toBeDefined();
+	expect(cropeetle?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 10,
+		max: 20,
+	});
+
+	// And Cropeetle should appear as an Overbloom upgrade (level 6 gives +2 Overbloom, costs 4 shards).
+	const overbloomUpgrades = player.getUpgrades({ stat: Stat.Overbloom });
+	const cropeetleUpgrade = overbloomUpgrades.find((u) => u.title === 'Cropeetle 6');
+	expect(cropeetleUpgrade).toMatchObject({
+		action: UpgradeAction.LevelUp,
+		category: UpgradeCategory.Attribute,
+		cost: {
+			items: { SHARD_CROPEETLE: 4 },
+		},
+	});
+	expect(cropeetleUpgrade?.stats?.[Stat.Overbloom]).toBe(2);
+
+	// Should NOT appear in plain FarmingFortune upgrades (no FF impact).
+	const ffUpgrades = player.getUpgrades({ stat: Stat.FarmingFortune });
+	expect(ffUpgrades.find((u) => u.title === 'Cropeetle 6')).toBeUndefined();
+});
+
+test('Freshly Baked Talisman purchase costs 25 kernels', () => {
+	const player = new FarmingPlayer({});
+
+	const overbloomUpgrades = player.getUpgrades({ stat: Stat.Overbloom });
+	const talismanPurchase = overbloomUpgrades.find((u) => u.title === 'Freshly Baked Talisman');
+	expect(talismanPurchase).toBeDefined();
+	expect(talismanPurchase?.action).toBe(UpgradeAction.Purchase);
+	expect(talismanPurchase?.cost?.kernels).toBe(25);
+	expect(talismanPurchase?.cost?.items).toBeUndefined();
+});
+
+test('Freshly Baked accessory tier-up costs use kernels currency', () => {
+	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_TALISMAN?.upgrade?.cost.kernels).toBe(100);
+	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RING?.upgrade?.cost.kernels).toBe(250);
+	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_ARTIFACT?.upgrade?.cost.kernels).toBe(500);
+	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RELIC?.upgrade?.cost.kernels).toBe(1000);
 });

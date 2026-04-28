@@ -138,4 +138,87 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			[Stat.FarmingFortune]: 0, // Effect is special
 		},
 	},
+	FRESHLY_BAKED_HEIRLOOM: {
+		skyblockId: 'FRESHLY_BAKED_HEIRLOOM',
+		name: 'Freshly Baked Heirloom',
+		wiki: 'https://w.elitesb.gg/Freshly_Baked_Heirloom',
+		family: 'FreshlyBaked',
+		familyOrder: 5,
+		maxRarity: Rarity.Legendary,
+		baseStats: {
+			[Stat.Overbloom]: 5,
+		},
+	},
+	FRESHLY_BAKED_RELIC: {
+		skyblockId: 'FRESHLY_BAKED_RELIC',
+		name: 'Freshly Baked Relic',
+		wiki: 'https://w.elitesb.gg/Freshly_Baked_Relic',
+		family: 'FreshlyBaked',
+		familyOrder: 4,
+		upgrade: {
+			id: 'FRESHLY_BAKED_HEIRLOOM',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				kernels: 1000,
+			},
+		},
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.Overbloom]: 4,
+		},
+	},
+	FRESHLY_BAKED_ARTIFACT: {
+		skyblockId: 'FRESHLY_BAKED_ARTIFACT',
+		name: 'Freshly Baked Artifact',
+		wiki: 'https://w.elitesb.gg/Freshly_Baked_Artifact',
+		family: 'FreshlyBaked',
+		familyOrder: 3,
+		upgrade: {
+			id: 'FRESHLY_BAKED_RELIC',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				kernels: 500,
+			},
+		},
+		maxRarity: Rarity.Rare,
+		baseStats: {
+			[Stat.Overbloom]: 3,
+		},
+	},
+	FRESHLY_BAKED_RING: {
+		skyblockId: 'FRESHLY_BAKED_RING',
+		name: 'Freshly Baked Ring',
+		wiki: 'https://w.elitesb.gg/Freshly_Baked_Ring',
+		family: 'FreshlyBaked',
+		familyOrder: 2,
+		upgrade: {
+			id: 'FRESHLY_BAKED_ARTIFACT',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				kernels: 250,
+			},
+		},
+		maxRarity: Rarity.Uncommon,
+		baseStats: {
+			[Stat.Overbloom]: 2,
+		},
+	},
+	FRESHLY_BAKED_TALISMAN: {
+		skyblockId: 'FRESHLY_BAKED_TALISMAN',
+		name: 'Freshly Baked Talisman',
+		wiki: 'https://w.elitesb.gg/Freshly_Baked_Talisman',
+		family: 'FreshlyBaked',
+		familyOrder: 1,
+		upgrade: {
+			id: 'FRESHLY_BAKED_RING',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				kernels: 100,
+			},
+		},
+		maxRarity: Rarity.Common,
+		baseStats: {
+			[Stat.Overbloom]: 1,
+		},
+	},
 };

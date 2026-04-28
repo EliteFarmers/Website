@@ -124,19 +124,16 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 		skyblockId: 'RAREFINDER_GARDEN_CHIP',
 		name: 'Rarefinder Chip',
 		wiki: GARDEN_CHIP_WIKI,
-		ratesModifier: (current, options) => {
-			const level = getChipLevel(getChipInputLevel(options.chips, 'rarefinder'));
-			if (level <= 0) return current;
-
-			const rarity = getChipRarity(level);
-			let perLevel = 0.02;
-			if (rarity === Rarity.Epic) perLevel = 0.025;
-			else if (rarity === Rarity.Legendary) perLevel = 0.03;
-
-			const bonus = level * perLevel;
-			current.rareItemBonus += bonus;
-			current.rareItemBonusBreakdown['Rarefinder Chip'] = bonus;
-			return current;
+		statsPerRarity: {
+			[Rarity.Rare]: {
+				[Stat.Overbloom]: 2,
+			},
+			[Rarity.Epic]: {
+				[Stat.Overbloom]: 2.5,
+			},
+			[Rarity.Legendary]: {
+				[Stat.Overbloom]: 3,
+			},
 		},
 	},
 };

@@ -22,6 +22,7 @@ import type { DungeonDataMostDamageMage } from './DungeonDataMostDamageMage';
 import type { DungeonDataMostDamageHealer } from './DungeonDataMostDamageHealer';
 import type { DungeonDataMostDamageArcher } from './DungeonDataMostDamageArcher';
 import type { DungeonDataMilestoneCompletions } from './DungeonDataMilestoneCompletions';
+import type { DungeonDataBestRuns } from './DungeonDataBestRuns';
 
 export interface DungeonData {
 	experience: number;
@@ -41,4 +42,6 @@ export interface DungeonData {
 	most_damage_healer: DungeonDataMostDamageHealer;
 	most_damage_archer: DungeonDataMostDamageArcher;
 	milestone_completions: DungeonDataMilestoneCompletions;
+	/** @nullable */
+	best_runs?: DungeonDataBestRuns;
 }

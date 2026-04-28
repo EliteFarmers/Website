@@ -11,8 +11,9 @@
 	import { Button } from '$ui/button';
 	import Settings from '@lucide/svelte/icons/settings';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Crop, Stat } from 'farming-weight';
+	import { Crop, Stat, type FarmingPlayer } from 'farming-weight';
 	import { Debounced, useDebounce, watch } from 'runed';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	const ctx = getStatsContext();
 	const ratesData = getRatesData();
@@ -32,13 +33,28 @@
 
 	let { player, crop }: Props = $props();
 
-	let upgrades = $state(
-		(() => [...$player.getUpgrades({ stat: Stat.FarmingFortune }), ...$player.getCropUpgrades(crop)])()
-	);
+	let upgrades = $state((() => mergeUpgrades($player, crop))());
 
 	const getUpgrades = useDebounce(() => {
-		upgrades = [...$player.getUpgrades({ stat: Stat.FarmingFortune }), ...$player.getCropUpgrades(crop)];
+		upgrades = mergeUpgrades($player, crop);
 	}, 750);
+
+	function mergeUpgrades(p: FarmingPlayer, c: Crop) {
+		const all = [
+			...p.getUpgrades({ stat: Stat.FarmingFortune }),
+			...p.getUpgrades({ stat: Stat.Overbloom }),
+			...p.getCropUpgrades(c),
+		];
+		const seen = new SvelteSet<string>();
+		const deduped = [];
+		for (const u of all) {
+			const key = (u as { conflictKey?: string }).conflictKey ?? `${u.title}::${u.action}`;
+			if (seen.has(key)) continue;
+			seen.add(key);
+			deduped.push(u);
+		}
+		return deduped;
+	}
 
 	watch([() => $player, () => crop], () => {
 		getUpgrades();

@@ -59,7 +59,11 @@
 
 <div class="flex w-full flex-col items-center justify-center gap-8">
 	<section class="flex w-full flex-row items-center justify-center gap-4 px-2">
-		<Skillbar name="Garden" progress={getGardenLevel(garden.experience ?? 0, overflow)} rank={ranks.garden?.rank} />
+		<Skillbar
+			name="Garden"
+			progress={getGardenLevel(Number(garden.experience ?? 0), overflow)}
+			rank={ranks.garden?.rank}
+		/>
 	</section>
 
 	<section class="flex w-full justify-center align-middle">

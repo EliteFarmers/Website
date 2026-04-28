@@ -39,6 +39,7 @@ export enum Stat {
 	Pristine = 'Pristine',
 	BonusPestChance = 'Bonus Pest Chance',
 	PestCooldownReduction = 'Pest Cooldown Reduction',
+	Overbloom = 'Overbloom',
 	FishingSpeed = 'Fishing Speed',
 }
 
@@ -215,5 +216,6 @@ export const STAT_NAMES: Record<Stat, string> = {
 	[Stat.Pristine]: 'Pristine',
 	[Stat.BonusPestChance]: 'Bonus Pest Chance',
 	[Stat.PestCooldownReduction]: 'Pest Cooldown Reduction',
+	[Stat.Overbloom]: 'Overbloom',
 	[Stat.FishingSpeed]: 'Fishing Speed',
 };

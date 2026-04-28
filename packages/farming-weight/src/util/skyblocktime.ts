@@ -132,6 +132,11 @@ export class SkyBlockTime {
 		return this.month > 9 && this.month < 13;
 	}
 
+	isHarvestFeast() {
+		// Every SkyBlock Year from the 1st of Early Autumn through the 31st of Late Autumn
+		return this.month > 6 && this.month < 10;
+	}
+
 	/**
 	 * Check if this SkyBlockTime object has a Jacob Contest event.
 	 */

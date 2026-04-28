@@ -20,7 +20,7 @@ export class FungiCutter1 extends BaseItem {
 	}
 
 	override crops = [Crop.Mushroom];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T1_TOOL_GEMS;
 	override upgrade = {
 		id: 'FUNGI_CUTTER_2',
@@ -50,7 +50,7 @@ export class FungiCutter2 extends BaseItem {
 	}
 
 	override crops = [Crop.Mushroom];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T2_TOOL_GEMS;
 	override upgrade = {
 		id: 'FUNGI_CUTTER_3',
@@ -80,6 +80,6 @@ export class FungiCutter3 extends BaseItem {
 	}
 
 	override crops = [Crop.Mushroom];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T3_TOOL_GEMS;
 }

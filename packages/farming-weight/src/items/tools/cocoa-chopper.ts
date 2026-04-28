@@ -19,7 +19,7 @@ export class CocoaChopper1 extends BaseItem {
 	}
 
 	override crops = [Crop.CocoaBeans];
-	override type = ReforgeTarget.Axe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T1_TOOL_GEMS;
 	override upgrade = {
 		id: 'COCO_CHOPPER_2',
@@ -48,7 +48,7 @@ export class CocoaChopper2 extends BaseItem {
 	}
 
 	override crops = [Crop.CocoaBeans];
-	override type = ReforgeTarget.Axe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T2_TOOL_GEMS;
 	override upgrade = {
 		id: 'COCO_CHOPPER_3',
@@ -77,6 +77,6 @@ export class CocoaChopper3 extends BaseItem {
 	}
 
 	override crops = [Crop.CocoaBeans];
-	override type = ReforgeTarget.Axe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T3_TOOL_GEMS;
 }

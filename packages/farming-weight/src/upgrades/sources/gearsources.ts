@@ -5,7 +5,7 @@ import { Stat } from '../../constants/stats.js';
 import type { FarmingArmor } from '../../fortune/farmingarmor.js';
 import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import { GemRarity } from '../../fortune/item.js';
-import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
+import { getMaxStatFromEnchant, getOptimisticStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
 import { getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
@@ -168,10 +168,31 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 							Stat.FarmingFortune,
 							gear.options
 						),
-					maxStat: (gear, stat) => getMaxStatFromEnchant(enchant, stat, gear.options),
+					maxStat: (gear, stat) => getMaxStatFromEnchant(enchant, stat, gear.options, gear.crop),
 					currentStat: (gear, stat) =>
-						getStatFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, stat, gear.options),
-					upgrades: (gear, stats) => getUpgradeableEnchant(gear, id, stats?.[0] ?? Stat.FarmingFortune),
+						getOptimisticStatFromEnchant(
+							gear.item.enchantments?.[id] ?? 0,
+							enchant,
+							stat,
+							gear.options,
+							gear.crop
+						),
+					upgrades: (gear, stats) => {
+						const chains: Stat[] = [];
+						for (const s of stats ?? [Stat.FarmingFortune]) {
+							if (!chains.includes(s)) chains.push(s);
+						}
+						if (chains.length === 0) chains.push(Stat.FarmingFortune);
+
+						const upgrades = chains.flatMap((s) => getUpgradeableEnchant(gear, id, s));
+						const seen = new Set<string>();
+						return upgrades.filter((u) => {
+							const key = u.conflictKey ?? `${u.title}:${u.action}`;
+							if (seen.has(key)) return false;
+							seen.add(key);
+							return true;
+						});
+					},
 				}) as DynamicFortuneSource<FarmingArmor | FarmingEquipment>
 		),
 ];

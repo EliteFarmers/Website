@@ -17,5 +17,7 @@ export interface NetworthBreakdown {
 	purse: number;
 	bank: number;
 	personalBank: number;
+	/** True when inventory API access was disabled, meaning networth is incomplete. */
+	noInventory: boolean;
 	categories: NetworthBreakdownCategories;
 }

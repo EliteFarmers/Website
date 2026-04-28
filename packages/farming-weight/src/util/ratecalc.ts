@@ -21,8 +21,12 @@ interface CalculateDropsOptions {
 	dicerLevel?: 1 | 2 | 3;
 	armorPieces?: 1 | 2 | 3 | 4;
 	attributes?: FarmingAttributes | Record<string, number>;
-	chips?: Record<string, number>;
+	chips?: Record<string, number | null | undefined>;
 	pet?: FarmingPet;
+	overbloom?: number;
+	overbloomBreakdown?: Record<string, number>;
+	harvestFeast?: { active: boolean; inSeasonCrops?: Crop[] };
+	toolReforge?: string;
 }
 
 const crops = [
@@ -290,15 +294,39 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		}
 	}
 
+	const overbloom = calcOptions.overbloom ?? 0;
+	if (calcOptions.overbloomBreakdown && Object.keys(calcOptions.overbloomBreakdown).length > 0) {
+		for (const [name, value] of Object.entries(calcOptions.overbloomBreakdown)) {
+			if (!value) continue;
+			const bonus = value * 0.01;
+			result.rareItemBonus += bonus;
+			result.rareItemBonusBreakdown[name] = (result.rareItemBonusBreakdown[name] ?? 0) + bonus;
+		}
+	} else if (overbloom > 0) {
+		const bonus = overbloom * 0.01;
+		result.rareItemBonus += bonus;
+		result.rareItemBonusBreakdown.Overbloom = bonus;
+	}
+
 	if (rng) {
 		const rareMultiplier = 1 + result.rareItemBonus;
+		const feast = calcOptions.harvestFeast;
+		const inSeason =
+			feast?.active === true && (feast.inSeasonCrops === undefined || feast.inSeasonCrops.includes(crop));
+
 		for (const rngDrop of rng) {
+			if (rngDrop.only === 'harvestFeast' && !inSeason) continue;
 			const drops = rngDrop.chance * blocksBroken * rareMultiplier;
 			for (const [item, count] of Object.entries(rngDrop.drops)) {
 				result.rngItems ??= {};
 				result.rngItems[item] = count * drops + (result.rngItems[item] ?? 0);
 			}
 		}
+	}
+
+	if (calcOptions.toolReforge) {
+		const reforge = REFORGES[calcOptions.toolReforge];
+		reforge?.ratesModifier?.(result, calcOptions);
 	}
 
 	if (result.pendingRngItems) {

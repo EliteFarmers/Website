@@ -32,7 +32,7 @@
 	function isCompleted(requirement: Exclude<ItemResponse['requirements'], null | undefined>[number]) {
 		if (requirement.type === 'GARDEN_LEVEL') {
 			if (!ctx.garden?.experience) return undefined; // Garden level not available
-			const { level } = getGardenLevel(ctx.garden?.experience ?? 0);
+			const { level } = getGardenLevel(Number(ctx.garden?.experience ?? 0));
 			return level >= requirement.level;
 		}
 		if (!requirement.skill || !requirement.level) return undefined;
@@ -45,6 +45,14 @@
 				ctx.member.current.skills?.[requirement.skill.toLowerCase() as keyof typeof ctx.member.current.skills];
 			if (skill === undefined) return undefined; // Skill not found, requirement not met
 
+			if (
+				skillName === 'totalXp' ||
+				skillName === 'levelCaps' ||
+				skillName === 'average' ||
+				skillName === 'levels'
+			) {
+				return false;
+			}
 			const { level } = getSkillLevel(skillName, ctx.member.current.skills[skillName]);
 			return level >= requirement.level;
 		} else {

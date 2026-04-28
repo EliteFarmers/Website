@@ -26,4 +26,5 @@ export const Pest = {
 	Dragonfly: 11,
 	Firefly: 12,
 	Mantis: 13,
+	LunarMoth: 14,
 } as const;

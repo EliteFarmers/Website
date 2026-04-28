@@ -184,69 +184,107 @@ test('Crop specific pet fortune test', () => {
 	});
 });
 
-test('Axed perk should work through FarmingPlayer', () => {
-	const axe = {
-		id: 258,
-		count: 1,
-		skyblockId: 'COCO_CHOPPER_3',
-		uuid: 'test-axe-uuid',
-		name: '§6Cocoa Chopper',
-		lore: ['§7Farming Fortune: §a+100', '', '§6§lLEGENDARY AXE'],
-		enchantments: {},
+test('Sunset enchantment grants daytime Overbloom and affects player rate calculations', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 300,
+				skyblockId: 'FERMENTO_LEGGINGS',
+				uuid: 'sunset-leggings',
+				name: '§6Fermento Leggings',
+				lore: [],
+				enchantments: {
+					ultimate_sunset: 5,
+				},
+				attributes: {},
+			},
+		],
 		attributes: {
-			modifier: 'bountiful',
-			farming_for_dummies_count: '5',
-		},
-	};
-
-	// Test with string "1"
-	const playerWithString = new FarmingPlayer({
-		tools: [axe],
-		perks: {
-			axed: '1',
+			wart_eater: 500,
 		},
 	});
 
-	const toolWithString = playerWithString.tools[0];
-	expect(toolWithString).toBeDefined();
-	expect(toolWithString.hasAxedPerk()).toBe(true);
-	expect(toolWithString.fortuneBreakdown['Axed Perk']).toBeGreaterThan(0);
+	expect(player.getStat(Stat.Overbloom)).toBe(0);
+	expect(player.getStat(Stat.Overbloom, Crop.NetherWart)).toBe(5);
+	expect(player.getStat(Stat.Overbloom, Crop.Moonflower)).toBe(0);
 
-	// Test with number 1
-	const playerWithNumber = new FarmingPlayer({
-		tools: [axe],
-		perks: {
-			axed: 1,
+	const rates = player.getRates(Crop.NetherWart, 100_000);
+	expect(rates.rareItemBonusBreakdown['Fermento Leggings']).toBe(0.05);
+	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.05, 2);
+
+	const moonflowerRates = player.getRates(Crop.Moonflower, 100_000);
+	expect(moonflowerRates.rareItemBonus).toBe(0);
+	expect(moonflowerRates.rareItemBonusBreakdown['Fermento Leggings']).toBeUndefined();
+});
+
+test('Feast enchantment grants tool Overbloom for player rate calculations', () => {
+	const player = new FarmingPlayer({
+		tools: [
+			{
+				id: 293,
+				count: 1,
+				skyblockId: 'THEORETICAL_HOE_WARTS_3',
+				uuid: 'feast-nether-wart-hoe',
+				name: '§6Newton Nether Warts Hoe',
+				lore: [],
+				enchantments: {
+					feast: 5,
+				},
+				attributes: {},
+			},
+		],
+		attributes: {
+			wart_eater: 500,
 		},
 	});
 
-	const toolWithNumber = playerWithNumber.tools[0];
-	expect(toolWithNumber).toBeDefined();
-	expect(toolWithNumber.hasAxedPerk()).toBe(true);
-	expect(toolWithNumber.fortuneBreakdown['Axed Perk']).toBeGreaterThan(0);
+	const tool = player.getBestTool(Crop.NetherWart);
+	expect(tool?.getStat(Stat.Overbloom, Crop.NetherWart)).toBe(2.5);
 
-	// Check the progress includes Axed Perk entry
-	const progress = toolWithNumber.getProgress();
-	const axedProgress = progress.find((p) => p.name === 'Axed Perk');
-	expect(axedProgress).toBeDefined();
-	expect(axedProgress?.current).toBeGreaterThan(0);
-	expect(axedProgress?.max).toBeGreaterThan(0);
+	const rates = player.getRates(Crop.NetherWart, 100_000);
+	expect(rates.rareItemBonus).toBe(0.025);
+	expect(rates.rareItemBonusBreakdown['Farming Tool']).toBe(0.025);
+	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.025, 2);
+});
 
-	// Now test without the perk
-	const playerWithoutPerk = new FarmingPlayer({
-		tools: [axe],
-		perks: {},
+test('Rarefinder chip grants Overbloom for player rate calculations', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			rarefinder: 20,
+		},
+		attributes: {
+			wart_eater: 500,
+		},
 	});
 
-	const toolWithoutPerk = playerWithoutPerk.tools[0];
-	expect(toolWithoutPerk).toBeDefined();
-	expect(toolWithoutPerk.hasAxedPerk()).toBe(false);
-	expect(toolWithoutPerk.fortuneBreakdown['Axed Perk']).toBeUndefined();
+	expect(player.getStat(Stat.Overbloom)).toBe(60);
 
-	// Check progress shows perk as available upgrade
-	const progressWithoutPerk = toolWithoutPerk.getProgress();
-	const axedProgressWithoutPerk = progressWithoutPerk.find((p) => p.name === 'Axed Perk');
-	expect(axedProgressWithoutPerk).toBeDefined();
-	expect(axedProgressWithoutPerk?.current).toBe(0);
-	expect(axedProgressWithoutPerk?.upgrades).toBeDefined();
+	const rates = player.getRates(Crop.NetherWart, 100_000);
+	expect(rates.rareItemBonus).toBeCloseTo(0.6, 4);
+	expect(rates.rareItemBonusBreakdown['Garden Chips']).toBeCloseTo(0.6, 4);
+	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.6, 2);
+});
+
+test('Rose Dragon grants Overbloom for player rate calculations', () => {
+	const player = new FarmingPlayer({
+		pets: [
+			{
+				uuid: 'rose-dragon-overbloom',
+				type: 'ROSE_DRAGON',
+				exp: 10 ** 20,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+		],
+	});
+
+	expect(player.getStat(Stat.Overbloom)).toBe(40);
+
+	const rates = player.getRates(Crop.Mushroom, 350_000);
+	expect(rates.rareItemBonus).toBeCloseTo(0.4, 4);
+	expect(rates.rareItemBonusBreakdown['Rose Dragon']).toBeCloseTo(0.4, 4);
+	expect(rates.rngItems?.['BURROWING_SPORES']).toBeCloseTo(1 * 1.4, 2);
 });

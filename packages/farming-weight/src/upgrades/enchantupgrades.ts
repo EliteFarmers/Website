@@ -3,7 +3,7 @@ import { EnchantTierProcurement, FARMING_ENCHANTS, type FarmingEnchant } from '.
 import { Stat } from '../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import type { Upgradeable } from '../fortune/upgradeable.js';
-import { getMaxStatFromEnchant, getStatFromEnchant } from '../util/enchants.js';
+import { getMaxStatFromEnchant, getOptimisticStatFromEnchant } from '../util/enchants.js';
 
 const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((crop) => crop.fortuneType));
 
@@ -57,7 +57,7 @@ export function getUpgradeableEnchant(
 	const includeWhenNoStatImpact = options?.includeWhenNoStatImpact === true;
 	if (maxForStat <= 0 && !includeWhenNoStatImpact) return result;
 	const currentForStat = applied
-		? getStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop)
+		? getOptimisticStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop)
 		: 0;
 	if (maxForStat > 0 && maxForStat <= currentForStat && !includeWhenNoStatImpact) return result;
 
@@ -66,7 +66,13 @@ export function getUpgradeableEnchant(
 		const procurement = enchant.levels[enchant.minLevel]?.procurement;
 		const deltaStats: Partial<Record<Stat, number>> = {};
 		for (const stat of Object.values(Stat)) {
-			const val = getStatFromEnchant(enchant.minLevel, enchant, stat, upgradeable.options, upgradeable.crop);
+			const val = getOptimisticStatFromEnchant(
+				enchant.minLevel,
+				enchant,
+				stat,
+				upgradeable.options,
+				upgradeable.crop
+			);
 			if (val !== 0) deltaStats[stat] = val;
 		}
 		// Some enchants (e.g. Dedication) are crop-computed and can evaluate to 0
@@ -121,8 +127,8 @@ export function getUpgradeableEnchant(
 	// Add an entry for upgrading the enchantment
 	const deltaStats: Partial<Record<Stat, number>> = {};
 	for (const stat of Object.values(Stat)) {
-		const before = getStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop);
-		const after = getStatFromEnchant(applied + 1, enchant, stat, upgradeable.options, upgradeable.crop);
+		const before = getOptimisticStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop);
+		const after = getOptimisticStatFromEnchant(applied + 1, enchant, stat, upgradeable.options, upgradeable.crop);
 		const diff = after - before;
 		if (diff !== 0) deltaStats[stat] = diff;
 	}

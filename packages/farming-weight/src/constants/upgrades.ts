@@ -75,6 +75,7 @@ export interface UpgradeCost {
 	coins?: number;
 	copper?: number;
 	bits?: number;
+	kernels?: number;
 	medals?: Partial<Record<Exclude<JacobContestMedal, 'platinum' | 'diamond'>, number>>;
 	applyCost?: Omit<UpgradeCost, 'applyCost'>;
 }
@@ -103,6 +104,9 @@ function addCost(left: UpgradeCost, right: UpgradeCost) {
 	}
 	if (right.bits) {
 		left.bits = (left.bits || 0) + (right.bits || 0);
+	}
+	if (right.kernels) {
+		left.kernels = (left.kernels || 0) + (right.kernels || 0);
 	}
 
 	if (right.medals) {

@@ -20,5 +20,6 @@ export interface JacobDataDto {
 	stats: JacobStatsDto;
 	participations: number;
 	firstPlaceScores: number;
+	uniqueGoldMedals: number;
 	contests: ContestParticipationDto[];
 }

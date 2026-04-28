@@ -1,6 +1,12 @@
 import { expect, test } from 'vitest';
+import { GARDEN_VISITORS } from '../../constants/garden.js';
+import { Stat } from '../../constants/stats.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingArmor } from '../../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../../fortune/farmingequipment.js';
+
+const MAX_UNIQUE_VISITORS = Object.keys(GARDEN_VISITORS).length;
+const MAX_GREEN_THUMB_FORTUNE = MAX_UNIQUE_VISITORS * 0.25;
 
 const almostMaxHelmet = {
 	id: 397,
@@ -262,8 +268,8 @@ test('Lotus necklace fortune sources', () => {
 		{
 			name: 'Green Thumb',
 			current: 82 * 0.25,
-			max: 34.25,
-			ratio: (82 * 0.25) / 34.25,
+			max: MAX_GREEN_THUMB_FORTUNE,
+			ratio: (82 * 0.25) / MAX_GREEN_THUMB_FORTUNE,
 		},
 	]);
 });
@@ -300,10 +306,10 @@ const maxLotusBracelet = {
 
 test('Maxed lotus bracelet fortune sources', () => {
 	const bracelet = new FarmingEquipment(maxLotusBracelet, {
-		uniqueVisitors: 84,
+		uniqueVisitors: MAX_UNIQUE_VISITORS,
 	});
 
-	expect(bracelet.fortune).toBe(56);
+	expect(bracelet.fortune).toBe(35 + MAX_GREEN_THUMB_FORTUNE);
 
 	const progress = bracelet.getProgress();
 
@@ -337,9 +343,42 @@ test('Maxed lotus bracelet fortune sources', () => {
 		},
 		{
 			name: 'Green Thumb',
-			current: 84 * 0.25,
-			max: 34.25,
-			ratio: (84 * 0.25) / 34.25,
+			current: MAX_GREEN_THUMB_FORTUNE,
+			max: MAX_GREEN_THUMB_FORTUNE,
+			ratio: MAX_GREEN_THUMB_FORTUNE / MAX_GREEN_THUMB_FORTUNE,
 		},
 	]);
+});
+
+test('Sunset enchant on armor surfaces Overbloom progress and upgrade', () => {
+	// Sunset grants 1 Overbloom per level on non-Moonflower crops, max level 5.
+	const helmetWithSunset = {
+		...almostMaxHelmet,
+		enchantments: {
+			...almostMaxHelmet.enchantments,
+			ultimate_sunset: 3,
+		},
+	};
+	const item = new FarmingArmor(helmetWithSunset);
+
+	const progress = item.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const sunset = progress.find((p) => p.name === 'Sunset');
+	expect(sunset).toBeDefined();
+	expect(sunset?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 3,
+		max: 5,
+	});
+
+	// Sunset has no FarmingFortune contribution; should NOT appear as a FarmingFortune upgrade.
+	const ffUpgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
+	expect(ffUpgrades.find((u) => u.title?.startsWith('Sunset'))).toBeUndefined();
+
+	// Should appear as an Overbloom upgrade.
+	const overbloomUpgrades = item.getUpgrades({ stat: Stat.Overbloom });
+	const sunsetUpgrade = overbloomUpgrades.find((u) => u.title === 'Sunset 4');
+	expect(sunsetUpgrade).toMatchObject({
+		action: UpgradeAction.Apply,
+		category: UpgradeCategory.Enchant,
+	});
+	expect(sunsetUpgrade?.stats?.[Stat.Overbloom]).toBe(1);
 });

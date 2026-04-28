@@ -1,6 +1,7 @@
 import { building, dev } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import { env as publicEnv } from '$env/dynamic/public';
+import { SkyBlockTime } from 'farming-weight';
 import fs from 'fs/promises';
 import {
 	getAnnouncement,
@@ -8,6 +9,7 @@ import {
 	getBadges,
 	getBazaarProducts,
 	getCategories,
+	getCurrentHarvestFeast,
 	getHypixelGuilds,
 	getLeaderboard,
 	getLeaderboards,
@@ -28,6 +30,7 @@ import {
 	type GetBazaarProductsResponse,
 	type GetSkyblockItemsResponse,
 	type GuildDetailsDto,
+	type HarvestFeastCurrentDto,
 	type HypixelGuildDetailsDto,
 	type LeaderboardDto,
 	type ProductDto,
@@ -208,6 +211,22 @@ const cacheEntries = {
 			return (data ?? []) as ResourcePackDto[];
 		},
 	},
+	harvestfeast: {
+		data: {} as HarvestFeastCurrentDto,
+		update: async () => {
+			const { data } = await getCurrentHarvestFeast();
+			return (
+				data ?? {
+					year: SkyBlockTime.now.year,
+					month: SkyBlockTime.now.month,
+					complete: false,
+					current: [],
+					next: {},
+					isGrandFeast: false,
+				}
+			);
+		},
+	},
 };
 
 export const cache = {
@@ -267,6 +286,9 @@ export const cache = {
 	},
 	get texturepacks() {
 		return cacheEntries.texturepacks.data;
+	},
+	get harvestfeast() {
+		return cacheEntries.harvestfeast.data;
 	},
 };
 

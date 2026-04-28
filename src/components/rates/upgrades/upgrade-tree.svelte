@@ -32,17 +32,22 @@
 		(upgrade.increase > 0 ? upgrade.increase : ((upgrade.stats ? upgrade.max : 0) ?? 0)) || 0
 	);
 
-	// Calculate copper and bits costs
+	// Calculate copper, bits, and kernel costs
 	const copperTotal = $derived((upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0));
 	const bitsTotal = $derived((upgrade.cost?.bits ?? 0) + (upgrade.cost?.applyCost?.bits ?? 0));
+	const kernelsTotal = $derived((upgrade.cost?.kernels ?? 0) + (upgrade.cost?.applyCost?.kernels ?? 0));
 	const copperPerFF = $derived(fortuneForCost > 0 && copperTotal > 0 ? Math.round(copperTotal / fortuneForCost) : 0);
 	const bitsPerFF = $derived(fortuneForCost > 0 && bitsTotal > 0 ? Math.round(bitsTotal / fortuneForCost) : 0);
+	const kernelsPerFF = $derived(
+		fortuneForCost > 0 && kernelsTotal > 0 ? Math.round(kernelsTotal / fortuneForCost) : 0
+	);
 
-	// Use copper/bits if no coin cost, otherwise use coins
+	// Use copper/bits/kernels if no coin cost, otherwise use coins
 	const displayTotal = $derived.by(() => {
 		if (cost > 0) return cost;
 		if (copperTotal > 0) return copperTotal;
 		if (bitsTotal > 0) return bitsTotal;
+		if (kernelsTotal > 0) return kernelsTotal;
 		return 0;
 	});
 
@@ -50,6 +55,7 @@
 		if (cost > 0 && fortuneForCost > 0) return Math.round(cost / fortuneForCost);
 		if (copperPerFF > 0) return copperPerFF;
 		if (bitsPerFF > 0) return bitsPerFF;
+		if (kernelsPerFF > 0) return kernelsPerFF;
 		return 0;
 	});
 
@@ -57,6 +63,7 @@
 		if (cost > 0) return 'coins';
 		if (copperTotal > 0) return ' copper';
 		if (bitsTotal > 0) return ' bits';
+		if (kernelsTotal > 0) return ` kernel${kernelsTotal === 1 ? '' : 's'}`;
 		return '';
 	});
 

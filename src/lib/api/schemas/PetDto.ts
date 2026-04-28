@@ -22,4 +22,9 @@ export interface PetDto {
 	/** @nullable */
 	skin?: string | null;
 	level: number;
+	maxLevel: number;
+	progress: number;
+	xpCurrent: number;
+	xpForNext: number;
+	xpMaxLevel: number;
 }

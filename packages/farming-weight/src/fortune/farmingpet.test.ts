@@ -165,8 +165,7 @@ test('Rose Dragon Symbiosis appears in player breakdown', () => {
 	expect(breakdown?.['Base Stats']).toBeDefined();
 });
 
-test('Pig Pet Trample shows reduction in pet breakdown', () => {
-	// Level 100 Legendary Pig Pet - Trample reduces total fortune by 75%
+test('Pig Pet Shining Stampede shows potato fortune in pet breakdown', () => {
 	const pig = {
 		uuid: 'test-pig-uuid',
 		type: 'PIG',
@@ -180,23 +179,15 @@ test('Pig Pet Trample shows reduction in pet breakdown', () => {
 
 	const player = new FarmingPlayer({
 		pets: [pig],
-		farmingLevel: 60, // 240 fortune from farming level
+		bestiaryKills: {
+			shiny_pig_1: 60,
+		},
 	});
 
 	expect(player.selectedPet?.type).toBe('PIG');
 
-	// Player's base fortune should be stored
-	expect(player.baseFortune).toBeGreaterThan(0);
-
-	// Get the pig's breakdown - should show Trample reduction
 	const breakdown = player.selectedPet?.getFullBreakdown(player);
 
-	// Trample should be defined with negative value (75% reduction of total fortune)
-	expect(breakdown?.['Trample (75% Reduction)']).toBeDefined();
-	expect(breakdown?.['Trample (75% Reduction)'].value).toBeLessThan(0);
-	expect(breakdown?.['Trample (75% Reduction)'].stat).toBe(Stat.FarmingFortune);
-
-	// Verify the reduction value is -75% of player base fortune
-	const expectedReduction = -player.baseFortune * 0.75;
-	expect(breakdown?.['Trample (75% Reduction)'].value).toBeCloseTo(expectedReduction, 2);
+	expect(breakdown?.['Potato Fortune']).toStrictEqual({ value: 20, stat: Stat.PotatoFortune });
+	expect(breakdown?.['Shining Stampede']).toStrictEqual({ value: 50, stat: Stat.PotatoFortune });
 });

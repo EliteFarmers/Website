@@ -19,7 +19,7 @@
 				"§9Dedication IV",
 				"§9Delicate V",
 				"§9Efficiency V",
-				"§9Sunder VI",
+				"§9Harvesting VI",
 				"§9Turbo-Melon V",
 				"",
 				"§7Level §a50 §6§l(MAX!)   §8(156.1k/200k)",
@@ -42,7 +42,7 @@
 				"§6§l§ka§r §6§lLEGENDARY AXE §6§l§ka"
 			],
 			"enchantments": {
-				"sunder": 6,
+				"harvesting": 6,
 				"delicate": 5,
 				"dedication": 4,
 				"efficiency": 5,

@@ -104,25 +104,25 @@ test('Armor set bonus', () => {
 		{
 			name: 'Necklace',
 			current: 0,
-			max: 81.75,
+			max: 82,
 			ratio: 0,
 		},
 		{
 			name: 'Cloak',
 			current: 0,
-			max: 81.75,
+			max: 82,
 			ratio: 0,
 		},
 		{
 			name: 'Belt',
 			current: 0,
-			max: 81.75,
+			max: 82,
 			ratio: 0,
 		},
 		{
 			name: 'Gloves',
 			current: 0,
-			max: 81.75,
+			max: 82,
 			ratio: 0,
 		},
 	]);
@@ -230,26 +230,26 @@ test('Equipment set bonus', () => {
 		{
 			name: 'Necklace',
 			current: 0,
-			max: 81.75,
+			max: 82,
 			ratio: 0,
 		},
 		{
 			name: 'Cloak',
 			current: 29,
-			max: 81.75,
-			ratio: 29 / 81.75,
+			max: 82,
+			ratio: 29 / 82,
 		},
 		{
 			name: 'Belt',
 			current: 0,
-			max: 81.75,
+			max: 82,
 			ratio: 0,
 		},
 		{
 			name: 'Gloves',
 			current: 29,
-			max: 81.75,
-			ratio: 29 / 81.75,
+			max: 82,
+			ratio: 29 / 82,
 		},
 	]);
 });
@@ -419,4 +419,30 @@ test('Helianthus helmet upgrades', () => {
 	expect(helmetProgress!.item?.skyblockId).toBe('HELIANTHUS_HELMET');
 
 	expect(helmetProgress!.current).toBe(helmetProgress!.max);
+});
+
+test('ArmorSet.getUpgrades surfaces Sunset enchant for Overbloom', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 397,
+				count: 1,
+				skyblockId: 'FERMENTO_HELMET',
+				uuid: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+				name: '§dFermento Helmet',
+				lore: [],
+				enchantments: { ultimate_sunset: 2 },
+				attributes: { timestamp: '1705977799398' },
+			},
+		],
+	});
+
+	const overbloomUpgrades = player.armorSet.getUpgrades({ stat: Stat.Overbloom });
+	const sunset = overbloomUpgrades.find((u) => u.title === 'Sunset 3');
+	expect(sunset).toBeDefined();
+	expect(sunset?.stats?.[Stat.Overbloom]).toBe(1);
+
+	// Plain getUpgrades on the player should also expose it.
+	const playerOverbloom = player.getUpgrades({ stat: Stat.Overbloom });
+	expect(playerOverbloom.find((u) => u.title === 'Sunset 3')).toBeDefined();
 });

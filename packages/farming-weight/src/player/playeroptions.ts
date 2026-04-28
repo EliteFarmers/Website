@@ -44,7 +44,22 @@ export interface FortuneMissingFromAPI {
 	chips?: Partial<FarmingPlayerGardenChips>;
 	perks?: Record<string, string | null | number>;
 
+	/**
+	 * Harvest Feast event state. When `active`, in-season RARE CROP drops (Seasoning + per-crop materials)
+	 * are included in detailed drop calculations and Carnival Harvest Feast perks contribute fortune.
+	 */
+	harvestFeast?: HarvestFeastOptions;
+
 	temporaryFortune?: TemporaryFarmingFortune;
+}
+
+export interface HarvestFeastOptions {
+	/** Whether a Harvest Feast (or Mayor Finnegan's Grand Feast) is currently active. */
+	active: boolean;
+	/** The crops that are in-season this month. Caller is responsible for computing this from the SkyBlock date. */
+	inSeasonCrops?: Crop[];
+	/** Whether the active feast is a Grand Feast (extends to entire SkyBlock year via Mayor Finnegan). */
+	grandFeast?: boolean;
 }
 
 export interface ExtraFarmingFortune {

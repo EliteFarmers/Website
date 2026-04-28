@@ -13,4 +13,6 @@ export interface ProfileMemberNetworthDto {
 	liquid: number;
 	functional: number;
 	liquidFunctional: number;
+	/** True when inventory API access was disabled, meaning networth is incomplete. */
+	noInventory: boolean;
 }

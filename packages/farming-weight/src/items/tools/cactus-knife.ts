@@ -19,7 +19,7 @@ export class CactusKnife1 extends BaseItem {
 	}
 
 	override crops = [Crop.Cactus];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T1_TOOL_GEMS;
 	override upgrade = {
 		id: 'CACTUS_KNIFE_2',
@@ -48,7 +48,7 @@ export class CactusKnife2 extends BaseItem {
 	}
 
 	override crops = [Crop.Cactus];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T2_TOOL_GEMS;
 	override upgrade = {
 		id: 'CACTUS_KNIFE_3',
@@ -77,6 +77,6 @@ export class CactusKnife3 extends BaseItem {
 	}
 
 	override crops = [Crop.Cactus];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T3_TOOL_GEMS;
 }
