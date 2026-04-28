@@ -47,38 +47,38 @@ export class BeePet extends FarmingPetDefinition {
 				type: FarmingPetStatType.Base,
 			},
 		},
-        [Rarity.Mythic]: {
-            [Stat.FarmingFortune]: {
-                name: 'Busy Buzz Buzz',
-                value: 0.4,
-                type: FarmingPetStatType.Base,
-            },
-        },
+		[Rarity.Mythic]: {
+			[Stat.FarmingFortune]: {
+				name: 'Busy Buzz Buzz',
+				value: 0.4,
+				type: FarmingPetStatType.Base,
+			},
+		},
 	};
 
-    override abilities = [
-        {
-            name: 'Powered by Pollen',
-            exists: (_, pet) => pet.rarity === Rarity.Mythic,
-            computed: (_, pet) => {
-                return {
-                    [Stat.MoonflowerFortune]: {
-                        name: 'Powered by Pollen',
-                        value: 1.6 * pet.level,
-                        type: FarmingPetStatType.Ability,
-                    },
-                    [Stat.SunflowerFortune]: {
-                        name: 'Powered by Pollen',
-                        value: 1.6 * pet.level,
-                        type: FarmingPetStatType.Ability,
-                    },
-                    [Stat.WildRoseFortune]: {
-                        name: 'Powered by Pollen',
-                        value: 1.6 * pet.level,
-                        type: FarmingPetStatType.Ability,
-                    },
-                }
-            }
-        }
-    ] as FarmingPetAbility[];
+	override abilities = [
+		{
+			name: 'Powered by Pollen',
+			exists: (_, pet) => pet.rarity === Rarity.Mythic,
+			computed: (_, pet) => {
+				return {
+					[Stat.MoonflowerFortune]: {
+						name: 'Powered by Pollen',
+						value: 1.6 * pet.level,
+						type: FarmingPetStatType.Ability,
+					},
+					[Stat.SunflowerFortune]: {
+						name: 'Powered by Pollen',
+						value: 1.6 * pet.level,
+						type: FarmingPetStatType.Ability,
+					},
+					[Stat.WildRoseFortune]: {
+						name: 'Powered by Pollen',
+						value: 1.6 * pet.level,
+						type: FarmingPetStatType.Ability,
+					},
+				};
+			},
+		},
+	] as FarmingPetAbility[];
 }

@@ -61,20 +61,20 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 			},
 		},
 	},
-    FLYING_PIG: {
-        name: 'Flying Pig',
-        wiki: 'https://w.elitesb.gg/Flying_Pig',
-        stats: {
-            [Stat.PotatoFortune]: {
-                name: 'Flying Pig Potato Fortune',
-                value: 40,
-            },
-            [Stat.Speed]: {
-                name: 'Flying Pig Speed',
-                value: 20,
-            },
-        },
-    }
+	FLYING_PIG: {
+		name: 'Flying Pig',
+		wiki: 'https://w.elitesb.gg/Flying_Pig',
+		stats: {
+			[Stat.PotatoFortune]: {
+				name: 'Flying Pig Potato Fortune',
+				value: 40,
+			},
+			[Stat.Speed]: {
+				name: 'Flying Pig Speed',
+				value: 20,
+			},
+		},
+	},
 };
 
 export const PET_RARITY_OFFSETS = {

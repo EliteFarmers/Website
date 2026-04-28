@@ -93,7 +93,7 @@ export class RoseDragonPet extends FarmingPetDefinition {
 						continue;
 					}
 
-                    // Max rarity not checked here as Hypixel apparently doesn't look for it
+					// Max rarity not checked here as Hypixel apparently doesn't look for it
 					if (pet.level >= 100) {
 						maxedPets[pet.type] = 1;
 					}

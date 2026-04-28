@@ -5,11 +5,11 @@ import type { ArmorSet, FarmingArmor } from '../../fortune/farmingarmor.js';
 import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import type { UpgradeableInfo } from '../../fortune/upgradeable.js';
 import {
-    ARMOR_SET_BONUS,
-    FARMING_ARMOR_INFO,
-    GEAR_SLOTS,
-    type GearSlot,
-    type GearSlotInfo,
+	ARMOR_SET_BONUS,
+	FARMING_ARMOR_INFO,
+	GEAR_SLOTS,
+	type GearSlot,
+	type GearSlotInfo,
 } from '../../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../../items/equipment.js';
 import { getFakeItem } from '../itemregistry.js';

@@ -256,7 +256,10 @@ test('Overbloom increases rare crops and rare item drops', () => {
 
 	expect(moonflowerWithOverbloom.rareItemBonus).toBe(0.05);
 	expect(moonflowerWithOverbloom.rareItemBonusBreakdown.Overbloom).toBe(0.05);
-	expect(moonflowerWithOverbloom.items['HELIANTHUS']).toBeCloseTo((baseMoonflower.items['HELIANTHUS'] ?? 0) * 1.05, 2);
+	expect(moonflowerWithOverbloom.items['HELIANTHUS']).toBeCloseTo(
+		(baseMoonflower.items['HELIANTHUS'] ?? 0) * 1.05,
+		2
+	);
 });
 
 test('Multiple rate modifiers stack correctly with multiplicative formula', () => {

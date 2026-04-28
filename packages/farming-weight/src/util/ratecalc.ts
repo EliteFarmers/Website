@@ -1,12 +1,12 @@
 import { FARMING_ATTRIBUTE_SHARDS, type FarmingAttributes, normalizeAttributes } from '../constants/attributes.js';
 import {
-    GARDEN_CHIPS,
-    getChipInputLevel,
-    getChipLevel,
-    getChipRarity,
-    normalizeChipLevels,
+	GARDEN_CHIPS,
+	getChipInputLevel,
+	getChipLevel,
+	getChipRarity,
+	normalizeChipLevels,
 } from '../constants/chips.js';
-import { Crop, CROP_INFO, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
+import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { Rarity, REFORGES } from '../constants/reforges.js';
 import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';

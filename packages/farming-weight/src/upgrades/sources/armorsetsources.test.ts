@@ -422,27 +422,27 @@ test('Helianthus helmet upgrades', () => {
 });
 
 test('ArmorSet.getUpgrades surfaces Sunset enchant for Overbloom', () => {
-const player = new FarmingPlayer({
-armor: [
-{
-id: 397,
-count: 1,
-skyblockId: 'FERMENTO_HELMET',
-uuid: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
-name: '§dFermento Helmet',
-lore: [],
-enchantments: { ultimate_sunset: 2 },
-attributes: { timestamp: '1705977799398' },
-},
-],
-});
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 397,
+				count: 1,
+				skyblockId: 'FERMENTO_HELMET',
+				uuid: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+				name: '§dFermento Helmet',
+				lore: [],
+				enchantments: { ultimate_sunset: 2 },
+				attributes: { timestamp: '1705977799398' },
+			},
+		],
+	});
 
-const overbloomUpgrades = player.armorSet.getUpgrades({ stat: Stat.Overbloom });
-const sunset = overbloomUpgrades.find((u) => u.title === 'Sunset 3');
-expect(sunset).toBeDefined();
-expect(sunset?.stats?.[Stat.Overbloom]).toBe(1);
+	const overbloomUpgrades = player.armorSet.getUpgrades({ stat: Stat.Overbloom });
+	const sunset = overbloomUpgrades.find((u) => u.title === 'Sunset 3');
+	expect(sunset).toBeDefined();
+	expect(sunset?.stats?.[Stat.Overbloom]).toBe(1);
 
-// Plain getUpgrades on the player should also expose it.
-const playerOverbloom = player.getUpgrades({ stat: Stat.Overbloom });
-expect(playerOverbloom.find((u) => u.title === 'Sunset 3')).toBeDefined();
+	// Plain getUpgrades on the player should also expose it.
+	const playerOverbloom = player.getUpgrades({ stat: Stat.Overbloom });
+	expect(playerOverbloom.find((u) => u.title === 'Sunset 3')).toBeDefined();
 });

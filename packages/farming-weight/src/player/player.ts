@@ -1,16 +1,16 @@
 import { normalizeAttributes } from '../constants/attributes.js';
 import {
-    getChipInputLevel,
-    getChipLevel,
-    getChipTempMultiplierPerLevel,
-    normalizeChipId,
-    normalizeChipLevels,
+	getChipInputLevel,
+	getChipLevel,
+	getChipTempMultiplierPerLevel,
+	normalizeChipId,
+	normalizeChipLevels,
 } from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
-import { UpgradeAction, UpgradeCategory, type FortuneUpgrade, type UpgradeTreeNode } from '../constants/upgrades.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory, type UpgradeTreeNode } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';

@@ -66,7 +66,13 @@ export function getUpgradeableEnchant(
 		const procurement = enchant.levels[enchant.minLevel]?.procurement;
 		const deltaStats: Partial<Record<Stat, number>> = {};
 		for (const stat of Object.values(Stat)) {
-			const val = getOptimisticStatFromEnchant(enchant.minLevel, enchant, stat, upgradeable.options, upgradeable.crop);
+			const val = getOptimisticStatFromEnchant(
+				enchant.minLevel,
+				enchant,
+				stat,
+				upgradeable.options,
+				upgradeable.crop
+			);
 			if (val !== 0) deltaStats[stat] = val;
 		}
 		// Some enchants (e.g. Dedication) are crop-computed and can evaluate to 0

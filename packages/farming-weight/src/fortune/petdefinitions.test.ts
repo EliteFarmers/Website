@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Rarity } from '../constants/reforges.js';
 import { Stat, type StatValue } from '../constants/stats.js';
-import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPets, FarmingPetStatType } from '../items/pets.js';
+import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPetStatType, FarmingPets } from '../items/pets.js';
 import { FarmingPet } from './farmingpet.js';
 
 function expectStatValue<T, C>(stat: StatValue<T, C> | undefined, value: number) {
@@ -217,7 +217,7 @@ describe('Pet Fortune Calculations', () => {
 					PUMPKIN: 46,
 					CACTUS: 46,
 					SUGAR_CANE: 46,
-					"INK_SACK:3": 46,
+					'INK_SACK:3': 46,
 					MUSHROOM_COLLECTION: 46,
 					NETHER_STALK: 46,
 				},

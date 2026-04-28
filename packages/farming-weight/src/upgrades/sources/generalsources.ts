@@ -1,36 +1,36 @@
 import {
-    FARMING_ATTRIBUTE_SHARDS,
-    getShardFortune,
-    getShardLevel,
-    getShardsForLevel,
-    getShardsForNextLevel,
-    getShardStat,
+	FARMING_ATTRIBUTE_SHARDS,
+	getShardFortune,
+	getShardLevel,
+	getShardStat,
+	getShardsForLevel,
+	getShardsForNextLevel,
 } from '../../constants/attributes.js';
 import {
-    GARDEN_CHIP_MAX_LEVEL,
-    GARDEN_CHIPS,
-    type GardenChipInfo,
-    getChipLevel,
-    getChipRarity,
+	GARDEN_CHIP_MAX_LEVEL,
+	GARDEN_CHIPS,
+	type GardenChipInfo,
+	getChipLevel,
+	getChipRarity,
 } from '../../constants/chips.js';
-import { type Crop, CROP_INFO } from '../../constants/crops.js';
+import { CROP_INFO, type Crop } from '../../constants/crops.js';
 import {
-    BESTIARY_PEST_BRACKETS,
-    DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-    GARDEN_BESTIARY_BRACKETS,
-    PEST_BESTIARY_IDS,
+	BESTIARY_PEST_BRACKETS,
+	DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	GARDEN_BESTIARY_BRACKETS,
+	PEST_BESTIARY_IDS,
 } from '../../constants/pests.js';
 import { Rarity } from '../../constants/reforges.js';
 import {
-    ANITA_FORTUNE_UPGRADE,
-    COMMUNITY_CENTER_UPGRADE,
-    DNA_MILESTONE_SOURCE,
-    FARMING_LEVEL,
-    FILLED_ROSEWATER_FLASK_SOURCE,
-    PEST_BESTIARY_SOURCE,
-    REFINED_TRUFFLE_SOURCE,
-    UNLOCKED_PLOTS,
-    WRIGGLING_LARVA_SOURCE,
+	ANITA_FORTUNE_UPGRADE,
+	COMMUNITY_CENTER_UPGRADE,
+	DNA_MILESTONE_SOURCE,
+	FARMING_LEVEL,
+	FILLED_ROSEWATER_FLASK_SOURCE,
+	PEST_BESTIARY_SOURCE,
+	REFINED_TRUFFLE_SOURCE,
+	UNLOCKED_PLOTS,
+	WRIGGLING_LARVA_SOURCE,
 } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
@@ -461,8 +461,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				item: highest?.item,
 				info: highest?.info,
 				nextInfo: first ?? highest?.getNextItemUpgrade()?.info,
-				maxInfo:
-					highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_HEIRLOOM,
+				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_HEIRLOOM,
 			};
 		},
 		upgrades: (player) => {

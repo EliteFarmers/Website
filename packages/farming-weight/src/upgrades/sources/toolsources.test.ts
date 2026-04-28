@@ -174,9 +174,7 @@ test('Test tool fortune sources', () => {
 
 test('Turbo enchants upgrade to gourd-backed levels 6 and 7', () => {
 	const level5Tool = new FarmingTool(netherwartHoe);
-	const level6 = level5Tool
-		.getUpgrades({ stat: Stat.NetherWartFortune })
-		.find((u) => u.title === 'Turbo-Warts 6');
+	const level6 = level5Tool.getUpgrades({ stat: Stat.NetherWartFortune }).find((u) => u.title === 'Turbo-Warts 6');
 
 	expect(level6).toMatchObject({
 		increase: 5,
@@ -202,9 +200,7 @@ test('Turbo enchants upgrade to gourd-backed levels 6 and 7', () => {
 			turbo_warts: 6,
 		},
 	});
-	const level7 = level6Tool
-		.getUpgrades({ stat: Stat.NetherWartFortune })
-		.find((u) => u.title === 'Turbo-Warts 7');
+	const level7 = level6Tool.getUpgrades({ stat: Stat.NetherWartFortune }).find((u) => u.title === 'Turbo-Warts 7');
 
 	expect(level7).toMatchObject({
 		increase: 5,
