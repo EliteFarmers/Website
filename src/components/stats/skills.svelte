@@ -19,7 +19,7 @@
 	const ranks = $derived(ctx.ranks);
 	const skills = $derived(ctx.member.current?.skills);
 	const levelCaps = $derived((ctx.member.current?.unparsed?.levelCaps ?? {}) as Record<string, number | undefined>);
-	const gardenXp = $derived(ctx.garden?.experience ?? 0);
+	const gardenXp = $derived(Number(ctx.garden?.experience ?? 0));
 </script>
 
 <Collapsible.Root bind:open class="mx-4 w-full">

@@ -424,6 +424,7 @@
 </FloatingButton>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
+	{@render warning()}
 	<Cropselector radio={true} />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
@@ -663,6 +664,7 @@
 		</section>
 	</div>
 
+	{@render warning()}
 	<Cropselector radio={true} href="#fortune" id="fortune" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
@@ -741,6 +743,7 @@
 		</section>
 	</div>
 
+	{@render warning()}
 	<Cropselector radio={true} href="#upgrades" id="upgrades" />
 
 	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
@@ -767,3 +770,19 @@
 		<RatesSettings {player} />
 	</Dialog.ScrollContent>
 </Dialog.Root>
+
+{#snippet warning()}
+	<!-- Warning about toolkit -->
+	<div class="flex flex-col items-center gap-2 rounded-md bg-yellow-100 px-4 py-2 text-sm text-yellow-800">
+		<p>
+			<TriangleAlert size={16} class="inline" />
+			Farming tools in your Farming Toolkit will not show up here! Please remove them from your toolkit and keep them
+			in a normal inventory!
+		</p>
+		<p>
+			Please report bugs with the new Harvest Feast features on the <a href="/support" class="text-link underline"
+				>support Discord server</a
+			>!
+		</p>
+	</div>
+{/snippet}
