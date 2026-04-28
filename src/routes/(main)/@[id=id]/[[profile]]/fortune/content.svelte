@@ -161,7 +161,7 @@
 		cropUpgrades: getCropUpgrades(
 			(ctx.member.current?.garden?.cropUpgrades ?? {}) as unknown as Record<string, number>
 		),
-		gardenLevel: getGardenLevel(ctx.member.current?.garden?.experience ?? 0).level,
+		gardenLevel: getGardenLevel(Number(ctx.member.current?.garden?.experience ?? 0)).level,
 
 		communityCenter: $ratesData.communityCenter,
 		filledRosewaterFlask: $ratesData.rosewaterFlasks,
