@@ -18,7 +18,7 @@ export interface FarmingEnchantTier {
 	stats?: Partial<Record<Stat, number>>;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 	computed?: Partial<Record<Stat, (opt: PlayerOptions) => number>>;
-	cropComputed?: Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>;
+	cropComputed?: Partial<Record<Stat, (crop?: Crop, opt?: PlayerOptions) => number>>;
 	procurement?: EnchantTierProcurement;
 	cost?: UpgradeCost;
 }

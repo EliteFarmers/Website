@@ -209,12 +209,12 @@ test('Sunset enchantment grants daytime Overbloom and affects player rate calcul
 	expect(player.getStat(Stat.Overbloom, Crop.Moonflower)).toBe(0);
 
 	const rates = player.getRates(Crop.NetherWart, 100_000);
-	expect(rates.rareItemBonusBreakdown.Overbloom).toBe(0.05);
+	expect(rates.rareItemBonusBreakdown['Fermento Leggings']).toBe(0.05);
 	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.05, 2);
 
 	const moonflowerRates = player.getRates(Crop.Moonflower, 100_000);
 	expect(moonflowerRates.rareItemBonus).toBe(0);
-	expect(moonflowerRates.rareItemBonusBreakdown.Overbloom).toBeUndefined();
+	expect(moonflowerRates.rareItemBonusBreakdown['Fermento Leggings']).toBeUndefined();
 });
 
 test('Feast enchantment grants tool Overbloom for player rate calculations', () => {
@@ -243,7 +243,7 @@ test('Feast enchantment grants tool Overbloom for player rate calculations', () 
 
 	const rates = player.getRates(Crop.NetherWart, 100_000);
 	expect(rates.rareItemBonus).toBe(0.025);
-	expect(rates.rareItemBonusBreakdown.Overbloom).toBe(0.025);
+	expect(rates.rareItemBonusBreakdown['Farming Tool']).toBe(0.025);
 	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.025, 2);
 });
 
@@ -261,7 +261,7 @@ test('Rarefinder chip grants Overbloom for player rate calculations', () => {
 
 	const rates = player.getRates(Crop.NetherWart, 100_000);
 	expect(rates.rareItemBonus).toBeCloseTo(0.6, 4);
-	expect(rates.rareItemBonusBreakdown.Overbloom).toBeCloseTo(0.6, 4);
+	expect(rates.rareItemBonusBreakdown['Garden Chips']).toBeCloseTo(0.6, 4);
 	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.6, 2);
 });
 
@@ -283,8 +283,8 @@ test('Rose Dragon grants Overbloom for player rate calculations', () => {
 
 	expect(player.getStat(Stat.Overbloom)).toBe(40);
 
-	const rates = player.getRates(Crop.Mushroom, 250_000);
+	const rates = player.getRates(Crop.Mushroom, 350_000);
 	expect(rates.rareItemBonus).toBeCloseTo(0.4, 4);
-	expect(rates.rareItemBonusBreakdown.Overbloom).toBeCloseTo(0.4, 4);
+	expect(rates.rareItemBonusBreakdown['Rose Dragon']).toBeCloseTo(0.4, 4);
 	expect(rates.rngItems?.['BURROWING_SPORES']).toBeCloseTo(1 * 1.4, 2);
 });

@@ -15,6 +15,7 @@ export enum Pest {
 	Dragonfly = 'dragonfly',
 	Firefly = 'firefly',
 	Mantis = 'mantis',
+    LunarMoth = 'lunar_moth',
 }
 
 export const FORTUNE_PER_PEST_BRACKET = 0.4;
@@ -69,20 +70,21 @@ export const TIMESTALK_CLONE_BESTIARY_BRACKET: Record<number, number> = {
 };
 
 export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
-	[Pest.Beetle]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Cricket]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Worm]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Fly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Locust]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Mite]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Mosquito]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Moth]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Rat]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Slug]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Mouse]: FIELD_MOUSE_BESTIARY_PEST_BRACKET,
-	[Pest.Dragonfly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Firefly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Mantis]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Beetle]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Cricket]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Worm]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Fly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Locust]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Mite]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Mosquito]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Moth]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Rat]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Slug]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Mouse]: FIELD_MOUSE_BESTIARY_PEST_BRACKET,
+    [Pest.Dragonfly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Firefly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.Mantis]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+    [Pest.LunarMoth]: FIELD_MOUSE_BESTIARY_PEST_BRACKET
 };
 
 export const PEST_EXCHANGE_RATES = {
@@ -144,6 +146,7 @@ export const PEST_IDS: Pest[] = [
 	Pest.Dragonfly,
 	Pest.Firefly,
 	Pest.Mantis,
+    Pest.LunarMoth,
 ];
 
 export const PEST_BESTIARY_IDS: Record<string, Pest | null> = {
@@ -161,6 +164,7 @@ export const PEST_BESTIARY_IDS: Record<string, Pest | null> = {
 	[`pest_${Pest.Dragonfly}_1`]: Pest.Dragonfly,
 	[`pest_${Pest.Firefly}_1`]: Pest.Firefly,
 	pest_praying_mantis_1: Pest.Mantis, // oops
+    [`pest_${Pest.LunarMoth}_1`]: Pest.LunarMoth,
 	zombuddy_1: null,
 	timestalk_clone_100: null,
 };
@@ -180,6 +184,7 @@ export const GARDEN_BESTIARY_NAMES: Record<string, string> = {
 	[`pest_${Pest.Dragonfly}_1`]: 'Dragonfly',
 	[`pest_${Pest.Firefly}_1`]: 'Firefly',
 	pest_praying_mantis_1: 'Mantis',
+    [`pest_${Pest.LunarMoth}_1`]: 'Lunar Moth',
 	zombuddy_1: 'Zombuddy',
 	timestalk_clone_100: 'Timestalk Clone',
 };
@@ -225,7 +230,7 @@ export const CROP_TO_PEST: Record<Crop, Pest> = {
 export const PEST_COLLECTION_BRACKETS = [0, 50, 100, 250, 500, 750, 1000];
 
 // Taken from https://api.eliteskyblock.com/weights/all
-export const PEST_COLLECTION_ADJUSTMENTS: Omit<Record<Pest, Record<number, number>>, Pest.Mouse> = {
+export const PEST_COLLECTION_ADJUSTMENTS: Omit<Record<Pest, Record<number, number>>, Pest.Mouse | Pest.LunarMoth> = {
 	mite: {
 		'0': 0,
 		'50': 392.81451,

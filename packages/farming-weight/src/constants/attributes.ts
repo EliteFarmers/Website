@@ -3,7 +3,6 @@ import type { DynamicFortuneSource } from '../upgrades/sources/dynamicfortunesou
 import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
 import { Crop } from './crops.js';
 import { Rarity } from './reforges.js';
-import { MATCHING_SPECIAL_CROP } from './specialcrops.js';
 import { getStatValue, Stat, type StatsRecord } from './stats.js';
 
 type ShardId = keyof typeof FARMING_ATTRIBUTE_SHARDS;
@@ -164,17 +163,10 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		rarity: Rarity.Rare,
 		effect: 'rates',
 		wiki: 'https://w.elitesb.gg/Cropeetle_Shard',
-		ratesModifier: (current, options) => {
-			const level = getShardLevel(Rarity.Rare, getAttributeAmount(options.attributes, 'crop_bug'));
-			if (level <= 0) return current;
-
-			const specialCrop = MATCHING_SPECIAL_CROP[options.crop];
-			if (!specialCrop) return current;
-
-			const bonus = 0.02 * level;
-			current.specialCropBonus += bonus;
-			current.specialCropBonusBreakdown['Cropeetle Shard'] = bonus;
-			return current;
+		perLevelStats: {
+			[Stat.Overbloom]: {
+				value: 2,
+			},
 		},
 	},
 	fancy_visit: {

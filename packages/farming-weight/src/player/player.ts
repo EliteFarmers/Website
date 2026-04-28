@@ -1,16 +1,16 @@
 import { normalizeAttributes } from '../constants/attributes.js';
 import {
-	getChipInputLevel,
-	getChipLevel,
-	getChipTempMultiplierPerLevel,
-	normalizeChipId,
-	normalizeChipLevels,
+    getChipInputLevel,
+    getChipLevel,
+    getChipTempMultiplierPerLevel,
+    normalizeChipId,
+    normalizeChipLevels,
 } from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
-import { type FortuneUpgrade, UpgradeAction, UpgradeCategory, type UpgradeTreeNode } from '../constants/upgrades.js';
+import { UpgradeAction, UpgradeCategory, type FortuneUpgrade, type UpgradeTreeNode } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
@@ -222,6 +222,15 @@ export class FarmingPlayer {
 		if (armorSetUpgrades.length > 0) {
 			upgrades.push(...armorSetUpgrades);
 		}
+
+		// For non-FarmingFortune stats (e.g. Overbloom), tool upgrades aren't tied to a single
+		// crop and won't be surfaced by getCropUpgrades, so include them here.
+		if (options?.stat && options.stat !== Stat.FarmingFortune) {
+			for (const tool of this.tools) {
+				upgrades.push(...tool.getUpgrades(options));
+			}
+		}
+
 		return filterAndSortUpgrades(upgrades, options);
 	}
 
@@ -484,9 +493,11 @@ export class FarmingPlayer {
 
 			const fortune = source.fortune(this.options.temporaryFortune);
 			if (fortune) {
-				const boosted = fortune * hyperchargeMultiplier;
-				breakdown[source.name] = { value: boosted, stat: Stat.FarmingFortune };
-				sum += boosted;
+				const stat = source.stat ?? Stat.FarmingFortune;
+				// Hypercharge chip only boosts farming fortune sources, not Overbloom or other stats.
+				const boosted = stat === Stat.FarmingFortune ? fortune * hyperchargeMultiplier : fortune;
+				breakdown[source.name] = { value: boosted, stat };
+				if (stat === Stat.FarmingFortune) sum += boosted;
 			}
 		}
 
@@ -527,6 +538,12 @@ export class FarmingPlayer {
 		const cropFortune = this.getCropFortune(crop, tool);
 		const fortune = this.permFortune + this.tempFortune + cropFortune.fortune;
 
+		const overbloomBreakdown = this.getStatBreakdown(Stat.Overbloom, crop);
+		const overbloomSources: Record<string, number> = {};
+		for (const [name, entry] of Object.entries(overbloomBreakdown)) {
+			if (entry.value) overbloomSources[name] = entry.value;
+		}
+
 		return calculateDetailedDrops({
 			crop: crop,
 			blocksBroken: blocksBroken,
@@ -537,6 +554,7 @@ export class FarmingPlayer {
 			chips: this.options.chips,
 			pet: this.selectedPet,
 			overbloom: this.getStat(Stat.Overbloom, crop),
+			overbloomBreakdown: overbloomSources,
 		});
 	}
 

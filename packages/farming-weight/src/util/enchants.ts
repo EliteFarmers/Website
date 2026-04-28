@@ -19,17 +19,43 @@ export function getStatFromEnchant(
 	options?: PlayerOptions,
 	crop?: Crop
 ): number {
+	return evalStatFromEnchant(level, enchant, stat, options, crop, false);
+}
+
+/**
+ * Like {@link getStatFromEnchant}, but when no crop is provided, evaluates
+ * `cropComputed` contributions with `undefined` so non-crop-bound items (e.g.
+ * armor with Sunset) can resolve per-level deltas without a representative crop.
+ */
+export function getOptimisticStatFromEnchant(
+	level: number,
+	enchant: FarmingEnchant,
+	stat: Stat,
+	options?: PlayerOptions,
+	crop?: Crop
+): number {
+	return evalStatFromEnchant(level, enchant, stat, options, crop, true);
+}
+
+function evalStatFromEnchant(
+	level: number,
+	enchant: FarmingEnchant,
+	stat: Stat,
+	options: PlayerOptions | undefined,
+	crop: Crop | undefined,
+	optimistic: boolean
+): number {
 	if (level <= 0) return 0;
 
 	const tier = enchant.levels?.[level];
 	if (!tier) return 0;
 
-	let value = getStatFromTier(tier, stat, options, crop, enchant);
+	let value = getStatFromTier(tier, stat, options, crop, enchant, optimistic);
 
 	if (enchant.computedLevels && options) {
 		const computedTier = enchant.computedLevels(options)?.[level];
 		if (computedTier) {
-			value += getStatFromTier(computedTier, stat, options, crop, enchant);
+			value += getStatFromTier(computedTier, stat, options, crop, enchant, optimistic);
 		}
 	}
 
@@ -53,12 +79,13 @@ export function getMaxStatFromEnchant(
 	const tier = enchant.levels?.[enchant.maxLevel];
 	if (!tier) return 0;
 
-	let value = getStatFromTier(tier, stat, options, crop, enchant);
+	const optimistic = !crop;
+	let value = getStatFromTier(tier, stat, options, crop, enchant, optimistic);
 
 	if (enchant.computedLevels && options) {
 		const computedTier = enchant.computedLevels(options)?.[enchant.maxLevel];
 		if (computedTier) {
-			value += getStatFromTier(computedTier, stat, options, crop, enchant);
+			value += getStatFromTier(computedTier, stat, options, crop, enchant, optimistic);
 		}
 	}
 
@@ -70,7 +97,8 @@ function getStatFromTier(
 	stat: Stat,
 	options: PlayerOptions | undefined,
 	crop: Crop | undefined,
-	enchant: FarmingEnchant
+	enchant: FarmingEnchant,
+	optimistic = false
 ) {
 	if (crop && enchant.cropSpecific && enchant.cropSpecific !== crop) {
 		return 0;
@@ -92,6 +120,8 @@ function getStatFromTier(
 
 	if (crop && (!enchant.cropSpecific || enchant.cropSpecific === crop)) {
 		value += tier.cropComputed?.[s]?.(crop, options) ?? 0;
+	} else if (!crop && optimistic && !enchant.cropSpecific) {
+		value += tier.cropComputed?.[s]?.(undefined, options) ?? 0;
 	}
 
 	return value;

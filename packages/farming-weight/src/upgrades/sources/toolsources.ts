@@ -337,6 +337,12 @@ function enchantSourceBuilder(
 				return best || getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
 			}
 
+			// Non-crop-fortune stats (e.g. Overbloom from Feast) are flat per enchant level,
+			// not per crop. Resolve once with one of the tool's crops.
+			if (stat !== Stat.FarmingFortune) {
+				return getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
+			}
+
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getMaxStatFromEnchant(enchant, stat, tool.options, crop);
@@ -373,6 +379,17 @@ function enchantSourceBuilder(
 				);
 			}
 
+			// Non-crop-fortune stats (e.g. Overbloom from Feast) are flat per enchant level.
+			if (stat !== Stat.FarmingFortune) {
+				return getStatFromEnchant(
+					tool.item.enchantments?.[id] ?? 0,
+					enchant,
+					stat,
+					tool.options,
+					tool.crops[0]
+				);
+			}
+
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, crop);
@@ -383,14 +400,18 @@ function enchantSourceBuilder(
 		},
 		upgrades: (tool, stats) => {
 			const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
-			if (!CROP_FORTUNE_STATS.has(primaryStat)) {
-				return getUpgradeableEnchant(tool, id, primaryStat);
+			const chains: Stat[] = [primaryStat];
+			if (CROP_FORTUNE_STATS.has(primaryStat) && !chains.includes(Stat.FarmingFortune)) {
+				chains.push(Stat.FarmingFortune);
+			}
+			for (const s of stats ?? []) {
+				if (!chains.includes(s)) chains.push(s);
 			}
 
-			const upgrades = [
-				...getUpgradeableEnchant(tool, id, primaryStat),
-				...getUpgradeableEnchant(tool, id, Stat.FarmingFortune),
-			];
+			const upgrades: FortuneUpgrade[] = [];
+			for (const s of chains) {
+				upgrades.push(...getUpgradeableEnchant(tool, id, s));
+			}
 
 			const seen = new Set<string>();
 			return upgrades.filter((u) => {

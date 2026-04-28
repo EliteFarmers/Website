@@ -1,3 +1,5 @@
+import { Stat } from './stats.js';
+
 export interface TemporaryFarmingFortune {
 	pestTurnIn?: number;
 
@@ -7,12 +9,16 @@ export interface TemporaryFarmingFortune {
 	springFilter?: boolean;
 	magic8Ball?: boolean;
 	anitaContest?: boolean;
+	celestialMasonJar?: boolean;
+	melonJuiceMixin?: boolean;
+	finnsFocaccia?: boolean;
 }
 
 export interface TemporaryFortuneSource {
 	name: string;
 	wiki: string;
 	fortune: (settings: TemporaryFarmingFortune) => number | undefined;
+	stat?: Stat;
 }
 
 export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryFortuneSource> = {
@@ -67,6 +73,31 @@ export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryF
 		fortune: (settings) => {
 			if (!settings.anitaContest) return;
 			return 25;
+		},
+	},
+	celestialMasonJar: {
+		name: 'Celestial Mason Jar',
+		wiki: 'https://w.elitesb.gg/Celestial_Mason_Jar',
+		fortune: (settings) => {
+			if (!settings.celestialMasonJar) return;
+			return 15;
+		},
+	},
+	melonJuiceMixin: {
+		name: 'Melon Juice Mixin',
+		wiki: 'https://w.elitesb.gg/Melon_Juice_Mixin',
+		fortune: (settings) => {
+			if (!settings.melonJuiceMixin) return;
+			return 15;
+		},
+	},
+	finnsFocaccia: {
+		name: "Finn's Focaccia",
+		wiki: 'https://w.elitesb.gg/Finn%27s_Focaccia',
+		stat: Stat.Overbloom,
+		fortune: (settings) => {
+			if (!settings.finnsFocaccia) return;
+			return 5;
 		},
 	},
 };

@@ -200,8 +200,8 @@
 		return filtered;
 	});
 
-	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune]));
-	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune]));
+	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune, Stat.Overbloom]));
+	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom]));
 	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
 
 	const cropToolSwitchOptions = $derived.by(() => {
@@ -356,6 +356,13 @@
 	});
 
 	const calculatorOptions = $derived.by(() => {
+		const overbloomBreakdown = selectedCropKey
+			? Object.fromEntries(
+					Object.entries($player.getStatBreakdown(Stat.Overbloom, selectedCropKey))
+						.map(([name, entry]) => [name, entry.value])
+						.filter(([, v]) => (v as number) > 0)
+				)
+			: {};
 		return {
 			farmingFortune: cropFortune.fortune,
 			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
@@ -367,6 +374,8 @@
 			pet: $player.selectedPet,
 			attributes: $player.attributes,
 			chips: $player.options.chips,
+			overbloom: selectedCropKey ? $player.getStat(Stat.Overbloom, selectedCropKey) : 0,
+			overbloomBreakdown,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
 	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
@@ -608,51 +617,29 @@
 							<span class="text-xl font-semibold">Farming Weight Gain</span>
 							<span class="text-xl font-semibold">{weightGain.toLocaleString()}</span>
 						</div>
-						{#if info.specialCropBonus > 0 || info.rareItemBonus > 0}
+						{#if info.rareItemBonus > 0}
 							<Accordion.Root type="single" class="w-full">
-								<Accordion.Item value="modifiers" class="outline-border w-full rounded-md px-2 outline">
+								<Accordion.Item value="overbloom" class="outline-border w-full rounded-md px-2 outline">
 									<Accordion.Trigger class="py-2 hover:no-underline">
 										<div class="flex w-full items-center justify-between gap-2 pr-2">
-											<span class="text-muted-foreground text-lg font-semibold"
-												>Rate Modifiers</span
+											<span class="text-lg font-semibold">Overbloom</span>
+											<span class="text-completed text-lg font-semibold"
+												>{(info.rareItemBonus * 100).toLocaleString()}</span
 											>
-											<span class="text-muted-foreground text-sm">Active</span>
 										</div>
 									</Accordion.Trigger>
 									<Accordion.Content class="pb-2">
 										<div class="flex flex-col">
-											{#if info.specialCropBonus > 0}
-												<div class="flex w-full items-center justify-between py-1">
-													<span class="text-lg">Special Crop Bonus</span>
-													<span class="text-progress text-lg font-semibold"
-														>+{(info.specialCropBonus * 100).toFixed(1)}%</span
+											{#each Object.entries(info.rareItemBonusBreakdown)
+												.filter(([, v]) => v > 0)
+												.sort(([, a], [, b]) => b - a) as [name, value] (name)}
+												<div class="flex w-full items-center justify-between py-1 pl-2">
+													<span class="text-muted-foreground text-sm">{name}</span>
+													<span class="text-muted-foreground text-sm"
+														>{(value * 100).toLocaleString()}</span
 													>
 												</div>
-												{#each Object.entries(info.specialCropBonusBreakdown) as [name, value] (name)}
-													<div class="flex w-full items-center justify-between py-1 pl-4">
-														<span class="text-muted-foreground text-sm">{name}</span>
-														<span class="text-muted-foreground text-sm"
-															>+{(value * 100).toFixed(1)}%</span
-														>
-													</div>
-												{/each}
-											{/if}
-											{#if info.rareItemBonus > 0}
-												<div class="flex w-full items-center justify-between py-1">
-													<span class="text-lg">Rare Drop Bonus</span>
-													<span class="text-link text-lg font-semibold"
-														>+{(info.rareItemBonus * 100).toFixed(1)}%</span
-													>
-												</div>
-												{#each Object.entries(info.rareItemBonusBreakdown).filter(([, v]) => v > 0) as [name, value] (name)}
-													<div class="flex w-full items-center justify-between py-1 pl-4">
-														<span class="text-muted-foreground text-sm">{name}</span>
-														<span class="text-muted-foreground text-sm"
-															>+{(value * 100).toFixed(1)}%</span
-														>
-													</div>
-												{/each}
-											{/if}
+											{/each}
 										</div>
 									</Accordion.Content>
 								</Accordion.Item>
@@ -734,7 +721,7 @@
 					{/if}
 					<CategoryProgress
 						name="Gear Fortune"
-						progress={$player.armorSet.getProgress([Stat.FarmingFortune])}
+						progress={$player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom])}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
@@ -742,7 +729,7 @@
 					/>
 					<CategoryProgress
 						name="General Fortune"
-						progress={$player.getProgress([Stat.FarmingFortune])}
+						progress={$player.getProgress([Stat.FarmingFortune, Stat.Overbloom])}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}

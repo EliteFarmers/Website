@@ -5,11 +5,11 @@ import type { ArmorSet, FarmingArmor } from '../../fortune/farmingarmor.js';
 import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import type { UpgradeableInfo } from '../../fortune/upgradeable.js';
 import {
-	ARMOR_SET_BONUS,
-	FARMING_ARMOR_INFO,
-	GEAR_SLOTS,
-	type GearSlot,
-	type GearSlotInfo,
+    ARMOR_SET_BONUS,
+    FARMING_ARMOR_INFO,
+    GEAR_SLOTS,
+    type GearSlot,
+    type GearSlotInfo,
 } from '../../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../../items/equipment.js';
 import { getFakeItem } from '../itemregistry.js';
@@ -138,9 +138,9 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 				maxInfo: (fake ? fake : piece)?.getLastItemUpgrade()?.info,
 			};
 		},
-		upgrades: (set) => {
+		upgrades: (set, stats) => {
 			const piece = set.getPiece(slot as GearSlot);
-			if (piece) return piece.getUpgrades();
+			if (piece) return piece.getUpgrades(stats?.length === 1 ? { stat: stats[0] } : undefined);
 
 			const itemToPurchase =
 				info.target === ReforgeTarget.Armor

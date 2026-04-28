@@ -57,6 +57,9 @@ export function getUpgradeCostBreakdown(
 		if (cost.copper) {
 			breakdown['Copper'] = { count: cost.copper, cost: -1 };
 		}
+		if (cost.kernels) {
+			breakdown['Kernels'] = { count: cost.kernels, cost: -1 };
+		}
 	}
 	if (cost?.applyCost) {
 		sumItems(cost.applyCost.items);

@@ -3,6 +3,7 @@ import { Crop } from '../../constants/crops.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
+import { FarmingPlayer } from '../../player/player.js';
 
 const netherwartHoe = {
 	id: 293,
@@ -607,4 +608,61 @@ test('alwaysInclude enchants should not contribute to max/current totals', () =>
 	expect(cropFever?.progress).toBeDefined();
 	expect(cropFever?.progress?.[0]?.max).toBe(5);
 	expect(cropFever?.progress?.[0]?.current).toBe(5);
+});
+
+test('Feast enchant on tool surfaces Overbloom progress and upgrade', () => {
+	// Feast grants 0.5 Overbloom per level, max level 5 -> max 2.5 Overbloom.
+	const hoeWithFeast = {
+		...netherwartHoe,
+		enchantments: {
+			...netherwartHoe.enchantments,
+			feast: 3,
+		},
+	};
+	const tool = new FarmingTool(hoeWithFeast);
+
+	const progress = tool.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const feast = progress.find((p) => p.name === 'Feast');
+	expect(feast).toBeDefined();
+	expect(feast?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 1.5,
+		max: 2.5,
+	});
+
+	// Feast doesn't contribute Farming or NetherWart Fortune; shouldn't appear in those upgrade lists.
+	expect(
+		tool.getUpgrades({ stat: Stat.NetherWartFortune }).find((u) => u.title?.startsWith('Feast'))
+	).toBeUndefined();
+
+	// Should appear as an Overbloom upgrade (level 4 = +0.5 Overbloom).
+	const overbloomUpgrades = tool.getUpgrades({ stat: Stat.Overbloom });
+	const feastUpgrade = overbloomUpgrades.find((u) => u.title === 'Feast 4');
+	expect(feastUpgrade).toMatchObject({
+		action: UpgradeAction.Apply,
+		category: UpgradeCategory.Enchant,
+	});
+	expect(feastUpgrade?.stats?.[Stat.Overbloom]).toBe(0.5);
+});
+
+test('Player.getUpgrades surfaces tool Overbloom upgrades (Feast)', () => {
+	const hoeWithFeast = {
+		...netherwartHoe,
+		enchantments: {
+			...netherwartHoe.enchantments,
+			feast: 2,
+		},
+	};
+	const player = new FarmingPlayer({
+		tools: [new FarmingTool(hoeWithFeast)],
+	});
+
+	const overbloomUpgrades = player.getUpgrades({ stat: Stat.Overbloom });
+	const feastUpgrade = overbloomUpgrades.find((u) => u.title === 'Feast 3');
+	expect(feastUpgrade).toBeDefined();
+	expect(feastUpgrade?.stats?.[Stat.Overbloom]).toBe(0.5);
+
+	// Tool upgrades should NOT leak into FarmingFortune list (they would already be
+	// included via getCropUpgrades for FF, not here).
+	const ffUpgrades = player.getUpgrades({ stat: Stat.FarmingFortune });
+	expect(ffUpgrades.find((u) => u.title?.startsWith('Feast'))).toBeUndefined();
 });

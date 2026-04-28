@@ -152,21 +152,20 @@ test('Burrowing RNG Drops', () => {
 		crop: Crop.Mushroom,
 		bountiful: true,
 		mooshroom: true,
-		blocksBroken: 250_000,
+		blocksBroken: 350_000,
 	});
 
 	expect(result.rngItems?.['BURROWING_SPORES']).toBe(1);
 });
 
-test('Cropeetle shard increases special crop bonus', () => {
+test('Cropeetle shard contributes Overbloom to special crop drops', () => {
 	const resultWithShard = calculateDetailedDrops({
 		crop: Crop.Wheat,
 		blocksBroken: 100_000,
 		bountiful: true,
 		mooshroom: false,
-		attributes: {
-			crop_bug: 100, // Max level (10)
-		},
+		overbloom: 20,
+		overbloomBreakdown: { 'Cropeetle Shard': 20 },
 	});
 
 	const resultWithoutShard = calculateDetailedDrops({
@@ -176,10 +175,10 @@ test('Cropeetle shard increases special crop bonus', () => {
 		mooshroom: false,
 	});
 
-	// Max level (10) gives 20% bonus => 1.2x multiplier on special crops
-	expect(resultWithShard.specialCropBonus).toBe(0.2);
-	expect(resultWithShard.specialCropBonusBreakdown).toStrictEqual({ 'Cropeetle Shard': 0.2 });
-	expect(resultWithoutShard.specialCropBonus).toBe(0);
+	// Max level (10) gives 20 Overbloom => +20% rare drop bonus
+	expect(resultWithShard.rareItemBonus).toBeCloseTo(0.2, 4);
+	expect(resultWithShard.rareItemBonusBreakdown).toStrictEqual({ 'Cropeetle Shard': 0.2 });
+	expect(resultWithoutShard.rareItemBonus).toBe(0);
 
 	// Cropie values should be 20% higher with max shard
 	expect(resultWithShard.items['CROPIE']).toBeCloseTo(resultWithoutShard.items['CROPIE'] * 1.2, 1);
@@ -267,20 +266,17 @@ test('Multiple rate modifiers stack correctly with multiplicative formula', () =
 		bountiful: true,
 		mooshroom: false,
 		attributes: {
-			crop_bug: 100, // Max level 10 = 20% special crop bonus
 			wart_eater: 500,
 		},
-		overbloom: 77.5,
+		overbloom: 97.5,
+		overbloomBreakdown: { 'Cropeetle Shard': 20, Sunset: 77.5 },
 	});
 
-	// Special crop bonus: Only Cropeetle 20%
-	expect(result.specialCropBonus).toBeCloseTo(0.2, 4);
+	// Rare item bonus: 97.5 Overbloom = 97.5%
+	expect(result.rareItemBonus).toBeCloseTo(0.975, 4);
 
-	// Rare item bonus: 77.5 Overbloom = 77.5%
-	expect(result.rareItemBonus).toBeCloseTo(0.775, 4);
-
-	// Base warty is 50, with 77.5% bonus should be 88.75
-	expect(result.rngItems?.['WARTY']).toBeCloseTo(50 * 1.775, 1);
+	// Base warty is 50, with 97.5% bonus should be ~98.75
+	expect(result.rngItems?.['WARTY']).toBeCloseTo(50 * 1.975, 1);
 });
 
 test('Melon NPC total matches the visible coin breakdown when special crop modifiers are active', () => {
@@ -291,9 +287,8 @@ test('Melon NPC total matches the visible coin breakdown when special crop modif
 		bountiful: true,
 		mooshroom: false,
 		armorPieces: 4,
-		attributes: {
-			crop_bug: 100,
-		},
+		overbloom: 20,
+		overbloomBreakdown: { 'Cropeetle Shard': 20 },
 	});
 
 	const visibleTotal = Object.values(result.coinSources).reduce((sum, value) => sum + value, 0);
@@ -309,9 +304,8 @@ test('Average melon drops keep NPC total in sync with the visible coin breakdown
 		bountiful: true,
 		mooshroom: false,
 		armorPieces: 4,
-		attributes: {
-			crop_bug: 100,
-		},
+		overbloom: 20,
+		overbloomBreakdown: { 'Cropeetle Shard': 20 },
 	})[Crop.Melon];
 
 	const visibleTotal = Object.values(result.coinSources).reduce((sum, value) => sum + value, 0);
