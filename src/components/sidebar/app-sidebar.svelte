@@ -19,6 +19,16 @@
 
 	const pageCtx = getPageCtx();
 	const gbl = getGlobalContext();
+	const sidebar = Sidebar.useSidebar();
+
+	let wasMobileOpen = false;
+	$effect(() => {
+		const isOpen = sidebar.openMobile;
+		if (sidebar.isMobile && isOpen && !wasMobileOpen && pageCtx.sidebarSection) {
+			pageCtx.showSectionSidebar();
+		}
+		wasMobileOpen = isOpen;
+	});
 </script>
 
 <Sidebar.Header class="mt-2">
@@ -80,12 +90,10 @@
 <div class="flex h-full flex-col overflow-hidden">
 	<ScrollArea class="h-full" orientation="vertical">
 		<Sidebar.Content class="gap-0">
-			{#if pageCtx.sidebar.length && pageCtx.above}
-				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
-			{/if}
-			<NavMain items={SIDEBAR_NAV} title="Main" />
-			{#if pageCtx.sidebar.length && !pageCtx.above}
-				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
+			{#if pageCtx.showingSectionSidebar && pageCtx.sidebarSection}
+				<NavDynamic section={pageCtx.sidebarSection} onBack={() => pageCtx.showMainSidebar()} />
+			{:else}
+				<NavMain items={SIDEBAR_NAV} title="Main" />
 			{/if}
 			{@render children?.()}
 		</Sidebar.Content>

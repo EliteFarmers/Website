@@ -2,7 +2,10 @@
 	import { page } from '$app/state';
 	import GuildTag from '$comp/guilds/guild-tag.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
+	import { createGuildNavPages } from '$content/nav';
 	import { RoundToFixed } from '$lib/format';
+	import { getPageCtx } from '$lib/hooks/page.svelte';
+	import { createSidebarSection } from '$lib/sidebar-sections';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import type { LayoutProps } from './$types';
 
@@ -13,6 +16,9 @@
 	const preferredGames = $derived.by(() => data.guild.preferredGames?.filter(Boolean) ?? []);
 
 	const latestStats = $derived.by(() => data.guild.stats?.[0]);
+	const pageCtx = getPageCtx();
+	const guildSidebarItems = $derived.by(() => createGuildNavPages(data.guild.id));
+	const guildSidebarSection = $derived.by(() => createSidebarSection('guilds', guildSidebarItems));
 
 	const overviewStats = $derived.by(() => {
 		const stats = latestStats;
@@ -64,6 +70,10 @@
 	function isActive(href: string, match: 'exact' | 'startsWith') {
 		return match === 'exact' ? pathname === href : pathname.startsWith(href);
 	}
+
+	$effect.pre(() => {
+		pageCtx.setSidebarSection(guildSidebarSection);
+	});
 </script>
 
 <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 py-10">

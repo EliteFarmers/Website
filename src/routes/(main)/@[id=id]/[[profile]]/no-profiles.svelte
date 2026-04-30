@@ -6,6 +6,7 @@
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import type { MinecraftAccountDto } from '$lib/api';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { createSidebarSection } from '$lib/sidebar-sections';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { watch } from 'runed';
@@ -59,7 +60,7 @@
 		() => [crumbs, sidebarCrumbs, account.id, page.url.pathname],
 		() => {
 			pageCtx.setBreadcrumbs(crumbs);
-			pageCtx.setSidebar('Account', sidebarCrumbs);
+			pageCtx.setSidebarSection(createSidebarSection('account', sidebarCrumbs));
 			tick().then(() => {
 				favorites.setPage({
 					icon: imageUrl,
