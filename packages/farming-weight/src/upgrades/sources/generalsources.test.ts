@@ -186,8 +186,64 @@ test('Freshly Baked Talisman purchase costs 25 kernels', () => {
 });
 
 test('Freshly Baked accessory tier-up costs use kernels currency', () => {
-	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_TALISMAN?.upgrade?.cost.kernels).toBe(100);
-	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RING?.upgrade?.cost.kernels).toBe(250);
-	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_ARTIFACT?.upgrade?.cost.kernels).toBe(500);
-	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RELIC?.upgrade?.cost.kernels).toBe(1000);
+	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_TALISMAN?.upgrade?.cost?.kernels).toBe(100);
+	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RING?.upgrade?.cost?.kernels).toBe(250);
+	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_ARTIFACT?.upgrade?.cost?.kernels).toBe(500);
+	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RELIC?.upgrade?.cost?.kernels).toBe(1000);
+});
+
+test('Harvest Feast perk progress can be passed through explicit feast options', () => {
+	const player = new FarmingPlayer({
+		harvestFeast: {
+			active: false,
+			perks: {
+				natural_talent: 3,
+				fortunate_feasting: 4,
+				feast_crashers: 2,
+			},
+		},
+	});
+
+	const progress = player.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const naturalTalent = progress.find((p) => p.name === 'Natural Talent');
+	const fortunateFeasting = progress.find((p) => p.name === 'Fortunate Feasting');
+
+	expect(naturalTalent?.progress?.[0]).toMatchObject({
+		name: 'Level',
+		current: 3,
+		max: 5,
+	});
+	expect(naturalTalent?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 0,
+		max: 5,
+	});
+	expect(naturalTalent?.active?.stats?.[Stat.Overbloom]).toBe(3);
+
+	expect(fortunateFeasting?.progress?.[0]).toMatchObject({
+		name: 'Level',
+		current: 4,
+		max: 5,
+	});
+	expect(fortunateFeasting?.stats?.[Stat.FarmingFortune]).toMatchObject({
+		current: 0,
+		max: 25,
+	});
+	expect(fortunateFeasting?.active?.fortune).toBe(20);
+	expect(fortunateFeasting?.active?.stats?.[Stat.FarmingFortune]).toBe(20);
+	expect(progress.find((p) => p.name === 'Feast Crashers')).toBeUndefined();
+});
+
+test('Harvest Feast perk levels contribute while feast is active', () => {
+	const player = new FarmingPlayer({
+		harvestFeast: {
+			active: true,
+			perks: {
+				natural_talent: 3,
+				fortunate_feasting: 4,
+			},
+		},
+	});
+
+	expect(player.getStat(Stat.Overbloom)).toBe(3);
+	expect(player.getStat(Stat.FarmingFortune)).toBe(20);
 });

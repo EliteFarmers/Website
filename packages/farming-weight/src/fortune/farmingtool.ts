@@ -144,7 +144,7 @@ export class FarmingTool extends UpgradeableBase {
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
 		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
-		const stats = options?.stat ? [options.stat] : undefined;
+		const stats = options?.stat ? [options.stat] : [Stat.FarmingFortune, Stat.Overbloom];
 
 		const upgrades = getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, false, stats).flatMap(
 			(source) => source.upgrades ?? []

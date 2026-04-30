@@ -7,18 +7,9 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { CarnivalHarvestFeastData } from './CarnivalHarvestFeastData';
 
-export interface SkillsDto {
-	farming: number;
-	mining: number;
-	combat: number;
-	foraging: number;
-	fishing: number;
-	enchanting: number;
-	alchemy: number;
-	carpentry: number;
-	runecrafting: number;
-	taming: number;
-	social: number;
-	hunting: number;
-}
+/**
+ * @nullable
+ */
+export type CarnivalDataHarvestFeast = CarnivalHarvestFeastData | null;

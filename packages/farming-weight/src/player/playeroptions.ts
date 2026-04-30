@@ -42,7 +42,11 @@ export interface FortuneMissingFromAPI {
 
 	attributes?: Record<string, number>;
 	chips?: Partial<FarmingPlayerGardenChips>;
-	perks?: Record<string, string | null | number>;
+	/**
+	 * Raw SkyBlock profile perk levels. Carnival Harvest Feast perks use keys like
+	 * `natural_talent` and `fortunate_feasting`.
+	 */
+	perks?: CarnivalHarvestFeastPerks & Record<string, string | null | number | undefined>;
 
 	/**
 	 * Harvest Feast event state. When `active`, in-season RARE CROP drops (Seasoning + per-crop materials)
@@ -60,6 +64,14 @@ export interface HarvestFeastOptions {
 	inSeasonCrops?: Crop[];
 	/** Whether the active feast is a Grand Feast (extends to entire SkyBlock year via Mayor Finnegan). */
 	grandFeast?: boolean;
+	/** Explicit Carnival Harvest Feast perk progress, if the raw profile `perks` bag is unavailable. */
+	perks?: CarnivalHarvestFeastPerks;
+}
+
+export interface CarnivalHarvestFeastPerks {
+	[key: string]: string | null | number | undefined;
+	natural_talent?: string | null | number;
+	fortunate_feasting?: string | null | number;
 }
 
 export interface ExtraFarmingFortune {

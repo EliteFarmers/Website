@@ -226,7 +226,12 @@ export class FarmingPlayer {
 		// For non-FarmingFortune stats (e.g. Overbloom), tool upgrades aren't tied to a single
 		// crop and won't be surfaced by getCropUpgrades, so include them here.
 		if (options?.stat && options.stat !== Stat.FarmingFortune) {
-			for (const tool of this.tools) {
+			const tools =
+				this.options.selectedCrop !== undefined
+					? [this.getSelectedCropTool(this.options.selectedCrop)].filter((tool) => tool !== undefined)
+					: this.tools;
+
+			for (const tool of tools) {
 				upgrades.push(...tool.getUpgrades(options));
 			}
 		}
@@ -445,10 +450,12 @@ export class FarmingPlayer {
 
 			// Get the stat type from the late breakdown entries (they specify their stat)
 			const lateBreakdownEntries = lateResult.breakdown ? Object.values(lateResult.breakdown) : [];
-			const lateStat = lateBreakdownEntries[0]?.stat ?? Stat.FarmingFortune;
+			const contributingLateEntry = lateBreakdownEntries.find((entry) => contributingStats.includes(entry.stat));
+			const lateStat = contributingLateEntry?.stat ?? lateBreakdownEntries[0]?.stat ?? Stat.FarmingFortune;
+			const lateResultContributes = contributingStats.includes(lateStat);
 
 			// Add late additive effects to the pet's entry
-			if (lateResult.additive) {
+			if (lateResultContributes && lateResult.additive) {
 				if (breakdown[petName]) {
 					breakdown[petName].value += lateResult.additive;
 				} else {
@@ -457,7 +464,7 @@ export class FarmingPlayer {
 			}
 
 			// Apply multiplier to total fortune (add as reduction to pet's entry)
-			if (lateResult.multiplier !== undefined && lateResult.multiplier !== 1) {
+			if (lateResultContributes && lateResult.multiplier !== undefined && lateResult.multiplier !== 1) {
 				const reduction = baseFortune * (lateResult.multiplier - 1);
 				if (breakdown[petName]) {
 					breakdown[petName].value += reduction;
