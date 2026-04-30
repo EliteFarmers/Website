@@ -19,6 +19,22 @@ export type Crumb =
 	| (CrumbBase & { icon: Component | unknown })
 	| (CrumbBase & { snippet?: Snippet<[Crumb | Omit<CrumbBase, 'dropdown'>]> });
 
+export interface SidebarSectionGroup {
+	label?: string;
+	items: Crumb[];
+}
+
+export interface SidebarSection {
+	id: string;
+	title: string;
+	items: Crumb[] | SidebarSectionGroup[];
+	backLabel?: string;
+}
+
+export function isSidebarSectionGroup(item: Crumb | SidebarSectionGroup): item is SidebarSectionGroup {
+	return Array.isArray((item as SidebarSectionGroup).items);
+}
+
 const home = {
 	icon: Home as unknown as Component,
 	href: '/',
@@ -26,12 +42,11 @@ const home = {
 
 export class Breadcrumb {
 	#breadcrumbs = $state<Crumb[]>([]);
-	#sidebar = $state<Crumb[]>([]);
-	#sidebarName = $state<string>('');
+	#sidebarSection = $state<SidebarSection | null>(null);
+	#sidebarView = $state<'main' | 'section'>('main');
 	#path = $derived<string>(page.url.pathname);
 	#overridePath = $state<string | null>(null);
 	#breadcrumbsOverride = $state<Crumb[] | null>(null);
-	#above = $state<boolean>(true);
 	#title = $state<string>('');
 
 	constructor() {
@@ -40,8 +55,8 @@ export class Breadcrumb {
 
 			this.#breadcrumbsOverride = null;
 			this.#overridePath = null;
-			this.#sidebar = [];
-			this.#sidebarName = '';
+			this.#sidebarSection = null;
+			this.#sidebarView = 'main';
 
 			untrack(() => {
 				const segments = this.#path.split('/').filter((segment) => segment !== '');
@@ -88,27 +103,36 @@ export class Breadcrumb {
 		this.#overridePath = page.url.pathname;
 	}
 
-	get name() {
-		return this.#sidebarName;
-	}
-
-	setSidebar(name: string, crumbs: Crumb[], above = true) {
-		this.#sidebarName = name;
-		this.#sidebar = crumbs;
+	setSidebarSection(section: SidebarSection | null) {
+		this.#sidebarSection = section;
 		this.#overridePath = page.url.pathname;
-		this.#above = above;
+		this.#sidebarView = section ? 'section' : 'main';
 	}
 
-	get above() {
-		return this.#above;
+	showMainSidebar() {
+		this.#sidebarView = 'main';
 	}
 
-	get sidebar() {
-		return this.#sidebar;
+	showSectionSidebar() {
+		if (this.#sidebarSection) {
+			this.#sidebarView = 'section';
+		}
 	}
 
-	get sidebarName() {
-		return this.#sidebarName;
+	get sidebarSection() {
+		return this.#sidebarSection;
+	}
+
+	get sidebarView() {
+		return this.#sidebarView;
+	}
+
+	get showingSectionSidebar() {
+		return this.#sidebarView === 'section' && !!this.#sidebarSection;
+	}
+
+	get name() {
+		return this.#sidebarSection?.title ?? '';
 	}
 }
 

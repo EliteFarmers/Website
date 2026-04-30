@@ -14,7 +14,8 @@
 	import type { MinecraftAccountDto, ProfileDetailsDto } from '$lib/api';
 	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
 	import { formatIgn } from '$lib/format';
-	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getPageCtx, type Crumb, type SidebarSectionGroup } from '$lib/hooks/page.svelte';
+	import { createSidebarSection } from '$lib/sidebar-sections';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { watch } from 'runed';
 	import { tick } from 'svelte';
@@ -116,52 +117,56 @@
 		},
 	]);
 
-	const sidebarCrumbs = $derived<Crumb[]>([
+	const sidebarCrumbs = $derived<SidebarSectionGroup[]>([
 		{
-			icon: PlayerHead,
-			name: formatIgn(thisMember?.username, thisMember?.meta) || account?.name,
-			capitalize: false,
-			href: `/@${account?.name}`,
-			tooltip: 'Player',
-			data: {
-				uuid: account?.id,
-			},
-			dropdown: otherMembers?.map((m) => ({
-				name: formatIgn(m.username, m.meta),
-				capitalize: false,
-				href: `/@${m.uuid}/${profile?.profileId}`,
-				data: {
-					uuid: m.uuid,
+			items: [
+				{
+					icon: PlayerHead,
+					name: formatIgn(thisMember?.username, thisMember?.meta) || account?.name,
+					capitalize: false,
+					href: `/@${account?.name}`,
+					tooltip: 'Player',
+					data: {
+						uuid: account?.id,
+					},
+					dropdown: otherMembers?.map((m) => ({
+						name: formatIgn(m.username, m.meta),
+						capitalize: false,
+						href: `/@${m.uuid}/${profile?.profileId}`,
+						data: {
+							uuid: m.uuid,
+						},
+						icon: PlayerHead,
+					})),
 				},
-				icon: PlayerHead,
-			})),
+				{
+					icon: Gamemode,
+					name: profile?.profileName,
+					href: path,
+					tooltip: 'Profile',
+					data: {
+						gameMode: profile.gameMode,
+						popover: false,
+						class: 'size-4',
+						map: true,
+					},
+					dropdown: otherProfiles?.map((p) => ({
+						name: p.name ?? 'Unknown',
+						href: `/@${account?.name}/${p.name}`,
+						data: {
+							gameMode: p.gameMode,
+							popover: false,
+							class: 'size-4',
+							map: true,
+						},
+						icon: Gamemode,
+					})),
+				},
+			],
 		},
 		{
-			icon: Gamemode,
-			name: profile?.profileName,
-			href: path,
-			tooltip: 'Profile',
-			data: {
-				gameMode: profile.gameMode,
-				popover: false,
-				class: 'size-4',
-				map: true,
-			},
-			dropdown: otherProfiles?.map((p) => ({
-				name: p.name ?? 'Unknown',
-				href: `/@${account?.name}/${p.name}`,
-				data: {
-					gameMode: p.gameMode,
-					popover: false,
-					class: 'size-4',
-					map: true,
-				},
-				icon: Gamemode,
-			})),
-		},
-		{
-			...subPage,
-			dropdown: subPages.filter((p) => p.name !== subPage.name),
+			label: 'Stats',
+			items: subPages,
 		},
 	]);
 
@@ -172,7 +177,7 @@
 		() => [crumbs, sidebarCrumbs, account?.id, page.url.pathname],
 		() => {
 			pageCtx.setBreadcrumbs(crumbs);
-			pageCtx.setSidebar('Stats', sidebarCrumbs);
+			pageCtx.setSidebarSection(createSidebarSection('stats', sidebarCrumbs));
 			tick().then(() => {
 				favorites.setPage({
 					icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
