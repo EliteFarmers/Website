@@ -253,6 +253,16 @@ function enchantSourceBuilder(
 			enchant.appliesTo.includes(tool.type) &&
 			(!enchant.cropSpecific || tool.crops.includes(enchant.cropSpecific)),
 		max: (tool) => {
+			const currentOverbloom = getStatFromEnchant(
+				tool.item.enchantments?.[id] ?? 0,
+				enchant,
+				Stat.Overbloom,
+				tool.options,
+				tool.crops[0]
+			);
+			const maxOverbloom =
+				currentOverbloom > 0 ? getMaxStatFromEnchant(enchant, Stat.Overbloom, tool.options, tool.crops[0]) : 0;
+
 			// For multi-crop tools (e.g., Eclipse Hoe), take the best single-crop value to avoid double counting
 			if (tool.crops.length > 1) {
 				let best = 0;
@@ -262,16 +272,30 @@ function enchantSourceBuilder(
 						getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop)
 					);
 				}
-				return best || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
+				return (
+					best ||
+					getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]) ||
+					maxOverbloom
+				);
 			}
 
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop);
 			}
-			return sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
+			return (
+				sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]) || maxOverbloom
+			);
 		},
 		current: (tool) => {
+			const currentOverbloom = getStatFromEnchant(
+				tool.item.enchantments?.[id] ?? 0,
+				enchant,
+				Stat.Overbloom,
+				tool.options,
+				tool.crops[0]
+			);
+
 			if (tool.crops.length > 1) {
 				let best = 0;
 				for (const crop of tool.crops) {
@@ -294,7 +318,8 @@ function enchantSourceBuilder(
 						Stat.FarmingFortune,
 						tool.options,
 						tool.crops[0]
-					)
+					) ||
+					currentOverbloom
 				);
 			}
 
@@ -316,7 +341,8 @@ function enchantSourceBuilder(
 					Stat.FarmingFortune,
 					tool.options,
 					tool.crops[0]
-				)
+				) ||
+				currentOverbloom
 			);
 		},
 		maxStat: (tool, stat) => {

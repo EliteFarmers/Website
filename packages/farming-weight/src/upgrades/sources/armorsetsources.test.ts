@@ -309,7 +309,7 @@ const bustlingLeggings = {
 
 test('Bustling Fermento Leggings Upgrades', () => {
 	const item = new FarmingArmor(bustlingLeggings);
-	const upgrades = item.getUpgrades();
+	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 
 	expect(upgrades).toHaveLength(7);
 });

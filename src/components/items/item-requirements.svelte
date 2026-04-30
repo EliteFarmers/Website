@@ -45,14 +45,6 @@
 				ctx.member.current.skills?.[requirement.skill.toLowerCase() as keyof typeof ctx.member.current.skills];
 			if (skill === undefined) return undefined; // Skill not found, requirement not met
 
-			if (
-				skillName === 'totalXp' ||
-				skillName === 'levelCaps' ||
-				skillName === 'average' ||
-				skillName === 'levels'
-			) {
-				return false;
-			}
 			const { level } = getSkillLevel(skillName, ctx.member.current.skills[skillName]);
 			return level >= requirement.level;
 		} else {

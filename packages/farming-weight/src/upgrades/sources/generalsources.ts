@@ -806,11 +806,15 @@ interface CarnivalPerk {
 	perLevel: number;
 }
 
-function getCarnivalPerkLevel(perks: Record<string, string | null | number> | undefined, key: string): number {
-	const raw = perks?.[key];
+function getCarnivalPerkLevel(player: FarmingPlayer, key: string): number {
+	const raw = player.options.harvestFeast?.perks?.[key] ?? player.options.perks?.[key];
 	if (raw === null || raw === undefined) return 0;
 	const level = typeof raw === 'number' ? raw : parseInt(raw, 10);
 	return Number.isFinite(level) ? level : 0;
+}
+
+function getCarnivalPerkFortune(player: FarmingPlayer, perk: CarnivalPerk): number {
+	return getCarnivalPerkLevel(player, perk.key) * perk.perLevel;
 }
 
 function isHarvestFeastActive(player: FarmingPlayer): boolean {
@@ -835,14 +839,6 @@ function createCarnivalHarvestFeastSources(): DynamicFortuneSource<FarmingPlayer
 			maxLevel: 5,
 			perLevel: 5,
 		},
-		{
-			key: 'feast_crashers',
-			name: 'Feast Crashers',
-			wiki: 'https://w.elitesb.gg/Doug',
-			stat: Stat.BonusPestChance,
-			maxLevel: 3,
-			perLevel: 2,
-		},
 	];
 	return perks.map((perk) => ({
 		name: perk.name,
@@ -853,22 +849,40 @@ function createCarnivalHarvestFeastSources(): DynamicFortuneSource<FarmingPlayer
 			return {
 				active: false,
 				reason: 'Only active during a Harvest Feast.',
-				fortune:
-					perk.stat === Stat.FarmingFortune
-						? getCarnivalPerkLevel(player.options.perks, perk.key) * perk.perLevel
-						: 0,
+				fortune: perk.stat === Stat.FarmingFortune ? getCarnivalPerkFortune(player, perk) : 0,
 			};
 		},
 		max: () => (perk.stat === Stat.FarmingFortune ? perk.maxLevel * perk.perLevel : 0),
 		current: (player) => {
 			if (perk.stat !== Stat.FarmingFortune) return 0;
 			if (!isHarvestFeastActive(player)) return 0;
-			return getCarnivalPerkLevel(player.options.perks, perk.key) * perk.perLevel;
+			return getCarnivalPerkFortune(player, perk);
 		},
 		maxStat: (_player, stat) => (stat === perk.stat ? perk.maxLevel * perk.perLevel : 0),
 		currentStat: (player, stat) => {
 			if (stat !== perk.stat || !isHarvestFeastActive(player)) return 0;
-			return getCarnivalPerkLevel(player.options.perks, perk.key) * perk.perLevel;
+			return getCarnivalPerkFortune(player, perk);
+		},
+		activeStat: (player, stat) => {
+			if (stat !== perk.stat) return { active: isHarvestFeastActive(player) };
+			return {
+				active: isHarvestFeastActive(player),
+				value: getCarnivalPerkFortune(player, perk),
+			};
+		},
+		progress: (player) => {
+			const level = getCarnivalPerkLevel(player, perk.key);
+			if (level <= 0) return undefined;
+			return [
+				{
+					name: 'Level',
+					current: level,
+					max: perk.maxLevel,
+					maxLevel: perk.maxLevel,
+					fortunePerLevel: perk.perLevel,
+					ratio: Math.min(level / perk.maxLevel, 1),
+				},
+			];
 		},
 	}));
 }

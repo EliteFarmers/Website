@@ -370,11 +370,8 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	const tool = new FarmingTool(t1WheatHoe);
 	expect(tool.fortune).toBe(4);
 
-	const upgrades = tool.getUpgrades();
+	const upgrades = tool.getUpgrades({ stat: Stat.FarmingFortune });
 
-	// Gem slots now respect tool-level unlock requirements (this item has no tool level data,
-	// so its effective level is 1 and gemstone slot upgrades are not yet available).
-	// Upgrades come from individual sources, plus self and rarity upgrades added in getUpgrades().
 	expect(upgrades).toHaveLength(6);
 
 	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Hoe Mk. II");
@@ -638,6 +635,18 @@ test('Feast enchant on tool surfaces Overbloom progress and upgrade', () => {
 		category: UpgradeCategory.Enchant,
 	});
 	expect(feastUpgrade?.stats?.[Stat.Overbloom]).toBe(0.5);
+
+	const defaultProgress = tool.getProgress();
+	const defaultFeast = defaultProgress.find((p) => p.name === 'Feast');
+	expect(defaultFeast).toMatchObject({
+		current: 1.5,
+		max: 2.5,
+	});
+
+	const defaultUpgrades = tool.getUpgrades();
+	const defaultFeastUpgrade = defaultUpgrades.find((u) => u.title === 'Feast 4');
+	expect(defaultFeastUpgrade).toBeDefined();
+	expect(defaultFeastUpgrade?.stats?.[Stat.Overbloom]).toBe(0.5);
 });
 
 test('Player.getUpgrades surfaces tool Overbloom upgrades (Feast)', () => {

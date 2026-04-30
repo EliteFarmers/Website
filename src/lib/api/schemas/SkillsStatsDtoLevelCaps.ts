@@ -8,17 +8,4 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-export interface SkillsDto {
-	farming: number;
-	mining: number;
-	combat: number;
-	foraging: number;
-	fishing: number;
-	enchanting: number;
-	alchemy: number;
-	carpentry: number;
-	runecrafting: number;
-	taming: number;
-	social: number;
-	hunting: number;
-}
+export type SkillsStatsDtoLevelCaps = { [key: string]: number };

@@ -68,7 +68,7 @@ test('Almost maxed fermento fortune sources', () => {
 	expect(item.fortune).toBe(72);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
 
-	const upgrades = item.getUpgrades();
+	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(5);
 
 	const progress = item.getProgress();
@@ -381,4 +381,16 @@ test('Sunset enchant on armor surfaces Overbloom progress and upgrade', () => {
 		category: UpgradeCategory.Enchant,
 	});
 	expect(sunsetUpgrade?.stats?.[Stat.Overbloom]).toBe(1);
+
+	const defaultProgress = item.getProgress();
+	const defaultSunset = defaultProgress.find((p) => p.name === 'Sunset');
+	expect(defaultSunset).toMatchObject({
+		current: 3,
+		max: 5,
+	});
+
+	const defaultUpgrades = item.getUpgrades();
+	const defaultSunsetUpgrade = defaultUpgrades.find((u) => u.title === 'Sunset 4');
+	expect(defaultSunsetUpgrade).toBeDefined();
+	expect(defaultSunsetUpgrade?.stats?.[Stat.Overbloom]).toBe(1);
 });

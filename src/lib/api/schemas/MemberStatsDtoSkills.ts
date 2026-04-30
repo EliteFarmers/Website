@@ -7,18 +7,11 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { SkillsStatsDto } from './SkillsStatsDto';
 
-export interface SkillsDto {
-	farming: number;
-	mining: number;
-	combat: number;
-	foraging: number;
-	fishing: number;
-	enchanting: number;
-	alchemy: number;
-	carpentry: number;
-	runecrafting: number;
-	taming: number;
-	social: number;
-	hunting: number;
-}
+/**
+ * Aggregate skill stats (total XP, average level, level caps, per-skill level details).
+Lives here so SkillsDto can remain a flat per-skill XP map.
+ * @nullable
+ */
+export type MemberStatsDtoSkills = SkillsStatsDto | null;

@@ -583,7 +583,7 @@ export class FarmingArmor extends UpgradeableBase {
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
 		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
-		const stats = options?.stat ? [options.stat] : undefined;
+		const stats = options?.stat ? [options.stat] : [Stat.FarmingFortune, Stat.Overbloom];
 
 		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(
 			this,

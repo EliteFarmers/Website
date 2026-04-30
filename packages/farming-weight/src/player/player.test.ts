@@ -247,6 +247,40 @@ test('Feast enchantment grants tool Overbloom for player rate calculations', () 
 	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.025, 2);
 });
 
+test('Selected crop Overbloom upgrades only include that crop tool', () => {
+	const player = new FarmingPlayer({
+		selectedCrop: Crop.Melon,
+		tools: [
+			{
+				id: 293,
+				count: 1,
+				skyblockId: 'FUNGI_CUTTER',
+				uuid: 'fungi-cutter-overbloom',
+				name: '§aFungi Cutter',
+				lore: [],
+				enchantments: {},
+				attributes: {},
+			},
+			{
+				id: 279,
+				count: 1,
+				skyblockId: 'MELON_DICER',
+				uuid: 'melon-dicer-overbloom',
+				name: '§aMelon Dicer',
+				lore: [],
+				enchantments: {},
+				attributes: {},
+			},
+		],
+	});
+
+	const overbloomUpgrades = player.getUpgrades({ stat: Stat.Overbloom });
+	const feastUpgrades = overbloomUpgrades.filter((upgrade) => upgrade.title === 'Feast 1');
+
+	expect(feastUpgrades.some((upgrade) => upgrade.meta?.itemUuid === 'melon-dicer-overbloom')).toBe(true);
+	expect(feastUpgrades.some((upgrade) => upgrade.meta?.itemUuid === 'fungi-cutter-overbloom')).toBe(false);
+});
+
 test('Rarefinder chip grants Overbloom for player rate calculations', () => {
 	const player = new FarmingPlayer({
 		chips: {
@@ -287,4 +321,51 @@ test('Rose Dragon grants Overbloom for player rate calculations', () => {
 	expect(rates.rareItemBonus).toBeCloseTo(0.4, 4);
 	expect(rates.rareItemBonusBreakdown['Rose Dragon']).toBeCloseTo(0.4, 4);
 	expect(rates.rngItems?.['BURROWING_SPORES']).toBeCloseTo(1 * 1.4, 2);
+});
+
+test('Rose Dragon Symbiosis does not count as Rose Dragon Overbloom', () => {
+	const maxedPetTypes = [
+		'BEE',
+		'CHICKEN',
+		'ELEPHANT',
+		'HEDGEHOG',
+		'MOOSHROOM_COW',
+		'MOSQUITO',
+		'PIG',
+		'RABBIT',
+		'SLUG',
+	];
+
+	const player = new FarmingPlayer({
+		pets: [
+			{
+				uuid: 'rose-dragon-overbloom-with-symbiosis',
+				type: 'ROSE_DRAGON',
+				exp: 10 ** 20,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+			...maxedPetTypes.map((type) => ({
+				uuid: `maxed-${type.toLowerCase()}`,
+				type,
+				exp: 10 ** 20,
+				active: false,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			})),
+		],
+	});
+
+	const breakdown = player.getStatBreakdown(Stat.Overbloom);
+
+	expect(breakdown['Rose Dragon']).toStrictEqual({
+		value: 40,
+		stat: Stat.Overbloom,
+	});
+	expect(player.getStat(Stat.Overbloom)).toBe(40);
 });

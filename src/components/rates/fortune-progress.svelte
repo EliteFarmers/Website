@@ -25,10 +25,11 @@
 		const newStats: typeof p.stats = {};
 
 		for (const [stat, statProgress] of Object.entries(p.stats ?? {})) {
+			const inactiveStatValue = p.active?.stats?.[stat as Stat] ?? inactiveFortune;
 			newStats[stat as keyof typeof newStats] = {
 				...statProgress,
-				current: inactiveFortune,
-				ratio: inactiveFortune > 0 ? Math.min(inactiveFortune / statProgress.max, 1) : 0,
+				current: inactiveStatValue,
+				ratio: inactiveStatValue > 0 ? Math.min(inactiveStatValue / statProgress.max, 1) : 0,
 			};
 		}
 

@@ -15,6 +15,7 @@
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
+	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
@@ -65,6 +66,7 @@
 
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
+	const harvestFeast = getHarvestFeast();
 
 	function updateSelectedTool(c: string) {
 		const crop = getCropFromName(c);
@@ -91,6 +93,11 @@
 
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? getCropFromName(crop)) as Crop;
+
+	function harvestFeastCropKey(crop: string): Crop | undefined {
+		const direct = Object.values(Crop).find((value) => value === crop);
+		return direct ?? getCropFromName(PROPER_CROP_NAME[crop] ?? crop);
+	}
 
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
 
@@ -125,6 +132,28 @@
 
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
 	const selectedCropKey = $derived(cropKey(selectedCrop));
+	const harvestFeastPerks = $derived.by(() => {
+		const current = ctx.member.current?.stats?.carnival?.harvestFeast;
+		if (!current) return undefined;
+
+		return {
+			natural_talent: current.naturalTalent,
+			fortunate_feasting: current.fortunateFeasting,
+		};
+	});
+	const harvestFeastOptions = $derived.by<PlayerOptions['harvestFeast']>(() => {
+		const current = harvestFeast.current;
+		const inSeasonCrops = (current?.current ?? [])
+			.map((crop) => harvestFeastCropKey(crop))
+			.filter((crop) => crop !== undefined);
+
+		return {
+			active: inSeasonCrops.length > 0,
+			inSeasonCrops,
+			grandFeast: current?.isGrandFeast ?? false,
+			perks: harvestFeastPerks,
+		};
+	});
 
 	let options = $derived({
 		tools: tools,
@@ -149,6 +178,7 @@
 		chips: ctx.member.current?.memberData?.garden?.chips ?? {},
 
 		perks: ctx.member.current?.unparsed?.perks ?? undefined,
+		harvestFeast: harvestFeastOptions,
 
 		farmingLevel: getLevelProgress(
 			'farming',
@@ -347,6 +377,7 @@
 				enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
 				mode: $ratesData.zorroMode,
 			},
+			harvestFeast: harvestFeastOptions,
 			selectedCrop: selectedCropKey,
 		};
 
@@ -374,6 +405,7 @@
 			pet: $player.selectedPet,
 			attributes: $player.attributes,
 			chips: $player.options.chips,
+			harvestFeast: $player.options.harvestFeast,
 			overbloom: selectedCropKey ? $player.getStat(Stat.Overbloom, selectedCropKey) : 0,
 			overbloomBreakdown,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];

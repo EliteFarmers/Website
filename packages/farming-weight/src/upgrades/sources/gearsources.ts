@@ -160,13 +160,34 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 					name: enchant.name,
 					wiki: () => enchant.wiki,
 					exists: (gear) => enchant.appliesTo.includes(gear.type),
-					max: (gear) => getMaxStatFromEnchant(enchant, Stat.FarmingFortune, gear.options),
+					max: (gear) => {
+						const currentOverbloom = getOptimisticStatFromEnchant(
+							gear.item.enchantments?.[id] ?? 0,
+							enchant,
+							Stat.Overbloom,
+							gear.options,
+							gear.crop
+						);
+						return (
+							getMaxStatFromEnchant(enchant, Stat.FarmingFortune, gear.options) ||
+							(currentOverbloom > 0
+								? getMaxStatFromEnchant(enchant, Stat.Overbloom, gear.options, gear.crop)
+								: 0)
+						);
+					},
 					current: (gear) =>
 						getStatFromEnchant(
 							gear.item.enchantments?.[id] ?? 0,
 							enchant,
 							Stat.FarmingFortune,
 							gear.options
+						) ||
+						getOptimisticStatFromEnchant(
+							gear.item.enchantments?.[id] ?? 0,
+							enchant,
+							Stat.Overbloom,
+							gear.options,
+							gear.crop
 						),
 					maxStat: (gear, stat) => getMaxStatFromEnchant(enchant, stat, gear.options, gear.crop),
 					currentStat: (gear, stat) =>

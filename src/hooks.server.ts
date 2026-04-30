@@ -63,7 +63,8 @@ async function ResolveWithSecurityHeaders(
 ): Promise<ReturnType<Handle>> {
 	const response = await resolve(event, {
 		transformPageChunk: ({ html }) => {
-			const isAdFree = event.locals.session?.flags?.includes('AD_FREE');
+			const isAdFree =
+				event.locals.session?.flags?.includes('AD_FREE') || event.locals.session?.perms?.viewAdminPages;
 			const shouldShowAds = !isAdFree && !event.locals.bot && event.locals.ads;
 			if (shouldShowAds) {
 				return html.replace('%elite.adscript%', privateEnv.AD_SCRIPT || '');
