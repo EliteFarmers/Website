@@ -21,9 +21,7 @@
 	const pageCtx = getPageCtx();
 	const gbl = getGlobalContext();
 	const sidebar = Sidebar.useSidebar();
-	const sectionReturnLabel = $derived(
-		pageCtx.sidebarSection ? `Back to ${pageCtx.sidebarSection.title}` : ''
-	);
+	const sectionReturnLabel = $derived(pageCtx.sidebarSection ? `Back to ${pageCtx.sidebarSection.title}` : '');
 
 	let wasMobileOpen = false;
 	$effect(() => {

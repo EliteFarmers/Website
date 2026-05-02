@@ -639,7 +639,9 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 	}
 
 	const allUpgrades = collectAllUpgrades(tree);
-	const recombUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === `recombobulate:${armorPiece!.item.uuid}`);
+	const recombUpgrades = allUpgrades.filter(
+		(u) => u.upgrade.conflictKey === `recombobulate:${armorPiece!.item.uuid}`
+	);
 
 	expect(recombUpgrades.length).toBe(1);
 	expect(recombUpgrades[0].depth).toBe(0);
