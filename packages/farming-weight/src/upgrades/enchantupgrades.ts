@@ -4,6 +4,7 @@ import { Stat } from '../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import type { Upgradeable } from '../fortune/upgradeable.js';
 import { getMaxStatFromEnchant, getOptimisticStatFromEnchant } from '../util/enchants.js';
+import { getItemScopedConflictKey } from './upgradekeys.js';
 
 const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((crop) => crop.fortuneType));
 
@@ -100,7 +101,7 @@ export function getUpgradeableEnchant(
 					? UpgradeAction.Apply
 					: UpgradeAction.LevelUp,
 			category: UpgradeCategory.Enchant,
-			conflictKey: `enchant:${enchantId}:1`,
+			conflictKey: getItemScopedConflictKey(upgradeable, `enchant:${enchantId}:1`),
 			cost: {
 				items: {
 					[enchantNameToId(enchant) + '_1']: 1,
@@ -185,7 +186,7 @@ export function getUpgradeableEnchant(
 		stats,
 		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
 		category: UpgradeCategory.Enchant,
-		conflictKey: `enchant:${enchantId}:${applied + 1}`,
+		conflictKey: getItemScopedConflictKey(upgradeable, `enchant:${enchantId}:${applied + 1}`),
 		cost: cost,
 		wiki: enchant.wiki,
 		onto: {

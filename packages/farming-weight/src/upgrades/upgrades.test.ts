@@ -247,7 +247,7 @@ test('Conflicting Reforges Test', () => {
 
 	expect(reforges.length).toBeGreaterThan(0);
 	for (const reforge of reforges) {
-		expect(reforge.conflictKey).toBe('reforge');
+		expect(reforge.conflictKey).toBe(`reforge:${item.item.uuid}`);
 	}
 
 	const rooted = reforges.find((u) => u.title === 'Reforge to Rooted');
