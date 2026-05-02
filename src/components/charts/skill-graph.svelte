@@ -39,7 +39,15 @@
 </script>
 
 <div class="m-2 h-50 rounded dark:scheme-dark">
-	<Chart {data} x="date" y="value" {yDomain} yNice padding={{ left: 48, bottom: 16, top: 5, right: 48 }}>
+	<Chart
+		{data}
+		x="date"
+		y="value"
+		{yDomain}
+		yNice
+		padding={{ left: 48, bottom: 16, top: 5, right: 48 }}
+		tooltipContext={{ mode: 'bisect-x' }}
+	>
 		<Layer type="svg" class="fill-primary stroke-muted-foreground">
 			<Axis
 				placement="left"

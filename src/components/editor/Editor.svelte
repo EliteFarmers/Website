@@ -26,6 +26,7 @@
 	import { strapiToTiptap, tiptapToStrapi } from '$lib/editor/transformer';
 	import { Button } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
+	import { SiYoutube as YoutubeIcon } from '@icons-pack/svelte-simple-icons';
 	import AlertCircle from '@lucide/svelte/icons/alert-circle';
 	import Bold from '@lucide/svelte/icons/bold';
 	import Code from '@lucide/svelte/icons/code';
@@ -51,7 +52,6 @@
 	import TableIcon from '@lucide/svelte/icons/table-2';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Unlink from '@lucide/svelte/icons/unlink';
-	import YoutubeIcon from '@lucide/svelte/icons/youtube';
 	import { Editor, type Content } from '@tiptap/core';
 	import Image from '@tiptap/extension-image';
 	import Link from '@tiptap/extension-link';
