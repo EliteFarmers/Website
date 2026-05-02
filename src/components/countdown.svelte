@@ -60,7 +60,7 @@
 {#if browser}
 	<NumberFlowGroup>
 		<div
-			style="font-variant-numeric: tabular-nums; --number-flow-char-height: 0.85em"
+			style="font-variant-numeric: tabular-nums; line-height: 0.85em"
 			{...rest}
 			class={cn('flex w-full flex-row items-center font-mono text-sm', rest.class)}
 		>

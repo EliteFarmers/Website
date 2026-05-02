@@ -18,7 +18,7 @@ export interface DynamicFortuneSource<T> {
 	current: (source: T) => number;
 	maxStat?: (source: T, stat: Stat) => number;
 	currentStat?: (source: T, stat: Stat) => number;
-	progress?: (source: T, stats?: Stat[]) => FortuneSourceProgress[];
+	progress?: (source: T, stats?: Stat[]) => FortuneSourceProgress[] | undefined;
 	info?: (source: T) => {
 		item?: EliteItemDto;
 		info?: UpgradeableInfo;

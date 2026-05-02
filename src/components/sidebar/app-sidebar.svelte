@@ -10,6 +10,7 @@
 	import { cn } from '$lib/utils';
 	import { ScrollArea } from '$ui/scroll-area';
 	import * as Sidebar from '$ui/sidebar';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import type { Snippet } from 'svelte';
 	import NavDynamic from './nav-dynamic.svelte';
@@ -19,6 +20,17 @@
 
 	const pageCtx = getPageCtx();
 	const gbl = getGlobalContext();
+	const sidebar = Sidebar.useSidebar();
+	const sectionReturnLabel = $derived(pageCtx.sidebarSection ? `Back to ${pageCtx.sidebarSection.title}` : '');
+
+	let wasMobileOpen = false;
+	$effect(() => {
+		const isOpen = sidebar.openMobile;
+		if (sidebar.isMobile && isOpen && !wasMobileOpen && pageCtx.sidebarSection) {
+			pageCtx.showSectionSidebar();
+		}
+		wasMobileOpen = isOpen;
+	});
 </script>
 
 <Sidebar.Header class="mt-2">
@@ -80,12 +92,28 @@
 <div class="flex h-full flex-col overflow-hidden">
 	<ScrollArea class="h-full" orientation="vertical">
 		<Sidebar.Content class="gap-0">
-			{#if pageCtx.sidebar.length && pageCtx.above}
-				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
-			{/if}
-			<NavMain items={SIDEBAR_NAV} title="Main" />
-			{#if pageCtx.sidebar.length && !pageCtx.above}
-				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
+			{#if pageCtx.showingSectionSidebar && pageCtx.sidebarSection}
+				<NavDynamic section={pageCtx.sidebarSection} onBack={() => pageCtx.showMainSidebar()} />
+			{:else}
+				{#if pageCtx.sidebarSection}
+					<Sidebar.Group data-sveltekit-preload-data="tap">
+						<Sidebar.Menu>
+							<Sidebar.MenuItem>
+								<Sidebar.MenuButton
+									class="text-sidebar-foreground/70"
+									onclick={() => pageCtx.showSectionSidebar()}
+								>
+									{#snippet tooltipContent()}
+										{sectionReturnLabel}
+									{/snippet}
+									<ArrowRight class="size-4" />
+									<span>{sectionReturnLabel}</span>
+								</Sidebar.MenuButton>
+							</Sidebar.MenuItem>
+						</Sidebar.Menu>
+					</Sidebar.Group>
+				{/if}
+				<NavMain items={SIDEBAR_NAV} title="Main" />
 			{/if}
 			{@render children?.()}
 		</Sidebar.Content>

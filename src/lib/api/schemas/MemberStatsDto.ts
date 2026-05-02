@@ -24,6 +24,8 @@ import type { MemberStatsDtoPlayerStats } from './MemberStatsDtoPlayerStats';
 import type { MemberStatsDtoMiscStats } from './MemberStatsDtoMiscStats';
 import type { MemberStatsDtoAbiphone } from './MemberStatsDtoAbiphone';
 import type { MemberStatsDtoHarpQuest } from './MemberStatsDtoHarpQuest';
+import type { MemberStatsDtoCarnival } from './MemberStatsDtoCarnival';
+import type { MemberStatsDtoSkills } from './MemberStatsDtoSkills';
 
 export interface MemberStatsDto {
 	/** @nullable */
@@ -74,5 +76,13 @@ has any recognised keys. Null otherwise.
 	abiphone?: MemberStatsDtoAbiphone;
 	/** @nullable */
 	harpQuest?: MemberStatsDtoHarpQuest;
+	/** @nullable */
+	carnival?: MemberStatsDtoCarnival;
+	/**
+   * Aggregate skill stats (total XP, average level, level caps, per-skill level details).
+Lives here so SkillsDto can remain a flat per-skill XP map.
+   * @nullable
+   */
+	skills?: MemberStatsDtoSkills;
 	lastUpdated: bigint;
 }

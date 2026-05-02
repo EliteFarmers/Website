@@ -222,6 +222,20 @@ export class FarmingPlayer {
 		if (armorSetUpgrades.length > 0) {
 			upgrades.push(...armorSetUpgrades);
 		}
+
+		// For non-FarmingFortune stats (e.g. Overbloom), tool upgrades aren't tied to a single
+		// crop and won't be surfaced by getCropUpgrades, so include them here.
+		if (options?.stat && options.stat !== Stat.FarmingFortune) {
+			const tools =
+				this.options.selectedCrop !== undefined
+					? [this.getSelectedCropTool(this.options.selectedCrop)].filter((tool) => tool !== undefined)
+					: this.tools;
+
+			for (const tool of tools) {
+				upgrades.push(...tool.getUpgrades(options));
+			}
+		}
+
 		return filterAndSortUpgrades(upgrades, options);
 	}
 
@@ -279,8 +293,8 @@ export class FarmingPlayer {
 		return val;
 	}
 
-	getStat(stat: Stat) {
-		const breakdown = this.getStatBreakdown(stat);
+	getStat(stat: Stat, targetCrop?: Crop) {
+		const breakdown = this.getStatBreakdown(stat, targetCrop);
 		return Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 	}
 
@@ -363,7 +377,7 @@ export class FarmingPlayer {
 		for (const piece of this.armorSet.equipment) {
 			if (!piece) continue;
 			for (const targetStat of contributingStats) {
-				const val = piece.getStat(targetStat);
+				const val = piece.getStat(targetStat, targetCrop);
 				add(piece.info.name, val, targetStat);
 			}
 		}
@@ -372,7 +386,7 @@ export class FarmingPlayer {
 		for (const piece of this.armorSet.armor) {
 			if (!piece) continue;
 			for (const targetStat of contributingStats) {
-				const val = piece.getStat(targetStat);
+				const val = piece.getStat(targetStat, targetCrop);
 				add(piece.info.name, val, targetStat);
 			}
 		}
@@ -436,10 +450,12 @@ export class FarmingPlayer {
 
 			// Get the stat type from the late breakdown entries (they specify their stat)
 			const lateBreakdownEntries = lateResult.breakdown ? Object.values(lateResult.breakdown) : [];
-			const lateStat = lateBreakdownEntries[0]?.stat ?? Stat.FarmingFortune;
+			const contributingLateEntry = lateBreakdownEntries.find((entry) => contributingStats.includes(entry.stat));
+			const lateStat = contributingLateEntry?.stat ?? lateBreakdownEntries[0]?.stat ?? Stat.FarmingFortune;
+			const lateResultContributes = contributingStats.includes(lateStat);
 
 			// Add late additive effects to the pet's entry
-			if (lateResult.additive) {
+			if (lateResultContributes && lateResult.additive) {
 				if (breakdown[petName]) {
 					breakdown[petName].value += lateResult.additive;
 				} else {
@@ -448,7 +464,7 @@ export class FarmingPlayer {
 			}
 
 			// Apply multiplier to total fortune (add as reduction to pet's entry)
-			if (lateResult.multiplier !== undefined && lateResult.multiplier !== 1) {
+			if (lateResultContributes && lateResult.multiplier !== undefined && lateResult.multiplier !== 1) {
 				const reduction = baseFortune * (lateResult.multiplier - 1);
 				if (breakdown[petName]) {
 					breakdown[petName].value += reduction;
@@ -484,9 +500,11 @@ export class FarmingPlayer {
 
 			const fortune = source.fortune(this.options.temporaryFortune);
 			if (fortune) {
-				const boosted = fortune * hyperchargeMultiplier;
-				breakdown[source.name] = { value: boosted, stat: Stat.FarmingFortune };
-				sum += boosted;
+				const stat = source.stat ?? Stat.FarmingFortune;
+				// Hypercharge chip only boosts farming fortune sources, not Overbloom or other stats.
+				const boosted = stat === Stat.FarmingFortune ? fortune * hyperchargeMultiplier : fortune;
+				breakdown[source.name] = { value: boosted, stat };
+				if (stat === Stat.FarmingFortune) sum += boosted;
 			}
 		}
 
@@ -527,12 +545,23 @@ export class FarmingPlayer {
 		const cropFortune = this.getCropFortune(crop, tool);
 		const fortune = this.permFortune + this.tempFortune + cropFortune.fortune;
 
+		const overbloomBreakdown = this.getStatBreakdown(Stat.Overbloom, crop);
+		const overbloomSources: Record<string, number> = {};
+		for (const [name, entry] of Object.entries(overbloomBreakdown)) {
+			if (entry.value) overbloomSources[name] = entry.value;
+		}
+
 		return calculateDetailedDrops({
 			crop: crop,
 			blocksBroken: blocksBroken,
 			farmingFortune: fortune,
 			bountiful: tool?.bountiful ?? false,
 			mooshroom: this.selectedPet?.type === FarmingPets.MooshroomCow,
+			attributes: this.options.attributes,
+			chips: this.options.chips,
+			pet: this.selectedPet,
+			overbloom: this.getStat(Stat.Overbloom, crop),
+			overbloomBreakdown: overbloomSources,
 		});
 	}
 

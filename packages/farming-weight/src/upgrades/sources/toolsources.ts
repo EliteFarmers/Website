@@ -209,67 +209,6 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 			] as FortuneUpgrade[];
 		},
 	},
-	{
-		name: 'Axed Perk',
-		wiki: () => 'https://w.elitesb.gg/Essence_Shops#Forest',
-		exists: (tool) => tool.type === ReforgeTarget.Axe,
-		max: (tool) => {
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const maxFortune = otherSources.reduce((acc, source) => acc + source.max(tool), 0);
-			return Math.max(0, maxFortune * 0.02);
-		},
-		current: (tool) => {
-			if (!tool.hasAxedPerk()) return 0;
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const fortune = otherSources.reduce((acc, source) => acc + source.current(tool), 0);
-			return Math.max(0, fortune * 0.02);
-		},
-		maxStat: (tool, stat) => {
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const maxFortune = otherSources.reduce((acc, source) => acc + (source.maxStat?.(tool, stat) ?? 0), 0);
-			return Math.max(0, maxFortune * 0.02);
-		},
-		currentStat: (tool, stat) => {
-			if (!tool.hasAxedPerk()) return 0;
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const fortune = otherSources.reduce((acc, source) => acc + (source.currentStat?.(tool, stat) ?? 0), 0);
-			return Math.max(0, fortune * 0.02);
-		},
-		upgrades: (tool) => {
-			if (tool.hasAxedPerk()) return [];
-			const stats: Record<Stat, number> = {
-				[Stat.FarmingFortune]: tool.getStat(Stat.FarmingFortune) * 0.02,
-			} as Record<Stat, number>;
-
-			for (const crop of tool.crops) {
-				const cropStat = CROP_INFO[crop]?.fortuneType;
-				if (cropStat) {
-					stats[cropStat] = tool.getStat(cropStat) * 0.02;
-				}
-			}
-
-			return [
-				{
-					title: 'Axed Perk',
-					increase: tool.fortune * 0.02,
-					stats,
-					action: UpgradeAction.Unlock,
-					category: UpgradeCategory.Misc,
-					conflictKey: 'axed_perk',
-					wiki: 'https://w.elitesb.gg/Essence_Shops#Forest',
-					cost: {
-						items: {
-							ESSENCE_FOREST: 10_000,
-						},
-					},
-					onto: {
-						name: tool.item.name,
-						skyblockId: tool.item.skyblockId,
-					},
-				},
-			] as FortuneUpgrade[];
-		},
-	},
 	...Object.entries(FARMING_ENCHANTS).map(([id, enchant]) => enchantSourceBuilder(id, enchant)),
 ];
 
@@ -314,6 +253,16 @@ function enchantSourceBuilder(
 			enchant.appliesTo.includes(tool.type) &&
 			(!enchant.cropSpecific || tool.crops.includes(enchant.cropSpecific)),
 		max: (tool) => {
+			const currentOverbloom = getStatFromEnchant(
+				tool.item.enchantments?.[id] ?? 0,
+				enchant,
+				Stat.Overbloom,
+				tool.options,
+				tool.crops[0]
+			);
+			const maxOverbloom =
+				currentOverbloom > 0 ? getMaxStatFromEnchant(enchant, Stat.Overbloom, tool.options, tool.crops[0]) : 0;
+
 			// For multi-crop tools (e.g., Eclipse Hoe), take the best single-crop value to avoid double counting
 			if (tool.crops.length > 1) {
 				let best = 0;
@@ -323,16 +272,30 @@ function enchantSourceBuilder(
 						getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop)
 					);
 				}
-				return best || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
+				return (
+					best ||
+					getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]) ||
+					maxOverbloom
+				);
 			}
 
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop);
 			}
-			return sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
+			return (
+				sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]) || maxOverbloom
+			);
 		},
 		current: (tool) => {
+			const currentOverbloom = getStatFromEnchant(
+				tool.item.enchantments?.[id] ?? 0,
+				enchant,
+				Stat.Overbloom,
+				tool.options,
+				tool.crops[0]
+			);
+
 			if (tool.crops.length > 1) {
 				let best = 0;
 				for (const crop of tool.crops) {
@@ -355,7 +318,8 @@ function enchantSourceBuilder(
 						Stat.FarmingFortune,
 						tool.options,
 						tool.crops[0]
-					)
+					) ||
+					currentOverbloom
 				);
 			}
 
@@ -377,7 +341,8 @@ function enchantSourceBuilder(
 					Stat.FarmingFortune,
 					tool.options,
 					tool.crops[0]
-				)
+				) ||
+				currentOverbloom
 			);
 		},
 		maxStat: (tool, stat) => {
@@ -396,6 +361,12 @@ function enchantSourceBuilder(
 					best = Math.max(best, getMaxStatFromEnchant(enchant, stat, tool.options, crop));
 				}
 				return best || getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
+			}
+
+			// Non-crop-fortune stats (e.g. Overbloom from Feast) are flat per enchant level,
+			// not per crop. Resolve once with one of the tool's crops.
+			if (stat !== Stat.FarmingFortune) {
+				return getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
 			}
 
 			let sum = 0;
@@ -434,6 +405,17 @@ function enchantSourceBuilder(
 				);
 			}
 
+			// Non-crop-fortune stats (e.g. Overbloom from Feast) are flat per enchant level.
+			if (stat !== Stat.FarmingFortune) {
+				return getStatFromEnchant(
+					tool.item.enchantments?.[id] ?? 0,
+					enchant,
+					stat,
+					tool.options,
+					tool.crops[0]
+				);
+			}
+
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, crop);
@@ -444,14 +426,18 @@ function enchantSourceBuilder(
 		},
 		upgrades: (tool, stats) => {
 			const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
-			if (!CROP_FORTUNE_STATS.has(primaryStat)) {
-				return getUpgradeableEnchant(tool, id, primaryStat);
+			const chains: Stat[] = [primaryStat];
+			if (CROP_FORTUNE_STATS.has(primaryStat) && !chains.includes(Stat.FarmingFortune)) {
+				chains.push(Stat.FarmingFortune);
+			}
+			for (const s of stats ?? []) {
+				if (!chains.includes(s)) chains.push(s);
 			}
 
-			const upgrades = [
-				...getUpgradeableEnchant(tool, id, primaryStat),
-				...getUpgradeableEnchant(tool, id, Stat.FarmingFortune),
-			];
+			const upgrades: FortuneUpgrade[] = [];
+			for (const s of chains) {
+				upgrades.push(...getUpgradeableEnchant(tool, id, s));
+			}
 
 			const seen = new Set<string>();
 			return upgrades.filter((u) => {

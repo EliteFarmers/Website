@@ -110,7 +110,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			name: '§6Bountiful Melon Dicer Mk. III',
 			lore: ['§7Farming Fortune: §6+133.62 §2(+5) §9(+7) §d(+24)'],
 			enchantments: {
-				sunder: 6,
+				harvesting: 6,
 				dedication: 4,
 				cultivating: 10,
 				turbo_melon: 5,
@@ -247,7 +247,6 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			anitaBonus: 5,
 			refinedTruffles: 5,
 			dnaMilestone: 1,
-			perks: { axed: 1 },
 			uniqueVisitors: 87,
 			chips: {
 				CROPSHOT_GARDEN_CHIP: 20,

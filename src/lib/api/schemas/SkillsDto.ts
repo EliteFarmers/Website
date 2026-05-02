@@ -7,8 +7,6 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
-import type { SkillsDtoLevelCaps } from './SkillsDtoLevelCaps';
-import type { SkillsDtoLevels } from './SkillsDtoLevels';
 
 export interface SkillsDto {
 	farming: number;
@@ -23,12 +21,4 @@ export interface SkillsDto {
 	taming: number;
 	social: number;
 	hunting: number;
-	totalXp: number;
-	average: number;
-	levelCaps: SkillsDtoLevelCaps;
-	/**
-	 * Per-skill computed level details (level, progress, maxLevel).
-	 * @nullable
-	 */
-	levels?: SkillsDtoLevels;
 }

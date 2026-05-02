@@ -14,7 +14,7 @@ import { RoseDragonPet } from './pets/rose-dragon.js';
 import { SlugPet } from './pets/slug.js';
 import type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType } from './types/pets.js';
 
-export { FarmingPets, FarmingPetStatType };
+export { FarmingPetStatType, FarmingPets };
 export type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType };
 
 export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
@@ -58,6 +58,20 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 			[Stat.BonusPestChance]: {
 				name: 'Bandana Pest Chance',
 				calculated: (player) => 0.2 * unlockedPestBestiaryTiers(player.bestiaryKills ?? {}),
+			},
+		},
+	},
+	FLYING_PIG: {
+		name: 'Flying Pig',
+		wiki: 'https://w.elitesb.gg/Flying_Pig',
+		stats: {
+			[Stat.PotatoFortune]: {
+				name: 'Flying Pig Potato Fortune',
+				value: 40,
+			},
+			[Stat.Speed]: {
+				name: 'Flying Pig Speed',
+				value: 20,
 			},
 		},
 	},

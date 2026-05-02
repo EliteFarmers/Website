@@ -128,7 +128,7 @@ test('Maxed Helmet Upgrades Test', () => {
 	const item = new FarmingArmor(maxHelmet);
 	expect(item.fortune).toBe(92);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(20);
-	const upgrades = item.getUpgrades();
+	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(1);
 	expect(upgrades[0].title).toBe('Helianthus Helmet');
 	expect(upgrades[0].action).toBe('upgrade');
@@ -140,7 +140,7 @@ test('Almost Maxed Helmet Upgrades Test', () => {
 	expect(item.fortune).toBe(72);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
 
-	const upgrades = item.getUpgrades();
+	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(5);
 
 	const recomb = upgrades.find((u) => u.action === 'recombobulate');
@@ -247,7 +247,7 @@ test('Conflicting Reforges Test', () => {
 
 	expect(reforges.length).toBeGreaterThan(0);
 	for (const reforge of reforges) {
-		expect(reforge.conflictKey).toBe('reforge');
+		expect(reforge.conflictKey).toBe(`reforge:${item.item.uuid}`);
 	}
 
 	const rooted = reforges.find((u) => u.title === 'Reforge to Rooted');

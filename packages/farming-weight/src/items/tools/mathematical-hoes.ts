@@ -29,7 +29,7 @@ export class GaussCarrotHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_CARROT: 256,
+				ENCHANTED_GOLDEN_CARROT: 64,
 			},
 		},
 	};
@@ -107,7 +107,7 @@ export class NewtonNetherWartsHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_NETHER_STALK: 256,
+				MUTANT_NETHER_STALK: 60,
 			},
 		},
 	};
@@ -185,7 +185,7 @@ export class PythagoreanPotatoHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_POTATO: 256,
+				ENCHANTED_BAKED_POTATO: 60,
 			},
 		},
 	};
@@ -263,7 +263,7 @@ export class TuringSugarCaneHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_SUGAR: 256,
+				ENCHANTED_SUGAR_CANE: 40,
 			},
 		},
 	};
@@ -341,7 +341,7 @@ export class EuclidsWheatHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_WHEAT: 256,
+				ENCHANTED_HAY_BALE: 20,
 			},
 		},
 	};

@@ -45,11 +45,7 @@ export class FarmingTool extends UpgradeableBase {
 	public declare info: FarmingToolInfo;
 
 	public override get type(): ReforgeTarget {
-		const t = this.info.type;
-		if (t === FarmingToolType.Dicer) return ReforgeTarget.Axe;
-		if (t === FarmingToolType.MathematicalHoe) return ReforgeTarget.Hoe;
-		if (Object.values(ReforgeTarget).includes(t as ReforgeTarget)) return t as ReforgeTarget;
-		return ReforgeTarget.Hoe;
+		return ReforgeTarget.FarmingTool;
 	}
 
 	// Backwards compatibility
@@ -148,7 +144,7 @@ export class FarmingTool extends UpgradeableBase {
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
 		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
-		const stats = options?.stat ? [options.stat] : undefined;
+		const stats = options?.stat ? [options.stat] : [Stat.FarmingFortune, Stat.Overbloom];
 
 		const upgrades = getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, false, stats).flatMap(
 			(source) => source.upgrades ?? []
@@ -242,11 +238,12 @@ export class FarmingTool extends UpgradeableBase {
 		this.fortune = this.getFortune();
 	}
 
-	getStat(stat: Stat): number {
+	getStat(stat: Stat, selectedCrop?: Crop): number {
 		let sum = 0;
+		const crops = selectedCrop && this.crops.includes(selectedCrop) ? [selectedCrop] : this.crops;
 
 		// Tool level gives 4 crop-specific fortune per level
-		for (const crop of this.crops) {
+		for (const crop of crops) {
 			if (stat === CROP_INFO[crop]?.fortuneType) {
 				sum += this.level * 4;
 				break;
@@ -277,16 +274,11 @@ export class FarmingTool extends UpgradeableBase {
 			if (!enchantment || !level) continue;
 			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
-			for (const crop of this.crops) {
+			for (const crop of crops) {
 				const val = getStatFromEnchant(level, enchantment, stat, this.options, crop);
 
 				sum += val;
 			}
-		}
-
-		// Axed Perk (2% bonus) - Applies to all fortune stats
-		if (this.hasAxedPerk()) {
-			sum *= 1.02;
 		}
 
 		return sum;
@@ -345,13 +337,6 @@ export class FarmingTool extends UpgradeableBase {
 			}
 		}
 
-		// Axed Perk (2% bonus)
-		if (this.hasAxedPerk()) {
-			const axed = sum * 0.02;
-			this.fortuneBreakdown['Axed Perk'] = axed;
-			sum += axed;
-		}
-
 		this.fortune = sum;
 		return sum;
 	}
@@ -405,15 +390,6 @@ export class FarmingTool extends UpgradeableBase {
 			this.item?.enchantments?.dedication &&
 			this.crops.some((crop) => (this.options?.milestones?.[crop] ?? 0) <= 0)
 		);
-	}
-
-	// Check if the tool has the Axed Perk by seeing if the stats in the lore have an additional 2% bonus
-	hasAxedPerk(): boolean {
-		if (this.type !== ReforgeTarget.Axe) return false;
-		if (this.fortuneBreakdown['Axed Perk']) return true;
-
-		const value = this.options?.perks?.['axed'] as string | number | undefined;
-		return value === '1' || value === 1;
 	}
 
 	static isValid(item: EliteItemDto | FarmingTool): boolean {

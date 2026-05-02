@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import * as Collapsible from '$comp/ui/collapsible/index.js';
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import type { Component } from 'svelte';
+	import { findActiveSidebarHref } from '../../lib/sidebar-active';
 	import SidebarLink from './sidebar-link.svelte';
 
 	let {
@@ -24,6 +26,7 @@
 	} = $props();
 
 	const sidebar = Sidebar.useSidebar();
+	const activeHref = $derived(findActiveSidebarHref(items, page.url.pathname));
 </script>
 
 <Sidebar.Group data-sveltekit-preload-data="tap">
@@ -77,7 +80,9 @@
 														<Sidebar.MenuSub>
 															{#each mainItem.items as subItem (subItem.title)}
 																<Sidebar.MenuSubItem>
-																	<Sidebar.MenuSubButton>
+																	<Sidebar.MenuSubButton
+																		isActive={subItem.href === activeHref}
+																	>
 																		{#snippet child({ props })}
 																			<a href={subItem.href} {...props}>
 																				<span>{subItem.title}</span>
@@ -93,7 +98,7 @@
 										{/snippet}
 									</Collapsible.Root>
 								{:else}
-									<SidebarLink item={mainItem} />
+									<SidebarLink item={mainItem} active={mainItem.href === activeHref} />
 								{/if}
 							{/each}
 						</Sidebar.Menu>

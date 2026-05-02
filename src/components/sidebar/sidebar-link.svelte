@@ -4,6 +4,7 @@
 	import * as Sidebar from '$ui/sidebar';
 	import { untrack, type Component } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
+	import { isSidebarHrefActive } from '../../lib/sidebar-active';
 
 	interface Props extends HTMLAnchorAttributes {
 		item: {
@@ -13,16 +14,17 @@
 			new?: number;
 		};
 		icon?: string;
+		active?: boolean;
 	}
 
-	let { item, icon }: Props = $props();
+	let { item, icon, active = false }: Props = $props();
 
-	let active = $derived(item.href === page.url.pathname);
+	let isActive = $derived(active || isSidebarHrefActive(item.href, page.url.pathname));
 
 	const gbl = getGlobalContext();
 
 	$effect.pre(() => {
-		if (active && item.new) {
+		if (isActive && item.new) {
 			untrack(() => {
 				gbl.markSidebarItemSeen(item.href, item.new ?? 0);
 			});
@@ -31,7 +33,7 @@
 </script>
 
 <Sidebar.MenuItem>
-	<Sidebar.MenuButton data-active={active}>
+	<Sidebar.MenuButton data-active={isActive}>
 		{#snippet tooltipContent()}
 			{item.title}
 		{/snippet}

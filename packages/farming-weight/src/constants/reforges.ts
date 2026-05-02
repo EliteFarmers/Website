@@ -1,3 +1,4 @@
+import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
 import { Stat } from './stats.js';
 
 export type RarityRecord<T> = Partial<Record<Rarity, T>>;
@@ -35,6 +36,7 @@ export function compareRarity(a: Rarity | string, b: Rarity | string) {
 }
 
 export enum ReforgeTarget {
+	FarmingTool = 'Farming Tool',
 	Hoe = 'Hoe',
 	Axe = 'Axe',
 	Armor = 'Armor',
@@ -62,13 +64,19 @@ export interface Reforge {
 	tiers: Partial<ReforgeTiers>;
 	/** If true, this reforge should be prioritized over others even if it provides less fortune */
 	priority?: boolean;
+	/**
+	 * Optional hook to modify detailed drop calculation results when this reforge is applied to the
+	 * player's farming tool. Runs after rng drops have been computed so the modifier can adjust
+	 * `result.rngItems` (or any other field) directly.
+	 */
+	ratesModifier?: (result: DetailedDropsResult, options: CalculateCropDetailedDropsOptions) => void;
 }
 
 export const REFORGES: Partial<Record<string, Reforge>> = {
 	bountiful: {
 		name: 'Bountiful',
 		wiki: 'https://w.elitesb.gg/Golden_Ball',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		priority: true,
 		stone: {
 			name: 'Golden Ball',
@@ -123,7 +131,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	blessed: {
 		name: 'Blessed',
 		wiki: 'https://w.elitesb.gg/Blessed_Fruit',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		stone: {
 			name: 'Blessed Fruit',
 			id: 'BLESSED_FRUIT',
@@ -148,7 +156,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 			},
 			[Rarity.Rare]: {
 				stats: {
-					[Stat.FarmingFortune]: 9,
+					[Stat.FarmingFortune]: 10,
 					[Stat.FarmingWisdom]: 3,
 					[Stat.Speed]: 9,
 				},
@@ -183,7 +191,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	earthy: {
 		name: 'Earthy',
 		wiki: 'https://w.elitesb.gg/Large_Walnut',
-		appliesTo: [ReforgeTarget.Axe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		stone: {
 			name: 'Large Walnut',
 			id: 'LARGE_WALNUT',
@@ -193,42 +201,36 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 			[Rarity.Common]: {
 				stats: {
 					[Stat.FarmingFortune]: 2,
-					[Stat.Speed]: 1,
 				},
 				cost: 5_000,
 			},
 			[Rarity.Uncommon]: {
 				stats: {
 					[Stat.FarmingFortune]: 4,
-					[Stat.Speed]: 1,
 				},
 				cost: 10_000,
 			},
 			[Rarity.Rare]: {
 				stats: {
 					[Stat.FarmingFortune]: 6,
-					[Stat.Speed]: 1,
 				},
 				cost: 20_000,
 			},
 			[Rarity.Epic]: {
 				stats: {
 					[Stat.FarmingFortune]: 8,
-					[Stat.Speed]: 1,
 				},
 				cost: 50_000,
 			},
 			[Rarity.Legendary]: {
 				stats: {
 					[Stat.FarmingFortune]: 10,
-					[Stat.Speed]: 1,
 				},
 				cost: 100_000,
 			},
 			[Rarity.Mythic]: {
 				stats: {
 					[Stat.FarmingFortune]: 12,
-					[Stat.Speed]: 1,
 				},
 				cost: 200_000,
 			},
@@ -237,7 +239,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	green_thumb: {
 		name: 'Green Thumb',
 		wiki: 'https://w.elitesb.gg/Reforging#Tool',
-		appliesTo: [ReforgeTarget.Hoe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		tiers: {
 			[Rarity.Common]: {
 				stats: {
@@ -293,7 +295,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	robust: {
 		name: 'Robust',
 		wiki: 'https://w.elitesb.gg/Reforging#Tool',
-		appliesTo: [ReforgeTarget.Hoe],
+		appliesTo: [ReforgeTarget.FarmingTool],
 		tiers: {
 			[Rarity.Common]: {
 				stats: {
@@ -660,6 +662,115 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 			},
 		},
 	},
+	deep_fried: {
+		name: 'Deep Fried',
+		wiki: 'https://w.elitesb.gg/Hashbrown',
+		appliesTo: [ReforgeTarget.FarmingTool],
+		stone: {
+			name: 'Hashbrown',
+			id: 'HASHBROWN',
+		},
+		// Deep Fried grants +25% chance to find Seasonings during a Harvest Feast. Seasonings only
+		// appear in `rngItems` when a Harvest Feast is active and the crop is in-season, so this
+		// multiplier is implicitly gated by the rng pipeline.
+		ratesModifier: (result) => {
+			const seasoning = result.rngItems?.['SEASONING'];
+			if (seasoning) {
+				result.rngItems!['SEASONING'] = seasoning * 1.25;
+			}
+		},
+		tiers: {
+			[Rarity.Common]: {
+				stats: {
+					[Stat.FarmingFortune]: 5,
+				},
+				cost: 20_000,
+			},
+			[Rarity.Uncommon]: {
+				stats: {
+					[Stat.FarmingFortune]: 9,
+				},
+				cost: 40_000,
+			},
+			[Rarity.Rare]: {
+				stats: {
+					[Stat.FarmingFortune]: 13,
+				},
+				cost: 80_000,
+			},
+			[Rarity.Epic]: {
+				stats: {
+					[Stat.FarmingFortune]: 18,
+				},
+				cost: 150_000,
+			},
+			[Rarity.Legendary]: {
+				stats: {
+					[Stat.FarmingFortune]: 23,
+				},
+				cost: 300_000,
+			},
+			[Rarity.Mythic]: {
+				stats: {
+					[Stat.FarmingFortune]: 28,
+				},
+				cost: 600_000,
+			},
+		},
+	},
+	overpriced: {
+		name: 'Overpriced',
+		wiki: 'https://w.elitesb.gg/Overpriced_Drink',
+		appliesTo: [ReforgeTarget.FarmingTool],
+		stone: {
+			name: 'Overpriced Drink',
+			id: 'OVERPRICED_DRINK',
+		},
+		tiers: {
+			[Rarity.Common]: {
+				stats: {
+					[Stat.FarmingFortune]: 5,
+					[Stat.Overbloom]: 7,
+				},
+				cost: 20_000,
+			},
+			[Rarity.Uncommon]: {
+				stats: {
+					[Stat.FarmingFortune]: 10,
+					[Stat.Overbloom]: 7,
+				},
+				cost: 40_000,
+			},
+			[Rarity.Rare]: {
+				stats: {
+					[Stat.FarmingFortune]: 15,
+					[Stat.Overbloom]: 7,
+				},
+				cost: 80_000,
+			},
+			[Rarity.Epic]: {
+				stats: {
+					[Stat.FarmingFortune]: 20,
+					[Stat.Overbloom]: 7,
+				},
+				cost: 150_000,
+			},
+			[Rarity.Legendary]: {
+				stats: {
+					[Stat.FarmingFortune]: 25,
+					[Stat.Overbloom]: 7,
+				},
+				cost: 300_000,
+			},
+			[Rarity.Mythic]: {
+				stats: {
+					[Stat.FarmingFortune]: 30,
+					[Stat.Overbloom]: 7,
+				},
+				cost: 600_000,
+			},
+		},
+	},
 };
 
 export const STAT_ICONS: Record<Stat, string> = {
@@ -687,6 +798,7 @@ export const STAT_ICONS: Record<Stat, string> = {
 	[Stat.ForagingWisdom]: '☯',
 	[Stat.Pristine]: '✧',
 	[Stat.BonusPestChance]: 'ൠ',
+	[Stat.Overbloom]: '☀',
 	[Stat.CactusFortune]: '☘',
 	[Stat.CarrotFortune]: '☘',
 	[Stat.CocoaBeanFortune]: '☘',

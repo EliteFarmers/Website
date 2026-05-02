@@ -19,6 +19,15 @@
 				return { stat, value: value as number };
 			}
 		}
+		// Fall back to the largest non-zero non-fortune stat (e.g. Overbloom)
+		let best: { stat: Stat; value: number } | undefined;
+		for (const [statKey, value] of Object.entries(upgrade.stats)) {
+			if (!value) continue;
+			if (!best || Math.abs(value as number) > Math.abs(best.value)) {
+				best = { stat: statKey as Stat, value: value as number };
+			}
+		}
+		if (best) return best;
 		return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 	});
 
@@ -41,6 +50,9 @@
 		costPerFortune(increase, (upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0))
 	);
 	const bits = $derived(costPerFortune(increase, (upgrade.cost?.bits ?? 0) + (upgrade.cost?.applyCost?.bits ?? 0)));
+	const kernels = $derived(
+		costPerFortune(increase, (upgrade.cost?.kernels ?? 0) + (upgrade.cost?.applyCost?.kernels ?? 0))
+	);
 </script>
 
 {#if copper > 0}
@@ -52,6 +64,11 @@
 	<p class="text-sm">
 		<span class="dark:text-completed">{bits.toLocaleString()}</span>
 		<span class="text-muted-foreground">bits</span>
+	</p>
+{:else if kernels > 0}
+	<p class="text-sm">
+		<span class="dark:text-completed">{kernels.toLocaleString()}</span>
+		<span class="text-muted-foreground">kernel{kernels === 1 ? '' : 's'}</span>
 	</p>
 {/if}
 {#if costPer > 0}

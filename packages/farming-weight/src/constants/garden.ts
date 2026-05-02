@@ -166,6 +166,11 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Legendary,
 		wiki: 'https://w.elitesb.gg/Bruuh',
 	},
+	carrot_king_avatar: {
+		name: 'Carrot King Avatar',
+		rarity: Rarity.Legendary,
+		wiki: 'https://w.elitesb.gg/Carrot_King_Avatar',
+	},
 	carpenter: {
 		name: 'Carpenter',
 		rarity: Rarity.Rare,
@@ -703,6 +708,11 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		name: 'Terry',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://w.elitesb.gg/Terry',
+	},
+	taylor: {
+		name: 'Taylor',
+		rarity: Rarity.Mythic,
+		wiki: 'https://w.elitesb.gg/Taylor',
 	},
 	tia: {
 		name: 'Tia the Fairy',

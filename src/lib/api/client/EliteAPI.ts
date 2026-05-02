@@ -87,6 +87,8 @@ import type {
 	GetAdminOrdersParams,
 	GetAdminSkillGraphsParams,
 	GetAuctionHouseNeu200,
+	GetAuctionHouseNeuAverageLowestBin200,
+	GetAuctionHouseNeuGzipParams,
 	GetAuctionHouseNeuParams,
 	GetAuctionPriceHistoryParams,
 	GetAuctionPriceHistoryResponse,
@@ -153,6 +155,8 @@ import type {
 	GuildJacobLeaderboardFeature,
 	GuildMemberDto,
 	GuildMembersLeaderboardDto,
+	HarvestFeastCurrentDto,
+	HarvestFeastCurrentRequest,
 	HypixelInventoryDto,
 	IncomingAccountDto,
 	IncomingGuildChannelDto,
@@ -8782,6 +8786,61 @@ export const updateGuildPurchases = async (discordId: string | bigint | number, 
 };
 
 /**
+ * Uses crowd-sourced data, which may not be accurate.
+ * @summary Get current Harvest Feast crops
+ */
+export type getCurrentHarvestFeastResponse200 = {
+	data: HarvestFeastCurrentDto;
+	status: 200;
+};
+
+export type getCurrentHarvestFeastResponseSuccess = getCurrentHarvestFeastResponse200 & {
+	headers: Headers;
+};
+export type getCurrentHarvestFeastResponse = getCurrentHarvestFeastResponseSuccess;
+
+export const getGetCurrentHarvestFeastUrl = () => {
+	return `${ELITE_API_URL}/harvest-feast/current`;
+};
+
+export const getCurrentHarvestFeast = async (options?: RequestInit) => {
+	return customFetch<getCurrentHarvestFeastResponse>(getGetCurrentHarvestFeastUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Crowd-sourced current Harvest Feast data.
+ * @summary Upload current Harvest Feast crops
+ */
+export type uploadCurrentHarvestFeastResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type uploadCurrentHarvestFeastResponseSuccess = uploadCurrentHarvestFeastResponse204 & {
+	headers: Headers;
+};
+export type uploadCurrentHarvestFeastResponse = uploadCurrentHarvestFeastResponseSuccess;
+
+export const getUploadCurrentHarvestFeastUrl = () => {
+	return `${ELITE_API_URL}/harvest-feast/current`;
+};
+
+export const uploadCurrentHarvestFeast = async (
+	harvestFeastCurrentRequest: HarvestFeastCurrentRequest,
+	options?: RequestInit
+) => {
+	return customFetch<uploadCurrentHarvestFeastResponse>(getUploadCurrentHarvestFeastUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(harvestFeastCurrentRequest),
+	});
+};
+
+/**
  * @summary Get Hypixel Guild
  */
 export type getHypixelGuildResponse200 = {
@@ -11132,6 +11191,60 @@ export const getAuction = async (auctionId: string, options?: RequestInit) => {
 };
 
 /**
+ * Get NEU lowest-BIN averages over a fixed history window using hourly lowest-BIN history buckets. Supported windows: 1day, 3day, 7day.
+ * @summary Get Average Lowest BIN Prices (NEU Format)
+ */
+export type getAuctionHouseNeuAverageLowestBinResponse200 = {
+	data: GetAuctionHouseNeuAverageLowestBin200;
+	status: 200;
+};
+
+export type getAuctionHouseNeuAverageLowestBinResponseSuccess = getAuctionHouseNeuAverageLowestBinResponse200 & {
+	headers: Headers;
+};
+export type getAuctionHouseNeuAverageLowestBinResponse = getAuctionHouseNeuAverageLowestBinResponseSuccess;
+
+export const getGetAuctionHouseNeuAverageLowestBinUrl = (window: string) => {
+	return `${ELITE_API_URL}/resources/auctions/neu/average-lbin/${window}`;
+};
+
+export const getAuctionHouseNeuAverageLowestBin = async (window: string, options?: RequestInit) => {
+	return customFetch<getAuctionHouseNeuAverageLowestBinResponse>(getGetAuctionHouseNeuAverageLowestBinUrl(window), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Get the same average lowest-BIN NEU payload as /resources/auctions/neu/average-lbin/{window}. Only use this if you need to, the normal endpoint already supports gzip data transfer.
+ * @summary Get Average Lowest BIN Prices (NEU Format, Gzip File)
+ */
+export type getAuctionHouseNeuAverageLowestBinGzipResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type getAuctionHouseNeuAverageLowestBinGzipResponseSuccess =
+	getAuctionHouseNeuAverageLowestBinGzipResponse204 & {
+		headers: Headers;
+	};
+export type getAuctionHouseNeuAverageLowestBinGzipResponse = getAuctionHouseNeuAverageLowestBinGzipResponseSuccess;
+
+export const getGetAuctionHouseNeuAverageLowestBinGzipUrl = (window: string) => {
+	return `${ELITE_API_URL}/resources/auctions/neu/average-lbin/${window}.gz`;
+};
+
+export const getAuctionHouseNeuAverageLowestBinGzip = async (window: string, options?: RequestInit) => {
+	return customFetch<getAuctionHouseNeuAverageLowestBinGzipResponse>(
+		getGetAuctionHouseNeuAverageLowestBinGzipUrl(window),
+		{
+			...options,
+			method: 'GET',
+		}
+	);
+};
+
+/**
  * Get lowest BIN prices keyed by NEU internal names. Drop-in replacement for moulberry lowestbin.json. Use ?mode=raw (default) for absolute cheapest BIN or ?mode=smooth for IQR-filtered prices.
  * @summary Get Lowest BIN Prices (NEU Format)
  */
@@ -11163,6 +11276,43 @@ export const getGetAuctionHouseNeuUrl = (params?: GetAuctionHouseNeuParams) => {
 
 export const getAuctionHouseNeu = async (params?: GetAuctionHouseNeuParams, options?: RequestInit) => {
 	return customFetch<getAuctionHouseNeuResponse>(getGetAuctionHouseNeuUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Get the same lowest BIN data as /resources/auctions/neu, but in a gzip file. Only use this if you need to, the normal endpoint already supports gzip data transfer.
+ * @summary Get Lowest BIN Prices (NEU Format, Gzip File)
+ */
+export type getAuctionHouseNeuGzipResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type getAuctionHouseNeuGzipResponseSuccess = getAuctionHouseNeuGzipResponse204 & {
+	headers: Headers;
+};
+export type getAuctionHouseNeuGzipResponse = getAuctionHouseNeuGzipResponseSuccess;
+
+export const getGetAuctionHouseNeuGzipUrl = (params?: GetAuctionHouseNeuGzipParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/auctions/neu.gz?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/auctions/neu.gz`;
+};
+
+export const getAuctionHouseNeuGzip = async (params?: GetAuctionHouseNeuGzipParams, options?: RequestInit) => {
+	return customFetch<getAuctionHouseNeuGzipResponse>(getGetAuctionHouseNeuGzipUrl(params), {
 		...options,
 		method: 'GET',
 	});

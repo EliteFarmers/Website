@@ -288,12 +288,12 @@ export class ArmorSet {
 		return result;
 	}
 
-	getStat(stat: Stat): number {
+	getStat(stat: Stat, crop?: Crop): number {
 		let sum = 0;
 		// Armor fortune
 		for (const piece of this.armor) {
 			if (!piece) continue;
-			sum += piece.getStat(stat);
+			sum += piece.getStat(stat, crop);
 		}
 
 		// Armor set bonuses
@@ -305,7 +305,7 @@ export class ArmorSet {
 		// Equipment fortune
 		for (const piece of this.equipment) {
 			if (!piece) continue;
-			sum += piece.getStat(stat);
+			sum += piece.getStat(stat, crop);
 		}
 
 		// Equipment set bonuses
@@ -495,7 +495,7 @@ export class FarmingArmor extends UpgradeableBase {
 		this.fortune = this.getFortune();
 	}
 
-	getStat(stat: Stat): number {
+	getStat(stat: Stat, crop?: Crop): number {
 		let sum = 0;
 
 		// Base stats
@@ -520,7 +520,7 @@ export class FarmingArmor extends UpgradeableBase {
 			const enchantment = FARMING_ENCHANTS[enchant];
 			if (!enchantment || !level || enchantment.cropSpecific) continue;
 
-			sum += getStatFromEnchant(level, enchantment, stat, this.options);
+			sum += getStatFromEnchant(level, enchantment, stat, this.options, crop);
 		}
 
 		return sum;
@@ -583,7 +583,7 @@ export class FarmingArmor extends UpgradeableBase {
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
 		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
-		const stats = options?.stat ? [options.stat] : undefined;
+		const stats = options?.stat ? [options.stat] : [Stat.FarmingFortune, Stat.Overbloom];
 
 		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(
 			this,

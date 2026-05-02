@@ -65,7 +65,7 @@
 		{yDomain}
 		yNice
 		padding={{ left: 48, bottom: 16, top: 5, right: 48 }}
-		tooltip={{ mode: 'bisect-x' }}
+		tooltipContext={{ mode: 'bisect-x' }}
 	>
 		{#snippet children({ context })}
 			<Layer type="svg" class="fill-primary stroke-muted-foreground">

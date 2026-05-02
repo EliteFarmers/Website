@@ -493,6 +493,16 @@
 		line-height: 1;
 	}
 
+	.lc-tooltip-container {
+		--color-primary: var(--color-primary);
+
+		--color-surface-100: var(--color-card);
+		--color-surface-200: var(--color-card);
+		--color-surface-300: var(--color-card);
+
+		--color-surface-content: var(--color-card-foreground);
+	}
+
 	[data-rehype-pretty-code-figure] {
 		background-color: var(--color-code);
 		color: var(--color-code-foreground);

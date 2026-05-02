@@ -32,7 +32,7 @@
 	function isCompleted(requirement: Exclude<ItemResponse['requirements'], null | undefined>[number]) {
 		if (requirement.type === 'GARDEN_LEVEL') {
 			if (!ctx.garden?.experience) return undefined; // Garden level not available
-			const { level } = getGardenLevel(ctx.garden?.experience ?? 0);
+			const { level } = getGardenLevel(Number(ctx.garden?.experience ?? 0));
 			return level >= requirement.level;
 		}
 		if (!requirement.skill || !requirement.level) return undefined;

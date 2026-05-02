@@ -15,6 +15,7 @@
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
+	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
@@ -65,6 +66,7 @@
 
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
+	const harvestFeast = getHarvestFeast();
 
 	function updateSelectedTool(c: string) {
 		const crop = getCropFromName(c);
@@ -91,6 +93,11 @@
 
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? getCropFromName(crop)) as Crop;
+
+	function harvestFeastCropKey(crop: string): Crop | undefined {
+		const direct = Object.values(Crop).find((value) => value === crop);
+		return direct ?? getCropFromName(PROPER_CROP_NAME[crop] ?? crop);
+	}
 
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
 
@@ -125,6 +132,28 @@
 
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
 	const selectedCropKey = $derived(cropKey(selectedCrop));
+	const harvestFeastPerks = $derived.by(() => {
+		const current = ctx.member.current?.stats?.carnival?.harvestFeast;
+		if (!current) return undefined;
+
+		return {
+			natural_talent: current.naturalTalent,
+			fortunate_feasting: current.fortunateFeasting,
+		};
+	});
+	const harvestFeastOptions = $derived.by<PlayerOptions['harvestFeast']>(() => {
+		const current = harvestFeast.current;
+		const inSeasonCrops = (current?.current ?? [])
+			.map((crop) => harvestFeastCropKey(crop))
+			.filter((crop) => crop !== undefined);
+
+		return {
+			active: inSeasonCrops.length > 0,
+			inSeasonCrops,
+			grandFeast: current?.isGrandFeast ?? false,
+			perks: harvestFeastPerks,
+		};
+	});
 
 	let options = $derived({
 		tools: tools,
@@ -149,6 +178,7 @@
 		chips: ctx.member.current?.memberData?.garden?.chips ?? {},
 
 		perks: ctx.member.current?.unparsed?.perks ?? undefined,
+		harvestFeast: harvestFeastOptions,
 
 		farmingLevel: getLevelProgress(
 			'farming',
@@ -161,7 +191,7 @@
 		cropUpgrades: getCropUpgrades(
 			(ctx.member.current?.garden?.cropUpgrades ?? {}) as unknown as Record<string, number>
 		),
-		gardenLevel: getGardenLevel(ctx.member.current?.garden?.experience ?? 0).level,
+		gardenLevel: getGardenLevel(Number(ctx.member.current?.garden?.experience ?? 0)).level,
 
 		communityCenter: $ratesData.communityCenter,
 		filledRosewaterFlask: $ratesData.rosewaterFlasks,
@@ -200,8 +230,8 @@
 		return filtered;
 	});
 
-	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune]));
-	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune]));
+	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune, Stat.Overbloom]));
+	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom]));
 	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
 
 	const cropToolSwitchOptions = $derived.by(() => {
@@ -347,6 +377,7 @@
 				enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
 				mode: $ratesData.zorroMode,
 			},
+			harvestFeast: harvestFeastOptions,
 			selectedCrop: selectedCropKey,
 		};
 
@@ -356,6 +387,13 @@
 	});
 
 	const calculatorOptions = $derived.by(() => {
+		const overbloomBreakdown = selectedCropKey
+			? Object.fromEntries(
+					Object.entries($player.getStatBreakdown(Stat.Overbloom, selectedCropKey))
+						.map(([name, entry]) => [name, entry.value])
+						.filter(([, v]) => (v as number) > 0)
+				)
+			: {};
 		return {
 			farmingFortune: cropFortune.fortune,
 			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
@@ -367,6 +405,9 @@
 			pet: $player.selectedPet,
 			attributes: $player.attributes,
 			chips: $player.options.chips,
+			harvestFeast: $player.options.harvestFeast,
+			overbloom: selectedCropKey ? $player.getStat(Stat.Overbloom, selectedCropKey) : 0,
+			overbloomBreakdown,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
 	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
@@ -415,6 +456,7 @@
 </FloatingButton>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
+	{@render warning()}
 	<Cropselector radio={true} />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
@@ -608,51 +650,29 @@
 							<span class="text-xl font-semibold">Farming Weight Gain</span>
 							<span class="text-xl font-semibold">{weightGain.toLocaleString()}</span>
 						</div>
-						{#if info.specialCropBonus > 0 || info.rareItemBonus > 0}
+						{#if info.rareItemBonus > 0}
 							<Accordion.Root type="single" class="w-full">
-								<Accordion.Item value="modifiers" class="outline-border w-full rounded-md px-2 outline">
+								<Accordion.Item value="overbloom" class="outline-border w-full rounded-md px-2 outline">
 									<Accordion.Trigger class="py-2 hover:no-underline">
 										<div class="flex w-full items-center justify-between gap-2 pr-2">
-											<span class="text-muted-foreground text-lg font-semibold"
-												>Rate Modifiers</span
+											<span class="text-lg font-semibold">Overbloom</span>
+											<span class="text-completed text-lg font-semibold"
+												>{(info.rareItemBonus * 100).toLocaleString()}</span
 											>
-											<span class="text-muted-foreground text-sm">Active</span>
 										</div>
 									</Accordion.Trigger>
 									<Accordion.Content class="pb-2">
 										<div class="flex flex-col">
-											{#if info.specialCropBonus > 0}
-												<div class="flex w-full items-center justify-between py-1">
-													<span class="text-lg">Special Crop Bonus</span>
-													<span class="text-progress text-lg font-semibold"
-														>+{(info.specialCropBonus * 100).toFixed(1)}%</span
+											{#each Object.entries(info.rareItemBonusBreakdown)
+												.filter(([, v]) => v > 0)
+												.sort(([, a], [, b]) => b - a) as [name, value] (name)}
+												<div class="flex w-full items-center justify-between py-1 pl-2">
+													<span class="text-muted-foreground text-sm">{name}</span>
+													<span class="text-muted-foreground text-sm"
+														>{(value * 100).toLocaleString()}</span
 													>
 												</div>
-												{#each Object.entries(info.specialCropBonusBreakdown) as [name, value] (name)}
-													<div class="flex w-full items-center justify-between py-1 pl-4">
-														<span class="text-muted-foreground text-sm">{name}</span>
-														<span class="text-muted-foreground text-sm"
-															>+{(value * 100).toFixed(1)}%</span
-														>
-													</div>
-												{/each}
-											{/if}
-											{#if info.rareItemBonus > 0}
-												<div class="flex w-full items-center justify-between py-1">
-													<span class="text-lg">Rare Drop Bonus</span>
-													<span class="text-link text-lg font-semibold"
-														>+{(info.rareItemBonus * 100).toFixed(1)}%</span
-													>
-												</div>
-												{#each Object.entries(info.rareItemBonusBreakdown).filter(([, v]) => v > 0) as [name, value] (name)}
-													<div class="flex w-full items-center justify-between py-1 pl-4">
-														<span class="text-muted-foreground text-sm">{name}</span>
-														<span class="text-muted-foreground text-sm"
-															>+{(value * 100).toFixed(1)}%</span
-														>
-													</div>
-												{/each}
-											{/if}
+											{/each}
 										</div>
 									</Accordion.Content>
 								</Accordion.Item>
@@ -676,6 +696,7 @@
 		</section>
 	</div>
 
+	{@render warning()}
 	<Cropselector radio={true} href="#fortune" id="fortune" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
@@ -734,7 +755,7 @@
 					{/if}
 					<CategoryProgress
 						name="Gear Fortune"
-						progress={$player.armorSet.getProgress([Stat.FarmingFortune])}
+						progress={$player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom])}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
@@ -742,7 +763,7 @@
 					/>
 					<CategoryProgress
 						name="General Fortune"
-						progress={$player.getProgress([Stat.FarmingFortune])}
+						progress={$player.getProgress([Stat.FarmingFortune, Stat.Overbloom])}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
@@ -754,6 +775,7 @@
 		</section>
 	</div>
 
+	{@render warning()}
 	<Cropselector radio={true} href="#upgrades" id="upgrades" />
 
 	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
@@ -780,3 +802,19 @@
 		<RatesSettings {player} />
 	</Dialog.ScrollContent>
 </Dialog.Root>
+
+{#snippet warning()}
+	<!-- Warning about toolkit -->
+	<div class="flex flex-col items-center gap-2 rounded-md bg-yellow-100 px-4 py-2 text-sm text-yellow-800">
+		<p>
+			<TriangleAlert size={16} class="inline" />
+			Farming tools in your Farming Toolkit will not show up here! Please remove them from your toolkit and keep them
+			in a normal inventory!
+		</p>
+		<p>
+			Please report bugs with the new Harvest Feast features on the <a href="/support" class="text-link underline"
+				>support Discord server</a
+			>!
+		</p>
+	</div>
+{/snippet}

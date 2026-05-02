@@ -26,6 +26,14 @@ test('SkyBlock Time Day of Year', () => {
 	expect(SkyBlockTime.from(1, 12, 31).dayOfYear).toBe(372);
 });
 
+test('SkyBlock Time Harvest Feast season', () => {
+	expect(SkyBlockTime.from(1, 6, 31).isHarvestFeast()).toBe(false);
+	expect(SkyBlockTime.from(1, 7, 1).isHarvestFeast()).toBe(true);
+	expect(SkyBlockTime.from(1, 8, 15).isHarvestFeast()).toBe(true);
+	expect(SkyBlockTime.from(1, 9, 31).isHarvestFeast()).toBe(true);
+	expect(SkyBlockTime.from(1, 10, 1).isHarvestFeast()).toBe(false);
+});
+
 test('SkyBlock Time Contest Key Conversion', () => {
 	const time = SkyBlockTime.fromContestKey('99:9_12:NETHER_STALK');
 	expect(time.day).toBe(12);
