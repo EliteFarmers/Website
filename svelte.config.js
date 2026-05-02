@@ -7,6 +7,11 @@ import { mdsxConfig } from './mdsx.config.js';
 const config = {
     preprocess: [mdsx(mdsxConfig)],
     extensions: ['.svelte', '.md'],
+    compilerOptions: {
+        experimental: {
+            async: true,
+        }
+    },
     kit: {
         experimental: {
             remoteFunctions: true,

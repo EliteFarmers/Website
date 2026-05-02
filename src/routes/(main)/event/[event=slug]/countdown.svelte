@@ -15,7 +15,7 @@
 {#if browser}
 	<NumberFlowGroup>
 		<div
-			style="font-variant-numeric: tabular-nums; --number-flow-char-height: 0.85em"
+			style="font-variant-numeric: tabular-nums; line-height: 0.85em"
 			class="flex w-full flex-row items-center font-mono text-2xl font-semibold sm:text-4xl md:text-6xl lg:text-8xl"
 		>
 			<div
