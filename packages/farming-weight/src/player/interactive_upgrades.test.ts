@@ -513,7 +513,7 @@ test('Upgrade Tree: Conflict Keys Prevent Duplicate Upgrade Types in Children', 
 	}
 
 	// Verify the reforge has a conflict key
-	expect(reforgeUpgrade.conflictKey).toBe('reforge');
+	expect(reforgeUpgrade.conflictKey).toBe(`reforge:${armorPiece!.item.uuid}`);
 
 	// Expand the upgrade tree
 	const tree = player.expandUpgrade(reforgeUpgrade, {
@@ -533,13 +533,13 @@ test('Upgrade Tree: Conflict Keys Prevent Duplicate Upgrade Types in Children', 
 	const allUpgrades = collectAllUpgrades(tree);
 
 	// There should only be ONE reforge upgrade in the entire tree (the root)
-	const reforgeUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === 'reforge');
+	const reforgeUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === `reforge:${armorPiece!.item.uuid}`);
 	expect(reforgeUpgrades.length).toBe(1);
 	expect(reforgeUpgrades[0].depth).toBe(0); // Should be at root only
 
 	// If there are children (e.g., item tier upgrades), they should not contain reforge upgrades
 	for (const child of tree.children) {
-		expect(child.upgrade.conflictKey).not.toBe('reforge');
+		expect(child.upgrade.conflictKey).not.toBe(`reforge:${armorPiece!.item.uuid}`);
 	}
 });
 
@@ -623,7 +623,7 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 		return;
 	}
 
-	expect(recombUpgrade.conflictKey).toBe('recombobulate');
+	expect(recombUpgrade.conflictKey).toBe(`recombobulate:${armorPiece!.item.uuid}`);
 
 	const tree = player.expandUpgrade(recombUpgrade, {
 		maxDepth: 3,
@@ -639,7 +639,7 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 	}
 
 	const allUpgrades = collectAllUpgrades(tree);
-	const recombUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === 'recombobulate');
+	const recombUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === `recombobulate:${armorPiece!.item.uuid}`);
 
 	expect(recombUpgrades.length).toBe(1);
 	expect(recombUpgrades[0].depth).toBe(0);
@@ -678,10 +678,12 @@ test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () 
 
 	expect(tree.children.length).toBe(2);
 
-	const hasRecomb = tree.children.some((c) => c.upgrade.conflictKey === 'recombobulate');
+	const hasRecomb = tree.children.some((c) => c.upgrade.conflictKey === `recombobulate:${squashWithReforge.uuid}`);
 	expect(hasRecomb).toBe(false);
 
-	const hasPest1 = tree.children.some((c) => c.upgrade.conflictKey === 'enchant:pesterminator:1');
+	const hasPest1 = tree.children.some(
+		(c) => c.upgrade.conflictKey === `enchant:pesterminator:1:${squashWithReforge.uuid}`
+	);
 	expect(hasPest1).toBe(false);
 
 	const hasUniqueGem = tree.children.some((c) => c.upgrade.conflictKey?.includes('PERIDOT_1'));
@@ -828,6 +830,63 @@ test('Gem Upgrade Chain Preserves Slot ID', () => {
 	expect(flawlessGem0?.meta?.slot).toBe('PERIDOT_0');
 });
 
+function maxedHelianthusArmor(skyblockId: string, uuid: string, name: string): EliteItemDto {
+	return {
+		id: 397,
+		count: 1,
+		skyblockId,
+		uuid,
+		name,
+		lore: [`§d§lMYTHIC ${name.toUpperCase()}`],
+		enchantments: {
+			pesterminator: 6,
+			ultimate_sunset: 5,
+		},
+		attributes: {
+			modifier: 'mossy',
+			rarity_upgrades: '1',
+		},
+		gems: {},
+	};
+}
+
+test('Available upgrades include missing Helianthus gems on all armor pieces', () => {
+	const pieces = [
+		maxedHelianthusArmor('HELIANTHUS_HELMET', 'helianthus-helmet-uuid', 'Helianthus Helmet'),
+		maxedHelianthusArmor('HELIANTHUS_CHESTPLATE', 'helianthus-chestplate-uuid', 'Helianthus Chestplate'),
+		maxedHelianthusArmor('HELIANTHUS_LEGGINGS', 'helianthus-leggings-uuid', 'Helianthus Leggings'),
+		maxedHelianthusArmor('HELIANTHUS_BOOTS', 'helianthus-boots-uuid', 'Helianthus Boots'),
+	];
+
+	const player = new FarmingPlayer({
+		armor: pieces.map((piece) => new FarmingArmor(piece)),
+	});
+
+	const seen = new Set<string>();
+	const availableUpgrades = [
+		...player.getUpgrades({ stat: Stat.FarmingFortune }),
+		...player.getUpgrades({ stat: Stat.Overbloom }),
+	].filter((upgrade) => {
+		const key = upgrade.conflictKey ?? `${upgrade.title}::${upgrade.action}`;
+		if (seen.has(key)) return false;
+		seen.add(key);
+		return true;
+	});
+
+	const gemUpgrades = availableUpgrades.filter(
+		(upgrade) => upgrade.meta?.type === 'gem' && upgrade.meta.value === 'FINE'
+	);
+
+	expect(gemUpgrades).toHaveLength(8);
+	expect(new Set(gemUpgrades.map((upgrade) => upgrade.conflictKey)).size).toBe(8);
+
+	for (const piece of pieces) {
+		const pieceGemUpgrades = gemUpgrades.filter((upgrade) => upgrade.meta?.itemUuid === piece.uuid);
+		expect(pieceGemUpgrades).toHaveLength(2);
+		expect(pieceGemUpgrades.map((upgrade) => upgrade.meta?.slot).sort()).toStrictEqual(['PERIDOT_0', 'PERIDOT_1']);
+	}
+});
+
 test('Tier Upgrade Children Include Gem Upgrade Chain', () => {
 	const squashHelmet: EliteItemDto = {
 		id: 301,
@@ -937,6 +996,6 @@ test('Include All Tier Upgrade Children Option', () => {
 
 	expect(treeAll.children.length).toBeGreaterThan(treeFiltered.children.length);
 
-	const hasRecomb = treeAll.children.some((c) => c.upgrade.conflictKey === 'recombobulate');
+	const hasRecomb = treeAll.children.some((c) => c.upgrade.conflictKey === `recombobulate:${squashHelmet.uuid}`);
 	expect(hasRecomb).toBe(true);
 });

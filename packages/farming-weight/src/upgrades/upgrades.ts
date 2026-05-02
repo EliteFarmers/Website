@@ -17,6 +17,7 @@ import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFor
 import { nextRarity, previousRarity } from '../util/itemstats.js';
 import { getUpgradeableEnchants } from './enchantupgrades.js';
 import { getFakeItem } from './itemregistry.js';
+import { getItemScopedConflictKey } from './upgradekeys.js';
 
 function getPieceBonus(upgradeable: Upgradeable): number {
 	const fn = (upgradeable as unknown as { getPieceBonus?: () => number }).getPieceBonus;
@@ -82,7 +83,7 @@ export function getSelfFortuneUpgrade(
 					type: 'buy_item',
 					id: nextInfo.skyblockId,
 				},
-				conflictKey: `item_tier:${nextInfo.skyblockId}`,
+				conflictKey: getItemScopedConflictKey(upgradeable, `item_tier:${nextInfo.skyblockId}`),
 			} satisfies FortuneUpgrade,
 		};
 	} else if (nextItem && nextInfo && !(nextItem.reason === UpgradeReason.Situational && !nextItem.preferred)) {
@@ -192,7 +193,7 @@ export function getSelfFortuneUpgrade(
 							? undefined
 							: (upgradeable.item.uuid ?? undefined),
 				},
-				conflictKey: `item_tier:${nextItem.id}`,
+				conflictKey: getItemScopedConflictKey(upgradeable, `item_tier:${nextItem.id}`),
 			} satisfies FortuneUpgrade,
 		};
 	}
@@ -299,7 +300,7 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 			id: 'rarity_upgrades',
 			value: 1,
 		},
-		conflictKey: 'recombobulate',
+		conflictKey: getItemScopedConflictKey(upgradeable, 'recombobulate'),
 	} satisfies FortuneUpgrade;
 
 	// Gemstone fortune increases with rarity
@@ -380,7 +381,7 @@ export function getUpgradeableReforges(upgradeable: Upgradeable, stats?: Stat[])
 			stats: deltaStats,
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Reforge,
-			conflictKey: 'reforge',
+			conflictKey: getItemScopedConflictKey(upgradeable, 'reforge'),
 			wiki: reforge.wiki,
 			onto: {
 				name: upgradeable.item.name,
@@ -458,7 +459,7 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 			},
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Gem,
-			conflictKey: `gem:${slotId}:${GemRarity.Fine}`,
+			conflictKey: getItemScopedConflictKey(upgradeable, `gem:${slotId}:${GemRarity.Fine}`),
 			meta: {
 				type: 'gem',
 				slot: slotId,
@@ -515,7 +516,7 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 				},
 				action: UpgradeAction.Apply,
 				category: UpgradeCategory.Gem,
-				conflictKey: `gem:${slotId}:${nextGem}`,
+				conflictKey: getItemScopedConflictKey(upgradeable, `gem:${slotId}:${nextGem}`),
 				meta: {
 					type: 'gem',
 					slot: slotId,
