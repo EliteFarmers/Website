@@ -12,12 +12,14 @@ export function mergeTexturePackCatalog(
 	overrides: LocalTexturePackOverride[] | null | undefined
 ) {
 	const merged = new Map<string, ResourcePackDto>();
+	const cachedPackList = Array.isArray(cachedPacks) ? cachedPacks : [];
+	const overrideList = Array.isArray(overrides) ? overrides : [];
 
-	for (const pack of cachedPacks ?? []) {
+	for (const pack of cachedPackList) {
 		merged.set(pack.id, pack);
 	}
 
-	for (const override of overrides ?? []) {
+	for (const override of overrideList) {
 		if (!merged.has(override.id)) {
 			merged.set(override.id, override);
 		}
