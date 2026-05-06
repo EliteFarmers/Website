@@ -145,9 +145,9 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 		family: 'FreshlyBaked',
 		familyOrder: 5,
 		maxRarity: Rarity.Legendary,
-		baseStats: {
-			[Stat.Overbloom]: 5,
-		},
+		computedStats: (opt) => ({
+			[Stat.Overbloom]: 5 * (opt.harvestFeast?.active ? 2 : 1),
+		}),
 	},
 	FRESHLY_BAKED_RELIC: {
 		skyblockId: 'FRESHLY_BAKED_RELIC',
@@ -163,9 +163,9 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			},
 		},
 		maxRarity: Rarity.Epic,
-		baseStats: {
-			[Stat.Overbloom]: 4,
-		},
+		computedStats: (opt) => ({
+			[Stat.Overbloom]: 4 * (opt.harvestFeast?.active ? 2 : 1),
+		}),
 	},
 	FRESHLY_BAKED_ARTIFACT: {
 		skyblockId: 'FRESHLY_BAKED_ARTIFACT',
@@ -181,9 +181,9 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			},
 		},
 		maxRarity: Rarity.Rare,
-		baseStats: {
-			[Stat.Overbloom]: 3,
-		},
+		computedStats: (opt) => ({
+			[Stat.Overbloom]: 3 * (opt.harvestFeast?.active ? 2 : 1),
+		}),
 	},
 	FRESHLY_BAKED_RING: {
 		skyblockId: 'FRESHLY_BAKED_RING',
@@ -199,9 +199,9 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			},
 		},
 		maxRarity: Rarity.Uncommon,
-		baseStats: {
-			[Stat.Overbloom]: 2,
-		},
+		computedStats: (opt) => ({
+			[Stat.Overbloom]: 2 * (opt.harvestFeast?.active ? 2 : 1),
+		}),
 	},
 	FRESHLY_BAKED_TALISMAN: {
 		skyblockId: 'FRESHLY_BAKED_TALISMAN',
@@ -217,8 +217,8 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			},
 		},
 		maxRarity: Rarity.Common,
-		baseStats: {
-			[Stat.Overbloom]: 1,
-		},
+		computedStats: (opt) => ({
+			[Stat.Overbloom]: 1 * (opt.harvestFeast?.active ? 2 : 1),
+		}),
 	},
 };

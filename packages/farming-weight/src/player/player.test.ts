@@ -239,12 +239,37 @@ test('Feast enchantment grants tool Overbloom for player rate calculations', () 
 	});
 
 	const tool = player.getBestTool(Crop.NetherWart);
-	expect(tool?.getStat(Stat.Overbloom, Crop.NetherWart)).toBe(2.5);
+	expect(tool?.getStat(Stat.Overbloom, Crop.NetherWart)).toBe(10);
 
 	const rates = player.getRates(Crop.NetherWart, 100_000);
-	expect(rates.rareItemBonus).toBe(0.025);
-	expect(rates.rareItemBonusBreakdown['Farming Tool']).toBe(0.025);
-	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.025, 2);
+	expect(rates.rareItemBonus).toBe(0.1);
+	expect(rates.rareItemBonusBreakdown['Farming Tool']).toBe(0.1);
+	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.1, 2);
+});
+
+test('Freshly Baked accessories double Overbloom during Harvest Feast', () => {
+	const freshlyBakedTalisman = {
+		skyblockId: 'FRESHLY_BAKED_TALISMAN',
+		uuid: 'freshly-baked-talisman',
+		name: 'Freshly Baked Talisman',
+		lore: [],
+		attributes: {},
+		enchantments: {},
+	};
+
+	const inactive = new FarmingPlayer({
+		accessories: [freshlyBakedTalisman],
+	});
+	expect(inactive.getStat(Stat.Overbloom)).toBe(1);
+
+	const active = new FarmingPlayer({
+		accessories: [freshlyBakedTalisman],
+		harvestFeast: {
+			active: true,
+		},
+	});
+	expect(active.getStat(Stat.Overbloom)).toBe(2);
+	expect(active.getStatBreakdown(Stat.Overbloom)['Freshly Baked Talisman']?.value).toBe(2);
 });
 
 test('Selected crop Overbloom upgrades only include that crop tool', () => {

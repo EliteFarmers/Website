@@ -32,6 +32,12 @@ export function createFarmingPlayer(options: PlayerOptions) {
 	return new FarmingPlayer(options);
 }
 
+function getItemFamily(info: object | undefined): string | undefined {
+	if (!info || !('family' in info)) return undefined;
+	const { family } = info;
+	return typeof family === 'string' ? family : undefined;
+}
+
 export class FarmingPlayer {
 	declare options: PlayerOptions;
 	declare permFortune: number;
@@ -162,8 +168,9 @@ export class FarmingPlayer {
 		let pool: FarmingAccessory[] = [];
 		if (this.options.accessories[0] instanceof FarmingAccessory) {
 			pool = (this.options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
+			for (const acc of pool) acc.setOptions(this.options);
 		} else {
-			pool = FarmingAccessory.fromArray(this.options.accessories as EliteItemDto[]);
+			pool = FarmingAccessory.fromArray(this.options.accessories as EliteItemDto[], this.options);
 		}
 
 		// Filter by unique family (keep highest rarity/fortune)
@@ -318,6 +325,11 @@ export class FarmingPlayer {
 		for (const source of GENERAL_FORTUNE_SOURCES) {
 			// If this source is handled by an active accessory, skip it here to avoid double counting
 			if (this.activeAccessories.some((a) => a.info.name === source.name)) continue;
+			const sourceInfo = source.info?.(this);
+			const sourceFamily = getItemFamily(sourceInfo?.info);
+			if (sourceFamily && this.activeAccessories.some((a) => a.info.family === sourceFamily)) {
+				continue;
+			}
 
 			if (source.exists && !source.exists(this)) continue;
 
