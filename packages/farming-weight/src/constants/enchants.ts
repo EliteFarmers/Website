@@ -487,27 +487,27 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		levels: {
 			1: {
 				stats: {
-					[Stat.Overbloom]: 0.5,
+					[Stat.Overbloom]: 2,
 				},
 			},
 			2: {
 				stats: {
-					[Stat.Overbloom]: 1,
+					[Stat.Overbloom]: 4,
 				},
 			},
 			3: {
 				stats: {
-					[Stat.Overbloom]: 1.5,
+					[Stat.Overbloom]: 6,
 				},
 			},
 			4: {
 				stats: {
-					[Stat.Overbloom]: 2,
+					[Stat.Overbloom]: 8,
 				},
 			},
 			5: {
 				stats: {
-					[Stat.Overbloom]: 2.5,
+					[Stat.Overbloom]: 10,
 				},
 			},
 		},

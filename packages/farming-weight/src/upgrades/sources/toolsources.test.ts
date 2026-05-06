@@ -618,8 +618,8 @@ test('Feast enchant on tool surfaces Overbloom progress and upgrade', () => {
 	const feast = progress.find((p) => p.name === 'Feast');
 	expect(feast).toBeDefined();
 	expect(feast?.stats?.[Stat.Overbloom]).toMatchObject({
-		current: 1.5,
-		max: 2.5,
+		current: 6,
+		max: 10,
 	});
 
 	// Feast doesn't contribute Farming or NetherWart Fortune; shouldn't appear in those upgrade lists.
@@ -634,19 +634,19 @@ test('Feast enchant on tool surfaces Overbloom progress and upgrade', () => {
 		action: UpgradeAction.Apply,
 		category: UpgradeCategory.Enchant,
 	});
-	expect(feastUpgrade?.stats?.[Stat.Overbloom]).toBe(0.5);
+	expect(feastUpgrade?.stats?.[Stat.Overbloom]).toBe(2);
 
 	const defaultProgress = tool.getProgress();
 	const defaultFeast = defaultProgress.find((p) => p.name === 'Feast');
 	expect(defaultFeast).toMatchObject({
-		current: 1.5,
-		max: 2.5,
+		current: 6,
+		max: 10,
 	});
 
 	const defaultUpgrades = tool.getUpgrades();
 	const defaultFeastUpgrade = defaultUpgrades.find((u) => u.title === 'Feast 4');
 	expect(defaultFeastUpgrade).toBeDefined();
-	expect(defaultFeastUpgrade?.stats?.[Stat.Overbloom]).toBe(0.5);
+	expect(defaultFeastUpgrade?.stats?.[Stat.Overbloom]).toBe(2);
 });
 
 test('Player.getUpgrades surfaces tool Overbloom upgrades (Feast)', () => {
@@ -664,7 +664,7 @@ test('Player.getUpgrades surfaces tool Overbloom upgrades (Feast)', () => {
 	const overbloomUpgrades = player.getUpgrades({ stat: Stat.Overbloom });
 	const feastUpgrade = overbloomUpgrades.find((u) => u.title === 'Feast 3');
 	expect(feastUpgrade).toBeDefined();
-	expect(feastUpgrade?.stats?.[Stat.Overbloom]).toBe(0.5);
+	expect(feastUpgrade?.stats?.[Stat.Overbloom]).toBe(2);
 
 	// Tool upgrades should NOT leak into FarmingFortune list (they would already be
 	// included via getCropUpgrades for FF, not here).

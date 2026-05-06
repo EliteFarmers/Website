@@ -80,8 +80,8 @@ export class UpgradeableBase implements Upgradeable {
 	}
 
 	getCalculatedStats(): Partial<Record<Stat, number>> {
-		if (!this.info.computedStats || !this.options) return {};
-		return this.info.computedStats?.(this.options) ?? {};
+		if (!this.info.computedStats) return {};
+		return this.info.computedStats(this.options ?? {});
 	}
 
 	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[] {

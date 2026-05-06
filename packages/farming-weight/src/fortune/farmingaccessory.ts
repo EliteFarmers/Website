@@ -32,11 +32,17 @@ export class FarmingAccessory extends UpgradeableBase {
 		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zeroed, stats);
 	}
 
+	setOptions(options: PlayerOptions) {
+		this.options = options;
+		this.getFortune();
+	}
+
 	getStat(stat: Stat): number {
 		let sum = 0;
 
 		// Base fortune
 		sum += this.info.baseStats?.[stat] ?? 0;
+		sum += this.getCalculatedStats()[stat] ?? 0;
 
 		// Gems
 		const gemStat = getGemStat(this.item, stat, this.rarity);
@@ -52,7 +58,8 @@ export class FarmingAccessory extends UpgradeableBase {
 		let sum = 0;
 
 		// Base fortune
-		const base = this.info.baseStats?.[Stat.FarmingFortune] ?? 0;
+		const base =
+			(this.info.baseStats?.[Stat.FarmingFortune] ?? 0) + (this.getCalculatedStats()[Stat.FarmingFortune] ?? 0);
 		if (base > 0) {
 			this.fortuneBreakdown['Base Stats'] = base;
 			sum += base;
@@ -75,10 +82,10 @@ export class FarmingAccessory extends UpgradeableBase {
 		return FARMING_ACCESSORIES_INFO[item.skyblockId as keyof typeof FARMING_ACCESSORIES_INFO] !== undefined;
 	}
 
-	static fromArray(items: EliteItemDto[]): FarmingAccessory[] {
+	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingAccessory[] {
 		return items
 			.filter((item) => FarmingAccessory.isValid(item))
-			.map((item) => new FarmingAccessory(item))
+			.map((item) => new FarmingAccessory(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
 	}
 

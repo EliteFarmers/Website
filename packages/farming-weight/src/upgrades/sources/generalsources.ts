@@ -438,19 +438,20 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		// Overbloom-only source; doesn't contribute to Farming Fortune.
 		max: () => 0,
 		current: () => 0,
-		maxStat: (_player, stat) => {
+		maxStat: (player, stat) => {
 			if (stat !== Stat.Overbloom) return 0;
 			const accessory = FarmingAccessory.fakeItem(
 				FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_TALISMAN as FarmingAccessoryInfo
 			);
-			return accessory?.getLastItemUpgrade()?.info.baseStats?.[Stat.Overbloom] ?? 0;
+			const last = accessory?.getLastItemUpgrade()?.info;
+			return last ? (FarmingAccessory.fakeItem(last, player.options)?.getStat(Stat.Overbloom) ?? 0) : 0;
 		},
 		currentStat: (player, stat) => {
 			if (stat !== Stat.Overbloom) return 0;
 			const highest = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_HEIRLOOM?.family
 			);
-			return highest?.info.baseStats?.[Stat.Overbloom] ?? 0;
+			return highest?.getStat(Stat.Overbloom) ?? 0;
 		},
 		info: (player) => {
 			const highest = player.activeAccessories.find(
@@ -478,7 +479,8 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						title: talisman.name,
 						increase: 0,
 						stats: {
-							[Stat.Overbloom]: talisman.baseStats?.[Stat.Overbloom] ?? 0,
+							[Stat.Overbloom]:
+								FarmingAccessory.fakeItem(talisman, player.options)?.getStat(Stat.Overbloom) ?? 0,
 						},
 						action: UpgradeAction.Purchase,
 						item: 'FRESHLY_BAKED_TALISMAN',

@@ -13,6 +13,7 @@ import { GemRarity } from '../fortune/item.js';
 import type { Upgradeable, UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { UpgradeableBase } from '../fortune/upgradeablebase.js';
 import { FARMING_TOOLS, type FarmingToolInfo } from '../items/tools.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
 import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune } from '../util/gems.js';
 import { nextRarity, previousRarity } from '../util/itemstats.js';
 import { getUpgradeableEnchants } from './enchantupgrades.js';
@@ -22,6 +23,20 @@ import { getItemScopedConflictKey } from './upgradekeys.js';
 function getPieceBonus(upgradeable: Upgradeable): number {
 	const fn = (upgradeable as unknown as { getPieceBonus?: () => number }).getPieceBonus;
 	return typeof fn === 'function' ? fn.call(upgradeable) : 0;
+}
+
+function getBaseStats(info: UpgradeableInfo, options?: PlayerOptions): Partial<Record<Stat, number>> {
+	const stats: Partial<Record<Stat, number>> = { ...(info.baseStats ?? {}) };
+	const computed = info.computedStats?.(options ?? {}) ?? {};
+
+	for (const stat of Object.values(Stat)) {
+		const value = computed[stat];
+		if (value !== undefined) {
+			stats[stat] = (stats[stat] ?? 0) + value;
+		}
+	}
+
+	return stats;
 }
 
 export function getItemUpgrades(upgradeable: Upgradeable, options?: { stat?: Stat }): FortuneUpgrade[] {
@@ -89,8 +104,8 @@ export function getSelfFortuneUpgrade(
 	} else if (nextItem && nextInfo && !(nextItem.reason === UpgradeReason.Situational && !nextItem.preferred)) {
 		// For item upgrades, compare base stats only (not total fortune which includes reforge/enchants)
 		// This ensures the delta accurately represents what changes when upgrading the item itself
-		const currentBaseStats = upgradeable.info.baseStats ?? {};
-		const nextBaseStats = nextInfo.baseStats ?? {};
+		const currentBaseStats = getBaseStats(upgradeable.info, upgradeable.options);
+		const nextBaseStats = getBaseStats(nextInfo, upgradeable.options);
 
 		const deltaStats: Partial<Record<Stat, number>> = {};
 		for (const stat of Object.values(Stat)) {
