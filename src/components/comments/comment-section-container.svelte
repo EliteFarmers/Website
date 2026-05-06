@@ -38,6 +38,11 @@
 	let commentVotes = $state<Record<number, 1 | -1 | 0>>({});
 	let pendingCommentVoteRequests = $state<Record<number, 1 | -1 | 0>>({});
 
+	function getCommentList(): CommentDto[] {
+		const current = commentsPromise.current;
+		return Array.isArray(current) ? current : [];
+	}
+
 	function applyOptimisticCommentVotes(comments: CommentDto[]) {
 		return comments.map((c) => {
 			const overrideVote = commentVotes[c.id];
@@ -144,7 +149,7 @@
 			return;
 		}
 
-		const baseList = (commentsPromise.current ?? []) as Array<{ id: number; userVote?: number | null }>;
+		const baseList = getCommentList();
 		const baseVote = baseList.find((c) => c.id === commentId)?.userVote ?? 0;
 		const oldVote: 1 | -1 | 0 = commentVotes[commentId] ?? (baseVote === 1 ? 1 : baseVote === -1 ? -1 : 0);
 		const nextVote: 1 | -1 | 0 = oldVote === value ? 0 : value;
@@ -155,28 +160,39 @@
 	}
 
 	let isModerator = $derived(session?.perms?.moderator ?? false);
-	let baseComments = $derived(commentsPromise.current ?? []);
+	let baseComments = $derived.by(getCommentList);
 	let displayComments = $derived(applyOptimisticCommentVotes(baseComments));
 </script>
 
-<CommentSection
-	comments={displayComments}
-	userId={session?.ign}
-	{isModerator}
-	isLoading={isLoadingComment}
-	onSubmit={async (parentId, content) => {
-		await handlePostComment(content, parentId ?? undefined);
-	}}
-	onEdit={async (commentId, content) => {
-		await handleEditComment(commentId, content);
-	}}
-	onDelete={async (commentId) => {
-		await handleDeleteComment(commentId);
-	}}
-	onVoteUp={(commentId) => {
-		handleVoteComment(commentId, 1);
-	}}
-	onVoteDown={(commentId) => {
-		handleVoteComment(commentId, -1);
-	}}
-/>
+<svelte:boundary>
+	<CommentSection
+		comments={displayComments}
+		userId={session?.ign}
+		{isModerator}
+		isLoading={isLoadingComment}
+		onSubmit={async (parentId, content) => {
+			await handlePostComment(content, parentId ?? undefined);
+		}}
+		onEdit={async (commentId, content) => {
+			await handleEditComment(commentId, content);
+		}}
+		onDelete={async (commentId) => {
+			await handleDeleteComment(commentId);
+		}}
+		onVoteUp={(commentId) => {
+			handleVoteComment(commentId, 1);
+		}}
+		onVoteDown={(commentId) => {
+			handleVoteComment(commentId, -1);
+		}}
+	/>
+	{#snippet failed(error, reset)}
+		<div class="border-destructive/30 bg-destructive/5 rounded-md border p-3 text-sm">
+			<p class="font-medium">Failed to load comments</p>
+			{#if typeof error === 'object' && error && 'message' in error}
+				<p class="text-muted-foreground mt-1">{error.message}</p>
+			{/if}
+			<button class="mt-2 rounded-md border px-3 py-1" onclick={reset}>Try again</button>
+		</div>
+	{/snippet}
+</svelte:boundary>

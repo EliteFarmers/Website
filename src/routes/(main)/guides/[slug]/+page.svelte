@@ -58,10 +58,12 @@
 	const draft = page.url.searchParams.get('draft') === 'true';
 
 	// Load guide and comments
-	const guidePromise = GetGuide({ slug, draft });
-	const commentsPromise = GetGuideComments(slug);
+	const guidePromise = $derived(GetGuide({ slug, draft }));
+	const commentsPromise = $derived(GetGuideComments(slug));
 
 	const guideData = $derived(guidePromise?.current ?? data.guide);
+	const COMMENTS_SECTION_ID = 'comments';
+	type TocItem = { level: number; text: string; id: string; isFooter?: boolean };
 
 	const gbl = getGlobalContext();
 	let isOwner = $derived(guideData?.author?.id === gbl.session?.id);
@@ -98,12 +100,12 @@
 		isBookmarked = !!guide.isBookmarked;
 	});
 
-	function buildTableOfContents(html: string): Array<{ level: number; text: string; id: string }> {
+	function buildTableOfContents(html: string): TocItem[] {
 		if (!html) return [];
 		const parser = new DOMParser();
 		const doc = parser.parseFromString(html, 'text/html');
 		const headings = doc.querySelectorAll('h1, h2, h3');
-		const toc: Array<{ level: number; text: string; id: string }> = [];
+		const toc: TocItem[] = [];
 
 		headings.forEach((heading, index) => {
 			const level = parseInt(heading.tagName[1]);
@@ -126,8 +128,8 @@
 			.join('');
 	}
 
-	function buildTableOfContentsFromBlocks(blocks: BlockNode[]): Array<{ level: number; text: string; id: string }> {
-		const toc: Array<{ level: number; text: string; id: string }> = [];
+	function buildTableOfContentsFromBlocks(blocks: BlockNode[]): TocItem[] {
+		const toc: TocItem[] = [];
 		blocks.forEach((block, index) => {
 			if (block.type === 'heading') {
 				const text = getTextFromInlineNodes(block.children);
@@ -139,6 +141,10 @@
 			}
 		});
 		return toc;
+	}
+
+	function appendCommentsTocItem(toc: TocItem[]): TocItem[] {
+		return [...toc, { level: 1, text: 'Comments', id: COMMENTS_SECTION_ID, isFooter: true }];
 	}
 
 	async function handleVote(guideId: number, value: 1 | -1) {
@@ -257,6 +263,28 @@
 		]);
 	});
 </script>
+
+{#snippet tableOfContents(toc: TocItem[], stickyOffset: string)}
+	{@const items = appendCommentsTocItem(toc)}
+	<div class="sticky {stickyOffset}">
+		<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
+		<nav class="flex flex-col gap-1 text-sm">
+			{#each items as item (item.id)}
+				<a
+					href="#{item.id}"
+					class="text-muted-foreground hover:text-foreground transition-colors"
+					class:mt-2={item.isFooter}
+					class:border-t={item.isFooter}
+					class:pt-2={item.isFooter}
+					class:font-medium={item.isFooter}
+					style="padding-left: {item.isFooter ? 0 : (item.level - 1) * 1}rem"
+				>
+					{item.text}
+				</a>
+			{/each}
+		</nav>
+	</div>
+{/snippet}
 
 {#if !guideData}
 	<div class="flex flex-col items-center justify-center gap-4 py-16">
@@ -385,13 +413,15 @@
 					{@render guideActions()}
 				</div>
 
-				<CommentSectionContainer
-					guideId={guideData.id}
-					{commentsPromise}
-					session={page.data.session}
-					{notifyError}
-					{notifySuccess}
-				/>
+				<div id={COMMENTS_SECTION_ID} class="scroll-mt-20">
+					<CommentSectionContainer
+						guideId={guideData.id}
+						{commentsPromise}
+						session={page.data.session}
+						{notifyError}
+						{notifySuccess}
+					/>
+				</div>
 			</div>
 
 			<div class="hidden lg:block">
@@ -407,63 +437,18 @@
 						})()}
 						{#if parsed}
 							{@const toc = buildTableOfContentsFromBlocks(parsed)}
-							{#if toc.length > 0}
-								<div class="sticky top-20">
-									<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
-									<nav class="flex flex-col gap-1 text-sm">
-										{#each toc as item (item.id)}
-											<a
-												href="#{item.id}"
-												class="text-muted-foreground hover:text-foreground transition-colors"
-												style="padding-left: {(item.level - 1) * 1}rem"
-											>
-												{item.text}
-											</a>
-										{/each}
-									</nav>
-								</div>
-							{/if}
+							{@render tableOfContents(toc, 'top-20')}
 						{:else}
 							{#await getHtmlFromMarkdown(guideData.content) then html}
 								{@const toc = buildTableOfContents(html)}
-								{#if toc.length > 0}
-									<div class="sticky top-4">
-										<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
-										<nav class="flex flex-col gap-1 text-sm">
-											{#each toc as item (item.id)}
-												<a
-													href="#{item.id}"
-													class="text-muted-foreground hover:text-foreground transition-colors"
-													style="padding-left: {(item.level - 1) * 1}rem"
-												>
-													{item.text}
-												</a>
-											{/each}
-										</nav>
-									</div>
-								{/if}
+								{@render tableOfContents(toc, 'top-4')}
 							{/await}
 						{/if}
 					{/key}
 				{:else}
 					{#await getHtmlFromMarkdown(guideData.content) then html}
 						{@const toc = buildTableOfContents(html)}
-						{#if toc.length > 0}
-							<div class="sticky top-4">
-								<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
-								<nav class="flex flex-col gap-1 text-sm">
-									{#each toc as item (item.id)}
-										<a
-											href="#{item.id}"
-											class="text-muted-foreground hover:text-foreground transition-colors"
-											style="padding-left: {(item.level - 1) * 1}rem"
-										>
-											{item.text}
-										</a>
-									{/each}
-								</nav>
-							</div>
-						{/if}
+						{@render tableOfContents(toc, 'top-4')}
 					{/await}
 				{/if}
 			</div>
@@ -555,9 +540,11 @@
 		{#if gbl.session?.perms.admin || isOwner}
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
-					<Button variant="outline" size="sm" aria-label="Open menu">
-						<Ellipsis class="h-4 w-4" />
-					</Button>
+					{#snippet child({ props })}
+						<Button {...props} variant="outline" size="sm" aria-label="Open menu">
+							<Ellipsis class="h-4 w-4" />
+						</Button>
+					{/snippet}
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end">
 					{#if gbl.session?.perms.admin}
