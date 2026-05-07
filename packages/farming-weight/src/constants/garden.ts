@@ -699,6 +699,11 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Rare,
 		wiki: 'https://w.elitesb.gg/Tammy',
 	},
+	tal_ker: {
+		name: 'Tal Ker',
+		rarity: Rarity.Legendary,
+		wiki: 'https://w.elitesb.gg/Tal_Ker',
+	},
 	tarwen: {
 		name: 'Tarwen',
 		rarity: Rarity.Uncommon,
