@@ -50,7 +50,7 @@
 						)}
 					>
 						<img src="/favicon.webp" class="aspect-square max-w-8" alt="Elite Logo" />
-						<span class="px-1 font-semibold tracking-tight sm:text-lg md:text-xl">Elite Skyblock</span>
+						<span class="px-0.5 font-semibold tracking-tight sm:text-lg md:text-xl">Elite Skyblock</span>
 					</a>
 				{/snippet}
 			</Sidebar.MenuButton>
@@ -66,7 +66,7 @@
 						{...props}
 						class={cn(
 							props.class ?? '',
-							'bg-card text-primary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative mx-0 border shadow-sm transition-all duration-300 group-data-[state=collapsed]:px-1.5! group-data-[state=expanded]:px-2'
+							'bg-card text-primary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[state=collapsed]:border-destructive/50 relative mx-0 border shadow-sm transition-all duration-300 group-data-[state=collapsed]:px-1.5! group-data-[state=expanded]:px-2'
 						)}
 					>
 						{#if gbl.user?.settings.features?.hideShopPromotions !== true}
@@ -79,7 +79,7 @@
 						<span class="text-primary font-semibold">Shop</span>
 						{#if page.data.newProducts}
 							<span
-								class="bg-destructive text-destructive-foreground absolute right-2 rounded-full px-1 text-[10px] font-bold"
+								class="bg-destructive text-destructive-foreground absolute right-2 rounded-full px-1 text-[10px] font-bold group-data-[state=collapsed]:hidden"
 								>NEW</span
 							>
 						{/if}
