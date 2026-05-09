@@ -2,7 +2,7 @@ export const OTHER_SITES = [
 	{
 		name: 'SkyCrypt',
 		url: ({ uuid, ign, profile }) => {
-			return `https://sky.shiiyu.moe/stats/${uuid ?? ign}/${profile ?? ''}`;
+			return `https://sky.shiiiyu.moe/stats/${uuid ?? ign}/${profile ?? ''}`;
 		},
 	},
 	{

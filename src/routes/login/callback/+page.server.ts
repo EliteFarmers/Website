@@ -4,6 +4,22 @@ import { getAcceptConfirmationUrl, login } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
+function getLoginRedirect(redirectTo: string, attemptCount: string | number, first: boolean, confirmationId?: number) {
+	const params = new URLSearchParams();
+	if (confirmationId) {
+		params.set('id', confirmationId.toString());
+	} else {
+		params.set('success', 'true');
+	}
+	params.set('redirect', redirectTo || '/');
+	params.set('attempt', attemptCount.toString());
+	if (first) {
+		params.set('first', 'true');
+	}
+
+	return `${confirmationId ? '/login/confirm' : '/login'}?${params.toString()}`;
+}
+
 export const load: PageServerLoad = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
@@ -79,14 +95,12 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		path: '/',
 	});
 
-	const first = loginResponse.first_login ? '&first=true' : '';
-
 	if (loginResponse.pending_confirmation) {
 		throw redirect(
 			307,
-			`/login/confirm?id=${loginResponse.pending_confirmation.id}&redirect=${redirectTo}&attempt=${attemptCount}${first}`
+			getLoginRedirect(redirectTo, attemptCount, loginResponse.first_login, loginResponse.pending_confirmation.id)
 		);
 	}
 
-	redirect(307, `/login?success=true&redirect=${redirectTo}&attempt=${attemptCount}${first}`);
+	redirect(307, getLoginRedirect(redirectTo, attemptCount, loginResponse.first_login));
 };

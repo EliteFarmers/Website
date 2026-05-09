@@ -134,7 +134,7 @@ export const CREDITS: Credit[] = [
 			},
 			{
 				name: 'Website',
-				url: 'https://sky.shiiyu.moe/',
+				url: 'https://sky.shiiiyu.moe/',
 			},
 			{
 				name: 'Patreon',

@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 		if (redirectTo) {
 			return {
 				firstLogin: firstLogin === 'true',
-				redirect: decodeURIComponent(redirectTo),
+				redirect: redirectTo,
 				user: auth,
 			};
 		}
