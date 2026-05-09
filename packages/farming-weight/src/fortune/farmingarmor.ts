@@ -4,16 +4,26 @@ import { type Rarity, type Reforge, ReforgeTarget, type ReforgeTier } from '../c
 import { Skill } from '../constants/skills.js';
 import { MATCHING_SPECIAL_CROP, type SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
-import type { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
-import { calculateAverageSpecialCrops } from '../crops/special.js';
 import {
-	ARMOR_SET_BONUS,
-	type ArmorSetBonus,
-	FARMING_ARMOR_INFO,
-	type FarmingArmorInfo,
-	GEAR_SLOTS,
-	GearSlot,
+	getQueryStats,
+	type FortuneSourceProgress,
+	type FortuneUpgrade,
+	type StatQueryOptions,
+} from '../constants/upgrades.js';
+import { calculateAverageSpecialCrops } from '../crops/special.js';
+import type { Effect, EffectEnvironment } from '../effects/types.js';
+import {
+    ARMOR_SET_BONUS,
+    type ArmorSetBonus,
+    FARMING_ARMOR_INFO,
+    type FarmingArmorInfo,
+    GEAR_SLOTS,
+    GearSlot,
 } from '../items/armor.js';
+import { statsToEffects } from '../items/sources/effects-util.js';
+import { enchantEffects } from '../items/sources/enchants.js';
+import { gemEffects } from '../items/sources/gems.js';
+import { reforgeEffects } from '../items/sources/reforges.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { getFakeItem, registerItem } from '../upgrades/itemregistry.js';
@@ -317,6 +327,41 @@ export class ArmorSet {
 		return sum;
 	}
 
+	/**
+	 * Returns the declarative `Effect[]` for the entire armor set: every armor
+	 * piece's effects, every equipment piece's effects, and the armor / equipment
+	 * set bonuses keyed by current piece count.
+	 */
+	getEffects(env: EffectEnvironment): Effect[] {
+		const effects: Effect[] = [];
+
+		for (const piece of this.armor) {
+			if (!piece) continue;
+			effects.push(...piece.getEffects(env));
+		}
+
+		for (const { bonus, count } of this.setBonuses) {
+			if (count < 2 || count > 4) continue;
+			const stats = bonus.stats?.[count];
+			if (!stats) continue;
+			effects.push(...statsToEffects(stats, `${bonus.name} (${count}-piece)`));
+		}
+
+		for (const piece of this.equipment) {
+			if (!piece) continue;
+			effects.push(...piece.getEffects(env));
+		}
+
+		for (const { bonus, count } of this.equipmentSetBonuses) {
+			if (count < 2 || count > 4) continue;
+			const stats = bonus.stats?.[count];
+			if (!stats) continue;
+			effects.push(...statsToEffects(stats, `${bonus.name} (${count}-piece)`));
+		}
+
+		return effects;
+	}
+
 	getFortuneBreakdown(reloadFamilies = false) {
 		if (reloadFamilies) {
 			this.recalculateFamilies();
@@ -382,30 +427,25 @@ export class ArmorSet {
 		return calculateAverageSpecialCrops(blocksBroken, crop, count);
 	}
 
-	specialDropsCount(crop: Crop) {
+	specialDropsCount(crop: Crop): 0 | 1 | 2 | 3 | 4 {
 		const special = MATCHING_SPECIAL_CROP[crop];
 
 		const applicableBonuses = this.setBonuses.filter((b) => b.special?.includes(special));
 		if (applicableBonuses.length === 0) return 0;
 
-		// Armor set counts need to be combined for special crops
-		// There will only be 2 applicable bonuses at most when Fermento armor plus
-		// a lower tier armor is used. Hypixel appears to count these as the same
-		// set bonus instead of rolling them separately.
-		let count = 0 as 1 | 2 | 3 | 4;
-		for (const bonus of applicableBonuses) {
-			count += bonus.count;
-		}
-
-		return count;
+		// Mixed armor families should use the best active same-family tier.
+		// For example, 2 Fermento + 2 Helianthus is not a 4-piece Feast bonus;
+		// it is two separate 2-piece bonuses, so the special-crop rate uses 2.
+		return Math.max(...applicableBonuses.map((bonus) => bonus.count)) as 1 | 2 | 3 | 4;
 	}
 
 	getProgress(stats?: Stat[], zeroed = false) {
 		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed, stats);
 	}
 
-	getUpgrades(options?: { stat?: Stat }) {
-		const stats = options?.stat ? [options.stat] : undefined;
+	getUpgrades(options?: StatQueryOptions) {
+		const hasExplicitStats = (options?.stats?.length ?? 0) > 0 || options?.stat !== undefined;
+		const stats = hasExplicitStats ? getQueryStats(options) : undefined;
 		const upgrades = getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, false, stats).flatMap(
 			(source) => source.upgrades ?? []
 		);
@@ -526,6 +566,49 @@ export class FarmingArmor extends UpgradeableBase {
 		return sum;
 	}
 
+	/**
+	 * Returns the declarative `Effect[]` representation of every contribution
+	 * this armor piece makes: base stats, per-farming-level stats, reforge,
+	 * gems, and enchants. Set bonuses are handled at the `ArmorSet` level (see
+	 * {@link ArmorSet.getEffects}).
+	 */
+	getEffects(env: EffectEnvironment): Effect[] {
+		const sourceName = this.item.name ?? this.info.name;
+		const effects: Effect[] = [];
+
+		effects.push(...statsToEffects(this.info.baseStats, sourceName));
+
+		if (this.info.perLevelStats?.skill === Skill.Farming && this.options?.farmingLevel) {
+			const perLevel: Partial<Record<Stat, number>> = {};
+			for (const [statKey, value] of Object.entries(this.info.perLevelStats.stats) as [
+				Stat,
+				number,
+			][]) {
+				if (value) perLevel[statKey] = value * this.options.farmingLevel;
+			}
+			effects.push(...statsToEffects(perLevel, `${sourceName} (Farming Level)`));
+		}
+
+		if (this.reforge && this.item.attributes?.modifier) {
+			effects.push(
+				...reforgeEffects(
+					this.item.attributes.modifier,
+					this.rarity,
+					`${sourceName} (${this.reforge.name})`
+				)
+			);
+		}
+
+		effects.push(...gemEffects(this.item, this.rarity, `${sourceName} (Gems)`));
+
+		for (const [enchantId, level] of Object.entries(this.item.enchantments ?? {})) {
+			if (!level) continue;
+			effects.push(...enchantEffects(enchantId, level, env, this.options ?? {}));
+		}
+
+		return effects;
+	}
+
 	getFortune() {
 		this.fortuneBreakdown = {};
 		let sum = 0;
@@ -579,11 +662,11 @@ export class FarmingArmor extends UpgradeableBase {
 		return sum;
 	}
 
-	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[] {
+	getUpgrades(options?: StatQueryOptions): FortuneUpgrade[] {
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
 		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
-		const stats = options?.stat ? [options.stat] : [Stat.FarmingFortune, Stat.Overbloom];
+		const stats = getQueryStats(options, [Stat.FarmingFortune, Stat.Overbloom]);
 
 		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(
 			this,

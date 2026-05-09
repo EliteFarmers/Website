@@ -59,8 +59,15 @@ export function getSourceProgress<T extends object>(
 					};
 				}
 			}
-			if (Object.keys(perStat).length > 0) {
-				progress.stats = perStat;
+		if (Object.keys(perStat).length > 0) {
+			progress.stats = perStat;
+		}
+	}
+
+		if (source.effects) {
+			const effects = source.effects(upgradeable, stats);
+			if (effects.length > 0) {
+				progress.effects = effects;
 			}
 		}
 
@@ -121,6 +128,7 @@ export function getSourceProgress<T extends object>(
 			progress.current === 0 &&
 			!progress.alwaysInclude &&
 			!progress.stats &&
+			!progress.effects &&
 			!progress.upgrades &&
 			!progress.progress
 		) {

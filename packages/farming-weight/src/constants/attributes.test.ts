@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { calculateDetailedAverageDrops } from '../util/ratecalc';
+import { createFarmingPlayer } from '../player/player';
 import { getShardLevel, getShardsForLevel, getShardsForNextLevel } from './attributes';
 import { Crop } from './crops';
 import { Rarity } from './reforges';
@@ -18,16 +18,14 @@ test('Attribute shards 0 test', () => {
 });
 
 test('Wartybug shard adds Warty to rate calc results', () => {
-	const calculator = calculateDetailedAverageDrops({
-		blocksBroken: 72000,
-		bountiful: false,
-		mooshroom: false,
+	const player = createFarmingPlayer({
+		farmingLevel: 60,
 		attributes: {
 			wart_eater: 72,
 		},
 	});
 
-	const rngItems = calculator[Crop.NetherWart].rngItems;
+	const rngItems = player.getRates(Crop.NetherWart, 72000).rngItems;
 
 	expect(rngItems).toHaveProperty('WARTY');
 });

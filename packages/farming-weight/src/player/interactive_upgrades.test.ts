@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
@@ -645,6 +646,38 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 
 	expect(recombUpgrades.length).toBe(1);
 	expect(recombUpgrades[0].depth).toBe(0);
+});
+
+test('Interactive Upgrade: item rarity prefers attributes and recombobulate updates attributes', () => {
+	const fermentoHelmet: EliteItemDto = {
+		id: 301,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: 'attribute-rarity-test-uuid',
+		name: '§aMossy Fermento Helmet',
+		lore: ['§d§lMYTHIC HELMET'],
+		enchantments: {},
+		attributes: { modifier: 'mossy', rarity: Rarity.Epic },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(fermentoHelmet)],
+	});
+
+	const armor = player.armor.find((piece) => piece.item.uuid === 'attribute-rarity-test-uuid');
+	expect(armor).toBeDefined();
+	expect(armor?.rarity).toBe(Rarity.Epic);
+
+	const recombUpgrade = armor?.getUpgrades().find((upgrade) => upgrade.meta?.id === 'rarity_upgrades');
+	expect(recombUpgrade).toBeDefined();
+
+	player.applyUpgrade(recombUpgrade!);
+
+	const updatedArmor = player.armor.find((piece) => piece.item.uuid === 'attribute-rarity-test-uuid');
+	expect(updatedArmor?.rarity).toBe(Rarity.Legendary);
+	expect(updatedArmor?.item.attributes?.rarity).toBe(Rarity.Legendary);
+	expect(updatedArmor?.item.lore).toStrictEqual(['§d§lMYTHIC HELMET']);
 });
 
 test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () => {

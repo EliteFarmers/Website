@@ -8,7 +8,7 @@ import { GemRarity } from '../../fortune/item.js';
 import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
-import { getUpgradeableGems } from '../upgrades.js';
+import { getCurrentReforgeEffectSummaries, getReforgeEffectSummaries, getUpgradeableGems } from '../upgrades.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((c) => c.fortuneType));
@@ -57,13 +57,21 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		maxStat: (tool, stat) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			if (tool.reforge?.name === 'Bountiful')
-				return REFORGES.bountiful?.tiers[last.maxRarity]?.stats?.[stat] ?? 0;
-			return REFORGES.blessed?.tiers?.[last.maxRarity]?.stats?.[stat] ?? 0;
+			const current = tool.reforgeStats?.stats?.[stat] ?? 0;
+			let best = 0;
+			for (const reforge of Object.values(REFORGES)) {
+				if (!reforge || !tool.type || !reforge.appliesTo.includes(tool.type)) continue;
+				if (!reforge.stone?.id) continue;
+				const value = reforge.tiers[last.maxRarity]?.stats?.[stat] ?? 0;
+				if (value > best) best = value;
+			}
+			return Math.max(best, current);
 		},
 		currentStat: (tool, stat) => tool.reforgeStats?.stats?.[stat] ?? 0,
+		effects: getCurrentReforgeEffectSummaries,
 		upgrades: (tool, stats) => {
-			const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
+			const requestedStats = stats && stats.length > 0 ? stats : [Stat.FarmingFortune];
+			const primaryStat = requestedStats[0] ?? Stat.FarmingFortune;
 			const currentStats = tool.reforgeStats?.stats ?? {};
 			const currentPrimary = currentStats?.[primaryStat] ?? 0;
 			// Find if there's a priority reforge that applies to this tool
@@ -72,23 +80,33 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 			);
 			const result: FortuneUpgrade[] = [];
 
-			for (const reforge of Object.values(REFORGES)) {
+			for (const [reforgeId, reforge] of Object.entries(REFORGES)) {
 				// Skip if the reforge doesn't apply to the item or is currently applied
 				if (!reforge || !tool.type || !reforge.appliesTo.includes(tool.type) || reforge === tool.reforge) {
 					continue;
 				}
 
-				// Skip non-priority reforges if there's a priority reforge available for this tool
-				if (priorityReforge && reforge !== priorityReforge && !reforge.priority) continue;
+				// For Farming Fortune views, keep the existing priority reforge behavior.
+				// Other stat views can surface non-priority reforges that affect that stat.
+				if (priorityReforge && reforge !== priorityReforge && !reforge.priority && primaryStat === Stat.FarmingFortune)
+					continue;
 				// Only suggest reforges with an explicit reforge stone
 				if (!reforge.stone?.id) continue;
 
 				const tier = reforge.tiers[tool.rarity];
 				if (!tier || !tier.stats) continue;
 				const nextPrimary = tier.stats?.[primaryStat] ?? 0;
+				const effects = getReforgeEffectSummaries(tool, reforgeId, requestedStats);
 
 				// Allow priority reforges even if they have less fortune
-				if (!reforge.priority && nextPrimary <= currentPrimary) continue;
+				if (
+					!reforge.priority &&
+					nextPrimary <= currentPrimary &&
+					!requestedStats.some((stat) => (tier.stats?.[stat] ?? 0) > (currentStats?.[stat] ?? 0)) &&
+					effects.length === 0
+				) {
+					continue;
+				}
 
 				const deltaStats: Partial<Record<Stat, number>> = {};
 				for (const s of Object.values(Stat)) {
@@ -103,6 +121,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					title: 'Reforge to ' + reforge.name,
 					increase,
 					stats: deltaStats,
+					effects: effects.length > 0 ? effects : undefined,
 					action: UpgradeAction.Apply,
 					category: UpgradeCategory.Reforge,
 					conflictKey: 'reforge',

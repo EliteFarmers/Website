@@ -3,6 +3,15 @@ import type { LateCalculationContext, LateCalculationResult } from '../constants
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { getStatValue, Stat, type StatBreakdown } from '../constants/stats.js';
 import {
+	type FortuneSourceProgress,
+	type FortuneUpgrade,
+	getQueryStats,
+	type StatQueryOptions,
+	UpgradeAction,
+	UpgradeCategory,
+} from '../constants/upgrades.js';
+import type { Effect, EffectEnvironment } from '../effects/types.js';
+import {
 	FARMING_PET_ITEMS,
 	FARMING_PETS,
 	type FarmingPetInfo,
@@ -13,6 +22,7 @@ import {
 	PET_LEVELS,
 	PET_RARITY_OFFSETS,
 } from '../items/pets.js';
+import { statsToEffects } from '../items/sources/effects-util.js';
 import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getRarityFromLore } from '../util/itemstats.js';
@@ -20,6 +30,14 @@ import type { EliteItemDto } from './item.js';
 
 export function createFarmingPet(pet: FarmingPetType) {
 	return new FarmingPet(pet);
+}
+
+function getPetItemId(item: FarmingPetItemInfo): string | undefined {
+	return Object.entries(FARMING_PET_ITEMS).find(([, value]) => value === item)?.[0];
+}
+
+function improvesRequestedStat(upgrade: FortuneUpgrade, stats: readonly Stat[]): boolean {
+	return stats.some((stat) => (upgrade.stats?.[stat] ?? 0) > 0);
 }
 
 export class FarmingPet {
@@ -144,6 +162,23 @@ export class FarmingPet {
 		return fortune;
 	}
 
+	/**
+	 * Returns the declarative `Effect[]` representation of every per-stat
+	 * contribution this pet makes (base, per-level, per-rarity-level, abilities,
+	 * pet item)
+	 */
+	getEffects(_env: EffectEnvironment, player?: FarmingPlayer): Effect[] {
+		const sourceName = this.info.name ?? this.type;
+		const stats: Partial<Record<Stat, number>> = {};
+
+		for (const stat of Object.values(Stat)) {
+			const { fortune } = this.computeFortune(stat, player);
+			if (fortune) stats[stat] = fortune;
+		}
+
+		return statsToEffects(stats, sourceName);
+	}
+
 	getFullBreakdown(player?: FarmingPlayer): StatBreakdown {
 		const full: StatBreakdown = {};
 		let baseFortune = 0;
@@ -252,6 +287,217 @@ export class FarmingPet {
 		}
 
 		return maxLevel;
+	}
+
+	getXpForLevel(level: number): number {
+		const offset = PET_RARITY_OFFSETS[this.rarity] ?? 0;
+		const maxLevel = this.info.maxLevel ?? 100;
+		const targetLevel = Math.max(1, Math.min(level, maxLevel));
+		let xp = 0;
+
+		for (let i = offset; i < offset + targetLevel - 1; i++) {
+			xp += PET_LEVELS[i] ?? 0;
+		}
+
+		return xp;
+	}
+
+	private withChanges(changes: Partial<FarmingPetType>): FarmingPet {
+		return new FarmingPet({ ...this.pet, ...changes }, this.options);
+	}
+
+	private getStatTotals(stats: readonly Stat[], player?: FarmingPlayer): Partial<Record<Stat, number>> {
+		const totals: Partial<Record<Stat, number>> = {};
+		for (const stat of stats) {
+			const value = this.getFortune(stat, player);
+			if (value !== 0) totals[stat] = value;
+		}
+		return totals;
+	}
+
+	private getBreakdownProgress(
+		maxPet: FarmingPet,
+		stats: readonly Stat[],
+		player?: FarmingPlayer
+	): FortuneSourceProgress[] {
+		const progress = new Map<string, FortuneSourceProgress>();
+
+		for (const stat of stats) {
+			const currentBreakdown = this.computeFortune(stat, player).breakdown;
+			const maxBreakdown = maxPet.computeFortune(stat, player).breakdown;
+			const sourceNames = new Set([...Object.keys(currentBreakdown), ...Object.keys(maxBreakdown)]);
+
+			for (const name of sourceNames) {
+				const current = currentBreakdown[name] ?? 0;
+				const max = Math.max(maxBreakdown[name] ?? 0, current);
+				if (current === 0 && max === 0) continue;
+
+				const entry =
+					progress.get(name) ??
+					({
+						name,
+						current: 0,
+						max: 0,
+						ratio: 0,
+						stats: {},
+					} satisfies FortuneSourceProgress);
+
+				entry.stats ??= {};
+				entry.stats[stat] = {
+					current,
+					max,
+					ratio: Math.min(max === 0 ? 0 : current / max, 1),
+				};
+
+				if (stat === Stat.FarmingFortune || entry.current === 0) {
+					entry.current = current;
+					entry.max = max;
+					entry.ratio = Math.min(max === 0 ? 0 : current / max, 1);
+				}
+
+				progress.set(name, entry);
+			}
+		}
+
+		return [...progress.values()].sort((a, b) => (b.current ?? 0) - (a.current ?? 0));
+	}
+
+	private getDeltaStats(next: FarmingPet, player: FarmingPlayer | undefined): Partial<Record<Stat, number>> {
+		const deltaStats: Partial<Record<Stat, number>> = {};
+		for (const stat of Object.values(Stat)) {
+			const delta = next.getFortune(stat, player) - this.getFortune(stat, player);
+			if (delta !== 0) deltaStats[stat] = +delta.toFixed(4);
+		}
+		return deltaStats;
+	}
+
+	private getProgressItem(): EliteItemDto {
+		return {
+			id: 0,
+			count: 1,
+			skyblockId: this.type,
+			uuid: this.pet.uuid,
+			name: this.getFormattedName(),
+			lore: [],
+			attributes: {
+				pet: 'true',
+				rarity: this.rarity,
+			},
+		};
+	}
+
+	getProgress(stats?: Stat[], player?: FarmingPlayer): FortuneSourceProgress[] {
+		const queryStats = stats && stats.length > 0 ? stats : [Stat.FarmingFortune];
+		const currentStats = this.getStatTotals(queryStats, player);
+		const maxPet = this.withChanges({ exp: this.getXpForLevel(this.info.maxLevel ?? 100) });
+		const maxStats = maxPet.getStatTotals(queryStats, player);
+
+		const perStat: NonNullable<FortuneSourceProgress['stats']> = {};
+		for (const stat of queryStats) {
+			const current = currentStats[stat] ?? 0;
+			const max = Math.max(maxStats[stat] ?? 0, current);
+			if (current === 0 && max === 0) continue;
+			perStat[stat] = {
+				current,
+				max,
+				ratio: Math.min(max === 0 ? 0 : current / max, 1),
+			};
+		}
+
+		const current = currentStats[Stat.FarmingFortune] ?? this.getFortune(Stat.FarmingFortune, player);
+		const max = Math.max(maxStats[Stat.FarmingFortune] ?? 0, current);
+		const upgrades = this.getUpgrades({ stats: queryStats }, player);
+		const breakdownProgress = this.getBreakdownProgress(maxPet, queryStats, player);
+
+		return [
+			{
+				name: `${this.info.name} Pet`,
+				current,
+				max,
+				ratio: Math.min(max === 0 ? 0 : current / max, 1),
+				stats: Object.keys(perStat).length > 0 ? perStat : undefined,
+				item: this.getProgressItem(),
+				wiki: this.info.wiki,
+				upgrades: upgrades.length > 0 ? upgrades : undefined,
+				progress: breakdownProgress.length > 0 ? breakdownProgress : undefined,
+			},
+		];
+	}
+
+	getUpgrades(options?: StatQueryOptions, player?: FarmingPlayer): FortuneUpgrade[] {
+		const stats = getQueryStats(options);
+		const upgrades: FortuneUpgrade[] = [];
+		const maxLevel = this.info.maxLevel ?? 100;
+
+		if (this.level < maxLevel) {
+			const nextLevel = this.level + 1;
+			const nextPet = this.withChanges({ exp: this.getXpForLevel(nextLevel) });
+			const deltaStats = this.getDeltaStats(nextPet, player);
+			const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+
+			const upgrade: FortuneUpgrade = {
+				title: `${this.info.name} Level ${nextLevel}`,
+				increase,
+				stats: deltaStats,
+				action: UpgradeAction.LevelUp,
+				category: UpgradeCategory.Pet,
+				wiki: this.info.wiki,
+				onto: {
+					name: this.getFormattedName(),
+					skyblockId: this.type,
+				},
+				meta: {
+					type: 'pet_level',
+					itemUuid: this.pet.uuid ?? undefined,
+					value: nextLevel,
+				},
+				conflictKey: `pet-level:${this.pet.uuid ?? this.type}`,
+			};
+
+			if (improvesRequestedStat(upgrade, stats)) {
+				upgrades.push(upgrade);
+			}
+		}
+
+		const currentItemId = this.item ? getPetItemId(this.item) : undefined;
+		for (const [itemId, item] of Object.entries(FARMING_PET_ITEMS)) {
+			if (itemId === currentItemId) continue;
+
+			const nextPet = this.withChanges({ heldItem: itemId });
+			const deltaStats = this.getDeltaStats(nextPet, player);
+			const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+			const upgrade: FortuneUpgrade = {
+				title: item.name,
+				increase,
+				stats: deltaStats,
+				action: UpgradeAction.Apply,
+				category: UpgradeCategory.Pet,
+				purchase: itemId,
+				wiki: item.wiki,
+				onto: {
+					name: this.getFormattedName(),
+					skyblockId: this.type,
+				},
+				cost: {
+					items: {
+						[itemId]: 1,
+					},
+				},
+				meta: {
+					type: 'pet_item',
+					id: itemId,
+					itemUuid: this.pet.uuid ?? undefined,
+				},
+				conflictKey: `pet-item:${this.pet.uuid ?? this.type}`,
+			};
+
+			if (improvesRequestedStat(upgrade, stats)) {
+				upgrades.push(upgrade);
+			}
+		}
+
+		upgrades.sort((a, b) => (b.increase ?? 0) - (a.increase ?? 0));
+		return upgrades;
 	}
 
 	getChimeraAffectedStats(multiplier: number): Record<Stat, number> {

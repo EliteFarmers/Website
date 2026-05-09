@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { RatesItemPriceData } from '$lib/api/elite.js';
-	import type { FortuneUpgrade, UpgradeInfo, UpgradeTreeNode } from 'farming-weight';
+	import type { FortuneUpgrade, UpgradeInfo, UpgradeRateImpact, UpgradeTreeNode } from 'farming-weight';
 	import { getColumns } from './columns.js';
 	import UpgradesTable from './data-table.svelte';
 	import UpgradeTreeWrapper from './upgrade-tree-wrapper.svelte';
@@ -12,11 +12,24 @@
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
 		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
+		rateImpactFn?: (upgrade: FortuneUpgrade) => UpgradeRateImpact | undefined;
+		rateImpactUnavailableLabel?: string;
 	}
 
-	let { upgrades, items, version, costFn, applyUpgrade, expandUpgrade }: Props = $props();
+	let {
+		upgrades,
+		items,
+		version,
+		costFn,
+		applyUpgrade,
+		expandUpgrade,
+		rateImpactFn,
+		rateImpactUnavailableLabel,
+	}: Props = $props();
 
-	const columns = $derived(getColumns(items, costFn, applyUpgrade, expandUpgrade, version));
+	const columns = $derived(
+		getColumns(items, costFn, applyUpgrade, expandUpgrade, rateImpactFn, rateImpactUnavailableLabel, version)
+	);
 
 	const tableData = $derived.by(() => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars

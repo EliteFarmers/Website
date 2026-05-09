@@ -191,3 +191,126 @@ test('Pig Pet Shining Stampede shows potato fortune in pet breakdown', () => {
 	expect(breakdown?.['Potato Fortune']).toStrictEqual({ value: 20, stat: Stat.PotatoFortune });
 	expect(breakdown?.['Shining Stampede']).toStrictEqual({ value: 50, stat: Stat.PotatoFortune });
 });
+
+test('Pet progress exposes separate upgrades for each owned pet', () => {
+	const player = new FarmingPlayer({
+		gardenLevel: 15,
+		pets: [
+			{
+				uuid: 'test-elephant-progress',
+				type: 'ELEPHANT',
+				exp: 0,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+			{
+				uuid: 'test-bee-progress',
+				type: 'BEE',
+				exp: 0,
+				active: false,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+		],
+	});
+
+	const petProgress = player.getPetProgress([Stat.FarmingFortune]);
+
+	expect(petProgress.map((progress) => progress.name)).toStrictEqual(['Elephant Pet', 'Bee Pet']);
+	expect(
+		player.getProgress([Stat.FarmingFortune]).find((progress) => progress.name === 'Elephant Pet')
+	).toBeUndefined();
+
+	const elephant = petProgress.find((progress) => progress.name === 'Elephant Pet');
+	expect(elephant?.stats?.[Stat.FarmingFortune]).toStrictEqual({
+		current: 1.5,
+		max: 150,
+		ratio: 0.01,
+	});
+	expect(
+		elephant?.progress?.find((progress) => progress.name === 'Farming Fortune')?.stats?.[Stat.FarmingFortune]
+	).toStrictEqual({
+		current: 1.5,
+		max: 150,
+		ratio: 0.01,
+	});
+	expect(elephant?.upgrades?.find((upgrade) => upgrade.meta?.type === 'pet_level')?.title).toBe('Elephant Level 2');
+	expect(elephant?.upgrades?.find((upgrade) => upgrade.meta?.type === 'pet_item')?.title).toBe('Green Bandana');
+});
+
+test('Pet upgrades apply to the targeted pet only', () => {
+	const player = new FarmingPlayer({
+		gardenLevel: 15,
+		pets: [
+			{
+				uuid: 'test-elephant-upgrade',
+				type: 'ELEPHANT',
+				exp: 0,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+			{
+				uuid: 'test-bee-upgrade',
+				type: 'BEE',
+				exp: 0,
+				active: false,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+		],
+	});
+
+	const elephantProgress = player
+		.getPetProgress([Stat.FarmingFortune])
+		.find((progress) => progress.name === 'Elephant Pet');
+	const levelUpgrade = elephantProgress?.upgrades?.find((upgrade) => upgrade.meta?.type === 'pet_level');
+	const itemUpgrade = elephantProgress?.upgrades?.find((upgrade) => upgrade.title === 'Green Bandana');
+
+	expect(levelUpgrade).toBeDefined();
+	expect(itemUpgrade).toBeDefined();
+
+	player.applyUpgrade(levelUpgrade!);
+	expect(player.pets.find((pet) => pet.pet.uuid === 'test-elephant-upgrade')?.level).toBe(2);
+	expect(player.pets.find((pet) => pet.pet.uuid === 'test-bee-upgrade')?.level).toBe(1);
+
+	player.applyUpgrade(itemUpgrade!);
+	expect(player.pets.find((pet) => pet.pet.uuid === 'test-elephant-upgrade')?.pet.heldItem).toBe('GREEN_BANDANA');
+	expect(player.selectedPet?.pet.heldItem).toBe('GREEN_BANDANA');
+});
+
+test('Pet upgrades exclude pet item swaps that lower requested fortune stats', () => {
+	const player = new FarmingPlayer({
+		gardenLevel: 15,
+		pets: [
+			{
+				uuid: 'test-elephant-downgrade',
+				type: 'ELEPHANT',
+				exp: 0,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: 'GREEN_BANDANA',
+				candyUsed: 0,
+				skin: null,
+			},
+		],
+	});
+
+	const elephantProgress = player
+		.getPetProgress([Stat.FarmingFortune])
+		.find((progress) => progress.name === 'Elephant Pet');
+
+	expect(elephantProgress?.upgrades?.find((upgrade) => upgrade.title === 'Yellow Bandana')).toBeUndefined();
+	expect(
+		elephantProgress?.upgrades?.find((upgrade) => (upgrade.stats?.[Stat.FarmingFortune] ?? 0) < 0)
+	).toBeUndefined();
+});

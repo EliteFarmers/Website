@@ -134,7 +134,7 @@ test('General fortune sources', () => {
 
 test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Shards', () => {
 	// Cropeetle is Rare. Leveling thresholds: [1, 2, 3, 3, 4, 4, 5, 6, 8, 12]
-	// 13 shards = level 5 (1+2+3+3+4 = 13). Each level grants +2 Overbloom.
+	// 13 shards = level 5 (1+2+3+3+4 = 13). Each level grants +2% special-crop drops.
 	const player = new FarmingPlayer({
 		attributes: { crop_bug: 13 },
 	});
@@ -143,21 +143,34 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 	const attributeShards = progress.find((p) => p.name === 'Attribute Shards');
 	expect(attributeShards).toBeDefined();
 
-	// Cropeetle (Rare, max level 10) provides 20 Overbloom max and we are at 10.
-	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
-		current: 10,
-		max: 20,
-	});
+	expect(attributeShards?.stats?.[Stat.Overbloom]).toBeUndefined();
+	expect(attributeShards?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Cropeetle Shard',
+			op: 'mul-rare',
+			value: 1.1,
+			description: 'Conditional Overbloom - +10% Cropie, Squash, Fermento, and Helianthus drops',
+			relatedStats: [Stat.Overbloom],
+			valueDisplay: 'factor',
+		})
+	);
 
-	// Drilling into Attribute Shards should reveal the Cropeetle shard with Overbloom progress.
+	// Drilling into Attribute Shards should reveal the Cropeetle shard as an Overbloom-related effect.
 	const cropeetle = attributeShards?.progress?.find((p) => p.name === 'Cropeetle Shard');
 	expect(cropeetle).toBeDefined();
-	expect(cropeetle?.stats?.[Stat.Overbloom]).toMatchObject({
-		current: 10,
-		max: 20,
-	});
+	expect(cropeetle?.stats?.[Stat.Overbloom]).toBeUndefined();
+	expect(cropeetle?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Cropeetle Shard',
+			op: 'mul-rare',
+			value: 1.1,
+			description: 'Conditional Overbloom - +10% Cropie, Squash, Fermento, and Helianthus drops',
+			relatedStats: [Stat.Overbloom],
+			valueDisplay: 'factor',
+		})
+	);
 
-	// And Cropeetle should appear as an Overbloom upgrade (level 6 gives +2 Overbloom, costs 4 shards).
+	// And Cropeetle should appear as an Overbloom-related upgrade (level 6 costs 4 shards).
 	const overbloomUpgrades = player.getUpgrades({ stat: Stat.Overbloom });
 	const cropeetleUpgrade = overbloomUpgrades.find((u) => u.title === 'Cropeetle 6');
 	expect(cropeetleUpgrade).toMatchObject({
@@ -167,7 +180,17 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 			items: { SHARD_CROPEETLE: 4 },
 		},
 	});
-	expect(cropeetleUpgrade?.stats?.[Stat.Overbloom]).toBe(2);
+	expect(cropeetleUpgrade?.stats?.[Stat.Overbloom]).toBeUndefined();
+	expect(cropeetleUpgrade?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Cropeetle Shard',
+			op: 'mul-rare',
+			value: 1.12,
+			description: 'Conditional Overbloom - +12% Cropie, Squash, Fermento, and Helianthus drops',
+			relatedStats: [Stat.Overbloom],
+			valueDisplay: 'factor',
+		})
+	);
 
 	// Should NOT appear in plain FarmingFortune upgrades (no FF impact).
 	const ffUpgrades = player.getUpgrades({ stat: Stat.FarmingFortune });
@@ -213,11 +236,17 @@ test('Harvest Feast perk progress can be passed through explicit feast options',
 		current: 3,
 		max: 5,
 	});
-	expect(naturalTalent?.stats?.[Stat.Overbloom]).toMatchObject({
-		current: 0,
-		max: 5,
+	expect(naturalTalent?.stats?.[Stat.Overbloom]).toBeUndefined();
+	expect(naturalTalent?.active?.stats?.[Stat.Overbloom]).toBeUndefined();
+	expect(naturalTalent?.effects).toContainEqual({
+		source: 'Natural Talent',
+		op: 'add-rare-pct',
+		value: 3,
+		scope: { tags: ['seasoning'], requiresHarvestFeast: true },
+		description: '+1% Seasoning chance per level during Harvest Feast',
+		valueDisplay: 'percent',
+		valueStat: undefined,
 	});
-	expect(naturalTalent?.active?.stats?.[Stat.Overbloom]).toBe(3);
 
 	expect(fortunateFeasting?.progress?.[0]).toMatchObject({
 		name: 'Level',
@@ -244,6 +273,6 @@ test('Harvest Feast perk levels contribute while feast is active', () => {
 		},
 	});
 
-	expect(player.getStat(Stat.Overbloom)).toBe(3);
+	expect(player.getStat(Stat.Overbloom)).toBe(0);
 	expect(player.getStat(Stat.FarmingFortune)).toBe(20);
 });

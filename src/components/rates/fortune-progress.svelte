@@ -7,15 +7,17 @@
 	import Info from '@lucide/svelte/icons/info';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { Stat, STAT_ICONS, STAT_NAMES, type FortuneSourceProgress } from 'farming-weight';
+	import EffectSummaryList from './effect-summary-list.svelte';
 	import FortuneActiveNote from './fortune-active-note.svelte';
 
 	interface Props {
 		progress: FortuneSourceProgress;
 		barBg?: string;
 		useItemName?: boolean;
+		showEffects?: boolean;
 	}
 
-	let { progress: p, barBg = 'bg-background', useItemName = true }: Props = $props();
+	let { progress: p, barBg = 'bg-background', useItemName = true, showEffects = false }: Props = $props();
 
 	let progress = $derived.by(() => {
 		if (p.active?.active !== false) return p;
@@ -60,10 +62,23 @@
 	// 		: undefined
 	// );
 
+	const visibleEffects = $derived.by(() => {
+		if (!showEffects || !progress.effects?.length) return [];
+
+		const shownStats = new Set(Object.keys(progress.stats ?? {}));
+		if (shownStats.size === 0) return progress.effects;
+
+		return progress.effects.filter((effect) => {
+			const relatedStats = effect.relatedStats ?? [];
+			return !relatedStats.some((stat) => shownStats.has(stat));
+		});
+	});
+
 	const hasBars = $derived.by(() => {
 		return (
 			(progress.stats && Object.keys(progress.stats).length > 0) ||
-			(progress.progress && Object.keys(progress.progress).length > 0)
+			(progress.progress && Object.keys(progress.progress).length > 0) ||
+			visibleEffects.length > 0
 		);
 	});
 </script>
@@ -74,7 +89,11 @@
 			<div class="flex h-10 flex-row items-center gap-1">
 				{#if progress.item?.name && useItemName}
 					{#if progress.item?.skyblockId}
-						<ItemRender skyblockId={progress.item.skyblockId} class="size-10" />
+						<ItemRender
+							skyblockId={progress.item.skyblockId}
+							pet={progress.item.attributes?.pet === 'true'}
+							class="size-10"
+						/>
 					{/if}
 					<ItemName name={progress.item.name} />
 				{:else}
@@ -147,5 +166,8 @@
 				{/each}
 			{/each}
 		</div>
+		{#if showEffects}
+			<EffectSummaryList effects={visibleEffects} />
+		{/if}
 	</div>
 {/if}

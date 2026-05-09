@@ -1,10 +1,11 @@
+import type { EffectOp, Scope } from '../effects/types.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import type { UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { GearSlot } from '../items/armor.js';
 import type { FARMING_TOOLS } from '../items/tools.js';
 import type { JacobContestMedal } from '../util/jacob.js';
 import type { Crop } from './crops.js';
-import type { Stat } from './stats.js';
+import { Stat } from './stats.js';
 
 export enum UpgradeReason {
 	NextTier = 'next', // Standard upgrade
@@ -51,6 +52,7 @@ export interface FortuneSourceProgress {
 			}
 		>
 	>;
+	effects?: EffectSummary[];
 	maxLevel?: number;
 	fortunePerLevel?: number;
 	max: number;
@@ -68,6 +70,17 @@ export interface FortuneSourceProgress {
 		fortune?: number;
 		stats?: Partial<Record<Stat, number>>;
 	};
+}
+
+export interface EffectSummary {
+	source: string;
+	op: EffectOp;
+	description?: string;
+	relatedStats?: readonly Stat[];
+	scope?: Scope;
+	value?: number;
+	valueDisplay?: 'stat' | 'percent' | 'factor';
+	valueStat?: Stat;
 }
 
 export interface UpgradeCost {
@@ -137,6 +150,7 @@ export enum UpgradeCategory {
 	Misc = 'misc',
 	Attribute = 'attribute',
 	Composter = 'composter',
+	Pet = 'pet',
 }
 
 export enum UpgradeAction {
@@ -157,6 +171,17 @@ export interface UpgradeInfoImprovement<T> {
 export interface FortuneUpgradeImprovement {
 	name: string;
 	fortune: number;
+}
+
+export interface UpgradeGroupDefinition {
+	id: string;
+	label: string;
+	strategy: 'available-pieces';
+	warning?: string;
+}
+
+export interface FortuneUpgradeGroupMeta extends UpgradeGroupDefinition {
+	memberCount: number;
 }
 
 export interface UpgradeInfo<T = number> {
@@ -197,8 +222,11 @@ export interface UpgradeMeta {
 		| 'attribute'
 		| 'crop_upgrade'
 		| 'chip'
+		| 'pet_item'
+		| 'pet_level'
 		| 'setting'
 		| 'unlock'
+		| 'upgrade_group'
 		| 'buy_item';
 	key?: string; // For enchants/stats keys
 	value?: number | string; // New value/level
@@ -226,6 +254,7 @@ export interface FortuneUpgrade {
 	 * with the value from the `increase` field.
 	 */
 	stats?: Partial<Record<Stat, number>>;
+	effects?: EffectSummary[];
 	action: UpgradeAction;
 	purchase?: string;
 	category: UpgradeCategory;
@@ -236,9 +265,23 @@ export interface FortuneUpgrade {
 	cost?: UpgradeCost;
 	wiki?: string;
 	conflictKey?: string;
+	group?: FortuneUpgradeGroupMeta | UpgradeGroupDefinition;
+	groupedUpgrades?: FortuneUpgrade[];
 	improvements?: FortuneUpgradeImprovement[];
 	meta?: UpgradeMeta;
 	skillReq?: Partial<Record<string, number>> | undefined;
+}
+
+export interface StatQueryOptions {
+	stat?: Stat;
+	stats?: Stat[];
+	includeUpgradeGroups?: boolean;
+}
+
+export function getQueryStats(options?: StatQueryOptions, fallback: Stat[] = [Stat.FarmingFortune]): Stat[] {
+	if (options?.stats && options.stats.length > 0) return [...options.stats];
+	if (options?.stat) return [options.stat];
+	return [...fallback];
 }
 
 export interface UpgradeTreeNode {
@@ -256,6 +299,7 @@ export interface Upgrade {
 	cost?: UpgradeCost;
 	why?: string;
 	preferred?: boolean;
+	group?: UpgradeGroupDefinition;
 }
 
 export interface InitialItems {

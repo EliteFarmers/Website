@@ -6,7 +6,6 @@ import type { StatsRecord } from '../../constants/stats.js';
 import type { FarmingPet } from '../../fortune/farmingpet.js';
 import type { FarmingPlayer } from '../../player/player.js';
 import type { PlayerOptions } from '../../player/playeroptions.js';
-import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../../util/ratecalc.js';
 
 export interface FarmingPetType {
 	uuid?: string | null;
@@ -29,11 +28,6 @@ export interface FarmingPetAbility {
 	 * Use this for abilities that depend on total fortune (e.g., Pig Pet's Trample).
 	 */
 	lateComputed?: (ctx: LateCalculationContext, pet: FarmingPet) => LateCalculationResult;
-	ratesModifier?: (
-		current: DetailedDropsResult,
-		options: CalculateCropDetailedDropsOptions,
-		pet: FarmingPet
-	) => DetailedDropsResult;
 	/** If true, this ability is considered a temporary fortune source and can be multiplied by Hypercharge chip */
 	temporary?: boolean;
 }

@@ -5,6 +5,9 @@ import { Stat } from '../../constants/stats.js';
 import { UpgradeReason } from '../../constants/upgrades.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
+import { armorTierGroup } from './groups.js';
+
+const SQUASH_TO_FERMENTO_GROUP = armorTierGroup('SQUASH', 'FERMENTO');
 
 export class SquashHelmet extends BaseItem {
 	get skyblockId() {
@@ -27,6 +30,7 @@ export class SquashHelmet extends BaseItem {
 	override upgrade = {
 		id: 'FERMENTO_HELMET',
 		reason: UpgradeReason.NextTier,
+		group: SQUASH_TO_FERMENTO_GROUP,
 		cost: {
 			items: {
 				CONDENSED_FERMENTO: 2,
@@ -78,6 +82,7 @@ export class SquashChestplate extends BaseItem {
 	override upgrade = {
 		id: 'FERMENTO_CHESTPLATE',
 		reason: UpgradeReason.NextTier,
+		group: SQUASH_TO_FERMENTO_GROUP,
 		cost: {
 			items: {
 				CONDENSED_FERMENTO: 2,
@@ -131,6 +136,7 @@ export class SquashLeggings extends BaseItem {
 	override upgrade = {
 		id: 'FERMENTO_LEGGINGS',
 		reason: UpgradeReason.NextTier,
+		group: SQUASH_TO_FERMENTO_GROUP,
 		cost: {
 			items: {
 				CONDENSED_FERMENTO: 2,
@@ -183,6 +189,7 @@ export class SquashBoots extends BaseItem {
 	override upgrade = {
 		id: 'FERMENTO_BOOTS',
 		reason: UpgradeReason.NextTier,
+		group: SQUASH_TO_FERMENTO_GROUP,
 		cost: {
 			items: {
 				CONDENSED_FERMENTO: 2,

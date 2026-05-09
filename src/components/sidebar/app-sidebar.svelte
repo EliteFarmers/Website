@@ -66,7 +66,7 @@
 						{...props}
 						class={cn(
 							props.class ?? '',
-							'bg-card text-primary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[state=collapsed]:border-destructive/50 relative mx-0 border shadow-sm transition-all duration-300 group-data-[state=collapsed]:px-1.5! group-data-[state=expanded]:px-2'
+							`bg-card text-primary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${page.data.newProducts ? 'group-data-[state=collapsed]:border-destructive/50' : ''} relative mx-0 border shadow-sm transition-all duration-300 group-data-[state=collapsed]:px-1.5! group-data-[state=expanded]:px-2`
 						)}
 					>
 						{#if gbl.user?.settings.features?.hideShopPromotions !== true}

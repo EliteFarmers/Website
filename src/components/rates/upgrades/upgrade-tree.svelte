@@ -209,7 +209,7 @@
 					<div
 						class="flex w-full min-w-0 flex-col gap-3 p-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4"
 					>
-						<div class="min-w-0">
+						<div class="w-full">
 							<UpgradeDescription {upgrade} {items} />
 						</div>
 						<UpgradeCost {upgrade} {items} totalCost={cost} class="min-w-0" />

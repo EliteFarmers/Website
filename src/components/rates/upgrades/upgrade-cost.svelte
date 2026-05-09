@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
+	import ScrollingName from '$comp/items/scrolling-name.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { cn } from '$lib/utils';
 	import type { FortuneUpgrade } from 'farming-weight';
@@ -77,15 +78,18 @@
 
 {#snippet itemCost(item: string, amount: number)}
 	{@const sbItem = items?.[item]}
-	<div class="flex min-w-0 flex-row flex-wrap items-center gap-x-1 gap-y-1">
-		<span class="text-sm font-semibold">{amount}x</span>
-		<div class="bg-background max-w-full min-w-0 rounded-sm border px-1">
+	<div class="flex max-w-80 min-w-0 flex-row items-center gap-1">
+		<span class="shrink-0 text-sm font-semibold">{amount}x</span>
+		<div class="bg-background w-fit max-w-full min-w-0 rounded-sm border px-1">
 			{#if sbItem?.item?.name}
-				<div class="flex min-w-0 flex-row items-center gap-1">
-					<ItemRender skyblockId={item} class="size-6" />
-					<span class="min-w-0 text-sm wrap-break-word whitespace-normal"
-						><ItemName name={sbItem.item.name} /></span
-					>
+				{@const itemDisplayName = sbItem.item.name
+					.replace('Enchantment Ultimate', '')
+					.replace('Enchantment ', '')}
+				<div class="flex max-w-full min-w-0 flex-row items-center gap-1">
+					<ItemRender skyblockId={item} class="size-6 shrink-0" />
+					<ScrollingName class="w-fit max-w-full min-w-0 text-sm" title={itemDisplayName}>
+						<ItemName name={itemDisplayName} />
+					</ScrollingName>
 				</div>
 			{:else}
 				<!-- Replace underscores with spaces and capitalize first letter of each word -->
@@ -97,22 +101,24 @@
 					.join(' ')
 					.replace('Enchantment ', '')}
 
-				<span class="text-sm wrap-break-word whitespace-normal">{itemName}</span>
+				<ScrollingName class="w-fit max-w-full min-w-0 text-sm" title={itemName}>
+					{itemName}
+				</ScrollingName>
 			{/if}
 		</div>
 
 		{#if sbItem?.auctions && sbItem.auctions.length > 0}
 			{@const lowest = Math.min(...sbItem.auctions.map((a) => a.lowest))}
-			<span class="dark:text-completed ml-1 text-sm whitespace-nowrap">
+			<span class="dark:text-completed ml-1 shrink-0 text-sm whitespace-nowrap">
 				{Math.round(lowest * amount).toLocaleString()}
 			</span>
-			<span class="text-muted-foreground whitespace-nowrap">coins</span>
+			<span class="text-muted-foreground shrink-0 whitespace-nowrap">coins</span>
 		{:else if sbItem?.bazaar}
 			{@const averageBuyOrder = sbItem.bazaar.averageBuyOrder}
-			<span class="dark:text-completed ml-1 text-sm whitespace-nowrap">
+			<span class="dark:text-completed ml-1 shrink-0 text-sm whitespace-nowrap">
 				{Math.round(averageBuyOrder * amount).toLocaleString()}
 			</span>
-			<span class="text-muted-foreground whitespace-nowrap">coins</span>
+			<span class="text-muted-foreground shrink-0 whitespace-nowrap">coins</span>
 		{/if}
 	</div>
 {/snippet}

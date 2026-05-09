@@ -1,4 +1,28 @@
 import { Rarity } from '../constants/reforges.js';
+import type { EliteItemDto } from '../fortune/item.js';
+
+const RARITY_BY_ATTRIBUTE = Object.fromEntries(
+	Object.values(Rarity).flatMap((rarity) => [
+		[rarity.toUpperCase(), rarity],
+		[rarity.toUpperCase().replaceAll(' ', '_'), rarity],
+	])
+) as Record<string, Rarity>;
+
+export function getRarityFromItem(item: Pick<EliteItemDto, 'attributes' | 'lore'>, fallback?: Rarity) {
+	const attributeRarity = getRarityFromAttribute(item.attributes?.rarity);
+	if (attributeRarity) return attributeRarity;
+
+	if (item.lore) {
+		return getRarityFromLore(item.lore);
+	}
+
+	return fallback ?? Rarity.Common;
+}
+
+export function getRarityFromAttribute(rarity?: string | null): Rarity | undefined {
+	if (!rarity) return undefined;
+	return RARITY_BY_ATTRIBUTE[rarity.toUpperCase()] ?? undefined;
+}
 
 export function getRarityFromLore(lore: string[]) {
 	const line = lore.at(-1);
@@ -32,10 +56,10 @@ function getRarity<T = Rarity>(line: string, fallback?: T): Rarity | T {
 			return Rarity.Mythic;
 		case line.includes('DIVINE'):
 			return Rarity.Divine;
-		case line.includes('SPECIAL'):
-			return Rarity.Special;
 		case line.includes('VERY SPECIAL'):
 			return Rarity.VerySpecial;
+		case line.includes('SPECIAL'):
+			return Rarity.Special;
 		case line.includes('ULTIMATE'):
 			return Rarity.Ultimate;
 		case line.includes('ADMIN'):

@@ -20,6 +20,10 @@ interface RatesData {
 	rosewaterFlasks: number;
 }
 
+type PartialRatesData = Partial<Omit<RatesData, 'temp'>> & {
+	temp?: Partial<RatesData['temp']>;
+};
+
 export const MissingRatesDataSchema = z.object({
 	communityCenter: z.number().optional(),
 	strength: z.number().optional(),
@@ -54,19 +58,30 @@ const defaultData = {
 	zorroMode: ZorroMode.Normal,
 } as RatesData;
 
-export function initRatesData(data = defaultData) {
+function normalizeRatesData(data?: PartialRatesData | null): RatesData {
+	return {
+		...defaultData,
+		...(data ?? {}),
+		v: defaultData.v,
+		temp: {
+			...defaultData.temp,
+			...(data?.temp ?? {}),
+		},
+	};
+}
+
+export function initRatesData(data: PartialRatesData = defaultData) {
+	let initialData = normalizeRatesData(data);
+
 	if (browser) {
 		const savedRatesData = localStorage.getItem('ratesData');
 
 		if (savedRatesData) {
-			data = JSON.parse(savedRatesData) as RatesData;
-
-			// Add in any missing fields from defaultData
-			data = { ...defaultData, ...data, v: defaultData.v };
+			initialData = normalizeRatesData(JSON.parse(savedRatesData) as PartialRatesData);
 		}
 	}
 
-	const store = writable<RatesData>(data);
+	const store = writable<RatesData>(initialData);
 
 	store.subscribe((rates) => {
 		if (browser) {
@@ -78,18 +93,20 @@ export function initRatesData(data = defaultData) {
 }
 
 export function getRatesData() {
-	const store = getContext<Writable<RatesData>>('ratesData');
+	let store = getContext<Writable<RatesData>>('ratesData');
+
+	if (!store) {
+		initRatesData();
+		store = getContext<Writable<RatesData>>('ratesData');
+	}
 
 	store.update((rates) => {
 		if (!rates || rates.v !== defaultData.v) {
-			rates = defaultData;
+			return normalizeRatesData();
 		}
 
-		return { ...defaultData, ...rates, v: defaultData.v };
+		return normalizeRatesData(rates);
 	});
 
-	if (store) return store;
-
-	initRatesData();
-	return getContext<Writable<RatesData>>('ratesData');
+	return store;
 }

@@ -5,6 +5,9 @@ import { Stat } from '../../constants/stats.js';
 import { UpgradeReason } from '../../constants/upgrades.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
+import { armorTierGroup } from './groups.js';
+
+const CROPIE_TO_SQUASH_GROUP = armorTierGroup('CROPIE', 'SQUASH');
 
 export class CropieHelmet extends BaseItem {
 	get skyblockId() {
@@ -27,6 +30,7 @@ export class CropieHelmet extends BaseItem {
 	override upgrade = {
 		id: 'SQUASH_HELMET',
 		reason: UpgradeReason.NextTier,
+		group: CROPIE_TO_SQUASH_GROUP,
 		cost: {
 			items: {
 				SQUASH: 20,
@@ -77,6 +81,7 @@ export class CropieChestplate extends BaseItem {
 	override upgrade = {
 		id: 'SQUASH_CHESTPLATE',
 		reason: UpgradeReason.NextTier,
+		group: CROPIE_TO_SQUASH_GROUP,
 		cost: {
 			items: {
 				SQUASH: 20,
@@ -128,6 +133,7 @@ export class CropieLeggings extends BaseItem {
 	override upgrade = {
 		id: 'SQUASH_LEGGINGS',
 		reason: UpgradeReason.NextTier,
+		group: CROPIE_TO_SQUASH_GROUP,
 		cost: {
 			items: {
 				SQUASH: 20,
@@ -179,6 +185,7 @@ export class CropieBoots extends BaseItem {
 	override upgrade = {
 		id: 'SQUASH_BOOTS',
 		reason: UpgradeReason.NextTier,
+		group: CROPIE_TO_SQUASH_GROUP,
 		cost: {
 			items: {
 				SQUASH: 20,

@@ -14,7 +14,7 @@
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
-	import { TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
+	import { Stat, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
 
 	const ratesData = getRatesData();
 	const gbl = getGlobalContext();
@@ -188,6 +188,42 @@
 
 			{#if $ratesData.temp.chocolateTruffle !== undefined}
 				<Switch bind:checked={$ratesData.temp.chocolateTruffle} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.celestialMasonJar.name} wiki={TEMPORARY_FORTUNE.celestialMasonJar.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={15} enabled={$ratesData.temp.celestialMasonJar && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.celestialMasonJar !== undefined}
+				<Switch bind:checked={$ratesData.temp.celestialMasonJar} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.melonJuiceMixin.name} wiki={TEMPORARY_FORTUNE.melonJuiceMixin.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={15} enabled={$ratesData.temp.melonJuiceMixin && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.melonJuiceMixin !== undefined}
+				<Switch bind:checked={$ratesData.temp.melonJuiceMixin} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.finnsFocaccia.name} wiki={TEMPORARY_FORTUNE.finnsFocaccia.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown
+				breakdown={{ [TEMPORARY_FORTUNE.finnsFocaccia.name]: { value: 5, stat: Stat.Overbloom } }}
+				enabled={$ratesData.temp.finnsFocaccia && $ratesData.useTemp}
+			/>
+
+			{#if $ratesData.temp.finnsFocaccia !== undefined}
+				<Switch bind:checked={$ratesData.temp.finnsFocaccia} disabled={!$ratesData.useTemp} />
 			{/if}
 		</div>
 	</SettingListItem>

@@ -13,7 +13,7 @@
 		"dev:content": "velite dev --watch",
 		"dev:svelte": "pnpm vite dev",
 		"devhost": "vite dev --host",
-		"build": "pnpm build:content && pnpm build:fw && pnpm build:svelte",
+		"build": "velite && pnpm -C packages/farming-weight build && vite build",
 		"build:content": "velite",
 		"build:svelte": "vite build",
 		"build:fw": "pnpm -C packages/farming-weight build",

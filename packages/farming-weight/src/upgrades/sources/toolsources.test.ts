@@ -430,6 +430,45 @@ test('Blessed hoe still recommends Bountiful', () => {
 	expect(blessed).toBeUndefined();
 });
 
+test('Overpriced reforge exposes Overbloom effect metadata for progress and upgrades', () => {
+	const tool = new FarmingTool(t1WheatHoe);
+	const overbloomUpgrades = tool.getUpgrades({ stat: Stat.Overbloom });
+	const overpriced = overbloomUpgrades.find((u) => u.title === 'Reforge to Overpriced');
+
+	expect(overpriced).toBeDefined();
+	expect(overpriced?.stats?.[Stat.Overbloom]).toBe(7);
+	expect(overpriced?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Reforge: Overpriced',
+			op: 'add-rare-pct',
+			value: 7,
+			relatedStats: [Stat.Overbloom],
+			scope: { tags: ['overbloom'] },
+		})
+	);
+
+	const overpricedHoe = {
+		...t1WheatHoe,
+		attributes: { ...t1WheatHoe.attributes, modifier: 'overpriced' },
+	};
+	const currentTool = new FarmingTool(overpricedHoe);
+	const reforgeProgress = currentTool.getProgress([Stat.Overbloom]).find((p) => p.name === 'Reforge Stats');
+
+	expect(reforgeProgress?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 7,
+		max: 7,
+	});
+	expect(reforgeProgress?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Reforge: Overpriced',
+			op: 'add-rare-pct',
+			value: 7,
+			relatedStats: [Stat.Overbloom],
+			scope: { tags: ['overbloom'] },
+		})
+	);
+});
+
 test('Tier 3 Cane Hoe Upgrades (crop stat includes Farming Fortune upgrades)', () => {
 	const tool = new FarmingTool(t3CaneHoe);
 
