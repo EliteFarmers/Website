@@ -267,8 +267,12 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		order: 14,
 		icon: '/images/pests/mouse.png',
 	},
-	pests: {
+	'lunar-moth': {
 		order: 15,
+		icon: '/images/pests/lunar_moth.png',
+	},
+	pests: {
+		order: 16,
 	},
 	'cactus-milestone': {
 		order: 1,

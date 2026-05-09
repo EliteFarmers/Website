@@ -63,19 +63,19 @@ export const HARVEST_FEAST_MATERIAL_CHANCE = 1 / 18_000;
 
 /** Per-crop unique Harvest Feast material item id, dropped at 1/18,000 from in-season crops. */
 export const HARVEST_FEAST_MATERIALS: Partial<Record<Crop, string>> = {
-	[Crop.Wheat]: 'CORNUCOPIA_CRYSTAL',
-	[Crop.Carrot]: 'CARROT_COLORED_VINYL_SET',
-	[Crop.Potato]: 'HASHBROWN',
-	[Crop.Pumpkin]: 'TURBO_GOURD',
-	[Crop.SugarCane]: 'SPEED_RELIC',
-	[Crop.Melon]: 'MELON_JUICE_MIXIN',
-	[Crop.Cactus]: 'POTTED_CACTUS',
-	[Crop.CocoaBeans]: 'BUG_BLENDER',
-	[Crop.Mushroom]: 'FRAGRANCED_BROWN_MUSHROOM_PASTE',
-	[Crop.NetherWart]: 'JACOBS_PARTICIPATION_MEDAL',
-	[Crop.Sunflower]: 'SUNFLOWER_BUTTER',
-	[Crop.Moonflower]: 'MOONDEW',
-	[Crop.WildRose]: 'ROYAL_JELLY',
+	[Crop.Wheat]: 'CORNUCOPIA',
+	[Crop.Carrot]: 'CARROT_ZEST',
+	[Crop.Potato]: 'DEEPFRIES',
+	[Crop.Pumpkin]: 'AGGOURDIAN',
+	[Crop.SugarCane]: 'CANE_KNOT',
+	[Crop.Melon]: 'MELON_JUICE',
+	[Crop.Cactus]: 'CACTUS_FLOWER',
+	[Crop.CocoaBeans]: 'DESIGNER_COFFEE_BEANS',
+	[Crop.Mushroom]: 'FEASTFUNGUS',
+	[Crop.NetherWart]: 'BOTROOT',
+	[Crop.Sunflower]: 'SALTED_SUNFLOWER_SEEDS',
+	[Crop.Moonflower]: 'CRYSTALIZED_MOONLIGHT',
+	[Crop.WildRose]: 'FLORAL_GELATIN',
 };
 
 function harvestFeastDrops(crop: Crop): CropRngDrop[] {
