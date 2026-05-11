@@ -1,7 +1,7 @@
 import { Stat } from '../../constants/stats.js';
 import type { Effect, EffectEnvironment } from '../../effects/types.js';
-import type { FarmingPlayer } from '../../player/player.js';
 import { statsToEffects } from '../../items/sources/effects-util.js';
+import type { FarmingPlayer } from '../../player/player.js';
 import { CROP_FORTUNE_SOURCES } from './cropsources.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 import { GENERAL_FORTUNE_SOURCES } from './generalsources.js';

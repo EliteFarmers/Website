@@ -35,7 +35,9 @@ describe('source-layer effect collection', () => {
 			],
 		});
 
-		expect(collectGeneralFortuneSourceEffects(player).some((effect) => effect.source === 'Magic 8 Ball')).toBe(false);
+		expect(collectGeneralFortuneSourceEffects(player).some((effect) => effect.source === 'Magic 8 Ball')).toBe(
+			false
+		);
 		expect(
 			collectGeneralFortuneSourceEffects(player).some((effect) => effect.source === 'Atmospheric Filter')
 		).toBe(false);
@@ -59,9 +61,9 @@ describe('source-layer effect collection', () => {
 		const activeEnv = active.buildEnvironment(Crop.Wheat);
 		const activeEffects = collectGeneralFortuneSourceEffects(active);
 
-		expect(resolveOverbloomScalar(collectGeneralFortuneSourceEffects(inactive), { env: inactiveEnv }, Stat.Overbloom)).toBe(
-			0
-		);
+		expect(
+			resolveOverbloomScalar(collectGeneralFortuneSourceEffects(inactive), { env: inactiveEnv }, Stat.Overbloom)
+		).toBe(0);
 		expect(resolveOverbloomScalar(activeEffects, { env: activeEnv }, Stat.Overbloom)).toBe(0);
 		expect(activeEffects).toContainEqual(
 			expect.objectContaining({

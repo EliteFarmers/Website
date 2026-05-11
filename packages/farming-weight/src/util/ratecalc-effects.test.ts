@@ -171,10 +171,7 @@ describe('ratecalc-effects: regression', () => {
 		expect(rates.otherCollection['Blessed Reforge']).toBeCloseTo(expectedBlessedDrops, 8);
 		expect(rates.coinSources['Blessed Reforge']).toBeCloseTo(expectedBlessedDrops * 4, 8);
 		expect(rates.rngItems?.[Crop.NetherWart] ?? 0).toBe(0);
-		expect(rates.items[Crop.NetherWart]).toBeCloseTo(
-			rates.collection - blocksBroken,
-			8
-		);
+		expect(rates.items[Crop.NetherWart]).toBeCloseTo(rates.collection - blocksBroken, 8);
 	});
 
 	test('Moonflower receives zero Overbloom from Sunset enchant', () => {

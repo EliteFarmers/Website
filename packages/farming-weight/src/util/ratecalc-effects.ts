@@ -1,7 +1,7 @@
 import { getChipInputLevel, getChipLevel, getChipRarity, normalizeChipLevels } from '../constants/chips.js';
-import { Crop, CROP_INFO, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
+import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { Rarity, REFORGES } from '../constants/reforges.js';
-import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO, SpecialCrop } from '../constants/specialcrops.js';
+import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO, type SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
 import { produceAddedDrops, resolveDropEffects } from '../effects/resolver.js';
@@ -108,11 +108,7 @@ function getCropInfo(crop: Crop): CropInfo {
 	return CROP_INFO[crop] ?? {};
 }
 
-function buildBaseRngCandidates(
-	cropInfo: CropInfo,
-	env: EffectEnvironment,
-	blocksBroken: number
-): CandidateRngDrop[] {
+function buildBaseRngCandidates(cropInfo: CropInfo, env: EffectEnvironment, blocksBroken: number): CandidateRngDrop[] {
 	const out: CandidateRngDrop[] = [];
 	const inSeason = env.harvestFeast && env.inSeason;
 	for (const drop of cropInfo.rng ?? []) {
@@ -143,8 +139,8 @@ function appendAddedDropCandidates(
 			payload.baseAmount !== undefined
 				? payload.baseAmount * blocksBroken
 				: payload.chance !== undefined
-				? payload.chance * blocksBroken
-				: 0;
+					? payload.chance * blocksBroken
+					: 0;
 		if (baseAmount <= 0) continue;
 		candidates.push({
 			itemId: payload.itemId,
@@ -158,10 +154,7 @@ function appendAddedDropCandidates(
 	}
 }
 
-function aggregateEffectsBreakdown(
-	target: EffectsBreakdown,
-	applied: readonly AppliedEffect[]
-): void {
+function aggregateEffectsBreakdown(target: EffectsBreakdown, applied: readonly AppliedEffect[]): void {
 	for (const entry of applied) {
 		// Only `add-rare-pct` contributes additively to the breakdown - the multiplicative
 		// ones are captured per-drop in `appliedEffects`. Each source contributes once: we
@@ -311,7 +304,9 @@ export function calculateDetailedDropsFromEffects(
 			}
 
 			if (applied.length > 0) {
-				result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(applied);
+				result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(
+					applied
+				);
 				aggregateEffectsBreakdown(result.effectsBreakdown, applied);
 			}
 			continue;
@@ -321,7 +316,9 @@ export function calculateDetailedDropsFromEffects(
 			result.currencies[candidate.itemId] = (result.currencies[candidate.itemId] ?? 0) + finalAmount;
 
 			if (applied.length > 0) {
-				result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(applied);
+				result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(
+					applied
+				);
 				aggregateEffectsBreakdown(result.effectsBreakdown, applied);
 			}
 			continue;

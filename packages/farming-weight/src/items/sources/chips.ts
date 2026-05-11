@@ -1,9 +1,9 @@
 import {
 	GARDEN_CHIPS,
+	type GardenChipId,
 	getChipInputLevel,
 	getChipLevel,
 	getChipRarity,
-	type GardenChipId,
 } from '../../constants/chips.js';
 import { Stat } from '../../constants/stats.js';
 import type { Effect, EffectEnvironment } from '../../effects/types.js';

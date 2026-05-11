@@ -13,10 +13,7 @@ export function buildEffectEnvironment(player: FarmingPlayer, crop?: Crop): Effe
 	return buildEffectEnvironmentFromOptions(player.options, crop);
 }
 
-export function buildEffectEnvironmentFromOptions(
-	opts: PlayerOptions | undefined,
-	crop?: Crop
-): EffectEnvironment {
+export function buildEffectEnvironmentFromOptions(opts: PlayerOptions | undefined, crop?: Crop): EffectEnvironment {
 	const harvestFeast = opts?.harvestFeast?.active === true;
 
 	let inSeason = false;
@@ -30,8 +27,7 @@ export function buildEffectEnvironmentFromOptions(
 		}
 	}
 
-	const infestedPlot =
-		typeof opts?.infestedPlotProbability === 'number' && opts.infestedPlotProbability > 0;
+	const infestedPlot = typeof opts?.infestedPlotProbability === 'number' && opts.infestedPlotProbability > 0;
 
 	const selectedCrop = opts?.selectedCrop;
 

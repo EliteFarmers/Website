@@ -1,12 +1,8 @@
 import type { Stat } from '../constants/stats.js';
+import { isGlobalOverbloomScope, matchesScopeForDrop, matchesScopeForStat } from './matcher.js';
 import {
-	isGlobalOverbloomScope,
-	matchesScopeForDrop,
-	matchesScopeForStat,
-} from './matcher.js';
-import {
-	DEFAULT_PHASE_FOR_OP,
 	type AppliedEffect,
+	DEFAULT_PHASE_FOR_OP,
 	type DropContext,
 	type Effect,
 	type EffectAddDropPayload,
@@ -55,11 +51,7 @@ export function assertValidEffect(effect: Effect): void {
  *
  * Drop-only scoped effects are rejected by the matcher.
  */
-export function resolveStatTotal(
-	effects: readonly Effect[],
-	stat: Stat,
-	ctx: StatContext
-): number {
+export function resolveStatTotal(effects: readonly Effect[], stat: Stat, ctx: StatContext): number {
 	let total = 0;
 	for (const effect of effects) {
 		if (effect.op !== 'add-stat') continue;
@@ -74,11 +66,7 @@ export function resolveStatTotal(
  * Per-stat breakdown of `add-stat` contributions matching a `StatContext`.
  * Returns `{ source: amount }` aggregated by source name.
  */
-export function resolveStatBreakdown(
-	effects: readonly Effect[],
-	stat: Stat,
-	ctx: StatContext
-): Record<string, number> {
+export function resolveStatBreakdown(effects: readonly Effect[], stat: Stat, ctx: StatContext): Record<string, number> {
 	const out: Record<string, number> = {};
 	for (const effect of effects) {
 		if (effect.op !== 'add-stat') continue;
@@ -98,11 +86,7 @@ export function resolveStatBreakdown(
  * `Stat.Overbloom` and whose scope is global Overbloom-shaped. Scoped Overbloom-
  * flavored effects are excluded by design - see the architecture plan.
  */
-export function resolveOverbloomScalar(
-	effects: readonly Effect[],
-	ctx: StatContext,
-	overbloomStat: Stat
-): number {
+export function resolveOverbloomScalar(effects: readonly Effect[], ctx: StatContext, overbloomStat: Stat): number {
 	let total = 0;
 	for (const effect of effects) {
 		if (effect.op !== 'add-rare-pct') continue;
@@ -150,10 +134,7 @@ export interface ProducedDrop {
  * Real per-drop scope filtering (tags, items, etc.) happens later when the
  * calculator builds a `DropContext` for each candidate.
  */
-export function produceAddedDrops(
-	effects: readonly Effect[],
-	env: EffectEnvironment
-): ProducedDrop[] {
+export function produceAddedDrops(effects: readonly Effect[], env: EffectEnvironment): ProducedDrop[] {
 	const out: ProducedDrop[] = [];
 	for (const effect of effects) {
 		if (effect.op !== 'add-drop') continue;
@@ -192,10 +173,7 @@ export interface DropResolutionResult {
  * `applied` records every effect that touched this drop, with phase and
  * resolved amount, for breakdown UIs.
  */
-export function resolveDropEffects(
-	effects: readonly Effect[],
-	ctx: DropContext
-): DropResolutionResult {
+export function resolveDropEffects(effects: readonly Effect[], ctx: DropContext): DropResolutionResult {
 	let addRarePct = 0;
 	let mulRare = 1;
 	let mulDrop = 1;
@@ -227,9 +205,7 @@ export function resolveDropEffects(
 		if (!matchesScopeForDrop(effect.scope, ctx)) continue;
 		const v = resolveValue(effect, ctx);
 		if (v < 0) {
-			throw new Error(
-				`Invalid mul-rare value ${v} from "${effect.source}" (must be >= 0; factor semantics).`
-			);
+			throw new Error(`Invalid mul-rare value ${v} from "${effect.source}" (must be >= 0; factor semantics).`);
 		}
 		if (v === 1) continue;
 		mulRare *= v;
@@ -252,9 +228,7 @@ export function resolveDropEffects(
 		if (!matchesScopeForDrop(effect.scope, ctx)) continue;
 		const v = resolveValue(effect, ctx);
 		if (v < 0) {
-			throw new Error(
-				`Invalid mul-drop value ${v} from "${effect.source}" (must be >= 0; factor semantics).`
-			);
+			throw new Error(`Invalid mul-drop value ${v} from "${effect.source}" (must be >= 0; factor semantics).`);
 		}
 		if (v === 1) continue;
 		mulDrop *= v;

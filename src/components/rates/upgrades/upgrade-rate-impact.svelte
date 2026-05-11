@@ -151,7 +151,9 @@
 						{totalCoins > 0 ? '+' : ''}{formatRate(totalCoins)}/hr
 					</span>
 					{#if payoffHours}
-						<span class="text-muted-foreground text-xs whitespace-nowrap">{formatPayoff(payoffHours)} payoff</span>
+						<span class="text-muted-foreground text-xs whitespace-nowrap"
+							>{formatPayoff(payoffHours)} payoff</span
+						>
 					{/if}
 				</span>
 			{:else}

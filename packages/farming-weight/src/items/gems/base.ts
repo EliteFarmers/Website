@@ -1,8 +1,8 @@
 import { GEMSTONES, type GemstoneInfo } from '../../constants/gems.js';
 import type { Rarity } from '../../constants/reforge-types.js';
-import { Stat } from '../../constants/stats.js';
+import type { Stat } from '../../constants/stats.js';
 import type { Effect } from '../../effects/types.js';
-import { GemRarity } from '../../fortune/item.js';
+import type { GemRarity } from '../../fortune/item.js';
 import { statsToEffects } from '../sources/effects-util.js';
 
 export class GemstoneSource {
@@ -51,9 +51,7 @@ export class GemstoneSource {
 }
 
 export function createGemstoneSources(): Record<string, GemstoneSource> {
-	return Object.fromEntries(
-		Object.entries(GEMSTONES).map(([id, info]) => [id, new GemstoneSource(id, info)])
-	);
+	return Object.fromEntries(Object.entries(GEMSTONES).map(([id, info]) => [id, new GemstoneSource(id, info)]));
 }
 
 function titleCase(id: string): string {

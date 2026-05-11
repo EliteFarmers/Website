@@ -59,10 +59,10 @@ export function getSourceProgress<T extends object>(
 					};
 				}
 			}
-		if (Object.keys(perStat).length > 0) {
-			progress.stats = perStat;
+			if (Object.keys(perStat).length > 0) {
+				progress.stats = perStat;
+			}
 		}
-	}
 
 		if (source.effects) {
 			const effects = source.effects(upgradeable, stats);

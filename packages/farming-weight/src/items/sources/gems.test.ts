@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
-import { GemRarity, type EliteItemDto } from '../../fortune/item.js';
+import { type EliteItemDto, GemRarity } from '../../fortune/item.js';
 import { GEMSTONE_SOURCES } from '../gems/index.js';
 import { gemEffects, gemSlotDeltaEffects, gemStat } from './gems.js';
 
@@ -48,13 +48,7 @@ describe('class-backed gemstone sources', () => {
 
 	test('gemSlotDeltaEffects calculates upgrade deltas from the same class source', () => {
 		expect(
-			gemSlotDeltaEffects(
-				'PERIDOT_0',
-				Rarity.Legendary,
-				GemRarity.Fine,
-				GemRarity.Flawless,
-				'Gemmed Item (Gems)'
-			)
+			gemSlotDeltaEffects('PERIDOT_0', Rarity.Legendary, GemRarity.Fine, GemRarity.Flawless, 'Gemmed Item (Gems)')
 		).toEqual([{ source: 'Gemmed Item (Gems)', op: 'add-stat', stat: Stat.FarmingFortune, value: 1 }]);
 	});
 });

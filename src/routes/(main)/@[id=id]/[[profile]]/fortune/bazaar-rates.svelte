@@ -307,7 +307,9 @@
 								<div class="mt-2 flex flex-col gap-2">
 									{#each numberEntries(result.currencies) as [currencyId, amount] (currencyId)}
 										<div class="flex items-start justify-between gap-4">
-											<p class="min-w-0 truncate text-sm font-semibold">{currencyName(currencyId)}</p>
+											<p class="min-w-0 truncate text-sm font-semibold">
+												{currencyName(currencyId)}
+											</p>
 											<p class="shrink-0 text-sm font-semibold">{amountText(amount)}</p>
 										</div>
 									{/each}

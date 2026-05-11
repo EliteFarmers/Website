@@ -38,9 +38,7 @@ describe('FarmingPlayer.collectEffects', () => {
 		const env = player.buildEnvironment();
 		const effects = player.collectEffects(env);
 
-		const overbloomPct = effects.filter(
-			(e) => e.op === 'add-rare-pct' && e.relatedStats?.includes(Stat.Overbloom)
-		);
+		const overbloomPct = effects.filter((e) => e.op === 'add-rare-pct' && e.relatedStats?.includes(Stat.Overbloom));
 		expect(overbloomPct.length).toBe(1);
 		expect(overbloomPct[0].scope).toEqual({ tags: ['overbloom'] });
 		expect(typeof overbloomPct[0].value).toBe('number');

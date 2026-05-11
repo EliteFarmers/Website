@@ -73,10 +73,7 @@ describe('matchesScopeForDrop', () => {
 			)
 		).toBe(false);
 		expect(
-			matchesScopeForDrop(
-				{ specialCropTypes: [SpecialCrop.Cropie] },
-				dropCtx({ specialCropType: undefined })
-			)
+			matchesScopeForDrop({ specialCropTypes: [SpecialCrop.Cropie] }, dropCtx({ specialCropType: undefined }))
 		).toBe(false);
 	});
 
@@ -88,12 +85,8 @@ describe('matchesScopeForDrop', () => {
 	});
 
 	test('appliesToAddedDrops: false skips drops produced by add-drop', () => {
-		expect(
-			matchesScopeForDrop({ appliesToAddedDrops: false }, dropCtx({ fromAddDrop: true }))
-		).toBe(false);
-		expect(
-			matchesScopeForDrop({ appliesToAddedDrops: false }, dropCtx({ fromAddDrop: false }))
-		).toBe(true);
+		expect(matchesScopeForDrop({ appliesToAddedDrops: false }, dropCtx({ fromAddDrop: true }))).toBe(false);
+		expect(matchesScopeForDrop({ appliesToAddedDrops: false }, dropCtx({ fromAddDrop: false }))).toBe(true);
 	});
 
 	test('match predicate runs last and is AND-ed with declarative fields', () => {
@@ -117,21 +110,14 @@ describe('matchesScopeForStat', () => {
 	});
 
 	test('crop-scoped effect contributes only when the query names that crop', () => {
-		expect(
-			matchesScopeForStat({ crops: [Crop.Wheat] }, statCtx({ crop: Crop.Wheat }))
-		).toBe(true);
-		expect(
-			matchesScopeForStat({ crops: [Crop.Wheat] }, statCtx({ crop: Crop.Carrot }))
-		).toBe(false);
+		expect(matchesScopeForStat({ crops: [Crop.Wheat] }, statCtx({ crop: Crop.Wheat }))).toBe(true);
+		expect(matchesScopeForStat({ crops: [Crop.Wheat] }, statCtx({ crop: Crop.Carrot }))).toBe(false);
 		expect(matchesScopeForStat({ crops: [Crop.Wheat] }, statCtx({ crop: undefined }))).toBe(false);
 	});
 
 	test('feast requirements still apply', () => {
 		expect(
-			matchesScopeForStat(
-				{ requiresHarvestFeast: true },
-				statCtx({ env: { ...baseEnv, harvestFeast: true } })
-			)
+			matchesScopeForStat({ requiresHarvestFeast: true }, statCtx({ env: { ...baseEnv, harvestFeast: true } }))
 		).toBe(true);
 		expect(matchesScopeForStat({ requiresHarvestFeast: true }, statCtx())).toBe(false);
 	});

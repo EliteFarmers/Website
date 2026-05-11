@@ -3,7 +3,7 @@ import { FARMING_ATTRIBUTE_SHARDS } from '../constants/attributes.js';
 import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforge-types.js';
 import { Stat } from '../constants/stats.js';
-import { UpgradeAction, UpgradeCategory, type FortuneUpgrade } from '../constants/upgrades.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingPlayer } from './player.js';
 
@@ -326,8 +326,12 @@ test('getUpgradeRateImpact applies setting-backed flat fortune upgrades', () => 
 		refinedTruffles: 0,
 	});
 
-	const dnaUpgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'DNA Analysis Milestone 5');
-	const truffleUpgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Refined Dark Cacao Truffle');
+	const dnaUpgrade = player
+		.getUpgrades({ stat: Stat.FarmingFortune })
+		.find((u) => u.title === 'DNA Analysis Milestone 5');
+	const truffleUpgrade = player
+		.getUpgrades({ stat: Stat.FarmingFortune })
+		.find((u) => u.title === 'Refined Dark Cacao Truffle');
 
 	expect(dnaUpgrade).toBeDefined();
 	expect(truffleUpgrade).toBeDefined();
@@ -579,9 +583,7 @@ test('getUpgradeRateImpact can be negative when an armor tier upgrade lowers act
 
 	expect(player.armorSet.specialDropsCount(Crop.NetherWart)).toBe(4);
 
-	const upgrade = player
-		.getUpgrades({ stat: Stat.FarmingFortune })
-		.find((u) => u.title === 'Helianthus Boots');
+	const upgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Helianthus Boots');
 
 	expect(upgrade).toBeDefined();
 
@@ -610,7 +612,9 @@ function fermentoArmorItem(
 		skyblockId,
 		uuid,
 		name,
-		lore: [`${rarity} ${skyblockId.includes('HELMET') ? 'HELMET' : skyblockId.includes('BOOTS') ? 'BOOTS' : 'ARMOR'}`],
+		lore: [
+			`${rarity} ${skyblockId.includes('HELMET') ? 'HELMET' : skyblockId.includes('BOOTS') ? 'BOOTS' : 'ARMOR'}`,
+		],
 		enchantments: {
 			pesterminator: 5,
 		},
@@ -758,8 +762,16 @@ test('partial armor tier upgrade groups include only currently available pieces'
 	expect(group?.groupedUpgrades?.map((u) => u.title)).toStrictEqual(['Helianthus Chestplate', 'Helianthus Boots']);
 	expect(group?.cost?.items?.CONDENSED_HELIANTHUS).toBe(4);
 	expect(group?.cost?.items?.COMPACTED_WILD_ROSE).toBe(64);
-	expect(player.getUpgrades({ stat: Stat.FarmingFortune, includeUpgradeGroups: true }).find((u) => u.title === 'Helianthus Chestplate')).toBeUndefined();
-	expect(player.getUpgrades({ stat: Stat.FarmingFortune, includeUpgradeGroups: true }).find((u) => u.title === 'Helianthus Boots')).toBeUndefined();
+	expect(
+		player
+			.getUpgrades({ stat: Stat.FarmingFortune, includeUpgradeGroups: true })
+			.find((u) => u.title === 'Helianthus Chestplate')
+	).toBeUndefined();
+	expect(
+		player
+			.getUpgrades({ stat: Stat.FarmingFortune, includeUpgradeGroups: true })
+			.find((u) => u.title === 'Helianthus Boots')
+	).toBeUndefined();
 });
 
 test('applyUpgrade applies grouped armor upgrades atomically through the normal item upgrade path', () => {

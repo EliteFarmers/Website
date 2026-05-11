@@ -1,4 +1,4 @@
-import { mergeCost, type FortuneUpgrade, type UpgradeCost } from '../constants/upgrades.js';
+import { type FortuneUpgrade, mergeCost, type UpgradeCost } from '../constants/upgrades.js';
 
 const SLOT_ORDER: Record<string, number> = {
 	Helmet: 0,
@@ -92,5 +92,8 @@ function mergeUpgradeCosts(upgrades: FortuneUpgrade[]): UpgradeCost | undefined 
 }
 
 function getUpgradeKey(upgrade: FortuneUpgrade): string {
-	return upgrade.conflictKey ?? `${upgrade.title}:${upgrade.action}:${upgrade.meta?.type ?? ''}:${upgrade.meta?.id ?? ''}`;
+	return (
+		upgrade.conflictKey ??
+		`${upgrade.title}:${upgrade.action}:${upgrade.meta?.type ?? ''}:${upgrade.meta?.id ?? ''}`
+	);
 }

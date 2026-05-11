@@ -1,11 +1,6 @@
 import type { Crop } from '../../constants/crops.js';
 import type { Stat } from '../../constants/stats.js';
-import type {
-	EffectSummary,
-	FortuneSourceProgress,
-	FortuneUpgrade,
-	UpgradeInfo,
-} from '../../constants/upgrades.js';
+import type { EffectSummary, FortuneSourceProgress, FortuneUpgrade, UpgradeInfo } from '../../constants/upgrades.js';
 import type { Effect } from '../../effects/types.js';
 import type { EliteItemDto } from '../../fortune/item.js';
 import type { UpgradeableInfo } from '../../fortune/upgradeable.js';

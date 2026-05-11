@@ -97,11 +97,7 @@ export class FarmingEquipment extends UpgradeableBase {
 
 		if (this.reforge && this.item.attributes?.modifier) {
 			effects.push(
-				...reforgeEffects(
-					this.item.attributes.modifier,
-					this.rarity,
-					`${sourceName} (${this.reforge.name})`
-				)
+				...reforgeEffects(this.item.attributes.modifier, this.rarity, `${sourceName} (${this.reforge.name})`)
 			);
 		}
 

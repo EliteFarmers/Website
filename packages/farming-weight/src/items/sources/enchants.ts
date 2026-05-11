@@ -1,4 +1,4 @@
-import { Crop } from '../../constants/crops.js';
+import type { Crop } from '../../constants/crops.js';
 import { FARMING_ENCHANTS } from '../../constants/enchants.js';
 import { Stat } from '../../constants/stats.js';
 import type { Effect, EffectEnvironment } from '../../effects/types.js';
@@ -84,10 +84,7 @@ export function enchantEffects(
 	}
 
 	if (tier.computed) {
-		for (const [statKey, fn] of Object.entries(tier.computed) as [
-			Stat,
-			(opt: PlayerOptions) => number,
-		][]) {
+		for (const [statKey, fn] of Object.entries(tier.computed) as [Stat, (opt: PlayerOptions) => number][]) {
 			pushStat(statKey, fn(options));
 		}
 	}

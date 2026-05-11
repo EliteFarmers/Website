@@ -8,10 +8,7 @@ import type { Effect } from '../../effects/types.js';
  * the resolver picks it up both as a virtual-stat contribution and as an
  * additive percent on overbloom-tagged drops.
  */
-export function statsToEffects(
-	stats: Partial<Record<Stat, number>> | undefined,
-	source: string
-): Effect[] {
+export function statsToEffects(stats: Partial<Record<Stat, number>> | undefined, source: string): Effect[] {
 	if (!stats) return [];
 	const out: Effect[] = [];
 	for (const [statKey, value] of Object.entries(stats) as [Stat, number][]) {

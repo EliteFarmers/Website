@@ -25,12 +25,7 @@ function getDisplayedIncrease(stats: Partial<Record<Stat, number>> | undefined, 
 	return stats[stat] ?? 0;
 }
 
-function getEnchantEffectSummaries(
-	upgradeable: Upgradeable,
-	enchantId: string,
-	level: number,
-	stat: Stat
-) {
+function getEnchantEffectSummaries(upgradeable: Upgradeable, enchantId: string, level: number, stat: Stat) {
 	const env = buildEffectEnvironmentFromOptions(upgradeable.options, upgradeable.crop);
 	const effects = enchantEffects(enchantId, level, env, upgradeable.options ?? {}, true);
 	return effectsToSummaries(effects, [stat]);

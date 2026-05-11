@@ -88,7 +88,12 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 
 				// For Farming Fortune views, keep the existing priority reforge behavior.
 				// Other stat views can surface non-priority reforges that affect that stat.
-				if (priorityReforge && reforge !== priorityReforge && !reforge.priority && primaryStat === Stat.FarmingFortune)
+				if (
+					priorityReforge &&
+					reforge !== priorityReforge &&
+					!reforge.priority &&
+					primaryStat === Stat.FarmingFortune
+				)
 					continue;
 				// Only suggest reforges with an explicit reforge stone
 				if (!reforge.stone?.id) continue;

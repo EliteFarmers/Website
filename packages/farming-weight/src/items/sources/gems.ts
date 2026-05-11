@@ -1,9 +1,9 @@
-import { Stat } from '../../constants/stats.js';
+import type { Rarity } from '../../constants/reforge-types.js';
+import type { Stat } from '../../constants/stats.js';
 import type { EffectSummary } from '../../constants/upgrades.js';
 import { effectsToSummaries } from '../../effects/summary.js';
 import type { Effect } from '../../effects/types.js';
-import { GemRarity, type EliteItemDto } from '../../fortune/item.js';
-import type { Rarity } from '../../constants/reforge-types.js';
+import type { EliteItemDto, GemRarity } from '../../fortune/item.js';
 import { getGemstoneSourceFromSlot, getGemstoneStatFromSlot } from '../gems/index.js';
 
 export function gemStat(item: EliteItemDto, stat: Stat, hostRarity: Rarity): number {
@@ -17,12 +17,7 @@ export function gemStat(item: EliteItemDto, stat: Stat, hostRarity: Rarity): num
 	return sum;
 }
 
-export function gemEffects(
-	item: EliteItemDto,
-	hostRarity: Rarity,
-	sourceName: string,
-	multiplier = 1
-): Effect[] {
+export function gemEffects(item: EliteItemDto, hostRarity: Rarity, sourceName: string, multiplier = 1): Effect[] {
 	const gems = item.gems;
 	if (!gems) return [];
 
@@ -58,5 +53,8 @@ export function gemSlotDeltaEffectSummaries(
 	stats?: Stat[],
 	multiplier = 1
 ): EffectSummary[] {
-	return effectsToSummaries(gemSlotDeltaEffects(slot, hostRarity, currentGem, nextGem, sourceName, multiplier), stats);
+	return effectsToSummaries(
+		gemSlotDeltaEffects(slot, hostRarity, currentGem, nextGem, sourceName, multiplier),
+		stats
+	);
 }

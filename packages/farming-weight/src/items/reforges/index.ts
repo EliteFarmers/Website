@@ -1,7 +1,7 @@
+import type { BaseReforge } from './base.js';
 import { BlessedReforge } from './blessed.js';
 import { BloomingReforge } from './blooming.js';
 import { BountifulReforge } from './bountiful.js';
-import type { BaseReforge } from './base.js';
 import { BustlingReforge } from './bustling.js';
 import { DeepFriedReforge } from './deep-fried.js';
 import { EarthyReforge } from './earthy.js';

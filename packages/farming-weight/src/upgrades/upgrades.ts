@@ -56,16 +56,10 @@ export function getReforgeEffectSummaries(
 	stats?: readonly Stat[],
 	sourceName?: string
 ): EffectSummary[] {
-	return effectsToSummaries(
-		reforgeEffects(reforgeId, upgradeable.rarity, sourceName),
-		getRequestedStats(stats)
-	);
+	return effectsToSummaries(reforgeEffects(reforgeId, upgradeable.rarity, sourceName), getRequestedStats(stats));
 }
 
-export function getCurrentReforgeEffectSummaries(
-	upgradeable: Upgradeable,
-	stats?: readonly Stat[]
-): EffectSummary[] {
+export function getCurrentReforgeEffectSummaries(upgradeable: Upgradeable, stats?: readonly Stat[]): EffectSummary[] {
 	const reforgeId = upgradeable.item.attributes?.modifier;
 	if (!reforgeId) return [];
 	return getReforgeEffectSummaries(upgradeable, reforgeId, stats);

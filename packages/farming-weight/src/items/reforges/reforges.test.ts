@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../../constants/crops.js';
-import { REFORGES, Rarity } from '../../constants/reforges.js';
+import { Rarity, REFORGES } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { reforgeEffects } from '../sources/reforges.js';
 import { BaseReforge, REFORGE_SOURCES } from './index.js';

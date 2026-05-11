@@ -13,13 +13,7 @@ import type { Stat } from '../constants/stats.js';
  * - `feast`: any Harvest Feast drop (seasoning + per-crop materials).
  * - `pest`: drop comes from a pest, not a regular crop break.
  */
-export type DropTagBuiltin =
-	| 'overbloom'
-	| 'rare-crop'
-	| 'special-crop'
-	| 'seasoning'
-	| 'feast'
-	| 'pest';
+export type DropTagBuiltin = 'overbloom' | 'rare-crop' | 'special-crop' | 'seasoning' | 'feast' | 'pest';
 
 export type DropTag = DropTagBuiltin | (string & {});
 
@@ -98,19 +92,9 @@ export interface Scope {
 	match?: (ctx: DropContext) => boolean;
 }
 
-export type EffectOp =
-	| 'add-stat'
-	| 'add-rare-pct'
-	| 'mul-rare'
-	| 'add-drop'
-	| 'mul-drop';
+export type EffectOp = 'add-stat' | 'add-rare-pct' | 'mul-rare' | 'add-drop' | 'mul-drop';
 
-export type EffectPhase =
-	| 'scalar'
-	| 'produce-drops'
-	| 'add-rare'
-	| 'mul-rare'
-	| 'mul-drop';
+export type EffectPhase = 'scalar' | 'produce-drops' | 'add-rare' | 'mul-rare' | 'mul-drop';
 
 /** Default phase for each op. Effects rarely override. */
 export const DEFAULT_PHASE_FOR_OP: Record<EffectOp, EffectPhase> = {

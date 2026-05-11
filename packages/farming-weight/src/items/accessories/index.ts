@@ -1,5 +1,4 @@
 import type { ItemDefinition } from '../definitions.js';
-import { AtmosphericFilterAccessory, Magic8BallAccessory } from './special.js';
 import { CropieTalisman, FermentoArtifact, HelianthusRelic, SquashRing } from './fermento-family.js';
 import {
 	FreshlyBakedArtifact,
@@ -9,6 +8,7 @@ import {
 	FreshlyBakedTalisman,
 } from './freshly-baked.js';
 import { PowerRelic } from './power-relic.js';
+import { AtmosphericFilterAccessory, Magic8BallAccessory } from './special.js';
 
 export * from './base.js';
 export * from './fermento-family.js';

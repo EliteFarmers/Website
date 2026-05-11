@@ -1,8 +1,4 @@
-import {
-    FARMING_ATTRIBUTE_SHARDS,
-    getAttributeAmount,
-    getShardLevel,
-} from '../../constants/attributes.js';
+import { FARMING_ATTRIBUTE_SHARDS, getAttributeAmount, getShardLevel } from '../../constants/attributes.js';
 import { Crop } from '../../constants/crops.js';
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
@@ -59,10 +55,7 @@ export class WartyBugShard extends FortuneSource {
 	getEffects(player: FarmingPlayer, env: EffectEnvironment): Effect[] {
 		if (env.crop !== Crop.NetherWart) return [];
 
-		const level = getShardLevel(
-			Rarity.Legendary,
-			getAttributeAmount(player.options.attributes, 'wart_eater')
-		);
+		const level = getShardLevel(Rarity.Legendary, getAttributeAmount(player.options.attributes, 'wart_eater'));
 		if (level <= 0) return [];
 
 		const chance = 0.00005 * level;
@@ -92,15 +85,10 @@ export class DragonflyShard extends FortuneSource {
 	readonly name = FARMING_ATTRIBUTE_SHARDS.garden_wisdom?.name ?? 'Dragonfly Shard';
 
 	getEffects(player: FarmingPlayer, _env: EffectEnvironment): Effect[] {
-		const level = getShardLevel(
-			Rarity.Epic,
-			getAttributeAmount(player.options.attributes, 'garden_wisdom')
-		);
+		const level = getShardLevel(Rarity.Epic, getAttributeAmount(player.options.attributes, 'garden_wisdom'));
 		if (level <= 0) return [];
 
-		return [
-			{ source: ATTRIBUTE_SHARDS_STAT_SOURCE, op: 'add-stat', stat: Stat.FarmingWisdom, value: 0.5 * level },
-		];
+		return [{ source: ATTRIBUTE_SHARDS_STAT_SOURCE, op: 'add-stat', stat: Stat.FarmingWisdom, value: 0.5 * level }];
 	}
 }
 
@@ -155,7 +143,12 @@ export class FireflyShard extends FortuneSource {
 		if (!state.active) return [];
 
 		return [
-			{ source: ATTRIBUTE_SHARDS_STAT_SOURCE, op: 'add-stat', stat: Stat.FarmingFortune, value: 5 * fireflyLevel },
+			{
+				source: ATTRIBUTE_SHARDS_STAT_SOURCE,
+				op: 'add-stat',
+				stat: Stat.FarmingFortune,
+				value: 5 * fireflyLevel,
+			},
 		];
 	}
 }
@@ -220,10 +213,7 @@ export class TermiteShard extends FortuneSource {
 	readonly name = FARMING_ATTRIBUTE_SHARDS.infiltration?.name ?? 'Termite Shard';
 
 	getActive(player: FarmingPlayer, env: EffectEnvironment): FortuneSourceActiveState {
-		const level = getShardLevel(
-			Rarity.Uncommon,
-			getAttributeAmount(player.options.attributes, 'infiltration')
-		);
+		const level = getShardLevel(Rarity.Uncommon, getAttributeAmount(player.options.attributes, 'infiltration'));
 		if (!env.infestedPlot) {
 			return {
 				active: false,
@@ -236,14 +226,9 @@ export class TermiteShard extends FortuneSource {
 
 	getEffects(player: FarmingPlayer, env: EffectEnvironment): Effect[] {
 		if (!env.infestedPlot) return [];
-		const level = getShardLevel(
-			Rarity.Uncommon,
-			getAttributeAmount(player.options.attributes, 'infiltration')
-		);
+		const level = getShardLevel(Rarity.Uncommon, getAttributeAmount(player.options.attributes, 'infiltration'));
 		if (level <= 0) return [];
-		return [
-			{ source: ATTRIBUTE_SHARDS_STAT_SOURCE, op: 'add-stat', stat: Stat.FarmingFortune, value: 3 * level },
-		];
+		return [{ source: ATTRIBUTE_SHARDS_STAT_SOURCE, op: 'add-stat', stat: Stat.FarmingFortune, value: 3 * level }];
 	}
 }
 
@@ -255,10 +240,7 @@ export class GalaxyFishShard extends FortuneSource {
 	readonly name = FARMING_ATTRIBUTE_SHARDS.ultimate_dna?.name ?? 'Galaxy Fish Shard';
 
 	getEffects(player: FarmingPlayer, _env: EffectEnvironment): Effect[] {
-		const level = getShardLevel(
-			Rarity.Legendary,
-			getAttributeAmount(player.options.attributes, 'ultimate_dna')
-		);
+		const level = getShardLevel(Rarity.Legendary, getAttributeAmount(player.options.attributes, 'ultimate_dna'));
 		if (level <= 0) return [];
 		const out: Effect[] = [
 			{ source: ATTRIBUTE_SHARDS_STAT_SOURCE, op: 'add-stat', stat: Stat.FarmingFortune, value: 1 * level },

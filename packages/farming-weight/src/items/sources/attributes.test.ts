@@ -219,11 +219,7 @@ describe('GalaxyFishShard', () => {
 		const env = buildEffectEnvironment(player);
 		const effects = new GalaxyFishShard().getEffects(player, env);
 		expect(effects).toHaveLength(3);
-		expect(effects.map((e) => e.stat)).toEqual([
-			Stat.FarmingFortune,
-			Stat.MiningFortune,
-			Stat.ForagingFortune,
-		]);
+		expect(effects.map((e) => e.stat)).toEqual([Stat.FarmingFortune, Stat.MiningFortune, Stat.ForagingFortune]);
 		for (const e of effects) expect(e.value).toBe(1);
 	});
 });

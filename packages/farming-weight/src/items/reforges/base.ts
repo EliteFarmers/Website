@@ -1,6 +1,6 @@
+import type { Rarity, Reforge, ReforgeTarget, ReforgeTier, ReforgeTiers } from '../../constants/reforge-types.js';
 import { Stat } from '../../constants/stats.js';
 import type { Effect } from '../../effects/types.js';
-import type { Rarity, Reforge, ReforgeTarget, ReforgeTier, ReforgeTiers } from '../../constants/reforge-types.js';
 
 type ReforgeDefinition = Omit<Reforge, 'id'>;
 

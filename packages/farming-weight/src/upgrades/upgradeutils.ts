@@ -1,6 +1,6 @@
 import { CROP_INFO } from '../constants/crops.js';
 import { Stat } from '../constants/stats.js';
-import { getQueryStats, type FortuneUpgrade, type StatQueryOptions } from '../constants/upgrades.js';
+import { type FortuneUpgrade, getQueryStats, type StatQueryOptions } from '../constants/upgrades.js';
 
 const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((c) => c.fortuneType));
 
@@ -21,9 +21,7 @@ export function getUpgradeDelta(upgrade: FortuneUpgrade, stat: Stat): number {
 }
 
 function upgradeHasRelatedEffect(upgrade: FortuneUpgrade, stats: readonly Stat[]): boolean {
-	return (
-		upgrade.effects?.some((effect) => effect.relatedStats?.some((related) => stats.includes(related))) ?? false
-	);
+	return upgrade.effects?.some((effect) => effect.relatedStats?.some((related) => stats.includes(related))) ?? false;
 }
 
 function getUpgradeScore(upgrade: FortuneUpgrade, stats: readonly Stat[]): number {

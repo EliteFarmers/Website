@@ -5,20 +5,20 @@ import { Skill } from '../constants/skills.js';
 import { MATCHING_SPECIAL_CROP, type SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
 import {
-	getQueryStats,
 	type FortuneSourceProgress,
 	type FortuneUpgrade,
+	getQueryStats,
 	type StatQueryOptions,
 } from '../constants/upgrades.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
 import {
-    ARMOR_SET_BONUS,
-    type ArmorSetBonus,
-    FARMING_ARMOR_INFO,
-    type FarmingArmorInfo,
-    GEAR_SLOTS,
-    GearSlot,
+	ARMOR_SET_BONUS,
+	type ArmorSetBonus,
+	FARMING_ARMOR_INFO,
+	type FarmingArmorInfo,
+	GEAR_SLOTS,
+	GearSlot,
 } from '../items/armor.js';
 import { statsToEffects } from '../items/sources/effects-util.js';
 import { enchantEffects } from '../items/sources/enchants.js';
@@ -580,10 +580,7 @@ export class FarmingArmor extends UpgradeableBase {
 
 		if (this.info.perLevelStats?.skill === Skill.Farming && this.options?.farmingLevel) {
 			const perLevel: Partial<Record<Stat, number>> = {};
-			for (const [statKey, value] of Object.entries(this.info.perLevelStats.stats) as [
-				Stat,
-				number,
-			][]) {
+			for (const [statKey, value] of Object.entries(this.info.perLevelStats.stats) as [Stat, number][]) {
 				if (value) perLevel[statKey] = value * this.options.farmingLevel;
 			}
 			effects.push(...statsToEffects(perLevel, `${sourceName} (Farming Level)`));
@@ -591,11 +588,7 @@ export class FarmingArmor extends UpgradeableBase {
 
 		if (this.reforge && this.item.attributes?.modifier) {
 			effects.push(
-				...reforgeEffects(
-					this.item.attributes.modifier,
-					this.rarity,
-					`${sourceName} (${this.reforge.name})`
-				)
+				...reforgeEffects(this.item.attributes.modifier, this.rarity, `${sourceName} (${this.reforge.name})`)
 			);
 		}
 

@@ -55,12 +55,8 @@ describe('buildEffectEnvironment', () => {
 	});
 
 	test('infestedPlot derives from infestedPlotProbability > 0', () => {
-		expect(buildEffectEnvironment(makePlayer({ infestedPlotProbability: 0.5 })).infestedPlot).toBe(
-			true
-		);
-		expect(buildEffectEnvironment(makePlayer({ infestedPlotProbability: 0 })).infestedPlot).toBe(
-			false
-		);
+		expect(buildEffectEnvironment(makePlayer({ infestedPlotProbability: 0.5 })).infestedPlot).toBe(true);
+		expect(buildEffectEnvironment(makePlayer({ infestedPlotProbability: 0 })).infestedPlot).toBe(false);
 		expect(buildEffectEnvironment(makePlayer()).infestedPlot).toBe(false);
 	});
 

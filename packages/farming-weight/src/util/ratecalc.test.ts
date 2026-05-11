@@ -4,12 +4,12 @@ import { Stat } from '../constants/stats.js';
 import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
 import type { Effect } from '../effects/types.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
-import {
-    calculateDetailedDropsFromEffects,
-    type CalculateDetailedDropsFromEffectsOptions,
-    type DetailedDropsFromEffectsResult,
-} from './ratecalc-effects.js';
 import { getPossibleResultsFromCrops } from './ratecalc.js';
+import {
+	type CalculateDetailedDropsFromEffectsOptions,
+	calculateDetailedDropsFromEffects,
+	type DetailedDropsFromEffectsResult,
+} from './ratecalc-effects.js';
 
 const crops = [
 	Crop.Cactus,

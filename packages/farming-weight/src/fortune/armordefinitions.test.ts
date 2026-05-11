@@ -177,7 +177,9 @@ describe('Armor Definitions Integrity', () => {
 			for (const piece of transition.pieces) {
 				const group = FARMING_ARMOR_INFO[piece].upgrade?.group;
 				expect(group?.id, piece).toBe(`armor-tier:${transition.from}:${transition.to}`);
-				expect(group?.label, piece).toBe(`Upgrade ${transition.from[0]}${transition.from.slice(1).toLowerCase()} Armor to ${transition.to[0]}${transition.to.slice(1).toLowerCase()} Armor`);
+				expect(group?.label, piece).toBe(
+					`Upgrade ${transition.from[0]}${transition.from.slice(1).toLowerCase()} Armor to ${transition.to[0]}${transition.to.slice(1).toLowerCase()} Armor`
+				);
 				expect(group?.strategy, piece).toBe('available-pieces');
 				expect(group?.warning, piece).toBe('Partial upgrades can reduce the active armor set tier.');
 			}
