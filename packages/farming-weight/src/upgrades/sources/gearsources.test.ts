@@ -381,6 +381,15 @@ test('Sunset enchant on armor surfaces Overbloom progress and upgrade', () => {
 		category: UpgradeCategory.Enchant,
 	});
 	expect(sunsetUpgrade?.stats?.[Stat.Overbloom]).toBe(1);
+	expect(sunsetUpgrade?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Enchant: Sunset',
+			op: 'add-rare-pct',
+			value: 4,
+			relatedStats: [Stat.Overbloom],
+			scope: { tags: ['overbloom'] },
+		})
+	);
 
 	const defaultProgress = item.getProgress();
 	const defaultSunset = defaultProgress.find((p) => p.name === 'Sunset');
@@ -393,4 +402,11 @@ test('Sunset enchant on armor surfaces Overbloom progress and upgrade', () => {
 	const defaultSunsetUpgrade = defaultUpgrades.find((u) => u.title === 'Sunset 4');
 	expect(defaultSunsetUpgrade).toBeDefined();
 	expect(defaultSunsetUpgrade?.stats?.[Stat.Overbloom]).toBe(1);
+	expect(defaultSunsetUpgrade?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Enchant: Sunset',
+			op: 'add-rare-pct',
+			value: 4,
+		})
+	);
 });

@@ -92,7 +92,7 @@
 							{#if getJoinedAt(member)}
 								<DateDisplay timestamp={getJoinedAt(member)} />
 							{:else}
-								<span class="text-muted-foreground">—</span>
+								<span class="text-muted-foreground">-</span>
 							{/if}
 						</Table.Cell>
 						<Table.Cell class="bg-card px-4 py-3 align-middle text-sm font-semibold">

@@ -20,7 +20,7 @@
 
 	let { upgrade, items, expanded, toggleExpanded, expandUpgrade }: Props = $props();
 
-	const hasNextUpgrades = $derived((expandUpgrade?.(upgrade).children.length ?? 0) > 0);
+	const hasNextUpgrades = $derived.by(() => (expandUpgrade?.(upgrade).children.length ?? 0) > 0);
 </script>
 
 <div class="flex h-full min-w-80 flex-1 flex-col items-start justify-center gap-1">

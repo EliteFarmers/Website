@@ -1,3 +1,4 @@
+import type { DropKind, DropTag } from '../effects/types.js';
 import { ITEM_IDS } from './itemids.js';
 import { Stat } from './stats.js';
 import type { UpgradeCost } from './upgrades.js';
@@ -33,11 +34,22 @@ export interface CropCraft {
 export interface CropRngDrop {
 	chance: number;
 	drops: Record<string, number>;
+	/** Output bucket for this drop. Defaults to `rng`. */
+	output?: 'rng' | 'collection' | 'currency';
 	/**
 	 * If `harvestFeast`, this drop only occurs when a Harvest Feast is active and this crop is in-season.
 	 * Used for Seasoning + per-crop Harvest Feast materials.
 	 */
 	only?: 'harvestFeast';
+	/**
+	 * Drop kind classification used by the effects pipeline. Defaults to `'rng'` when omitted.
+	 */
+	dropKind?: DropKind;
+	/**
+	 * Drop tags consumed by `Effect.scope.tags`. See `DropTagBuiltin` for the well-known set.
+	 * Defaults to `['overbloom','rare-crop']` when omitted (the SkyBlock RARE CROP pool).
+	 */
+	tags?: readonly DropTag[];
 }
 
 export interface CropInfo {
@@ -84,7 +96,9 @@ function harvestFeastDrops(crop: Crop): CropRngDrop[] {
 		{
 			chance: HARVEST_FEAST_SEASONING_CHANCE,
 			drops: { SEASONING: 1 },
+			output: 'currency',
 			only: 'harvestFeast',
+			tags: ['overbloom', 'rare-crop', 'seasoning', 'feast'],
 		},
 	];
 	if (material) {
@@ -92,6 +106,7 @@ function harvestFeastDrops(crop: Crop): CropRngDrop[] {
 			chance: HARVEST_FEAST_MATERIAL_CHANCE,
 			drops: { [material]: 1 },
 			only: 'harvestFeast',
+			tags: ['overbloom', 'rare-crop', 'feast'],
 		});
 	}
 	return entries;
@@ -234,6 +249,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				drops: {
 					BURROWING_SPORES: 1,
 				},
+				tags: ['overbloom', 'rare-crop'],
 			},
 			...harvestFeastDrops(Crop.Mushroom),
 		],

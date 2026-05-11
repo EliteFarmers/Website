@@ -8,7 +8,7 @@ import { GemRarity } from '../../fortune/item.js';
 import { getMaxStatFromEnchant, getOptimisticStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
-import { getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
+import { getCurrentReforgeEffectSummaries, getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEquipment>[] = [
@@ -68,6 +68,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		currentStat: (gear, stat) => {
 			return gear.reforgeStats?.stats?.[stat] ?? 0;
 		},
+		effects: getCurrentReforgeEffectSummaries,
 		upgrades: getUpgradeableReforges,
 	},
 	{

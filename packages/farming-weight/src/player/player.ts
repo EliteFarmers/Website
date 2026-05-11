@@ -8,9 +8,22 @@ import {
 } from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
+import { compareRarity, type Rarity } from '../constants/reforge-types.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
-import { type FortuneUpgrade, UpgradeAction, UpgradeCategory, type UpgradeTreeNode } from '../constants/upgrades.js';
+import {
+	type EffectSummary,
+	type FortuneUpgrade,
+	getQueryStats,
+	type StatQueryOptions,
+	UpgradeAction,
+	UpgradeCategory,
+	type UpgradeTreeNode,
+} from '../constants/upgrades.js';
+import { buildEffectEnvironment } from '../effects/environment.js';
+import { resolveOverbloomBreakdown, resolveStatBreakdown } from '../effects/resolver.js';
+import { effectsToSummaries } from '../effects/summary.js';
+import type { Effect, EffectEnvironment } from '../effects/types.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
@@ -18,13 +31,21 @@ import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPets } from '../items/pets.js';
+import { FARMING_ATTRIBUTE_SHARD_CLASSES } from '../items/sources/attributes.js';
+import { GARDEN_CHIP_CLASSES } from '../items/sources/chips.js';
 import { FARMING_TOOLS } from '../items/tools.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
+import { withGroupedUpgrades } from '../upgrades/groups.js';
 import { getFakeItem } from '../upgrades/itemregistry.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
+import {
+	collectCropFortuneSourceEffects,
+	collectGeneralFortuneSourceEffects,
+} from '../upgrades/sources/effectsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
-import { calculateDetailedDrops } from '../util/ratecalc.js';
+import { nextRarity, previousRarity } from '../util/itemstats.js';
+import { calculateDetailedDropsFromEffects, type DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 import { createFarmingWeightCalculator, type FarmingWeightInfo } from '../weight/weightcalc.js';
 import type { PlayerOptions } from './playeroptions.js';
 
@@ -32,10 +53,38 @@ export function createFarmingPlayer(options: PlayerOptions) {
 	return new FarmingPlayer(options);
 }
 
-function getItemFamily(info: object | undefined): string | undefined {
-	if (!info || !('family' in info)) return undefined;
-	const { family } = info;
-	return typeof family === 'string' ? family : undefined;
+export interface PlayerStatQuery {
+	stats: Stat[];
+	crop?: Crop;
+}
+
+export interface PlayerStatView {
+	totals: Partial<Record<Stat, number>>;
+	breakdowns: Partial<Record<Stat, StatBreakdown>>;
+	effects: EffectSummary[];
+	upgrades: FortuneUpgrade[];
+}
+
+export interface UpgradeRateImpactOptions {
+	crop: Crop;
+	blocksBroken: number;
+}
+
+export interface DetailedDropsFromEffectsDelta {
+	collection: number;
+	npcCoins: number;
+	coinSources: Record<string, number>;
+	otherCollection: Record<string, number>;
+	items: Record<string, number>;
+	currencies: Record<string, number>;
+	rngItems: Record<string, number>;
+	totalItems: number;
+}
+
+export interface UpgradeRateImpact {
+	before: DetailedDropsFromEffectsResult;
+	after: DetailedDropsFromEffectsResult;
+	delta: DetailedDropsFromEffectsDelta;
 }
 
 export class FarmingPlayer {
@@ -193,6 +242,11 @@ export class FarmingPlayer {
 		this.accessories = pool;
 	}
 
+	private syncActiveAccessories() {
+		this.options.accessories = this.accessories;
+		this.populateActiveAccessories();
+	}
+
 	changeArmor(armor: FarmingArmor[]) {
 		this.armorSet = new ArmorSet(armor.sort((a, b) => b.fortune - a.fortune));
 	}
@@ -219,8 +273,13 @@ export class FarmingPlayer {
 		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, stats);
 	}
 
-	getUpgrades(options?: { stat?: Stat }) {
-		const stats = options?.stat ? [options.stat] : undefined;
+	getPetProgress(stats?: Stat[]) {
+		return this.pets.flatMap((pet) => pet.getProgress(stats, this));
+	}
+
+	getUpgrades(options?: StatQueryOptions) {
+		const hasExplicitStats = (options?.stats?.length ?? 0) > 0 || options?.stat !== undefined;
+		const stats = hasExplicitStats ? getQueryStats(options) : undefined;
 		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, stats).flatMap(
 			(source) => source.upgrades ?? []
 		);
@@ -232,7 +291,7 @@ export class FarmingPlayer {
 
 		// For non-FarmingFortune stats (e.g. Overbloom), tool upgrades aren't tied to a single
 		// crop and won't be surfaced by getCropUpgrades, so include them here.
-		if (options?.stat && options.stat !== Stat.FarmingFortune) {
+		if (stats?.some((stat) => stat !== Stat.FarmingFortune)) {
 			const tools =
 				this.options.selectedCrop !== undefined
 					? [this.getSelectedCropTool(this.options.selectedCrop)].filter((tool) => tool !== undefined)
@@ -243,7 +302,30 @@ export class FarmingPlayer {
 			}
 		}
 
-		return filterAndSortUpgrades(upgrades, options);
+		const filtered = filterAndSortUpgrades(upgrades, options);
+		return options?.includeUpgradeGroups ? withGroupedUpgrades(filtered) : filtered;
+	}
+
+	getStatView(query: PlayerStatQuery): PlayerStatView {
+		const stats = query.stats.length > 0 ? query.stats : [Stat.FarmingFortune];
+		const totals: Partial<Record<Stat, number>> = {};
+		const breakdowns: Partial<Record<Stat, StatBreakdown>> = {};
+
+		for (const stat of stats) {
+			totals[stat] = this.getStat(stat, query.crop);
+			breakdowns[stat] = this.getStatBreakdown(stat, query.crop);
+		}
+
+		const env = this.buildEnvironment(query.crop);
+		const effects = effectsToSummaries(this.collectEffects(env), stats);
+		const upgrades = this.getUpgrades({ stats });
+
+		return {
+			totals,
+			breakdowns,
+			effects,
+			upgrades,
+		};
 	}
 
 	getCropUpgrades(crop?: Crop, tool?: FarmingTool) {
@@ -264,17 +346,26 @@ export class FarmingPlayer {
 		} else {
 			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
 			if (startingInfo) {
-				const fakeItem = getFakeItem(startingInfo.skyblockId, this.options);
+				const fakeItem = getFakeItem<FarmingTool>(startingInfo.skyblockId, this.options);
+				const startingToolFortune = fakeItem?.getStat(CROP_INFO[crop].fortuneType, crop) ?? 0;
 
 				upgrades.push({
 					title: startingInfo.name,
 					action: UpgradeAction.Purchase,
-					increase: fakeItem?.getFortune() ?? 0,
+					increase: startingToolFortune,
+					stats: {
+						[CROP_INFO[crop].fortuneType]: startingToolFortune,
+					},
 					wiki: startingInfo.wiki,
+					purchase: startingInfo.skyblockId,
 					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.max, 0) ?? 0,
 					category: UpgradeCategory.Item,
 					cost: {
 						copper: 250,
+					},
+					meta: {
+						type: 'buy_item',
+						id: startingInfo.skyblockId,
 					},
 				});
 			}
@@ -300,6 +391,75 @@ export class FarmingPlayer {
 		return val;
 	}
 
+	/**
+	 * Build the canonical {@link EffectEnvironment} for this player + crop.
+	 * Thin wrapper over {@link buildEffectEnvironment}; provided so callers
+	 * never have to import the helper directly.
+	 */
+	buildEnvironment(crop?: Crop): EffectEnvironment {
+		return buildEffectEnvironment(this, crop);
+	}
+
+	/**
+	 * Aggregate the declarative {@link Effect}[] from every active source on
+	 * the player: armor set (armor + equipment + set bonuses, including each
+	 * piece's reforge & enchants), the selected tool, active accessories, the
+	 * selected pet, every attribute shard, and every garden chip.
+	 *
+	 * Sources with a `getActive` guard that returns `active: false` are
+	 * skipped. Sources whose `getEffects` returns `[]` contribute nothing.
+	 *
+	 * This method is the single seam consumed by the new effect-resolver
+	 * pipeline (`getStat`, `getRates`). It does **not** apply scopes - that's
+	 * the resolver's job - so the returned list includes every effect the
+	 * player could plausibly emit, with their declarative scopes intact.
+	 */
+	collectEffects(env: EffectEnvironment): Effect[] {
+		const effects: Effect[] = [];
+
+		effects.push(...collectGeneralFortuneSourceEffects(this));
+
+		// Armor set: armor pieces, equipment pieces, and set bonuses.
+		// (Per-piece reforge/enchant effects are emitted by each piece.)
+		effects.push(...this.armorSet.getEffects(env));
+
+		// Tool: for crop-scoped calculations, use the selected/best tool for
+		// that crop. For crop-agnostic stat queries, use the selected tool.
+		const tool = env.crop ? this.getSelectedCropTool(env.crop) : this.selectedTool;
+		if (tool) {
+			effects.push(...tool.getEffects(env));
+		}
+
+		// Active accessories only - the same filtering `getStatBreakdown`
+		// applies, so we don't double-count Helianthus etc.
+		for (const accessory of this.activeAccessories) {
+			effects.push(...accessory.getEffects(env));
+		}
+
+		// Selected pet.
+		if (this.selectedPet) {
+			effects.push(...this.selectedPet.getEffects(env, this));
+		}
+
+		// Attribute shards.
+		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARD_CLASSES)) {
+			const active = shard.getActive?.(this, env);
+			if (active && active.active === false) continue;
+			effects.push(...shard.getEffects(this, env));
+		}
+
+		// Garden chips.
+		for (const chip of Object.values(GARDEN_CHIP_CLASSES)) {
+			const active = chip.getActive?.(this, env);
+			if (active && active.active === false) continue;
+			effects.push(...chip.getEffects(this, env));
+		}
+
+		effects.push(...collectCropFortuneSourceEffects(this, env));
+
+		return effects;
+	}
+
 	getStat(stat: Stat, targetCrop?: Crop) {
 		const breakdown = this.getStatBreakdown(stat, targetCrop);
 		return Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
@@ -317,118 +477,19 @@ export class FarmingPlayer {
 			}
 		};
 
-		// Identify all stats that contribute to the requested stat
 		const contributingStats = getContributoryStats(stat);
+		const env = this.buildEnvironment(targetCrop);
+		const effects = this.collectEffects(env);
+		const statContext = { env, crop: targetCrop };
 
-		// General Sources
-		// Always run general sources (they apply to everything)
-		for (const source of GENERAL_FORTUNE_SOURCES) {
-			// If this source is handled by an active accessory, skip it here to avoid double counting
-			if (this.activeAccessories.some((a) => a.info.name === source.name)) continue;
-			const sourceInfo = source.info?.(this);
-			const sourceFamily = getItemFamily(sourceInfo?.info);
-			if (sourceFamily && this.activeAccessories.some((a) => a.info.family === sourceFamily)) {
-				continue;
-			}
+		for (const targetStat of contributingStats) {
+			const resolved =
+				targetStat === Stat.Overbloom
+					? resolveOverbloomBreakdown(effects, statContext, Stat.Overbloom)
+					: resolveStatBreakdown(effects, targetStat, statContext);
 
-			if (source.exists && !source.exists(this)) continue;
-
-			for (const targetStat of contributingStats) {
-				let val = 0;
-				if (source.currentStat) {
-					val = source.currentStat(this, targetStat) ?? 0;
-				} else if (source.current && targetStat === Stat.FarmingFortune) {
-					val = source.current(this) ?? 0;
-				}
-				add(source.name, val, targetStat);
-			}
-		}
-
-		// Crop Sources
-		// Only run if we have a target crop
-		if (targetCrop) {
-			for (const source of CROP_FORTUNE_SOURCES) {
-				// Helianthus Relic Family is handled by activeAccessories
-				if (source.name === 'Helianthus Relic Family') continue;
-
-				const ctx = { player: this, crop: targetCrop };
-				if (source.exists && !source.exists(ctx)) continue;
-
-				for (const targetStat of contributingStats) {
-					let val = 0;
-					// For Crop Sources, strictly match the crop's fortune type.
-					if (source.currentStat) {
-						val = source.currentStat(ctx, targetStat) ?? 0;
-					} else if (source.current && targetStat === CROP_INFO[targetCrop].fortuneType) {
-						val = source.current(ctx) ?? 0;
-					}
-					add(source.name, val, targetStat);
-				}
-			}
-		}
-
-		// Pets
-		const pet = this.selectedPet;
-		if (pet) {
-			for (const targetStat of contributingStats) {
-				// Pass the player for abilities that depend on player context (e.g., Mosquito sugar cane fortune)
-				const val = pet.getFortune(targetStat, this);
-				add(pet.info.name ?? 'Selected Pet', val, targetStat);
-			}
-		}
-
-		// Tools
-		if (!targetCrop && this.selectedTool) {
-			for (const targetStat of contributingStats) {
-				const val = this.selectedTool.getStat(targetStat);
-				add(this.selectedTool.info.name, val, targetStat);
-			}
-		}
-
-		// Equipment
-		for (const piece of this.armorSet.equipment) {
-			if (!piece) continue;
-			for (const targetStat of contributingStats) {
-				const val = piece.getStat(targetStat, targetCrop);
-				add(piece.info.name, val, targetStat);
-			}
-		}
-
-		// Armor
-		for (const piece of this.armorSet.armor) {
-			if (!piece) continue;
-			for (const targetStat of contributingStats) {
-				const val = piece.getStat(targetStat, targetCrop);
-				add(piece.info.name, val, targetStat);
-			}
-		}
-
-		// Armor Set Bonuses
-		for (const { bonus, count } of this.armorSet.setBonuses) {
-			if (count < 2 || count > 4) continue;
-			for (const targetStat of contributingStats) {
-				const val = bonus.stats?.[count]?.[targetStat] ?? 0;
-				add(bonus.name, val, targetStat);
-			}
-		}
-
-		// Equipment Set Bonuses
-		for (const { bonus, count } of this.armorSet.equipmentSetBonuses) {
-			if (count < 2 || count > 4) continue;
-			for (const targetStat of contributingStats) {
-				const val = bonus.stats?.[count]?.[targetStat] ?? 0;
-				add(bonus.name, val, targetStat);
-			}
-		}
-
-		// Accessories
-		for (const acc of this.activeAccessories) {
-			// If the accessory is restricted to specific crops, check validity
-			if (acc.info.crops && (!targetCrop || !acc.info.crops.includes(targetCrop))) continue;
-
-			for (const targetStat of contributingStats) {
-				const val = acc.getStat(targetStat);
-				add(acc.info.name, val, targetStat);
+			for (const [name, value] of Object.entries(resolved)) {
+				add(name, value, targetStat);
 			}
 		}
 
@@ -552,29 +613,40 @@ export class FarmingPlayer {
 		);
 	}
 
-	getRates(crop: Crop, blocksBroken: number): ReturnType<typeof calculateDetailedDrops> {
+	getRates(crop: Crop, blocksBroken: number): DetailedDropsFromEffectsResult {
 		const tool = this.getBestTool(crop);
 		const cropFortune = this.getCropFortune(crop, tool);
-		const fortune = this.permFortune + this.tempFortune + cropFortune.fortune;
+		const fortune = cropFortune.fortune;
 
-		const overbloomBreakdown = this.getStatBreakdown(Stat.Overbloom, crop);
-		const overbloomSources: Record<string, number> = {};
-		for (const [name, entry] of Object.entries(overbloomBreakdown)) {
-			if (entry.value) overbloomSources[name] = entry.value;
-		}
+		const env = this.buildEnvironment(crop);
+		const effects = this.collectEffects(env);
 
-		return calculateDetailedDrops({
-			crop: crop,
-			blocksBroken: blocksBroken,
+		return calculateDetailedDropsFromEffects({
+			crop,
+			blocksBroken,
 			farmingFortune: fortune,
+			armorPieces: this.armorSet.specialDropsCount(crop),
 			bountiful: tool?.bountiful ?? false,
 			mooshroom: this.selectedPet?.type === FarmingPets.MooshroomCow,
-			attributes: this.options.attributes,
+			maxTool: tool?.getCurrentLevelProgress().maxed ?? false,
 			chips: this.options.chips,
 			pet: this.selectedPet,
-			overbloom: this.getStat(Stat.Overbloom, crop),
-			overbloomBreakdown: overbloomSources,
+			effects,
+			env,
 		});
+	}
+
+	getUpgradeRateImpact(upgrade: FortuneUpgrade, options: UpgradeRateImpactOptions): UpgradeRateImpact {
+		const before = this.getRates(options.crop, options.blocksBroken);
+		const clonedPlayer = this.clone();
+		clonedPlayer.applyUpgrade(upgrade);
+		const after = clonedPlayer.getRates(options.crop, options.blocksBroken);
+
+		return {
+			before,
+			after,
+			delta: diffDetailedDrops(before, after),
+		};
 	}
 
 	getWeightCalc(info?: FarmingWeightInfo): ReturnType<typeof createFarmingWeightCalculator> {
@@ -604,6 +676,39 @@ export class FarmingPlayer {
 		if (!upgrade.meta) return;
 		const { type, itemUuid, key, value, id } = upgrade.meta;
 
+		if (type === 'upgrade_group') {
+			for (const groupedUpgrade of upgrade.groupedUpgrades ?? []) {
+				this.applyUpgrade(groupedUpgrade);
+			}
+			this.permFortune = this.getGeneralFortune();
+			return;
+		}
+
+		if ((type === 'pet_level' || type === 'pet_item') && itemUuid) {
+			const index = this.pets.findIndex((pet) => pet.pet.uuid === itemUuid);
+			const target = this.pets[index];
+
+			if (target) {
+				const nextPetData = { ...target.pet };
+				if (type === 'pet_level' && value) {
+					nextPetData.exp = target.getXpForLevel(Number(value));
+				} else if (type === 'pet_item' && id) {
+					nextPetData.heldItem = id;
+				}
+
+				const updatedPet = new FarmingPet(nextPetData, this.options);
+				this.pets[index] = updatedPet;
+				this.options.pets = this.pets;
+				if (this.selectedPet?.pet.uuid === itemUuid) {
+					this.selectedPet = updatedPet;
+					this.options.selectedPet = updatedPet;
+				}
+				this.permFortune = this.getGeneralFortune();
+			}
+
+			return;
+		}
+
 		if (itemUuid) {
 			const candidates = [...this.tools, ...this.armor, ...this.equipment, ...this.accessories];
 			const target = candidates.find((i) => i.item.uuid === itemUuid);
@@ -616,7 +721,11 @@ export class FarmingPlayer {
 					if (target instanceof FarmingTool) {
 						const idx = this.tools.indexOf(target);
 						if (idx >= 0) {
-							this.tools[idx] = new FarmingTool(target.item, this.options);
+							const updatedTool = new FarmingTool(target.item, this.options);
+							this.tools[idx] = updatedTool;
+							if (this.selectedTool === target) {
+								this.selectedTool = updatedTool;
+							}
 						}
 					} else if (target instanceof FarmingArmor) {
 						const idx = this.armor.indexOf(target);
@@ -645,7 +754,11 @@ export class FarmingPlayer {
 					if (target instanceof FarmingTool) {
 						const idx = this.tools.indexOf(target);
 						if (idx >= 0) {
-							this.tools[idx] = new FarmingTool(target.item, this.options);
+							const updatedTool = new FarmingTool(target.item, this.options);
+							this.tools[idx] = updatedTool;
+							if (this.selectedTool === target) {
+								this.selectedTool = updatedTool;
+							}
 						}
 					} else if (target instanceof FarmingArmor) {
 						const idx = this.armor.indexOf(target);
@@ -714,6 +827,7 @@ export class FarmingPlayer {
 				} else if (type === 'item' && id === 'rarity_upgrades' && value) {
 					target.item.attributes ??= {};
 					target.item.attributes.rarity_upgrades = String(value);
+					setItemRarityAttribute(target.item, nextRarity(target.rarity));
 					// Recomb affects rarity, which affects stats. Need to reload tool.
 					if (target instanceof FarmingTool) {
 						const idx = this.tools.indexOf(target);
@@ -757,6 +871,10 @@ export class FarmingPlayer {
 							...newItem.item.gems,
 							...target.item.gems,
 						};
+						setItemRarityAttribute(
+							newItem.item,
+							getUpgradedItemRarity(target.rarity, target.info.maxRarity, newItem.info.maxRarity)
+						);
 						// Preserve the old item's UUID so the item remains trackable
 						newItem.item.uuid = target.item.uuid;
 
@@ -794,6 +912,11 @@ export class FarmingPlayer {
 						this.permFortune = this.getGeneralFortune();
 					}
 				}
+
+				if (target instanceof FarmingAccessory) {
+					this.syncActiveAccessories();
+				}
+				this.permFortune = this.getGeneralFortune();
 			}
 		} else if (type === 'skill') {
 			if (key === 'farmingLevel' && value) {
@@ -834,11 +957,18 @@ export class FarmingPlayer {
 		} else if (type === 'setting' && key && value) {
 			if (key === 'cocoaFortuneUpgrade') {
 				this.options.cocoaFortuneUpgrade = Number(value);
+			} else if (key === 'dnaMilestone') {
+				this.options.dnaMilestone = Number(value);
+			} else if (key === 'refinedTruffles') {
+				this.options.refinedTruffles = Number(value);
 			}
 			this.permFortune = this.getGeneralFortune();
 		} else if (type === 'unlock' && id) {
 			if (id === 'personal_best') {
 				this.options.personalBestsUnlocked = true;
+			} else if (id === 'exportable_crop' && key) {
+				this.options.exportableCrops ??= {};
+				this.options.exportableCrops[key as Crop] = true;
 			}
 			this.permFortune = this.getGeneralFortune();
 		} else if (type === 'buy_item' && id) {
@@ -878,7 +1008,9 @@ export class FarmingPlayer {
 						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
 						this.armor[oldIdx] = new FarmingArmor(newItem.item, this.options);
 					} else {
-						this.armor.push(newItem);
+						const addedPiece = new FarmingArmor(newItem.item, this.options);
+						this.armor.push(addedPiece);
+						this.armorSet.updateArmorSlot(addedPiece);
 					}
 				} else if (newItem instanceof FarmingEquipment) {
 					const oldIdx = itemUuid ? this.equipment.findIndex((e) => e.item.uuid === itemUuid) : -1;
@@ -895,7 +1027,9 @@ export class FarmingPlayer {
 						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
 						this.equipment[oldIdx] = new FarmingEquipment(newItem.item, this.options);
 					} else {
-						this.equipment.push(newItem);
+						const addedPiece = new FarmingEquipment(newItem.item, this.options);
+						this.equipment.push(addedPiece);
+						this.armorSet.updateEquipmentSlot(addedPiece);
 					}
 				} else if (newItem instanceof FarmingAccessory) {
 					const oldIdx = itemUuid ? this.accessories.findIndex((a) => a.item.uuid === itemUuid) : -1;
@@ -914,6 +1048,9 @@ export class FarmingPlayer {
 					} else {
 						this.accessories.push(newItem);
 					}
+				}
+				if (newItem instanceof FarmingAccessory) {
+					this.syncActiveAccessories();
 				}
 				this.permFortune = this.getGeneralFortune();
 			}
@@ -1038,6 +1175,29 @@ export class FarmingPlayer {
 			totalCost: upgrade.cost,
 			children: [],
 		};
+
+		if (upgrade.meta?.type === 'upgrade_group') {
+			const sequentialPlayer = this.clone();
+			for (const groupedUpgrade of upgrade.groupedUpgrades ?? []) {
+				const childStatsBefore = sequentialPlayer.getAllStats(stats, crop);
+				const childPlayer = sequentialPlayer.clone();
+				childPlayer.applyUpgrade(groupedUpgrade);
+				const childStatsAfter = childPlayer.getAllStats(stats, crop);
+
+				node.children.push({
+					upgrade: groupedUpgrade,
+					statsBefore: childStatsBefore,
+					statsAfter: childStatsAfter,
+					statsGained: this.computeStatsDiff(childStatsBefore, childStatsAfter),
+					totalCost: groupedUpgrade.cost,
+					children: [],
+				});
+
+				sequentialPlayer.applyUpgrade(groupedUpgrade);
+			}
+
+			return node;
+		}
 
 		// Stop recursion at max depth
 		if (depth >= maxDepth) {
@@ -1172,10 +1332,14 @@ export class FarmingPlayer {
 				player.tools.find((t) => t.item.uuid === itemUuid) ??
 				player.armor.find((a) => a.item.uuid === itemUuid) ??
 				player.equipment.find((e) => e.item.uuid === itemUuid) ??
-				player.accessories.find((a) => a.item.uuid === itemUuid);
+				player.accessories.find((a) => a.item.uuid === itemUuid) ??
+				player.pets.find((p) => p.pet.uuid === itemUuid);
 
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
-				const itemUpgrades = target.getUpgrades({ stat: primaryStat }) as FortuneUpgrade[];
+				const itemUpgrades =
+					target instanceof FarmingPet
+						? target.getUpgrades({ stat: primaryStat }, player)
+						: (target.getUpgrades({ stat: primaryStat }) as FortuneUpgrade[]);
 				// Filter to only include upgrades of the same type (enchant chains, tier upgrades, etc.)
 				// For gem upgrades, also match on slot to only show follow-ups for that specific slot
 				for (const u of itemUpgrades) {
@@ -1208,6 +1372,59 @@ export class FarmingPlayer {
 
 		return upgrades;
 	}
+}
+
+function diffDetailedDrops(
+	before: DetailedDropsFromEffectsResult,
+	after: DetailedDropsFromEffectsResult
+): DetailedDropsFromEffectsDelta {
+	const items = diffRecord(before.items, after.items);
+	const rngItems = diffRecord(before.rngItems ?? {}, after.rngItems ?? {});
+	const currencies = diffRecord(before.currencies, after.currencies);
+
+	return {
+		collection: after.collection - before.collection,
+		npcCoins: after.npcCoins - before.npcCoins,
+		coinSources: diffRecord(before.coinSources, after.coinSources),
+		otherCollection: diffRecord(before.otherCollection, after.otherCollection),
+		items,
+		currencies,
+		rngItems,
+		totalItems: sumRecord(items) + sumRecord(rngItems),
+	};
+}
+
+function diffRecord(before: Record<string, number>, after: Record<string, number>): Record<string, number> {
+	const result: Record<string, number> = {};
+	const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
+	for (const key of keys) {
+		const delta = (after[key] ?? 0) - (before[key] ?? 0);
+		if (delta !== 0) {
+			result[key] = delta;
+		}
+	}
+	return result;
+}
+
+function sumRecord(record: Record<string, number>): number {
+	return Object.values(record).reduce((sum, value) => sum + value, 0);
+}
+
+function getUpgradedItemRarity(currentRarity: Rarity, currentMaxRarity: Rarity, nextMaxRarity: Rarity): Rarity {
+	const currentBaseRarity = previousRarity(currentMaxRarity);
+	const nextBaseRarity = previousRarity(nextMaxRarity);
+	const rarityIncrease = compareRarity(currentRarity, currentBaseRarity);
+
+	if (rarityIncrease > 0) {
+		return nextRarity(nextBaseRarity);
+	}
+
+	return nextBaseRarity;
+}
+
+function setItemRarityAttribute(item: EliteItemDto, rarity: Rarity): void {
+	item.attributes ??= {};
+	item.attributes.rarity = rarity;
 }
 
 export interface JacobFarmingContest {

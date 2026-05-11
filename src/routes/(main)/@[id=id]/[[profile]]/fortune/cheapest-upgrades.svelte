@@ -11,9 +11,9 @@
 	import { Button } from '$ui/button';
 	import Settings from '@lucide/svelte/icons/settings';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Crop, Stat, type FarmingPlayer } from 'farming-weight';
-	import { Debounced, useDebounce, watch } from 'runed';
-	import { SvelteSet } from 'svelte/reactivity';
+	import { Crop, Stat, type FarmingPlayer, type FortuneUpgrade, type UpgradeRateImpact } from 'farming-weight';
+	import { Debounced } from 'runed';
+	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
 	const ctx = getStatsContext();
 	const ratesData = getRatesData();
@@ -29,20 +29,17 @@
 	interface Props {
 		player: RatesPlayerStore;
 		crop: Crop;
+		blocksPerHour?: number;
 	}
 
-	let { player, crop }: Props = $props();
+	let { player, crop, blocksPerHour = 72_000 }: Props = $props();
 
-	let upgrades = $state((() => mergeUpgrades($player, crop))());
-
-	const getUpgrades = useDebounce(() => {
-		upgrades = mergeUpgrades($player, crop);
-	}, 750);
+	const upgrades = $derived.by(() => mergeUpgrades($player, crop));
+	const rateImpactCache = $derived.by(() => buildRateImpactCache($player, upgrades, crop, blocksPerHour));
 
 	function mergeUpgrades(p: FarmingPlayer, c: Crop) {
 		const all = [
-			...p.getUpgrades({ stat: Stat.FarmingFortune }),
-			...p.getUpgrades({ stat: Stat.Overbloom }),
+			...p.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom], includeUpgradeGroups: true }),
 			...p.getCropUpgrades(c),
 		];
 		const seen = new SvelteSet<string>();
@@ -56,11 +53,61 @@
 		return deduped;
 	}
 
-	watch([() => $player, () => crop], () => {
-		getUpgrades();
-	});
+	function getUpgradeKey(upgrade: FortuneUpgrade) {
+		return (
+			upgrade.conflictKey ??
+			`${upgrade.title}::${upgrade.action}::${upgrade.meta?.type ?? ''}::${upgrade.meta?.key ?? ''}`
+		);
+	}
 
-	const neededItems = $derived(getItemsFromUpgrades(upgrades));
+	function getRateImpactKey(upgrade: FortuneUpgrade, activeCrop = crop, activeBlocksPerHour = blocksPerHour) {
+		return `${activeCrop}::${activeBlocksPerHour.toFixed(4)}::${getUpgradeKey(upgrade)}`;
+	}
+
+	function buildRateImpactCache(
+		p: FarmingPlayer,
+		rows: FortuneUpgrade[],
+		activeCrop: Crop,
+		activeBlocksPerHour: number
+	) {
+		const values = new SvelteMap<string, UpgradeRateImpact>();
+		let version = rows.length + activeBlocksPerHour;
+
+		if (activeCrop && activeBlocksPerHour > 0) {
+			for (const upgrade of rows) {
+				const impact = p.getUpgradeRateImpact(upgrade, {
+					crop: activeCrop,
+					blocksBroken: activeBlocksPerHour,
+				});
+
+				values.set(getRateImpactKey(upgrade, activeCrop, activeBlocksPerHour), impact);
+				version += impact.delta.totalItems;
+			}
+		}
+
+		return { values, version };
+	}
+
+	function getRateImpact(upgrade: FortuneUpgrade) {
+		return rateImpactCache.values.get(getRateImpactKey(upgrade));
+	}
+
+	function getRateImpactItems(cache: { values: Map<string, UpgradeRateImpact> }) {
+		const items = new SvelteSet<string>();
+		for (const impact of cache.values.values()) {
+			for (const itemId of Object.keys(impact.delta.items ?? {})) {
+				items.add(itemId);
+			}
+			for (const itemId of Object.keys(impact.delta.rngItems ?? {})) {
+				items.add(itemId);
+			}
+		}
+		return [...items];
+	}
+
+	const neededItems = $derived([
+		...new Set([...getItemsFromUpgrades(upgrades), ...getRateImpactItems(rateImpactCache)]),
+	]);
 
 	const debouncedItems = new Debounced(() => neededItems, 500);
 
@@ -130,12 +177,13 @@
 		<UpgradeList
 			{upgrades}
 			items={itemsData}
-			version={itemsVersion}
+			version={itemsVersion + rateImpactCache.version}
 			costFn={getUpgradeCost}
+			rateImpactFn={getRateImpact}
+			rateImpactUnavailableLabel={crop ? undefined : 'Select a Crop'}
 			applyUpgrade={(u) => {
 				$player.applyUpgrade(u);
 				player.refresh();
-				getUpgrades();
 			}}
 			expandUpgrade={(u) =>
 				$player.expandUpgrade(u, {

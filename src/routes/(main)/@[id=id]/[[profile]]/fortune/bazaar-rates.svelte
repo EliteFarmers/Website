@@ -8,14 +8,14 @@
 	import * as Select from '$ui/select';
 	import { Skeleton } from '$ui/skeleton';
 	import Switch from '$ui/switch/switch.svelte';
-	import { Crop, getPossibleResultsFromCrops, type DetailedDropsResult } from 'farming-weight';
+	import { Crop, getPossibleResultsFromCrops, type DetailedDropsFromEffectsResult } from 'farming-weight';
 	import { watch } from 'runed';
 
 	interface Props {
 		crop: Crop;
 		amount: number;
 		otherCoins?: number;
-		result: DetailedDropsResult;
+		result: DetailedDropsFromEffectsResult;
 	}
 
 	const ratesData = getRatesData();
@@ -56,6 +56,19 @@
 			: (($ratesData.bzMode === 'insta' ? itemCost.bazaar?.averageSell : itemCost.bazaar?.averageSellOrder) ?? 0);
 		return Math.round(lowestPrice * amount);
 	}
+
+	function numberEntries(record: Record<string, number> | undefined) {
+		return Object.entries(record ?? {}) as [string, number][];
+	}
+
+	function currencyName(id: string) {
+		if (id === 'SEASONING') return 'Seasoning';
+		return id;
+	}
+
+	function amountText(amount: number) {
+		return amount % 1 === 0 ? Math.floor(amount).toLocaleString() : amount.toFixed(2);
+	}
 </script>
 
 {#if bzPromise}
@@ -69,7 +82,7 @@
 		</div>
 	{:then bz}
 		{@const otherCoinsNpc = otherCoins}
-		{@const otherItems = Object.entries(result.items ?? {}).filter(
+		{@const otherItems = numberEntries(result.items).filter(
 			([id, count]) => id !== crop && id !== Crop.Seeds && (count ?? 0) > 0
 		)}
 
@@ -120,7 +133,7 @@
 		{@const best = craftList[0]}
 
 		{@const rng = Object.fromEntries(
-			Object.entries(result.rngItems ?? {}).map(([item, amount], idx) => {
+			numberEntries(result.rngItems).map(([item, amount], idx) => {
 				const name = bz?.[item]?.bazaar?.name ?? bz?.[item]?.item?.name ?? `RNG Item ${idx}`;
 				return [name, price(bz, item, amount)];
 			})
@@ -266,11 +279,10 @@
 							<div class="rounded-md border p-2">
 								<p class="text-base font-semibold">RNG Items</p>
 								<div class="mt-2 flex flex-col gap-2">
-									{#each Object.entries(result.rngItems ?? {}) as [itemId, amount] (itemId)}
+									{#each numberEntries(result.rngItems) as [itemId, amount] (itemId)}
 										{@const bzData = bz?.[itemId]?.bazaar}
 										{@const name = bzData?.name ?? bz?.[itemId]?.item?.name ?? itemId}
-										{@const itemsText =
-											amount % 1 === 0 ? Math.floor(amount).toLocaleString() : amount.toFixed(2)}
+										{@const itemsText = amountText(amount)}
 										{@const per = getSellPrice(bzData)}
 										{@const total = Math.floor(per * amount)}
 										<div class="flex items-start justify-between gap-4">
@@ -283,6 +295,22 @@
 											<div class="shrink-0 text-right {includeRng ? '' : 'line-through'}">
 												<p class="text-sm font-semibold">{total.toLocaleString()}</p>
 											</div>
+										</div>
+									{/each}
+								</div>
+							</div>
+						{/if}
+
+						{#if numberEntries(result.currencies).length > 0}
+							<div class="rounded-md border p-2">
+								<p class="text-base font-semibold">Currencies</p>
+								<div class="mt-2 flex flex-col gap-2">
+									{#each numberEntries(result.currencies) as [currencyId, amount] (currencyId)}
+										<div class="flex items-start justify-between gap-4">
+											<p class="min-w-0 truncate text-sm font-semibold">
+												{currencyName(currencyId)}
+											</p>
+											<p class="shrink-0 text-sm font-semibold">{amountText(amount)}</p>
 										</div>
 									{/each}
 								</div>

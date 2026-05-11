@@ -25,7 +25,20 @@
 
 	let progressModal = $state(false);
 	let shownProgressIndex = $state<number | null>(null);
-	const shownProgress = $derived((shownProgressIndex !== null ? progress[shownProgressIndex] : null) ?? null);
+	const visibleProgress = $derived.by(() =>
+		progress.filter(
+			(p) =>
+				p.stats ||
+				p.nextInfo ||
+				p.maxInfo ||
+				p.item ||
+				p.upgrades?.length ||
+				p.progress?.some(
+					(child) => child.stats || child.nextInfo || child.maxInfo || child.item || child.upgrades?.length
+				)
+		)
+	);
+	const shownProgress = $derived((shownProgressIndex !== null ? visibleProgress[shownProgressIndex] : null) ?? null);
 	const equipConfig = $derived.by(() => (shownProgress && equip ? equip(shownProgress) : null));
 </script>
 
@@ -36,7 +49,7 @@
 			<h2 class="pl-1 text-xl">{name}</h2>
 		</div>
 		<div class="grid w-full grid-cols-1 gap-1.5 md:grid-cols-2 lg:grid-cols-3">
-			{#each progress as p, i (p.name + p.current + (p.item?.uuid ?? ''))}
+			{#each visibleProgress as p, i (p.name + p.current + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item || p.upgrades?.length}
 					<button
 						class="bg-card hover:bg-card/40 w-full cursor-pointer rounded-md border px-1"

@@ -120,7 +120,11 @@
 			<div class="flex min-w-0 items-center gap-4">
 				{#if progress?.item?.skyblockId}
 					<div class="bg-background rounded-lg border p-2">
-						<ItemRender skyblockId={progress.item.skyblockId} class="size-12" />
+						<ItemRender
+							skyblockId={progress.item.skyblockId}
+							pet={progress.item.attributes?.pet === 'true'}
+							class="size-12"
+						/>
 					</div>
 				{/if}
 				<div class="flex min-w-0 flex-col items-start gap-1">
@@ -183,12 +187,12 @@
 		<div class="space-y-6 p-4 sm:p-6">
 			<!-- Details Section (Primary) -->
 			{#if progress}
-				<FortuneProgress {progress} barBg="bg-card" useItemName={false} />
+				<FortuneProgress {progress} barBg="bg-card" useItemName={false} showEffects />
 
 				{#if progress.progress?.length}
 					<div class="grid gap-2 md:grid-cols-2">
 						{#each progress.progress as p, i (i)}
-							<FortuneProgress progress={p} barBg="bg-card" />
+							<FortuneProgress progress={p} barBg="bg-card" showEffects />
 						{/each}
 					</div>
 				{/if}
@@ -280,9 +284,7 @@
 			{#if hasUpgrades}
 				<hr class="border-muted" />
 				<div>
-					<h3 class="text-muted-foreground mb-4 text-sm font-bold tracking-wider uppercase">
-						Available Upgrades
-					</h3>
+					<h3 class="text-muted-foreground mb-4 text-sm font-semibold">Available Upgrades</h3>
 					<div class="flex flex-col gap-2">
 						{#each sortedUpgrades as upgrade, i (i)}
 							{#if expandUpgrade}

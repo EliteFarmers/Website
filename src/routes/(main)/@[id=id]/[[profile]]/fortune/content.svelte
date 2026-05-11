@@ -7,6 +7,7 @@
 	import CategoryProgress from '$comp/rates/category-progress.svelte';
 	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
 	import FarmingGear from '$comp/rates/farming-gear.svelte';
+	import PetFortuneProgress from '$comp/rates/pet-fortune-progress.svelte';
 	import PetSelector from '$comp/rates/pet-selector.svelte';
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
@@ -30,14 +31,12 @@
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import {
 		ArmorSet,
-		calculateDetailedAverageDrops,
 		createFarmingPlayer,
 		createFarmingWeightCalculator,
 		Crop,
 		CROP_INFO,
 		FarmingArmor,
 		FarmingPet,
-		FarmingPets,
 		FarmingTool,
 		getCropFromName,
 		getCropMilestoneLevels,
@@ -45,6 +44,9 @@
 		getGardenLevel,
 		LotusGear,
 		Stat,
+		STAT_ICONS,
+		type AppliedEffect,
+		type DetailedDropsFromEffectsResult,
 		type EliteItemDto,
 		type FortuneSourceProgress,
 		type FortuneUpgrade,
@@ -54,7 +56,7 @@
 	} from 'farming-weight';
 	import { Debounced } from 'runed';
 	import { onMount, untrack } from 'svelte';
-	import { SvelteSet } from 'svelte/reactivity';
+	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 	import BazaarRates from './bazaar-rates.svelte';
 	import CheapestUpgrades from './cheapest-upgrades.svelte';
 	import RatesSettings from './rates-settings.svelte';
@@ -100,6 +102,7 @@
 	}
 
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
+	const blocksPerHour = $derived(72_000 * (bps / 20));
 
 	let pets = $derived.by(() => (ctx.member.ready ? FarmingPet.fromArray(ctx.pets) : []));
 	let tools = $derived.by(() => (ctx.member.ready ? FarmingTool.fromArray(ctx.tools as EliteItemDto[]) : []));
@@ -232,6 +235,7 @@
 
 	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune, Stat.Overbloom]));
 	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom]));
+	const petProgress = $derived($player.getPetProgress([Stat.FarmingFortune, Stat.Overbloom]));
 	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
 
 	const cropToolSwitchOptions = $derived.by(() => {
@@ -309,16 +313,65 @@
 				const stat = tool.crops[0] ? CROP_INFO[tool.crops[0]]?.fortuneType : Stat.FarmingFortune;
 				return tool.getUpgrades({ stat: stat ?? Stat.FarmingFortune });
 			}
+
+			const pet = $player.pets.find((p) => p.pet.uuid === uuid);
+			if (pet) {
+				return pet.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom] }, $player);
+			}
 		}
 		// Fall back to the progress upgrades
 		return p.upgrades ?? [];
 	}
 
-	const allProgress = $derived([...generalProgress, ...gearProgress, ...cropProgress]);
+	const allProgress = $derived([...generalProgress, ...gearProgress, ...petProgress, ...cropProgress]);
 
 	function getUpgradeKey(upgrade: FortuneUpgrade): string {
 		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
 		return `${upgrade.category}|${upgrade.title}|${metaKey}|${upgrade.conflictKey ?? ''}`;
+	}
+
+	type DropEffectRow = {
+		key: string;
+		source: string;
+		value: string;
+		valueIcon?: string;
+		detail?: string;
+		sortValue: number;
+	};
+
+	function formatEffectAmount(effect: AppliedEffect): string {
+		const amount = effect.amount.toLocaleString(undefined, { maximumFractionDigits: 2 });
+		if (effect.valueDisplay === 'stat') return amount;
+		if (effect.valueDisplay === 'percent') return `+${amount}%`;
+		if (effect.valueDisplay === 'factor') return `${amount}x`;
+		if (effect.op === 'add-rare-pct') return `+${amount}%`;
+		return `${amount}x`;
+	}
+
+	function getDropEffectValueIcon(effect: AppliedEffect): string | undefined {
+		if (!effect.valueStat) return undefined;
+		return STAT_ICONS[effect.valueStat];
+	}
+
+	function getDropEffectRows(info: DetailedDropsFromEffectsResult): DropEffectRow[] {
+		const rows = new SvelteMap<string, DropEffectRow>();
+		for (const dropEffects of Object.values(info.appliedEffects)) {
+			for (const effect of dropEffects) {
+				const key = `${effect.source}|${effect.op}|${effect.amount}|${effect.description ?? ''}|${JSON.stringify(effect.scope ?? {})}`;
+				const sortValue = effect.op === 'add-rare-pct' ? effect.amount : Math.abs(effect.amount - 1) * 100;
+				const row: DropEffectRow = {
+					key,
+					source: effect.source,
+					value: formatEffectAmount(effect),
+					valueIcon: getDropEffectValueIcon(effect),
+					detail: effect.description,
+					sortValue,
+				};
+				const existing = rows.get(key);
+				if (!existing || row.sortValue > existing.sortValue) rows.set(key, row);
+			}
+		}
+		return [...rows.values()].sort((a, b) => b.sortValue - a.sortValue);
 	}
 
 	const allTreeUpgrades = $derived.by(() => {
@@ -386,35 +439,10 @@
 		});
 	});
 
-	const calculatorOptions = $derived.by(() => {
-		const overbloomBreakdown = selectedCropKey
-			? Object.fromEntries(
-					Object.entries($player.getStatBreakdown(Stat.Overbloom, selectedCropKey))
-						.map(([name, entry]) => [name, entry.value])
-						.filter(([, v]) => (v as number) > 0)
-				)
-			: {};
-		return {
-			farmingFortune: cropFortune.fortune,
-			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
-			mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
-			blocksBroken: blocksActuallyBroken,
-			armorPieces: $player.armorSet.specialDropsCount(selectedCropKey),
-			infestedPlotProbability: $ratesData.infestedPlotProbability,
-			maxTool: $player.selectedTool?.level === 50,
-			pet: $player.selectedPet,
-			attributes: $player.attributes,
-			chips: $player.options.chips,
-			harvestFeast: $player.options.harvestFeast,
-			overbloom: selectedCropKey ? $player.getStat(Stat.Overbloom, selectedCropKey) : 0,
-			overbloomBreakdown,
-		} as Parameters<typeof calculateDetailedAverageDrops>[0];
+	const selected = $derived.by(() => {
+		if (!selectedCropKey || !$selectedCrops[selectedCrop]) return undefined;
+		return [selectedCropKey, $player.getRates(selectedCropKey, blocksActuallyBroken)] as const;
 	});
-	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
-
-	const selected = $derived(
-		Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? ''])
-	);
 
 	const weightGain = $derived.by(() => {
 		if (!selected) return 0;
@@ -546,6 +574,7 @@
 					{@const [cropId, info] = selected}
 					{@const coinBreakdown = Object.entries(info.coinSources).sort(([, a], [, b]) => b - a)}
 					{@const otherBreakdown = Object.entries(info.otherCollection).sort(([, a], [, b]) => b - a)}
+					{@const dropEffectRows = getDropEffectRows(info)}
 
 					<div class="flex flex-col items-start gap-2">
 						<div class="flex flex-row items-center gap-2 align-middle">
@@ -650,27 +679,39 @@
 							<span class="text-xl font-semibold">Farming Weight Gain</span>
 							<span class="text-xl font-semibold">{weightGain.toLocaleString()}</span>
 						</div>
-						{#if info.rareItemBonus > 0}
+						{#if dropEffectRows.length > 0}
 							<Accordion.Root type="single" class="w-full">
-								<Accordion.Item value="overbloom" class="outline-border w-full rounded-md px-2 outline">
+								<Accordion.Item
+									value="drop-effects"
+									class="outline-border w-full rounded-md px-2 outline"
+								>
 									<Accordion.Trigger class="py-2 hover:no-underline">
 										<div class="flex w-full items-center justify-between gap-2 pr-2">
-											<span class="text-lg font-semibold">Overbloom</span>
-											<span class="text-completed text-lg font-semibold"
-												>{(info.rareItemBonus * 100).toLocaleString()}</span
-											>
+											<span class="text-lg font-semibold">Drop Effects</span>
+											<span class="text-completed text-lg font-semibold">
+												{dropEffectRows.length.toLocaleString()}
+												{dropEffectRows.length === 1 ? 'effect' : 'effects'}
+											</span>
 										</div>
 									</Accordion.Trigger>
 									<Accordion.Content class="pb-2">
-										<div class="flex flex-col">
-											{#each Object.entries(info.rareItemBonusBreakdown)
-												.filter(([, v]) => v > 0)
-												.sort(([, a], [, b]) => b - a) as [name, value] (name)}
-												<div class="flex w-full items-center justify-between py-1 pl-2">
-													<span class="text-muted-foreground text-sm">{name}</span>
-													<span class="text-muted-foreground text-sm"
-														>{(value * 100).toLocaleString()}</span
-													>
+										<div class="flex flex-col gap-2">
+											{#each dropEffectRows as effect (effect.key)}
+												<div class="flex w-full items-start justify-between gap-3 py-1 pl-2">
+													<div class="flex min-w-0 flex-col">
+														<span class="text-sm font-medium">{effect.source}</span>
+														{#if effect.detail}
+															<span class="text-muted-foreground text-sm"
+																>{effect.detail}</span
+															>
+														{/if}
+													</div>
+													<span class="text-muted-foreground shrink-0 text-sm font-medium">
+														{effect.value}
+														{#if effect.valueIcon}
+															<span class="font-mono">{effect.valueIcon}</span>
+														{/if}
+													</span>
 												</div>
 											{/each}
 										</div>
@@ -780,7 +821,7 @@
 
 	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
 		<svelte:boundary>
-			<CheapestUpgrades {player} crop={selectedCropKey} />
+			<CheapestUpgrades {player} crop={selectedCropKey} {blocksPerHour} />
 			{#snippet failed(error, reset)}
 				<div class="flex w-full flex-col items-center justify-center gap-4">
 					<p class="text-lg font-semibold">Failed to load upgrades!</p>
@@ -795,6 +836,18 @@
 			{/snippet}
 		</svelte:boundary>
 	</section>
+
+	{@render warning()}
+	<PetFortuneProgress
+		{player}
+		pets={$player.pets}
+		expandUpgrade={(u) =>
+			$player.expandUpgrade(u, {
+				stats: [Stat.FarmingFortune, Stat.Overbloom],
+			})}
+		costFn={getUpgradeCost}
+		items={itemsData}
+	/>
 </div>
 
 <Dialog.Root bind:open={$ratesData.settings}>

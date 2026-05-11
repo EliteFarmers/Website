@@ -64,6 +64,13 @@ export function getSourceProgress<T extends object>(
 			}
 		}
 
+		if (source.effects) {
+			const effects = source.effects(upgradeable, stats);
+			if (effects.length > 0) {
+				progress.effects = effects;
+			}
+		}
+
 		if (source.progress) {
 			const p = source.progress(upgradeable, stats);
 			if (p) {
@@ -121,6 +128,7 @@ export function getSourceProgress<T extends object>(
 			progress.current === 0 &&
 			!progress.alwaysInclude &&
 			!progress.stats &&
+			!progress.effects &&
 			!progress.upgrades &&
 			!progress.progress
 		) {

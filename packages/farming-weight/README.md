@@ -58,20 +58,49 @@ console.log(weight.bonusSources);
 
 ### Rates Calculator
 
-This package also contains a rates calculator, which can be used to calculate farming drops and NPC profit for each crop.
+This package also contains an effect-driven rates calculator, which can be used to calculate farming drops and NPC profit for a player's active crop.
 
 ```ts
-import { calculateDetailedAverageDrops, Crop } from 'farming-weight';
+import { createFarmingPlayer, Crop } from 'farming-weight';
 
-const drops = calculateDetailedAverageDrops({
-	farmingFortune: 1500,
-	bountiful: true,
-	mooshroom: true,
-	dicerLevel: 3,
-	blocksBroken: 24000, // 100% efficiency for 20 minutes
+const player = createFarmingPlayer({
+	tools: farmingTools,
+	armor: armorSet,
+	equipment,
+	accessories,
+	pets,
+	attributes,
+	chips,
+	selectedCrop: Crop.Wheat,
 });
 
-console.log(drops[Crop.Wheat].collection); // 123000 (or whatever the collection is)
+const drops = player.getRates(Crop.Wheat, 24000); // 100% efficiency for 20 minutes
+
+console.log(drops.collection); // 123000 (or whatever the collection is)
+console.log(drops.effectsBreakdown); // { "Sunset": 5, ... }
+console.log(drops.appliedEffects.CROPIE); // Per-drop effect details
+```
+
+For lower-level callers that already collect effects, use the effect calculator directly:
+
+```ts
+import { calculateDetailedDropsFromEffects, Crop } from 'farming-weight';
+
+const crop = Crop.Wheat;
+const env = player.buildEnvironment(crop);
+const effects = player.collectEffects(env);
+
+const drops = calculateDetailedDropsFromEffects({
+	crop,
+	blocksBroken: 24000,
+	farmingFortune: player.getCropFortune(crop).fortune + player.fortune,
+	bountiful: player.getBestTool(crop)?.bountiful ?? false,
+	effects,
+	env,
+});
+
+console.log(drops.effectsBreakdown);
+console.log(drops.appliedEffects);
 ```
 
 ### FarmingPlayer Calculator
@@ -93,12 +122,10 @@ const player = createFarmingPlayer(options);
 // Get a player's Wheat fortune
 const cropFortune = player.getCropFortune(Crop.Wheat);
 
-// Create a calculator for a player's Wheat fortune
-const calculator = calculateDetailedAverageDrops({
-	farmingFortune: player.fortune + cropFortune.fortune,
-	bountiful: player.selectedTool?.reforge?.name === 'Bountiful',
-	mooshroom: player.selectedPet?.type === FarmingPets.MooshroomCow,
-	dicerLevel: player.selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
-	blocksBroken: blocksBroken,
-});
+// Calculate drops using the player's scalar stats plus scoped effects
+const rates = player.getRates(Crop.Wheat, blocksBroken);
+
+console.log(cropFortune.fortune);
+console.log(rates.items);
+console.log(rates.appliedEffects);
 ```

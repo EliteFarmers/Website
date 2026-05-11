@@ -1,4 +1,3 @@
-import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
 import { Rarity, type RarityRecord } from './reforges.js';
 import { Stat } from './stats.js';
 
@@ -30,10 +29,6 @@ export interface GardenChipInfo {
 	 * Used by Hypercharge Chip.
 	 */
 	tempMultiplierPerLevel?: RarityRecord<number>;
-	/**
-	 * Modifier for drop rates. Applied during rate calculations.
-	 */
-	ratesModifier?: (current: DetailedDropsResult, options: CalculateCropDetailedDropsOptions) => DetailedDropsResult;
 }
 
 export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {

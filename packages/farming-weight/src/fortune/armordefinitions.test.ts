@@ -149,6 +149,43 @@ describe('Armor Definitions Integrity', () => {
 		expect(helianthusHelmet.upgrade).toBeUndefined();
 	});
 
+	test('Tiered farming armor upgrades declare group metadata', () => {
+		const transitions = [
+			{
+				from: 'MELON',
+				to: 'CROPIE',
+				pieces: ['MELON_HELMET', 'MELON_CHESTPLATE', 'MELON_LEGGINGS', 'MELON_BOOTS'],
+			},
+			{
+				from: 'CROPIE',
+				to: 'SQUASH',
+				pieces: ['CROPIE_HELMET', 'CROPIE_CHESTPLATE', 'CROPIE_LEGGINGS', 'CROPIE_BOOTS'],
+			},
+			{
+				from: 'SQUASH',
+				to: 'FERMENTO',
+				pieces: ['SQUASH_HELMET', 'SQUASH_CHESTPLATE', 'SQUASH_LEGGINGS', 'SQUASH_BOOTS'],
+			},
+			{
+				from: 'FERMENTO',
+				to: 'HELIANTHUS',
+				pieces: ['FERMENTO_HELMET', 'FERMENTO_CHESTPLATE', 'FERMENTO_LEGGINGS', 'FERMENTO_BOOTS'],
+			},
+		];
+
+		for (const transition of transitions) {
+			for (const piece of transition.pieces) {
+				const group = FARMING_ARMOR_INFO[piece].upgrade?.group;
+				expect(group?.id, piece).toBe(`armor-tier:${transition.from}:${transition.to}`);
+				expect(group?.label, piece).toBe(
+					`Upgrade ${transition.from[0]}${transition.from.slice(1).toLowerCase()} Armor to ${transition.to[0]}${transition.to.slice(1).toLowerCase()} Armor`
+				);
+				expect(group?.strategy, piece).toBe('available-pieces');
+				expect(group?.warning, piece).toBe('Partial upgrades can reduce the active armor set tier.');
+			}
+		}
+	});
+
 	test('Special armor pieces have correct properties', () => {
 		const farmerBoots = FARMING_ARMOR_INFO['FARMER_BOOTS'];
 		expect(farmerBoots).toBeDefined();

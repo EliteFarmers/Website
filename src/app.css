@@ -61,6 +61,8 @@
 		--moonflower: hsl(240, 20%, 70%);
 		--wildrose: hsl(340 65% 60%);
 
+		--overbloom: hsl(64, 61%, 40%);
+
 		--sidebar-background: hsl(0 0% 98%);
 		--sidebar-foreground: hsl(240 5.3% 26.1%);
 		--sidebar-primary: hsl(240 5.9% 10%);
@@ -422,6 +424,7 @@
 	--color-mushroom: var(--mushroom);
 	--color-cocoa: var(--cocoa);
 	--color-sunflower: var(--sunflower);
+	--color-overbloom: var(--overbloom);
 	--color-moonflower: var(--moonflower);
 	--color-wildrose: var(--wildrose);
 

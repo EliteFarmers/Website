@@ -1,6 +1,5 @@
 import type { FarmingPlayer } from '../player/player.js';
 import type { DynamicFortuneSource } from '../upgrades/sources/dynamicfortunesources.js';
-import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
 import { Crop } from './crops.js';
 import { Rarity } from './reforges.js';
 import { getStatValue, Stat, type StatsRecord } from './stats.js';
@@ -9,16 +8,23 @@ type ShardId = keyof typeof FARMING_ATTRIBUTE_SHARDS;
 
 export type FarmingAttributes = Record<ShardId | string, number>;
 
+export interface FarmingAttributeShardContext {
+	attributes?: FarmingAttributes | Record<string, number>;
+	infestedPlotProbability?: number;
+	crop?: Crop;
+}
+
+export type FarmingAttributeShardSourceContext = FarmingPlayer | FarmingAttributeShardContext;
+
 export interface FarmingAttributeShard {
 	name: string;
 	skyblockId: string;
 	rarity: Rarity;
 	wiki: string;
 	effect: FarmingAttributeShardEffect;
-	stats?: StatsRecord<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>;
-	perLevelStats?: StatsRecord<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>;
-	active?: DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions>['active'];
-	ratesModifier?: (current: DetailedDropsResult, options: CalculateCropDetailedDropsOptions) => DetailedDropsResult;
+	stats?: StatsRecord<unknown, FarmingAttributeShardSourceContext>;
+	perLevelStats?: StatsRecord<unknown, FarmingAttributeShardSourceContext>;
+	active?: DynamicFortuneSource<FarmingAttributeShardSourceContext>['active'];
 }
 
 export type FarmingAttributeShardEffect = 'none' | 'rates' | 'fortune' | 'wisdom';
@@ -30,20 +36,6 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		rarity: Rarity.Legendary,
 		effect: 'rates',
 		wiki: 'https://w.elitesb.gg/Wartybug_Shard',
-		ratesModifier: (current, options) => {
-			if (options.crop !== Crop.NetherWart) return current;
-
-			const level = getShardLevel(Rarity.Legendary, getAttributeAmount(options.attributes, 'wart_eater'));
-			if (level <= 0) return current;
-
-			const wartyChance = 0.00005 * level;
-			const wartyDrops = current.blocksBroken * wartyChance;
-
-			current.pendingRngItems ??= {};
-			current.pendingRngItems['WARTY'] = (current.pendingRngItems['WARTY'] ?? 0) + wartyDrops;
-			current.rareItemBonusBreakdown['Warty Bug Shard (Base)'] = 0;
-			return current;
-		},
 	},
 	garden_wisdom: {
 		name: 'Dragonfly Shard',
@@ -334,7 +326,7 @@ export function getShardsForNextLevel(rarity: Rarity, amount: number): number {
 
 export function getShardFortune(
 	shard: FarmingAttributeShard,
-	player: FarmingPlayer | CalculateCropDetailedDropsOptions,
+	player: FarmingAttributeShardSourceContext,
 	level?: number
 ): number {
 	return getShardStat(shard, player, Stat.FarmingFortune, level);
@@ -342,7 +334,7 @@ export function getShardFortune(
 
 export function getShardStat(
 	shard: FarmingAttributeShard,
-	player: FarmingPlayer | CalculateCropDetailedDropsOptions,
+	player: FarmingAttributeShardSourceContext,
 	stat: Stat,
 	level?: number
 ): number {
@@ -359,11 +351,8 @@ export function getShardStat(
 		return 0;
 	}
 
-	const stats = getStatValue<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>(shard.stats?.[stat], player);
-	const perLevel = getStatValue<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>(
-		shard.perLevelStats?.[stat],
-		player
-	);
+	const stats = getStatValue<unknown, FarmingAttributeShardSourceContext>(shard.stats?.[stat], player);
+	const perLevel = getStatValue<unknown, FarmingAttributeShardSourceContext>(shard.perLevelStats?.[stat], player);
 
 	return stats + level * perLevel;
 }

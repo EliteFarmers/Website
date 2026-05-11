@@ -3,8 +3,13 @@ import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import type { Effect, EffectEnvironment } from '../effects/types.js';
 import type { FarmingArmorInfo } from '../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
+import { statsToEffects } from '../items/sources/effects-util.js';
+import { enchantEffects } from '../items/sources/enchants.js';
+import { gemEffects } from '../items/sources/gems.js';
+import { reforgeEffects } from '../items/sources/reforges.js';
 import { type PlayerOptions, ZorroMode } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { registerItem } from '../upgrades/itemregistry.js';
@@ -77,6 +82,45 @@ export class FarmingEquipment extends UpgradeableBase {
 		}
 
 		return sum;
+	}
+
+	/**
+	 * Returns the declarative `Effect[]` representation of every contribution
+	 * this equipment piece makes: base stats, reforge, gems, enchants. Set
+	 * bonuses are emitted at the {@link ArmorSet} level.
+	 */
+	getEffects(env: EffectEnvironment): Effect[] {
+		const sourceName = this.item.name ?? this.info.name;
+		const effects: Effect[] = [];
+
+		effects.push(...statsToEffects(this.info.baseStats, sourceName));
+
+		if (this.reforge && this.item.attributes?.modifier) {
+			effects.push(
+				...reforgeEffects(this.item.attributes.modifier, this.rarity, `${sourceName} (${this.reforge.name})`)
+			);
+		}
+
+		effects.push(...gemEffects(this.item, this.rarity, `${sourceName} (Gems)`));
+
+		for (const [enchantId, level] of Object.entries(this.item.enchantments ?? {})) {
+			if (!level) continue;
+			effects.push(...enchantEffects(enchantId, level, env, this.options ?? {}));
+		}
+
+		if (this.info.family === 'LOTUS') {
+			const pieceBonus = this.getPieceBonus();
+			if (pieceBonus > 0) {
+				effects.push({
+					source: `${sourceName} (Salesperson)`,
+					op: 'add-stat',
+					stat: Stat.FarmingFortune,
+					value: pieceBonus,
+				});
+			}
+		}
+
+		return effects;
 	}
 
 	getFortune() {

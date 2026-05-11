@@ -99,6 +99,11 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 					category: UpgradeCategory.Misc,
 					wiki: 'https://w.elitesb.gg/Carrolyn',
 					cost: CROP_INFO[crop].exportableCost,
+					meta: {
+						type: 'unlock',
+						id: 'exportable_crop',
+						key: crop,
+					},
 				},
 			];
 		},

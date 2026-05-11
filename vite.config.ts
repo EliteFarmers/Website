@@ -5,8 +5,10 @@ import { fileURLToPath } from 'node:url';
 import path from 'path';
 import { defineConfig, type PluginOption } from 'vite';
 
+const sentryEnabled = Boolean(process.env.SENTRY_ORG && process.env.SENTRY_PROJECT);
+
 const plugins = [
-	process.env.SENTRY_ORG && process.env.SENTRY_PROJECT
+	sentryEnabled
 		? sentrySvelteKit({
 				org: 'kaeso',
 				project: 'elite-website',
@@ -49,7 +51,7 @@ export default defineConfig({
 		},
 	},
 	build: {
-		sourcemap: true,
+		sourcemap: sentryEnabled,
 		commonjsOptions: {
 			ignore: [
 				'@napi-rs/canvas-*',

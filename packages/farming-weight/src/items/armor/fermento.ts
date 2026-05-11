@@ -5,8 +5,10 @@ import { Stat } from '../../constants/stats.js';
 import { UpgradeReason } from '../../constants/upgrades.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
+import { armorTierGroup } from './groups.js';
 
 const FERMENTO_SPECIAL = [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus];
+const FERMENTO_TO_HELIANTHUS_GROUP = armorTierGroup('FERMENTO', 'HELIANTHUS');
 
 const FERMENTO_GEM_SLOTS = [
 	{
@@ -46,6 +48,7 @@ export class FermentoHelmet extends BaseItem {
 	override upgrade = {
 		id: 'HELIANTHUS_HELMET',
 		reason: UpgradeReason.NextTier,
+		group: FERMENTO_TO_HELIANTHUS_GROUP,
 		cost: {
 			items: {
 				COMPACTED_WILD_ROSE: 64,
@@ -89,6 +92,7 @@ export class FermentoChestplate extends BaseItem {
 	override upgrade = {
 		id: 'HELIANTHUS_CHESTPLATE',
 		reason: UpgradeReason.NextTier,
+		group: FERMENTO_TO_HELIANTHUS_GROUP,
 		cost: {
 			items: {
 				COMPACTED_WILD_ROSE: 64,
@@ -132,6 +136,7 @@ export class FermentoLeggings extends BaseItem {
 	override upgrade = {
 		id: 'HELIANTHUS_LEGGINGS',
 		reason: UpgradeReason.NextTier,
+		group: FERMENTO_TO_HELIANTHUS_GROUP,
 		cost: {
 			items: {
 				COMPACTED_WILD_ROSE: 64,
@@ -175,6 +180,7 @@ export class FermentoBoots extends BaseItem {
 	override upgrade = {
 		id: 'HELIANTHUS_BOOTS',
 		reason: UpgradeReason.NextTier,
+		group: FERMENTO_TO_HELIANTHUS_GROUP,
 		cost: {
 			items: {
 				COMPACTED_MOONFLOWER: 64,
