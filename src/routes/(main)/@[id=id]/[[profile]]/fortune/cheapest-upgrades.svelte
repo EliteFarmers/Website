@@ -42,12 +42,12 @@
 			...p.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom], includeUpgradeGroups: true }),
 			...p.getCropUpgrades(c),
 		];
-		const seen = new SvelteSet<string>();
-		const deduped = [];
+		const seen: Record<string, boolean> = {};
+		const deduped: FortuneUpgrade[] = [];
 		for (const u of all) {
 			const key = (u as { conflictKey?: string }).conflictKey ?? `${u.title}::${u.action}`;
-			if (seen.has(key)) continue;
-			seen.add(key);
+			if (seen[key]) continue;
+			seen[key] = true;
 			deduped.push(u);
 		}
 		return deduped;
