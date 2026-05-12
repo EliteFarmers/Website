@@ -23,9 +23,6 @@ importers:
       isomorphic-dompurify:
         specifier: ^3.12.0
         version: 3.12.0
-      vanilla-cookieconsent:
-        specifier: ^3.1.0
-        version: 3.1.0
     devDependencies:
       '@date-fns/utc':
         specifier: ^2.1.1
@@ -5953,9 +5950,6 @@ packages:
   validator@13.15.26:
     resolution: {integrity: sha512-spH26xU080ydGggxRyR1Yhcbgx+j3y5jbNXk/8L+iRvdIEQ4uTRH2Sgf2dokud6Q4oAtsbNvJ1Ft+9xmm6IZcA==}
     engines: {node: '>= 0.10'}
-
-  vanilla-cookieconsent@3.1.0:
-    resolution: {integrity: sha512-/McNRtm/3IXzb9dhqMIcbquoU45SzbN2VB+To4jxEPqMmp7uVniP6BhGLjU8MC7ZCDsNQVOp27fhQTM/ruIXAA==}
 
   vaul-svelte@1.0.0-next.7:
     resolution: {integrity: sha512-7zN7Bi3dFQixvvbUJY9uGDe7Ws/dGZeBQR2pXdXmzQiakjrxBvWo0QrmsX3HK+VH+SZOltz378cmgmCS9f9rSg==}
@@ -12736,8 +12730,6 @@ snapshots:
 
   validator@13.15.26:
     optional: true
-
-  vanilla-cookieconsent@3.1.0: {}
 
   vaul-svelte@1.0.0-next.7(svelte@5.55.5(@typescript-eslint/types@8.59.1)):
     dependencies:

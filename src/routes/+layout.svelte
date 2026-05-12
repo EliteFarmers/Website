@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
 	import { updated } from '$app/state';
-	import GTag from '$comp/analytics/g-tag.svelte';
+	import UmamiAnalytics from '$comp/analytics/umami.svelte';
 	import GiftNotificationDialog from '$comp/gift-notification-dialog.svelte';
 	import PageToast from '$comp/page-toast.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
@@ -56,4 +56,4 @@
 <PageToast />
 <GiftNotificationDialog />
 <ThemeWatcher />
-<GTag />
+<UmamiAnalytics />

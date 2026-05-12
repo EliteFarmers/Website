@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { trackAnalytics } from '$lib/analytics';
 	import type { CommentDto } from '$lib/api';
 	import {
 		createCommentCommand,
@@ -107,6 +108,9 @@
 			}
 
 			notifySuccess('Comment posted!');
+			trackAnalytics('comments.created', {
+				reply: Boolean(parentId),
+			});
 		} catch (err) {
 			notifyError('Failed to post comment');
 			console.error(err);
@@ -141,6 +145,7 @@
 		}
 
 		notifySuccess('Comment deleted');
+		trackAnalytics('comments.deleted');
 	}
 
 	function handleVoteComment(commentId: number, value: 1 | -1) {
@@ -156,6 +161,9 @@
 
 		commentVotes = { ...commentVotes, [commentId]: nextVote };
 		pendingCommentVoteRequests = { ...pendingCommentVoteRequests, [commentId]: nextVote };
+		trackAnalytics('comments.vote', {
+			value: nextVote,
+		});
 		flushCommentVotes();
 	}
 

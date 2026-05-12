@@ -7,9 +7,10 @@
 	let copyPromise: Promise<void> | null = $state(null);
 
 	function copyClicked() {
-		copyPromise = navigator.clipboard
-			.writeText(text)
-			.then((x) => new Promise((resolve) => setTimeout(() => resolve(x), 100)));
+		copyPromise = navigator.clipboard.writeText(text).then((x) => {
+			onCopied?.();
+			return new Promise((resolve) => setTimeout(() => resolve(x), 100));
+		});
 
 		setTimeout(() => {
 			copyPromise = null;
@@ -22,6 +23,7 @@
 		class?: string | undefined | null;
 		iconClass?: string;
 		copy?: () => void;
+		onCopied?: () => void;
 	}
 
 	let {
@@ -31,6 +33,7 @@
 		iconClass = '',
 		children,
 		copy = $bindable(copyClicked),
+		onCopied,
 		...rest
 	}: Props = $props();
 

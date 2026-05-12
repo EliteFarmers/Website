@@ -12,6 +12,7 @@
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
+	import { trackAnalytics } from '$lib/analytics';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
@@ -87,6 +88,13 @@
 			$player.selectTool(selectedTool);
 		}
 		player.refresh();
+	}
+
+	function toggleSettings() {
+		$ratesData.settings = !$ratesData.settings;
+		if ($ratesData.settings) {
+			trackAnalytics('fortune.settings_opened');
+		}
 	}
 
 	function delayedUpdateSelectedTool(c: string) {
@@ -479,13 +487,13 @@
 	description="See missing fortune upgrades, overall progress, and your expected farming rates in Hypixel Skyblock!"
 />
 
-<FloatingButton onclick={() => ($ratesData.settings = !$ratesData.settings)}>
+<FloatingButton onclick={toggleSettings}>
 	<Settings class="transition-all group-hover:rotate-90 md:size-6!" />
 </FloatingButton>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
 	{@render warning()}
-	<Cropselector radio={true} />
+	<Cropselector radio={true} analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
 		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 p-4 md:py-4">
@@ -496,12 +504,7 @@
 					<Fortunebreakdown title="Total Farming Fortune" total={totalFortune} breakdown={fortuneBreakdown} />
 				</div>
 				<div class="flex flex-1 justify-end">
-					<Button
-						variant="outline"
-						class="m-1"
-						size="sm"
-						onclick={() => ($ratesData.settings = !$ratesData.settings)}
-					>
+					<Button variant="outline" class="m-1" size="sm" onclick={toggleSettings}>
 						<Settings size={20} />
 					</Button>
 				</div>
@@ -738,7 +741,7 @@
 	</div>
 
 	{@render warning()}
-	<Cropselector radio={true} href="#fortune" id="fortune" />
+	<Cropselector radio={true} href="#fortune" id="fortune" analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
 		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 p-4">
@@ -749,12 +752,7 @@
 				<h2 class="mb-1 text-2xl">Farming Fortune</h2>
 				<div class="flex-1">
 					<div class="flex flex-1 justify-start">
-						<Button
-							variant="ghost"
-							class="text-muted-foreground mx-2"
-							size="sm"
-							onclick={() => ($ratesData.settings = !$ratesData.settings)}
-						>
+						<Button variant="ghost" class="text-muted-foreground mx-2" size="sm" onclick={toggleSettings}>
 							<Settings size={20} />
 						</Button>
 					</div>
@@ -817,7 +815,7 @@
 	</div>
 
 	{@render warning()}
-	<Cropselector radio={true} href="#upgrades" id="upgrades" />
+	<Cropselector radio={true} href="#upgrades" id="upgrades" analyticsEvent="fortune.crop_selected" />
 
 	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
 		<svelte:boundary>
@@ -825,13 +823,23 @@
 			{#snippet failed(error, reset)}
 				<div class="flex w-full flex-col items-center justify-center gap-4">
 					<p class="text-lg font-semibold">Failed to load upgrades!</p>
-					<CopyToClipboard text={JSON.stringify(error, null, 2)} class="text-sm">Copy Error</CopyToClipboard>
+					<CopyToClipboard
+						text={JSON.stringify(error, null, 2)}
+						class="text-sm"
+						onCopied={() => trackAnalytics('fortune.error_copied')}>Copy Error</CopyToClipboard
+					>
 					<p class="text-muted-foreground text-sm">
 						Please report the error in the <a href="/support" class="text-link underline"
 							>Support Discord Server</a
 						>!
 					</p>
-					<Button variant="outline" onclick={reset}>Retry</Button>
+					<Button
+						variant="outline"
+						onclick={() => {
+							trackAnalytics('fortune.upgrade_retry');
+							reset();
+						}}>Retry</Button
+					>
 				</div>
 			{/snippet}
 		</svelte:boundary>

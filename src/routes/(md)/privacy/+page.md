@@ -1,13 +1,13 @@
 ---
 title: Privacy Policy
 description: The Privacy Policy for Our Application
-lastUpdated: 2026-03-28
+lastUpdated: 2026-05-11
 blueprint: page
 ---
 
 # Privacy Policy
 
-<sub>Last updated: <strong>March 28, 2026</strong></sub>
+<sub>Last updated: <strong>May 11, 2026</strong></sub>
 
 This Privacy Policy explains how we collect, use, and protect your information when you use our Service. By using the Service, you agree to the practices described in this policy.
 
@@ -43,24 +43,22 @@ When you log in to our Service using Discord, we receive and store limited infor
 
 ### 4. Automatically Collected Usage Data
 
-- **Service Analytics**: We collect anonymous data about how you interact with our Service (e.g., which features are used most). This helps us improve the user experience.
-- **Google Analytics**: We use Google Analytics to help us analyze website traffic. If you provide consent through our cookie banner, we may also enable Google Signals. This feature enhances our analytics by associating your visit information with your Google account, if you are signed-in and have consented to Ads Personalization on Google.<br/><br/>This provides us with aggregated and anonymized demographic data (like age, gender) and interest data, which helps us better understand our users. This data is always aggregated and we cannot see information about individual users. You can access and manage this data at any time through Google's [My Ad Center](https://myadcenter.google.com/).
+- **Service Analytics**: We collect usage data, such as page views and feature usage. This helps us understand which parts of the Service are useful and where the experience can be improved. If you are logged in, some usage analytics may be associated with your account to help us understand feature usage and improve the Service.
 
 ## Cookies and Similar Technologies
 
-We use cookies to help our Service function and to understand how you use it.
+We use cookies and similar technologies to help our Service function and to support advertising.
 
 ### How We Use Cookies
 
 We use the following types of cookies:
 
-- **Essential Cookies**: These are necessary for the website to function properly. They handle tasks like keeping you logged in (session management) and remembering your preferences. You cannot opt out of these cookies as the website will not work correctly without them.
-- **Analytics Cookies**: We use these cookies to understand how users interact with our Service. We use Google Analytics, which helps us collect anonymous data like which pages are most popular and how long visitors stay on our site. This information helps us improve the Service for everyone.
-- **Advertising Cookies**: If you provide consent, our advertising partners use these cookies to collect data about your browsing activity. This helps them build a profile of your interests to show you advertisements that are more relevant to you on our site and others.
+- **Essential Cookies**: These are necessary for the website to function properly. They handle tasks like keeping you logged in, protecting the login flow, and remembering functional preferences. You cannot opt out of these cookies as the website will not work correctly without them.
+- **Advertising Cookies**: If you provide consent through NitroPay, our advertising partners may use cookies and similar technologies to collect data about your browsing activity. This helps them show advertisements and measure ad performance.
 
 ### How to Control Cookies
 
-Most web browsers allow you to control cookies through their settings. You can set your browser to block or delete cookies, but be aware that if you block our essential cookies, parts of our Service may not work. You can manage your consent for Analytics and Advertising cookies at any time through our cookie banner.
+Most web browsers allow you to control cookies through their settings. You can set your browser to block or delete cookies, but be aware that if you block our essential cookies, parts of our Service may not work. Advertising consent is managed through NitroPay's consent controls where ads are shown.
 
 ## How We Use Your Information
 
@@ -81,11 +79,11 @@ We do not sell your Personal Data. We only share your information in the followi
 - **For Legal Reasons**: We may disclose your information if required by law or to protect the rights, property, or safety of our company, our users, or the public.
 - **Business Transfers**: If we are involved in a merger or acquisition, your data may be transferred. We will notify you before this happens.
 - **With Payment Processors**: When you make a purchase through our website shop, we share necessary order information (such as your selected products and recipient Minecraft username) with Tebex to process and fulfill your order. We do not share your Discord account information with Tebex. Tebex's handling of your data is governed by the [Tebex Checkout Privacy Policy](https://checkout.tebex.io/privacy).
-- **With Advertising Partners**: If you consent to advertising cookies, we share data with our advertising partners. This is done to enable personalized advertising and remarketing. This includes:
-    - **Google Analytics**: We may use data collected through Google Signals for remarketing purposes, which means you might see ads for our Service on other websites.
+- **With Moderation Service Providers**: We may send user-submitted content, such as guide text or comments, to service providers that help us detect spam, abuse, unsafe content, or policy violations. Only the submitted content is shared in these scenarios. User account information and surrounding metadata are not included in moderation requests.
+- **With Advertising Partners**: If you consent to advertising cookies, our advertising partners may collect data through NitroPay's advertising stack. This is done to display advertisements, personalize them where allowed, and measure ad performance. This includes:
     - **NitroPay**: We partner with NitroPay to display third-party advertisements on our website. Details on this are in the section below.
 
-    Your consent for sharing data with these partners is required and can be managed at any time through our cookie banner and your Google account settings.
+    Your advertising consent can be managed through NitroPay's consent controls.
 
 ## Third-Party Advertising
 

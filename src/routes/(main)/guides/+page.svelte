@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
+	import { trackAnalytics } from '$lib/analytics';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { ListGuides, ListTags } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
@@ -51,6 +52,13 @@
 	function handleSearch(value: string) {
 		searchQuery = value;
 		currentPage = 0;
+
+		trackAnalytics('guides.search', {
+			has_query: Boolean(searchQuery.trim()),
+			tag_count: selectedTagIds.length,
+			type: selectedType || null,
+			sort: sortBy,
+		});
 	}
 </script>
 

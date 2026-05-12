@@ -4,6 +4,7 @@
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import MainSearch from '$comp/stats/main-search.svelte';
 	import { env } from '$env/dynamic/public';
+	import { trackAnalytics } from '$lib/analytics';
 	import { getArticlesPaginated } from '$lib/remote/articles.remote';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
@@ -24,6 +25,12 @@
 	let { data }: Props = $props();
 
 	const recentArticles = getArticlesPaginated({ page: 1, pageSize: 4 });
+
+	function trackHomeCta(target: string) {
+		trackAnalytics('home.cta_clicked', {
+			target,
+		});
+	}
 </script>
 
 <Head
@@ -52,6 +59,7 @@
 			<a
 				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
 				href="/fortune"
+				onclick={() => trackHomeCta('fortune')}
 			>
 				<div class="bg-progress/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
 				<div class="bg-progress/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
@@ -75,6 +83,7 @@
 			<a
 				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
 				href="/shop"
+				onclick={() => trackHomeCta('shop')}
 			>
 				<div class="bg-primary/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
 				<div class="bg-primary/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
@@ -138,6 +147,7 @@
 								variant="secondary"
 								target="_blank"
 								rel="noopener noreferrer nofollow"
+								onclick={() => trackHomeCta('discord')}
 							>
 								Elite Farmers
 								<ExternalLink class="ml-2" size={20} />
@@ -148,6 +158,7 @@
 								variant="secondary"
 								target="_blank"
 								rel="noopener noreferrer nofollow"
+								onclick={() => trackHomeCta('support')}
 							>
 								Support Server
 								<ExternalLink class="ml-2" size={20} />
@@ -171,6 +182,7 @@
 								target="_blank"
 								variant="secondary"
 								rel="noopener noreferrer nofollow"
+								onclick={() => trackHomeCta('kofi')}
 							>
 								Donate on Ko-Fi
 								<ExternalLink class="ml-2" size={20} />
@@ -197,6 +209,7 @@
 								target="_blank"
 								variant="secondary"
 								rel="noopener noreferrer nofollow"
+								onclick={() => trackHomeCta('bot_invite')}
 							>
 								Invite Elite Bot
 								<ExternalLink class="ml-2" size={20} />

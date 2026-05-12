@@ -399,7 +399,10 @@ export class CheckoutState {
 
 		this.addingPendingGiftProduct = true;
 		try {
-			await this.#tebex.addToBasket(this.pendingGiftProductId, { recipient: activeRecipient });
+			await this.#tebex.addToBasket(this.pendingGiftProductId, {
+				recipient: activeRecipient,
+				source: 'checkout_gift',
+			});
 
 			const hasItem =
 				this.#tebex.currentCheckout?.checkoutRequest.items.some(
