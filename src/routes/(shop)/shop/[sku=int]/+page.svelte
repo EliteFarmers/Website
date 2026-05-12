@@ -268,7 +268,10 @@
 					</Button>
 				{:else}
 					<Button
-						onclick={() => (shouldPromptGiftCheckout ? startGiftCheckout() : tebex.addToBasket(product.id))}
+						onclick={() =>
+							shouldPromptGiftCheckout
+								? startGiftCheckout()
+								: tebex.addToBasket(product.id, { source: 'product_page' })}
 						size="lg"
 						class="w-full text-lg font-semibold"
 						disabled={!canStartGiftCheckout ||

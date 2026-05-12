@@ -31,8 +31,9 @@ declare global {
 	}
 
 	declare interface Window {
-		gtag: (...args: unknown[]) => void;
-		updateGtagConsent: () => void;
+		umami?: {
+			track: (eventName?: string, data?: Record<string, string | number | boolean | null>) => void;
+		};
 		nitroAds: {
 			createAd: (id: string, settings: Record<string, unknown>) => void;
 			removeAd: (id: string) => void;

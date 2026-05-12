@@ -9,6 +9,7 @@
 	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
+	import { trackAnalytics } from '$lib/analytics';
 	import type { FullGuideDto, GuideDto } from '$lib/api/schemas';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
@@ -169,6 +170,9 @@
 
 		pendingGuideVote = nextVote;
 		pendingGuideVoteGuideId = guideId;
+		trackAnalytics('guides.vote', {
+			value: nextVote,
+		});
 		flushGuideVote();
 	}
 
@@ -197,6 +201,14 @@
 		}
 
 		notifySuccess(nextBookmarked ? 'Guide bookmarked' : 'Bookmark removed');
+		trackAnalytics('guides.bookmark', {
+			bookmarked: nextBookmarked,
+		});
+	}
+
+	function handleShareGuide() {
+		navigator.clipboard.writeText(window.location.href);
+		trackAnalytics('guides.share');
 	}
 
 	async function handleDeleteGuide(guideId: number) {
@@ -532,7 +544,7 @@
 			Bookmark
 		</Button>
 
-		<Button variant="outline" size="sm" onclick={() => navigator.clipboard.writeText(window.location.href)}>
+		<Button variant="outline" size="sm" onclick={handleShareGuide}>
 			<Link class="mr-2 h-4 w-4" />
 			Share
 		</Button>

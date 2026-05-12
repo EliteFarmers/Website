@@ -5,6 +5,7 @@ import type {
 	CreateTebexCheckoutRequestRecipient,
 	TebexCurrentCheckoutDto,
 } from '$lib/api';
+import { trackAnalytics } from '$lib/analytics';
 import { getGlobalContext, GlobalContext } from '$lib/hooks/global.svelte';
 import Tebex from '@tebexio/tebex.js';
 import { createContext } from 'svelte';
@@ -121,7 +122,7 @@ export class TebexContext {
 		}
 	}
 
-	async addToBasket(productId: string, options?: { recipient?: string | null }) {
+	async addToBasket(productId: string, options?: { recipient?: string | null; source?: string }) {
 		if (!this.#gbl.authorized) {
 			await goto('/login?redirect=' + encodeURIComponent(window.location.pathname));
 			return;
@@ -168,6 +169,12 @@ export class TebexContext {
 				toast.error(result.error);
 				return;
 			}
+
+			trackAnalytics('shop.add_to_basket', {
+				product_id: productId,
+				is_gift: Boolean(options?.recipient),
+				source: options?.source ?? 'unknown',
+			});
 		} catch (error) {
 			console.error('Failed to add product to basket', error);
 			toast.error('Failed to update your basket');
@@ -208,8 +215,12 @@ export class TebexContext {
 					}
 
 					toast.error(result.error);
+					return;
 				}
 
+				trackAnalytics('shop.remove_from_basket', {
+					product_id: productId,
+				});
 				return;
 			}
 
@@ -229,6 +240,10 @@ export class TebexContext {
 				toast.error(result.error);
 				return;
 			}
+
+			trackAnalytics('shop.remove_from_basket', {
+				product_id: productId,
+			});
 		} catch (error) {
 			console.error('Failed to remove product from basket', error);
 			toast.error('Failed to update your basket');
@@ -295,6 +310,9 @@ export class TebexContext {
 				await this.refreshCurrentCheckout();
 			}
 
+			trackAnalytics('shop.recipient_changed', {
+				mode: nextRecipient.mode,
+			});
 			return true;
 		} catch (error) {
 			console.error('Failed to update checkout recipient', error);
@@ -417,6 +435,7 @@ export class TebexContext {
 		this.#tebex = tebex;
 		this.#checkoutEventUnsubscribers = [
 			tebex.checkout.on('open', () => {
+				trackAnalytics('shop.checkout_opened');
 				this.#checkoutResult = {
 					status: 'open',
 					lastEventAt: Date.now(),
@@ -424,6 +443,7 @@ export class TebexContext {
 				};
 			}),
 			tebex.checkout.on('payment:complete', () => {
+				trackAnalytics('shop.payment_complete');
 				const currentCheckoutQuery = this.#ensureCurrentCheckoutQuery();
 				this.#checkoutResult = {
 					status: 'success',
@@ -437,6 +457,7 @@ export class TebexContext {
 				void this.refreshCurrentCheckout();
 			}),
 			tebex.checkout.on('payment:error', () => {
+				trackAnalytics('shop.payment_error');
 				this.#checkoutResult = {
 					status: 'error',
 					lastEventAt: Date.now(),

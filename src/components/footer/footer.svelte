@@ -6,9 +6,7 @@
 	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import { Button } from '$ui/button';
 	import { Separator } from '$ui/separator';
-	import * as CookieConsent from 'vanilla-cookieconsent';
-	const { PUBLIC_COMMUNITY_INVITE, PUBLIC_DONATION_URL, PUBLIC_GTAG_MEASUREMENT_ID, PUBLIC_SUPPORT_SERVER_INVITE } =
-		env;
+	const { PUBLIC_COMMUNITY_INVITE, PUBLIC_DONATION_URL, PUBLIC_SUPPORT_SERVER_INVITE } = env;
 
 	const adCtx = getAdCtx();
 </script>
@@ -30,9 +28,6 @@
 			<Button variant="link" class="h-8 p-0" href="/info">Site Information</Button>
 			<Button variant="link" class="h-8 p-0" href="/terms">Terms of Service</Button>
 			<Button variant="link" class="h-8 p-0" href="/privacy">Privacy Policy</Button>
-			{#if PUBLIC_GTAG_MEASUREMENT_ID}
-				<Button variant="link" class="h-8 p-0" onclick={CookieConsent.showPreferences}>Cookie Settings</Button>
-			{/if}
 		</div>
 		<div class="flex flex-1 basis-32 flex-col items-start gap-2 py-4">
 			<h2 class="text-lg font-semibold">Community</h2>

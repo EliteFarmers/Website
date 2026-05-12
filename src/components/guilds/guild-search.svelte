@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import GuildTag from '$comp/guilds/guild-tag.svelte';
+	import { trackAnalytics } from '$lib/analytics';
 	import type { HypixelGuildSearchResultDto } from '$lib/api';
 	import { searchGuilds } from '$lib/remote/guilds.remote';
 	import { Button } from '$ui/button';
@@ -69,6 +70,9 @@
 
 			if (requestId === activeRequest) {
 				results = next;
+				trackAnalytics('guilds.search_completed', {
+					result_count: next.length,
+				});
 			}
 		} catch (error) {
 			console.error('Failed to search guilds', error);
@@ -90,6 +94,7 @@
 
 	async function handleOpenChange(next: boolean) {
 		if (next) {
+			trackAnalytics('guilds.search_opened');
 			await tick();
 			inputRef?.focus();
 			return;

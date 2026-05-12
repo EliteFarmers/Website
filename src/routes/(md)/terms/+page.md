@@ -49,7 +49,7 @@ We reserve the right to investigate and suspend or terminate your access to the 
 You may be able to post content, such as guides and comments ("User Content"), on the Service.
 
 - **Ownership and License**: You retain ownership of your User Content. By posting it, you grant us a non-exclusive, royalty-free, worldwide license to use, display, reproduce, and distribute your User Content on the Service. This includes the right for us to monetize the Service, such as by displaying advertisements on or alongside your content without compensation to you.
-- **Moderation**: To ensure high quality and safety, **all User Content is subject to review by moderators before it becomes publicly visible.** We reserve the right to approve, reject, or remove any User Content at our sole discretion, for any reason, including if it violates these Terms.
+- **Moderation**: To help keep the Service safe and useful, User Content may be reviewed manually and/or with automated tools before or after it becomes publicly visible. We may approve, reject, flag, or remove User Content at our sole discretion, including if it violates these Terms.
 - **Responsibility**: You are solely responsible for the User Content you create. You must ensure you have the necessary rights to post the content and that it does not violate the rights of others.
 
 ## Purchases and Monetization

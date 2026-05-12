@@ -3,6 +3,7 @@
 	import JumpLink from '$comp/jump-link.svelte';
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
+	import { trackAnalytics } from '$lib/analytics';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
 	import { getItem, getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
@@ -151,7 +152,12 @@
 			<JumpLink id="upgrades" self={false} />
 		</div>
 		<div>
-			<Button onclick={() => ($ratesData.settings = true)}>
+			<Button
+				onclick={() => {
+					$ratesData.settings = true;
+					trackAnalytics('fortune.settings_opened');
+				}}
+			>
 				<Settings size={20} />
 				<span class="max-md:sr-only">Settings</span>
 			</Button>

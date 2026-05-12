@@ -3,6 +3,7 @@
 	import Head from '$comp/head.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import { trackAnalytics } from '$lib/analytics';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
@@ -11,6 +12,11 @@
 
 	let open = $state(false);
 	const gbl = getGlobalContext();
+
+	function openSearch() {
+		open = true;
+		trackAnalytics('fortune.search_opened');
+	}
 </script>
 
 <Head
@@ -28,7 +34,7 @@
 		</div>
 
 		<Button
-			onclick={() => (open = true)}
+			onclick={openSearch}
 			class="bg-card mx-auto flex w-full max-w-lg flex-row gap-2 rounded-lg border-[3px] p-4 lg:flex-1"
 			variant="outline"
 			size="lg"
@@ -91,7 +97,7 @@
 	</div>
 
 	<Button
-		onclick={() => (open = true)}
+		onclick={openSearch}
 		class="bg-card mx-auto flex w-full max-w-lg flex-row gap-2 rounded-lg border-[3px] p-4 lg:flex-1"
 		variant="outline"
 		size="lg"

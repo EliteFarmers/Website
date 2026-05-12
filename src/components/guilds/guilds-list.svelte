@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { replaceState } from '$app/navigation';
 	import { page as pageState } from '$app/state';
+	import { trackAnalytics } from '$lib/analytics';
 	import type { HypixelGuildDetailsDto } from '$lib/api/schemas/HypixelGuildDetailsDto';
 	import { SortHypixelGuildsBy } from '$lib/api/schemas/SortHypixelGuildsBy';
 	import { getHypixelGuildsList } from '$lib/remote/guilds.remote';
@@ -112,12 +113,21 @@
 	function handleSortingChange(next: SortingState) {
 		sorting = normalizeSorting(next);
 		pageIndex = 0;
+		const primary = sorting[0];
+		trackAnalytics('guilds.sort_changed', {
+			sort: columnSortMap[primary.id] ?? SortHypixelGuildsBy.memberCount,
+			descending: primary.desc ?? false,
+		});
 		loadGuilds({ sorting, page: 0, size: pageSize });
 	}
 
 	function handlePaginationChange(next: PaginationState) {
 		pageIndex = next.pageIndex;
 		pageSize = next.pageSize;
+		trackAnalytics('guilds.page_changed', {
+			page: next.pageIndex + 1,
+			page_size: next.pageSize,
+		});
 		loadGuilds({ sorting, page: next.pageIndex, size: next.pageSize });
 	}
 
