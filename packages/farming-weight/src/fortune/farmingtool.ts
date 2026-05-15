@@ -17,7 +17,6 @@ import { reforgeEffects } from '../items/sources/reforges.js';
 import { FARMING_TOOLS, type FarmingToolInfo, FarmingToolType } from '../items/tools.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
-import { registerItem } from '../upgrades/itemregistry.js';
 import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
 import { getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
@@ -480,12 +479,4 @@ export class FarmingTool extends UpgradeableBase {
 
 		return new FarmingTool(fake, options);
 	}
-}
-
-for (const item of Object.values(FARMING_TOOLS)) {
-	if (!item) continue;
-	registerItem({
-		info: item,
-		fakeItem: (i, o) => FarmingTool.fakeItem(i, o),
-	});
 }

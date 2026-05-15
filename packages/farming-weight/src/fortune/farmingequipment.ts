@@ -12,7 +12,6 @@ import { gemEffects } from '../items/sources/gems.js';
 import { reforgeEffects } from '../items/sources/reforges.js';
 import { type PlayerOptions, ZorroMode } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
-import { registerItem } from '../upgrades/itemregistry.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
 import { getGemStat } from '../util/gems.js';
@@ -281,11 +280,3 @@ export class FarmingEquipment extends UpgradeableBase {
 // For backwards compatibility
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LotusGear = FarmingEquipment;
-
-for (const item of Object.values(FARMING_EQUIPMENT_INFO)) {
-	if (!item) continue;
-	registerItem({
-		info: item,
-		fakeItem: (i, o) => FarmingEquipment.fakeItem(i, o),
-	});
-}

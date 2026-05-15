@@ -36,7 +36,10 @@
 	let { player, crop, blocksPerHour = 72_000 }: Props = $props();
 
 	const upgrades = $derived.by(() => mergeUpgrades($player, crop));
-	const rateImpactCache = $derived.by(() => buildRateImpactCache($player, upgrades, crop, blocksPerHour));
+	const playerRateStateKey = $derived.by(() => getPlayerRateStateKey($player));
+	const rateImpactCache = $derived.by(() =>
+		buildRateImpactCache($player, upgrades, crop, blocksPerHour, playerRateStateKey)
+	);
 
 	function mergeUpgrades(p: FarmingPlayer, c: Crop) {
 		const all = [
@@ -61,18 +64,36 @@
 		);
 	}
 
-	function getRateImpactKey(upgrade: FortuneUpgrade, activeCrop = crop, activeBlocksPerHour = blocksPerHour) {
-		return `${activeCrop}::${activeBlocksPerHour.toFixed(4)}::${getUpgradeKey(upgrade)}`;
+	function getPlayerRateStateKey(p: FarmingPlayer) {
+		return [p.selectedPet?.pet.uuid ?? '', p.selectedTool?.item.uuid ?? ''].join('::');
+	}
+
+	function hashKey(value: string) {
+		let hash = 0;
+		for (let i = 0; i < value.length; i++) {
+			hash = (hash * 31 + value.charCodeAt(i)) | 0;
+		}
+		return hash;
+	}
+
+	function getRateImpactKey(
+		upgrade: FortuneUpgrade,
+		activeCrop = crop,
+		activeBlocksPerHour = blocksPerHour,
+		activePlayerStateKey = playerRateStateKey
+	) {
+		return `${activePlayerStateKey}::${activeCrop}::${activeBlocksPerHour.toFixed(4)}::${getUpgradeKey(upgrade)}`;
 	}
 
 	function buildRateImpactCache(
 		p: FarmingPlayer,
 		rows: FortuneUpgrade[],
 		activeCrop: Crop,
-		activeBlocksPerHour: number
+		activeBlocksPerHour: number,
+		activePlayerStateKey: string
 	) {
 		const values = new SvelteMap<string, UpgradeRateImpact>();
-		let version = rows.length + activeBlocksPerHour;
+		let version = rows.length + activeBlocksPerHour + hashKey(activePlayerStateKey);
 
 		if (activeCrop && activeBlocksPerHour > 0) {
 			for (const upgrade of rows) {
@@ -81,7 +102,7 @@
 					blocksBroken: activeBlocksPerHour,
 				});
 
-				values.set(getRateImpactKey(upgrade, activeCrop, activeBlocksPerHour), impact);
+				values.set(getRateImpactKey(upgrade, activeCrop, activeBlocksPerHour, activePlayerStateKey), impact);
 				version += impact.delta.totalItems;
 			}
 		}

@@ -157,7 +157,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		wiki: 'https://w.elitesb.gg/Cropeetle_Shard',
 		perLevelStats: {
 			[Stat.Overbloom]: {
-				value: 2,
+				value: 1,
 			},
 		},
 	},
@@ -204,11 +204,10 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		wiki: 'https://w.elitesb.gg/Praying_Mantis_Shard',
 	},
 	pest_luck: {
-		// 2% chance for rare pest drops per level
 		name: 'Pest Shard',
 		skyblockId: 'SHARD_PEST',
 		rarity: Rarity.Uncommon,
-		effect: 'none',
+		effect: 'rates',
 		wiki: 'https://w.elitesb.gg/Pest',
 	},
 	visitor_bait: {

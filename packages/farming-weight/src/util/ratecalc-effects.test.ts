@@ -87,7 +87,7 @@ describe('ratecalc-effects: regression', () => {
 		expect(naturalTalentRates.rngItems?.BOTROOT).toBeCloseTo(baseRates.rngItems?.BOTROOT ?? 0, 8);
 	});
 
-	test('Cropeetle Shard scales matching special-crop drops by 1.20x', () => {
+	test('Cropeetle Shard grants +10 normal Overbloom at max level', () => {
 		const player = new FarmingPlayer({
 			attributes: { crop_bug: 999 },
 			tools: [
@@ -122,13 +122,12 @@ describe('ratecalc-effects: regression', () => {
 		const cropeetleRates = player.getRates(Crop.Cactus, 100_000);
 		const baselineRates = baseline.getRates(Crop.Cactus, 100_000);
 
-		// Cactus matches SpecialCrop.Fermento. Cropeetle should scale FERMENTO drops.
 		const fermentoBase = baselineRates.items['FERMENTO'] as number;
 		const fermentoBuffed = cropeetleRates.items['FERMENTO'] as number;
-		expect(fermentoBuffed).toBeCloseTo(fermentoBase * 1.2, 2);
+		expect(fermentoBuffed).toBeCloseTo(fermentoBase * 1.1, 2);
 	});
 
-	test('Cropeetle Shard does NOT scale Warty drops on Nether Wart', () => {
+	test('Cropeetle Shard applies to non-special normal Overbloom drops', () => {
 		const player = new FarmingPlayer({
 			attributes: { crop_bug: 999, wart_eater: 500 },
 		});
@@ -137,7 +136,7 @@ describe('ratecalc-effects: regression', () => {
 		const buffed = player.getRates(Crop.NetherWart, 100_000);
 		const base = baseline.getRates(Crop.NetherWart, 100_000);
 
-		expect(buffed.rngItems?.['WARTY']).toBeCloseTo(base.rngItems?.['WARTY'] ?? 0, 4);
+		expect(buffed.rngItems?.['WARTY']).toBeCloseTo((base.rngItems?.['WARTY'] ?? 0) * 1.1, 4);
 	});
 
 	test('Warty Bug Shard only adds drops while farming Nether Wart', () => {

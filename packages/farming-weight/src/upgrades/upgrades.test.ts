@@ -2,6 +2,7 @@ import { expect, test } from 'vitest';
 import { Stat } from '../constants/stats.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
+import { getUpgradeableInfo } from './upgrades.js';
 
 const maxHelmet = {
 	id: 397,
@@ -133,6 +134,16 @@ test('Maxed Helmet Upgrades Test', () => {
 	expect(upgrades[0].title).toBe('Helianthus Helmet');
 	expect(upgrades[0].action).toBe('upgrade');
 	expect(upgrades[0].category).toBe('item');
+});
+
+test('Upgradeable info lookup preserves fake object compatibility', () => {
+	const { info, fake } = getUpgradeableInfo('HELIANTHUS_HELMET');
+
+	expect(info?.skyblockId).toBe('HELIANTHUS_HELMET');
+	expect(fake?.info.skyblockId).toBe('HELIANTHUS_HELMET');
+	expect(fake?.item.skyblockId).toBe('HELIANTHUS_HELMET');
+	expect(fake?.getStat(Stat.FarmingFortune)).toBe(35);
+	expect(fake?.getStats()[Stat.FarmingFortune]).toBe(35);
 });
 
 test('Almost Maxed Helmet Upgrades Test', () => {

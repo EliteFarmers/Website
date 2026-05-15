@@ -134,7 +134,7 @@ test('General fortune sources', () => {
 
 test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Shards', () => {
 	// Cropeetle is Rare. Leveling thresholds: [1, 2, 3, 3, 4, 4, 5, 6, 8, 12]
-	// 13 shards = level 5 (1+2+3+3+4 = 13). Each level grants +2% special-crop drops.
+	// 13 shards = level 5 (1+2+3+3+4 = 13). Each level grants +1 normal Overbloom.
 	const player = new FarmingPlayer({
 		attributes: { crop_bug: 13 },
 	});
@@ -143,30 +143,40 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 	const attributeShards = progress.find((p) => p.name === 'Attribute Shards');
 	expect(attributeShards).toBeDefined();
 
-	expect(attributeShards?.stats?.[Stat.Overbloom]).toBeUndefined();
+	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 5,
+		max: 10,
+		ratio: 0.5,
+	});
 	expect(attributeShards?.effects).toContainEqual(
 		expect.objectContaining({
 			source: 'Cropeetle Shard',
-			op: 'mul-rare',
-			value: 1.1,
-			description: 'Conditional Overbloom - +10% Cropie, Squash, Fermento, and Helianthus drops',
+			op: 'add-rare-pct',
+			value: 5,
+			description: 'Normal Overbloom',
 			relatedStats: [Stat.Overbloom],
-			valueDisplay: 'factor',
+			valueDisplay: 'stat',
+			valueStat: Stat.Overbloom,
 		})
 	);
 
 	// Drilling into Attribute Shards should reveal the Cropeetle shard as an Overbloom-related effect.
 	const cropeetle = attributeShards?.progress?.find((p) => p.name === 'Cropeetle Shard');
 	expect(cropeetle).toBeDefined();
-	expect(cropeetle?.stats?.[Stat.Overbloom]).toBeUndefined();
+	expect(cropeetle?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 5,
+		max: 10,
+		ratio: 0.5,
+	});
 	expect(cropeetle?.effects).toContainEqual(
 		expect.objectContaining({
 			source: 'Cropeetle Shard',
-			op: 'mul-rare',
-			value: 1.1,
-			description: 'Conditional Overbloom - +10% Cropie, Squash, Fermento, and Helianthus drops',
+			op: 'add-rare-pct',
+			value: 5,
+			description: 'Normal Overbloom',
 			relatedStats: [Stat.Overbloom],
-			valueDisplay: 'factor',
+			valueDisplay: 'stat',
+			valueStat: Stat.Overbloom,
 		})
 	);
 
@@ -180,15 +190,16 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 			items: { SHARD_CROPEETLE: 4 },
 		},
 	});
-	expect(cropeetleUpgrade?.stats?.[Stat.Overbloom]).toBeUndefined();
+	expect(cropeetleUpgrade?.stats?.[Stat.Overbloom]).toBe(1);
 	expect(cropeetleUpgrade?.effects).toContainEqual(
 		expect.objectContaining({
 			source: 'Cropeetle Shard',
-			op: 'mul-rare',
-			value: 1.12,
-			description: 'Conditional Overbloom - +12% Cropie, Squash, Fermento, and Helianthus drops',
+			op: 'add-rare-pct',
+			value: 6,
+			description: 'Normal Overbloom',
 			relatedStats: [Stat.Overbloom],
-			valueDisplay: 'factor',
+			valueDisplay: 'stat',
+			valueStat: Stat.Overbloom,
 		})
 	);
 
@@ -213,6 +224,17 @@ test('Freshly Baked accessory tier-up costs use kernels currency', () => {
 	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RING?.upgrade?.cost?.kernels).toBe(250);
 	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_ARTIFACT?.upgrade?.cost?.kernels).toBe(500);
 	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RELIC?.upgrade?.cost?.kernels).toBe(1000);
+});
+
+test('zero-delta general upgrades remain visible for multi-stat fortune queries', () => {
+	const player = new FarmingPlayer({});
+
+	const upgrades = player.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom] });
+	const relic = upgrades.find((u) => u.title === 'Relic of Power');
+
+	expect(relic).toBeDefined();
+	expect(relic?.increase).toBe(0);
+	expect(relic?.stats).toEqual({ [Stat.FarmingFortune]: 0 });
 });
 
 test('Harvest Feast perk progress can be passed through explicit feast options', () => {

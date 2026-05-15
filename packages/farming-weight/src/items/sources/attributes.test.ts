@@ -13,6 +13,7 @@ import {
 	FireflyShard,
 	GalaxyFishShard,
 	LunarMothShard,
+	PestShard,
 	TermiteShard,
 	WartyBugShard,
 } from './attributes.js';
@@ -35,7 +36,7 @@ describe('CropeetleShard', () => {
 		expect(new CropeetleShard().getEffects(player, env)).toEqual([]);
 	});
 
-	test('emits a single mul-rare 1.02 factor at level 1', () => {
+	test('emits normal Overbloom at level 1', () => {
 		// Cropeetle is Rarity.Rare; first threshold from ATTRIBUTE_SHARD_LEVELING is 1.
 		const player = createFarmingPlayer({
 			farmingLevel: 60,
@@ -44,12 +45,20 @@ describe('CropeetleShard', () => {
 		const env = buildEffectEnvironment(player, Crop.Wheat);
 		const effects = new CropeetleShard().getEffects(player, env);
 		expect(effects).toHaveLength(1);
-		expect(effects[0]?.op).toBe('mul-rare');
-		expect(effects[0]?.value).toBeCloseTo(1.02);
-		expect(effects[0]?.scope?.tags).toEqual(['special-crop']);
+		expect(effects[0]).toMatchObject({
+			op: 'add-rare-pct',
+			value: 1,
+			scope: { tags: ['overbloom'] },
+			relatedStats: [Stat.Overbloom],
+			meta: {
+				description: 'Normal Overbloom',
+				valueDisplay: 'stat',
+				valueStat: Stat.Overbloom,
+			},
+		});
 	});
 
-	test('only buffs special-crop drops; ignores Seasoning, Warty, regular rare RNG', () => {
+	test('buffs all normal Overbloom drops instead of only special crops', () => {
 		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { crop_bug: 1 } });
 		const env = buildEffectEnvironment(player, Crop.Wheat);
 		const effects = new CropeetleShard().getEffects(player, env);
@@ -73,20 +82,19 @@ describe('CropeetleShard', () => {
 			fromAddDrop: true,
 		});
 
-		expect(resolveDropEffects(effects, cropie).mulRare).toBeCloseTo(1.02);
-		expect(resolveDropEffects(effects, seasoning).mulRare).toBe(1);
-		expect(resolveDropEffects(effects, warty).mulRare).toBe(1);
+		expect(resolveDropEffects(effects, cropie).addRarePct).toBe(1);
+		expect(resolveDropEffects(effects, seasoning).addRarePct).toBe(1);
+		expect(resolveDropEffects(effects, warty).addRarePct).toBe(1);
 	});
 
-	test('two levels stack additively (1 + 0.02 * 2 = 1.04)', () => {
+	test('max level grants +10 normal Overbloom', () => {
 		const player = createFarmingPlayer({
 			farmingLevel: 60,
-			// Rare leveling thresholds: [1, 2, ...]; need 1+2 = 3 shards for level 2.
-			attributes: { crop_bug: 3 },
+			attributes: { crop_bug: 999 },
 		});
 		const env = buildEffectEnvironment(player, Crop.Wheat);
 		const effects = new CropeetleShard().getEffects(player, env);
-		expect(effects[0]?.value).toBeCloseTo(1.04);
+		expect(effects[0]?.value).toBe(10);
 	});
 });
 
@@ -224,6 +232,49 @@ describe('GalaxyFishShard', () => {
 	});
 });
 
+describe('PestShard', () => {
+	test('emits pest-only Overbloom at level 1', () => {
+		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { pest_luck: 1 } });
+		const env = buildEffectEnvironment(player);
+		const effects = new PestShard().getEffects(player, env);
+
+		expect(effects).toHaveLength(1);
+		expect(effects[0]).toMatchObject({
+			op: 'add-rare-pct',
+			value: 2,
+			scope: { tags: ['pest'] },
+			relatedStats: [Stat.Overbloom],
+			meta: {
+				description: 'Pest Overbloom',
+				valueDisplay: 'stat',
+				valueStat: Stat.Overbloom,
+			},
+		});
+	});
+
+	test('only buffs pest drops and reaches +20 at max level', () => {
+		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { pest_luck: 999 } });
+		const env = buildEffectEnvironment(player);
+		const effects = new PestShard().getEffects(player, env);
+
+		const pest = dropCtx({
+			dropKind: 'pest',
+			itemId: 'PEST_DROP',
+			tags: new Set(['pest']),
+		});
+		const cropie = dropCtx({
+			itemId: 'CROPIE',
+			dropKind: 'special-crop',
+			specialCropType: SpecialCrop.Cropie,
+			tags: new Set(['overbloom', 'rare-crop', 'special-crop']),
+		});
+
+		expect(effects[0]?.value).toBe(20);
+		expect(resolveDropEffects(effects, pest).addRarePct).toBe(20);
+		expect(resolveDropEffects(effects, cropie).addRarePct).toBe(0);
+	});
+});
+
 describe('FARMING_ATTRIBUTE_SHARD_CLASSES registry', () => {
 	test('every legacy shard key has a class instance', () => {
 		const expectedKeys = [
@@ -252,12 +303,11 @@ describe('FARMING_ATTRIBUTE_SHARD_CLASSES registry', () => {
 				pretty_clothes: 5,
 				fancy_visit: 5,
 				insect_power: 5,
-				pest_luck: 5,
 				visitor_bait: 5,
 			},
 		});
 		const env = buildEffectEnvironment(player);
-		for (const key of ['pretty_clothes', 'fancy_visit', 'insect_power', 'pest_luck', 'visitor_bait'] as const) {
+		for (const key of ['pretty_clothes', 'fancy_visit', 'insect_power', 'visitor_bait'] as const) {
 			expect(FARMING_ATTRIBUTE_SHARD_CLASSES[key].getEffects(player, env)).toEqual([]);
 		}
 	});

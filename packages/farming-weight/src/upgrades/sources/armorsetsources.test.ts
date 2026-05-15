@@ -128,6 +128,39 @@ test('Armor set bonus', () => {
 	]);
 });
 
+test('Armor slot progress keeps Overbloom out of Farming Fortune totals', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 397,
+				count: 1,
+				skyblockId: 'HELIANTHUS_CHESTPLATE',
+				uuid: 'helianthus-chestplate-with-sunset',
+				name: '§dMossy Helianthus Chestplate',
+				lore: ['§d§lMYTHIC CHESTPLATE'],
+				enchantments: { pesterminator: 6, ultimate_sunset: 2 },
+				attributes: {
+					modifier: 'mossy',
+					rarity: 'MYTHIC',
+				},
+				gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
+			},
+		],
+	});
+
+	const progress = player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const chestplate = progress.find((piece) => piece.name === 'Chestplate');
+
+	expect(chestplate?.stats?.[Stat.FarmingFortune]).toMatchObject({
+		current: 102,
+		max: 102,
+	});
+	expect(chestplate?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 2,
+		max: 5,
+	});
+});
+
 const pesthunterCloak = {
 	id: 397,
 	count: 1,

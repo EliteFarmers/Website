@@ -1,8 +1,12 @@
 import { ReforgeTarget } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
-import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
-import type { ArmorSet, FarmingArmor } from '../../fortune/farmingarmor.js';
-import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
+import {
+	type FortuneSourceProgress,
+	type FortuneUpgrade,
+	UpgradeAction,
+	UpgradeCategory,
+} from '../../constants/upgrades.js';
+import type { ArmorSet } from '../../fortune/farmingarmor.js';
 import type { UpgradeableInfo } from '../../fortune/upgradeable.js';
 import {
 	ARMOR_SET_BONUS,
@@ -12,8 +16,11 @@ import {
 	type GearSlotInfo,
 } from '../../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../../items/equipment.js';
-import { getFakeItem } from '../itemregistry.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
+
+function progressStatValue(progress: FortuneSourceProgress, stat: Stat, key: 'current' | 'max'): number {
+	return progress.stats?.[stat]?.[key] ?? 0;
+}
 
 export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 	...Object.entries(GEAR_SLOTS)
@@ -69,7 +76,7 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 			);
 		},
 		max: (set) => {
-			const item = getFakeItem(info.startingItem);
+			const item = set.getStartingPiece(slot as GearSlot);
 
 			const progress = item?.getProgress();
 			const maxed = progress?.reduce((acc, p) => acc + p.max, 0) ?? 0;
@@ -84,20 +91,14 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 			return maxed;
 		},
 		maxStat: (set, stat) => {
-			const fake = getFakeItem(info.startingItem);
+			const fake = set.getStartingPiece(slot as GearSlot);
 			const fakeProgress = fake?.getProgress([stat], true) ?? [];
-			const fakeMax = fakeProgress.reduce(
-				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.max : 0)),
-				0
-			);
+			const fakeMax = fakeProgress.reduce((acc, p) => acc + progressStatValue(p, stat, 'max'), 0);
 
 			const currentItem = set.getPiece(slot as GearSlot);
 			if (currentItem) {
 				const currentProgress = currentItem.getProgress([stat], false);
-				const currentMax = currentProgress.reduce(
-					(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.max : 0)),
-					0
-				);
+				const currentMax = currentProgress.reduce((acc, p) => acc + progressStatValue(p, stat, 'max'), 0);
 				if (currentMax > fakeMax) return currentMax;
 			}
 
@@ -111,25 +112,19 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 		currentStat: (set, stat) => {
 			const item = set.getPiece(slot as GearSlot);
 			const progress = item?.getProgress([stat], false) ?? [];
-			return progress.reduce(
-				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.current : 0)),
-				0
-			);
+			return progress.reduce((acc, p) => acc + progressStatValue(p, stat, 'current'), 0);
 		},
 		progress: (set, stats) => {
 			const item = set.getPiece(slot as GearSlot);
 			if (item) return item.getProgress(stats, false);
 
-			const fake =
-				info.target === ReforgeTarget.Armor
-					? getFakeItem<FarmingArmor>(info.startingItem)
-					: getFakeItem<FarmingEquipment>(info.startingItem);
+			const fake = set.getStartingPiece(slot as GearSlot);
 
 			return fake?.getProgress(stats, true) ?? [];
 		},
 		info: (set) => {
 			const piece = set.getPiece(slot as GearSlot);
-			const fake = !piece ? getFakeItem(info.startingItem) : undefined;
+			const fake = !piece ? set.getStartingPiece(slot as GearSlot) : undefined;
 
 			return {
 				item: piece?.item,
@@ -147,7 +142,7 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 					? (FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
 					: (FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
 
-			const fakeItem = getFakeItem(itemToPurchase.skyblockId);
+			const fakeItem = set.getStartingPiece(slot as GearSlot);
 
 			const upgrade: FortuneUpgrade = {
 				title: itemToPurchase.name,

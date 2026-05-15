@@ -20,13 +20,13 @@ import {
 	GEAR_SLOTS,
 	GearSlot,
 } from '../items/armor.js';
+import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { statsToEffects } from '../items/sources/effects-util.js';
 import { enchantEffects } from '../items/sources/enchants.js';
 import { gemEffects } from '../items/sources/gems.js';
 import { reforgeEffects } from '../items/sources/reforges.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
-import { getFakeItem, registerItem } from '../upgrades/itemregistry.js';
 import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 import { getLastItemUpgradeableTo, getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
@@ -226,6 +226,13 @@ export class ArmorSet {
 			default:
 				return;
 		}
+	}
+
+	getStartingPiece(slot: GearSlot): FarmingArmor | FarmingEquipment | undefined {
+		const info = GEAR_SLOTS[slot];
+		return info.target === ReforgeTarget.Armor
+			? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[info.startingItem] as FarmingArmorInfo)
+			: FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as FarmingArmorInfo);
 	}
 
 	setPiece(armor: FarmingArmor | FarmingEquipment) {
@@ -455,10 +462,7 @@ export class ArmorSet {
 	getPieceProgress(slot: GearSlot) {
 		let piece = this.getPiece(slot);
 		if (!piece) {
-			piece =
-				GEAR_SLOTS[slot].target === ReforgeTarget.Armor
-					? getFakeItem<FarmingArmor>(GEAR_SLOTS[slot].startingItem)
-					: getFakeItem<FarmingEquipment>(GEAR_SLOTS[slot].startingItem);
+			piece = this.getStartingPiece(slot);
 			return piece?.getProgress(undefined, true) ?? [];
 		}
 
@@ -717,12 +721,4 @@ export class FarmingArmor extends UpgradeableBase {
 
 		return new FarmingArmor(fake, options);
 	}
-}
-
-for (const item of Object.values(FARMING_ARMOR_INFO)) {
-	if (!item) continue;
-	registerItem({
-		info: item,
-		fakeItem: (i, o) => FarmingArmor.fakeItem(i, o),
-	});
 }

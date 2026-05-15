@@ -253,11 +253,13 @@ export class FarmingPlayer {
 
 	selectTool(tool: FarmingTool) {
 		this.selectedTool = tool;
+		this.options.selectedTool = tool;
 		this.permFortune = this.getGeneralFortune();
 	}
 
 	selectPet(pet: FarmingPet) {
 		this.selectedPet = pet;
+		this.options.selectedPet = pet;
 		this.permFortune = this.getGeneralFortune();
 	}
 
@@ -1071,6 +1073,8 @@ export class FarmingPlayer {
 			}));
 		};
 
+		const selectedToolUuid = this.selectedTool?.item.uuid;
+		const selectedPetUuid = this.selectedPet?.pet.uuid;
 		const clonedOptions: PlayerOptions = {
 			...this.options,
 			tools: cloneItems(this.tools),
@@ -1086,9 +1090,21 @@ export class FarmingPlayer {
 			bestiaryKills: { ...this.options.bestiaryKills },
 			attributes: { ...this.options.attributes },
 			plots: [...(this.options.plots ?? [])],
+			selectedTool: undefined,
+			selectedPet: undefined,
 		};
 
-		return new FarmingPlayer(clonedOptions);
+		const clonedPlayer = new FarmingPlayer(clonedOptions);
+		if (selectedToolUuid) {
+			const selectedTool = clonedPlayer.tools.find((tool) => tool.item.uuid === selectedToolUuid);
+			if (selectedTool) clonedPlayer.selectTool(selectedTool);
+		}
+		if (selectedPetUuid) {
+			const selectedPet = clonedPlayer.pets.find((pet) => pet.pet.uuid === selectedPetUuid);
+			if (selectedPet) clonedPlayer.selectPet(selectedPet);
+		}
+
+		return clonedPlayer;
 	}
 
 	/**

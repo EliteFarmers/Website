@@ -47,16 +47,18 @@ describe('FarmingPlayer.collectEffects', () => {
 
 	test('attribute shards contribute via getEffects', () => {
 		// Cropeetle is Rare; total shards for max level 10 = 48. Use a high
-		// number to guarantee max level -> mul-rare 1.20.
+		// number to guarantee max level -> +10 normal Overbloom.
 		const player = new FarmingPlayer({
 			attributes: { crop_bug: 999 },
 		});
 		const env = player.buildEnvironment();
 		const effects = player.collectEffects(env);
 
-		const cropeetle = effects.filter((e) => e.op === 'mul-rare');
+		const cropeetle = effects.filter((e) => e.source === 'Cropeetle Shard');
 		expect(cropeetle.length).toBe(1);
-		expect(cropeetle[0].value).toBeCloseTo(1.2, 5);
+		expect(cropeetle[0].op).toBe('add-rare-pct');
+		expect(cropeetle[0].value).toBe(10);
+		expect(cropeetle[0].scope).toEqual({ tags: ['overbloom'] });
 		expect(cropeetle[0].relatedStats).toContain(Stat.Overbloom);
 	});
 
