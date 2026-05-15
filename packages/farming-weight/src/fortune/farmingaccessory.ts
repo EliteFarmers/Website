@@ -7,7 +7,6 @@ import { statsToEffects } from '../items/sources/effects-util.js';
 import { gemEffects } from '../items/sources/gems.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
-import { registerItem } from '../upgrades/itemregistry.js';
 import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources.js';
 import { getGemStat, getPeridotFortune } from '../util/gems.js';
 import type { EliteItemDto } from './item.js';
@@ -123,12 +122,4 @@ export class FarmingAccessory extends UpgradeableBase {
 
 		return new FarmingAccessory(fake, options);
 	}
-}
-
-for (const item of Object.values(FARMING_ACCESSORIES_INFO)) {
-	if (!item) continue;
-	registerItem({
-		info: item,
-		fakeItem: (i, o) => FarmingAccessory.fakeItem(i, o),
-	});
 }

@@ -156,10 +156,7 @@ function appendAddedDropCandidates(
 
 function aggregateEffectsBreakdown(target: EffectsBreakdown, applied: readonly AppliedEffect[]): void {
 	for (const entry of applied) {
-		// Only `add-rare-pct` contributes additively to the breakdown - the multiplicative
-		// ones are captured per-drop in `appliedEffects`. Each source contributes once: we
-		// take the max observed amount across all candidate drops, since the same source
-		// can match multiple drops with the same value.
+		// Only `add-rare-pct` contributes additively to the breakdown
 		if (entry.op !== 'add-rare-pct') continue;
 		const prev = target[entry.source] ?? 0;
 		if (entry.amount > prev) target[entry.source] = entry.amount;

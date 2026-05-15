@@ -24,7 +24,7 @@ import type { PlayerOptions } from '../player/playeroptions.js';
 import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune } from '../util/gems.js';
 import { nextRarity, previousRarity } from '../util/itemstats.js';
 import { getUpgradeableEnchants } from './enchantupgrades.js';
-import { getFakeItem } from './itemregistry.js';
+import { getItemInfo } from './itemcatalog.js';
 import { getItemScopedConflictKey } from './upgradekeys.js';
 
 function getPieceBonus(upgradeable: Upgradeable): number {
@@ -44,6 +44,66 @@ function getBaseStats(info: UpgradeableInfo, options?: PlayerOptions): Partial<R
 	}
 
 	return stats;
+}
+
+function getFakeUpgradeableOfSameKind(upgradeable: Upgradeable, info?: UpgradeableInfo): UpgradeableBase | undefined {
+	if (!info) return undefined;
+
+	const c = upgradeable.constructor as {
+		fakeItem?: (info: UpgradeableInfo, options?: PlayerOptions) => UpgradeableBase | undefined;
+	};
+	return c.fakeItem?.(info, upgradeable.options);
+}
+
+function createInfoFake(info?: UpgradeableInfo): UpgradeableBase | undefined {
+	if (!info) return undefined;
+
+	const getStat = (stat: Stat) => getBaseStats(info)[stat] ?? 0;
+	const item = {
+		name: info.name,
+		skyblockId: info.skyblockId,
+		attributes: {},
+		enchantments: {},
+	};
+	const fake = {
+		item,
+		info,
+		options: undefined,
+		recombobulated: false,
+		rarity: info.maxRarity,
+		reforge: undefined,
+		reforgeStats: undefined,
+		fortune: 0,
+		getFortune() {
+			return getStat(Stat.FarmingFortune);
+		},
+		getStat(stat: Stat) {
+			return getStat(stat);
+		},
+		getStats() {
+			const result: Partial<Record<Stat, number>> = {};
+			for (const stat of Object.values(Stat)) {
+				const value = getStat(stat);
+				if (value > 0) result[stat] = value;
+			}
+			return result;
+		},
+		getUpgrades() {
+			return [];
+		},
+		getItemUpgrade() {
+			return info.upgrade;
+		},
+		getLastItemUpgrade() {
+			return undefined;
+		},
+		getProgress() {
+			return [];
+		},
+	} as unknown as UpgradeableBase;
+
+	fake.fortune = fake.getFortune();
+	return fake;
 }
 
 function getRequestedStats(stats?: readonly Stat[]): readonly Stat[] {
@@ -90,11 +150,12 @@ export function getSelfFortuneUpgrade(
 	const nextItem = upgradeable.getItemUpgrade();
 	const deadEnd = nextItem && nextItem.reason == UpgradeReason.DeadEnd;
 
-	const { info: nextInfo, fake: nextFake } = getUpgradeableInfo(nextItem?.id);
+	const { info: nextInfo } = getUpgradeableInfo(nextItem?.id);
+	const nextFake = getFakeUpgradeableOfSameKind(upgradeable, nextInfo);
 	const slot = (upgradeable.info as UpgradeableInfo & { slot?: GearSlot }).slot;
 
 	if (deadEnd && nextInfo) {
-		const nextStats = nextFake?.getStats() ?? {};
+		const nextStats = nextFake?.getStats() ?? getBaseStats(nextInfo, upgradeable.options);
 		const currentStats = upgradeable.getStats();
 		const deltaStats: Partial<Record<Stat, number>> = {};
 		for (const stat of Object.values(Stat)) {
@@ -105,7 +166,7 @@ export function getSelfFortuneUpgrade(
 			deadEnd: true,
 			upgrade: {
 				title: nextInfo.name,
-				increase: nextFake?.getFortune() ?? 0,
+				increase: nextFake?.getFortune() ?? deltaStats[Stat.FarmingFortune] ?? 0,
 				stats: deltaStats,
 				wiki: nextInfo.wiki,
 				action: UpgradeAction.Purchase,
@@ -271,18 +332,8 @@ export function getUpgradeableInfo(skyblockId?: string): {
 	info?: UpgradeableInfo;
 	fake?: UpgradeableBase;
 } {
-	if (!skyblockId) return { info: undefined, fake: undefined };
-
-	const fake = getFakeItem(skyblockId);
-
-	if (fake) {
-		return {
-			info: fake.info,
-			fake: fake,
-		};
-	}
-
-	return { info: undefined, fake: undefined };
+	const info = getItemInfo(skyblockId);
+	return { info, fake: createInfoFake(info) };
 }
 
 export function getNextItemUpgradeableTo(

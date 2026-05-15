@@ -41,6 +41,8 @@ export function filterAndSortUpgrades(upgrades: FortuneUpgrade[], options?: Stat
 	const filtered = upgrades.filter((u) => {
 		if (stats.some((stat) => getUpgradeDelta(u, stat) !== 0)) return true;
 		if (upgradeHasRelatedEffect(u, stats)) return true;
+		const upgradeStats = u.stats;
+		if (upgradeStats && stats.some((stat) => Object.hasOwn(upgradeStats, stat))) return true;
 		// For crop-fortune views, keep 0-delta FarmingFortune upgrades so the UI can
 		// still show upgrade trees (e.g. Dedication) when milestones/context are missing.
 		if (

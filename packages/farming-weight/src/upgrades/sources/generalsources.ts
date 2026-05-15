@@ -63,7 +63,6 @@ function shardStat(
 	stat: Stat,
 	level?: number
 ): number {
-	if (shard.effect === 'rates') return 0;
 	return getShardStat(shard, player, stat, level);
 }
 

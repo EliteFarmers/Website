@@ -85,6 +85,7 @@ describe('Pet Definitions Integrity', () => {
 		expect(hedgehog.name).toBe('Hedgehog');
 		expectStatValue(hedgehog.perLevelStats?.[Stat.Speed], 0.15);
 		expectStatValue(hedgehog.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.PestKillFortune], 1);
+		expectStatValue(hedgehog.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.Overbloom], 0.35);
 		expect(hedgehog.abilities).toHaveLength(1);
 		expect(hedgehog.abilities?.[0].name).toBe("Hunter's Insight");
 	});
@@ -260,5 +261,6 @@ describe('Pet Fortune Calculations', () => {
 		expect(pet.level).toBe(100);
 		// 10 pests with all 15 tiers unlocked each = 150 tiers * 0.7 = 105 fortune
 		expect(pet.fortune).toBe(105);
+		expect(pet.getFortune(Stat.Overbloom)).toBe(35);
 	});
 });

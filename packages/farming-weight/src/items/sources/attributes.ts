@@ -5,16 +5,10 @@ import { Stat } from '../../constants/stats.js';
 import type { Effect, EffectEnvironment } from '../../effects/types.js';
 import type { FarmingPlayer } from '../../player/player.js';
 import { FortuneSource, type FortuneSourceActiveState } from './base.js';
+import { statsToEffects } from './effects-util.js';
 
 const ATTRIBUTE_SHARDS_STAT_SOURCE = 'Attribute Shards';
 
-/**
- * Cropeetle Shard - `+2%` to Special Crop drops per level (max `+20%` at
- * level 10), expressed as a single `mul-rare` factor `1 + 0.02 * level`.
- *
- * Scoped to the `special-crop` tag so it does NOT leak to Seasoning, Burrowing
- * Spores, feast materials, or other Overbloom-tagged drops.
- */
 export class CropeetleShard extends FortuneSource {
 	readonly id = 'cropeetle';
 	readonly name = FARMING_ATTRIBUTE_SHARDS.crop_bug?.name ?? 'Cropeetle Shard';
@@ -23,21 +17,7 @@ export class CropeetleShard extends FortuneSource {
 		const level = getShardLevel(Rarity.Rare, getAttributeAmount(player.options.attributes, 'crop_bug'));
 		if (level <= 0) return [];
 
-		const factor = 1 + 0.02 * level;
-
-		return [
-			{
-				source: this.name,
-				op: 'mul-rare',
-				value: factor,
-				scope: { tags: ['special-crop'] },
-				relatedStats: [Stat.Overbloom],
-				meta: {
-					description: `Conditional Overbloom - +${(level * 2).toFixed(0)}% Cropie, Squash, Fermento, and Helianthus drops`,
-					valueDisplay: 'factor',
-				},
-			},
-		];
+		return statsToEffects({ [Stat.Overbloom]: level }, this.name);
 	}
 }
 
@@ -282,8 +262,24 @@ export class PestShard extends FortuneSource {
 	readonly id = 'pest';
 	readonly name = FARMING_ATTRIBUTE_SHARDS.pest_luck?.name ?? 'Pest Shard';
 
-	getEffects(_player: FarmingPlayer, _env: EffectEnvironment): Effect[] {
-		return [];
+	getEffects(player: FarmingPlayer, _env: EffectEnvironment): Effect[] {
+		const level = getShardLevel(Rarity.Uncommon, getAttributeAmount(player.options.attributes, 'pest_luck'));
+		if (level <= 0) return [];
+
+		return [
+			{
+				source: this.name,
+				op: 'add-rare-pct',
+				value: level * 2,
+				scope: { tags: ['pest'] },
+				relatedStats: [Stat.Overbloom],
+				meta: {
+					description: 'Pest Overbloom',
+					valueDisplay: 'stat',
+					valueStat: Stat.Overbloom,
+				},
+			},
+		];
 	}
 }
 

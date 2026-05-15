@@ -33,6 +33,11 @@ export class HedgehogPet extends FarmingPetDefinition {
 				value: 1,
 				type: FarmingPetStatType.Ability,
 			},
+			[Stat.Overbloom]: {
+				name: 'Fearsome Farmer',
+				value: 0.35,
+				type: FarmingPetStatType.Ability,
+			},
 		},
 	};
 

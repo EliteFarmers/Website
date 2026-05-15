@@ -926,16 +926,20 @@ test('getUpgradeRateImpact reports Seasoning gains as currency-only output', () 
 	expect(impact.delta.totalItems).not.toBeCloseTo(itemDeltaTotal + impact.delta.currencies.SEASONING, 8);
 });
 
-test('getUpgradeRateImpact reports scoped Cropeetle special-crop gains only where applicable', () => {
+test('getUpgradeRateImpact reports Cropeetle normal Overbloom gains', () => {
 	const player = fermentoToHelianthusPlayer();
 	const upgrade: FortuneUpgrade = {
 		title: 'Cropeetle 1',
 		increase: 0,
+		stats: {
+			[Stat.Overbloom]: 1,
+		},
 		effects: [
 			{
 				source: 'Cropeetle Shard',
-				op: 'mul-rare',
-				value: 1.02,
+				op: 'add-rare-pct',
+				value: 1,
+				scope: { tags: ['overbloom'] },
 				relatedStats: [Stat.Overbloom],
 			},
 		],
@@ -960,7 +964,48 @@ test('getUpgradeRateImpact reports scoped Cropeetle special-crop gains only wher
 	expect(cactusImpact.delta.totalItems).toBeGreaterThan(0);
 	expect(cactusImpact.delta.collection).toBe(0);
 	expect(mushroomImpact.delta.totalItems).toBeGreaterThan(0);
-	expect(mushroomImpact.delta.rngItems.BURROWING_SPORES ?? 0).toBe(0);
+	expect(mushroomImpact.delta.rngItems.BURROWING_SPORES ?? 0).toBeGreaterThan(0);
+});
+
+test('getUpgradeRateImpact preserves the selected pet when cloning for the after state', () => {
+	const player = new FarmingPlayer({
+		pets: [
+			{
+				type: 'ELEPHANT',
+				exp: 30_000_000_000,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				uuid: 'best-elephant',
+			},
+			{
+				type: 'RABBIT',
+				exp: 30_000_000_000,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				uuid: 'worse-rabbit',
+			},
+		],
+	});
+	const rabbit = player.pets.find((pet) => pet.pet.uuid === 'worse-rabbit');
+	expect(rabbit).toBeDefined();
+	player.selectPet(rabbit!);
+
+	const impact = player.getUpgradeRateImpact(
+		{
+			title: 'No-op',
+			increase: 0,
+			action: UpgradeAction.Apply,
+			category: UpgradeCategory.Item,
+		},
+		{
+			crop: Crop.Wheat,
+			blocksBroken: 100_000,
+		}
+	);
+
+	expect(impact.delta.collection).toBe(0);
+	expect(impact.delta.totalItems).toBe(0);
+	expect(impact.delta.npcCoins).toBe(0);
 });
 
 test('getRates includes Tool Exp Capsules for maxed crop tools', () => {
