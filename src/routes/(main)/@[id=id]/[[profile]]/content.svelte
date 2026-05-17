@@ -185,7 +185,7 @@
 				class="{route === 'ranks' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Ranks</Button
 			>
 			{#if page.data.session?.perms.support}
-				<Button variant="ghost" size="sm" href="{path}/graphs" class="w-1/3 cursor-pointer sm:w-auto"
+				<Button variant="ghost" size="sm" href="/admin/@{path}" class="w-1/3 cursor-pointer sm:w-auto"
 					>Admin</Button
 				>
 			{/if}
