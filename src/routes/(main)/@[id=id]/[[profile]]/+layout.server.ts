@@ -1,5 +1,5 @@
 import { getPlayerLeaderboardRanks, getWithTimeout } from '$lib/api';
-import { getProfileMember, getProfilesAccount } from '$lib/remote';
+import { getProfileMember, getProfilesAccount, getVirtualFarmingMemberInventory } from '$lib/remote';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ params, locals }) => {
@@ -12,7 +12,7 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		const profileData = await profileDataPromise;
 
 		if (profileData.account?.id && profileData.profile?.profileId) {
-			const [memberData, ranksData] = await Promise.all([
+			const [memberData, ranksData, farmingInventoryData] = await Promise.all([
 				getProfileMember({
 					playerUuid: profileData.account.id,
 					profileUuid: profileData.profile.profileId ?? '',
@@ -29,6 +29,10 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 						).then((res) => res.data),
 					500
 				),
+				getVirtualFarmingMemberInventory({
+					playerUuid: profileData.account.id,
+					profileUuid: profileData.profile.profileId ?? '',
+				}),
 			]);
 
 			return {
@@ -36,16 +40,22 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 				ssrProfileData: profileData,
 				ssrMemberData: memberData ?? undefined,
 				ssrRanksData: ranksData ?? undefined,
+				ssrFarmingInventoryData: farmingInventoryData ?? undefined,
 			};
 		}
 
 		return {
 			profileData,
 			ssrProfileData: profileData,
+			ssrFarmingInventoryData: undefined,
 		};
 	}
 
 	return {
 		profileData: profileDataPromise,
+		ssrProfileData: undefined,
+		ssrMemberData: undefined,
+		ssrRanksData: undefined,
+		ssrFarmingInventoryData: undefined,
 	};
 };

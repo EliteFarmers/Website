@@ -78,6 +78,7 @@ import type {
 	EventMemberDto,
 	EventTeamWithMembersDto,
 	EventTeamsWordListDto,
+	FarmingInventoryDto,
 	FarmingWeightAllProfilesDto,
 	FarmingWeightDto,
 	ForceAddMemberAdminParams,
@@ -11072,6 +11073,49 @@ export const getGetSelectedProfileUrl = (playerUuid: string) => {
 
 export const getSelectedProfile = async (playerUuid: string, options?: RequestInit) => {
 	return customFetch<getSelectedProfileResponse>(getGetSelectedProfileUrl(playerUuid), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get virtual farming inventory
+ */
+export type getVirtualFarmingInventoryResponse200 = {
+	data: FarmingInventoryDto;
+	status: 200;
+};
+
+export type getVirtualFarmingInventoryResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getVirtualFarmingInventoryResponse404 = {
+	data: void;
+	status: 404;
+};
+
+export type getVirtualFarmingInventoryResponseSuccess = getVirtualFarmingInventoryResponse200 & {
+	headers: Headers;
+};
+export type getVirtualFarmingInventoryResponseError = (
+	| getVirtualFarmingInventoryResponse400
+	| getVirtualFarmingInventoryResponse404
+) & {
+	headers: Headers;
+};
+
+export type getVirtualFarmingInventoryResponse =
+	| getVirtualFarmingInventoryResponseSuccess
+	| getVirtualFarmingInventoryResponseError;
+
+export const getGetVirtualFarmingInventoryUrl = (playerUuid: string, profileUuid: string) => {
+	return `${ELITE_API_URL}/profile/${playerUuid}/${profileUuid}/inventories/virtual/farming`;
+};
+
+export const getVirtualFarmingInventory = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
+	return customFetch<getVirtualFarmingInventoryResponse>(getGetVirtualFarmingInventoryUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'GET',
 	});

@@ -5,12 +5,15 @@ import {
 	getProfile,
 	getProfileInventory,
 	getSelectedProfile,
+	getVirtualFarmingInventory,
 	zodGetPlayerLeaderboardRanksParams,
 	zodGetProfileInventoryParams,
 	zodGetProfileParams,
 	zodGetSelectedProfileParams,
+	zodGetVirtualFarmingInventoryParams,
 	type AuctionItemDto,
 	type BazaarProductSummaryDto,
+	type FarmingInventoryDto,
 	type HypixelInventoryDto,
 	type ItemResponse,
 } from '$lib/api';
@@ -31,6 +34,11 @@ export const getMemberRanks = query(zodGetPlayerLeaderboardRanksParams, async (p
 
 export const getMemberInventory = query(zodGetProfileInventoryParams, async (params) => {
 	return await getProfileInventory(params.playerUuid, params.profileUuid, params.inventory).then((res) => res.data);
+});
+
+export const getVirtualFarmingMemberInventory = query(zodGetVirtualFarmingInventoryParams, async (params) => {
+	const result = await getVirtualFarmingInventory(params.playerUuid, params.profileUuid).then((res) => res.data);
+	return (result ?? { armor: [], tools: [], equipment: [], accessories: [] }) as FarmingInventoryDto;
 });
 
 export const getMemberInventories = query(

@@ -107,7 +107,7 @@
 <section class="my-8 flex w-full justify-center align-middle">
 	<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-8 align-middle lg:flex-row">
 		<Collections />
-		{#if member?.farmingWeight?.inventory?.tools?.length || member?.events?.length || ctx.member.loading}
+		{#if ctx.tools.length || member?.events?.length || ctx.member.loading || ctx.farmingInventory.loading}
 			<div class="flex flex-1 flex-col gap-2">
 				{#each member?.events ?? [] as event (event.eventId)}
 					<ProfileEventMember member={event} ign={ign || ''} memberUuid={uuid ?? ''} />

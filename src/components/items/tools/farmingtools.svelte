@@ -19,6 +19,7 @@
 	let currentShown = $state(13 - (ctx.member.current?.events?.length ?? 0));
 
 	let actualTools = $state<FT[]>([]);
+	let toolsLoading = $derived(ctx.farmingInventory.loading);
 
 	watch(
 		() => ctx.tools,
@@ -37,14 +38,14 @@
 	);
 </script>
 
-{#if actualTools.length !== 0 || ctx.member.loading}
+{#if actualTools.length !== 0 || toolsLoading}
 	<div class="flex flex-1 flex-col items-center gap-2">
-		{#each actualTools.slice(0, currentShown) as tool, i (tool.item.uuid ?? i)}
+		{#each actualTools.slice(0, currentShown) as tool (tool)}
 			<Farmingtool {tool} />
 		{/each}
-		{#if ctx.member.loading}
-			{#each { length: 10 }, i (i)}
-				<div class="h-20 w-full flex-1">
+		{#if toolsLoading}
+			{#each { length: 13 }, i (i)}
+				<div class="my-1 h-20 w-full">
 					<div class="flex h-full flex-row items-center gap-2 p-1">
 						<Skeleton class="aspect-square h-18 w-18 rounded-lg" />
 						<div class="flex grow flex-row justify-between gap-1 pr-2">

@@ -298,7 +298,6 @@ export * from './FarmingWeightDto';
 export * from './FarmingWeightDtoBonusWeight';
 export * from './FarmingWeightDtoCropWeight';
 export * from './FarmingWeightDtoCrops';
-export * from './FarmingWeightDtoInventory';
 export * from './FarmingWeightDtoUncountedCrops';
 export * from './FarmingWeightRecap';
 export * from './FarmingWeightWithProfileDto';

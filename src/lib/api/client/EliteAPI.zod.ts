@@ -3383,6 +3383,14 @@ export const zodGetSelectedProfileParams = zod.object({
 });
 
 /**
+ * @summary Get virtual farming inventory
+ */
+export const zodGetVirtualFarmingInventoryParams = zod.object({
+	playerUuid: zod.string(),
+	profileUuid: zod.string(),
+});
+
+/**
  * Retrieves the yearly recap for a player. Requires authentication if the recap is not public.
  * @summary Get Player Recap
  */
