@@ -14,6 +14,7 @@ import {
 } from '../constants/upgrades.js';
 import { effectsToSummaries } from '../effects/summary.js';
 import { GemRarity } from '../fortune/item.js';
+import { getLotusToBlossomPieceBonus } from '../fortune/lotuspiecebonus.js';
 import type { Upgradeable, UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { UpgradeableBase } from '../fortune/upgradeablebase.js';
 import type { GearSlot } from '../items/definitions.js';
@@ -212,15 +213,15 @@ export function getSelfFortuneUpgrade(
 			if (stat !== Stat.FarmingFortune) increase += deltaStats[stat] ?? 0;
 		}
 
-		// Lotus -> Blossom equipment upgrades also increase the "Piece Bonus" fortune.
-		// This bonus is encoded in the item lore (e.g. "Piece Bonus: +15☘") and scales up on Blossom gear.
-		if (upgradeable.item.skyblockId?.startsWith('LOTUS_') && nextInfo.skyblockId?.startsWith('BLOSSOM_')) {
-			const currentBonus = getPieceBonus(upgradeable);
-			if (currentBonus > 0) {
-				const blossomBonus = currentBonus * 1.5;
-				increase += blossomBonus - currentBonus;
-				deltaStats[Stat.FarmingFortune] = increase;
-			}
+		const currentPieceBonus = getPieceBonus(upgradeable);
+		const upgradedPieceBonus = getLotusToBlossomPieceBonus(
+			upgradeable.item.skyblockId,
+			nextInfo.skyblockId,
+			currentPieceBonus
+		);
+		if (upgradedPieceBonus !== undefined) {
+			increase += upgradedPieceBonus - currentPieceBonus;
+			deltaStats[Stat.FarmingFortune] = increase;
 		}
 
 		// Account for gem rarity changes when the item's base rarity increases
