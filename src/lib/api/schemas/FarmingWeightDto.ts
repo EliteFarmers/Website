@@ -12,7 +12,6 @@ import type { FarmingWeightDtoCropWeight } from './FarmingWeightDtoCropWeight';
 import type { FarmingWeightDtoBonusWeight } from './FarmingWeightDtoBonusWeight';
 import type { FarmingWeightDtoUncountedCrops } from './FarmingWeightDtoUncountedCrops';
 import type { PestsDto } from './PestsDto';
-import type { FarmingWeightDtoInventory } from './FarmingWeightDtoInventory';
 
 export interface FarmingWeightDto {
 	totalWeight: number;
@@ -22,7 +21,5 @@ export interface FarmingWeightDto {
 	bonusWeight: FarmingWeightDtoBonusWeight;
 	uncountedCrops: FarmingWeightDtoUncountedCrops;
 	pests: PestsDto;
-	/** @nullable */
-	inventory?: FarmingWeightDtoInventory;
 	lastUpdated: bigint;
 }

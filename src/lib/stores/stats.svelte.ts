@@ -1,4 +1,5 @@
 import type {
+	FarmingInventoryDto,
 	ItemDto,
 	LeaderboardRanksResponse,
 	MinecraftAccountDto,
@@ -12,7 +13,7 @@ import type { ProfileDetails } from '$lib/api/elite';
 import { API_CROP_TO_CROP, PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { CROP_TO_PEST } from '$lib/constants/pests';
 import { formatIgn, getRankInformation } from '$lib/format';
-import { getMemberRanks, getProfileMember } from '$lib/remote';
+import { getMemberRanks, getProfileMember, getVirtualFarmingMemberInventory } from '$lib/remote';
 import { type RemoteQuery } from '@sveltejs/kit';
 import { Crop, getCropFromName } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
@@ -24,6 +25,8 @@ export class PlayerStats {
 	#profiles = $state<ProfileDetails[]>();
 	#member = $state<RemoteQuery<ProfileMemberDto | undefined>>(null!);
 	#ranks = $state<RemoteQuery<LeaderboardRanksResponse | undefined>>(null!);
+	#farmingInventory = $state<RemoteQuery<FarmingInventoryDto | undefined>>(null!);
+	#farmingInventoryRequestKey = $state<string | null>(null);
 	#filteredRanks = $derived<LeaderboardRanksResponse['ranks'] | null>(
 		Object.fromEntries(Object.entries(this.#ranks?.current?.ranks ?? {}).filter((r) => r[1].rank <= 10_000))
 	);
@@ -51,6 +54,7 @@ export class PlayerStats {
 		style?: WeightStyleWithDataDto | WeightStyleListDto;
 		initialMember?: ProfileMemberDto;
 		initialRanks?: LeaderboardRanksResponse;
+		initialFarmingInventory?: FarmingInventoryDto;
 		bot?: boolean;
 	}) {
 		this.setValues(data);
@@ -63,12 +67,15 @@ export class PlayerStats {
 		style,
 		initialMember,
 		initialRanks,
+		initialFarmingInventory,
 		bot,
 	}: ConstructorParameters<typeof PlayerStats>[0]) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;
 		this.#style = style;
+		this.#farmingInventoryRequestKey =
+			initialFarmingInventory || bot ? `${account.id}:${selectedProfile?.profileId ?? ''}` : null;
 
 		if (this.fortuneSettings) {
 			const ratesData = getRatesData();
@@ -106,12 +113,40 @@ export class PlayerStats {
 			});
 		}
 
+		if (initialFarmingInventory || bot) {
+			this.#farmingInventory = {
+				current: initialFarmingInventory,
+				loading: false,
+				error: null,
+			} as RemoteQuery<FarmingInventoryDto>;
+		} else {
+			this.#farmingInventory = {
+				current: undefined,
+				loading: false,
+				error: null,
+			} as RemoteQuery<FarmingInventoryDto>;
+		}
+
 		$effect(() => {
-			this.#tools = this.#member.current?.farmingWeight.inventory?.tools ?? [];
+			const inventory = this.#farmingInventory.current;
+			this.#tools = inventory?.tools ?? [];
 			this.#pets = this.#member.current?.pets ?? [];
-			this.#armor = this.#member.current?.farmingWeight.inventory?.armor ?? [];
-			this.#equipment = this.#member.current?.farmingWeight.inventory?.equipment ?? [];
+			this.#armor = inventory?.armor ?? [];
+			this.#equipment = inventory?.equipment ?? [];
 			this.#ready = !this.#member.loading;
+		});
+
+		$effect(() => {
+			const profileUuid = this.#selectedProfile?.profileId ?? '';
+			const requestKey = `${this.#account.id}:${profileUuid}`;
+			if (bot || initialFarmingInventory || this.#member.loading || !this.#member.current) return;
+			if (this.#farmingInventoryRequestKey === requestKey) return;
+
+			this.#farmingInventoryRequestKey = requestKey;
+			this.#farmingInventory = getVirtualFarmingMemberInventory({
+				playerUuid: this.#account.id,
+				profileUuid,
+			});
 		});
 	}
 
@@ -163,6 +198,10 @@ export class PlayerStats {
 		return this.#member;
 	}
 
+	get farmingInventory() {
+		return this.#farmingInventory;
+	}
+
 	get garden() {
 		return this.#garden;
 	}
@@ -193,6 +232,10 @@ export class PlayerStats {
 
 	get equipment() {
 		return this.#equipment ?? [];
+	}
+
+	get accessories() {
+		return this.#farmingInventory.current?.accessories ?? [];
 	}
 
 	static parseCollections(member: ProfileMemberDto | undefined) {

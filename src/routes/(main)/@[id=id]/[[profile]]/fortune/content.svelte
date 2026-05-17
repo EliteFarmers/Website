@@ -112,10 +112,10 @@
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
 	const blocksPerHour = $derived(72_000 * (bps / 20));
 
-	let pets = $derived.by(() => (ctx.member.ready ? FarmingPet.fromArray(ctx.pets) : []));
-	let tools = $derived.by(() => (ctx.member.ready ? FarmingTool.fromArray(ctx.tools as EliteItemDto[]) : []));
-	let armor = $derived.by(() => (ctx.member.ready ? FarmingArmor.fromArray(ctx.armor as EliteItemDto[]) : []));
-	let equipment = $derived.by(() => (ctx.member.ready ? LotusGear.fromArray(ctx.equipment as EliteItemDto[]) : []));
+	let pets = $derived.by(() => (ctx.ready ? FarmingPet.fromArray(ctx.pets) : []));
+	let tools = $derived.by(() => (ctx.ready ? FarmingTool.fromArray(ctx.tools as EliteItemDto[]) : []));
+	let armor = $derived.by(() => (ctx.ready ? FarmingArmor.fromArray(ctx.armor as EliteItemDto[]) : []));
+	let equipment = $derived.by(() => (ctx.ready ? LotusGear.fromArray(ctx.equipment as EliteItemDto[]) : []));
 
 	// Deselect pet if it's not on this player
 	onMount(() => {
@@ -169,7 +169,7 @@
 	let options = $derived({
 		tools: tools,
 		armor: armorSet,
-		accessories: (ctx.member.current?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
+		accessories: ctx.accessories as EliteItemDto[],
 		pets: pets,
 
 		selectedPet: (() => selectedPet)(),
@@ -421,7 +421,7 @@
 	});
 
 	$effect(() => {
-		if (!ctx.member.ready) return;
+		if (!ctx.ready) return;
 
 		options = {
 			...untrack(() => $player.options),
@@ -492,7 +492,6 @@
 </FloatingButton>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
-	{@render warning()}
 	<Cropselector radio={true} analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
@@ -740,7 +739,6 @@
 		</section>
 	</div>
 
-	{@render warning()}
 	<Cropselector radio={true} href="#fortune" id="fortune" analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
@@ -814,7 +812,6 @@
 		</section>
 	</div>
 
-	{@render warning()}
 	<Cropselector radio={true} href="#upgrades" id="upgrades" analyticsEvent="fortune.crop_selected" />
 
 	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
@@ -845,7 +842,6 @@
 		</svelte:boundary>
 	</section>
 
-	{@render warning()}
 	<PetFortuneProgress
 		{player}
 		pets={$player.pets}
@@ -863,19 +859,3 @@
 		<RatesSettings {player} />
 	</Dialog.ScrollContent>
 </Dialog.Root>
-
-{#snippet warning()}
-	<!-- Warning about toolkit -->
-	<div class="flex flex-col items-center gap-2 rounded-md bg-yellow-100 px-4 py-2 text-sm text-yellow-800">
-		<p>
-			<TriangleAlert size={16} class="inline" />
-			Farming tools in your Farming Toolkit will not show up here! Please remove them from your toolkit and keep them
-			in a normal inventory!
-		</p>
-		<p>
-			Please report bugs with the new Harvest Feast features on the <a href="/support" class="text-link underline"
-				>support Discord server</a
-			>!
-		</p>
-	</div>
-{/snippet}

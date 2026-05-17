@@ -8,7 +8,7 @@
 	import NameCard from '$comp/stats/namecard/name-card.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
-	import type { LeaderboardRanksResponse, ProfileMemberDto } from '$lib/api';
+	import type { FarmingInventoryDto, LeaderboardRanksResponse, ProfileMemberDto } from '$lib/api';
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import { watch } from 'runed';
@@ -24,11 +24,13 @@
 		data,
 		ssrMemberData,
 		ssrRanksData,
+		ssrFarmingInventoryData,
 		children,
 	}: {
 		data: ValidProfileData;
 		ssrMemberData?: ProfileMemberDto | undefined;
 		ssrRanksData?: LeaderboardRanksResponse | undefined;
+		ssrFarmingInventoryData?: FarmingInventoryDto | undefined;
 		children: Snippet;
 	} = $props();
 
@@ -40,6 +42,7 @@
 			style: data.style,
 			initialMember: ssrMemberData ?? undefined,
 			initialRanks: ssrRanksData ?? undefined,
+			initialFarmingInventory: ssrFarmingInventoryData ?? undefined,
 			bot: page.data.bot ?? false,
 		}))()
 	);
@@ -56,6 +59,7 @@
 				style: data.style,
 				initialMember: ssrMemberData ?? undefined,
 				initialRanks: ssrRanksData ?? undefined,
+				initialFarmingInventory: ssrFarmingInventoryData ?? undefined,
 				bot: page.data.bot ?? false,
 			});
 

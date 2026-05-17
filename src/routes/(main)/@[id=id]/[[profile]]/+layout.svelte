@@ -33,6 +33,7 @@
 			data={data.ssrProfileData as Exclude<typeof data.ssrProfileData, { code: number; error: string }>}
 			ssrMemberData={data.ssrMemberData}
 			ssrRanksData={data.ssrRanksData}
+			ssrFarmingInventoryData={data.ssrFarmingInventoryData}
 		>
 			{@render children?.()}
 		</Content>
