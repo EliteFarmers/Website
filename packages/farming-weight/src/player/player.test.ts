@@ -5,6 +5,7 @@ import { Rarity } from '../constants/reforge-types.js';
 import { Stat } from '../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
+import type { GearSlot } from '../items/definitions.js';
 import { FarmingPlayer } from './player.js';
 
 test('Player construct test', () => {
@@ -449,7 +450,7 @@ test('getUpgradeRateImpact applies starting farm armor purchases', () => {
 	cloned.applyUpgrade(upgrade!);
 
 	expect(cloned.armor.some((piece) => piece.info.skyblockId === 'FARM_ARMOR_HELMET')).toBe(true);
-	expect(cloned.armorSet.getPiece('Helmet')?.info.skyblockId).toBe('FARM_ARMOR_HELMET');
+	expect(cloned.armorSet.getPiece('Helmet' as GearSlot)?.info.skyblockId).toBe('FARM_ARMOR_HELMET');
 
 	const impact = player.getUpgradeRateImpact(upgrade!, {
 		crop: Crop.Wheat,
@@ -474,7 +475,7 @@ test('getUpgradeRateImpact applies starting lotus equipment purchases', () => {
 	cloned.applyUpgrade(upgrade!);
 
 	expect(cloned.equipment.some((piece) => piece.info.skyblockId === 'LOTUS_CLOAK')).toBe(true);
-	expect(cloned.armorSet.getPiece('Cloak')?.info.skyblockId).toBe('LOTUS_CLOAK');
+	expect(cloned.armorSet.getPiece('Cloak' as GearSlot)?.info.skyblockId).toBe('LOTUS_CLOAK');
 
 	const impact = player.getUpgradeRateImpact(upgrade!, {
 		crop: Crop.Wheat,
@@ -482,6 +483,56 @@ test('getUpgradeRateImpact applies starting lotus equipment purchases', () => {
 	});
 
 	expect(impact.delta.totalItems).toBeGreaterThan(0);
+});
+
+test('getUpgradeRateImpact keeps Lotus to Blossom salesperson piece bonus positive', () => {
+	const player = new FarmingPlayer({
+		farmingLevel: 20,
+		equipment: [
+			{
+				id: 397,
+				count: 1,
+				damage: 3,
+				skyblockId: 'LOTUS_NECKLACE',
+				uuid: 'lotus-necklace-piece-bonus',
+				name: 'Rooted Lotus Necklace',
+				lore: [
+					'§7Farming Fortune: §a+40.5 §9(+15)',
+					'',
+					'§6Piece Bonus: Salesperson',
+					'',
+					'§7Piece Bonus: §6+15☘',
+					'',
+					'§5§l§ka§r §5§lEPIC NECKLACE §5§l§ka',
+				],
+				enchantments: { green_thumb: 5 },
+				attributes: {
+					modifier: 'rooted',
+					rarity_upgrades: '1',
+				},
+			},
+		],
+	});
+
+	const upgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Blossom Necklace');
+
+	expect(upgrade).toBeDefined();
+	expect(upgrade?.increase).toBeCloseTo(12.5);
+
+	const cloned = player.clone();
+	cloned.applyUpgrade(upgrade!);
+	const upgraded = cloned.equipment.find((piece) => piece.item.uuid === 'lotus-necklace-piece-bonus');
+
+	expect(upgraded?.item.skyblockId).toBe('BLOSSOM_NECKLACE');
+	expect(upgraded?.getPieceBonus()).toBeCloseTo(22.5);
+
+	const impact = player.getUpgradeRateImpact(upgrade!, {
+		crop: Crop.Wheat,
+		blocksBroken: 72_000,
+	});
+
+	expect(impact.delta.totalItems).toBeGreaterThan(0);
+	expect(impact.delta.npcCoins).toBeGreaterThan(0);
 });
 
 test('getUpgradeRateImpact applies special accessory purchases', () => {

@@ -18,6 +18,7 @@ import { getGemStat } from '../util/gems.js';
 import { extractNumberFromLine } from '../util/lore.js';
 import type { FarmingArmor } from './farmingarmor.js';
 import type { EliteItemDto } from './item.js';
+import { getLotusToBlossomPieceBonus, setLotusPieceBonusLore } from './lotuspiecebonus.js';
 import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
 
@@ -248,6 +249,17 @@ export class FarmingEquipment extends UpgradeableBase {
 		}
 
 		return found;
+	}
+
+	applyTierUpgradeStateTo(newItem: FarmingEquipment): void {
+		const upgradedPieceBonus = getLotusToBlossomPieceBonus(
+			this.item.skyblockId,
+			newItem.item.skyblockId,
+			this.getPieceBonus()
+		);
+		if (upgradedPieceBonus === undefined) return;
+
+		setLotusPieceBonusLore(newItem.item, upgradedPieceBonus);
 	}
 
 	static isValid(item: EliteItemDto): boolean {

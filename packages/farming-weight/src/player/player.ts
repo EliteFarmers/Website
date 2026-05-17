@@ -901,6 +901,7 @@ export class FarmingPlayer {
 						} else if (target instanceof FarmingEquipment && newItem instanceof FarmingEquipment) {
 							const idx = this.equipment.indexOf(target);
 							if (idx >= 0) {
+								target.applyTierUpgradeStateTo(newItem);
 								const updatedPiece = new FarmingEquipment(newItem.item, this.options);
 								this.equipment[idx] = updatedPiece;
 								this.armorSet.updateEquipmentSlot(updatedPiece);
@@ -1027,6 +1028,7 @@ export class FarmingPlayer {
 							...oldItem.item.attributes,
 						};
 						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
+						oldItem.applyTierUpgradeStateTo(newItem);
 						this.equipment[oldIdx] = new FarmingEquipment(newItem.item, this.options);
 					} else {
 						const addedPiece = new FarmingEquipment(newItem.item, this.options);
