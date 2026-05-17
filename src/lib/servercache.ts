@@ -20,6 +20,7 @@ import {
 	getStyles,
 	getTeamWordList,
 	getUpcomingEvents,
+	getWebsiteCacheReloadSignal,
 	skyblockGemShop,
 	SortHypixelGuildsBy,
 	type AnnouncementDto,
@@ -42,8 +43,9 @@ import {
 import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
 import { mdToHtml } from './md';
-const { ELITE_API_URL } = env;
+const { ELITE_API_URL, ELITE_API_TOKEN } = env;
 const { PUBLIC_COMMUNITY_ID } = publicEnv;
+const SERVER_CACHE_RELOAD_POLL_INTERVAL = 1000;
 
 const cacheEntries = {
 	events: {
@@ -293,6 +295,7 @@ export const cache = {
 };
 
 let intervals: (number | NodeJS.Timeout)[] = [];
+let remoteReloadSignalVersion = 0 as number | bigint;
 
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
@@ -321,6 +324,7 @@ export async function initCachedItems() {
 	if (building || !ELITE_API_URL) return;
 
 	await reloadCachedItems();
+	await initializeRemoteReloadSignalVersion();
 
 	for (const i of intervals) {
 		clearInterval(i);
@@ -337,9 +341,32 @@ export async function initCachedItems() {
 		)
 	); // 1 hour
 
+	intervals.push(setInterval(checkForRemoteReloadSignal, SERVER_CACHE_RELOAD_POLL_INTERVAL));
+
 	for (const entry of Object.values(cacheEntries)) {
 		if (!('interval' in entry)) continue;
 		intervals.push(setInterval(() => refreshCacheItem(entry), entry.interval * 1000));
+	}
+}
+
+async function initializeRemoteReloadSignalVersion() {
+	if (!ELITE_API_TOKEN) return;
+	try {
+		remoteReloadSignalVersion = (await getWebsiteCacheReloadSignal())?.data?.version ?? 0;
+	} catch (error) {
+		console.error('Failed to initialize remote website cache reload signal:', error);
+	}
+}
+
+async function checkForRemoteReloadSignal() {
+	try {
+		const version = await getWebsiteCacheReloadSignal().then((res) => res.data?.version);
+		if (!version || version <= remoteReloadSignalVersion) return;
+
+		await reloadCachedItems();
+		remoteReloadSignalVersion = version;
+	} catch (error) {
+		console.error('Failed to poll remote website cache reload signal:', error);
 	}
 }
 

@@ -1,9 +1,9 @@
 import { env } from '$env/dynamic/public';
-const { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } = env;
 import { getAuthAccount } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import crypto from 'crypto';
 import type { PageServerLoad } from './$types';
+const { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } = env;
 
 export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 	const success = url.searchParams.get('success');
@@ -11,6 +11,11 @@ export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 	const attemptCount = url.searchParams.get('attempt');
 	const accept = url.searchParams.get('accept');
 	const firstLogin = url.searchParams.get('first');
+
+	// Don't allow open redirects
+	if (redirectTo && redirectTo.startsWith('http')) {
+		error(400, 'Invalid redirect URL');
+	}
 
 	if (success) {
 		if (attemptCount && +attemptCount > 3) {

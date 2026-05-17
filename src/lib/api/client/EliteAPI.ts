@@ -255,6 +255,7 @@ import type {
 	UserSettingsDto,
 	VoteCommentRequest,
 	VoteGuideRequest,
+	WebsiteCacheReloadSignalDto,
 	WeightStyleListDto,
 	WeightStyleWithDataDto,
 	WeightsDto,
@@ -13619,6 +13620,76 @@ export const updateToolSetting = async (
 		method: 'PUT',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(updateToolSettingRequest),
+	});
+};
+
+/**
+ * @summary Get website server-cache reload signal
+ */
+export type getWebsiteCacheReloadSignalResponse200 = {
+	data: WebsiteCacheReloadSignalDto;
+	status: 200;
+};
+
+export type getWebsiteCacheReloadSignalResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getWebsiteCacheReloadSignalResponseSuccess = getWebsiteCacheReloadSignalResponse200 & {
+	headers: Headers;
+};
+export type getWebsiteCacheReloadSignalResponseError = getWebsiteCacheReloadSignalResponse401 & {
+	headers: Headers;
+};
+
+export type getWebsiteCacheReloadSignalResponse =
+	| getWebsiteCacheReloadSignalResponseSuccess
+	| getWebsiteCacheReloadSignalResponseError;
+
+export const getGetWebsiteCacheReloadSignalUrl = () => {
+	return `${ELITE_API_URL}/website/cache/reload-signal`;
+};
+
+export const getWebsiteCacheReloadSignal = async (options?: RequestInit) => {
+	return customFetch<getWebsiteCacheReloadSignalResponse>(getGetWebsiteCacheReloadSignalUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Request website server-cache reload
+ */
+export type requestWebsiteCacheReloadResponse200 = {
+	data: WebsiteCacheReloadSignalDto;
+	status: 200;
+};
+
+export type requestWebsiteCacheReloadResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type requestWebsiteCacheReloadResponseSuccess = requestWebsiteCacheReloadResponse200 & {
+	headers: Headers;
+};
+export type requestWebsiteCacheReloadResponseError = requestWebsiteCacheReloadResponse401 & {
+	headers: Headers;
+};
+
+export type requestWebsiteCacheReloadResponse =
+	| requestWebsiteCacheReloadResponseSuccess
+	| requestWebsiteCacheReloadResponseError;
+
+export const getRequestWebsiteCacheReloadUrl = () => {
+	return `${ELITE_API_URL}/website/cache/reload-signal`;
+};
+
+export const requestWebsiteCacheReload = async (options?: RequestInit) => {
+	return customFetch<requestWebsiteCacheReloadResponse>(getRequestWebsiteCacheReloadUrl(), {
+		...options,
+		method: 'POST',
 	});
 };
 
