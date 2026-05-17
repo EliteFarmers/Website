@@ -425,9 +425,12 @@
 
 		options = {
 			...untrack(() => $player.options),
+			tools,
+			armor: armorSet,
+			accessories: ctx.accessories as EliteItemDto[],
+			pets,
 			selectedPet: untrack(() => $player.selectedPet),
 			selectedTool: untrack(() => $player.selectedTool),
-			armor: untrack(() => $player.armorSet),
 			communityCenter: $ratesData.communityCenter,
 			filledRosewaterFlask: $ratesData.rosewaterFlasks,
 			strength: $ratesData.strength,
@@ -478,7 +481,9 @@
 	});
 
 	$effect(() => {
-		delayedUpdateSelectedTool(selectedCrop);
+		if (tools.length) {
+			delayedUpdateSelectedTool(selectedCrop);
+		}
 	});
 </script>
 
