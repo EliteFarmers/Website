@@ -37,7 +37,6 @@
 	},
 	"dependencies": {
 		"@napi-rs/canvas": "^0.1.100",
-		"@sentry/sveltekit": "^10.46.0",
 		"@tebexio/tebex.js": "^1.11.0",
 		"farming-weight": "workspace:*",
 		"isomorphic-dompurify": "^3.12.0"
