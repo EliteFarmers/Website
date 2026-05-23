@@ -196,7 +196,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		},
 	},
 	insect_power: {
-		// 5% vacuum damage per level
+		// 10% vacuum damage per level
 		name: 'Praying Mantis Shard',
 		skyblockId: 'SHARD_PRAYING_MANTIS',
 		rarity: Rarity.Uncommon,

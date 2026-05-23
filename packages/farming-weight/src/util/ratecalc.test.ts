@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { Crop, MAX_CROP_FORTUNE } from '../constants/crops';
+import { Crop, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { Stat } from '../constants/stats.js';
 import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
 import type { Effect } from '../effects/types.js';
@@ -38,6 +38,12 @@ type AverageDetailedOptions = Omit<DetailedOptions, 'crop'> & {
 	cropFortune?: Partial<Record<Crop, number>>;
 };
 
+function cropResult(results: Record<Crop, DetailedDropsFromEffectsResult>, crop: Crop): DetailedDropsFromEffectsResult {
+	const result = results[crop];
+	expect(result, `${crop} result should be defined`).toBeDefined();
+	return result!;
+}
+
 function detailed(options: DetailedOptions): DetailedDropsFromEffectsResult {
 	const env = buildEffectEnvironmentFromOptions(
 		{
@@ -68,7 +74,7 @@ function averageDetailed(options: AverageDetailedOptions): Record<Crop, Detailed
 	}
 
 	if (options.mooshroom) {
-		const mushroom = result[Crop.Mushroom];
+		const mushroom = result[Crop.Mushroom]!;
 		const mooshroom = mushroom.otherCollection['Mushroom'] ?? 0;
 
 		mushroom.collection += mooshroom;
@@ -121,39 +127,47 @@ test('Rate calc test', () => {
 		mooshroom: true,
 	});
 
-	expect(drops[Crop.Wheat].collection).toBe(48_000);
-	expect(drops[Crop.Wheat].npcPrice).toBe(6);
+	const wheat = cropResult(drops, Crop.Wheat);
+	const netherWart = cropResult(drops, Crop.NetherWart);
+	const sugarCane = cropResult(drops, Crop.SugarCane);
+	const cactus = cropResult(drops, Crop.Cactus);
+	const carrot = cropResult(drops, Crop.Carrot);
+	const melon = cropResult(drops, Crop.Melon);
+	const seeds = cropResult(drops, Crop.Seeds);
 
-	expect(drops[Crop.NetherWart].otherCollection['Fermento']).toBeCloseTo(1.68, 8);
-	expect(drops[Crop.SugarCane].otherCollection['Fermento']).toBeCloseTo(1.68, 8);
-	expect(drops[Crop.Cactus].otherCollection['Fermento']).toBeCloseTo(1.68, 8);
+	expect(wheat.collection).toBe(48_000);
+	expect(wheat.npcPrice).toBe(6);
 
-	expect(drops[Crop.Carrot].items[Crop.Carrot]).toBe(drops[Crop.Carrot].collection - 24000);
-	expect(drops[Crop.Carrot].items).toStrictEqual({
+	expect(netherWart.otherCollection['Fermento']).toBeCloseTo(1.68, 8);
+	expect(sugarCane.otherCollection['Fermento']).toBeCloseTo(1.68, 8);
+	expect(cactus.otherCollection['Fermento']).toBeCloseTo(1.68, 8);
+
+	expect(carrot.items[Crop.Carrot]).toBe(carrot.collection - 24000);
+	expect(carrot.items).toStrictEqual({
 		[Crop.Carrot]: 120000,
 		CROPIE: 12,
 		MUSHROOM_COLLECTION: 24000,
 	});
 
-	expect(drops[Crop.Melon].items[Crop.Melon]).toBe(240000);
-	expect(drops[Crop.Melon].items.SQUASH).toBeCloseTo(7.2, 8);
-	expect(drops[Crop.Melon].items.MUSHROOM_COLLECTION).toBe(24000);
+	expect(melon.items[Crop.Melon]).toBe(240000);
+	expect(melon.items.SQUASH).toBeCloseTo(7.2, 8);
+	expect(melon.items.MUSHROOM_COLLECTION).toBe(24000);
 
-	expect(drops[Crop.SugarCane].items).toStrictEqual({
+	expect(sugarCane.items).toStrictEqual({
 		[Crop.SugarCane]: 96000,
 		FERMENTO: 1.68,
 		MUSHROOM_COLLECTION: 48000,
 	});
 
-	expect(drops[Crop.Seeds].items).toStrictEqual({
+	expect(seeds.items).toStrictEqual({
 		[Crop.Seeds]: 48000,
 		FERMENTO: 1.68,
 		MUSHROOM_COLLECTION: 24000,
 	});
-	expect(drops[Crop.Seeds].otherCollection['Replenish']).toBe(-24000);
-	expect(drops[Crop.Seeds].collection).toBe(48000 + 24000);
+	expect(seeds.otherCollection['Replenish']).toBe(-24000);
+	expect(seeds.collection).toBe(48000 + 24000);
 
-	expect(drops[Crop.Wheat].items).toStrictEqual({
+	expect(wheat.items).toStrictEqual({
 		[Crop.Wheat]: 48000,
 		[Crop.Seeds]: 48000,
 		CROPIE: 12,
@@ -164,26 +178,26 @@ test('Rate calc test', () => {
 test('Possible results - Wheat', () => {
 	const result = getPossibleResultsFromCrops(Crop.Wheat, 26000);
 
-	expect(result[Crop.Wheat].items).toBe(26000);
-	expect(result[Crop.Wheat].cost).toBe(0);
-	expect(result[Crop.Wheat].remainder).toBe(0);
+	expect(result[Crop.Wheat]?.items).toBe(26000);
+	expect(result[Crop.Wheat]?.cost).toBe(0);
+	expect(result[Crop.Wheat]?.remainder).toBe(0);
 
-	expect(result['ENCHANTED_WHEAT'].fractionalItems).toBe(162.5);
-	expect(result['ENCHANTED_WHEAT'].cost).toBe(0);
-	expect(result['ENCHANTED_HAY_BALE'].fractionalItems).toBe(1.015625);
+	expect(result['ENCHANTED_WHEAT']?.fractionalItems).toBe(162.5);
+	expect(result['ENCHANTED_WHEAT']?.cost).toBe(0);
+	expect(result['ENCHANTED_HAY_BALE']?.fractionalItems).toBe(1.015625);
 });
 
 test('Possible results - Carrot', () => {
 	const result = getPossibleResultsFromCrops(Crop.Carrot, 26000);
 
-	expect(result[Crop.Carrot].items).toBe(26000);
-	expect(result[Crop.Carrot].cost).toBe(0);
-	expect(result[Crop.Carrot].remainder).toBe(0);
+	expect(result[Crop.Carrot]?.items).toBe(26000);
+	expect(result[Crop.Carrot]?.cost).toBe(0);
+	expect(result[Crop.Carrot]?.remainder).toBe(0);
 
-	expect(result['ENCHANTED_CARROT'].fractionalItems).toBe(162.5);
-	expect(result['ENCHANTED_CARROT'].fractionalCost).toBe(0);
-	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalItems).toBe(1.015625);
-	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalCost).toBe(0);
+	expect(result['ENCHANTED_CARROT']?.fractionalItems).toBe(162.5);
+	expect(result['ENCHANTED_CARROT']?.fractionalCost).toBe(0);
+	expect(result['ENCHANTED_GOLDEN_CARROT']?.fractionalItems).toBe(1.015625);
+	expect(result['ENCHANTED_GOLDEN_CARROT']?.fractionalCost).toBe(0);
 });
 
 test('Max fortune results', () => {
@@ -236,8 +250,9 @@ test('Tool Exp Capsules include seeds for wheat (average drops)', () => {
 		maxTool: true,
 	});
 
-	expect(drops[Crop.Wheat].otherCollection['Seeds']).toBe(100_000);
-	expect(drops[Crop.Wheat].items['TOOL_EXP_CAPSULE']).toBe(1);
+	const wheat = cropResult(drops, Crop.Wheat);
+	expect(wheat.otherCollection['Seeds']).toBe(100_000);
+	expect(wheat.items['TOOL_EXP_CAPSULE']).toBe(1);
 });
 
 test('Warty RNG Drops', () => {
@@ -282,7 +297,7 @@ test('Cropeetle shard contributes a scoped special crop effect', () => {
 
 	expect(resultWithShard.effectsBreakdown).toStrictEqual({});
 	expect(resultWithoutShard.effectsBreakdown).toStrictEqual({});
-	expect(resultWithShard.items['CROPIE']).toBeCloseTo(resultWithoutShard.items['CROPIE'] * 1.2, 1);
+	expect(resultWithShard.items['CROPIE']).toBeCloseTo(resultWithoutShard.items['CROPIE']! * 1.2, 1);
 	expect(resultWithShard.appliedEffects['CROPIE']).toContainEqual(
 		expect.objectContaining({
 			source: 'Cropeetle Shard',
@@ -401,14 +416,17 @@ test('Melon NPC total matches the visible coin breakdown when rare effects are a
 });
 
 test('Average melon drops keep NPC total in sync with the visible coin breakdown', () => {
-	const result = averageDetailed({
-		blocksBroken: 72_000,
-		farmingFortune: 100,
-		bountiful: true,
-		mooshroom: false,
-		armorPieces: 4,
-		effects: [overbloomEffect(20)],
-	})[Crop.Melon];
+	const result = cropResult(
+		averageDetailed({
+			blocksBroken: 72_000,
+			farmingFortune: 100,
+			bountiful: true,
+			mooshroom: false,
+			armorPieces: 4,
+			effects: [overbloomEffect(20)],
+		}),
+		Crop.Melon
+	);
 
 	const visibleTotal = Object.values(result.coinSources).reduce((sum, value) => sum + value, 0);
 

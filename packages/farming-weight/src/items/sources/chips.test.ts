@@ -25,7 +25,7 @@ describe('garden chip source effects', () => {
 	test('generic chips use normalized input ids and level-derived rarity stats', () => {
 		const player = createFarmingPlayer({
 			chips: {
-				CROPSHOT_GARDEN_CHIP: 12,
+				cropshot: 12,
 			},
 		});
 		const env = buildEffectEnvironment(player);
@@ -43,7 +43,7 @@ describe('garden chip source effects', () => {
 	test('rarefinder emits global Overbloom rare-drop effect instead of add-stat', () => {
 		const player = createFarmingPlayer({
 			chips: {
-				RAREFINDER_GARDEN_CHIP: 16,
+				rarefinder: 16,
 			},
 		});
 		const env = buildEffectEnvironment(player);
@@ -67,8 +67,8 @@ describe('garden chip source effects', () => {
 	test('bespoke progress-only chips do not emit scalar effects', () => {
 		const player = createFarmingPlayer({
 			chips: {
-				HYPERCHARGE_GARDEN_CHIP: 20,
-				MECHAMIND_GARDEN_CHIP: 20,
+				hypercharge: 20,
+				mechamind: 20,
 			},
 		});
 		const env = buildEffectEnvironment(player);

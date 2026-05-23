@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { ITEM_IDS } from './itemids';
-import { mergeCost, type UpgradeCost } from './upgrades';
+import { ITEM_IDS } from './itemids.js';
+import { mergeCost, type UpgradeCost } from './upgrades.js';
 
 test('Upgrade cost merge', () => {
 	const cost1: UpgradeCost = {

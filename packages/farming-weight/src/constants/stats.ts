@@ -1,6 +1,7 @@
 import type { PlayerOptions } from '../player/playeroptions.js';
 
 export enum Stat {
+	Damage = 'Damage',
 	Strength = 'Strength',
 	Health = 'Health',
 	Defense = 'Defense',
@@ -170,6 +171,18 @@ export const CROP_FORTUNE_STATS: ReadonlySet<Stat> = new Set([
 	Stat.WheatFortune,
 ]);
 
+export const CROP_FARMING_STATS: Stat[] = [Stat.FarmingFortune, Stat.Overbloom];
+
+export const PEST_FARMING_STATS: Stat[] = [
+	Stat.BonusPestChance,
+	Stat.PestKillFortune,
+	Stat.PestCooldownReduction,
+	Stat.FarmingFortune,
+	Stat.Overbloom,
+];
+
+export const VACUUM_STATS: Stat[] = [Stat.PestKillFortune, Stat.Damage, Stat.FarmingFortune];
+
 export function statMatchesQuery(statToCheck: Stat, queryStat: Stat): boolean {
 	if (statToCheck === queryStat) return true;
 	if (STAT_GROUPS[queryStat]?.has(statToCheck)) return true;
@@ -178,6 +191,7 @@ export function statMatchesQuery(statToCheck: Stat, queryStat: Stat): boolean {
 }
 
 export const STAT_NAMES: Record<Stat, string> = {
+	[Stat.Damage]: 'Damage',
 	[Stat.Strength]: 'Strength',
 	[Stat.Health]: 'Health',
 	[Stat.Defense]: 'Defense',

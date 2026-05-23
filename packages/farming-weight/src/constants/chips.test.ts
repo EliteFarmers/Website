@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { GARDEN_CHIP_MAX_LEVEL, getChipLevel, normalizeChipId } from './chips';
+import { GARDEN_CHIP_MAX_LEVEL, getChipLevel, normalizeChipId } from './chips.js';
 
 test('Garden chip level clamp test', () => {
 	expect(getChipLevel(undefined)).toBe(0);

@@ -68,6 +68,7 @@ export interface PlayerStatView {
 export interface UpgradeRateImpactOptions {
 	crop: Crop;
 	blocksBroken: number;
+	before?: DetailedDropsFromEffectsResult;
 }
 
 export interface DetailedDropsFromEffectsDelta {
@@ -639,7 +640,7 @@ export class FarmingPlayer {
 	}
 
 	getUpgradeRateImpact(upgrade: FortuneUpgrade, options: UpgradeRateImpactOptions): UpgradeRateImpact {
-		const before = this.getRates(options.crop, options.blocksBroken);
+		const before = options.before ?? this.getRates(options.crop, options.blocksBroken);
 		const clonedPlayer = this.clone();
 		clonedPlayer.applyUpgrade(upgrade);
 		const after = clonedPlayer.getRates(options.crop, options.blocksBroken);
@@ -789,7 +790,24 @@ export class FarmingPlayer {
 					if (target instanceof FarmingTool) {
 						const idx = this.tools.indexOf(target);
 						if (idx >= 0) {
-							this.tools[idx] = new FarmingTool(target.item, this.options);
+							const updatedTool = new FarmingTool(target.item, this.options);
+							this.tools[idx] = updatedTool;
+							if (this.selectedTool === target) {
+								this.selectedTool = updatedTool;
+							}
+						}
+					}
+				} else if (type === 'item' && id === 'bookworm_books') {
+					target.item.attributes ??= {};
+					target.item.attributes.bookworm_books = String(value);
+					if (target instanceof FarmingTool) {
+						const idx = this.tools.indexOf(target);
+						if (idx >= 0) {
+							const updatedTool = new FarmingTool(target.item, this.options);
+							this.tools[idx] = updatedTool;
+							if (this.selectedTool === target) {
+								this.selectedTool = updatedTool;
+							}
 						}
 					}
 				} else if (type === 'gem' && upgrade.meta.slot && value) {

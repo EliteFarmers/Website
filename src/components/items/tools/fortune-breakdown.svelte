@@ -8,6 +8,7 @@
 
 	interface Props {
 		title?: string;
+		stat?: Stat;
 		total?: number | undefined;
 		breakdown?: Record<string, number | { value: number; stat: Stat }> | undefined;
 		enabled?: boolean;
@@ -20,6 +21,7 @@
 
 	let {
 		title = 'Farming Fortune Breakdown',
+		stat = undefined,
 		total = undefined,
 		breakdown = undefined,
 		enabled = true,
@@ -41,7 +43,7 @@
 
 	let primaryStatAndTotal = $derived.by(() => {
 		if (total !== undefined && Number.isFinite(total)) {
-			return { stat: Stat.FarmingFortune, total };
+			return { stat: stat ?? Stat.FarmingFortune, total };
 		}
 
 		const hasStatInfo = list.some((entry) => entry.stat !== undefined);
@@ -71,7 +73,7 @@
 		}
 
 		const legacyTotal = total ?? list.reduce((acc, entry) => acc + entry.value, 0);
-		return { stat: Stat.FarmingFortune, total: legacyTotal };
+		return { stat: stat ?? Stat.FarmingFortune, total: legacyTotal };
 	});
 
 	let primaryStat = $derived(primaryStatAndTotal.stat);

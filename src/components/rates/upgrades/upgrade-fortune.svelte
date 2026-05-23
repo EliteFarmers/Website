@@ -29,14 +29,26 @@
 	const primaryStat = $derived.by(() => {
 		if (!upgrade.stats) return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 		const ff = upgrade.stats[Stat.FarmingFortune];
-		if (ff !== undefined && ff !== 0) return { stat: Stat.FarmingFortune, value: ff };
+		// Prefer FarmingFortune only when it's a positive contributor; otherwise
+		// pick the stat that best represents what the upgrade actually gives.
+		if (ff !== undefined && ff > 0) return { stat: Stat.FarmingFortune, value: ff };
 
 		for (const [statKey, value] of Object.entries(upgrade.stats)) {
 			const stat = statKey as Stat;
-			if (CROP_FORTUNE_STATS.has(stat) && value !== 0) {
+			if (CROP_FORTUNE_STATS.has(stat) && (value as number) > 0) {
 				return { stat, value: value as number };
 			}
 		}
+
+		let bestPositive: { stat: Stat; value: number } | undefined;
+		for (const [statKey, value] of Object.entries(upgrade.stats)) {
+			const numeric = value as number;
+			if (!numeric || numeric <= 0) continue;
+			if (!bestPositive || numeric > bestPositive.value) {
+				bestPositive = { stat: statKey as Stat, value: numeric };
+			}
+		}
+		if (bestPositive) return bestPositive;
 
 		let best: { stat: Stat; value: number } | undefined;
 		for (const [statKey, value] of Object.entries(upgrade.stats)) {

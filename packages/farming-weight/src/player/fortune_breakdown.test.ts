@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
-import fullBreakdownExample from './full_breakdown_example.json';
+import fullBreakdownExample from './full_breakdown_example.json' with { type: 'json' };
 import { FarmingPlayer } from './player.js';
 import type { PlayerOptions } from './playeroptions.js';
 
@@ -71,7 +71,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 
 		// The Fermento Artifact should only appear in crop breakdown, not general breakdown
 		expect(player.breakdown['Fermento Artifact']).toBeUndefined();
-		expect(cropFortune.breakdown['Fermento Artifact'].value).toBe(30);
+		expect(cropFortune.breakdown['Fermento Artifact']?.value).toBe(30);
 
 		// Combined breakdown sum logic is outdated. We now check that cropFortune (Total) matches its breakdown sum.
 		const breakdownSum = Object.values(cropFortune.breakdown).reduce((sum, val) => sum + val.value, 0);
@@ -96,7 +96,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 		});
 
 		// General accessory should appear in breakdown
-		expect(player.breakdown['Helianthus Relic'].value).toBe(40);
+		expect(player.breakdown['Helianthus Relic']?.value).toBe(40);
 
 		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val.value, 0);
 		expect(breakdownSum).toBe(player.fortune);
@@ -249,8 +249,8 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			dnaMilestone: 1,
 			uniqueVisitors: 87,
 			chips: {
-				CROPSHOT_GARDEN_CHIP: 20,
-				HYPERCHARGE_GARDEN_CHIP: 20,
+				cropshot: 20,
+				hypercharge: 20,
 			},
 			temporaryFortune: {
 				pestTurnIn: 200,
@@ -266,7 +266,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 		expect(player.breakdown['Fermento Artifact']).toBeUndefined();
 
 		// Crop breakdown should include Fermento Artifact
-		expect(cropFortune.breakdown['Fermento Artifact'].value).toBe(30);
+		expect(cropFortune.breakdown['Fermento Artifact']?.value).toBe(30);
 
 		// General breakdown sum should match
 		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val.value, 0);
@@ -282,7 +282,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 		expect(keys).toContain('Mooshroom Cow');
 
 		if (keys.includes('Mooshroom Cow')) {
-			expect(cropFortune.breakdown['Mooshroom Cow'].value).toBeGreaterThanOrEqual(
+			expect(cropFortune.breakdown['Mooshroom Cow']?.value).toBeGreaterThanOrEqual(
 				player.breakdown['Mooshroom Cow']?.value ?? 0
 			);
 		}

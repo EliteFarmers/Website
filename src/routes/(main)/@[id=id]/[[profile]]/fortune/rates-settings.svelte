@@ -229,6 +229,22 @@
 	</SettingListItem>
 	<SettingSeperator />
 
+	<SettingListItem title={TEMPORARY_FORTUNE.stinkyCheesePotion.name} wiki={TEMPORARY_FORTUNE.stinkyCheesePotion.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown
+				breakdown={{
+					[TEMPORARY_FORTUNE.stinkyCheesePotion.name]: { value: 20, stat: Stat.BonusPestChance },
+				}}
+				enabled={$ratesData.temp.stinkyCheesePotion && $ratesData.useTemp}
+			/>
+
+			{#if $ratesData.temp.stinkyCheesePotion !== undefined}
+				<Switch bind:checked={$ratesData.temp.stinkyCheesePotion} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
 	<SettingHeader class="mt-8 text-xl">Other Settings</SettingHeader>
 	<SettingBigSeperator />
 

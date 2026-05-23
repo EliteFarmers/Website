@@ -36,6 +36,7 @@ export function compareRarity(a: Rarity | string, b: Rarity | string) {
 
 export enum ReforgeTarget {
 	FarmingTool = 'Farming Tool',
+	Vacuum = 'Vacuum',
 	Hoe = 'Hoe',
 	Axe = 'Axe',
 	Armor = 'Armor',

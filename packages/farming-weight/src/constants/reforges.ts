@@ -12,6 +12,7 @@ export * from './reforge-types.js';
 export const REFORGES: Record<string, Reforge> = REFORGE_SOURCES;
 
 export const STAT_ICONS: Record<Stat, string> = {
+	[Stat.Damage]: '❁',
 	[Stat.FishingSpeed]: '☂',
 	[Stat.Strength]: '❁',
 	[Stat.Health]: '❤',

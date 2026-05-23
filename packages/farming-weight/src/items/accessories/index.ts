@@ -7,12 +7,14 @@ import {
 	FreshlyBakedRing,
 	FreshlyBakedTalisman,
 } from './freshly-baked.js';
+import { PesthunterArtifact, PesthunterBadge, PesthunterRelic, PesthunterRing } from './pesthunter.js';
 import { PowerRelic } from './power-relic.js';
 import { AtmosphericFilterAccessory, Magic8BallAccessory } from './special.js';
 
 export * from './base.js';
 export * from './fermento-family.js';
 export * from './freshly-baked.js';
+export * from './pesthunter.js';
 export * from './power-relic.js';
 export * from './special.js';
 
@@ -29,6 +31,10 @@ export const FARMING_ACCESSORY_CLASSES = {
 	FRESHLY_BAKED_ARTIFACT: new FreshlyBakedArtifact(),
 	FRESHLY_BAKED_RING: new FreshlyBakedRing(),
 	FRESHLY_BAKED_TALISMAN: new FreshlyBakedTalisman(),
+	PESTHUNTER_RELIC: new PesthunterRelic(),
+	PESTHUNTER_ARTIFACT: new PesthunterArtifact(),
+	PESTHUNTER_RING: new PesthunterRing(),
+	PESTHUNTER_BADGE: new PesthunterBadge(),
 } satisfies Record<string, ItemDefinition>;
 
 export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> = FARMING_ACCESSORY_CLASSES;

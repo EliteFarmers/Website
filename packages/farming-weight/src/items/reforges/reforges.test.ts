@@ -7,10 +7,12 @@ import { BaseReforge, REFORGE_SOURCES } from './index.js';
 
 test('all reforge definitions are class-backed sources', () => {
 	expect(Object.keys(REFORGE_SOURCES).sort()).toEqual([
+		'beady',
 		'blessed',
 		'blooming',
 		'bountiful',
 		'bustling',
+		'buzzing',
 		'deep_fried',
 		'earthy',
 		'green_thumb',

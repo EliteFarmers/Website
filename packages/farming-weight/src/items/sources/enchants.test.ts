@@ -41,8 +41,8 @@ describe('enchant source effects', () => {
 		expect(
 			enchantEffects('dedication', 4, env(Crop.Cactus), {
 				milestones: {
-					cactus: 46,
-					wheat: 10,
+					[Crop.Cactus]: 46,
+					[Crop.Wheat]: 10,
 				},
 			})
 		).toEqual(

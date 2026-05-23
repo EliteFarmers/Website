@@ -12,10 +12,16 @@ import { PigPet } from './pets/pig.js';
 import { RabbitPet } from './pets/rabbit.js';
 import { RoseDragonPet } from './pets/rose-dragon.js';
 import { SlugPet } from './pets/slug.js';
-import type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType } from './types/pets.js';
+import type {
+	FarmingPetAbility,
+	FarmingPetInfo,
+	FarmingPetItemInfo,
+	FarmingPetItemStatModifier,
+	FarmingPetType,
+} from './types/pets.js';
 
 export { FarmingPetStatType, FarmingPets };
-export type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType };
+export type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetItemStatModifier, FarmingPetType };
 
 export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 	[FarmingPets.Elephant]: new ElephantPet(),
@@ -60,6 +66,28 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 				calculated: (player) => 0.2 * unlockedPestBestiaryTiers(player.bestiaryKills ?? {}),
 			},
 		},
+	},
+	MINOS_RELIC: {
+		name: 'Minos Relic',
+		wiki: 'https://w.elitesb.gg/Minos_Relic',
+		modifiers: [
+			{
+				kind: 'multiply-pet-stats',
+				statTypes: [FarmingPetStatType.Base],
+				multiplier: 4 / 3,
+			},
+		],
+	},
+	HEPHAESTUS_RELIC: {
+		name: 'Hephaestus Relic',
+		wiki: 'https://w.elitesb.gg/Hephaestus_Relic',
+		modifiers: [
+			{
+				kind: 'multiply-pet-stats',
+				statTypes: [FarmingPetStatType.Base],
+				multiplier: 1.5,
+			},
+		],
 	},
 	FLYING_PIG: {
 		name: 'Flying Pig',

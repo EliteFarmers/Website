@@ -306,6 +306,7 @@ test('Interactive Upgrade: Tool Tier Upgrade', () => {
 	if (tierUpgrade && tierUpgrade.meta?.id) {
 		const oldToolCount = player.tools.length;
 		const oldTool = player.tools[0];
+		expect(oldTool).toBeDefined();
 
 		player.applyUpgrade(tierUpgrade);
 
@@ -317,13 +318,13 @@ test('Interactive Upgrade: Tool Tier Upgrade', () => {
 		expect(newTool).toBeDefined();
 
 		// Verify enchantments, attributes, gems were transferred
-		expect(newTool?.item.enchantments?.dedication).toBe(oldTool.item.enchantments?.dedication);
-		expect(newTool?.item.enchantments?.harvesting).toBe(oldTool.item.enchantments?.harvesting);
-		expect(newTool?.item.attributes?.modifier).toBe(oldTool.item.attributes?.modifier);
+		expect(newTool?.item.enchantments?.dedication).toBe(oldTool!.item.enchantments?.dedication);
+		expect(newTool?.item.enchantments?.harvesting).toBe(oldTool!.item.enchantments?.harvesting);
+		expect(newTool?.item.attributes?.modifier).toBe(oldTool!.item.attributes?.modifier);
 		expect(newTool?.item.attributes?.farming_for_dummies_count).toBe(
-			oldTool.item.attributes?.farming_for_dummies_count
+			oldTool!.item.attributes?.farming_for_dummies_count
 		);
-		expect(newTool?.item.gems?.PERIDOT_0).toBe(oldTool.item.gems?.PERIDOT_0);
+		expect(newTool?.item.gems?.PERIDOT_0).toBe(oldTool!.item.gems?.PERIDOT_0);
 	}
 });
 
@@ -466,12 +467,12 @@ test('Interactive Upgrade: Equipment Purchase Shows Follow-up Upgrades', () => {
 
 	// The upgrade should be a purchase upgrade with proper meta
 	const purchaseUpgrade = cloakProgress!.upgrades![0];
-	expect(purchaseUpgrade.meta).toBeDefined();
-	expect(purchaseUpgrade.meta?.type).toBe('buy_item');
-	expect(purchaseUpgrade.meta?.id).toBeDefined();
+	expect(purchaseUpgrade?.meta).toBeDefined();
+	expect(purchaseUpgrade?.meta?.type).toBe('buy_item');
+	expect(purchaseUpgrade?.meta?.id).toBeDefined();
 
 	// Expand the upgrade tree
-	const tree = player.expandUpgrade(purchaseUpgrade, {
+	const tree = player.expandUpgrade(purchaseUpgrade!, {
 		maxDepth: 2,
 		stats: [Stat.FarmingFortune],
 	});
@@ -536,7 +537,7 @@ test('Upgrade Tree: Conflict Keys Prevent Duplicate Upgrade Types in Children', 
 	// There should only be ONE reforge upgrade in the entire tree (the root)
 	const reforgeUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === `reforge:${armorPiece!.item.uuid}`);
 	expect(reforgeUpgrades.length).toBe(1);
-	expect(reforgeUpgrades[0].depth).toBe(0); // Should be at root only
+	expect(reforgeUpgrades[0]?.depth).toBe(0); // Should be at root only
 
 	// If there are children (e.g., item tier upgrades), they should not contain reforge upgrades
 	for (const child of tree.children) {
@@ -555,13 +556,13 @@ test('Upgrade Tree: Armor Piece Purchase Shows Complete Follow-up Tree', () => {
 	expect(helmetProgress!.upgrades!.length).toBeGreaterThan(0);
 
 	const purchaseUpgrade = helmetProgress!.upgrades![0];
-	expect(purchaseUpgrade.meta).toBeDefined();
-	expect(purchaseUpgrade.meta?.type).toBe('buy_item');
-	expect(purchaseUpgrade.meta?.id).toBeDefined();
+	expect(purchaseUpgrade?.meta).toBeDefined();
+	expect(purchaseUpgrade?.meta?.type).toBe('buy_item');
+	expect(purchaseUpgrade?.meta?.id).toBeDefined();
 
-	expect(purchaseUpgrade.conflictKey).toBe('item_purchase:Helmet');
+	expect(purchaseUpgrade?.conflictKey).toBe('item_purchase:Helmet');
 
-	const tree = player.expandUpgrade(purchaseUpgrade, {
+	const tree = player.expandUpgrade(purchaseUpgrade!, {
 		maxDepth: 2,
 		stats: [Stat.FarmingFortune],
 	});
@@ -645,7 +646,7 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 	);
 
 	expect(recombUpgrades.length).toBe(1);
-	expect(recombUpgrades[0].depth).toBe(0);
+	expect(recombUpgrades[0]?.depth).toBe(0);
 });
 
 test('Interactive Upgrade: item rarity prefers attributes and recombobulate updates attributes', () => {

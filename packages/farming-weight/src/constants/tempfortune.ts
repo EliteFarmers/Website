@@ -12,6 +12,7 @@ export interface TemporaryFarmingFortune {
 	celestialMasonJar?: boolean;
 	melonJuiceMixin?: boolean;
 	finnsFocaccia?: boolean;
+	stinkyCheesePotion?: boolean;
 }
 
 export interface TemporaryFortuneSource {
@@ -98,6 +99,15 @@ export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryF
 		fortune: (settings) => {
 			if (!settings.finnsFocaccia) return;
 			return 5;
+		},
+	},
+	stinkyCheesePotion: {
+		name: 'Douce Pluie de Stinky Cheese Potion',
+		wiki: 'https://w.elitesb.gg/Douce_Pluie_De_Stinky_Cheese',
+		stat: Stat.BonusPestChance,
+		fortune: (settings) => {
+			if (!settings.stinkyCheesePotion) return;
+			return 20;
 		},
 	},
 };

@@ -88,29 +88,34 @@ export class FarmingPet {
 	): { fortune: number; breakdown: Record<string, number> } {
 		let fortune = 0;
 		const breakdown: Record<string, number> = {};
+		const typedContributions: Partial<Record<FarmingPetStatType, number>> = {};
+
+		const addContribution = (name: string, value: number, type?: FarmingPetStatType) => {
+			if (!value) return;
+			fortune += value;
+			breakdown[name] = (breakdown[name] ?? 0) + value;
+			if (type) typedContributions[type] = (typedContributions[type] ?? 0) + value;
+		};
 
 		// Base stats
 		const baseStat = this.info.stats?.[stat];
 		const stats = getStatValue(baseStat, this);
 		if (stats) {
-			fortune += stats;
-			breakdown[baseStat?.name ?? 'Base Stats'] = stats;
+			addContribution(baseStat?.name ?? 'Base Stats', stats, baseStat?.type);
 		}
 
 		// Per level stats
 		const perLevelStats = this.info.perLevelStats?.[stat];
 		if (perLevelStats) {
 			const amount = getStatValue(perLevelStats, this) * this.level;
-			fortune += amount;
-			breakdown[perLevelStats.name ?? 'Unknown'] = amount;
+			addContribution(perLevelStats.name ?? 'Unknown', amount, perLevelStats.type);
 		}
 
 		// Per rarity fortune stats
 		const perRarityStats = this.info.perRarityLevelStats?.[this.rarity]?.[stat];
 		if (perRarityStats) {
 			const amount = getStatValue(perRarityStats, this) * this.level;
-			fortune += amount;
-			breakdown[perRarityStats.name ?? 'Rarity Stat'] = amount;
+			addContribution(perRarityStats.name ?? 'Rarity Stat', amount, perRarityStats.type);
 		}
 
 		// Pet abilities
@@ -134,8 +139,20 @@ export class FarmingPet {
 					value *= hyperchargeMultiplier;
 				}
 
+				addContribution(fortuneStat.name ?? ability.name, value, fortuneStat.type);
+			}
+		}
+
+		// Pet item modifiers such as Minos/Hephaestus Relic.
+		for (const modifier of this.item?.modifiers ?? []) {
+			if (modifier.kind !== 'multiply-pet-stats') continue;
+			const statTypes = modifier.statTypes ?? Object.values(FarmingPetStatType);
+			const affected = statTypes.reduce((sum, type) => sum + (typedContributions[type] ?? 0), 0);
+			const value = affected * (modifier.multiplier - 1);
+			if (value) {
+				breakdown[modifier.name ?? this.item?.name ?? 'Pet Item Modifier'] =
+					(breakdown[modifier.name ?? this.item?.name ?? 'Pet Item Modifier'] ?? 0) + value;
 				fortune += value;
-				breakdown[fortuneStat.name ?? ability.name] = value;
 			}
 		}
 

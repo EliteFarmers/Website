@@ -14,6 +14,8 @@
 		expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
 		rateImpactFn?: (upgrade: FortuneUpgrade) => UpgradeRateImpact | undefined;
 		rateImpactUnavailableLabel?: string;
+		costPerValueFn?: (upgrade: FortuneUpgrade) => number;
+		costPerHeader?: string;
 	}
 
 	let {
@@ -25,10 +27,22 @@
 		expandUpgrade,
 		rateImpactFn,
 		rateImpactUnavailableLabel,
+		costPerValueFn,
+		costPerHeader,
 	}: Props = $props();
 
 	const columns = $derived(
-		getColumns(items, costFn, applyUpgrade, expandUpgrade, rateImpactFn, rateImpactUnavailableLabel, version)
+		getColumns(
+			items,
+			costFn,
+			applyUpgrade,
+			expandUpgrade,
+			rateImpactFn,
+			rateImpactUnavailableLabel,
+			version,
+			costPerValueFn,
+			costPerHeader
+		)
 	);
 
 	const tableData = $derived.by(() => {

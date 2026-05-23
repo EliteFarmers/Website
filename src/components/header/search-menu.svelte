@@ -117,6 +117,10 @@
 				<Tabs.Trigger value="/fortune" class="data-[state=active]:border-border border-2 border-transparent"
 					>Fortune</Tabs.Trigger
 				>
+				<Tabs.Trigger
+					value="/pest-farming"
+					class="data-[state=active]:border-border border-2 border-transparent">Pest Farming</Tabs.Trigger
+				>
 				<Tabs.Trigger value="/contests" class="data-[state=active]:border-border border-2 border-transparent"
 					>Contests</Tabs.Trigger
 				>

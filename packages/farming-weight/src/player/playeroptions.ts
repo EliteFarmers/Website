@@ -38,6 +38,8 @@ export interface FortuneMissingFromAPI {
 	filledRosewaterFlask?: number;
 
 	sprayedPlot?: boolean;
+	pesthunterAccessoryEnabled?: boolean;
+	mantidPestKills?: number;
 	infestedPlotProbability?: number;
 
 	attributes?: Record<string, number>;
@@ -72,6 +74,7 @@ export interface CarnivalHarvestFeastPerks {
 	[key: string]: string | null | number | undefined;
 	natural_talent?: string | null | number;
 	fortunate_feasting?: string | null | number;
+	feast_crashers?: string | null | number;
 }
 
 export interface ExtraFarmingFortune {

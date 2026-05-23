@@ -17,8 +17,9 @@ export const getColumns = (
 	expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode,
 	rateImpactFn?: (upgrade: FortuneUpgrade) => UpgradeRateImpact | undefined,
 	rateImpactUnavailableLabel?: string,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	_version?: number
+	_version?: number,
+	costPerValueFn?: (upgrade: FortuneUpgrade) => number,
+	costPerHeader = 'Cost Per Fortune'
 ) =>
 	[
 		{
@@ -77,7 +78,7 @@ export const getColumns = (
 			accessorKey: 'costper',
 			accessorFn: (row) => {
 				if (costFn) {
-					const increase = row.increase || row.max || 0;
+					const increase = (costPerValueFn?.(row) ?? row.increase) || row.max || 0;
 					return increase > 0 ? Math.round(costFn(row, itemsLookup) / increase) : 0;
 				}
 				return 0;
@@ -86,13 +87,14 @@ export const getColumns = (
 				return renderComponent(UpgradeCostPer, {
 					upgrade: row.original,
 					totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
+					value: costPerValueFn?.(row.original),
 				});
 			},
 			enableSorting: true,
 			header: ({ column }) =>
 				renderComponent(DataTableColumnHeader<FortuneUpgrade, unknown>, {
 					column,
-					title: 'Cost Per Fortune',
+					title: costPerHeader,
 				}),
 		},
 		{

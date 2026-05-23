@@ -1,5 +1,6 @@
 <script lang="ts" module>
 	import ChartArea from '@lucide/svelte/icons/chart-area';
+	import Bug from '@lucide/svelte/icons/bug';
 	import Clover from '@lucide/svelte/icons/clover';
 	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
 	import Sprout from '@lucide/svelte/icons/sprout';
@@ -62,13 +63,18 @@
 			href: `${path}/fortune`,
 		},
 		{
+			icon: Bug,
+			name: 'Pest Farming',
+			href: `${path}/pest-farming`,
+		},
+		{
 			icon: Trophy,
 			name: 'ranks',
 			href: `${path}/ranks`,
 		},
 	]);
 
-	const subPage = $derived(subPages.find((subPages) => subPages.name === lastPath) ?? subPages[0]);
+	const subPage = $derived(subPages.find((subPage) => subPage.href?.split('/').at(-1) === lastPath) ?? subPages[0]);
 
 	const crumbs = $derived<Crumb[]>([
 		{

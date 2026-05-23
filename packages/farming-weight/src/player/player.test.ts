@@ -3,8 +3,14 @@ import { FARMING_ATTRIBUTE_SHARDS } from '../constants/attributes.js';
 import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforge-types.js';
 import { Stat } from '../constants/stats.js';
-import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
+import {
+	type FortuneUpgrade,
+	type FortuneUpgradeGroupMeta,
+	UpgradeAction,
+	UpgradeCategory,
+} from '../constants/upgrades.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
+import type { EliteItemDto } from '../fortune/item.js';
 import type { GearSlot } from '../items/definitions.js';
 import { FarmingPlayer } from './player.js';
 
@@ -47,7 +53,7 @@ test('Hypercharge chip temp fortune scaling test', () => {
 	});
 
 	// Doubled
-	expect(player.tempFortuneBreakdown['Century Cake'].value).toBe(10);
+	expect(player.tempFortuneBreakdown['Century Cake']?.value).toBe(10);
 });
 
 test('Garden chips stat contribution test', () => {
@@ -162,7 +168,7 @@ test('Overdrive chip contest crop fortune test', () => {
 	});
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
-	expect(cropFortune.breakdown['Overdrive Chip'].value).toBe(100);
+	expect(cropFortune.breakdown['Overdrive Chip']?.value).toBe(100);
 
 	const other = player.getCropFortune(Crop.Carrot);
 	expect(other.breakdown['Overdrive Chip']).toBeUndefined();
@@ -236,7 +242,7 @@ test('Crop specific pet fortune test', () => {
 		uniqueVisitors: 71,
 	});
 
-	player.selectPet(player.pets[0]);
+	player.selectPet(player.pets[0]!);
 
 	const cropFortune = player.getCropFortune(Crop.SugarCane);
 	expect(cropFortune).toBeDefined();
@@ -292,6 +298,44 @@ test('getUpgradeRateImpact reports flat fortune crop output gains', () => {
 	expect(impact.delta.collection).toBe(9_000);
 	expect(impact.delta.items[Crop.NetherWart]).toBe(9_000);
 	expect(impact.delta.totalItems).toBe(9_000);
+});
+
+test('getUpgradeRateImpact reuses provided before rates', () => {
+	const player = new FarmingPlayer({
+		farmingLevel: 20,
+		cropUpgrades: {
+			[Crop.NetherWart]: 0,
+		},
+	});
+	const upgrade: FortuneUpgrade = {
+		title: 'Nether Wart Fortune 1',
+		increase: 5,
+		stats: { [Stat.NetherWartFortune]: 5 },
+		action: UpgradeAction.Upgrade,
+		category: UpgradeCategory.Anita,
+		meta: {
+			type: 'crop_upgrade',
+			key: Crop.NetherWart,
+			value: 1,
+		},
+	};
+	const before = player.getRates(Crop.NetherWart, 72_000);
+	const originalGetRates = player.getRates.bind(player);
+	let originalPlayerRateCalls = 0;
+	player.getRates = ((crop, blocksBroken) => {
+		originalPlayerRateCalls++;
+		return originalGetRates(crop, blocksBroken);
+	}) as FarmingPlayer['getRates'];
+
+	const impact = player.getUpgradeRateImpact(upgrade, {
+		crop: Crop.NetherWart,
+		blocksBroken: 72_000,
+		before,
+	});
+
+	expect(originalPlayerRateCalls).toBe(0);
+	expect(impact.before).toBe(before);
+	expect(impact.delta.collection).toBe(9_000);
 });
 
 test('getUpgradeRateImpact applies exportable crop unlocks', () => {
@@ -492,7 +536,6 @@ test('getUpgradeRateImpact keeps Lotus to Blossom salesperson piece bonus positi
 			{
 				id: 397,
 				count: 1,
-				damage: 3,
 				skyblockId: 'LOTUS_NECKLACE',
 				uuid: 'lotus-necklace-piece-bonus',
 				name: 'Rooted Lotus Necklace',
@@ -510,7 +553,7 @@ test('getUpgradeRateImpact keeps Lotus to Blossom salesperson piece bonus positi
 					modifier: 'rooted',
 					rarity_upgrades: '1',
 				},
-			},
+			} as EliteItemDto,
 		],
 	});
 
@@ -768,11 +811,12 @@ test('getUpgrades can replace grouped armor tier rows with a single set upgrade'
 	const player = fermentoToHelianthusPlayer();
 	const upgrades = player.getUpgrades({ stat: Stat.FarmingFortune, includeUpgradeGroups: true });
 	const group = upgrades.find((u) => u.meta?.type === 'upgrade_group');
+	const groupMeta = group?.group as FortuneUpgradeGroupMeta | undefined;
 
 	expect(group).toBeDefined();
 	expect(upgrades[0]).toBe(group);
 	expect(group?.title).toBe('Upgrade Fermento Armor to Helianthus Armor');
-	expect(group?.group?.memberCount).toBe(4);
+	expect(groupMeta?.memberCount).toBe(4);
 	expect(group?.groupedUpgrades?.map((u) => u.title)).toStrictEqual([
 		'Helianthus Helmet',
 		'Helianthus Chestplate',
@@ -807,9 +851,10 @@ test('partial armor tier upgrade groups include only currently available pieces'
 	const group = player
 		.getUpgrades({ stat: Stat.FarmingFortune, includeUpgradeGroups: true })
 		.find((u) => u.meta?.type === 'upgrade_group');
+	const groupMeta = group?.group as FortuneUpgradeGroupMeta | undefined;
 
 	expect(group).toBeDefined();
-	expect(group?.group?.memberCount).toBe(2);
+	expect(groupMeta?.memberCount).toBe(2);
 	expect(group?.groupedUpgrades?.map((u) => u.title)).toStrictEqual(['Helianthus Chestplate', 'Helianthus Boots']);
 	expect(group?.cost?.items?.CONDENSED_HELIANTHUS).toBe(4);
 	expect(group?.cost?.items?.COMPACTED_WILD_ROSE).toBe(64);
@@ -867,8 +912,8 @@ test('grouped armor tier rate impact matches applying member upgrades sequential
 	}
 	const after = sequential.getRates(Crop.NetherWart, blocksBroken);
 
-	expect(groupedImpact.before.items.FERMENTO).toBeCloseTo(before.items.FERMENTO, 8);
-	expect(groupedImpact.after.items.FERMENTO).toBeCloseTo(after.items.FERMENTO, 8);
+	expect(groupedImpact.before.items.FERMENTO!).toBeCloseTo(before.items.FERMENTO!, 8);
+	expect(groupedImpact.after.items.FERMENTO!).toBeCloseTo(after.items.FERMENTO!, 8);
 	expect(groupedImpact.delta.items.FERMENTO ?? 0).toBeCloseTo(0, 8);
 	expect(groupedImpact.delta.collection).toBeCloseTo(after.collection - before.collection, 8);
 	expect(groupedImpact.delta.npcCoins).toBeCloseTo(after.npcCoins - before.npcCoins, 5);
@@ -896,8 +941,8 @@ test('expandUpgrade exposes grouped armor members in application order', () => {
 		'Helianthus Boots',
 	]);
 	expect(tree.statsGained[Stat.FarmingFortune]).toBeGreaterThan(0);
-	expect(tree.children[0].statsGained[Stat.FarmingFortune]).toBeLessThan(0);
-	expect(tree.children[2].statsGained[Stat.FarmingFortune]).toBeGreaterThan(0);
+	expect(tree.children[0]?.statsGained[Stat.FarmingFortune]).toBeLessThan(0);
+	expect(tree.children[2]?.statsGained[Stat.FarmingFortune]).toBeGreaterThan(0);
 });
 
 test('getUpgradeRateImpact reports normal Overbloom RNG gains', () => {
@@ -974,7 +1019,7 @@ test('getUpgradeRateImpact reports Seasoning gains as currency-only output', () 
 	expect(impact.delta.rngItems.SEASONING).toBeUndefined();
 	expect(impact.delta.coinSources.SEASONING).toBeUndefined();
 	expect(impact.delta.totalItems).toBeCloseTo(itemDeltaTotal, 8);
-	expect(impact.delta.totalItems).not.toBeCloseTo(itemDeltaTotal + impact.delta.currencies.SEASONING, 8);
+	expect(impact.delta.totalItems).not.toBeCloseTo(itemDeltaTotal + impact.delta.currencies.SEASONING!, 8);
 });
 
 test('getUpgradeRateImpact reports Cropeetle normal Overbloom gains', () => {

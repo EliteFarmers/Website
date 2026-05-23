@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
-import { createFarmingPlayer } from '../player/player';
-import { getShardLevel, getShardsForLevel, getShardsForNextLevel } from './attributes';
-import { Crop } from './crops';
-import { Rarity } from './reforges';
+import { createFarmingPlayer } from '../player/player.js';
+import { getShardLevel, getShardsForLevel, getShardsForNextLevel } from './attributes.js';
+import { Crop } from './crops.js';
+import { Rarity } from './reforges.js';
 
 test('Attribute shards leveling test', () => {
 	const amount = 19;

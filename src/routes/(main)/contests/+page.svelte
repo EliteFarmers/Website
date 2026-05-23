@@ -41,7 +41,7 @@
 <div class="flex flex-col items-center justify-center">
 	<h1 class="my-16 text-4xl">Jacob's Contests</h1>
 
-	<div class="flex max-w-4xl flex-col items-stretch gap-8 md:flex-row">
+	<div class="flex max-w-5xl flex-col items-stretch gap-8 md:flex-row">
 		<Card.Root class="flex max-w-md flex-col">
 			<Card.Header>
 				<Card.Title class="text-xl">View upcoming contests!</Card.Title>
@@ -52,6 +52,17 @@
 				</p>
 				<div class="flex justify-center">
 					<Button href="/contests/upcoming" variant="default" size="lg">Upcoming Contests</Button>
+				</div>
+			</Card.Content>
+		</Card.Root>
+		<Card.Root class="flex max-w-md flex-col">
+			<Card.Header>
+				<Card.Title class="text-xl">View upcoming Harvest Feast crops!</Card.Title>
+			</Card.Header>
+			<Card.Content class="flex flex-1 flex-col justify-between">
+				<p class="text-md mb-6 w-full">Current Feast crops and the next known crop season times.</p>
+				<div class="flex justify-center">
+					<Button href="/harvest-feast/upcoming" variant="default" size="lg">Harvest Feast Crops</Button>
 				</div>
 			</Card.Content>
 		</Card.Root>

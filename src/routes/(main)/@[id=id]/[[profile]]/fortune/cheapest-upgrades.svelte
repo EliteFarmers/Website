@@ -12,7 +12,14 @@
 	import { Button } from '$ui/button';
 	import Settings from '@lucide/svelte/icons/settings';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Crop, Stat, type FarmingPlayer, type FortuneUpgrade, type UpgradeRateImpact } from 'farming-weight';
+	import {
+		Crop,
+		Stat,
+		getRateCalculationStateKey,
+		type FarmingPlayer,
+		type FortuneUpgrade,
+		type UpgradeRateImpact,
+	} from 'farming-weight';
 	import { Debounced } from 'runed';
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
@@ -35,8 +42,11 @@
 
 	let { player, crop, blocksPerHour = 72_000 }: Props = $props();
 
+	const rateImpactMemo = new SvelteMap<string, UpgradeRateImpact>();
+	const maxRateImpactMemoEntries = 2_500;
+
 	const upgrades = $derived.by(() => mergeUpgrades($player, crop));
-	const playerRateStateKey = $derived.by(() => getPlayerRateStateKey($player));
+	const playerRateStateKey = $derived.by(() => getRateCalculationStateKey($player, crop));
 	const rateImpactCache = $derived.by(() =>
 		buildRateImpactCache($player, upgrades, crop, blocksPerHour, playerRateStateKey)
 	);
@@ -64,10 +74,6 @@
 		);
 	}
 
-	function getPlayerRateStateKey(p: FarmingPlayer) {
-		return [p.selectedPet?.pet.uuid ?? '', p.selectedTool?.item.uuid ?? ''].join('::');
-	}
-
 	function hashKey(value: string) {
 		let hash = 0;
 		for (let i = 0; i < value.length; i++) {
@@ -93,21 +99,44 @@
 		activePlayerStateKey: string
 	) {
 		const values = new SvelteMap<string, UpgradeRateImpact>();
+		const activeKeys = new SvelteSet<string>();
 		let version = rows.length + activeBlocksPerHour + hashKey(activePlayerStateKey);
 
 		if (activeCrop && activeBlocksPerHour > 0) {
-			for (const upgrade of rows) {
-				const impact = p.getUpgradeRateImpact(upgrade, {
-					crop: activeCrop,
-					blocksBroken: activeBlocksPerHour,
-				});
+			let beforeRates: UpgradeRateImpact['before'] | undefined;
 
-				values.set(getRateImpactKey(upgrade, activeCrop, activeBlocksPerHour, activePlayerStateKey), impact);
+			for (const upgrade of rows) {
+				const key = getRateImpactKey(upgrade, activeCrop, activeBlocksPerHour, activePlayerStateKey);
+				let impact = rateImpactMemo.get(key);
+				if (!impact) {
+					beforeRates ??= p.getRates(activeCrop, activeBlocksPerHour);
+					impact = p.getUpgradeRateImpact(upgrade, {
+						crop: activeCrop,
+						blocksBroken: activeBlocksPerHour,
+						before: beforeRates,
+					});
+					rateImpactMemo.set(key, impact);
+				}
+
+				activeKeys.add(key);
+				values.set(key, impact);
 				version += impact.delta.totalItems;
 			}
 		}
 
+		pruneRateImpactMemo(activeKeys);
 		return { values, version };
+	}
+
+	function pruneRateImpactMemo(activeKeys: Set<string>) {
+		if (rateImpactMemo.size <= maxRateImpactMemoEntries) return;
+
+		for (const key of rateImpactMemo.keys()) {
+			if (!activeKeys.has(key)) {
+				rateImpactMemo.delete(key);
+			}
+			if (rateImpactMemo.size <= maxRateImpactMemoEntries) return;
+		}
 	}
 
 	function getRateImpact(upgrade: FortuneUpgrade) {
