@@ -154,11 +154,11 @@ export const updateGuideCommand = command(
 		description: z.string().min(1),
 		markdownContent: z.string(),
 		richBlocks: z.any().optional(),
-		iconSkyblockId: z.string().optional(),
+		iconSkyblockId: z.string().nullable().optional(),
 		tags: z.array(z.string()).optional(),
 		concurrency: z.number(),
 	}),
-	async ({ id, title, description, markdownContent, iconSkyblockId, tags, concurrency }) => {
+	async ({ id, title, description, markdownContent, richBlocks, iconSkyblockId, tags, concurrency }) => {
 		const event = getRequestEvent();
 		if (!event.locals.access_token) {
 			return { error: 'Unauthorized' };
@@ -171,12 +171,16 @@ export const updateGuideCommand = command(
 			concurrencyVersion: concurrency,
 		};
 
-		if (iconSkyblockId) {
+		if (iconSkyblockId !== undefined) {
 			request.iconSkyblockId = iconSkyblockId;
 		}
 
-		if (tags) {
+		if (tags !== undefined) {
 			request.tags = tags;
+		}
+
+		if (richBlocks !== undefined) {
+			request.richBlocks = richBlocks;
 		}
 
 		const result = await updateGuide(id, request);
@@ -193,9 +197,6 @@ export const updateGuideCommand = command(
 			});
 			return { error: 'Failed to update guide' };
 		}
-
-		// Refresh the guide data after update
-		GetGuide({ slug: '', draft: true }).refresh();
 
 		return { error: null, version: result.data.concurrencyVersion };
 	}

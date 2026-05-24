@@ -22,6 +22,7 @@ export interface FullGuideDto {
 	score: number;
 	viewCount: number;
 	tags: string[];
+	tagIds: number[];
 	isDraft: boolean;
 	status: string;
 	/** @nullable */
