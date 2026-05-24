@@ -22,4 +22,5 @@ export interface GuideDto {
 	createdAt: string;
 	description: string;
 	tags: string[];
+	tagIds: number[];
 }
