@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
 	import type { RootNode } from '$comp/blocks/blocks';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import { env } from '$env/dynamic/public';
 	import { getPageCtx } from '$lib/hooks/page.svelte';

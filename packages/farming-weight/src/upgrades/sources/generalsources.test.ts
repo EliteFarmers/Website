@@ -249,9 +249,10 @@ test('Harvest Feast perk progress can be passed through explicit feast options',
 		},
 	});
 
-	const progress = player.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const progress = player.getProgress([Stat.FarmingFortune, Stat.Overbloom, Stat.BonusPestChance]);
 	const naturalTalent = progress.find((p) => p.name === 'Natural Talent');
 	const fortunateFeasting = progress.find((p) => p.name === 'Fortunate Feasting');
+	const feastCrashers = progress.find((p) => p.name === 'Feast Crashers');
 
 	expect(naturalTalent?.progress?.[0]).toMatchObject({
 		name: 'Level',
@@ -281,7 +282,16 @@ test('Harvest Feast perk progress can be passed through explicit feast options',
 	});
 	expect(fortunateFeasting?.active?.fortune).toBe(20);
 	expect(fortunateFeasting?.active?.stats?.[Stat.FarmingFortune]).toBe(20);
-	expect(progress.find((p) => p.name === 'Feast Crashers')).toBeUndefined();
+	expect(feastCrashers?.progress?.[0]).toMatchObject({
+		name: 'Level',
+		current: 2,
+		max: 3,
+	});
+	expect(feastCrashers?.stats?.[Stat.BonusPestChance]).toMatchObject({
+		current: 0,
+		max: 6,
+	});
+	expect(feastCrashers?.active?.stats?.[Stat.BonusPestChance]).toBe(4);
 });
 
 test('Harvest Feast perk levels contribute while feast is active', () => {
@@ -291,10 +301,12 @@ test('Harvest Feast perk levels contribute while feast is active', () => {
 			perks: {
 				natural_talent: 3,
 				fortunate_feasting: 4,
+				feast_crashers: 3,
 			},
 		},
 	});
 
 	expect(player.getStat(Stat.Overbloom)).toBe(0);
 	expect(player.getStat(Stat.FarmingFortune)).toBe(20);
+	expect(player.getStat(Stat.BonusPestChance)).toBe(6);
 });

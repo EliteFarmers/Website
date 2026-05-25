@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';

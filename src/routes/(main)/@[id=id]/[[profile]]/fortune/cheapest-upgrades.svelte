@@ -2,8 +2,8 @@
 	import { browser } from '$app/environment';
 	import JumpLink from '$comp/jump-link.svelte';
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
-	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { trackAnalytics } from '$lib/analytics';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
 	import { getItem, getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
@@ -12,9 +12,15 @@
 	import { Button } from '$ui/button';
 	import Settings from '@lucide/svelte/icons/settings';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Crop, Stat, type FarmingPlayer, type FortuneUpgrade, type UpgradeRateImpact } from 'farming-weight';
+	import {
+		Crop,
+		Stat,
+		getRateCalculationStateKey,
+		type FarmingPlayer,
+		type FortuneUpgrade,
+		type UpgradeRateImpact,
+	} from 'farming-weight';
 	import { Debounced } from 'runed';
-	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
 	const ctx = getStatsContext();
 	const ratesData = getRatesData();
@@ -26,7 +32,6 @@
 		return await getItems(items);
 	}
 
-	type FetchedItems = Awaited<ReturnType<typeof getBazaarData> | undefined>;
 	interface Props {
 		player: RatesPlayerStore;
 		crop: Crop;
@@ -35,8 +40,12 @@
 
 	let { player, crop, blocksPerHour = 72_000 }: Props = $props();
 
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const rateImpactMemo = new Map<string, UpgradeRateImpact>();
+	const maxRateImpactMemoEntries = 2_500;
+
 	const upgrades = $derived.by(() => mergeUpgrades($player, crop));
-	const playerRateStateKey = $derived.by(() => getPlayerRateStateKey($player));
+	const playerRateStateKey = $derived.by(() => getRateCalculationStateKey($player, crop));
 	const rateImpactCache = $derived.by(() =>
 		buildRateImpactCache($player, upgrades, crop, blocksPerHour, playerRateStateKey)
 	);
@@ -64,10 +73,6 @@
 		);
 	}
 
-	function getPlayerRateStateKey(p: FarmingPlayer) {
-		return [p.selectedPet?.pet.uuid ?? '', p.selectedTool?.item.uuid ?? ''].join('::');
-	}
-
 	function hashKey(value: string) {
 		let hash = 0;
 		for (let i = 0; i < value.length; i++) {
@@ -92,30 +97,66 @@
 		activeBlocksPerHour: number,
 		activePlayerStateKey: string
 	) {
-		const values = new SvelteMap<string, UpgradeRateImpact>();
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const values = new Map<string, UpgradeRateImpact>();
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const activeKeys = new Set<string>();
 		let version = rows.length + activeBlocksPerHour + hashKey(activePlayerStateKey);
 
 		if (activeCrop && activeBlocksPerHour > 0) {
-			for (const upgrade of rows) {
-				const impact = p.getUpgradeRateImpact(upgrade, {
-					crop: activeCrop,
-					blocksBroken: activeBlocksPerHour,
-				});
+			let beforeRates: UpgradeRateImpact['before'] | undefined;
 
-				values.set(getRateImpactKey(upgrade, activeCrop, activeBlocksPerHour, activePlayerStateKey), impact);
+			for (const upgrade of rows) {
+				const key = getRateImpactKey(upgrade, activeCrop, activeBlocksPerHour, activePlayerStateKey);
+				let impact = rateImpactMemo.get(key);
+				if (!impact) {
+					beforeRates ??= p.getRates(activeCrop, activeBlocksPerHour);
+					impact = p.getUpgradeRateImpact(upgrade, {
+						crop: activeCrop,
+						blocksBroken: activeBlocksPerHour,
+						before: beforeRates,
+					});
+					rateImpactMemo.set(key, impact);
+				}
+
+				activeKeys.add(key);
+				values.set(key, impact);
 				version += impact.delta.totalItems;
 			}
 		}
 
+		pruneRateImpactMemo(activeKeys);
 		return { values, version };
+	}
+
+	function pruneRateImpactMemo(activeKeys: Set<string>) {
+		if (rateImpactMemo.size <= maxRateImpactMemoEntries) return;
+
+		for (const key of rateImpactMemo.keys()) {
+			if (!activeKeys.has(key)) {
+				rateImpactMemo.delete(key);
+			}
+			if (rateImpactMemo.size <= maxRateImpactMemoEntries) return;
+		}
 	}
 
 	function getRateImpact(upgrade: FortuneUpgrade) {
 		return rateImpactCache.values.get(getRateImpactKey(upgrade));
 	}
 
+	function hasUpgradePath(upgrade: FortuneUpgrade) {
+		return (
+			$player.expandUpgrade(upgrade, {
+				includeAllTierUpgradeChildren: true,
+				maxDepth: 1,
+				stats: [Stat.FarmingFortune],
+			}).children.length > 0
+		);
+	}
+
 	function getRateImpactItems(cache: { values: Map<string, UpgradeRateImpact> }) {
-		const items = new SvelteSet<string>();
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const items = new Set<string>();
 		for (const impact of cache.values.values()) {
 			for (const itemId of Object.keys(impact.delta.items ?? {})) {
 				items.add(itemId);
@@ -136,26 +177,47 @@
 	let itemsData = $state<RatesItemPriceData>({});
 	let itemsVersion = $state(0);
 	let isInitialLoad = $state(true);
+	let isLoadingItems = $state(true);
+	let itemLoadError = $state<unknown>(null);
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const requestedFallbackItems = new Set<string>();
 
-	let itemsPromise = $derived<Promise<FetchedItems | undefined>>(
-		(async () => {
-			if (!isInitialLoad) return undefined;
-			const data = await getBazaarData(debouncedItems.current);
-			if (data) {
-				Object.assign(itemsData, data);
-				itemsVersion++;
+	$effect(() => {
+		if (!isInitialLoad) return;
+
+		const needed = debouncedItems.current;
+		let cancelled = false;
+		isLoadingItems = true;
+		itemLoadError = null;
+
+		void getBazaarData(needed)
+			.then((data) => {
+				if (cancelled) return;
+				if (data) {
+					Object.assign(itemsData, data);
+					itemsVersion++;
+				}
 				isInitialLoad = false;
-			}
-			return data;
-		})()
-	);
+				isLoadingItems = false;
+			})
+			.catch((error: unknown) => {
+				if (cancelled) return;
+				itemLoadError = error;
+				isLoadingItems = false;
+			});
+
+		return () => {
+			cancelled = true;
+		};
+	});
 
 	$effect(() => {
 		if (isInitialLoad) return;
 		const needed = debouncedItems.current;
-		const missing = needed.filter((id) => !itemsData[id]);
+		const missing = needed.filter((id) => !itemsData[id] && !requestedFallbackItems.has(id));
 
 		if (missing.length > 0) {
+			for (const id of missing) requestedFallbackItems.add(id);
 			Promise.all(missing.map((id) => getItem(id))).then((results) => {
 				results.forEach((res, i) => {
 					itemsData[missing[i]] = res;
@@ -198,9 +260,13 @@
 			<p>No crop selected! Select a crop to add crop specific upgrades to this list!</p>
 		</div>
 	{/if}
-	{#await itemsPromise}
+	{#if isLoadingItems}
 		<p class="text-muted-foreground text-sm">Loading item prices...</p>
-	{:then}
+	{:else if itemLoadError}
+		<p class="text-sm text-red-500">
+			Error fetching item prices: {itemLoadError instanceof Error ? itemLoadError.message : String(itemLoadError)}
+		</p>
+	{:else}
 		<UpgradeList
 			{upgrades}
 			items={itemsData}
@@ -217,10 +283,9 @@
 					includeAllTierUpgradeChildren: true,
 					stats: [Stat.FarmingFortune],
 				})}
+			{hasUpgradePath}
 		/>
-	{:catch error}
-		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>
-	{/await}
+	{/if}
 	<div class="text-muted-foreground flex flex-col items-center justify-center gap-2 p-4 text-sm">
 		<p class="text-primary max-w-xl text-center">
 			Upgrades such as strength for Mooshroom Cow and unlocking visitors for Green Thumb aren't shown here as

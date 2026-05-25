@@ -7,7 +7,7 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Info from '@lucide/svelte/icons/info';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import type { FortuneUpgrade, UpgradeTreeNode } from 'farming-weight';
+	import type { FortuneUpgrade } from 'farming-weight';
 	import UpgradeDescription from './upgrade-description.svelte';
 
 	interface Props {
@@ -15,12 +15,10 @@
 		items?: RatesItemPriceData;
 		expanded?: boolean;
 		toggleExpanded?: () => void;
-		expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
+		canExpand?: boolean;
 	}
 
-	let { upgrade, items, expanded, toggleExpanded, expandUpgrade }: Props = $props();
-
-	const hasNextUpgrades = $derived.by(() => (expandUpgrade?.(upgrade).children.length ?? 0) > 0);
+	let { upgrade, items, expanded, toggleExpanded, canExpand = false }: Props = $props();
 </script>
 
 <div class="flex h-full min-w-80 flex-1 flex-col items-start justify-center gap-1">
@@ -44,12 +42,12 @@
 		{/if}
 	</p>
 	<UpgradeDescription {upgrade} {items} />
-	{#if hasNextUpgrades && toggleExpanded}
+	{#if canExpand && toggleExpanded}
 		<Button variant="link" size="sm" class="text-muted-foreground h-auto p-0" onclick={() => toggleExpanded()}>
 			{#if expanded}
-				<ChevronDown class="mr-1 h-3 w-3" /> Hide next upgrades
+				<ChevronDown class="mr-1 h-3 w-3" /> Hide upgrade path
 			{:else}
-				<ChevronRight class="mr-1 h-3 w-3" /> Show next upgrades...
+				<ChevronRight class="mr-1 h-3 w-3" /> View upgrade path...
 			{/if}
 		</Button>
 	{/if}

@@ -10,6 +10,7 @@
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc --watch",
+		"typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
 		"format": "pnpm biome check --write",
 		"lint": "pnpm biome check",
 		"test": "vitest run",

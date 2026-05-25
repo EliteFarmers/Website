@@ -30,6 +30,7 @@ import {
 	FILLED_ROSEWATER_FLASK_SOURCE,
 	PEST_BESTIARY_SOURCE,
 	REFINED_TRUFFLE_SOURCE,
+	SPRAYONATOR_SOURCE,
 	UNLOCKED_PLOTS,
 	WRIGGLING_LARVA_SOURCE,
 } from '../../constants/specific.js';
@@ -55,6 +56,10 @@ export const GARDEN_CHIP_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = Object
 
 function hasPlayerOptions(source: unknown): source is FarmingPlayer {
 	return typeof source === 'object' && source !== null && 'options' in source;
+}
+
+function includesRequestedStat(stats: Stat[] | undefined, stat: Stat): boolean {
+	return stats?.includes(stat) === true;
 }
 
 function shardStat(
@@ -582,6 +587,113 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 	},
 	{
+		name: 'Pesthunter Accessory',
+		exists: () => true,
+		wiki: (player) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+			return highest?.info.wiki ?? FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.wiki;
+		},
+		max: () => 0,
+		current: () => 0,
+		maxStat: (player, stat) => {
+			if (stat !== Stat.BonusPestChance) return 0;
+			const first = FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE;
+			const accessory = first
+				? FarmingAccessory.fakeItem(first, { ...player.options, pesthunterAccessoryEnabled: true })
+				: undefined;
+			const last = accessory?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.PESTHUNTER_RELIC;
+			return last
+				? (FarmingAccessory.fakeItem(last, { ...player.options, pesthunterAccessoryEnabled: true })?.getStat(
+						stat
+					) ?? 0)
+				: 0;
+		},
+		currentStat: (player, stat) => {
+			if (stat !== Stat.BonusPestChance) return 0;
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+			return highest?.getStat(stat) ?? 0;
+		},
+		active: (player) => {
+			if (player.options.pesthunterAccessoryEnabled !== false) return { active: true };
+			return {
+				active: false,
+				reason: 'Pesthunter accessory bonus is manually disabled.',
+			};
+		},
+		activeStat: (player, stat) => {
+			if (stat !== Stat.BonusPestChance) return { active: player.options.pesthunterAccessoryEnabled !== false };
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+			const enabledValue = highest
+				? FarmingAccessory.fakeItem(highest.info, {
+						...player.options,
+						pesthunterAccessoryEnabled: true,
+					})?.getStat(stat)
+				: undefined;
+			return {
+				active: player.options.pesthunterAccessoryEnabled !== false,
+				value: enabledValue,
+			};
+		},
+		info: (player) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+			const first = !highest ? FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE : undefined;
+			return {
+				item: highest?.item,
+				info: highest?.info,
+				nextInfo: first ?? highest?.getNextItemUpgrade()?.info,
+				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.PESTHUNTER_RELIC,
+			};
+		},
+		upgrades: (player, stats) => {
+			if (!includesRequestedStat(stats, Stat.BonusPestChance)) return [];
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+
+			if (!highest) {
+				const badge = FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE;
+				if (!badge) return [];
+				const value =
+					FarmingAccessory.fakeItem(badge, { ...player.options, pesthunterAccessoryEnabled: true })?.getStat(
+						Stat.BonusPestChance
+					) ?? 0;
+				return [
+					{
+						title: badge.name,
+						increase: 0,
+						stats: {
+							[Stat.BonusPestChance]: value,
+						},
+						action: UpgradeAction.Purchase,
+						purchase: badge.skyblockId,
+						category: UpgradeCategory.Item,
+						wiki: badge.wiki,
+						cost: {
+							items: {
+								[badge.skyblockId]: 1,
+							},
+						},
+						meta: {
+							type: 'buy_item',
+							id: badge.skyblockId,
+						},
+						conflictKey: `accessory:${badge.skyblockId}`,
+					},
+				];
+			}
+
+			return highest.getUpgrades({ stat: Stat.BonusPestChance });
+		},
+	},
+	{
 		name: DNA_MILESTONE_SOURCE.name,
 		wiki: () => DNA_MILESTONE_SOURCE.wiki,
 		exists: () => true,
@@ -876,6 +988,27 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			];
 		},
 	},
+	{
+		name: SPRAYONATOR_SOURCE.name,
+		api: false,
+		wiki: () => SPRAYONATOR_SOURCE.wiki,
+		exists: () => true,
+		max: () => 0,
+		current: () => 0,
+		maxStat: (_player, stat) => getFortune(SPRAYONATOR_SOURCE.maxLevel, SPRAYONATOR_SOURCE, stat),
+		currentStat: (player, stat) => (player.options.sprayedPlot ? getFortune(1, SPRAYONATOR_SOURCE, stat) : 0),
+		active: (player) => {
+			if (player.options.sprayedPlot) return { active: true };
+			return {
+				active: false,
+				reason: 'Enable Sprayed Plot when farming a manually sprayed plot.',
+			};
+		},
+		activeStat: (player, stat) => ({
+			active: player.options.sprayedPlot === true,
+			value: getFortune(1, SPRAYONATOR_SOURCE, stat),
+		}),
+	},
 	...createCarnivalHarvestFeastSources(),
 ];
 
@@ -936,6 +1069,14 @@ function createCarnivalHarvestFeastSources(): DynamicFortuneSource<FarmingPlayer
 			stat: Stat.FarmingFortune,
 			maxLevel: 5,
 			perLevel: 5,
+		},
+		{
+			key: 'feast_crashers',
+			name: 'Feast Crashers',
+			wiki: 'https://w.elitesb.gg/Doug',
+			stat: Stat.BonusPestChance,
+			maxLevel: 3,
+			perLevel: 2,
 		},
 	];
 	return perks.map((perk) => ({

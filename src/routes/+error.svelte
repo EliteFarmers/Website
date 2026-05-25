@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 
 	let message = $derived(page.error?.message ?? 'Unknown error.');
 	let status = $derived(page.status);

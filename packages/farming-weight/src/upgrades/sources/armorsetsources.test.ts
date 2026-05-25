@@ -191,6 +191,105 @@ const pesthunterGloves = {
 	},
 };
 
+const rootedBlossomBelt: EliteItemDto = {
+	id: 397,
+	count: 1,
+	skyblockId: 'BLOSSOM_BELT',
+	uuid: 'rooted-blossom-belt',
+	name: '§6Rooted Blossom Belt',
+	lore: ['§6§lLEGENDARY BELT'],
+	enchantments: {},
+	attributes: {
+		modifier: 'rooted',
+		rarity: 'LEGENDARY',
+	},
+};
+
+const helianthusHelmet: EliteItemDto = {
+	id: 397,
+	count: 1,
+	skyblockId: 'HELIANTHUS_HELMET',
+	uuid: 'helianthus-helmet',
+	name: '§dMossy Helianthus Helmet',
+	lore: ['§d§lMYTHIC HELMET'],
+	enchantments: {},
+	attributes: {
+		modifier: 'mossy',
+		rarity: 'MYTHIC',
+	},
+	gems: {},
+};
+
+test('armor loadout progress reports armor sources only', () => {
+	const player = new FarmingPlayer({
+		armor: [helianthusHelmet],
+		equipment: [rootedBlossomBelt],
+	});
+
+	const names = player.armorSet.armorLoadout.getProgress([Stat.FarmingFortune]).map((progress) => progress.name);
+
+	expect(names).toStrictEqual(['Helmet', 'Chestplate', 'Leggings', 'Boots', 'Armor Set Bonus']);
+	expect(names).not.toContain('Belt');
+	expect(names).not.toContain('Equipment Set Bonus');
+});
+
+test('equipment loadout progress reports equipment sources only', () => {
+	const player = new FarmingPlayer({
+		armor: [helianthusHelmet],
+		equipment: [rootedBlossomBelt],
+	});
+
+	const names = player.armorSet.equipmentLoadout.getProgress([Stat.FarmingFortune]).map((progress) => progress.name);
+
+	expect(names).toStrictEqual(['Necklace', 'Cloak', 'Belt', 'Gloves']);
+	expect(names).not.toContain('Helmet');
+	expect(names).not.toContain('Armor Set Bonus');
+});
+
+test('armor set progress remains the combined armor and equipment facade', () => {
+	const player = new FarmingPlayer({
+		armor: [helianthusHelmet],
+		equipment: [rootedBlossomBelt],
+	});
+
+	const names = player.armorSet.getProgress([Stat.FarmingFortune]).map((progress) => progress.name);
+
+	expect(names).toStrictEqual([
+		'Helmet',
+		'Chestplate',
+		'Leggings',
+		'Boots',
+		'Armor Set Bonus',
+		'Necklace',
+		'Cloak',
+		'Belt',
+		'Gloves',
+	]);
+});
+
+test('pest-focused equipment upgrades prefer pest equipment and Squeaky while keeping farming fortune visible', () => {
+	const player = new FarmingPlayer({
+		equipment: [rootedBlossomBelt],
+	});
+	const stats = [Stat.BonusPestChance, Stat.PestKillFortune, Stat.PestCooldownReduction, Stat.FarmingFortune];
+
+	const progress = player.armorSet.getProgress(stats);
+	const belt = progress.find((piece) => piece.name === 'Belt');
+	const upgrades = player.armorSet.getUpgrades({ stats });
+	const squeaky = upgrades.find(
+		(upgrade) => upgrade.title === 'Reforge to Squeaky' && upgrade.onto?.skyblockId === 'BLOSSOM_BELT'
+	);
+
+	expect(belt?.stats?.[Stat.BonusPestChance]?.max).toBeGreaterThan(2);
+	expect(belt?.stats?.[Stat.FarmingFortune]?.current).toBeGreaterThan(0);
+	expect(upgrades.findIndex((upgrade) => upgrade.title === "Pesthunter's Belt")).toBeLessThan(
+		upgrades.findIndex((upgrade) => upgrade.title === 'Reforge to Squeaky')
+	);
+	expect(squeaky?.increase).toBe(2);
+	expect(squeaky?.stats?.[Stat.BonusPestChance]).toBe(2);
+	expect(squeaky?.stats?.[Stat.FarmingFortune]).toBe(-8);
+});
+
 test('Equipment set bonus', () => {
 	const player = new FarmingPlayer({
 		armor: [
@@ -288,7 +387,7 @@ test('Equipment set bonus', () => {
 });
 
 test('Rancher boots preferred upgrade test', () => {
-	const boots = FarmingArmor.fakeItem(FARMING_ARMOR_INFO.RANCHERS_BOOTS);
+	const boots = FarmingArmor.fakeItem(FARMING_ARMOR_INFO.RANCHERS_BOOTS!);
 	if (!boots) throw new Error('No boots');
 
 	const player = new FarmingPlayer({
@@ -361,15 +460,15 @@ test('Armor purchase upgrades have stats populated', () => {
 	if (helmetProgress?.upgrades && helmetProgress.upgrades.length > 0) {
 		const purchaseUpgrade = helmetProgress.upgrades[0];
 		expect(purchaseUpgrade).toBeDefined();
-		expect(purchaseUpgrade.stats).toBeDefined();
+		expect(purchaseUpgrade?.stats).toBeDefined();
 
 		// Purchase upgrades should have stats from the fake item's getStats()
 		// This verifies the stats field is populated, not hardcoded to just FarmingFortune
-		expect(typeof purchaseUpgrade.stats).toBe('object');
+		expect(typeof purchaseUpgrade?.stats).toBe('object');
 
 		// If there's an increase, FarmingFortune should be present
-		if (purchaseUpgrade.increase > 0) {
-			expect(purchaseUpgrade.stats?.['farming_fortune']).toBeDefined();
+		if (purchaseUpgrade!.increase > 0) {
+			expect(purchaseUpgrade!.stats?.['farming_fortune']).toBeDefined();
 		}
 	}
 });

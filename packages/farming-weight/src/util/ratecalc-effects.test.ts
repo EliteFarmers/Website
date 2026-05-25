@@ -59,7 +59,7 @@ describe('ratecalc-effects: regression', () => {
 		const baseRates = basePlayer.getRates(Crop.NetherWart, blocksBroken);
 		const deepFriedRates = deepFriedPlayer.getRates(Crop.NetherWart, blocksBroken);
 
-		expect(deepFriedRates.currencies.SEASONING).toBeCloseTo(baseRates.currencies.SEASONING * 1.25, 8);
+		expect(deepFriedRates.currencies.SEASONING).toBeCloseTo(baseRates.currencies.SEASONING! * 1.25, 8);
 		expect(deepFriedRates.rngItems?.BOTROOT).toBeCloseTo(baseRates.rngItems?.BOTROOT ?? 0, 8);
 	});
 
@@ -83,7 +83,7 @@ describe('ratecalc-effects: regression', () => {
 		const naturalTalentRates = naturalTalentPlayer.getRates(Crop.NetherWart, blocksBroken);
 
 		expect(naturalTalentPlayer.getStat(Stat.Overbloom)).toBe(0);
-		expect(naturalTalentRates.currencies.SEASONING).toBeCloseTo(baseRates.currencies.SEASONING * 1.05, 8);
+		expect(naturalTalentRates.currencies.SEASONING).toBeCloseTo(baseRates.currencies.SEASONING! * 1.05, 8);
 		expect(naturalTalentRates.rngItems?.BOTROOT).toBeCloseTo(baseRates.rngItems?.BOTROOT ?? 0, 8);
 	});
 

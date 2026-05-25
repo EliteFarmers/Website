@@ -3,10 +3,10 @@
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import Countdown from '$comp/countdown.svelte';
-	import Head from '$comp/head.svelte';
 	import LeaderboardEntriesColumns from '$comp/leaderboards/entries-columns.svelte';
 	import IntervalSelect from '$comp/leaderboards/interval-select.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import { formatLeaderboardAmount } from '$lib/format';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';

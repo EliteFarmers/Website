@@ -2,10 +2,10 @@
 	import { browser } from '$app/environment';
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
 	import LeaderboardEntriesColumns from '$comp/leaderboards/entries-columns.svelte';
 	import IntervalSelect from '$comp/leaderboards/interval-select.svelte';
 	import LeaderboardPaginationLocal from '$comp/leaderboards/pagination-local.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import type { GuildMembersLeaderboard, LeaderboardEntry } from '$lib/api/elite';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';

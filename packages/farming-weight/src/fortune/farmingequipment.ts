@@ -1,8 +1,10 @@
 import type { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
-import { Stat } from '../constants/stats.js';
+import { Stat, type StatBreakdown } from '../constants/stats.js';
 import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
+import { resolveOverbloomBreakdown, resolveStatBreakdown } from '../effects/resolver.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
 import type { FarmingArmorInfo } from '../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
@@ -82,6 +84,39 @@ export class FarmingEquipment extends UpgradeableBase {
 		}
 
 		return sum;
+	}
+
+	getStatBreakdown(stat: Stat, crop?: Crop): StatBreakdown {
+		if (this.item.skyblockId === 'ZORROS_CAPE' && stat === Stat.FarmingFortune) {
+			if (this.options?.zorro?.enabled === false) return {};
+			this.getFortune();
+			return Object.fromEntries(
+				Object.entries(this.fortuneBreakdown).map(([source, value]) => [
+					source,
+					{
+						value,
+						stat,
+					},
+				])
+			);
+		}
+
+		const env = buildEffectEnvironmentFromOptions(this.options, crop);
+		const effects = this.getEffects(env);
+		const resolved =
+			stat === Stat.Overbloom
+				? resolveOverbloomBreakdown(effects, { env, crop }, Stat.Overbloom)
+				: resolveStatBreakdown(effects, stat, { env, crop });
+
+		return Object.fromEntries(
+			Object.entries(resolved).map(([source, value]) => [
+				source,
+				{
+					value,
+					stat,
+				},
+			])
+		);
 	}
 
 	/**

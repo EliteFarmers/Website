@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Head from '$comp/head.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { trackAnalytics } from '$lib/analytics';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';

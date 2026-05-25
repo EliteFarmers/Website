@@ -1,7 +1,6 @@
 <script lang="ts">
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import FloatingButton from '$comp/floating-button.svelte';
-	import Head from '$comp/head.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import JumpLink from '$comp/jump-link.svelte';
 	import CategoryProgress from '$comp/rates/category-progress.svelte';
@@ -10,12 +9,13 @@
 	import PetFortuneProgress from '$comp/rates/pet-fortune-progress.svelte';
 	import PetSelector from '$comp/rates/pet-selector.svelte';
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
-	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { trackAnalytics } from '$lib/analytics';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
-	import { getLevelProgress } from '$lib/format';
+	import { formatBoundaryError, getLevelProgress } from '$lib/format';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
 	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { getItems } from '$lib/remote/items.remote';
@@ -39,6 +39,7 @@
 		FarmingArmor,
 		FarmingPet,
 		FarmingTool,
+		GearSlot,
 		getCropFromName,
 		getCropMilestoneLevels,
 		getCropUpgrades,
@@ -46,12 +47,12 @@
 		LotusGear,
 		Stat,
 		STAT_ICONS,
+		Vacuum,
 		type AppliedEffect,
 		type DetailedDropsFromEffectsResult,
 		type EliteItemDto,
 		type FortuneSourceProgress,
 		type FortuneUpgrade,
-		type GearSlot,
 		type PlayerOptions,
 		type UpgradeTreeNode,
 	} from 'farming-weight';
@@ -70,6 +71,7 @@
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
 	const harvestFeast = getHarvestFeast();
+	const FORTUNE_QUERY_STATS = [Stat.FarmingFortune, Stat.Overbloom];
 
 	function updateSelectedTool(c: string) {
 		const crop = getCropFromName(c);
@@ -114,6 +116,7 @@
 
 	let pets = $derived.by(() => (ctx.ready ? FarmingPet.fromArray(ctx.pets) : []));
 	let tools = $derived.by(() => (ctx.ready ? FarmingTool.fromArray(ctx.tools as EliteItemDto[]) : []));
+	let vacuums = $derived.by(() => (ctx.ready ? Vacuum.fromArray(ctx.tools as EliteItemDto[]) : []));
 	let armor = $derived.by(() => (ctx.ready ? FarmingArmor.fromArray(ctx.armor as EliteItemDto[]) : []));
 	let equipment = $derived.by(() => (ctx.ready ? LotusGear.fromArray(ctx.equipment as EliteItemDto[]) : []));
 
@@ -150,6 +153,7 @@
 		return {
 			natural_talent: current.naturalTalent,
 			fortunate_feasting: current.fortunateFeasting,
+			feast_crashers: current.feastCrashers,
 		};
 	});
 	const harvestFeastOptions = $derived.by<PlayerOptions['harvestFeast']>(() => {
@@ -241,9 +245,9 @@
 		return filtered;
 	});
 
-	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune, Stat.Overbloom]));
-	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom]));
-	const petProgress = $derived($player.getPetProgress([Stat.FarmingFortune, Stat.Overbloom]));
+	const generalProgress = $derived($player.getProgress(FORTUNE_QUERY_STATS));
+	const gearProgress = $derived($player.armorSet.getProgress(FORTUNE_QUERY_STATS));
+	const petProgress = $derived($player.getPetProgress(FORTUNE_QUERY_STATS));
 	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
 
 	const cropToolSwitchOptions = $derived.by(() => {
@@ -324,7 +328,7 @@
 
 			const pet = $player.pets.find((p) => p.pet.uuid === uuid);
 			if (pet) {
-				return pet.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom] }, $player);
+				return pet.getUpgrades({ stats: FORTUNE_QUERY_STATS }, $player);
 			}
 		}
 		// Fall back to the progress upgrades
@@ -332,6 +336,10 @@
 	}
 
 	const allProgress = $derived([...generalProgress, ...gearProgress, ...petProgress, ...cropProgress]);
+
+	function expandProgressUpgrade(upgrade: FortuneUpgrade): UpgradeTreeNode {
+		return $player.expandUpgrade(upgrade, { stats: FORTUNE_QUERY_STATS });
+	}
 
 	function getUpgradeKey(upgrade: FortuneUpgrade): string {
 		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
@@ -399,7 +407,7 @@
 			// Use getProgressUpgrades to get tool upgrades correctly
 			const upgrades = getProgressUpgrades(p);
 			for (const u of upgrades) {
-				const tree = $player.expandUpgrade(u);
+				const tree = expandProgressUpgrade(u);
 				traverse(tree);
 			}
 		}
@@ -446,7 +454,8 @@
 		};
 
 		untrack(() => {
-			player.update(() => createFarmingPlayer(options));
+			const nextPlayer = createFarmingPlayer(options);
+			player.update(() => nextPlayer);
 		});
 	});
 
@@ -574,6 +583,26 @@
 			<div id="rates-gear-selector" class="flex w-full flex-col gap-2">
 				<FarmingGear {player} />
 			</div>
+
+			{#if vacuums.length > 0}
+				<div
+					id="rates-vacuum-selector"
+					class="flex w-full items-center justify-between gap-3 rounded-md border p-4"
+				>
+					<div>
+						<p class="text-lg font-semibold">Pest Farming</p>
+						<p class="text-muted-foreground text-sm">
+							Vacuum stats and pest upgrades now have their own page.
+						</p>
+					</div>
+					<Button
+						variant="outline"
+						size="sm"
+						href="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/pest-farming"
+						>Pest Farming</Button
+					>
+				</div>
+			{/if}
 		</section>
 		<section class="bg-card w-full flex-1 rounded-md border-2 p-4">
 			<div class="flex h-full w-full max-w-lg flex-col gap-2 p-2">
@@ -754,7 +783,13 @@
 				</div>
 				<h2 class="mb-1 text-2xl">Farming Fortune</h2>
 				<div class="flex-1">
-					<div class="flex flex-1 justify-start">
+					<div class="flex flex-1 flex-wrap items-center justify-start gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							href="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/pest-farming"
+							>Pest Farming</Button
+						>
 						<Button variant="ghost" class="text-muted-foreground mx-2" size="sm" onclick={toggleSettings}>
 							<Settings size={20} />
 						</Button>
@@ -797,7 +832,7 @@
 					{/if}
 					<CategoryProgress
 						name="Gear Fortune"
-						progress={$player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom])}
+						progress={gearProgress}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
@@ -805,7 +840,7 @@
 					/>
 					<CategoryProgress
 						name="General Fortune"
-						progress={$player.getProgress([Stat.FarmingFortune, Stat.Overbloom])}
+						progress={generalProgress}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
@@ -826,7 +861,7 @@
 				<div class="flex w-full flex-col items-center justify-center gap-4">
 					<p class="text-lg font-semibold">Failed to load upgrades!</p>
 					<CopyToClipboard
-						text={JSON.stringify(error, null, 2)}
+						text={formatBoundaryError(error)}
 						class="text-sm"
 						onCopied={() => trackAnalytics('fortune.error_copied')}>Copy Error</CopyToClipboard
 					>

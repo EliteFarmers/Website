@@ -306,6 +306,16 @@ export const WRIGGLING_LARVA_SOURCE: FortuneSource = {
 	wiki: 'https://w.elitesb.gg/Wriggling_Larva',
 };
 
+export const SPRAYONATOR_SOURCE: FortuneSource = {
+	name: 'Sprayonator',
+	fortunePerLevel: 0,
+	statsPerLevel: {
+		[Stat.BonusPestChance]: 50,
+	},
+	maxLevel: 1,
+	wiki: 'https://w.elitesb.gg/Sprayonator',
+};
+
 export const COCOA_FORTUNE_UPGRADE: FortuneSource = {
 	name: 'Cocoa Fortune Upgrade',
 	cropSpecific: true,

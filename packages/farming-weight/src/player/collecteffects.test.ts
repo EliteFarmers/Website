@@ -40,9 +40,9 @@ describe('FarmingPlayer.collectEffects', () => {
 
 		const overbloomPct = effects.filter((e) => e.op === 'add-rare-pct' && e.relatedStats?.includes(Stat.Overbloom));
 		expect(overbloomPct.length).toBe(1);
-		expect(overbloomPct[0].scope).toEqual({ tags: ['overbloom'] });
-		expect(typeof overbloomPct[0].value).toBe('number');
-		expect(overbloomPct[0].value).toBeGreaterThan(0);
+		expect(overbloomPct[0]?.scope).toEqual({ tags: ['overbloom'] });
+		expect(typeof overbloomPct[0]?.value).toBe('number');
+		expect(overbloomPct[0]?.value).toBeGreaterThan(0);
 	});
 
 	test('attribute shards contribute via getEffects', () => {
@@ -56,10 +56,10 @@ describe('FarmingPlayer.collectEffects', () => {
 
 		const cropeetle = effects.filter((e) => e.source === 'Cropeetle Shard');
 		expect(cropeetle.length).toBe(1);
-		expect(cropeetle[0].op).toBe('add-rare-pct');
-		expect(cropeetle[0].value).toBe(10);
-		expect(cropeetle[0].scope).toEqual({ tags: ['overbloom'] });
-		expect(cropeetle[0].relatedStats).toContain(Stat.Overbloom);
+		expect(cropeetle[0]?.op).toBe('add-rare-pct');
+		expect(cropeetle[0]?.value).toBe(10);
+		expect(cropeetle[0]?.scope).toEqual({ tags: ['overbloom'] });
+		expect(cropeetle[0]?.relatedStats).toContain(Stat.Overbloom);
 	});
 
 	test('firefly shard is suppressed when Moonflower is selected', () => {

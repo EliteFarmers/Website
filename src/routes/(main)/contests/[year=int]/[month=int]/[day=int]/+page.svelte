@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
 	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';

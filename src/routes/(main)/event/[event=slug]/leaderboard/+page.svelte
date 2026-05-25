@@ -3,7 +3,7 @@
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';

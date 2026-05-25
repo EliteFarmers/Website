@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
-	import Head from '$comp/head.svelte';
 	import InventorySelect from '$comp/items/inventories/inventory-select.svelte';
 	import SackContents from '$comp/items/sack-contents.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
+	import StatsHead from '$comp/seo/stats-head.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import Collections from '$comp/stats/collections.svelte';
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
@@ -88,14 +88,12 @@
 	);
 </script>
 
-<Head
-	title={profileTitle}
+<StatsHead
+	title="Stats"
 	{description}
-	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(profile?.profileName ?? '')}"
 	{ldJson}
 	keywords="farming, skyblock profile, skyblock, Hypixel, elite skyblock, elite farmers"
-	noindex={ctx.hideFromIndex}
 />
 
 <section class="my-2 mb-16 flex items-center justify-center" id="Skills">

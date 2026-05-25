@@ -88,7 +88,7 @@ test('Slug Repugnant Aroma with Hypercharge chip', () => {
 	// Level 100 Legendary Slug on sprayed plot with Hypercharge level 20 (Legendary = 5% per level = 100% boost)
 	const petWithHypercharge = new FarmingPet(slug, {
 		sprayedPlot: true,
-		chips: { HYPERCHARGE_GARDEN_CHIP: 20 },
+		chips: { hypercharge: 20 },
 	});
 	// Base = 100, multiplied by 2 (1 + 0.05 * 20) = 200
 	expect(petWithHypercharge.fortune).toBe(200);
@@ -96,7 +96,7 @@ test('Slug Repugnant Aroma with Hypercharge chip', () => {
 	// Level 100 Legendary Slug on sprayed plot with Hypercharge level 10 (Rare = 3% per level = 30% boost)
 	const petWithRareHypercharge = new FarmingPet(slug, {
 		sprayedPlot: true,
-		chips: { HYPERCHARGE_GARDEN_CHIP: 10 },
+		chips: { hypercharge: 10 },
 	});
 	// Base = 100, multiplied by 1.30 (1 + 0.03 * 10) = 130
 	expect(petWithRareHypercharge.fortune).toBe(130);
@@ -104,7 +104,7 @@ test('Slug Repugnant Aroma with Hypercharge chip', () => {
 	// Level 100 Legendary Slug NOT on sprayed plot with Hypercharge (should have 0 fortune from Repugnant Aroma)
 	const petNotSprayed = new FarmingPet(slug, {
 		sprayedPlot: false,
-		chips: { HYPERCHARGE_GARDEN_CHIP: 20 },
+		chips: { hypercharge: 20 },
 	});
 	expect(petNotSprayed.fortune).toBe(0);
 });
@@ -159,8 +159,8 @@ test('Rose Dragon Symbiosis appears in player breakdown', () => {
 
 	// Symbiosis: 3 fortune per maxed farming pet (2 maxed pets = 6 fortune)
 	expect(breakdown?.['Symbiosis']).toBeDefined();
-	expect(breakdown?.['Symbiosis'].value).toBe(6);
-	expect(breakdown?.['Symbiosis'].stat).toBe(Stat.FarmingFortune);
+	expect(breakdown?.['Symbiosis']?.value).toBe(6);
+	expect(breakdown?.['Symbiosis']?.stat).toBe(Stat.FarmingFortune);
 
 	expect(breakdown?.['Base Stats']).toBeDefined();
 });

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
 	import { Input } from '$ui/input';
@@ -70,6 +70,18 @@
 			</Card.Content>
 		</Card.Root>
 	</div>
+
+	<Card.Root class="mt-8 flex w-full max-w-4xl flex-col">
+		<Card.Header>
+			<Card.Title class="text-xl">View upcoming Harvest Feast crops!</Card.Title>
+		</Card.Header>
+		<Card.Content class="flex flex-1 flex-row justify-between">
+			<p class="text-md mb-6 w-full">Current Feast crops and the next known crop season times.</p>
+			<div class="flex justify-center">
+				<Button href="/harvest-feast/upcoming" variant="default" size="lg">Harvest Feast Crops</Button>
+			</div>
+		</Card.Content>
+	</Card.Root>
 
 	<div class="my-8 mb-32 flex w-full max-w-4xl justify-center">
 		<Card.Root class="w-full gap-0 p-0">

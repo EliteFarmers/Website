@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
+	import StatsHead from '$comp/seo/stats-head.svelte';
 	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
 	import GardenChips from '$comp/stats/garden/garden-chips.svelte';
@@ -50,11 +50,10 @@
 	);
 </script>
 
-<Head
-	title="{ctx.ignMeta} | Garden"
+<StatsHead
+	title="Garden"
 	description="See this player's garden stats in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/garden"
-	noindex={ctx.hideFromIndex}
 />
 
 <div class="flex w-full flex-col items-center justify-center gap-8">

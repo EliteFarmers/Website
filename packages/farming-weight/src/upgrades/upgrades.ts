@@ -483,7 +483,7 @@ export function getUpgradeableReforges(upgradeable: Upgradeable, stats?: Stat[])
 			const diff = after - before;
 			if (diff !== 0) deltaStats[stat] = diff;
 		}
-		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+		const increase = deltaStats[primaryStat] ?? deltaStats[Stat.FarmingFortune] ?? 0;
 
 		result.push({
 			title: 'Reforge to ' + reforge.name,

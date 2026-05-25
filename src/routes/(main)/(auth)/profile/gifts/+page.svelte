@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import type { GiftItemDto, PendingGiftDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';

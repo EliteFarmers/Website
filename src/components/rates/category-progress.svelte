@@ -43,10 +43,12 @@
 </script>
 
 <div class="flex w-full flex-1 flex-col justify-center gap-2">
-	<div class="mx-1 flex w-full flex-1 flex-col gap-2">
+	<div class="flex w-full flex-1 flex-col gap-2">
 		<div class="flex flex-row items-center gap-1">
 			{@render children?.()}
-			<h2 class="pl-1 text-xl">{name}</h2>
+			{#if name}
+				<h2 class="text-xl">{name}</h2>
+			{/if}
 		</div>
 		<div class="grid w-full grid-cols-1 gap-1.5 md:grid-cols-2 lg:grid-cols-3">
 			{#each visibleProgress as p, i (p.name + p.current + (p.item?.uuid ?? ''))}

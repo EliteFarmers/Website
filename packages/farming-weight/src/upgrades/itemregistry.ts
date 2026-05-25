@@ -4,6 +4,7 @@ import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { UpgradeableBase } from '../fortune/upgradeablebase.js';
+import { Vacuum } from '../fortune/vacuum.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { ITEM_INFO_REGISTRY } from './itemcatalog.js';
 
@@ -21,6 +22,9 @@ function getFakeItemFactory(info: UpgradeableInfo): RegistrableItem['fakeItem'] 
 	}
 	if (FarmingEquipment.isValid({ skyblockId: info.skyblockId })) {
 		return (i, options) => FarmingEquipment.fakeItem(i, options);
+	}
+	if (Vacuum.isValid({ skyblockId: info.skyblockId })) {
+		return (i, options) => Vacuum.fakeItem(i, options);
 	}
 	return (i, options) => FarmingTool.fakeItem(i, options);
 }

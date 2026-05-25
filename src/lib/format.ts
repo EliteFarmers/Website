@@ -391,7 +391,36 @@ export function getStatColor(stat: Stat, ratio: number): string | null {
 			return ratio < 1 ? 'bg-overbloom/70' : 'bg-overbloom';
 		case Stat.FarmingFortune:
 			return ratio < 1 ? 'bg-progress/70' : 'bg-progress';
+		case Stat.BonusPestChance:
+			return ratio < 1 ? 'bg-pestchance/70' : 'bg-pestchance';
 		default:
 			return 'bg-muted';
 	}
+}
+
+export function formatBoundaryError(error: unknown): string {
+	if (error instanceof Error) {
+		return JSON.stringify(
+			{
+				name: error.name,
+				message: error.message,
+				stack: error.stack,
+				cause: (error as Error & { cause?: unknown }).cause,
+			},
+			null,
+			2
+		);
+	}
+
+	if (error && typeof error === 'object') {
+		return JSON.stringify(
+			Object.fromEntries(
+				Object.getOwnPropertyNames(error).map((key) => [key, (error as Record<string, unknown>)[key]])
+			),
+			null,
+			2
+		);
+	}
+
+	return String(error);
 }

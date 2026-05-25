@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Head from '$comp/head.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { acceptConfirmationForm } from '$lib/remote/confirmations.remote';
 	import { Button } from '$ui/button';
 	import { ScrollArea } from '$ui/scroll-area';

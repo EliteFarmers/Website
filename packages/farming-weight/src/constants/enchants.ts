@@ -322,6 +322,41 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
+	bug_blender: {
+		name: 'Bug Blender',
+		id: 'ENCHANTMENT_BUG_BLENDER',
+		appliesTo: [ReforgeTarget.Vacuum],
+		wiki: 'https://hypixelskyblock.minecraft.wiki/w/Bug_Blender',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				stats: {
+					[Stat.PestKillFortune]: 20,
+				},
+			},
+			2: {
+				stats: {
+					[Stat.PestKillFortune]: 40,
+				},
+			},
+			3: {
+				stats: {
+					[Stat.PestKillFortune]: 60,
+				},
+			},
+			4: {
+				stats: {
+					[Stat.PestKillFortune]: 80,
+				},
+			},
+			5: {
+				stats: {
+					[Stat.PestKillFortune]: 100,
+				},
+			},
+		},
+	},
 	ultimate_sunset: {
 		name: 'Sunset',
 		id: 'ENCHANTMENT_ULTIMATE_SUNSET',

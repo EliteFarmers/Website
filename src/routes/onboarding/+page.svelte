@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import UserIcon from '$comp/discord/user-icon.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import LinkOptions from '$comp/settings/link-options.svelte';
 	import LinkingGuide from '$comp/settings/linking-guide.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';

@@ -5,8 +5,8 @@
 	import type { BlockNode, InlineNode } from '$comp/blocks/blocks';
 	import { CommentSectionContainer } from '$comp/comments';
 	import UserIcon from '$comp/discord/user-icon.svelte';
-	import Head from '$comp/head.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import { trackAnalytics } from '$lib/analytics';

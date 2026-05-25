@@ -2,9 +2,9 @@
 	import { page } from '$app/state';
 	import { env } from '$env/dynamic/public';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
-	import HeadLdJson from './head-ld-json.svelte';
+	import HeadLdJson from '../head-ld-json.svelte';
 
-	interface Props {
+	export interface Props {
 		title: string | undefined; // 'Elite | Skyblock Farming Weight';
 		keywords?: string | undefined;
 		imageUrl?: string | undefined;

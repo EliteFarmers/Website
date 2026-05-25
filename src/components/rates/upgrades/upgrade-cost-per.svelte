@@ -4,9 +4,10 @@
 	interface Props {
 		upgrade: FortuneUpgrade;
 		totalCost: number;
+		value?: number;
 	}
 
-	let { upgrade, totalCost }: Props = $props();
+	let { upgrade, totalCost, value }: Props = $props();
 
 	const primaryStat = $derived.by(() => {
 		if (!upgrade.stats) return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
@@ -31,7 +32,7 @@
 		return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 	});
 
-	const increase = $derived(upgrade.increase || primaryStat.value || 0);
+	const increase = $derived(value ?? (upgrade.increase || primaryStat.value || 0));
 	const costPer = $derived.by(() => {
 		const cost = increase > 0 ? Math.round(totalCost / increase) : 0;
 

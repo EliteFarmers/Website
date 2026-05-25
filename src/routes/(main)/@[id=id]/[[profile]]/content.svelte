@@ -185,6 +185,12 @@
 			<Button
 				variant="ghost"
 				size="sm"
+				href="{path}/pest-farming"
+				class="{route === 'pest-farming' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Pest Farming</Button
+			>
+			<Button
+				variant="ghost"
+				size="sm"
 				href="{path}/ranks"
 				class="{route === 'ranks' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Ranks</Button
 			>

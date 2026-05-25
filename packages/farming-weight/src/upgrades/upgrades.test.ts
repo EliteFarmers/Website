@@ -131,9 +131,9 @@ test('Maxed Helmet Upgrades Test', () => {
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(20);
 	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(1);
-	expect(upgrades[0].title).toBe('Helianthus Helmet');
-	expect(upgrades[0].action).toBe('upgrade');
-	expect(upgrades[0].category).toBe('item');
+	expect(upgrades[0]?.title).toBe('Helianthus Helmet');
+	expect(upgrades[0]?.action).toBe('upgrade');
+	expect(upgrades[0]?.category).toBe('item');
 });
 
 test('Upgradeable info lookup preserves fake object compatibility', () => {

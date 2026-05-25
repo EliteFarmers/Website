@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { Button } from '$ui/button';
 	import Info from '@lucide/svelte/icons/info';
 	import X from '@lucide/svelte/icons/x';

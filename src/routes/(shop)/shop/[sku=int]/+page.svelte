@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import Head from '$comp/head.svelte';
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import ArtistCredit from '$comp/shop/artist-credit.svelte';
 	import Badge from '$comp/stats/badge.svelte';
 	import { env } from '$env/dynamic/public';

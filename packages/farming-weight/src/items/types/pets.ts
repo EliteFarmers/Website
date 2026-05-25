@@ -22,7 +22,10 @@ export interface FarmingPetAbility {
 	name: string;
 	exists?: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => boolean;
 	/** Computed stats during base phase calculation */
-	computed: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => StatsRecord;
+	computed: (
+		player: { player?: FarmingPlayer; options: PlayerOptions },
+		pet: FarmingPet
+	) => StatsRecord<FarmingPetStatType>;
 	/**
 	 * Late-phase calculation that runs after all base stats are computed.
 	 * Use this for abilities that depend on total fortune (e.g., Pig Pet's Trample).
@@ -44,9 +47,18 @@ export interface FarmingPetInfo {
 	abilities?: FarmingPetAbility[];
 }
 
+export interface FarmingPetItemStatModifier {
+	kind: 'multiply-pet-stats';
+	/** Defaults to every typed pet stat contribution when omitted. */
+	statTypes?: readonly FarmingPetStatType[];
+	multiplier: number;
+	name?: string;
+}
+
 export interface FarmingPetItemInfo {
 	name: string;
 	wiki: string;
 	stats?: StatsRecord<PlayerOptions>;
+	modifiers?: FarmingPetItemStatModifier[];
 	skillReq?: Partial<Record<Skill, number>>;
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import type { MinecraftAccountDto } from '$lib/api';

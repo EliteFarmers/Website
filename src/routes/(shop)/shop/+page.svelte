@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
 	import PremiumBanner from '$comp/monetization/premium-banner.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
 	import ResponsiveImage from '$comp/responsive-image.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { ProductDto, ShopCategoryDto } from '$lib/api';
 	import { buildShopHomeLdJson, shopKeywords } from '$lib/shop/seo';

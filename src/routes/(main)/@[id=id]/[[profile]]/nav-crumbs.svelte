@@ -1,4 +1,5 @@
 <script lang="ts" module>
+	import Bug from '@lucide/svelte/icons/bug';
 	import ChartArea from '@lucide/svelte/icons/chart-area';
 	import Clover from '@lucide/svelte/icons/clover';
 	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
@@ -62,13 +63,19 @@
 			href: `${path}/fortune`,
 		},
 		{
+			icon: Bug,
+			name: 'Pest Farming',
+			href: `${path}/pest-farming`,
+			snippet: pestFarmingCrumb,
+		},
+		{
 			icon: Trophy,
 			name: 'ranks',
 			href: `${path}/ranks`,
 		},
 	]);
 
-	const subPage = $derived(subPages.find((subPages) => subPages.name === lastPath) ?? subPages[0]);
+	const subPage = $derived(subPages.find((subPage) => subPage.href?.split('/').at(-1) === lastPath) ?? subPages[0]);
 
 	const crumbs = $derived<Crumb[]>([
 		{
@@ -208,4 +215,11 @@
 			<Gamemode class="size-4" gameMode={(crumb?.data?.mode ?? 'classic') as ProfileGameMode} popover={false} />
 		{/if}
 	</div>
+{/snippet}
+
+{#snippet pestFarmingCrumb(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
+	<span class="max-w-28 truncate first-letter:capitalize">{crumb?.name}</span>
+	<span class="border-destructive bg-destructive/40 rounded-md border px-1 text-xs leading-snug uppercase">
+		Beta
+	</span>
 {/snippet}

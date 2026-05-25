@@ -2,9 +2,9 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import EmojiDialog from '$comp/emoji/emoji-dialog.svelte';
-	import Head from '$comp/head.svelte';
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import SettingHeader from '$comp/settings/setting-header.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';

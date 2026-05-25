@@ -220,7 +220,8 @@ export class FarmingTool extends UpgradeableBase {
 	}
 
 	private setReforge(reforgeId: string) {
-		this.reforge = REFORGES[reforgeId] ?? undefined;
+		const reforge = REFORGES[reforgeId] ?? undefined;
+		this.reforge = reforge?.appliesTo.includes(this.type) ? reforge : undefined;
 		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
 	}
 
@@ -281,7 +282,8 @@ export class FarmingTool extends UpgradeableBase {
 			if (!enchantment || !level) continue;
 			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
-			for (const crop of crops) {
+			const enchantCrops = crops.length > 0 ? crops : [undefined];
+			for (const crop of enchantCrops) {
 				const val = getStatFromEnchant(level, enchantment, stat, this.options, crop);
 
 				sum += val;
