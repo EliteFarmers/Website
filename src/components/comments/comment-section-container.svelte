@@ -98,15 +98,14 @@
 		const trimmedContent = content.trim();
 
 		try {
-			const result = await createCommentCommand({ guideId, content: trimmedContent, parentId }).updates(
-				commentsPromise
-			);
+			const result = await createCommentCommand({ guideId, content: trimmedContent, parentId });
 
 			if (result.error) {
 				notifyError(result.error);
 				return;
 			}
 
+			await commentsPromise.refresh();
 			notifySuccess('Comment posted!');
 			trackAnalytics('comments.created', {
 				reply: Boolean(parentId),
@@ -137,13 +136,14 @@
 	}
 
 	async function handleDeleteComment(commentId: number) {
-		const result = await deleteCommentCommand(commentId).updates(commentsPromise);
+		const result = await deleteCommentCommand(commentId);
 
 		if (result.error) {
 			notifyError(result.error);
 			return;
 		}
 
+		await commentsPromise.refresh();
 		notifySuccess('Comment deleted');
 		trackAnalytics('comments.deleted');
 	}

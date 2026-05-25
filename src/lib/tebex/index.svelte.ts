@@ -145,9 +145,10 @@ export class TebexContext {
 		this.resetCheckoutResult();
 		this.#setProductAction(productId, 'adding');
 
+		let releaseOptimisticCheckout: (() => void) | undefined;
 		try {
 			let result: { error?: string } | undefined;
-			const optimisticCheckout = currentCheckoutQuery.withOverride((current) =>
+			releaseOptimisticCheckout = currentCheckoutQuery.withOverride((current) =>
 				this.#buildOptimisticCheckout(current, productId, 'add', options?.recipient)
 			);
 
@@ -155,20 +156,22 @@ export class TebexContext {
 				result = await updateCheckout({
 					orderId: existingCheckout.orderId,
 					body: this.#buildCheckoutRequest(existingCheckout.checkoutRequest, productId, options?.recipient),
-				}).updates(optimisticCheckout);
+				});
 			} else {
 				result = await createCheckout({
 					items: [{ productId, quantity: 1 }],
 					recipient: options?.recipient
 						? { mode: 'GiftUser', playerUuidOrIgn: options.recipient }
 						: undefined,
-				}).updates(optimisticCheckout);
+				});
 			}
 
 			if (result?.error) {
 				toast.error(result.error);
 				return;
 			}
+
+			await this.refreshCurrentCheckout();
 
 			trackAnalytics('shop.add_to_basket', {
 				product_id: productId,
@@ -179,6 +182,7 @@ export class TebexContext {
 			console.error('Failed to add product to basket', error);
 			toast.error('Failed to update your basket');
 		} finally {
+			releaseOptimisticCheckout?.();
 			this.#initializedCurrentCheckout = true;
 			this.#clearProductAction(productId);
 		}
@@ -194,6 +198,7 @@ export class TebexContext {
 		this.resetCheckoutResult();
 		this.#setProductAction(productId, 'removing');
 
+		let releaseOptimisticCheckout: (() => void) | undefined;
 		try {
 			if (!items.length) {
 				if (this.#deletingCheckoutOrderId === existingCheckout.orderId) {
@@ -202,9 +207,10 @@ export class TebexContext {
 
 				this.#deletingCheckoutOrderId = existingCheckout.orderId;
 
+				releaseOptimisticCheckout = currentCheckoutQuery.withOverride(() => null);
 				const result = await deleteCheckout({
 					orderId: existingCheckout.orderId,
-				}).updates(currentCheckoutQuery.withOverride(() => null));
+				});
 
 				if (result?.error) {
 					if (result.error === 'Only unpaid tebex orders can be deleted') {
@@ -218,28 +224,30 @@ export class TebexContext {
 					return;
 				}
 
+				currentCheckoutQuery.set(null);
 				trackAnalytics('shop.remove_from_basket', {
 					product_id: productId,
 				});
 				return;
 			}
 
+			releaseOptimisticCheckout = currentCheckoutQuery.withOverride((current) =>
+				this.#buildOptimisticCheckout(current, productId, 'remove')
+			);
 			const result = await updateCheckout({
 				orderId: existingCheckout.orderId,
 				body: {
 					...existingCheckout.checkoutRequest,
 					items,
 				},
-			}).updates(
-				currentCheckoutQuery.withOverride((current) =>
-					this.#buildOptimisticCheckout(current, productId, 'remove')
-				)
-			);
+			});
 
 			if (result?.error) {
 				toast.error(result.error);
 				return;
 			}
+
+			await this.refreshCurrentCheckout();
 
 			trackAnalytics('shop.remove_from_basket', {
 				product_id: productId,
@@ -248,6 +256,7 @@ export class TebexContext {
 			console.error('Failed to remove product from basket', error);
 			toast.error('Failed to update your basket');
 		} finally {
+			releaseOptimisticCheckout?.();
 			if (this.#deletingCheckoutOrderId === existingCheckout.orderId) {
 				this.#deletingCheckoutOrderId = null;
 			}
@@ -266,49 +275,33 @@ export class TebexContext {
 		this.resetCheckoutResult();
 		this.#updatingRecipient = true;
 
+		let releaseOptimisticCheckout: (() => void) | undefined;
 		try {
+			releaseOptimisticCheckout = currentCheckoutQuery.withOverride((current) =>
+				current
+					? {
+							...current,
+							checkoutRequest: {
+								...current.checkoutRequest,
+								recipient: nextRecipient,
+							},
+						}
+					: current
+			);
 			const result = await updateCheckout({
 				orderId: existingCheckout.orderId,
 				body: {
 					...existingCheckout.checkoutRequest,
 					recipient: nextRecipient,
 				},
-			}).updates(
-				currentCheckoutQuery.withOverride((current) =>
-					current
-						? {
-								...current,
-								checkoutRequest: {
-									...current.checkoutRequest,
-									recipient: nextRecipient,
-								},
-							}
-						: current
-				)
-			);
+			});
 
 			if (result?.error) {
 				toast.error(result.error);
 				return false;
 			}
 
-			if (result?.data) {
-				const currentCheckout = currentCheckoutQuery.current ?? existingCheckout;
-				currentCheckoutQuery.set(
-					currentCheckout
-						? {
-								...currentCheckout,
-								...result.data,
-								checkoutRequest: {
-									...currentCheckout.checkoutRequest,
-									recipient: nextRecipient,
-								},
-							}
-						: null
-				);
-			} else {
-				await this.refreshCurrentCheckout();
-			}
+			await this.refreshCurrentCheckout();
 
 			trackAnalytics('shop.recipient_changed', {
 				mode: nextRecipient.mode,
@@ -319,6 +312,7 @@ export class TebexContext {
 			toast.error('Failed to update the gift recipient');
 			return false;
 		} finally {
+			releaseOptimisticCheckout?.();
 			this.#updatingRecipient = false;
 		}
 	}
