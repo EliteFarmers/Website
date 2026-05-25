@@ -51,6 +51,7 @@
 	let tags = $state<string[]>([]);
 	let guideId = $state<number | null>(null);
 	let concurrencyVersion = $state(1);
+	let hasLoadedGuide = $state(false);
 
 	// UI state
 	let isSaving = $state(false);
@@ -58,10 +59,34 @@
 	let isDeleting = $state(false);
 	let showDeleteDialog = $state(false);
 	let saveStatus = $state<'idle' | 'saving' | 'saved'>('idle');
+	let saveError = $state<string | null>(null);
+	let lastSavedSnapshot = $state('');
 	let lastSaveTime = $state<Date | null>(null);
 
 	// Auto-save timer
 	let saveTimeout: ReturnType<typeof setTimeout> | null = null;
+	let activeSave: Promise<boolean> | null = null;
+
+	function getContentToSave() {
+		return editorContent ? JSON.stringify(editorContent) : markdownContent;
+	}
+
+	function getSaveSnapshot() {
+		return JSON.stringify({
+			title,
+			description,
+			markdownContent: getContentToSave(),
+			iconSkyblockId: skyblockIconId.trim(),
+			tags: [...tags],
+		});
+	}
+
+	function clearPendingSave() {
+		if (saveTimeout) {
+			clearTimeout(saveTimeout);
+			saveTimeout = null;
+		}
+	}
 
 	$effect(() => {
 		guide.then((g) => {
@@ -71,7 +96,7 @@
 			title = g.title;
 			description = g.description;
 			markdownContent = g.content;
-			tags = g.tags || [];
+			tags = (g.tagIds ?? []).map((id) => id.toString());
 			skyblockIconId = g.iconSkyblockId || '';
 			concurrencyVersion = g.concurrencyVersion || 1;
 
@@ -86,73 +111,133 @@
 					// Not JSON, keep as markdown
 				}
 			}
+
+			lastSavedSnapshot = getSaveSnapshot();
+			hasLoadedGuide = true;
 		});
 	});
 
 	// Auto-save effect
 	$effect(() => {
-		if (title && description && markdownContent) {
-			if (saveTimeout) clearTimeout(saveTimeout);
-
-			saveStatus = 'saving';
-			saveTimeout = setTimeout(async () => {
-				if (saveStatus !== 'saving') {
-					await handleSave();
-				}
-			}, 3000); // Auto-save after 3 seconds of inactivity
+		const snapshot = getSaveSnapshot();
+		if (!hasLoadedGuide || snapshot === lastSavedSnapshot) {
+			return;
 		}
+		if (!title.trim() || !description.trim()) {
+			return;
+		}
+
+		clearPendingSave();
+		saveStatus = 'saving';
+		saveError = null;
+		saveTimeout = setTimeout(() => {
+			saveTimeout = null;
+			void saveCurrentDraft();
+		}, 3000);
+
+		return clearPendingSave;
 	});
 
 	async function handleSave() {
+		return await saveLatestDraft();
+	}
+
+	async function saveLatestDraft() {
+		clearPendingSave();
+
 		if (!title.trim() || !description.trim()) {
-			notifyError('Title and description are required');
-			return;
+			saveError = 'Title and description are required';
+			notifyError(saveError);
+			return false;
 		}
 		if (!guideId) {
-			notifyError('Guide not loaded yet');
-			return;
+			saveError = 'Guide not loaded yet';
+			notifyError(saveError);
+			return false;
 		}
+
+		while (getSaveSnapshot() !== lastSavedSnapshot) {
+			const saved = await saveCurrentDraft();
+			if (!saved) return false;
+		}
+
+		saveStatus = 'saved';
+		return true;
+	}
+
+	async function saveCurrentDraft() {
+		if (activeSave) {
+			return await activeSave;
+		}
+
+		activeSave = performSave();
+		try {
+			return await activeSave;
+		} finally {
+			activeSave = null;
+		}
+	}
+
+	async function performSave() {
+		if (!guideId) {
+			saveError = 'Guide not loaded yet';
+			notifyError(saveError);
+			return false;
+		}
+
+		const snapshotToSave = getSaveSnapshot();
+		const contentToSave = getContentToSave();
 
 		isSaving = true;
 		saveStatus = 'saving';
+		saveError = null;
 
 		try {
-			const contentToSave = editorContent ? JSON.stringify(editorContent) : markdownContent;
 			const result = await updateGuideCommand({
 				id: guideId,
 				title,
 				description,
 				markdownContent: contentToSave,
-				iconSkyblockId: skyblockIconId || undefined,
-				tags: tags.length > 0 ? tags : undefined,
+				iconSkyblockId: skyblockIconId.trim(),
+				tags: [...tags],
 				concurrency: concurrencyVersion,
 			});
 
 			if (result.error) {
+				saveError = result.error;
+				saveStatus = 'idle';
 				notifyError(result.error);
-				return;
+				return false;
 			}
 
 			markdownContent = contentToSave;
 			concurrencyVersion = result.version || concurrencyVersion;
+			lastSavedSnapshot = snapshotToSave;
 
 			saveStatus = 'saved';
 			lastSaveTime = new Date();
 			notifySuccess('Guide saved');
 
 			setTimeout(() => {
-				saveStatus = 'idle';
+				if (getSaveSnapshot() === lastSavedSnapshot) {
+					saveStatus = 'idle';
+				}
 			}, 2000);
+
+			return true;
 		} catch (err) {
-			notifyError('Failed to save guide');
+			saveError = 'Failed to save guide';
+			saveStatus = 'idle';
+			notifyError(saveError);
 			console.error(err);
+			return false;
 		} finally {
 			isSaving = false;
 		}
 	}
 
 	async function handleSubmitForApproval() {
-		const contentHasValue = (editorContent && editorContent.length > 0) || markdownContent.trim();
+		const contentHasValue = editorContent ? editorContent.length > 0 : markdownContent.trim().length > 0;
 		if (!title.trim() || !description.trim() || !contentHasValue) {
 			notifyError('Please fill in all fields before submitting');
 			return;
@@ -165,20 +250,9 @@
 		isSubmitting = true;
 
 		try {
-			// Save first if there are unsaved changes
-			if (saveStatus !== 'saved') {
-				const saveResult = await updateGuideCommand({
-					id: guideId,
-					title,
-					description,
-					markdownContent,
-					concurrency: concurrencyVersion,
-				});
-
-				if (saveResult.error) {
-					notifyError('Failed to save guide before submitting: ' + saveResult.error);
-					return;
-				}
+			const saved = await saveLatestDraft();
+			if (!saved) {
+				return;
 			}
 
 			const result = await submitGuideForApprovalCommand(guideId);
@@ -198,9 +272,8 @@
 
 			await goto('/profile/guides');
 		} catch (err) {
-			console.log(err);
-
-			// notifyError('Failed to submit guide');
+			notifyError('Failed to submit guide');
+			console.error(err);
 		} finally {
 			isSubmitting = false;
 		}
@@ -246,10 +319,12 @@
 				<div>
 					<h1 class="text-3xl font-bold">Edit Guide</h1>
 					<p class="text-muted-foreground mt-1">
-						{#if lastSaveTime}
-							Saved {lastSaveTime.toLocaleTimeString()}
+						{#if saveError}
+							<span class="text-destructive">{saveError}</span>
 						{:else if saveStatus === 'saving'}
 							Saving...
+						{:else if lastSaveTime}
+							Saved {lastSaveTime.toLocaleTimeString()}
 						{/if}
 					</p>
 				</div>
@@ -282,13 +357,7 @@
 						<CardContent class="space-y-4">
 							<div>
 								<label for="title" class="text-sm font-semibold">Title</label>
-								<Input
-									id="title"
-									placeholder="Guide title"
-									value={title}
-									onchange={(e) => (title = e.currentTarget.value)}
-									class="mt-1"
-								/>
+								<Input id="title" placeholder="Guide title" bind:value={title} class="mt-1" />
 							</div>
 
 							<div>
@@ -296,8 +365,7 @@
 								<Textarea
 									id="description"
 									placeholder="Brief summary of your guide"
-									value={description}
-									onchange={(e) => (description = e.currentTarget.value)}
+									bind:value={description}
 									rows={2}
 									class="mt-1"
 								/>
@@ -313,7 +381,7 @@
 										id="skyblock-icon"
 										placeholder="ex: WHEAT, SEEDS, DIAMOND_BLOCK, etc."
 										bind:value={skyblockIconId}
-										onchange={(e) => (skyblockIconId = e.currentTarget.value.toUpperCase())}
+										oninput={(e) => (skyblockIconId = e.currentTarget.value.toUpperCase())}
 										class="mt-1"
 									/>
 								</div>
