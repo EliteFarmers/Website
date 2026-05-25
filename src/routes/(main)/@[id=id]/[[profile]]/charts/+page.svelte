@@ -1,8 +1,8 @@
 <script lang="ts">
 	import CropGraph from '$comp/charts/crop-graph.svelte';
 	import SkillGraph from '$comp/charts/skill-graph.svelte';
-	import Head from '$comp/head.svelte';
 	import JumpLink from '$comp/jump-link.svelte';
+	import StatsHead from '$comp/seo/stats-head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getCollectionCharts, getSkillCharts } from '$lib/remote/graphs.remote';
@@ -259,11 +259,10 @@
 	let startTime = $derived(Math.floor(value.toDate(tz).getTime() / 1000));
 </script>
 
-<Head
-	title="{ctx.ignMeta} | Charts"
+<StatsHead
+	title="Charts"
 	description="See crop collection charts for Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/charts"
-	noindex={ctx.hideFromIndex}
 />
 
 <div class="flex w-full flex-col items-center justify-center gap-4">

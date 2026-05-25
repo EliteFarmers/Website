@@ -8,14 +8,16 @@
 	interface Props {
 		current?: boolean;
 		unknown?: boolean;
+		cropsUnknown?: boolean;
 		timestamp?: number;
 		crops: string[];
 		currentSeconds: number;
 	}
 
-	let { current = false, unknown = false, timestamp, crops, currentSeconds }: Props = $props();
+	let { current = false, unknown = false, cropsUnknown = false, timestamp, crops, currentSeconds }: Props = $props();
 
 	let time = $derived(timestamp ?? 0);
+	let hasStarted = $derived(timestamp !== undefined && timestamp <= currentSeconds);
 	let lang = $derived.by(() => {
 		if (browser) return navigator.language ?? 'en';
 		return 'en';
@@ -47,7 +49,8 @@
 				})}
 			</h4>
 			<h4 class="bg-card max-w-fit rounded-md px-2 text-center text-xl font-semibold whitespace-nowrap">
-				Starts {getRelativeTimeString(new Date((time - currentSeconds + currentSeconds) * 1000), lang)}
+				{hasStarted ? 'Started' : 'Starts'}
+				{getRelativeTimeString(new Date(time * 1000), lang)}
 			</h4>
 		{:else if current}
 			<h4 class="bg-card max-w-fit rounded-md px-2 text-center text-xl font-semibold whitespace-nowrap">
@@ -60,21 +63,27 @@
 		{/if}
 	</div>
 	<div class="flex flex-wrap items-center justify-center gap-3 md:justify-end">
-		{#each crops as name (name)}
-			<Popover.Mobile>
-				{#snippet trigger()}
-					<div class="bg-card flex aspect-square w-16 items-center justify-center rounded-md text-center">
-						{#if PROPER_CROP_TO_IMG[name]}
-							<img class="pixelated w-12" src={PROPER_CROP_TO_IMG[name]} alt={name} />
-						{:else}
-							<span class="text-muted-foreground px-2 text-xs">{name}</span>
-						{/if}
+		{#if cropsUnknown}
+			<div class="bg-card text-muted-foreground rounded-md border border-dashed px-4 py-3 text-center text-sm">
+				{hasStarted ? 'Crops not reported yet' : 'Crops unknown!'}
+			</div>
+		{:else}
+			{#each crops as name (name)}
+				<Popover.Mobile>
+					{#snippet trigger()}
+						<div class="bg-card flex aspect-square w-16 items-center justify-center rounded-md text-center">
+							{#if PROPER_CROP_TO_IMG[name]}
+								<img class="pixelated w-12" src={PROPER_CROP_TO_IMG[name]} alt={name} />
+							{:else}
+								<span class="text-muted-foreground px-2 text-xs">{name}</span>
+							{/if}
+						</div>
+					{/snippet}
+					<div class="mx-8 text-center">
+						{name}
 					</div>
-				{/snippet}
-				<div class="mx-8 text-center">
-					{name}
-				</div>
-			</Popover.Mobile>
-		{/each}
+				</Popover.Mobile>
+			{/each}
+		{/if}
 	</div>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
 	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { onMount } from 'svelte';

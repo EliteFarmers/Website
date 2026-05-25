@@ -9,11 +9,17 @@ import { FARMING_ARMOR_INFO } from '../items/armor.js';
 import { GearSlot } from '../items/definitions.js';
 import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { FarmingPets, type FarmingPetType } from '../items/pets.js';
-import { PestFarmingPhase, PestFarmingPlayer } from './pestfarmingplayer.js';
+import {
+	PEST_FARMING_PHASE_STATS,
+	PEST_PHASE_WEIGHTS,
+	PestFarmingPhase,
+	PestFarmingPlayer,
+} from './pestfarmingplayer.js';
 
-function armor(id: keyof typeof FARMING_ARMOR_INFO, uuid: string) {
+function armor(id: keyof typeof FARMING_ARMOR_INFO, uuid: string, slot?: string) {
 	const item = FarmingArmor.fakeItem(FARMING_ARMOR_INFO[id]!)!;
 	item.item.uuid = uuid;
+	item.item.slot = slot;
 	return item;
 }
 
@@ -99,6 +105,34 @@ test('phase loadouts use phase armor, shared equipment, and independent pets', (
 	expect(player.getPhasePlayer(PestFarmingPhase.Kill).selectedPet?.pet.uuid).toBe('hedgehog');
 });
 
+test('default pest armor loadouts prefer equipped and separate wardrobe sets before loose pieces', () => {
+	const player = new PestFarmingPlayer({
+		armor: [
+			armor('FERMENTO_HELMET', 'main-helmet', 'armor:0'),
+			armor('FERMENTO_CHESTPLATE', 'main-chestplate', 'armor:1'),
+			armor('FERMENTO_LEGGINGS', 'main-leggings', 'armor:2'),
+			armor('FERMENTO_BOOTS', 'main-boots', 'armor:3'),
+			armor('CROPIE_HELMET', 'spawn-helmet', 'wardrobe:0'),
+			armor('CROPIE_CHESTPLATE', 'spawn-chestplate', 'wardrobe:9'),
+			armor('CROPIE_LEGGINGS', 'spawn-leggings', 'wardrobe:18'),
+			armor('CROPIE_BOOTS', 'spawn-boots', 'wardrobe:27'),
+			armor('HELIANTHUS_HELMET', 'loose-helmet'),
+			armor('HELIANTHUS_CHESTPLATE', 'loose-chestplate'),
+		],
+	});
+
+	expect(player.getArmorSetLoadout('main')?.pieces[GearSlot.Helmet]).toBe('main-helmet');
+	expect(player.getArmorSetLoadout('main')?.pieces[GearSlot.Chestplate]).toBe('main-chestplate');
+	expect(player.getArmorSetLoadout('main')?.pieces[GearSlot.Leggings]).toBe('main-leggings');
+	expect(player.getArmorSetLoadout('main')?.pieces[GearSlot.Boots]).toBe('main-boots');
+
+	expect(player.getArmorSetLoadout('spawn')?.pieces[GearSlot.Helmet]).toBe('spawn-helmet');
+	expect(player.getArmorSetLoadout('spawn')?.pieces[GearSlot.Chestplate]).toBe('spawn-chestplate');
+	expect(player.getArmorSetLoadout('spawn')?.pieces[GearSlot.Leggings]).toBe('spawn-leggings');
+	expect(player.getArmorSetLoadout('spawn')?.pieces[GearSlot.Boots]).toBe('spawn-boots');
+	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).helmet?.item.uuid).toBe('spawn-helmet');
+});
+
 test('phase armor and shared equipment progress are scoped to their loadout types', () => {
 	const player = new PestFarmingPlayer({
 		armor: [armor('HELIANTHUS_HELMET', 'main-helmet')],
@@ -130,6 +164,26 @@ test('phase armor and shared equipment progress are scoped to their loadout type
 	expect(equipmentProgressNames).toContain('Belt');
 	expect(equipmentProgressNames).not.toContain('Helmet');
 	expect(equipmentProgressNames).not.toContain('Armor Set Bonus');
+});
+
+test('farm phase includes pest cooldown reduction as a relevant phase stat', () => {
+	const player = new PestFarmingPlayer({
+		equipment: [equipment('PESTHUNTERS_CLOAK', 'pesthunter-cloak')],
+		sharedEquipment: {
+			[GearSlot.Cloak]: 'pesthunter-cloak',
+		},
+	});
+
+	const view = player.getPhaseStatView(PestFarmingPhase.Farm);
+	const farmCooldownUpgrades = player.getPhaseUpgrades(PestFarmingPhase.Farm);
+
+	expect(PEST_FARMING_PHASE_STATS[PestFarmingPhase.Farm]).toContain(Stat.PestCooldownReduction);
+	expect(PEST_PHASE_WEIGHTS[PestFarmingPhase.Farm][Stat.PestCooldownReduction]).toBeGreaterThan(
+		PEST_PHASE_WEIGHTS[PestFarmingPhase.Farm][Stat.FarmingFortune] ?? 0
+	);
+	expect(view.totals[Stat.PestCooldownReduction]).toBe(10);
+	expect(view.upgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
+	expect(farmCooldownUpgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
 });
 
 test('explicitly cleared armor slots stay empty instead of being auto-filled', () => {
@@ -187,6 +241,82 @@ test('spawn phase can switch back to the main armor set even when spawn armor ex
 
 	expect(player.phaseLoadouts[PestFarmingPhase.Spawn].armorSetId).toBe('main');
 	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).helmet?.item.uuid).toBe('main-helmet');
+});
+
+test('phase armor set changes update only the selected phase loadout', () => {
+	const player = new PestFarmingPlayer({
+		armor: [armor('HELIANTHUS_HELMET', 'main-helmet'), armor('FERMENTO_HELMET', 'spawn-helmet')],
+		equipment: [equipment('PESTHUNTERS_BELT', 'pesthunter-belt')],
+		armorSets: [
+			{
+				id: 'main',
+				name: 'Main Armor',
+				pieces: {
+					[GearSlot.Helmet]: 'main-helmet',
+				},
+			},
+			{
+				id: 'spawn',
+				name: 'Spawn Armor',
+				pieces: {
+					[GearSlot.Helmet]: 'spawn-helmet',
+				},
+			},
+		],
+		phaseLoadouts: {
+			[PestFarmingPhase.Farm]: { armorSetId: 'main' },
+			[PestFarmingPhase.Spawn]: { armorSetId: 'spawn' },
+			[PestFarmingPhase.Kill]: { armorSetId: 'main' },
+		},
+		sharedEquipment: {
+			[GearSlot.Belt]: 'pesthunter-belt',
+		},
+	});
+
+	const farmBefore = player.getPhasePlayer(PestFarmingPhase.Farm);
+	const spawnBefore = player.getPhasePlayer(PestFarmingPhase.Spawn);
+	const killBefore = player.getPhasePlayer(PestFarmingPhase.Kill);
+
+	expect(player.setPhaseArmorSet(PestFarmingPhase.Spawn, 'main')).toBe(true);
+
+	expect(player.getPhasePlayer(PestFarmingPhase.Farm)).toBe(farmBefore);
+	expect(player.getPhasePlayer(PestFarmingPhase.Spawn)).toBe(spawnBefore);
+	expect(player.getPhasePlayer(PestFarmingPhase.Kill)).toBe(killBefore);
+	expect(player.phaseLoadouts[PestFarmingPhase.Spawn].armorSetId).toBe('main');
+	expect(player.options.phaseLoadouts?.[PestFarmingPhase.Spawn]?.armorSetId).toBe('main');
+	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).helmet?.item.uuid).toBe('main-helmet');
+	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).belt?.item.uuid).toBe('pesthunter-belt');
+
+	const currentSpawn = player.getPhasePlayer(PestFarmingPhase.Spawn);
+	expect(player.setPhaseArmorSet(PestFarmingPhase.Spawn, 'missing')).toBe(false);
+	expect(player.getPhasePlayer(PestFarmingPhase.Spawn)).toBe(currentSpawn);
+});
+
+test('phase pet changes update only the selected phase loadout', () => {
+	const player = new PestFarmingPlayer({
+		pets: [pet(FarmingPets.Elephant, 'elephant'), pet(FarmingPets.Mosquito, 'mosquito', 'BROWN_BANDANA')],
+		phaseLoadouts: {
+			[PestFarmingPhase.Farm]: { armorSetId: 'main', petId: 'elephant' },
+			[PestFarmingPhase.Spawn]: { armorSetId: 'spawn', petId: 'mosquito' },
+			[PestFarmingPhase.Kill]: { armorSetId: 'main', petId: 'elephant' },
+		},
+	});
+
+	const farmBefore = player.getPhasePlayer(PestFarmingPhase.Farm);
+	const spawnBefore = player.getPhasePlayer(PestFarmingPhase.Spawn);
+	const killBefore = player.getPhasePlayer(PestFarmingPhase.Kill);
+
+	expect(player.setPhasePet(PestFarmingPhase.Spawn, 'elephant')).toBe(true);
+
+	expect(player.getPhasePlayer(PestFarmingPhase.Farm)).toBe(farmBefore);
+	expect(player.getPhasePlayer(PestFarmingPhase.Spawn)).toBe(spawnBefore);
+	expect(player.getPhasePlayer(PestFarmingPhase.Kill)).toBe(killBefore);
+	expect(player.getPhasePlayer(PestFarmingPhase.Spawn).selectedPet?.pet.uuid).toBe('elephant');
+	expect(player.options.phaseLoadouts?.[PestFarmingPhase.Spawn]?.petId).toBe('elephant');
+
+	const currentSpawn = player.getPhasePlayer(PestFarmingPhase.Spawn);
+	expect(player.setPhasePet(PestFarmingPhase.Spawn, 'missing')).toBe(false);
+	expect(player.getPhasePlayer(PestFarmingPhase.Spawn)).toBe(currentSpawn);
 });
 
 test('one armor set can be reused by every phase', () => {

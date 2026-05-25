@@ -19,9 +19,8 @@
 		type UpgradeInfo,
 		type UpgradeTreeNode,
 	} from 'farming-weight';
-	import { SvelteSet } from 'svelte/reactivity';
 	import FortuneProgress from './fortune-progress.svelte';
-	import UpgradeTree from './upgrades/upgrade-tree.svelte';
+	import LazyUpgradeTree from './upgrades/lazy-upgrade-tree.svelte';
 
 	interface Props {
 		open: boolean;
@@ -64,35 +63,7 @@
 		return `${upgrade.category}|${upgrade.title}|${metaKey}|${upgrade.conflictKey ?? ''}`;
 	}
 
-	const allUpgrades = $derived.by(() => {
-		if (!expandUpgrade) return baseUpgrades;
-
-		const seen = new SvelteSet<string>();
-		const result: FortuneUpgrade[] = [];
-
-		const addIfNew = (upgrade: FortuneUpgrade) => {
-			const key = getUpgradeKey(upgrade);
-			if (!seen.has(key)) {
-				seen.add(key);
-				result.push(upgrade);
-			}
-		};
-
-		const traverse = (node: UpgradeTreeNode) => {
-			addIfNew(node.upgrade);
-			node.children.forEach(traverse);
-		};
-
-		for (const upgrade of baseUpgrades) {
-			const tree = expandUpgrade(upgrade);
-			addIfNew(tree.upgrade);
-			tree.children.forEach(traverse);
-		}
-
-		return result;
-	});
-
-	const hasUpgrades = $derived(allUpgrades.length > 0);
+	const hasUpgrades = $derived(baseUpgrades.length > 0);
 
 	const sortedUpgrades = $derived.by(() => {
 		const upgrades = [...baseUpgrades];
@@ -107,7 +78,7 @@
 
 	const totalCost = $derived.by(() => {
 		if (!costFn) return 0;
-		return allUpgrades.reduce((sum, u) => {
+		return baseUpgrades.reduce((sum, u) => {
 			const c = costFn(u, items);
 			return sum + (u.repeatable ?? 1) * c;
 		}, 0);
@@ -286,9 +257,9 @@
 				<div>
 					<h3 class="text-muted-foreground mb-4 text-sm font-semibold">Available Upgrades</h3>
 					<div class="flex flex-col gap-2">
-						{#each sortedUpgrades as upgrade, i (i)}
+						{#each sortedUpgrades as upgrade (getUpgradeKey(upgrade))}
 							{#if expandUpgrade}
-								<UpgradeTree node={expandUpgrade(upgrade)} {items} {costFn} {applyUpgrade} />
+								<LazyUpgradeTree {upgrade} {expandUpgrade} {items} {costFn} {applyUpgrade} />
 							{/if}
 						{/each}
 					</div>

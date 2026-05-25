@@ -1,9 +1,11 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP } from '$lib/constants/crops';
+	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { DEFAULT_SELECTED_CROPS, getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { SkyBlockTime } from 'farming-weight';
 	import { onMount } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import FeastEntry from './feast-entry.svelte';
@@ -13,9 +15,14 @@
 		timestamp: number | null;
 	};
 
+	type FeastWaveEntry = {
+		timestamp: number;
+	};
+
 	const harvestFeast = getHarvestFeast();
 	const displayCrops = Object.keys(DEFAULT_SELECTED_CROPS);
 	const cropAliases = new SvelteMap<string, string>();
+	const HARVEST_FEAST_WAVE_MONTHS = [7, 8, 9] as const;
 
 	for (const crop of displayCrops) {
 		const apiCrop = PROPER_CROP_TO_API_CROP[crop];
@@ -52,7 +59,20 @@
 		return !$anySelected || $selected[crop] === true;
 	}
 
+	function getFallbackFeastYear(currentSeconds: number): number {
+		const now = new SkyBlockTime(currentSeconds * 1000);
+		return now.month > 9 ? now.year + 1 : now.year;
+	}
+
+	function getFallbackWaveStarts(currentSeconds: number): FeastWaveEntry[] {
+		const year = getFallbackFeastYear(currentSeconds);
+		return HARVEST_FEAST_WAVE_MONTHS.map((month) => ({
+			timestamp: SkyBlockTime.from(year, month, 1).unixSeconds,
+		}));
+	}
+
 	const feast = $derived(harvestFeast.current);
+	const fallbackWaveStarts = $derived(getFallbackWaveStarts(seconds));
 	const nextEntries = $derived.by<FeastCropEntry[]>(() => {
 		const next = feast?.next ?? {};
 		return Object.entries(next)
@@ -93,6 +113,14 @@
 
 		return () => clearInterval(interval);
 	});
+
+	const pageCtx = getPageCtx();
+	$effect.pre(() => {
+		pageCtx.setBreadcrumbs([
+			{ name: 'Harvest Feast' },
+			{ name: 'Upcoming Crops', href: '/harvest-feast/upcoming' },
+		]);
+	});
 </script>
 
 <Head title="Harvest Feast Upcoming Crops" description="Upcoming Harvest Feast crop seasons for Hypixel SkyBlock." />
@@ -100,22 +128,17 @@
 <div class="flex flex-col items-center justify-center px-4">
 	<h1 class="my-16 text-center text-4xl">Harvest Feast Upcoming Crops</h1>
 
-	<div class="mb-8 flex flex-wrap items-center justify-center gap-2 text-sm">
-		<span class="bg-card rounded-md border px-3 py-1 font-semibold">
-			{feast?.isGrandFeast ? 'Grand Feast' : 'Harvest Feast'}
-		</span>
-		{#if feast?.year !== undefined && feast?.month !== undefined}
-			<span class="bg-card rounded-md border px-3 py-1">Year {feast.year}, Month {feast.month}</span>
-		{/if}
-		{#if feast?.complete}
-			<span class="bg-card rounded-md border px-3 py-1">Complete schedule</span>
-		{:else}
-			<span class="bg-card rounded-md border px-3 py-1">Updating schedule</span>
-		{/if}
-	</div>
-
 	{#if !hasData}
-		<p class="text-muted-foreground text-center">No Harvest Feast crop data has been provided yet.</p>
+		<div class="flex max-w-2xl flex-col gap-3 pb-8 text-center">
+			<p class="text-muted-foreground">
+				Crop data has not been reported yet! The Harvest Feast needs to start for crops to be known!
+			</p>
+		</div>
+		<div class="mx-8 flex w-full flex-col items-center justify-center gap-4 md:w-[70%]">
+			{#each fallbackWaveStarts as wave (wave.timestamp)}
+				<FeastEntry timestamp={wave.timestamp} crops={[]} cropsUnknown={true} currentSeconds={seconds} />
+			{/each}
+		</div>
 	{:else}
 		<div class="mb-8 flex w-full flex-row justify-center gap-2">
 			<CropSelector />
@@ -139,9 +162,4 @@
 			</div>
 		{/if}
 	{/if}
-
-	<p class="text-muted-foreground max-w-2xl py-16 text-center">
-		Grand Feast crop times are only visible one crop ahead, so unresolved crops stay unknown until a new report
-		arrives.
-	</p>
 </div>

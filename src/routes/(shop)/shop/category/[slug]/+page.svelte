@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
 	import RenderMd from '$comp/markdown/render-md.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
 	import ResponsiveImage from '$comp/responsive-image.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import ArtistCredit from '$comp/shop/artist-credit.svelte';
 	import { env } from '$env/dynamic/public';
 	import { buildShopCategoryLdJson, shopKeywords } from '$lib/shop/seo';

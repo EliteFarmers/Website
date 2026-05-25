@@ -97,7 +97,7 @@
 	</div>
 	<hr class="w-full" />
 	<div class="-mx-2 mb-2 flex w-full flex-col gap-2">
-		{#each filtered as tool (tool.item.uuid)}
+		{#each filtered as tool (tool)}
 			{@const selected = selectedToolId === tool.item.uuid}
 			{#if tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? ''])}
 				<button

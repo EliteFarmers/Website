@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Event from '$comp/discord/event.svelte';
 	import Serverbar from '$comp/discord/serverbar.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { env } from '$env/dynamic/public';
 	import type { PageData } from './$types';
 	const { PUBLIC_COMMUNITY_ID } = env;

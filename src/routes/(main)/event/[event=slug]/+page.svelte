@@ -6,9 +6,9 @@
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventType from '$comp/events/event-type.svelte';
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
-	import Head from '$comp/head.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
 	import RenderMd from '$comp/markdown/render-md.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import * as Accordion from '$ui/accordion';

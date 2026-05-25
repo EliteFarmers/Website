@@ -103,6 +103,8 @@ test('Mantid recent pest kill bonus is capped per armor piece', () => {
 
 	const breakdown = player.getStatBreakdown(Stat.BonusPestChance);
 	expect(breakdown['Helianthus Helmet (Mantid Bonus)']?.value).toBe(5);
+	expect(armor.getStatBreakdown(Stat.BonusPestChance)['Helianthus Helmet']?.value).toBe(20);
+	expect(armor.getStatBreakdown(Stat.BonusPestChance)['Helianthus Helmet (Mantid Bonus)']?.value).toBe(5);
 });
 
 test('pet stat relics boost base pet Bonus Pest Chance', () => {

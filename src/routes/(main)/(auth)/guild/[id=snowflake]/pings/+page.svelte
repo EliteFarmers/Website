@@ -4,7 +4,7 @@
 	import ChannelSelect from '$comp/discord/channel-select.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import RoleSelect from '$comp/discord/role-select.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';

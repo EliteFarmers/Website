@@ -1,10 +1,9 @@
 <script lang="ts">
+	import StatBreakdownDialog from '$comp/rates/stat-breakdown-dialog.svelte';
 	import { getStatColor } from '$lib/format';
 	import { cn } from '$lib/utils';
-	import * as Popover from '$ui/popover';
-	import { STAT_ICONS, STAT_NAMES, Stat } from 'farming-weight';
+	import { STAT_ICONS, Stat } from 'farming-weight';
 	import { SvelteMap } from 'svelte/reactivity';
-	import FormattedText from '../formatted-text.svelte';
 
 	interface Props {
 		title?: string;
@@ -116,11 +115,12 @@
 		</span>
 	</div>
 {:else}
-	<Popover.Mobile>
-		{#snippet trigger()}
-			<div
+	<StatBreakdownDialog {title} stat={primaryStat} total={sum} {breakdown}>
+		{#snippet trigger({ props })}
+			<button
+				{...props}
 				class={cn(
-					'relative flex h-full min-h-4 flex-row items-center gap-1.5 rounded-md px-1',
+					'relative flex h-fit min-h-4 flex-row items-center gap-1.5 rounded-md px-1',
 					background,
 					className
 				)}
@@ -133,50 +133,12 @@
 				>
 					{(+displaySum.toFixed(2)).toLocaleString()}
 				</span>
-			</div>
+			</button>
 		{/snippet}
 		{#if child}
 			{@render child?.()}
 		{:else}
-			<div class="flex max-w-xs flex-col gap-2">
-				<div>
-					<p class="text-lg font-semibold">{title}</p>
-				</div>
-
-				<div class="flex flex-col gap-1">
-					{#each list as entry (entry.key)}
-						<div
-							class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
-						>
-							<div class="flex flex-col">
-								<div class="flex items-center gap-1">
-									{#if entry.stat}
-										<span>{STAT_ICONS[entry.stat] ?? ''}</span>
-									{/if}
-									{#if entry.key.includes('§')}
-										<FormattedText text={entry.key} />
-									{:else}
-										<p>{entry.key}</p>
-									{/if}
-								</div>
-								{#if entry.stat && entry.stat !== Stat.FarmingFortune}
-									<p class="text-muted-foreground text-xs">{STAT_NAMES[entry.stat] ?? entry.stat}</p>
-								{/if}
-							</div>
-
-							<p>{(+safeNumber(entry.value).toFixed(2)).toLocaleString()}</p>
-						</div>
-					{/each}
-				</div>
-
-				<div class="text-primary flex flex-row justify-between p-1 text-base font-semibold">
-					<p>Total</p>
-					<p>{(+sum.toFixed(2)).toLocaleString()}</p>
-				</div>
-				<div class="wrap-break-word">
-					{@render children?.()}
-				</div>
-			</div>
+			{@render children?.()}
 		{/if}
-	</Popover.Mobile>
+	</StatBreakdownDialog>
 {/if}

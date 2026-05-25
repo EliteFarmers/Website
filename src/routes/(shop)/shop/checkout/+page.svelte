@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import ShopBasketItem from '$comp/shop/shop-basket-item.svelte';
 	import ShopGiftRecipient from '$comp/shop/shop-gift-recipient.svelte';
 	import ShopOrderSummary from '$comp/shop/shop-order-summary.svelte';

@@ -7,7 +7,7 @@
 	import * as Select from '$ui/select';
 	import { Stat, type FarmingPet, type FortuneUpgrade, type UpgradeInfo, type UpgradeTreeNode } from 'farming-weight';
 	import FortuneProgress from './fortune-progress.svelte';
-	import UpgradeTree from './upgrades/upgrade-tree.svelte';
+	import LazyUpgradeTree from './upgrades/lazy-upgrade-tree.svelte';
 
 	interface Props {
 		player: RatesPlayerStore;
@@ -54,10 +54,6 @@
 	function getUpgradeKey(upgrade: FortuneUpgrade, index: number): string {
 		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
 		return `${upgrade.category}|${upgrade.title}|${metaKey}|${upgrade.conflictKey ?? ''}|${index}`;
-	}
-
-	function getUpgradeNode(upgrade: FortuneUpgrade): UpgradeTreeNode {
-		return expandUpgrade(upgrade);
 	}
 </script>
 
@@ -137,7 +133,7 @@
 				<div class="flex flex-col gap-2">
 					<h3 class="text-muted-foreground text-sm font-bold tracking-wider uppercase">Available Upgrades</h3>
 					{#each sortedUpgrades as upgrade, i (getUpgradeKey(upgrade, i))}
-						<UpgradeTree node={getUpgradeNode(upgrade)} {items} {costFn} />
+						<LazyUpgradeTree {upgrade} {items} {costFn} {expandUpgrade} />
 					{/each}
 				</div>
 			{:else}

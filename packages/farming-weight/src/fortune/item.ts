@@ -4,6 +4,7 @@ export interface EliteItemDto {
 	skyblockId?: string | null;
 	uuid?: string | null;
 	name?: string | null;
+	slot?: string | null;
 	lore?: string[] | null;
 	enchantments?: {
 		[key: string]: number | null;

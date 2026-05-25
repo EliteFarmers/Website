@@ -7,7 +7,13 @@ import type {
 	StatQueryOptions,
 	UpgradeTreeNode,
 } from '../constants/upgrades.js';
-import { ArmorLoadout, type ArmorSet, EquipmentLoadout, FarmingArmor } from '../fortune/farmingarmor.js';
+import {
+	ArmorLoadout,
+	type ArmorSet,
+	EquipmentLoadout,
+	FarmingArmor,
+	selectArmorLoadoutPieces,
+} from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import type { FarmingPet } from '../fortune/farmingpet.js';
 import type { EliteItemDto } from '../fortune/item.js';
@@ -30,7 +36,7 @@ export const PEST_ARMOR_SLOTS = [GearSlot.Helmet, GearSlot.Chestplate, GearSlot.
 export const PEST_EQUIPMENT_SLOTS = [GearSlot.Necklace, GearSlot.Cloak, GearSlot.Belt, GearSlot.Gloves] as const;
 
 export const PEST_FARMING_PHASE_STATS: Record<PestFarmingPhase, Stat[]> = {
-	[PestFarmingPhase.Farm]: [...CROP_FARMING_STATS],
+	[PestFarmingPhase.Farm]: [...CROP_FARMING_STATS, Stat.PestCooldownReduction],
 	[PestFarmingPhase.Spawn]: [Stat.BonusPestChance, Stat.PestCooldownReduction],
 	[PestFarmingPhase.Kill]: [Stat.PestKillFortune, Stat.FarmingFortune, Stat.Overbloom, Stat.Damage],
 };
@@ -45,6 +51,7 @@ export const PEST_DEFAULT_WEIGHTS: Partial<Record<Stat, number>> = {
 
 export const PEST_PHASE_WEIGHTS: Record<PestFarmingPhase, Partial<Record<Stat, number>>> = {
 	[PestFarmingPhase.Farm]: {
+		[Stat.PestCooldownReduction]: 10_000,
 		[Stat.Overbloom]: 100,
 		[Stat.FarmingFortune]: 1,
 	},
@@ -140,6 +147,10 @@ function mergeBreakdown(left: StatBreakdown, right: StatBreakdown, prefix?: stri
 		}
 	}
 	return result;
+}
+
+function sumStatBreakdown(breakdown: StatBreakdown): number {
+	return Object.values(breakdown).reduce((sum, entry) => sum + entry.value, 0);
 }
 
 function getUpgradeIdentity(upgrade: FortuneUpgrade): string {
@@ -323,6 +334,55 @@ export class PestFarmingPlayer {
 		this.kill = this.phases[PestFarmingPhase.Kill];
 	}
 
+	private setPhaseLoadout(phase: PestFarmingPhase, loadout: PestPhaseLoadout): void {
+		this.phaseLoadouts = {
+			...this.phaseLoadouts,
+			[phase]: loadout,
+		};
+		this.options.phaseLoadouts = {
+			...(this.options.phaseLoadouts ?? {}),
+			[phase]: { ...loadout },
+		};
+	}
+
+	private refreshPhaseFortune(phase: PestFarmingPhase): void {
+		const player = this.phases[phase];
+		player.permFortune = player.getGeneralFortune();
+		player.tempFortune = player.getTempFortune();
+		this.refreshPhaseAliases();
+	}
+
+	setPhaseArmorSet(phase: PestFarmingPhase, armorSetId: string): boolean {
+		if (!this.getArmorSetLoadout(armorSetId)) return false;
+
+		const current = this.phaseLoadouts[phase];
+		if (current.armorSetId === armorSetId) return false;
+
+		this.setPhaseLoadout(phase, {
+			...current,
+			armorSetId,
+		});
+		this.applyArmorLoadout(this.phases[phase], this.getArmorSetLoadout(armorSetId));
+		this.refreshPhaseFortune(phase);
+		return true;
+	}
+
+	setPhasePet(phase: PestFarmingPhase, petId: string): boolean {
+		if (!this.inventory.pets.some((pet) => pet.pet.uuid === petId)) return false;
+
+		const current = this.phaseLoadouts[phase];
+		if (current.petId === petId) return false;
+
+		this.setPhaseLoadout(phase, {
+			...current,
+			petId,
+		});
+		const pet = this.phases[phase].pets.find((candidate) => candidate.pet.uuid === petId);
+		if (pet) this.phases[phase].selectPet(pet);
+		this.refreshPhaseAliases();
+		return true;
+	}
+
 	private applyArmorLoadout(player: FarmingPlayer, loadout?: PestArmorSetLoadout): void {
 		for (const slot of PEST_ARMOR_SLOTS) {
 			player.armorSet.clearSlot(slot);
@@ -374,18 +434,38 @@ export class PestFarmingPlayer {
 		excluded = new Set<string>(),
 		initial: Partial<Record<GearSlot, string | null>> = {}
 	): Partial<Record<GearSlot, string | null>> {
-		const result = { ...initial };
+		const result: Partial<Record<GearSlot, string | null>> = {};
+		const initialPieces: Partial<Record<GearSlot, FarmingArmor | null>> = {};
+
+		for (const slot of PEST_ARMOR_SLOTS) {
+			if (!Object.hasOwn(initial, slot)) continue;
+
+			const uuid = initial[slot];
+			if (uuid === null) {
+				result[slot] = null;
+				initialPieces[slot] = null;
+				continue;
+			}
+
+			const piece = uuid ? this.findArmor(slot, uuid) : undefined;
+			if (!piece) continue;
+
+			result[slot] = uuid;
+			initialPieces[slot] = piece;
+		}
+
+		const selected = selectArmorLoadoutPieces(this.inventory.armor, {
+			slots: PEST_ARMOR_SLOTS,
+			scorePiece: (piece) => this.getPieceScore(piece, weights),
+			excluded,
+			initial: initialPieces,
+		});
+
 		for (const slot of PEST_ARMOR_SLOTS) {
 			if (Object.hasOwn(result, slot)) continue;
-			const best = this.inventory.armor
-				.filter((piece) => piece.slot === slot && !excluded.has(piece.item.uuid ?? ''))
-				.reduce<FarmingArmor | undefined>((current, candidate) => {
-					if (!current) return candidate;
-					return this.getPieceScore(candidate, weights) > this.getPieceScore(current, weights)
-						? candidate
-						: current;
-				}, undefined);
-			if (best?.item.uuid) result[slot] = best.item.uuid;
+
+			const uuid = selected[slot]?.item.uuid;
+			if (uuid) result[slot] = uuid;
 		}
 		return result;
 	}
@@ -412,8 +492,6 @@ export class PestFarmingPlayer {
 
 	private pickBestPetId(phase: PestFarmingPhase): string | undefined {
 		const selectedUuid = this.options.selectedPet?.pet.uuid ?? undefined;
-		if (phase !== PestFarmingPhase.Spawn && selectedUuid) return selectedUuid;
-
 		const weights = PEST_PHASE_WEIGHTS[phase];
 		const best = this.inventory.pets.reduce<FarmingPet | undefined>((current, candidate) => {
 			if (!current) return candidate;
@@ -534,17 +612,23 @@ export class PestFarmingPlayer {
 		stats: Stat[] = PEST_FARMING_PHASE_STATS[phase],
 		crop?: Crop
 	): PestStatView {
+		const playerView = this.phases[phase].getStatView({ stats, crop });
 		const totals: Partial<Record<Stat, number>> = {};
 		const breakdowns: Partial<Record<Stat, StatBreakdown>> = {};
 		for (const stat of stats) {
-			totals[stat] = this.getPhaseStat(phase, stat, crop);
-			breakdowns[stat] = this.getPhaseStatBreakdown(phase, stat, crop);
+			const playerBreakdown = playerView.breakdowns[stat] ?? {};
+			const breakdown =
+				phase === PestFarmingPhase.Kill && this.selectedVacuum && VACUUM_STATS.includes(stat)
+					? mergeBreakdown(playerBreakdown, this.selectedVacuum.getStatBreakdown(stat), 'Vacuum')
+					: playerBreakdown;
+			totals[stat] = sumStatBreakdown(breakdown);
+			breakdowns[stat] = breakdown;
 		}
 
 		return {
 			totals,
 			breakdowns,
-			effects: this.phases[phase].getStatView({ stats, crop }).effects,
+			effects: playerView.effects,
 			upgrades: this.getPhaseUpgrades(phase, { stats }),
 		};
 	}

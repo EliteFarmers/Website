@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSkyblockMonth, getTimeStamp } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';

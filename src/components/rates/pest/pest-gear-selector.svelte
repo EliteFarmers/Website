@@ -34,6 +34,7 @@
 		overallBreakdown?: Record<string, { value: number; stat: Stat }>;
 		slots?: readonly GearSlot[];
 		blockedUuids?: Record<string, string>;
+		headerAction?: import('svelte').Snippet;
 		children?: import('svelte').Snippet;
 	}
 
@@ -48,6 +49,7 @@
 		overallBreakdown,
 		slots,
 		blockedUuids = {},
+		headerAction,
 		children,
 	}: Props = $props();
 
@@ -71,13 +73,16 @@
 				{/if}
 			</div>
 		</div>
-		{#if overallBreakdown}
-			<FortuneBreakdown title="Pest Gear Stats" breakdown={overallBreakdown} />
-		{/if}
+		<div class="flex items-center gap-2">
+			{@render headerAction?.()}
+			{#if overallBreakdown}
+				<FortuneBreakdown title="Pest Gear Stats" breakdown={overallBreakdown} />
+			{/if}
+		</div>
 	</header>
 
 	<div class="flex flex-col gap-2">
-		{#each slotEntries as [slot, piece] (slot)}
+		{#each slotEntries as [slot, piece] (piece ?? slot)}
 			{@const options = armorSet.slotOptions[slot] ?? []}
 			{@const eligible = options.filter(
 				(o) => !o.item.uuid || !blockedUuids[o.item.uuid] || o.item.uuid === piece?.item.uuid

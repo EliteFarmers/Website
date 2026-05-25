@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
 	import WrappedContainer from '$comp/replay/WrappedContainer.svelte';
 	import ActivitySlide from '$comp/replay/slides/ActivitySlide.svelte';
 	import CollectionSlide from '$comp/replay/slides/CollectionSlide.svelte';
@@ -14,6 +13,7 @@
 	import SkillSlide from '$comp/replay/slides/SkillSlide.svelte';
 	import StreakSlide from '$comp/replay/slides/StreakSlide.svelte';
 	import SummarySlide from '$comp/replay/slides/SummarySlide.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
 

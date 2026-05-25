@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Head from '$comp/head.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { trackAnalytics } from '$lib/analytics';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
@@ -64,7 +64,7 @@
 		{/if}
 	</div>
 
-	<div class="mb-16 flex max-w-4xl flex-col items-center justify-center gap-6">
+	<div class="mb-16 flex max-w-2xl flex-col items-center justify-center gap-6">
 		<Card.Root class="flex w-full items-start gap-6 p-4 not-first-of-type:flex-row md:p-6">
 			<div class="flex flex-col gap-2">
 				<Card.Title class="text-xl">Pest Stats</Card.Title>
@@ -87,8 +87,8 @@
 			<div class="flex flex-col gap-2">
 				<Card.Title class="text-xl">Pest Upgrades</Card.Title>
 				<Card.Description class="text-base">
-					Compare pest-focused upgrades with a weighted pest score while pest drop rates are still being
-					modeled.
+					Still a work in progress, but eventually view the cheapest pest farming upgrades and their impact on
+					pest stats and vacuum progress.
 				</Card.Description>
 			</div>
 		</Card.Root>
@@ -96,7 +96,7 @@
 
 	<Button
 		onclick={openSearch}
-		class="bg-card mx-auto flex w-full max-w-lg flex-row gap-2 rounded-lg border-[3px] p-4 lg:flex-1"
+		class="bg-card mx-auto flex max-h-14 w-full max-w-lg flex-row gap-2 rounded-lg border-[3px] p-4 lg:flex-1"
 		variant="outline"
 		size="lg"
 	>

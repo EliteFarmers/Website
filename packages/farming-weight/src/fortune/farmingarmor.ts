@@ -3,7 +3,7 @@ import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Skill } from '../constants/skills.js';
 import { MATCHING_SPECIAL_CROP, type SpecialCrop } from '../constants/specialcrops.js';
-import { Stat } from '../constants/stats.js';
+import { Stat, type StatBreakdown } from '../constants/stats.js';
 import {
 	type FortuneSourceProgress,
 	type FortuneUpgrade,
@@ -11,6 +11,8 @@ import {
 	type StatQueryOptions,
 } from '../constants/upgrades.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
+import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
+import { resolveOverbloomBreakdown, resolveStatBreakdown } from '../effects/resolver.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
 import {
 	ARMOR_SET_BONUS,
@@ -59,6 +61,19 @@ export interface ActiveArmorSetBonus {
 
 type GearPiece = FarmingArmor | FarmingEquipment;
 
+export const ARMOR_LOADOUT_SLOTS = [GearSlot.Helmet, GearSlot.Chestplate, GearSlot.Leggings, GearSlot.Boots] as const;
+
+type ArmorPieceSelection = Partial<Record<GearSlot, FarmingArmor>>;
+
+export interface SelectArmorLoadoutOptions {
+	slots?: readonly GearSlot[];
+	scorePiece?: (piece: FarmingArmor) => number;
+	excluded?: ReadonlySet<string>;
+	initial?: Partial<Record<GearSlot, FarmingArmor | null>>;
+	minInventorySetPieces?: number;
+	fillMissing?: boolean;
+}
+
 function getSetBonusFrom(pieces: (GearPiece | null)[]) {
 	const families = new Map<string, number>();
 	const result = [];
@@ -106,6 +121,142 @@ function getStartingEquipmentPiece(slot: GearSlot): FarmingEquipment | undefined
 	return FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as FarmingArmorInfo);
 }
 
+function parseInventorySlot(slot: string | null | undefined): { inventory: string; index: number } | undefined {
+	if (!slot) return undefined;
+
+	const separator = slot.indexOf(':');
+	if (separator < 0) return undefined;
+
+	const inventory = slot.slice(0, separator).toLowerCase();
+	const slotValue = slot.slice(separator + 1);
+	if (!/^\d+$/.test(slotValue)) return undefined;
+
+	return {
+		inventory,
+		index: Number(slotValue),
+	};
+}
+
+export function getArmorInventorySetKey(item: EliteItemDto): string | undefined {
+	const parsed = parseInventorySlot(item.slot);
+	if (!parsed) return undefined;
+
+	if (parsed.inventory === 'armor' && parsed.index >= 0 && parsed.index <= 3) {
+		return 'armor:equipped';
+	}
+
+	if (parsed.inventory === 'wardrobe' && parsed.index >= 0) {
+		const page = Math.floor(parsed.index / 36);
+		const column = (parsed.index + 1) % 9;
+		return `wardrobe:${page}:${column}`;
+	}
+
+	return undefined;
+}
+
+function scoreInventorySet(
+	key: string,
+	pieces: ArmorPieceSelection,
+	slots: readonly GearSlot[],
+	scorePiece: (piece: FarmingArmor) => number
+) {
+	const present = slots.filter((slot) => pieces[slot]);
+	const pieceScore = present.reduce((sum, slot) => sum + scorePiece(pieces[slot]!), 0);
+	const equippedBonus = key === 'armor:equipped' ? 100 : 0;
+	return present.length * 10_000 + equippedBonus + pieceScore;
+}
+
+export function selectArmorLoadoutPieces(
+	armor: FarmingArmor[],
+	options: SelectArmorLoadoutOptions = {}
+): ArmorPieceSelection {
+	const slots = options.slots ?? ARMOR_LOADOUT_SLOTS;
+	const allowedSlots = new Set<GearSlot>(slots);
+	const scorePiece = options.scorePiece ?? ((piece: FarmingArmor) => piece.potential);
+	const excluded = options.excluded ?? new Set<string>();
+	const minInventorySetPieces = options.minInventorySetPieces ?? 2;
+	const fillMissing = options.fillMissing ?? true;
+	const result: ArmorPieceSelection = {};
+	const blockedSlots = new Set<GearSlot>();
+	const used = new Set<string>();
+
+	for (const slot of slots) {
+		if (!Object.hasOwn(options.initial ?? {}, slot)) continue;
+
+		blockedSlots.add(slot);
+		const piece = options.initial?.[slot];
+		if (!piece) continue;
+
+		result[slot] = piece;
+		if (piece.item.uuid) used.add(piece.item.uuid);
+	}
+
+	const inventorySets = new Map<string, ArmorPieceSelection>();
+	for (const piece of armor) {
+		const pieceSlot = piece.slot;
+		if (!pieceSlot || !allowedSlots.has(pieceSlot)) continue;
+		if (piece.item.uuid && excluded.has(piece.item.uuid)) continue;
+
+		const key = getArmorInventorySetKey(piece.item);
+		if (!key) continue;
+
+		const pieces = inventorySets.get(key) ?? {};
+		const current = pieces[pieceSlot];
+		if (!current || scorePiece(piece) > scorePiece(current)) {
+			pieces[pieceSlot] = piece;
+		}
+		inventorySets.set(key, pieces);
+	}
+
+	let bestInventorySet: ArmorPieceSelection | undefined;
+	let bestInventorySetScore = Number.NEGATIVE_INFINITY;
+	for (const [key, pieces] of inventorySets.entries()) {
+		const presentCount = slots.filter((slot) => pieces[slot]).length;
+		if (presentCount < minInventorySetPieces) continue;
+
+		const score = scoreInventorySet(key, pieces, slots, scorePiece);
+		if (score > bestInventorySetScore) {
+			bestInventorySet = pieces;
+			bestInventorySetScore = score;
+		}
+	}
+
+	if (bestInventorySet) {
+		for (const slot of slots) {
+			if (blockedSlots.has(slot) || result[slot]) continue;
+			const piece = bestInventorySet[slot];
+			if (!piece) continue;
+
+			result[slot] = piece;
+			if (piece.item.uuid) used.add(piece.item.uuid);
+		}
+	}
+
+	if (!fillMissing) return result;
+
+	for (const slot of slots) {
+		if (blockedSlots.has(slot) || result[slot]) continue;
+
+		const best = armor
+			.filter((piece) => {
+				if (piece.slot !== slot) return false;
+				if (piece.item.uuid && (excluded.has(piece.item.uuid) || used.has(piece.item.uuid))) return false;
+				return true;
+			})
+			.reduce<FarmingArmor | undefined>((current, candidate) => {
+				if (!current) return candidate;
+				return scorePiece(candidate) > scorePiece(current) ? candidate : current;
+			}, undefined);
+
+		if (best) {
+			result[slot] = best;
+			if (best.item.uuid) used.add(best.item.uuid);
+		}
+	}
+
+	return result;
+}
+
 export class ArmorLoadout {
 	public declare helmet?: FarmingArmor;
 	public declare chestplate?: FarmingArmor;
@@ -142,10 +293,12 @@ export class ArmorLoadout {
 		armor.sort((a, b) => b.potential - a.potential);
 		this.pieces = armor;
 
-		this.helmet = armor.find((a) => a.slot === GearSlot.Helmet);
-		this.chestplate = armor.find((a) => a.slot === GearSlot.Chestplate);
-		this.leggings = armor.find((a) => a.slot === GearSlot.Leggings);
-		this.boots = armor.find((a) => a.slot === GearSlot.Boots);
+		const selected = selectArmorLoadoutPieces(armor);
+
+		this.helmet = selected[GearSlot.Helmet];
+		this.chestplate = selected[GearSlot.Chestplate];
+		this.leggings = selected[GearSlot.Leggings];
+		this.boots = selected[GearSlot.Boots];
 
 		this.recalculateFamilies();
 	}
@@ -984,6 +1137,25 @@ export class FarmingArmor extends UpgradeableBase {
 		}
 
 		return sum;
+	}
+
+	getStatBreakdown(stat: Stat, crop?: Crop): StatBreakdown {
+		const env = buildEffectEnvironmentFromOptions(this.options, crop);
+		const effects = this.getEffects(env);
+		const resolved =
+			stat === Stat.Overbloom
+				? resolveOverbloomBreakdown(effects, { env, crop }, Stat.Overbloom)
+				: resolveStatBreakdown(effects, stat, { env, crop });
+
+		return Object.fromEntries(
+			Object.entries(resolved).map(([source, value]) => [
+				source,
+				{
+					value,
+					stat,
+				},
+			])
+		);
 	}
 
 	/**

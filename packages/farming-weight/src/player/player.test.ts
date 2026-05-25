@@ -11,13 +11,65 @@ import {
 } from '../constants/upgrades.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import type { EliteItemDto } from '../fortune/item.js';
+import { FARMING_ARMOR_INFO } from '../items/armor.js';
 import type { GearSlot } from '../items/definitions.js';
 import { FarmingPlayer } from './player.js';
+
+function farmingArmorItem(id: keyof typeof FARMING_ARMOR_INFO, uuid: string, slot?: string): EliteItemDto {
+	const info = FARMING_ARMOR_INFO[id]!;
+	return {
+		skyblockId: info.skyblockId,
+		uuid,
+		name: info.name,
+		slot,
+		lore: [],
+		attributes: {},
+		enchantments: {},
+		gems: {},
+	};
+}
 
 test('Player construct test', () => {
 	const player = new FarmingPlayer({});
 	expect(player.breakdown).toStrictEqual({});
 	expect(player.fortune).toBe(0);
+});
+
+test('armor loadout prefers the equipped set before loose higher-value pieces', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			farmingArmorItem('FERMENTO_HELMET', 'equipped-helmet', 'armor:0'),
+			farmingArmorItem('FERMENTO_CHESTPLATE', 'equipped-chestplate', 'armor:1'),
+			farmingArmorItem('FERMENTO_LEGGINGS', 'equipped-leggings', 'armor:2'),
+			farmingArmorItem('FERMENTO_BOOTS', 'equipped-boots', 'armor:3'),
+			farmingArmorItem('HELIANTHUS_HELMET', 'loose-helmet'),
+			farmingArmorItem('HELIANTHUS_CHESTPLATE', 'loose-chestplate'),
+			farmingArmorItem('HELIANTHUS_LEGGINGS', 'loose-leggings'),
+			farmingArmorItem('HELIANTHUS_BOOTS', 'loose-boots'),
+		],
+	});
+
+	expect(player.armorSet.helmet?.item.uuid).toBe('equipped-helmet');
+	expect(player.armorSet.chestplate?.item.uuid).toBe('equipped-chestplate');
+	expect(player.armorSet.leggings?.item.uuid).toBe('equipped-leggings');
+	expect(player.armorSet.boots?.item.uuid).toBe('equipped-boots');
+});
+
+test('armor loadout groups wardrobe columns and fills missing set slots from loose pieces', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			farmingArmorItem('FERMENTO_HELMET', 'wardrobe-helmet', 'wardrobe:0'),
+			farmingArmorItem('FERMENTO_CHESTPLATE', 'wardrobe-chestplate', 'wardrobe:9'),
+			farmingArmorItem('FERMENTO_LEGGINGS', 'wardrobe-leggings', 'wardrobe:18'),
+			farmingArmorItem('HELIANTHUS_HELMET', 'loose-helmet'),
+			farmingArmorItem('HELIANTHUS_BOOTS', 'loose-boots'),
+		],
+	});
+
+	expect(player.armorSet.helmet?.item.uuid).toBe('wardrobe-helmet');
+	expect(player.armorSet.chestplate?.item.uuid).toBe('wardrobe-chestplate');
+	expect(player.armorSet.leggings?.item.uuid).toBe('wardrobe-leggings');
+	expect(player.armorSet.boots?.item.uuid).toBe('loose-boots');
 });
 
 test('Temp fortune test', () => {

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import FloatingButton from '$comp/floating-button.svelte';
-	import Head from '$comp/head.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import JumpLink from '$comp/jump-link.svelte';
 	import CategoryProgress from '$comp/rates/category-progress.svelte';
@@ -10,12 +9,13 @@
 	import PetFortuneProgress from '$comp/rates/pet-fortune-progress.svelte';
 	import PetSelector from '$comp/rates/pet-selector.svelte';
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
-	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { trackAnalytics } from '$lib/analytics';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
-	import { getLevelProgress } from '$lib/format';
+	import { formatBoundaryError, getLevelProgress } from '$lib/format';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
 	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { getItems } from '$lib/remote/items.remote';
@@ -861,7 +861,7 @@
 				<div class="flex w-full flex-col items-center justify-center gap-4">
 					<p class="text-lg font-semibold">Failed to load upgrades!</p>
 					<CopyToClipboard
-						text={JSON.stringify(error, null, 2)}
+						text={formatBoundaryError(error)}
 						class="text-sm"
 						onCopied={() => trackAnalytics('fortune.error_copied')}>Copy Error</CopyToClipboard
 					>

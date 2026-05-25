@@ -62,6 +62,7 @@
 		--wildrose: hsl(340 65% 60%);
 
 		--overbloom: hsl(64, 61%, 40%);
+		--pestchance: hsl(111, 87%, 25%);
 
 		--sidebar-background: hsl(0 0% 98%);
 		--sidebar-foreground: hsl(240 5.3% 26.1%);
@@ -424,9 +425,11 @@
 	--color-mushroom: var(--mushroom);
 	--color-cocoa: var(--cocoa);
 	--color-sunflower: var(--sunflower);
-	--color-overbloom: var(--overbloom);
 	--color-moonflower: var(--moonflower);
 	--color-wildrose: var(--wildrose);
+
+	--color-overbloom: var(--overbloom);
+	--color-pestchance: var(--pestchance);
 
 	--color-progress: var(--progress);
 	--color-completed: var(--completed);

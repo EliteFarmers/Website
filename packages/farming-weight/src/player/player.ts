@@ -315,8 +315,9 @@ export class FarmingPlayer {
 		const breakdowns: Partial<Record<Stat, StatBreakdown>> = {};
 
 		for (const stat of stats) {
-			totals[stat] = this.getStat(stat, query.crop);
-			breakdowns[stat] = this.getStatBreakdown(stat, query.crop);
+			const breakdown = this.getStatBreakdown(stat, query.crop);
+			totals[stat] = Object.values(breakdown).reduce((sum, entry) => sum + entry.value, 0);
+			breakdowns[stat] = breakdown;
 		}
 
 		const env = this.buildEnvironment(query.crop);

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';

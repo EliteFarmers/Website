@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Serverbar from '$comp/discord/serverbar.svelte';
-	import Head from '$comp/head.svelte';
 	import Entry from '$comp/leaderboards/entry.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import MainSearch from '$comp/stats/main-search.svelte';
 	import { env } from '$env/dynamic/public';
 	import { trackAnalytics } from '$lib/analytics';

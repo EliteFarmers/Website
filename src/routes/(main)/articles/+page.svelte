@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import type { PageProps } from './$types';
 	import ArticlePill from './article-pill.svelte';
 	import ArticlesFilter from './articles-filter.svelte';

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import Head from '$comp/head.svelte';
 	import Product from '$comp/monetization/product.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { env } from '$env/dynamic/public';
 	import { getTebexThemeConfig } from '$lib/tebex/theme';
 	import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '$ui/accordion';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
+	import StatsHead from '$comp/seo/stats-head.svelte';
 	import RanksList from '$comp/stats/ranks/ranks-list.svelte';
 	import { getLeaderboardList } from '$lib/remote/leaderboards.remote.js';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
@@ -8,11 +8,10 @@
 	const leaderboards = getLeaderboardList();
 </script>
 
-<Head
-	title="{ctx.ignMeta} | Ranks"
+<StatsHead
+	title="Ranks"
 	description="See this player's leaderboard ranks in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/ranks"
-	noindex={ctx.hideFromIndex}
 />
 
 <div class="mb-16 flex flex-col items-center gap-8">

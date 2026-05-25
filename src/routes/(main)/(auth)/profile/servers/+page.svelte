@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import Guild from '../guild.svelte';
 	import type { PageData } from './$types';
 

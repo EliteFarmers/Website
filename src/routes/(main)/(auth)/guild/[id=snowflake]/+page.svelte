@@ -4,7 +4,7 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import RoleSelect from '$comp/discord/role-select.svelte';
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';

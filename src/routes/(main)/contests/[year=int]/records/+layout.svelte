@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { getTimeStamp } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';

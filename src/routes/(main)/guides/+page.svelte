@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { trackAnalytics } from '$lib/analytics';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { ListGuides, ListTags } from '$lib/remote/guides.remote';

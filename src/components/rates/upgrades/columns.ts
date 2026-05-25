@@ -15,6 +15,7 @@ export const getColumns = (
 	costFn?: (upgrade: FortuneUpgrade, items?: RatesItemPriceData) => number,
 	applyUpgrade?: (upgrade: FortuneUpgrade) => void,
 	expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode,
+	canExpandUpgrade?: (upgrade: FortuneUpgrade) => boolean,
 	rateImpactFn?: (upgrade: FortuneUpgrade) => UpgradeRateImpact | undefined,
 	rateImpactUnavailableLabel?: string,
 	_version?: number,
@@ -32,7 +33,7 @@ export const getColumns = (
 					items: itemsLookup,
 					expanded: row.getIsExpanded(),
 					toggleExpanded: row.toggleExpanded,
-					expandUpgrade,
+					canExpand: !!expandUpgrade && (canExpandUpgrade?.(row.original) ?? false),
 				});
 			},
 		},

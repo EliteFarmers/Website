@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import LinkOptions from '$comp/settings/link-options.svelte';
 	import LinkingGuide from '$comp/settings/linking-guide.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';

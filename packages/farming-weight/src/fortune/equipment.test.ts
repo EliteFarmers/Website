@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../constants/stats.js';
 import { ZorroMode } from '../player/playeroptions.js';
 import { ArmorSet } from './farmingarmor.js';
 import { FarmingEquipment } from './farmingequipment.js';
@@ -125,6 +126,18 @@ test('Lotus Necklace Test', () => {
 	expect(necklace2.fortuneBreakdown).toStrictEqual(necklace.fortuneBreakdown);
 });
 
+test('equipment stat breakdown uses item contribution sources', () => {
+	const necklace = new FarmingEquipment(lotusNecklace, {
+		uniqueVisitors: 84,
+	});
+
+	const breakdown = necklace.getStatBreakdown(Stat.FarmingFortune);
+	expect(breakdown['§5Rooted Lotus Necklace']?.value).toBe(5);
+	expect(breakdown['§5Rooted Lotus Necklace (Rooted)']?.value).toBe(15);
+	expect(breakdown['Enchant: Green Thumb']?.value).toBe(21);
+	expect(breakdown['§5Rooted Lotus Necklace (Salesperson)']?.value).toBe(15);
+});
+
 const pestVest = {
 	id: 397,
 	count: 1,
@@ -161,6 +174,15 @@ test('Pest Vest Test', () => {
 	});
 
 	expect(vest.getFortune()).toBe(39);
+});
+
+test('equipment pest stat breakdown includes base pest sources', () => {
+	const vest = new FarmingEquipment(pestVest, {
+		uniqueVisitors: 84,
+	});
+
+	expect(vest.getStatBreakdown(Stat.BonusPestChance)['§6Rooted Pest Vest']?.value).toBe(10);
+	expect(vest.getStatBreakdown(Stat.PestCooldownReduction)['§6Rooted Pest Vest']?.value).toBe(15);
 });
 
 const pesthunterCloak = {

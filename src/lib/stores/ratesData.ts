@@ -5,27 +5,21 @@ import {
 	PestFarmingPhase,
 	ZorroMode,
 	type FarmingTool,
-	type GearSlot,
-	type PestArmorSetLoadout,
-	type PestPhaseLoadout,
 	type TemporaryFarmingFortune,
 } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 import * as z from 'zod';
 
-interface PestFarmingData {
+export interface PestFarmingData {
 	selectedCrop?: string;
-	selectedVacuum?: string;
-	armorSets: PestArmorSetLoadout[];
-	phaseLoadouts: Record<PestFarmingPhase, PestPhaseLoadout>;
-	sharedEquipment: Partial<Record<GearSlot, string>>;
+	phaseLoadouts: Record<PestFarmingPhase, { armorSetId: string }>;
 	sprayedPlot: boolean;
 	pesthunterAccessoryEnabled: boolean;
 	mantidPestKills: number;
 }
 
-interface RatesData {
+export interface RatesData {
 	v: number;
 	settings: boolean;
 	tool?: FarmingTool;
@@ -81,16 +75,11 @@ const defaultData = {
 	infestedPlotProbability: 0.2,
 	zorroMode: ZorroMode.Normal,
 	pestFarming: {
-		armorSets: [
-			{ id: PEST_MAIN_ARMOR_SET_ID, name: 'Farm/Kill Armor', pieces: {} },
-			{ id: PEST_SPAWN_ARMOR_SET_ID, name: 'Spawn Armor', pieces: {} },
-		],
 		phaseLoadouts: {
 			[PestFarmingPhase.Farm]: { armorSetId: PEST_MAIN_ARMOR_SET_ID },
 			[PestFarmingPhase.Spawn]: { armorSetId: PEST_SPAWN_ARMOR_SET_ID },
 			[PestFarmingPhase.Kill]: { armorSetId: PEST_MAIN_ARMOR_SET_ID },
 		},
-		sharedEquipment: {},
 		sprayedPlot: true,
 		pesthunterAccessoryEnabled: true,
 		mantidPestKills: 0,
@@ -98,52 +87,24 @@ const defaultData = {
 } as RatesData;
 
 function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingData {
-	const inputArmorSets = data?.armorSets?.length ? data.armorSets : defaultData.pestFarming.armorSets;
-	const mainArmorSet =
-		inputArmorSets.find((set) => set.id === PEST_MAIN_ARMOR_SET_ID) ??
-		inputArmorSets[0] ??
-		defaultData.pestFarming.armorSets[0];
-	const spawnArmorSet =
-		inputArmorSets.find((set) => set.id === PEST_SPAWN_ARMOR_SET_ID) ??
-		inputArmorSets.find((set) => set.id !== mainArmorSet?.id) ??
-		defaultData.pestFarming.armorSets[1];
-	const armorSets: PestArmorSetLoadout[] = [
-		{
-			id: PEST_MAIN_ARMOR_SET_ID,
-			name: mainArmorSet?.name || 'Farm/Kill Armor',
-			pieces: { ...(mainArmorSet?.pieces ?? {}) },
-		},
-		{
-			id: PEST_SPAWN_ARMOR_SET_ID,
-			name: spawnArmorSet?.name || 'Spawn Armor',
-			pieces: { ...(spawnArmorSet?.pieces ?? {}) },
-		},
-	];
-	const armorSetIds = new Set(armorSets.map((set) => set.id));
-	const normalizePhaseLoadout = (phase: PestFarmingPhase, fallbackArmorSetId: string): PestPhaseLoadout => {
+	const armorSetIds = new Set([PEST_MAIN_ARMOR_SET_ID, PEST_SPAWN_ARMOR_SET_ID]);
+	const normalizePhaseLoadout = (phase: PestFarmingPhase, fallbackArmorSetId: string): { armorSetId: string } => {
 		const loadout = data?.phaseLoadouts?.[phase];
 		const armorSetId =
 			loadout?.armorSetId && armorSetIds.has(loadout.armorSetId) ? loadout.armorSetId : fallbackArmorSetId;
 		return {
-			...defaultData.pestFarming.phaseLoadouts[phase],
-			...(loadout ?? {}),
 			armorSetId,
 		};
 	};
 
 	return {
-		...defaultData.pestFarming,
-		...(data ?? {}),
-		armorSets,
+		selectedCrop: data?.selectedCrop,
 		phaseLoadouts: {
 			[PestFarmingPhase.Farm]: normalizePhaseLoadout(PestFarmingPhase.Farm, PEST_MAIN_ARMOR_SET_ID),
 			[PestFarmingPhase.Spawn]: normalizePhaseLoadout(PestFarmingPhase.Spawn, PEST_SPAWN_ARMOR_SET_ID),
 			[PestFarmingPhase.Kill]: normalizePhaseLoadout(PestFarmingPhase.Kill, PEST_MAIN_ARMOR_SET_ID),
 		},
-		sharedEquipment: {
-			...defaultData.pestFarming.sharedEquipment,
-			...(data?.sharedEquipment ?? {}),
-		},
+		sprayedPlot: data?.sprayedPlot ?? defaultData.pestFarming.sprayedPlot,
 		pesthunterAccessoryEnabled: true,
 		mantidPestKills: 0,
 	};
