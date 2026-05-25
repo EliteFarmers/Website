@@ -187,23 +187,32 @@
 		isBookmarked = nextBookmarked;
 
 		const cmd = nextBookmarked ? bookmarkGuideCommand : unbookmarkGuideCommand;
-		const result = await cmd(guideId).updates(
-			guidePromise.withOverride((current) => {
-				if (!current) return current;
-				return { ...current, isBookmarked: nextBookmarked };
-			})
-		);
-
-		if (result.error) {
-			isBookmarked = oldBookmarked;
-			notifyError(result.error);
-			return;
-		}
-
-		notifySuccess(nextBookmarked ? 'Guide bookmarked' : 'Bookmark removed');
-		trackAnalytics('guides.bookmark', {
-			bookmarked: nextBookmarked,
+		const releaseBookmarkOverride = guidePromise.withOverride((current) => {
+			if (!current) return current;
+			return { ...current, isBookmarked: nextBookmarked };
 		});
+
+		try {
+			const result = await cmd(guideId);
+
+			if (result.error) {
+				isBookmarked = oldBookmarked;
+				notifyError(result.error);
+				return;
+			}
+
+			await guidePromise.refresh();
+			notifySuccess(nextBookmarked ? 'Guide bookmarked' : 'Bookmark removed');
+			trackAnalytics('guides.bookmark', {
+				bookmarked: nextBookmarked,
+			});
+		} catch (err) {
+			isBookmarked = oldBookmarked;
+			notifyError('Failed to update bookmark');
+			console.error(err);
+		} finally {
+			releaseBookmarkOverride();
+		}
 	}
 
 	function handleShareGuide() {

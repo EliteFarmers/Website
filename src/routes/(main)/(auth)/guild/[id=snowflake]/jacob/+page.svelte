@@ -323,11 +323,11 @@
 			<h3 class="text-xl">Server Jacob Leaderboard Settings</h3>
 		</Dialog.Header>
 		<form
-			{...createJacobLeaderboardForm.enhance(async ({ form, submit }) => {
-				await submit();
+			{...createJacobLeaderboardForm.enhance(async (form) => {
+				await form.submit();
 				if (createJacobLeaderboardForm.result?.success) {
 					resetCreateFormFields();
-					form.reset();
+					form.element.reset();
 					clickOutsideModal = false;
 				}
 			})}
