@@ -2,14 +2,18 @@ import { browser } from '$app/environment';
 import {
 	PEST_MAIN_ARMOR_SET_ID,
 	PEST_SPAWN_ARMOR_SET_ID,
+	DEFAULT_PEST_CYCLE_SETTINGS,
 	PestFarmingPhase,
 	ZorroMode,
 	type FarmingTool,
+	type PestCycleSettings,
 	type TemporaryFarmingFortune,
 } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 import * as z from 'zod';
+
+export type PestFarmingRateSettings = Omit<PestCycleSettings, 'sprayedPlot'>;
 
 export interface PestFarmingData {
 	selectedCrop?: string;
@@ -17,6 +21,7 @@ export interface PestFarmingData {
 	sprayedPlot: boolean;
 	pesthunterAccessoryEnabled: boolean;
 	mantidPestKills: number;
+	rateSettings: PestFarmingRateSettings;
 }
 
 export interface RatesData {
@@ -83,6 +88,22 @@ const defaultData = {
 		sprayedPlot: true,
 		pesthunterAccessoryEnabled: true,
 		mantidPestKills: 0,
+		rateSettings: {
+			blocksPerSecond: DEFAULT_PEST_CYCLE_SETTINGS.blocksPerSecond,
+			spawnBlocksPerSecond: DEFAULT_PEST_CYCLE_SETTINGS.spawnBlocksPerSecond,
+			farmSwapBeforeCooldownSeconds: DEFAULT_PEST_CYCLE_SETTINGS.farmSwapBeforeCooldownSeconds,
+			farmToSpawnSwapSeconds: DEFAULT_PEST_CYCLE_SETTINGS.farmToSpawnSwapSeconds,
+			spawnToKillSwapSeconds: DEFAULT_PEST_CYCLE_SETTINGS.spawnToKillSwapSeconds,
+			fixedKillSetupSeconds: DEFAULT_PEST_CYCLE_SETTINGS.fixedKillSetupSeconds,
+			fixedPestSearchSeconds: DEFAULT_PEST_CYCLE_SETTINGS.fixedPestSearchSeconds,
+			secondsPerPestKill: DEFAULT_PEST_CYCLE_SETTINGS.secondsPerPestKill,
+			returnToFarmSeconds: DEFAULT_PEST_CYCLE_SETTINGS.returnToFarmSeconds,
+			activePestsAtCycleStart: DEFAULT_PEST_CYCLE_SETTINGS.activePestsAtCycleStart,
+			maxActivePests: DEFAULT_PEST_CYCLE_SETTINGS.maxActivePests,
+			atmosphericFilterAutumn: DEFAULT_PEST_CYCLE_SETTINGS.atmosphericFilterAutumn,
+			pestRepellent: DEFAULT_PEST_CYCLE_SETTINGS.pestRepellent,
+			finneganActive: DEFAULT_PEST_CYCLE_SETTINGS.finneganActive,
+		},
 	},
 } as RatesData;
 
@@ -107,6 +128,10 @@ function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingD
 		sprayedPlot: data?.sprayedPlot ?? defaultData.pestFarming.sprayedPlot,
 		pesthunterAccessoryEnabled: true,
 		mantidPestKills: 0,
+		rateSettings: {
+			...defaultData.pestFarming.rateSettings,
+			...(data?.rateSettings ?? {}),
+		},
 	};
 }
 

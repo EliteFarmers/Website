@@ -37,6 +37,21 @@
 		$ratesData.settings = true;
 		trackAnalytics('pest_farming.settings_opened');
 	}
+
+	function formatNumber(value: number, maximumFractionDigits = 0) {
+		return value.toLocaleString(undefined, { maximumFractionDigits });
+	}
+
+	function formatRate(value: number) {
+		return `${formatNumber(value)}/hr`;
+	}
+
+	function formatDuration(seconds: number) {
+		const totalSeconds = Math.max(0, Math.round(seconds));
+		const minutes = Math.floor(totalSeconds / 60);
+		const remainingSeconds = totalSeconds % 60;
+		return minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${remainingSeconds}s`;
+	}
 </script>
 
 <StatsHead
@@ -70,6 +85,75 @@
 					</Button>
 				</div>
 				<Cropselector radio={true} analyticsEvent="pest_farming.crop_selected" />
+			</section>
+
+			<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
+				<header class="flex flex-col gap-1">
+					<h2 class="text-xl leading-tight font-semibold">Rate Breakdown</h2>
+					<p class="text-muted-foreground text-sm">
+						{formatNumber(pest.pestRateResult.breakdown.pestSpawning.expectedPestsPerSpawn, 2)} expected pests
+						every {formatDuration(pest.pestRateResult.debug.cycleSeconds)} cycle.
+					</p>
+				</header>
+				<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+					<div class="bg-muted/30 rounded-md border p-3">
+						<p class="text-muted-foreground text-xs font-medium">Total</p>
+						<p class="text-xl font-semibold">{formatRate(pest.pestRateResult.valuation.coinsPerHour)}</p>
+					</div>
+					<div class="bg-muted/30 rounded-md border p-3">
+						<p class="text-muted-foreground text-xs font-medium">Crop Breaking</p>
+						<p class="text-xl font-semibold">
+							{formatRate(pest.pestRateResult.valuation.byBucket.cropBreaking)}
+						</p>
+					</div>
+					<div class="bg-muted/30 rounded-md border p-3">
+						<p class="text-muted-foreground text-xs font-medium">Pest Drops</p>
+						<p class="text-xl font-semibold">
+							{formatRate(
+								pest.pestRateResult.valuation.byBucket.pestDrops +
+									pest.pestRateResult.valuation.byBucket.npcCoins
+							)}
+						</p>
+					</div>
+					<div class="bg-muted/30 rounded-md border p-3">
+						<p class="text-muted-foreground text-xs font-medium">Rare Drops</p>
+						<p class="text-xl font-semibold">
+							{formatRate(pest.pestRateResult.valuation.byBucket.rngDrops)}
+						</p>
+					</div>
+					{#if pest.pestRateResult.valuation.byBucket.pestExchanges}
+						<div class="bg-muted/30 rounded-md border p-3">
+							<p class="text-muted-foreground text-xs font-medium">Pest Exchanges</p>
+							<p class="text-xl font-semibold">
+								{formatRate(pest.pestRateResult.valuation.byBucket.pestExchanges)}
+							</p>
+						</div>
+					{/if}
+					{#if pest.pestRateResult.valuation.byBucket.pestShards}
+						<div class="bg-muted/30 rounded-md border p-3">
+							<p class="text-muted-foreground text-xs font-medium">Pest Shards</p>
+							<p class="text-xl font-semibold">
+								{formatRate(pest.pestRateResult.valuation.byBucket.pestShards)}
+							</p>
+						</div>
+					{/if}
+					{#if pest.pestRateResult.valuation.byBucket.costs}
+						<div class="bg-muted/30 rounded-md border p-3">
+							<p class="text-muted-foreground text-xs font-medium">Costs</p>
+							<p class="text-xl font-semibold">
+								{formatRate(pest.pestRateResult.valuation.byBucket.costs)}
+							</p>
+						</div>
+					{/if}
+					{#if pest.pestRateResult.valuation.byBucket.feastRareCrops}
+						<div class="bg-muted/30 rounded-md border p-3">
+							<p class="text-muted-foreground text-xs font-medium">Feast Rare Crops</p>
+							<p class="text-xl font-semibold">
+								{formatRate(pest.pestRateResult.valuation.byBucket.feastRareCrops)}
+							</p>
+						</div>
+					{/if}
+				</div>
 			</section>
 
 			<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
@@ -382,9 +466,11 @@
 						applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
 						expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
 						hasUpgradePath={(upgrade) => pest.hasActivePhaseUpgradePath(upgrade)}
-						costPerValueFn={(upgrade) => pest.getPhaseUpgradeScore(upgrade)}
-						costPerHeader="Cost Per Phase Score"
-						version={pest.pestVersion}
+						rateImpactFn={(upgrade) => pest.getPestRateImpact(upgrade)}
+						rateImpactUnavailableLabel="Loading Rates"
+						costPerValueFn={(upgrade) => pest.getPestRateImpactScore(upgrade)}
+						costPerHeader="Cost / Coins/hr"
+						version={pest.pestRateVersion}
 					/>
 				</section>
 			</section>

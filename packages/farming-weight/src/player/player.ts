@@ -82,10 +82,22 @@ export interface DetailedDropsFromEffectsDelta {
 	totalItems: number;
 }
 
-export interface UpgradeRateImpact {
-	before: DetailedDropsFromEffectsResult;
-	after: DetailedDropsFromEffectsResult;
-	delta: DetailedDropsFromEffectsDelta;
+export interface UpgradeRateImpact<
+	TBefore = DetailedDropsFromEffectsResult,
+	TAfter = DetailedDropsFromEffectsResult,
+	TDelta extends DetailedDropsFromEffectsDelta = DetailedDropsFromEffectsDelta,
+> {
+	before: TBefore;
+	after: TAfter;
+	delta: TDelta;
+	valuationDelta?: {
+		complete: boolean;
+		coinsPerCycle: number;
+		coinsPerInterval: number;
+		coinsPerHour: number;
+		costPerCoinsPerHour?: number;
+		missingItemIds: string[];
+	};
 }
 
 export class FarmingPlayer {
@@ -983,6 +995,10 @@ export class FarmingPlayer {
 				this.options.dnaMilestone = Number(value);
 			} else if (key === 'refinedTruffles') {
 				this.options.refinedTruffles = Number(value);
+			} else if (key === 'wrigglingLarva') {
+				this.options.wrigglingLarva = Number(value);
+			} else if (key === 'filledRosewaterFlask' || key === 'filledRosewaterFlasks') {
+				this.options.filledRosewaterFlask = Number(value);
 			}
 			this.permFortune = this.getGeneralFortune();
 		} else if (type === 'unlock' && id) {

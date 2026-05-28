@@ -738,12 +738,25 @@ export class PestFarmingPlayer {
 
 	private applyGlobalOptionUpgrade(upgrade: FortuneUpgrade): void {
 		const { type, key, value } = upgrade.meta ?? {};
-		if (type !== 'attribute' || !key || value === undefined) return;
+		if (!key || value === undefined) return;
 
-		this.options.attributes = {
-			...this.options.attributes,
-			[key]: Number(value),
-		};
+		if (type === 'attribute') {
+			this.options.attributes = {
+				...this.options.attributes,
+				[key]: Number(value),
+			};
+		} else if (type === 'setting') {
+			if (key === 'wrigglingLarva') {
+				this.options.wrigglingLarva = Number(value);
+			} else if (key === 'filledRosewaterFlask' || key === 'filledRosewaterFlasks') {
+				this.options.filledRosewaterFlask = Number(value);
+			} else {
+				return;
+			}
+		} else {
+			return;
+		}
+
 		for (const vacuum of this.vacuums) vacuum.setOptions(this.options);
 	}
 

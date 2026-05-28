@@ -218,6 +218,10 @@ test('Pesthunter Cloak Test', () => {
 	});
 
 	expect(cloak.getFortune()).toBe(29);
+	expect(cloak.getStatBreakdown(Stat.PestCooldownReduction)["§dSqueaky Pesthunter's Cloak (Squeaky)"]?.value).toBe(
+		2.5
+	);
+	expect(cloak.getStat(Stat.PestCooldownReduction)).toBe(12.5);
 });
 
 test('Pesthunter Set Bonus Test', () => {

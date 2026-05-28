@@ -287,6 +287,7 @@ test('pest-focused equipment upgrades prefer pest equipment and Squeaky while ke
 	);
 	expect(squeaky?.increase).toBe(2);
 	expect(squeaky?.stats?.[Stat.BonusPestChance]).toBe(2);
+	expect(squeaky?.stats?.[Stat.PestCooldownReduction]).toBe(2.5);
 	expect(squeaky?.stats?.[Stat.FarmingFortune]).toBe(-8);
 });
 

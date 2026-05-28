@@ -3,17 +3,19 @@
 	import * as Popover from '$ui/popover';
 	import { CROP_INFO, Crop, type UpgradeRateImpact } from 'farming-weight';
 
+	type AnyUpgradeRateImpact = UpgradeRateImpact<unknown, unknown>;
+
 	interface Props {
-		impact?: UpgradeRateImpact;
+		impact?: AnyUpgradeRateImpact;
 		coins?: number;
 		totalCost?: number;
 		items?: RatesItemPriceData;
 		unavailableLabel?: string;
 	}
 
-	let { impact, coins = 0, totalCost = 0, items, unavailableLabel }: Props = $props();
+	let { impact, coins = undefined, totalCost = 0, items, unavailableLabel }: Props = $props();
 
-	const totalCoins = $derived(coins);
+	const totalCoins = $derived(coins ?? impact?.valuationDelta?.coinsPerHour ?? 0);
 	const payoffHours = $derived(totalCoins > 0 && totalCost > 0 ? totalCost / totalCoins : undefined);
 	const npcRows = $derived.by(() => sortedRows(impact?.delta.coinSources));
 	const rngRows = $derived.by(() =>
@@ -205,7 +207,7 @@
 
 					{#if npcRows.length > 0}
 						<div class="flex flex-col gap-1">
-							<p class="text-muted-foreground font-medium">NPC Coin Sources</p>
+							<p class="text-muted-foreground font-medium">Coin Sources</p>
 							{#each npcRows as [source, value] (source)}
 								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
 									<p class="truncate">{source}</p>
