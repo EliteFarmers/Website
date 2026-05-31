@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { GUIDE_TYPE_OPTIONS } from '$lib/guides/categories';
 	import { createGuideCommand } from '$lib/remote/guides.remote';
 	import { Button } from '$ui/button';
 	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$ui/card';
@@ -8,12 +9,8 @@
 	let selectedType = $state('0');
 	let isLoading = $state(false);
 
-	const guideTypes = [
-		{ label: 'General', value: '0' },
-		{ label: 'Farming', value: '1' },
-		{ label: 'Greenhouse', value: '2' },
-		{ label: 'Contest', value: '3' },
-	];
+	const guideTypes = GUIDE_TYPE_OPTIONS;
+	let selectedGuideType = $derived(guideTypes.find((type) => type.value === selectedType));
 
 	async function createGuide() {
 		if (!selectedType) {
@@ -59,17 +56,7 @@
 					{/each}
 				</select>
 				<p class="text-muted-foreground mt-1 text-xs">
-					{#if selectedType === '0'}
-						Create a general guide covering any topic
-					{:else if selectedType === '1'}
-						Share farming tips and strategies
-					{:else if selectedType === '2'}
-						Document greenhouse layouts and designs
-					{:else if selectedType === '3'}
-						Create contest guides and resources
-					{:else}
-						Select a type to see description
-					{/if}
+					{selectedGuideType?.description ?? 'Select a type to see description'}
 				</p>
 			</div>
 

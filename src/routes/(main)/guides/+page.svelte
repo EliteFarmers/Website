@@ -2,6 +2,7 @@
 	import ItemRender from '$comp/items/item-render.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import { trackAnalytics } from '$lib/analytics';
+	import { ALL_GUIDE_TYPE_OPTIONS } from '$lib/guides/categories';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { ListGuides, ListTags } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
@@ -35,13 +36,7 @@
 	const guides = $derived(ListGuides(listParams));
 	const tags = $derived(ListTags());
 
-	const guideTypes = [
-		{ label: 'All Types', value: '' },
-		{ label: 'General', value: '0' },
-		{ label: 'Farming', value: '1' },
-		{ label: 'Greenhouse', value: '2' },
-		{ label: 'Contest', value: '3' },
-	];
+	const guideTypes = ALL_GUIDE_TYPE_OPTIONS;
 
 	const sortOptions = [
 		{ label: 'Newest', value: 'newest' },
@@ -71,6 +66,9 @@
 		<div class="mt-6 flex items-center justify-center gap-2">
 			<a href="/guides/new">
 				<Button>Create Guide</Button>
+			</a>
+			<a href="/guides/rules">
+				<Button variant="outline">Rules</Button>
 			</a>
 			{#if gbl.authorized}
 				<a href="/profile/guides">

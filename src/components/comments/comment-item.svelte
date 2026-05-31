@@ -9,6 +9,7 @@
 	import CommentEditor from './comment-editor.svelte';
 	import CommentMetadata from './comment-metadata.svelte';
 	import CommentVote from './comment-vote.svelte';
+	import type { HoistTarget } from './hoist-comment-dialog.svelte';
 
 	interface Props {
 		comment: CommentDto;
@@ -20,6 +21,10 @@
 		onVoteUp?: () => void;
 		onVoteDown?: () => void;
 		onToggleCollapse?: () => void;
+		canHoist?: boolean;
+		hoistTargets?: HoistTarget[];
+		onHoist?: (targetId: string) => void;
+		onClearHoist?: () => void;
 	}
 
 	let {
@@ -32,6 +37,10 @@
 		onVoteUp,
 		onVoteDown,
 		onToggleCollapse,
+		canHoist = false,
+		hoistTargets = [],
+		onHoist,
+		onClearHoist,
 	}: Props = $props();
 
 	let isEditing = $state(false);
@@ -69,7 +78,15 @@
 			<!-- Header: metadata and actions -->
 			<div class="flex flex-row items-center justify-between gap-2">
 				<CommentMetadata {comment} />
-				<CommentActions {comment} onEdit={() => (isEditing = true)} {onDelete} />
+				<CommentActions
+					{comment}
+					onEdit={() => (isEditing = true)}
+					{onDelete}
+					{canHoist}
+					{hoistTargets}
+					{onHoist}
+					{onClearHoist}
+				/>
 			</div>
 
 			<!-- Comment content or editor -->

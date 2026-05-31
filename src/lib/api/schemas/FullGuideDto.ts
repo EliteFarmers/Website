@@ -8,6 +8,8 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 import type { AuthorDto } from './AuthorDto';
+import type { GuideAuthorDto } from './GuideAuthorDto';
+import type { GuideAssetDto } from './GuideAssetDto';
 
 export interface FullGuideDto {
 	id: number;
@@ -18,6 +20,7 @@ export interface FullGuideDto {
 	description: string;
 	content: string;
 	author: AuthorDto;
+	authors: GuideAuthorDto[];
 	createdAt: string;
 	score: number;
 	viewCount: number;
@@ -32,4 +35,5 @@ export interface FullGuideDto {
 	/** @nullable */
 	rejectionReason?: string | null;
 	concurrencyVersion: number;
+	assets: GuideAssetDto[];
 }

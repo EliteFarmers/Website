@@ -10,6 +10,7 @@ import type {
 	InlineNode,
 	ItemListBlockNode,
 	ItemPriceBlockNode,
+	LitematicBlockNode,
 	ListBlockNode,
 	ListItemBlockNode,
 	ParagraphBlockNode,
@@ -42,6 +43,8 @@ function convertNode(node: JSONContent): BlockNode | null {
 			return convertCode(node);
 		case 'image':
 			return convertImage(node);
+		case 'litematic':
+			return convertLitematic(node);
 		case 'bulletList':
 		case 'orderedList':
 			return convertList(node);
@@ -111,6 +114,7 @@ function convertImage(node: JSONContent): ImageBlockNode {
 	return {
 		type: 'image',
 		image: {
+			assetId: node.attrs?.assetId,
 			name: node.attrs?.alt || 'image',
 			alternativeText: node.attrs?.alt,
 			url: node.attrs?.src || '',
@@ -125,7 +129,23 @@ function convertImage(node: JSONContent): ImageBlockNode {
 			updatedAt: new Date().toISOString(),
 			width: node.attrs?.width ? parseInt(node.attrs.width) : undefined,
 			height: node.attrs?.height ? parseInt(node.attrs.height) : undefined,
+			sources: node.attrs?.sources as ImageBlockNode['image']['sources'],
 		},
+	};
+}
+
+function convertLitematic(node: JSONContent): LitematicBlockNode {
+	return {
+		type: 'litematic',
+		assetId: node.attrs?.assetId || '',
+		fileName: node.attrs?.fileName || '',
+		downloadUrl: node.attrs?.downloadUrl || '',
+		name: node.attrs?.name,
+		author: node.attrs?.author,
+		width: node.attrs?.width,
+		height: node.attrs?.height,
+		length: node.attrs?.length,
+		regionCount: node.attrs?.regionCount ?? 0,
 	};
 }
 
@@ -384,6 +404,23 @@ function convertBlockToTiptap(node: BlockNode): JSONContent | null {
 					title: node.image.caption,
 					width: node.image.width,
 					height: node.image.height,
+					assetId: node.image.assetId,
+					sources: node.image.sources,
+				},
+			};
+		case 'litematic':
+			return {
+				type: 'litematic',
+				attrs: {
+					assetId: node.assetId,
+					fileName: node.fileName,
+					downloadUrl: node.downloadUrl,
+					name: node.name,
+					author: node.author,
+					width: node.width,
+					height: node.height,
+					length: node.length,
+					regionCount: node.regionCount,
 				},
 			};
 		case 'list':

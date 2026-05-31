@@ -17,13 +17,16 @@
 	import { Accordion } from '$lib/editor/extensions/accordion';
 	import { BlockGrid } from '$lib/editor/extensions/block-grid';
 	import { Callout } from '$lib/editor/extensions/callout';
+	import { GuideImage } from '$lib/editor/extensions/guide-image';
 	import { ItemList } from '$lib/editor/extensions/item-list';
 	import { ItemPrice } from '$lib/editor/extensions/item-price';
+	import { Litematic } from '$lib/editor/extensions/litematic';
 	import { Recipe } from '$lib/editor/extensions/recipe';
 	import { SkyblockItem } from '$lib/editor/extensions/skyblock-item';
 	import { ColumnLeft, ColumnRight, TwoColumn } from '$lib/editor/extensions/two-column';
 	import { YouTube } from '$lib/editor/extensions/youtube';
 	import { strapiToTiptap, tiptapToStrapi } from '$lib/editor/transformer';
+	import type { GuideAssetDto } from '$lib/guides/types';
 	import { Button } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { SiYoutube as YoutubeIcon } from '@icons-pack/svelte-simple-icons';
@@ -32,6 +35,7 @@
 	import Code from '@lucide/svelte/icons/code';
 	import Coins from '@lucide/svelte/icons/coins';
 	import Columns from '@lucide/svelte/icons/columns-2';
+	import FileArchive from '@lucide/svelte/icons/file-archive';
 	import Grid3x3 from '@lucide/svelte/icons/grid-3x3';
 	import Heading1 from '@lucide/svelte/icons/heading-1';
 	import Heading2 from '@lucide/svelte/icons/heading-2';
@@ -53,7 +57,6 @@
 	import Undo from '@lucide/svelte/icons/undo';
 	import Unlink from '@lucide/svelte/icons/unlink';
 	import { Editor, type Content } from '@tiptap/core';
-	import Image from '@tiptap/extension-image';
 	import Link from '@tiptap/extension-link';
 	import { Table } from '@tiptap/extension-table';
 	import { TableCell } from '@tiptap/extension-table-cell';
@@ -64,6 +67,7 @@
 	import InsertAccordionDialog from './dialogs/insert-accordion-dialog.svelte';
 	import InsertBlockGridDialog from './dialogs/insert-block-grid-dialog.svelte';
 	import InsertCalloutDialog from './dialogs/insert-callout-dialog.svelte';
+	import GuideAssetsDialog from './dialogs/guide-assets-dialog.svelte';
 	import InsertItemDialog from './dialogs/insert-item-dialog.svelte';
 	import InsertItemListDialog from './dialogs/insert-item-list-dialog.svelte';
 	import InsertPriceDialog from './dialogs/insert-price-dialog.svelte';
@@ -74,7 +78,17 @@
 		content,
 		onChange,
 		class: className,
-	}: { content: string | RootNode; onChange?: (content: RootNode) => void; class?: string } = $props();
+		guideId,
+		assets = [],
+		onAssetsChanged,
+	}: {
+		content: string | RootNode;
+		onChange?: (content: RootNode) => void;
+		class?: string;
+		guideId?: number | null;
+		assets?: GuideAssetDto[];
+		onAssetsChanged?: () => void;
+	} = $props();
 
 	let element: HTMLElement;
 	let editor: Editor | undefined = $state();
@@ -86,6 +100,7 @@
 	let showItemListDialog = $state(false);
 	let showBlockGridDialog = $state(false);
 	let showAccordionDialog = $state(false);
+	let showAssetsDialog = $state(false);
 	let editSkyblockItem = $state<EditSkyblockItemEvent | null>(null);
 	let editItemPrice = $state<EditItemPriceEvent | null>(null);
 	let editRecipe = $state<EditRecipeEvent | null>(null);
@@ -148,13 +163,14 @@
 				Link.configure({
 					openOnClick: false,
 				}),
-				Image,
+				GuideImage,
 				SkyblockItem,
 				ItemPrice,
 				TwoColumn,
 				ColumnLeft,
 				ColumnRight,
 				YouTube,
+				Litematic,
 				Callout,
 				Accordion,
 				Recipe,
@@ -218,6 +234,11 @@
 
 	function addImage() {
 		if (!editor) return;
+		if (guideId) {
+			showAssetsDialog = true;
+			return;
+		}
+
 		const url = window.prompt('Image URL');
 
 		if (url) {
@@ -405,6 +426,16 @@
 				>
 					<YoutubeIcon class="h-4 w-4" />
 				</Button>
+				{#if guideId}
+					<Button
+						variant="ghost"
+						size="icon"
+						onclick={() => (showAssetsDialog = true)}
+						title="Insert Guide Asset"
+					>
+						<FileArchive class="h-4 w-4" />
+					</Button>
+				{/if}
 				<Button variant="ghost" size="icon" onclick={() => (showCalloutDialog = true)} title="Insert Callout">
 					<AlertCircle class="h-4 w-4" />
 				</Button>
@@ -531,6 +562,12 @@
 							<YoutubeIcon class="mr-2 h-4 w-4" />
 							YouTube Video
 						</DropdownMenu.Item>
+						{#if guideId}
+							<DropdownMenu.Item onclick={() => (showAssetsDialog = true)}>
+								<FileArchive class="mr-2 h-4 w-4" />
+								Guide Asset
+							</DropdownMenu.Item>
+						{/if}
 						<DropdownMenu.Item onclick={() => (showCalloutDialog = true)}>
 							<AlertCircle class="mr-2 h-4 w-4" />
 							Callout
@@ -653,6 +690,15 @@
 	}}
 	{editor}
 	editNode={editAccordion}
+/>
+
+<GuideAssetsDialog
+	open={showAssetsDialog}
+	onOpenChange={(v) => (showAssetsDialog = v)}
+	{editor}
+	{guideId}
+	{assets}
+	{onAssetsChanged}
 />
 
 <style>

@@ -6,11 +6,13 @@
 	import { CommentSectionContainer } from '$comp/comments';
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
+	import ContentReportDialog from '$comp/reports/content-report-dialog.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import { trackAnalytics } from '$lib/analytics';
-	import type { FullGuideDto, GuideDto } from '$lib/api/schemas';
+	import type { FullGuideDto } from '$lib/api/schemas';
+	import type { CommentWithGuideAuthor, FullGuideWithAuthors, GuideAuthorDto } from '$lib/guides/types';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { GetGuideComments } from '$lib/remote/comments.remote';
@@ -38,6 +40,7 @@
 	import { Separator } from '$ui/separator';
 	import Ellipsis from '@lucide/svelte/icons/ellipsis';
 	import Eye from '@lucide/svelte/icons/eye';
+	import Flag from '@lucide/svelte/icons/flag';
 	import Link from '@lucide/svelte/icons/link';
 	import Star from '@lucide/svelte/icons/star';
 	import ThumbsDown from '@lucide/svelte/icons/thumbs-down';
@@ -62,12 +65,37 @@
 	const guidePromise = $derived(GetGuide({ slug, draft }));
 	const commentsPromise = $derived(GetGuideComments(slug));
 
-	const guideData = $derived(guidePromise?.current ?? data.guide);
+	const guideData = $derived((guidePromise?.current ?? data.guide) as FullGuideWithAuthors | undefined);
 	const COMMENTS_SECTION_ID = 'comments';
 	type TocItem = { level: number; text: string; id: string; isFooter?: boolean };
 
 	const gbl = getGlobalContext();
-	let isOwner = $derived(guideData?.author?.id === gbl.session?.id);
+	let authors = $derived.by((): GuideAuthorDto[] => {
+		if (!guideData) return [];
+		return guideData.authors?.length
+			? guideData.authors
+			: [{ author: guideData.author, isOwner: true, role: 'Owner' }];
+	});
+	let isOwner = $derived(authors.some((author) => author.isOwner && author.author.id === gbl.session?.id));
+	let isGuideAuthor = $derived(authors.some((author) => author.author.id === gbl.session?.id));
+	let canEditGuide = $derived(Boolean(gbl.session?.perms.admin || isGuideAuthor));
+	let canManageGuide = $derived(Boolean(gbl.session?.perms.admin || isOwner));
+	let parsedBlocks = $derived.by(() => parseGuideBlocks(guideData?.content));
+	let commentsData = $derived((commentsPromise?.current ?? []) as CommentWithGuideAuthor[]);
+	let hoistedComments = $derived.by(() => {
+		const map: Record<string, CommentWithGuideAuthor[]> = {};
+		for (const comment of commentsData) {
+			if (!comment.liftedElementId || comment.isDeleted) continue;
+			map[comment.liftedElementId] ??= [];
+			map[comment.liftedElementId].push(comment);
+		}
+		return map;
+	});
+	let hoistTargets = $derived.by(() =>
+		parsedBlocks
+			? buildTableOfContentsFromBlocks(parsedBlocks).map((item) => ({ id: item.id, label: item.text || item.id }))
+			: []
+	);
 
 	// Component state
 	let userVote = $state<number | null>(null);
@@ -76,6 +104,7 @@
 	let pendingGuideVoteGuideId: number | null = null;
 	let showDeleteDialog = $state(false);
 	let showUnpublishDialog = $state(false);
+	let showReportDialog = $state(false);
 	let isLoadingDelete = $state(false);
 	let isLoadingUnpublish = $state(false);
 
@@ -100,6 +129,19 @@
 		userVote = guide.userVote ?? null;
 		isBookmarked = !!guide.isBookmarked;
 	});
+
+	function parseGuideBlocks(content: string | undefined): BlockNode[] | null {
+		if (!content || (!content.trim().startsWith('[') && !content.trim().startsWith('{'))) {
+			return null;
+		}
+
+		try {
+			const parsed = JSON.parse(content);
+			return Array.isArray(parsed) ? (parsed as BlockNode[]) : null;
+		} catch {
+			return null;
+		}
+	}
 
 	function buildTableOfContents(html: string): TocItem[] {
 		if (!html) return [];
@@ -262,13 +304,6 @@
 		}
 	}
 
-	let ign = $derived.by(() => {
-		const guide = guideData as GuideDto | undefined;
-		if (!guide) return '';
-		const split = guide.author.name.split(' ');
-		return split.length === 1 ? split[0] : split.sort((a, b) => b.length - a.length)[0];
-	});
-
 	const pageCtx = getPageCtx();
 
 	$effect.pre(() => {
@@ -344,7 +379,7 @@
 			<div class="bg-muted/50 border-border my-4 rounded-lg border p-4">
 				<p class="font-semibold">You are viewing a draft version</p>
 				<p class="text-muted-foreground mt-1 text-sm">This guide is not visible to the public.</p>
-				{#if page.data.session?.perms.admin}
+				{#if canEditGuide}
 					<div class="mt-3 flex gap-2">
 						<a href="/guides/{guideData.slug}/edit">
 							<Button size="sm" variant="outline">Edit</Button>
@@ -364,16 +399,31 @@
 
 			<div class="flex flex-col items-center gap-4">
 				<div class="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-					<div class="text-foreground flex items-center gap-2 font-medium">
-						{#if guideData.author.avatar}
-							<UserIcon
-								user={{ id: guideData.author.id.toString(), avatar: guideData.author.avatar }}
-								class="size-6 rounded-full"
-							/>
-						{:else}
-							<PlayerHead uuid={ign} class="size-6" />
-						{/if}
-						<span>{guideData.author.name}</span>
+					<div class="text-foreground flex flex-wrap items-center justify-center gap-2 font-medium">
+						{#each authors as guideAuthor (guideAuthor.author.id)}
+							<div class="flex items-center gap-1.5">
+								{#if guideAuthor.author.avatar}
+									<UserIcon
+										user={{
+											id: guideAuthor.author.id.toString(),
+											avatar: guideAuthor.author.avatar,
+										}}
+										class="size-6 rounded-full"
+									/>
+								{:else}
+									{@const nameParts = guideAuthor.author.name.split(' ')}
+									{@const headName =
+										nameParts.length === 1
+											? nameParts[0]
+											: nameParts.sort((a, b) => b.length - a.length)[0]}
+									<PlayerHead uuid={headName} class="size-6" />
+								{/if}
+								<span>{guideAuthor.author.name}</span>
+								{#if guideAuthor.isOwner}
+									<Badge variant="outline" class="px-1.5 py-0 text-[10px]">Owner</Badge>
+								{/if}
+							</div>
+						{/each}
 					</div>
 					<DateDisplay timestamp={new Date(guideData.createdAt).getTime()} />
 					<span class="flex items-center gap-1">
@@ -398,27 +448,11 @@
 
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
 			<div class="lg:col-span-3">
-				{#if guideData.content.trim().startsWith('[') || guideData.content.trim().startsWith('{')}
+				{#if parsedBlocks}
 					{#key guideData.content}
-						{@const parsed = (() => {
-							try {
-								const p = JSON.parse(guideData.content);
-								return Array.isArray(p) ? p : null;
-							} catch {
-								return null;
-							}
-						})()}
-						{#if parsed}
-							<div class="prose dark:prose-invert mb-8 max-w-none">
-								<BlockRenderer content={parsed} />
-							</div>
-						{:else}
-							<div class="prose dark:prose-invert mb-8 max-w-none">
-								{#await getHtmlFromMarkdown(guideData.content) then html}
-									<RenderHtml content={html} />
-								{/await}
-							</div>
-						{/if}
+						<div class="prose dark:prose-invert mb-8 max-w-none">
+							<BlockRenderer content={parsedBlocks} {hoistedComments} />
+						</div>
 					{/key}
 				{:else}
 					<div class="prose dark:prose-invert mb-8 max-w-none">
@@ -441,31 +475,16 @@
 						session={page.data.session}
 						{notifyError}
 						{notifySuccess}
+						canHoist={canEditGuide}
+						{hoistTargets}
 					/>
 				</div>
 			</div>
 
 			<div class="hidden lg:block">
-				{#if guideData.content.trim().startsWith('[') || guideData.content.trim().startsWith('{')}
-					{#key guideData.content}
-						{@const parsed = (() => {
-							try {
-								const p = JSON.parse(guideData.content);
-								return Array.isArray(p) ? p : null;
-							} catch {
-								return null;
-							}
-						})()}
-						{#if parsed}
-							{@const toc = buildTableOfContentsFromBlocks(parsed)}
-							{@render tableOfContents(toc, 'top-20')}
-						{:else}
-							{#await getHtmlFromMarkdown(guideData.content) then html}
-								{@const toc = buildTableOfContents(html)}
-								{@render tableOfContents(toc, 'top-4')}
-							{/await}
-						{/if}
-					{/key}
+				{#if parsedBlocks}
+					{@const toc = buildTableOfContentsFromBlocks(parsedBlocks)}
+					{@render tableOfContents(toc, 'top-20')}
 				{:else}
 					{#await getHtmlFromMarkdown(guideData.content) then html}
 						{@const toc = buildTableOfContents(html)}
@@ -558,7 +577,14 @@
 			Share
 		</Button>
 
-		{#if gbl.session?.perms.admin || isOwner}
+		{#if gbl.authorized}
+			<Button variant="outline" size="sm" onclick={() => (showReportDialog = true)}>
+				<Flag class="mr-2 h-4 w-4" />
+				Report
+			</Button>
+		{/if}
+
+		{#if canEditGuide || canManageGuide}
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
 					{#snippet child({ props })}
@@ -568,15 +594,28 @@
 					{/snippet}
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end">
-					{#if gbl.session?.perms.admin}
+					{#if canManageGuide}
 						<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)}>Unpublish</DropdownMenu.Item>
 					{/if}
-					<DropdownMenu.Item onclick={() => goto(`/guides/${guideData.slug}/edit`)}>Edit</DropdownMenu.Item>
-					<DropdownMenu.Item onclick={() => (showDeleteDialog = true)} class="text-destructive">
-						Delete
-					</DropdownMenu.Item>
+					{#if canEditGuide}
+						<DropdownMenu.Item onclick={() => goto(`/guides/${guideData.slug}/edit`)}
+							>Edit</DropdownMenu.Item
+						>
+					{/if}
+					{#if canManageGuide}
+						<DropdownMenu.Item onclick={() => (showDeleteDialog = true)} class="text-destructive">
+							Delete
+						</DropdownMenu.Item>
+					{/if}
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		{/if}
 	{/snippet}
+
+	<ContentReportDialog
+		open={showReportDialog}
+		targetType="Guide"
+		targetId={guideData.id}
+		onOpenChange={(open) => (showReportDialog = open)}
+	/>
 {/if}

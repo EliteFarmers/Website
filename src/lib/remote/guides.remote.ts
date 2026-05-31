@@ -1,4 +1,5 @@
 import { command, getRequestEvent, query } from '$app/server';
+import { env } from '$env/dynamic/private';
 import {
 	bookmarkGuide,
 	createGuide,
@@ -23,8 +24,17 @@ import type {
 	UpdateGuideRequest,
 	VoteGuideRequest,
 } from '$lib/api/schemas';
+import { customFetch } from '$lib/api/custom-fetch';
+import type { GuideAssetDto, GuideVersionDto } from '$lib/guides/types';
 import { error } from '@sveltejs/kit';
 import * as z from 'zod';
+
+type ApiSuccess<T> = { status: 200; data: T } | { status: 204; data: null };
+type ApiError = { status: 400 | 401 | 403 | 404 | 500; data: unknown };
+
+function apiUrl(path: string) {
+	return `${env.ELITE_API_URL}${path}`;
+}
 
 /**
  * Query: List all available guide tags
@@ -122,6 +132,50 @@ export const GetUserBookmarks = query(z.union([z.string(), z.bigint(), z.number(
 });
 
 /**
+ * Query: List uploaded guide images and litematics for the editor
+ */
+export const GetGuideAssets = query(z.number(), async (guideId) => {
+	const event = getRequestEvent();
+	if (!event.locals.access_token) {
+		error(401, 'Unauthorized');
+	}
+
+	const result = await customFetch<ApiSuccess<GuideAssetDto[]> | ApiError>(apiUrl(`/guides/${guideId}/assets`));
+	if (result.response.status === 401) {
+		error(401, 'Unauthorized');
+	}
+	if (result.response.status === 403) {
+		error(403, 'Insufficient permissions');
+	}
+	if (!result.ok) {
+		error(result.response.status, 'Failed to fetch guide assets');
+	}
+	return result.data ?? [];
+});
+
+/**
+ * Query: List guide save history for editors
+ */
+export const GetGuideHistory = query(z.number(), async (guideId) => {
+	const event = getRequestEvent();
+	if (!event.locals.access_token) {
+		error(401, 'Unauthorized');
+	}
+
+	const result = await customFetch<ApiSuccess<GuideVersionDto[]> | ApiError>(apiUrl(`/guides/${guideId}/history`));
+	if (result.response.status === 401) {
+		error(401, 'Unauthorized');
+	}
+	if (result.response.status === 403) {
+		error(403, 'Insufficient permissions');
+	}
+	if (!result.ok) {
+		error(result.response.status, 'Failed to fetch guide history');
+	}
+	return result.data ?? [];
+});
+
+/**
  * Command: Create a new guide draft
  */
 export const createGuideCommand = command(z.string(), async (type: string) => {
@@ -199,6 +253,82 @@ export const updateGuideCommand = command(
 		}
 
 		return { error: null, version: result.data.concurrencyVersion };
+	}
+);
+
+/**
+ * Command: Restore an older guide save into the current draft
+ */
+export const restoreGuideVersionCommand = command(
+	z.object({
+		guideId: z.number(),
+		versionId: z.number(),
+	}),
+	async ({ guideId, versionId }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) {
+			return { error: 'Unauthorized', version: null };
+		}
+
+		const result = await customFetch<ApiSuccess<{ concurrencyVersion: number }> | ApiError>(
+			apiUrl(`/guides/${guideId}/history/${versionId}/restore`),
+			{
+				method: 'POST',
+			}
+		);
+
+		if (result.response.status === 401) {
+			return { error: 'Unauthorized', version: null };
+		}
+		if (result.response.status === 403) {
+			return { error: 'You do not have permission to restore this guide', version: null };
+		}
+		if (!result.ok) {
+			return { error: 'Failed to restore guide revision', version: null };
+		}
+
+		GetGuideHistory(guideId).refresh();
+		return { error: null, version: result.data?.concurrencyVersion ?? null };
+	}
+);
+
+/**
+ * Command: Replace owner and editor author list
+ */
+export const replaceGuideAuthorsCommand = command(
+	z.object({
+		guideId: z.number(),
+		ownerId: z.string().min(1),
+		editorIds: z.array(z.string()).max(3),
+	}),
+	async ({ guideId, ownerId, editorIds }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) {
+			return { error: 'Unauthorized' };
+		}
+
+		const result = await customFetch<ApiSuccess<null> | ApiError>(apiUrl(`/guides/${guideId}/authors`), {
+			method: 'PUT',
+			headers: {
+				'content-type': 'application/json',
+			},
+			body: JSON.stringify({
+				ownerId,
+				editorIds,
+			}),
+		});
+
+		if (result.response.status === 401) {
+			return { error: 'Unauthorized' };
+		}
+		if (result.response.status === 403) {
+			return { error: 'You do not have permission to manage authors' };
+		}
+		if (!result.ok) {
+			return { error: 'Failed to update guide authors' };
+		}
+
+		return { error: null };
 	}
 );
 

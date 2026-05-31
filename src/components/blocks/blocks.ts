@@ -34,6 +34,9 @@ export function generateBlockKey(node: BlockNode, idx: number): string {
 	if (node.type === 'image' && node.image.hash) {
 		return `img-${node.image.hash}-${idx}`;
 	}
+	if (node.type === 'litematic' && node.assetId) {
+		return `litematic-${node.assetId}-${idx}`;
+	}
 	return `${node.type}-${idx}`;
 }
 
@@ -79,12 +82,14 @@ export interface CodeBlockNode {
 export interface ImageBlockNode {
 	type: 'image';
 	image: {
+		assetId?: string;
 		name: string;
 		alternativeText?: string;
 		url: string;
 		caption?: string;
 		width?: number;
 		height?: number;
+		sources?: Record<string, { url: string; width: number }>;
 		formats?: Record<string, unknown>;
 		hash: string;
 		ext: string;
@@ -95,6 +100,19 @@ export interface ImageBlockNode {
 		createdAt: string;
 		updatedAt: string;
 	};
+}
+
+export interface LitematicBlockNode {
+	type: 'litematic';
+	assetId: string;
+	fileName: string;
+	downloadUrl: string;
+	name?: string | null;
+	author?: string | null;
+	width?: number | null;
+	height?: number | null;
+	length?: number | null;
+	regionCount: number;
 }
 
 export interface SkyblockItemBlockNode {
@@ -195,6 +213,7 @@ export type BlockNode =
 	| QuoteBlockNode
 	| CodeBlockNode
 	| ImageBlockNode
+	| LitematicBlockNode
 	| ListBlockNode
 	| ListItemBlockNode
 	| SkyblockItemBlockNode
@@ -216,6 +235,7 @@ export interface BlockComponents {
 	quote: Component<QuoteProps>;
 	code: Component<CodeProps>;
 	image: Component<ImageProps>;
+	litematic: Component<LitematicProps>;
 	list: Component<ListProps>;
 	'list-item': Component<ListItemProps>;
 	'skyblock-item': Component<SkyblockItemProps>;
@@ -319,6 +339,10 @@ export interface CodeProps extends BlockComponentProps {
 
 export interface ImageProps extends BlockComponentProps {
 	node: ImageBlockNode;
+}
+
+export interface LitematicProps extends BlockComponentProps {
+	node: LitematicBlockNode;
 }
 
 export interface ListProps extends BlockComponentProps {

@@ -2,6 +2,8 @@
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import type { CommentDto } from '$lib/api';
+	import type { CommentWithGuideAuthor } from '$lib/guides/types';
+	import { Badge } from '$ui/badge';
 	import * as Tooltip from '$ui/tooltip';
 	import { formatDistanceToNow } from 'date-fns';
 
@@ -12,6 +14,7 @@
 	let { comment }: Props = $props();
 
 	let { author, createdAt, isEdited = false, isPending = false } = $derived(comment);
+	let isGuideAuthor = $derived((comment as CommentWithGuideAuthor).isGuideAuthor ?? false);
 	let { id: authorId, name: authorName, avatar: authorAvatar } = $derived(author);
 
 	let date = $derived(new Date(createdAt));
@@ -44,6 +47,10 @@
 	</Tooltip.Root>
 
 	{#if !comment.isDeleted}
+		{#if isGuideAuthor}
+			<Badge variant="secondary" class="px-1.5 py-0 text-[10px]">OP</Badge>
+		{/if}
+
 		{#if isEdited}
 			<span class="text-muted-foreground text-xs">(edited{comment.isEditedByAdmin ? ' by admin' : ''})</span>
 		{/if}

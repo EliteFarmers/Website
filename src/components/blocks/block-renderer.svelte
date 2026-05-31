@@ -7,6 +7,8 @@
 		type ModifierComponents,
 	} from './blocks';
 
+	import HoistedCommentCallout from '$comp/comments/hoisted-comment-callout.svelte';
+	import type { CommentWithGuideAuthor } from '$lib/guides/types';
 	import Link from './elements/a.svelte';
 	import AccordionComponent from './elements/accordion.svelte';
 	import BlockGridComponent from './elements/block-grid.svelte';
@@ -16,6 +18,7 @@
 	import Image from './elements/img.svelte';
 	import ItemListComponent from './elements/item-list.svelte';
 	import ItemPriceComponent from './elements/item-price.svelte';
+	import LitematicComponent from './elements/litematic.svelte';
 	import ListItem from './elements/li.svelte';
 	import List from './elements/list.svelte';
 	import Paragraph from './elements/p.svelte';
@@ -32,7 +35,12 @@
 	import Strikethrough from './inline/strikethrough.svelte';
 	import Underline from './inline/underline.svelte';
 
-	const { content, blocks = {}, modifiers = {} }: BlocksRendererProps = $props();
+	const {
+		content,
+		blocks = {},
+		modifiers = {},
+		hoistedComments = {},
+	}: BlocksRendererProps & { hoistedComments?: Record<string, CommentWithGuideAuthor[]> } = $props();
 
 	const defaultBlocks: BlockComponents = {
 		paragraph: Paragraph,
@@ -40,6 +48,7 @@
 		quote: Quote,
 		code: Code,
 		image: Image,
+		litematic: LitematicComponent,
 		list: List,
 		'list-item': ListItem,
 		'skyblock-item': SkyblockItem,
@@ -72,6 +81,13 @@
 		{#if resolvedBlocks[node.type]}
 			{@const Block = resolvedBlocks[node.type] as unknown as import('svelte').Component}
 			<Block {node} {index} modifiers={resolvedModifiers} />
+			{#if hoistedComments[`heading-${index}`]?.length}
+				<div class="not-prose">
+					{#each hoistedComments[`heading-${index}`] as comment (comment.id)}
+						<HoistedCommentCallout {comment} />
+					{/each}
+				</div>
+			{/if}
 		{:else}
 			<div class="blocks-renderer-unknown">
 				Unknown block type: <code>{node.type}</code>

@@ -8,11 +8,17 @@
 	import RenderMd from '$comp/markdown/render-md.svelte';
 	import {
 		deleteGuideCommand,
+		GetGuideAssets,
+		GetGuideHistory,
 		GetGuide,
 		ListTags,
+		replaceGuideAuthorsCommand,
+		restoreGuideVersionCommand,
 		submitGuideForApprovalCommand,
 		updateGuideCommand,
 	} from '$lib/remote/guides.remote';
+	import type { FullGuideWithAuthors, GuideAssetDto, GuideAuthorDto, GuideVersionDto } from '$lib/guides/types';
+	import { isImageAsset, isLitematicAsset } from '$lib/guides/types';
 	import {
 		AlertDialog,
 		AlertDialogAction,
@@ -29,6 +35,11 @@
 	import { Separator } from '$ui/separator';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$ui/tabs';
 	import { Textarea } from '$ui/textarea';
+	import { Badge } from '$ui/badge';
+	import FileArchive from '@lucide/svelte/icons/file-archive';
+	import ImageIcon from '@lucide/svelte/icons/image';
+	import History from '@lucide/svelte/icons/history';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
 
 	function notifyError(message: string) {
 		console.error(message);
@@ -52,12 +63,17 @@
 	let guideId = $state<number | null>(null);
 	let concurrencyVersion = $state(1);
 	let hasLoadedGuide = $state(false);
+	let ownerId = $state('');
+	let editorIdsText = $state('');
 
 	// UI state
 	let isSaving = $state(false);
 	let isSubmitting = $state(false);
 	let isDeleting = $state(false);
 	let showDeleteDialog = $state(false);
+	let isSavingAuthors = $state(false);
+	let authorError = $state<string | null>(null);
+	let historyError = $state<string | null>(null);
 	let saveStatus = $state<'idle' | 'saving' | 'saved'>('idle');
 	let saveError = $state<string | null>(null);
 	let lastSavedSnapshot = $state('');
@@ -66,6 +82,21 @@
 	// Auto-save timer
 	let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 	let activeSave: Promise<boolean> | null = null;
+
+	const guideData = $derived(guide.current as FullGuideWithAuthors | undefined);
+	const assetsQuery = $derived(guideId ? GetGuideAssets(guideId) : null);
+	const historyQuery = $derived(guideId ? GetGuideHistory(guideId) : null);
+	const guideAssets = $derived((assetsQuery?.current ?? guideData?.assets ?? []) as GuideAssetDto[]);
+	const guideAuthors = $derived.by((): GuideAuthorDto[] => {
+		if (!guideData) return [];
+		return guideData.authors?.length
+			? guideData.authors
+			: [{ author: guideData.author, isOwner: true, role: 'Owner' }];
+	});
+	const ownerAuthor = $derived(guideAuthors.find((author) => author.isOwner) ?? guideAuthors[0]);
+	const canManageGuide = $derived(
+		Boolean(page.data.session?.perms.admin || ownerAuthor?.author.id === page.data.session?.id)
+	);
 
 	function getContentToSave() {
 		return editorContent ? JSON.stringify(editorContent) : markdownContent;
@@ -88,32 +119,45 @@
 		}
 	}
 
+	function loadGuideIntoState(g: FullGuideWithAuthors, force = false) {
+		if (!force && guideId !== null) return;
+		guideId = g.id;
+		title = g.title;
+		description = g.description;
+		markdownContent = g.content;
+		tags = (g.tagIds ?? []).map((id) => id.toString());
+		skyblockIconId = g.iconSkyblockId || '';
+		concurrencyVersion = g.concurrencyVersion || 1;
+		loadEditorContent(g.content);
+		const authorList = g.authors?.length ? g.authors : [{ author: g.author, isOwner: true, role: 'Owner' }];
+		ownerId = authorList.find((author) => author.isOwner)?.author.id ?? g.author.id;
+		editorIdsText = authorList
+			.filter((author) => !author.isOwner)
+			.map((author) => author.author.id)
+			.join('\n');
+
+		lastSavedSnapshot = getSaveSnapshot();
+		hasLoadedGuide = true;
+	}
+
+	function loadEditorContent(content: string) {
+		editorContent = null;
+		if (content && content.trim().startsWith('[')) {
+			try {
+				const parsed = JSON.parse(content);
+				if (Array.isArray(parsed)) {
+					editorContent = parsed as RootNode;
+				}
+			} catch {
+				// Not JSON, keep as markdown.
+			}
+		}
+	}
+
 	$effect(() => {
 		guide.then((g) => {
 			if (!g) return;
-			if (guideId !== null) return;
-			guideId = g.id;
-			title = g.title;
-			description = g.description;
-			markdownContent = g.content;
-			tags = (g.tagIds ?? []).map((id) => id.toString());
-			skyblockIconId = g.iconSkyblockId || '';
-			concurrencyVersion = g.concurrencyVersion || 1;
-
-			// Try to detect if content is JSON blocks format
-			if (g.content && g.content.trim().startsWith('[')) {
-				try {
-					const parsed = JSON.parse(g.content);
-					if (Array.isArray(parsed)) {
-						editorContent = parsed as RootNode;
-					}
-				} catch {
-					// Not JSON, keep as markdown
-				}
-			}
-
-			lastSavedSnapshot = getSaveSnapshot();
-			hasLoadedGuide = true;
+			loadGuideIntoState(g as FullGuideWithAuthors);
 		});
 	});
 
@@ -303,6 +347,81 @@
 			isDeleting = false;
 		}
 	}
+
+	function parseEditorIds() {
+		return editorIdsText
+			.split(/[\s,]+/)
+			.map((id) => id.trim())
+			.filter(Boolean);
+	}
+
+	async function handleSaveAuthors() {
+		if (!guideId) return;
+		authorError = null;
+		isSavingAuthors = true;
+
+		try {
+			const result = await replaceGuideAuthorsCommand({
+				guideId,
+				ownerId: ownerId.trim(),
+				editorIds: parseEditorIds(),
+			});
+
+			if (result.error) {
+				authorError = result.error;
+				notifyError(result.error);
+				return;
+			}
+
+			await guide.refresh();
+			notifySuccess('Guide authors updated');
+		} finally {
+			isSavingAuthors = false;
+		}
+	}
+
+	async function handleRestoreVersion(version: GuideVersionDto) {
+		if (!guideId) return;
+		historyError = null;
+
+		try {
+			const result = await restoreGuideVersionCommand({ guideId, versionId: version.id });
+			if (result.error) {
+				historyError = result.error;
+				notifyError(result.error);
+				return;
+			}
+
+			title = version.title;
+			description = version.description;
+			markdownContent = version.content;
+			loadEditorContent(version.content);
+			concurrencyVersion = result.version ?? version.concurrencyVersion;
+			lastSavedSnapshot = getSaveSnapshot();
+			lastSaveTime = new Date();
+			await historyQuery?.refresh();
+			notifySuccess('Guide revision restored');
+		} catch (err) {
+			historyError = 'Failed to restore guide revision';
+			notifyError(historyError);
+			console.error(err);
+		}
+	}
+
+	async function deleteAsset(asset: GuideAssetDto) {
+		if (!guideId) return;
+		const response = await fetch(`/api/guides/${guideId}/assets/${asset.id}`, {
+			method: 'DELETE',
+		});
+
+		if (!response.ok) {
+			notifyError('Failed to delete asset');
+			return;
+		}
+
+		await assetsQuery?.refresh();
+		notifySuccess('Asset deleted');
+	}
 </script>
 
 {#await guide then g}
@@ -345,6 +464,9 @@
 			<Tabs value="edit" class="w-full">
 				<TabsList>
 					<TabsTrigger value="edit">Edit</TabsTrigger>
+					<TabsTrigger value="assets">Assets</TabsTrigger>
+					<TabsTrigger value="history">History</TabsTrigger>
+					<TabsTrigger value="authors">Authors</TabsTrigger>
 					<TabsTrigger value="preview">Preview</TabsTrigger>
 				</TabsList>
 
@@ -413,13 +535,201 @@
 						</CardContent>
 					</Card>
 
-					{#if markdownContent}
+					{#if hasLoadedGuide}
 						<Editor
 							content={markdownContent}
 							onChange={(blocks) => (editorContent = blocks)}
 							class="min-h-125"
+							{guideId}
+							assets={guideAssets}
+							onAssetsChanged={() => assetsQuery?.refresh()}
 						/>
 					{/if}
+				</TabsContent>
+
+				<TabsContent value="assets" class="space-y-6">
+					<Card>
+						<CardHeader>
+							<CardTitle>Uploaded Assets</CardTitle>
+							<CardDescription
+								>Images are rehosted and resized. Litematic files are validated before storage.</CardDescription
+							>
+						</CardHeader>
+						<CardContent class="space-y-4">
+							<div class="grid gap-3 sm:grid-cols-2">
+								{#each guideAssets as asset (asset.id)}
+									<div class="flex gap-3 rounded-md border p-3">
+										<div
+											class="bg-muted flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-md"
+										>
+											{#if isImageAsset(asset)}
+												<img
+													src={asset.image?.url}
+													alt={asset.image?.title || asset.fileName}
+													class="h-full w-full object-cover"
+													loading="lazy"
+												/>
+											{:else}
+												<FileArchive class="size-6" />
+											{/if}
+										</div>
+										<div class="min-w-0 flex-1">
+											<div class="flex items-start justify-between gap-2">
+												<div class="min-w-0">
+													<p class="truncate text-sm font-medium">
+														{asset.image?.title || asset.litematic?.name || asset.fileName}
+													</p>
+													<p class="text-muted-foreground mt-1 text-xs">{asset.fileName}</p>
+												</div>
+												<Button
+													variant="ghost"
+													size="icon"
+													aria-label="Delete asset"
+													onclick={() => deleteAsset(asset)}
+												>
+													<Trash2 class="size-4" />
+												</Button>
+											</div>
+											<div class="mt-2 flex flex-wrap gap-2">
+												{#if isImageAsset(asset)}
+													<Badge variant="secondary">
+														<ImageIcon class="size-3" />
+														Image
+													</Badge>
+													<Badge variant="outline"
+														>{asset.image?.width} x {asset.image?.height}</Badge
+													>
+												{:else if isLitematicAsset(asset)}
+													<Badge variant="secondary">
+														<FileArchive class="size-3" />
+														Litematic
+													</Badge>
+													<Badge variant="outline"
+														>{asset.litematic?.regionCount ?? 0} regions</Badge
+													>
+												{/if}
+											</div>
+										</div>
+									</div>
+								{:else}
+									<p
+										class="text-muted-foreground rounded-md border border-dashed p-4 text-sm sm:col-span-2"
+									>
+										No uploaded assets yet. Use the asset button in the editor toolbar to upload
+										images or litematics.
+									</p>
+								{/each}
+							</div>
+						</CardContent>
+					</Card>
+				</TabsContent>
+
+				<TabsContent value="history" class="space-y-6">
+					<Card>
+						<CardHeader>
+							<CardTitle>Edit History</CardTitle>
+							<CardDescription
+								>Every save creates a revision that can be restored into the current draft.</CardDescription
+							>
+						</CardHeader>
+						<CardContent class="space-y-3">
+							{#if historyError}
+								<p class="text-destructive text-sm">{historyError}</p>
+							{/if}
+							{#if historyQuery}
+								{#await historyQuery then versions}
+									{#each versions as version (version.id)}
+										<div
+											class="flex flex-col gap-3 rounded-md border p-3 sm:flex-row sm:items-center sm:justify-between"
+										>
+											<div class="min-w-0">
+												<div class="flex items-center gap-2">
+													<History class="size-4" />
+													<p class="font-medium">Revision {version.revisionNumber}</p>
+													{#if version.isPublished}
+														<Badge variant="secondary">Published</Badge>
+													{/if}
+												</div>
+												<p class="text-muted-foreground mt-1 truncate text-sm">
+													{version.title}
+												</p>
+												<p class="text-muted-foreground text-xs">
+													{new Date(version.createdAt).toLocaleString()}
+												</p>
+											</div>
+											<Button
+												variant="outline"
+												size="sm"
+												onclick={() => handleRestoreVersion(version)}>Restore</Button
+											>
+										</div>
+									{:else}
+										<p class="text-muted-foreground rounded-md border border-dashed p-4 text-sm">
+											No saved revisions yet.
+										</p>
+									{/each}
+								{:catch}
+									<p class="text-destructive text-sm">Failed to load guide history</p>
+								{/await}
+							{/if}
+						</CardContent>
+					</Card>
+				</TabsContent>
+
+				<TabsContent value="authors" class="space-y-6">
+					<Card>
+						<CardHeader>
+							<CardTitle>Guide Authors</CardTitle>
+							<CardDescription
+								>Guides can have up to four visible authors. Editors can save and submit drafts.</CardDescription
+							>
+						</CardHeader>
+						<CardContent class="space-y-4">
+							<div class="grid gap-2">
+								{#each guideAuthors as author (author.author.id)}
+									<div class="flex items-center justify-between rounded-md border p-3">
+										<div>
+											<p class="font-medium">{author.author.name}</p>
+											<p class="text-muted-foreground text-xs">{author.author.id}</p>
+										</div>
+										<Badge variant={author.isOwner ? 'default' : 'secondary'}
+											>{author.isOwner ? 'Owner' : 'Editor'}</Badge
+										>
+									</div>
+								{/each}
+							</div>
+
+							{#if canManageGuide}
+								<Separator />
+								<div class="grid gap-4">
+									<div>
+										<label for="owner-id" class="text-sm font-semibold">Owner Account ID</label>
+										<Input id="owner-id" bind:value={ownerId} class="mt-1" />
+									</div>
+									<div>
+										<label for="editor-ids" class="text-sm font-semibold">Editor Account IDs</label>
+										<Textarea
+											id="editor-ids"
+											bind:value={editorIdsText}
+											rows={4}
+											placeholder="One account ID per line, max 3 editors"
+											class="mt-1"
+										/>
+									</div>
+									{#if authorError}
+										<p class="text-destructive text-sm">{authorError}</p>
+									{/if}
+									<Button onclick={handleSaveAuthors} disabled={isSavingAuthors || !ownerId.trim()}>
+										{isSavingAuthors ? 'Saving...' : 'Save Authors'}
+									</Button>
+								</div>
+							{:else}
+								<p class="text-muted-foreground text-sm">
+									Only the guide owner or an admin can change authors.
+								</p>
+							{/if}
+						</CardContent>
+					</Card>
 				</TabsContent>
 
 				<TabsContent value="preview" class="space-y-6">
@@ -449,9 +759,13 @@
 			<Separator />
 
 			<div class="flex items-center justify-between">
-				<Button variant="destructive" onclick={() => (showDeleteDialog = true)} disabled={isDeleting}>
-					Delete Guide
-				</Button>
+				{#if canManageGuide}
+					<Button variant="destructive" onclick={() => (showDeleteDialog = true)} disabled={isDeleting}>
+						Delete Guide
+					</Button>
+				{:else}
+					<div></div>
+				{/if}
 
 				<div class="flex gap-2">
 					<Button variant="outline" onclick={handleSave} disabled={isSaving}>

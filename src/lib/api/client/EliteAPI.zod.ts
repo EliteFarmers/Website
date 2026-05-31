@@ -1854,6 +1854,30 @@ export const zodUnbookmarkGuideParams = zod.object({
 });
 
 /**
+ * @summary Clear a hoisted guide comment
+ */
+export const zodClearHoistedCommentParams = zod.object({
+	guideId: zod.number(),
+	commentId: zod.number(),
+});
+
+/**
+ * Places an approved comment near a guide element for correction callouts.
+ * @summary Hoist a guide comment
+ */
+export const zodHoistCommentParams = zod.object({
+	guideId: zod.number(),
+	commentId: zod.number(),
+});
+
+export const zodHoistCommentBodyLiftedElementIdMin = 0;
+export const zodHoistCommentBodyLiftedElementIdMax = 128;
+
+export const zodHoistCommentBody = zod.object({
+	liftedElementId: zod.string().min(zodHoistCommentBodyLiftedElementIdMin).max(zodHoistCommentBodyLiftedElementIdMax),
+});
+
+/**
  * Create a new comment on a guide.
  * @summary Post a comment
  */
@@ -1882,7 +1906,16 @@ export const zodCreateCommentBody = zod.object({
  * @summary Create a new guide draft
  */
 export const zodCreateGuideBody = zod.object({
-	type: zod.union([zod.literal(0), zod.literal(1), zod.literal(2), zod.literal(3)]),
+	type: zod.union([
+		zod.literal(0),
+		zod.literal(1),
+		zod.literal(2),
+		zod.literal(3),
+		zod.literal(4),
+		zod.literal(5),
+		zod.literal(6),
+		zod.literal(7),
+	]),
 });
 
 /**
@@ -1891,7 +1924,18 @@ export const zodCreateGuideBody = zod.object({
  */
 export const zodListGuidesQueryParams = zod.object({
 	query: zod.string().nullish(),
-	type: zod.union([zod.literal(0), zod.literal(1), zod.literal(2), zod.literal(3)]).nullish(),
+	type: zod
+		.union([
+			zod.literal(0),
+			zod.literal(1),
+			zod.literal(2),
+			zod.literal(3),
+			zod.literal(4),
+			zod.literal(5),
+			zod.literal(6),
+			zod.literal(7),
+		])
+		.nullish(),
 	tags: zod.array(zod.number()).nullish(),
 	sort: zod.enum(['newest', 'topRated', 'trending']),
 	page: zod.number(),
@@ -1923,6 +1967,15 @@ export const zodCreateTagBody = zod.object({
  */
 export const zodDeleteCommentParams = zod.object({
 	commentId: zod.number(),
+});
+
+/**
+ * Deletes a guide asset and its stored files. The frontend should remove image/litematic blocks that referenced this asset from the current draft.
+ * @summary Delete guide asset
+ */
+export const zodDeleteGuideAssetParams = zod.object({
+	guideId: zod.number(),
+	assetId: zod.string(),
 });
 
 /**
@@ -2032,11 +2085,53 @@ export const zodGetUserGuidesParams = zod.object({
 });
 
 /**
+ * Downloads a remote HTTPS image server-side, validates it, and stores responsive variants in Elite object storage.
+ * @summary Import guide image from URL
+ */
+export const zodImportGuideImageParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodImportGuideImageBodyUrlMin = 0;
+export const zodImportGuideImageBodyUrlMax = 2048;
+
+export const zodImportGuideImageBodyTitleMin = 0;
+export const zodImportGuideImageBodyTitleMax = 64;
+
+export const zodImportGuideImageBodyDescriptionMin = 0;
+export const zodImportGuideImageBodyDescriptionMax = 512;
+
+export const zodImportGuideImageBody = zod.object({
+	url: zod.string().min(zodImportGuideImageBodyUrlMin).max(zodImportGuideImageBodyUrlMax),
+	title: zod.string().min(zodImportGuideImageBodyTitleMin).max(zodImportGuideImageBodyTitleMax).nullish(),
+	description: zod
+		.string()
+		.min(zodImportGuideImageBodyDescriptionMin)
+		.max(zodImportGuideImageBodyDescriptionMax)
+		.nullish(),
+});
+
+/**
  * Returns all comments for a specific guide.
  * @summary List comments for a guide
  */
 export const zodListCommentsParams = zod.object({
 	slug: zod.string(),
+});
+
+/**
+ * @summary List guide assets
+ */
+export const zodListGuideAssetsParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Lists saved guide revisions for guide authors and moderators.
+ * @summary List guide edit history
+ */
+export const zodListGuideHistoryParams = zod.object({
+	guideId: zod.number(),
 });
 
 /**
@@ -2049,6 +2144,28 @@ export const zodRejectGuideParams = zod.object({
 
 export const zodRejectGuideBody = zod.object({
 	reason: zod.string().nullish().describe('Optional reason for rejection to provide feedback to the author.'),
+});
+
+/**
+ * Replaces the guide owner and editor list. Guides can have at most four visible authors.
+ * @summary Replace guide authors
+ */
+export const zodReplaceGuideAuthorsParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodReplaceGuideAuthorsBody = zod.object({
+	ownerId: zod.number().min(1),
+	editorIds: zod.array(zod.number()),
+});
+
+/**
+ * Copies a previous guide revision into a new draft revision.
+ * @summary Restore a guide revision
+ */
+export const zodRestoreGuideVersionParams = zod.object({
+	guideId: zod.number(),
+	versionId: zod.number(),
 });
 
 /**
@@ -2066,6 +2183,33 @@ export const zodSubmitGuideForApprovalParams = zod.object({
 export const zodUnpublishGuideParams = zod.object({
 	guideId: zod.number(),
 });
+
+/**
+ * @summary Upload guide image
+ */
+export const zodUploadGuideImageParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodUploadGuideImageBodyTitleMax = 64;
+
+export const zodUploadGuideImageBodyDescriptionMax = 512;
+
+export const zodUploadGuideImageBody = zod.object({
+	title: zod.string().max(zodUploadGuideImageBodyTitleMax).nullish(),
+	description: zod.string().max(zodUploadGuideImageBodyDescriptionMax).nullish(),
+	image: zod.instanceof(File),
+});
+
+/**
+ * Uploads and validates a Litematica schematic for a guide.
+ * @summary Upload guide litematic
+ */
+export const zodUploadGuideLitematicParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodUploadGuideLitematicBody = zod.instanceof(File);
 
 /**
  * Cast an upvote (+1) or downvote (-1) on a comment.
@@ -3412,6 +3556,48 @@ export const zodToggleRecapVisibilityParams = zod.object({
 
 export const zodToggleRecapVisibilityBody = zod.object({
 	public: zod.coerce.boolean<boolean>(),
+});
+
+/**
+ * Reports a content item for manual moderator review. This reporting system is designed to cover more content types over time; v1 accepts guide and comment reports.
+ * @summary Report content
+ */
+export const zodCreateContentReportBodyTargetIdMin = 0;
+
+export const zodCreateContentReportBodyReasonMin = 0;
+export const zodCreateContentReportBodyReasonMax = 1000;
+
+export const zodCreateContentReportBody = zod.object({
+	targetType: zod.enum(['guide', 'comment']),
+	targetId: zod.number().min(zodCreateContentReportBodyTargetIdMin),
+	reason: zod.string().min(zodCreateContentReportBodyReasonMin).max(zodCreateContentReportBodyReasonMax),
+});
+
+/**
+ * Lists reports for manual moderation. This system will expand beyond guide and comment reports later.
+ * @summary List content reports
+ */
+export const zodListContentReportsQueryParams = zod.object({
+	status: zod.enum(['open', 'reviewed', 'dismissed']).nullish(),
+});
+
+/**
+ * @summary Resolve content report
+ */
+export const zodResolveContentReportParams = zod.object({
+	reportId: zod.number(),
+});
+
+export const zodResolveContentReportBodyResolutionNoteMin = 0;
+export const zodResolveContentReportBodyResolutionNoteMax = 1000;
+
+export const zodResolveContentReportBody = zod.object({
+	status: zod.enum(['open', 'reviewed', 'dismissed']),
+	resolutionNote: zod
+		.string()
+		.min(zodResolveContentReportBodyResolutionNoteMin)
+		.max(zodResolveContentReportBodyResolutionNoteMax)
+		.nullish(),
 });
 
 /**
