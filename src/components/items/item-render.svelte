@@ -8,16 +8,17 @@
 		pet?: boolean;
 		packs?: boolean;
 		class?: string;
+		inline?: boolean;
 	}
 
-	let { skyblockId, pet = false, packs = true, class: customClass }: Props = $props();
+	let { skyblockId, pet = false, packs = true, class: customClass, inline = true }: Props = $props();
 	let errored = $state(false);
 	let loading = $state(true);
 
 	const gbl = getGlobalContext();
 </script>
 
-<div class={cn('relative aspect-square', customClass)}>
+<svelte:element this={inline ? 'span' : 'div'} class={cn('relative aspect-square', customClass)}>
 	{#if loading && !errored}
 		<LoaderCircle class="absolute top-1/2 left-1/2 size-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin" />
 	{/if}
@@ -33,4 +34,4 @@
 			loading = false;
 		}}
 	/>
-</div>
+</svelte:element>

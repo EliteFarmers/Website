@@ -1,7 +1,7 @@
 ---
 title: Contact Us
 description: How to contact the Elite team.
-lastUpdated: 2025-09-15
+lastUpdated: 2026-05-29
 ---
 
 # Contact Us
@@ -11,6 +11,10 @@ How and when to reach out!
 ## Report Bugs / Make Suggestions
 
 Please report any bugs or make suggestions on the [support Discord server](/support). You may also use the [GitHub repository](https://github.com/EliteFarmers/Website) to report bugs, but the Discord server is preferred.
+
+## Report Content / General Inquiry
+
+The preferred method of contact for reports or general inquiries is through the [support Discord server](/support). If that doesn't work for you, you may reach out through email to [contact@elitenetwork.dev](mailto:contact@elitenetwork.dev).
 
 ## Appeal a ban on The Elite Skyblock Farmers
 
@@ -28,7 +32,7 @@ Feel free to reach out through the [support Discord server](/support) or [contac
 
 This can include but is not limited to:
 
-- Not recieving perks
+- Not receiving perks
 - Gifted items to the wrong user
 - Unable to reassign a rejected/expired gift or similar
 

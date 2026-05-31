@@ -1,7 +1,7 @@
 // Editor events for communication between node views and Editor component
 // Using CustomEvents on window for simplicity since node views are mounted outside the component tree
 
-import type { BlockGridCell, ItemListItem, RecipeSlot } from '$comp/blocks/blocks';
+import type { BlockGridCell, CreditsEntry, ItemListItem, RecipeSlot } from '$comp/blocks/blocks';
 
 export interface EditSkyblockItemEvent {
 	skyblockId: string;
@@ -25,6 +25,17 @@ export interface EditRecipeEvent {
 
 export interface EditItemListEvent {
 	items: ItemListItem[];
+	pos: number;
+}
+
+export interface EditCreditsEvent {
+	entries: CreditsEntry[];
+	pos: number;
+}
+
+export interface EditWikiLinkEvent {
+	url: string;
+	pageName: string;
 	pos: number;
 }
 
@@ -63,6 +74,14 @@ export function dispatchEditItemList(data: EditItemListEvent) {
 	window.dispatchEvent(new CustomEvent('editor:edit-item-list', { detail: data }));
 }
 
+export function dispatchEditCredits(data: EditCreditsEvent) {
+	window.dispatchEvent(new CustomEvent('editor:edit-credits', { detail: data }));
+}
+
+export function dispatchEditWikiLink(data: EditWikiLinkEvent) {
+	window.dispatchEvent(new CustomEvent('editor:edit-wiki-link', { detail: data }));
+}
+
 export function dispatchEditTable(data: EditTableEvent) {
 	window.dispatchEvent(new CustomEvent('editor:edit-table', { detail: data }));
 }
@@ -97,6 +116,18 @@ export function onEditItemList(handler: (data: EditItemListEvent) => void): () =
 	const listener = (e: Event) => handler((e as CustomEvent<EditItemListEvent>).detail);
 	window.addEventListener('editor:edit-item-list', listener);
 	return () => window.removeEventListener('editor:edit-item-list', listener);
+}
+
+export function onEditCredits(handler: (data: EditCreditsEvent) => void): () => void {
+	const listener = (e: Event) => handler((e as CustomEvent<EditCreditsEvent>).detail);
+	window.addEventListener('editor:edit-credits', listener);
+	return () => window.removeEventListener('editor:edit-credits', listener);
+}
+
+export function onEditWikiLink(handler: (data: EditWikiLinkEvent) => void): () => void {
+	const listener = (e: Event) => handler((e as CustomEvent<EditWikiLinkEvent>).detail);
+	window.addEventListener('editor:edit-wiki-link', listener);
+	return () => window.removeEventListener('editor:edit-wiki-link', listener);
 }
 
 export function onEditTable(handler: (data: EditTableEvent) => void): () => void {

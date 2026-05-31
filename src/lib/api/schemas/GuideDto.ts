@@ -8,6 +8,7 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 import type { AuthorDto } from './AuthorDto';
+import type { GuideAuthorDto } from './GuideAuthorDto';
 
 export interface GuideDto {
 	id: number;
@@ -17,6 +18,7 @@ export interface GuideDto {
 	/** @nullable */
 	iconSkyblockId?: string | null;
 	author: AuthorDto;
+	authors: GuideAuthorDto[];
 	score: number;
 	views: number;
 	createdAt: string;

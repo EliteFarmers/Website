@@ -9,6 +9,7 @@
 	import CommentEditor from './comment-editor.svelte';
 	import CommentMetadata from './comment-metadata.svelte';
 	import CommentVote from './comment-vote.svelte';
+	import type { HoistTarget } from './hoist-comment-dialog.svelte';
 
 	interface Props {
 		comment: CommentDto;
@@ -20,6 +21,10 @@
 		onVoteUp?: () => void;
 		onVoteDown?: () => void;
 		onToggleCollapse?: () => void;
+		canHoist?: boolean;
+		hoistTargets?: HoistTarget[];
+		onHoist?: (targetId: string) => void;
+		onClearHoist?: () => void;
 	}
 
 	let {
@@ -32,12 +37,20 @@
 		onVoteUp,
 		onVoteDown,
 		onToggleCollapse,
+		canHoist = false,
+		hoistTargets = [],
+		onHoist,
+		onClearHoist,
 	}: Props = $props();
 
 	let isEditing = $state(false);
 </script>
 
-<div class="flex flex-col gap-2">
+<div
+	class="flex flex-col gap-2 rounded-md border {comment.liftedElementId
+		? 'bg-card border-accent py-2 pr-2'
+		: 'border-transparent'}"
+>
 	<!-- Comment body with left border -->
 	<div class="flex flex-row gap-2">
 		<!-- Collapse button and left border -->
@@ -69,7 +82,15 @@
 			<!-- Header: metadata and actions -->
 			<div class="flex flex-row items-center justify-between gap-2">
 				<CommentMetadata {comment} />
-				<CommentActions {comment} onEdit={() => (isEditing = true)} {onDelete} />
+				<CommentActions
+					{comment}
+					onEdit={() => (isEditing = true)}
+					{onDelete}
+					{canHoist}
+					{hoistTargets}
+					{onHoist}
+					{onClearHoist}
+				/>
 			</div>
 
 			<!-- Comment content or editor -->
@@ -112,13 +133,8 @@
 				{/if}
 
 				{#if childCount && childCount > 0 && !isExpanded}
-					<Button
-						variant="ghost"
-						size="sm"
-						onclick={onToggleCollapse}
-						class="text-muted-foreground hover:text-foreground p-0"
-					>
-						<span class="text-muted-foreground text-xs">
+					<Button variant="ghost" size="sm" onclick={onToggleCollapse} class="h-6">
+						<span class="text-primary text-xs font-semibold">
 							{childCount}
 							{childCount === 1 ? 'reply' : 'replies'}
 						</span>

@@ -19,5 +19,6 @@ export interface UpdateGuideRequest {
 	tags?: string[] | null;
 	/** @nullable */
 	richBlocks?: UpdateGuideRequestRichBlocks;
+	/** Opaque save token for the draft version the editor loaded. */
 	concurrencyVersion: number;
 }

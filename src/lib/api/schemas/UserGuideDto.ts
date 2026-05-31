@@ -7,6 +7,8 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { AuthorDto } from './AuthorDto';
+import type { GuideAuthorDto } from './GuideAuthorDto';
 
 export interface UserGuideDto {
 	id: number;
@@ -18,6 +20,8 @@ export interface UserGuideDto {
 	score: number;
 	viewCount: number;
 	createdAt: string;
+	author: AuthorDto;
+	authors: GuideAuthorDto[];
 	/** @nullable */
 	updatedAt?: string | null;
 }

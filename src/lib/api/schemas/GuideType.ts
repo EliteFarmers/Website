@@ -16,4 +16,8 @@ export const GuideType = {
 	Farm: 1,
 	Greenhouse: 2,
 	Contest: 3,
+	MoneyMaking: 4,
+	Builds: 5,
+	Tools: 6,
+	Events: 7,
 } as const;

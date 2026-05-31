@@ -2,14 +2,17 @@
 	import { trackAnalytics } from '$lib/analytics';
 	import type { CommentDto } from '$lib/api';
 	import {
+		clearHoistedCommentCommand,
 		createCommentCommand,
 		deleteCommentCommand,
 		editCommentCommand,
 		GetGuideComments,
+		hoistCommentCommand,
 		voteCommentCommand,
 	} from '$lib/remote/comments.remote';
 	import { useDebounce } from 'runed';
 	import CommentSection from './comment-section.svelte';
+	import type { HoistTarget } from './hoist-comment-dialog.svelte';
 
 	type Session =
 		| {
@@ -25,6 +28,8 @@
 		session: Session;
 		notifyError?: (message: string) => void;
 		notifySuccess?: (message: string) => void;
+		canHoist?: boolean;
+		hoistTargets?: HoistTarget[];
 	};
 
 	let {
@@ -33,6 +38,8 @@
 		session,
 		notifyError = (message: string) => console.error(message),
 		notifySuccess = (message: string) => console.info(message),
+		canHoist = false,
+		hoistTargets = [],
 	}: Props = $props();
 
 	let isLoadingComment = $state(false);
@@ -167,6 +174,28 @@
 		flushCommentVotes();
 	}
 
+	async function handleHoistComment(commentId: number, liftedElementId: string) {
+		const result = await hoistCommentCommand({ guideId, commentId, liftedElementId });
+		if (result.error) {
+			notifyError(result.error);
+			return;
+		}
+
+		await commentsPromise.refresh();
+		notifySuccess('Comment hoisted');
+	}
+
+	async function handleClearHoist(commentId: number) {
+		const result = await clearHoistedCommentCommand({ guideId, commentId });
+		if (result.error) {
+			notifyError(result.error);
+			return;
+		}
+
+		await commentsPromise.refresh();
+		notifySuccess('Comment hoist cleared');
+	}
+
 	let isModerator = $derived(session?.perms?.moderator ?? false);
 	let baseComments = $derived.by(getCommentList);
 	let displayComments = $derived(applyOptimisticCommentVotes(baseComments));
@@ -193,6 +222,10 @@
 		onVoteDown={(commentId) => {
 			handleVoteComment(commentId, -1);
 		}}
+		{canHoist}
+		{hoistTargets}
+		onHoist={(commentId, targetId) => handleHoistComment(commentId, targetId)}
+		onClearHoist={(commentId) => handleClearHoist(commentId)}
 	/>
 	{#snippet failed(error, reset)}
 		<div class="border-destructive/30 bg-destructive/5 rounded-md border p-3 text-sm">

@@ -28,6 +28,7 @@ export interface CommentDto {
 	userVote?: number | null;
 	isPending: boolean;
 	isDeleted: boolean;
+	isGuideAuthor: boolean;
 	isEdited: boolean;
 	isEditedByAdmin: boolean;
 	hasPendingEdit: boolean;

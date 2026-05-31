@@ -1,3 +1,4 @@
+import BookOpenText from '@lucide/svelte/icons/book-open-text';
 import HeartHandshake from '@lucide/svelte/icons/heart-handshake';
 import History from '@lucide/svelte/icons/history';
 import ServerCog from '@lucide/svelte/icons/server-cog';
@@ -20,6 +21,11 @@ export const INFO_CATEGORIES = [
 		title: 'Server Management',
 		slug: 'servers',
 		icon: ServerCog,
+	},
+	{
+		title: 'Guide Blocks',
+		slug: 'guides',
+		icon: BookOpenText,
 	},
 	{
 		title: 'Badges',

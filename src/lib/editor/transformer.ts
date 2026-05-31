@@ -2,6 +2,7 @@ import type {
 	AccordionBlockNode,
 	BlockGridBlockNode,
 	BlockNode,
+	CreditsBlockNode,
 	CalloutBlockNode,
 	CalloutVariant,
 	CodeBlockNode,
@@ -10,6 +11,7 @@ import type {
 	InlineNode,
 	ItemListBlockNode,
 	ItemPriceBlockNode,
+	LitematicBlockNode,
 	ListBlockNode,
 	ListItemBlockNode,
 	ParagraphBlockNode,
@@ -20,14 +22,20 @@ import type {
 	TableBlockNode,
 	TextNode,
 	TwoColumnBlockNode,
+	WikiLinkInlineNode,
 	YouTubeBlockNode,
 } from '$comp/blocks/blocks';
+import { ensureGuideBlockIds } from '$lib/guides/block-ids';
+import { getLargestImageSourceUrl } from '$lib/guides/responsive-images';
+import { normalizeWikiLinkUrl } from '$lib/guides/wiki-links';
 import type { JSONContent } from '@tiptap/core';
 
 export function tiptapToStrapi(content: JSONContent): RootNode {
 	if (!content.content) return [];
 
-	return content.content.map((node) => convertNode(node)).filter((node): node is BlockNode => node !== null);
+	return ensureGuideBlockIds(
+		content.content.map((node) => convertNode(node)).filter((node): node is BlockNode => node !== null)
+	);
 }
 
 function convertNode(node: JSONContent): BlockNode | null {
@@ -42,6 +50,8 @@ function convertNode(node: JSONContent): BlockNode | null {
 			return convertCode(node);
 		case 'image':
 			return convertImage(node);
+		case 'litematic':
+			return convertLitematic(node);
 		case 'bulletList':
 		case 'orderedList':
 			return convertList(node);
@@ -61,6 +71,8 @@ function convertNode(node: JSONContent): BlockNode | null {
 			return convertRecipe(node);
 		case 'itemList':
 			return convertItemList(node);
+		case 'credits':
+			return convertCredits(node);
 		case 'table':
 			return convertTable(node);
 		case 'blockGrid':
@@ -71,8 +83,17 @@ function convertNode(node: JSONContent): BlockNode | null {
 	}
 }
 
+function readBlockId(node: JSONContent) {
+	return typeof node.attrs?.blockId === 'string' && node.attrs.blockId ? node.attrs.blockId : undefined;
+}
+
+function attrsWithBlockId(node: BlockNode, attrs: Record<string, unknown> = {}) {
+	return node.id ? { ...attrs, blockId: node.id } : attrs;
+}
+
 function convertParagraph(node: JSONContent): ParagraphBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'paragraph',
 		children: convertInlineNodes(node.content),
 	};
@@ -80,6 +101,7 @@ function convertParagraph(node: JSONContent): ParagraphBlockNode {
 
 function convertHeading(node: JSONContent): HeadingBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'heading',
 		level: (node.attrs?.level as 1 | 2 | 3 | 4 | 5 | 6) || 1,
 		children: convertInlineNodes(node.content),
@@ -88,6 +110,7 @@ function convertHeading(node: JSONContent): HeadingBlockNode {
 
 function convertQuote(node: JSONContent): QuoteBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'quote',
 		children: convertInlineNodes(node.content),
 	};
@@ -97,6 +120,7 @@ function convertCode(node: JSONContent): CodeBlockNode {
 	// Strapi code block expects TextNode[] children, usually just one
 	const textContent = node.content?.map((c) => c.text || '').join('') || '';
 	return {
+		id: readBlockId(node),
 		type: 'code',
 		children: [
 			{
@@ -109,12 +133,16 @@ function convertCode(node: JSONContent): CodeBlockNode {
 
 function convertImage(node: JSONContent): ImageBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'image',
 		image: {
+			assetId: node.attrs?.assetId,
 			name: node.attrs?.alt || 'image',
 			alternativeText: node.attrs?.alt,
 			url: node.attrs?.src || '',
 			caption: node.attrs?.title,
+			displaySize: node.attrs?.displaySize as ImageBlockNode['image']['displaySize'],
+			align: node.attrs?.align as ImageBlockNode['image']['align'],
 			// Defaults for required fields if missing
 			hash: 'unknown',
 			ext: 'unknown',
@@ -125,7 +153,24 @@ function convertImage(node: JSONContent): ImageBlockNode {
 			updatedAt: new Date().toISOString(),
 			width: node.attrs?.width ? parseInt(node.attrs.width) : undefined,
 			height: node.attrs?.height ? parseInt(node.attrs.height) : undefined,
+			sources: node.attrs?.sources as ImageBlockNode['image']['sources'],
 		},
+	};
+}
+
+function convertLitematic(node: JSONContent): LitematicBlockNode {
+	return {
+		id: readBlockId(node),
+		type: 'litematic',
+		assetId: node.attrs?.assetId || '',
+		fileName: node.attrs?.fileName || '',
+		downloadUrl: node.attrs?.downloadUrl || '',
+		name: node.attrs?.name,
+		author: node.attrs?.author,
+		width: node.attrs?.width,
+		height: node.attrs?.height,
+		length: node.attrs?.length,
+		regionCount: node.attrs?.regionCount ?? 0,
 	};
 }
 
@@ -140,6 +185,7 @@ function convertList(node: JSONContent): ListBlockNode {
 	});
 
 	return {
+		id: readBlockId(node),
 		type: 'list',
 		format: node.type === 'orderedList' ? 'ordered' : 'unordered',
 		children,
@@ -167,6 +213,7 @@ function convertListItem(node: JSONContent): (ListItemBlockNode | ListBlockNode)
 	// Add the list item with inline content first
 	if (inlineChildren.length > 0 || result.length === 0) {
 		result.unshift({
+			id: readBlockId(node),
 			type: 'list-item',
 			children: inlineChildren,
 		});
@@ -175,19 +222,20 @@ function convertListItem(node: JSONContent): (ListItemBlockNode | ListBlockNode)
 	return result;
 }
 
-function convertInlineNodes(nodes?: JSONContent[]): (InlineNode | SkyblockItemBlockNode)[] {
+function convertInlineNodes(nodes?: JSONContent[]): InlineNode[] {
 	if (!nodes) return [];
-	return nodes
-		.map((node) => convertInlineNode(node))
-		.filter((n): n is InlineNode | SkyblockItemBlockNode => n !== null);
+	return nodes.map((node) => convertInlineNode(node)).filter((n): n is InlineNode => n !== null);
 }
 
-function convertInlineNode(node: JSONContent): InlineNode | SkyblockItemBlockNode | ItemPriceBlockNode | null {
+function convertInlineNode(node: JSONContent): InlineNode | null {
 	if (node.type === 'skyblockItem') {
 		return convertSkyblockItem(node);
 	}
 	if (node.type === 'itemPrice') {
 		return convertItemPrice(node);
+	}
+	if (node.type === 'wikiLink') {
+		return convertWikiLinkInline(node);
 	}
 	if (node.type === 'text') {
 		const textNode: TextNode = {
@@ -237,6 +285,7 @@ function convertInlineNode(node: JSONContent): InlineNode | SkyblockItemBlockNod
 
 function convertSkyblockItem(node: JSONContent): SkyblockItemBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'skyblock-item',
 		skyblockId: node.attrs?.skyblockId || '',
 		size: node.attrs?.size || 'md',
@@ -247,6 +296,7 @@ function convertSkyblockItem(node: JSONContent): SkyblockItemBlockNode {
 
 function convertItemPrice(node: JSONContent): ItemPriceBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'item-price',
 		skyblockId: node.attrs?.skyblockId || '',
 		multiplier: node.attrs?.multiplier ?? 1,
@@ -258,6 +308,7 @@ function convertTwoColumn(node: JSONContent): TwoColumnBlockNode {
 	const rightColumn = node.content?.find((c) => c.type === 'columnRight');
 
 	return {
+		id: readBlockId(node),
 		type: 'two-column',
 		variant: (node.attrs?.variant as 'plain' | 'bordered') || 'plain',
 		left: leftColumn?.content?.map((n) => convertNode(n)).filter((n): n is BlockNode => n !== null) ?? [],
@@ -267,6 +318,7 @@ function convertTwoColumn(node: JSONContent): TwoColumnBlockNode {
 
 function convertYouTube(node: JSONContent): YouTubeBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'youtube',
 		videoId: node.attrs?.videoId || '',
 	};
@@ -274,6 +326,7 @@ function convertYouTube(node: JSONContent): YouTubeBlockNode {
 
 function convertCallout(node: JSONContent): CalloutBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'callout',
 		variant: (node.attrs?.variant as CalloutVariant) || 'note',
 		children: node.content?.map((n) => convertNode(n)).filter((n): n is BlockNode => n !== null) ?? [],
@@ -282,6 +335,7 @@ function convertCallout(node: JSONContent): CalloutBlockNode {
 
 function convertAccordion(node: JSONContent): AccordionBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'accordion',
 		title: (node.attrs?.title as string) || 'Click to expand',
 		children: node.content?.map((n) => convertNode(n)).filter((n): n is BlockNode => n !== null) ?? [],
@@ -290,6 +344,7 @@ function convertAccordion(node: JSONContent): AccordionBlockNode {
 
 function convertRecipe(node: JSONContent): RecipeBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'recipe',
 		grid: (node.attrs?.grid as RecipeBlockNode['grid']) || [],
 		output: (node.attrs?.output as RecipeBlockNode['output']) || {},
@@ -298,13 +353,31 @@ function convertRecipe(node: JSONContent): RecipeBlockNode {
 
 function convertItemList(node: JSONContent): ItemListBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'item-list',
 		items: (node.attrs?.items as ItemListBlockNode['items']) || [],
 	};
 }
 
+function convertCredits(node: JSONContent): CreditsBlockNode {
+	return {
+		id: readBlockId(node),
+		type: 'credits',
+		entries: (node.attrs?.entries as CreditsBlockNode['entries']) || [],
+	};
+}
+
+function convertWikiLinkInline(node: JSONContent): WikiLinkInlineNode {
+	const normalized = normalizeWikiLinkUrl((node.attrs?.url as string) || '');
+	return {
+		type: 'wiki-link',
+		url: normalized?.url || ((node.attrs?.url as string) ?? ''),
+		pageName: (node.attrs?.pageName as string) || normalized?.pageName || 'Wiki link',
+	};
+}
+
 function convertTable(node: JSONContent): TableBlockNode {
-	if (!node.content) return { type: 'table', rows: 0, cols: 0, cells: [] };
+	if (!node.content) return { id: readBlockId(node), type: 'table', rows: 0, cols: 0, cells: [] };
 
 	const cells: RootNode[][] = []; // Changed to RootNode[][]
 	let cols = 0;
@@ -329,6 +402,7 @@ function convertTable(node: JSONContent): TableBlockNode {
 	});
 
 	return {
+		id: readBlockId(node),
 		type: 'table',
 		rows: cells.length,
 		cols,
@@ -338,6 +412,7 @@ function convertTable(node: JSONContent): TableBlockNode {
 
 function convertBlockGrid(node: JSONContent): BlockGridBlockNode {
 	return {
+		id: readBlockId(node),
 		type: 'block-grid',
 		rows: (node.attrs?.rows as number) || 3,
 		cols: (node.attrs?.cols as number) || 3,
@@ -346,9 +421,10 @@ function convertBlockGrid(node: JSONContent): BlockGridBlockNode {
 }
 
 export function strapiToTiptap(root: RootNode): JSONContent {
+	const content = ensureGuideBlockIds(root);
 	return {
 		type: 'doc',
-		content: root.map((node) => convertBlockToTiptap(node)).filter((n): n is JSONContent => n !== null),
+		content: content.map((node) => convertBlockToTiptap(node)).filter((n): n is JSONContent => n !== null),
 	};
 }
 
@@ -357,38 +433,61 @@ function convertBlockToTiptap(node: BlockNode): JSONContent | null {
 		case 'paragraph':
 			return {
 				type: 'paragraph',
+				attrs: attrsWithBlockId(node),
 				content: convertInlineToTiptap(node.children),
 			};
 		case 'heading':
 			return {
 				type: 'heading',
-				attrs: { level: node.level },
+				attrs: attrsWithBlockId(node, { level: node.level }),
 				content: convertInlineToTiptap(node.children),
 			};
 		case 'quote':
 			return {
 				type: 'blockquote',
+				attrs: attrsWithBlockId(node),
 				content: [{ type: 'paragraph', content: convertInlineToTiptap(node.children) }], // Blockquote usually contains paragraphs in Tiptap
 			};
 		case 'code':
 			return {
 				type: 'codeBlock',
+				attrs: attrsWithBlockId(node),
 				content: node.children.map((c) => ({ type: 'text', text: c.text })),
 			};
 		case 'image':
 			return {
 				type: 'image',
-				attrs: {
-					src: node.image.url,
+				attrs: attrsWithBlockId(node, {
+					src: getLargestImageSourceUrl(node.image.sources) ?? node.image.url,
 					alt: node.image.alternativeText,
 					title: node.image.caption,
+					displaySize: node.image.displaySize,
+					align: node.image.align,
 					width: node.image.width,
 					height: node.image.height,
-				},
+					assetId: node.image.assetId,
+					sources: node.image.sources,
+				}),
+			};
+		case 'litematic':
+			return {
+				type: 'litematic',
+				attrs: attrsWithBlockId(node, {
+					assetId: node.assetId,
+					fileName: node.fileName,
+					downloadUrl: node.downloadUrl,
+					name: node.name,
+					author: node.author,
+					width: node.width,
+					height: node.height,
+					length: node.length,
+					regionCount: node.regionCount,
+				}),
 			};
 		case 'list':
 			return {
 				type: node.format === 'ordered' ? 'orderedList' : 'bulletList',
+				attrs: attrsWithBlockId(node),
 				content: node.children.map((item) => convertListChildToTiptap(item)),
 			};
 		case 'skyblock-item':
@@ -396,15 +495,15 @@ function convertBlockToTiptap(node: BlockNode): JSONContent | null {
 		case 'item-price':
 			return {
 				type: 'itemPrice',
-				attrs: {
+				attrs: attrsWithBlockId(node, {
 					skyblockId: node.skyblockId,
 					multiplier: node.multiplier ?? 1,
-				},
+				}),
 			};
 		case 'two-column':
 			return {
 				type: 'twoColumn',
-				attrs: { variant: node.variant || 'plain' },
+				attrs: attrsWithBlockId(node, { variant: node.variant || 'plain' }),
 				content: [
 					{
 						type: 'columnLeft',
@@ -423,33 +522,39 @@ function convertBlockToTiptap(node: BlockNode): JSONContent | null {
 		case 'youtube':
 			return {
 				type: 'youtube',
-				attrs: { videoId: node.videoId },
+				attrs: attrsWithBlockId(node, { videoId: node.videoId }),
 			};
 		case 'callout':
 			return {
 				type: 'callout',
-				attrs: { variant: node.variant },
+				attrs: attrsWithBlockId(node, { variant: node.variant }),
 				content: node.children.map((n) => convertBlockToTiptap(n)).filter((n): n is JSONContent => n !== null),
 			};
 		case 'accordion':
 			return {
 				type: 'accordion',
-				attrs: { title: node.title },
+				attrs: attrsWithBlockId(node, { title: node.title }),
 				content: node.children.map((n) => convertBlockToTiptap(n)).filter((n): n is JSONContent => n !== null),
 			};
 		case 'recipe':
 			return {
 				type: 'recipe',
-				attrs: { grid: node.grid, output: node.output },
+				attrs: attrsWithBlockId(node, { grid: node.grid, output: node.output }),
 			};
 		case 'item-list':
 			return {
 				type: 'itemList',
-				attrs: { items: node.items },
+				attrs: attrsWithBlockId(node, { items: node.items }),
+			};
+		case 'credits':
+			return {
+				type: 'credits',
+				attrs: attrsWithBlockId(node, { entries: node.entries }),
 			};
 		case 'table':
 			return {
 				type: 'table',
+				attrs: attrsWithBlockId(node),
 				content: node.cells.map((row) => ({
 					type: 'tableRow',
 					content: row.map((cellContent) => {
@@ -467,7 +572,7 @@ function convertBlockToTiptap(node: BlockNode): JSONContent | null {
 		case 'block-grid':
 			return {
 				type: 'blockGrid',
-				attrs: { rows: node.rows, cols: node.cols, cells: node.cells },
+				attrs: attrsWithBlockId(node, { rows: node.rows, cols: node.cols, cells: node.cells }),
 			};
 		default:
 			return null;
@@ -488,6 +593,7 @@ function convertListChildToTiptap(node: ListItemBlockNode | ListBlockNode): JSON
 function convertListItemToTiptap(node: ListItemBlockNode): JSONContent {
 	return {
 		type: 'listItem',
+		attrs: attrsWithBlockId(node),
 		content: [
 			{
 				type: 'paragraph',
@@ -500,12 +606,12 @@ function convertListItemToTiptap(node: ListItemBlockNode): JSONContent {
 function convertSkyblockItemToTiptap(node: SkyblockItemBlockNode): JSONContent {
 	return {
 		type: 'skyblockItem',
-		attrs: {
+		attrs: attrsWithBlockId(node, {
 			skyblockId: node.skyblockId,
 			size: node.size,
 			inline: node.inline,
 			pet: node.pet,
-		},
+		}),
 	};
 }
 
@@ -550,13 +656,25 @@ function convertInlineToTiptap(nodes: InlineNode[]): JSONContent[] {
 		} else if (node.type === 'item-price') {
 			results.push({
 				type: 'itemPrice',
-				attrs: {
+				attrs: attrsWithBlockId(node, {
 					skyblockId: node.skyblockId,
 					multiplier: node.multiplier ?? 1,
-				},
+				}),
 			});
+		} else if (node.type === 'wiki-link') {
+			results.push(convertWikiLinkToTiptap(node));
 		}
 	}
 
 	return results;
+}
+
+function convertWikiLinkToTiptap(node: WikiLinkInlineNode): JSONContent {
+	return {
+		type: 'wikiLink',
+		attrs: {
+			url: node.url,
+			pageName: node.pageName,
+		},
+	};
 }
