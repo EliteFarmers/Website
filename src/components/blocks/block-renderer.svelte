@@ -2,6 +2,7 @@
 	import {
 		generateBlockKey,
 		mergeComponents,
+		type BlockNode,
 		type BlockComponents,
 		type BlocksRendererProps,
 		type ModifierComponents,
@@ -14,6 +15,7 @@
 	import BlockGridComponent from './elements/block-grid.svelte';
 	import Quote from './elements/blockquote.svelte';
 	import CalloutComponent from './elements/callout.svelte';
+	import CreditsComponent from './elements/credits.svelte';
 	import Heading from './elements/heading.svelte';
 	import Image from './elements/img.svelte';
 	import ItemListComponent from './elements/item-list.svelte';
@@ -59,6 +61,7 @@
 		accordion: AccordionComponent,
 		recipe: RecipeComponent,
 		'item-list': ItemListComponent,
+		credits: CreditsComponent,
 		table: TableComponent,
 		'block-grid': BlockGridComponent,
 	};
@@ -74,20 +77,32 @@
 
 	let resolvedBlocks = $derived(mergeComponents(defaultBlocks, blocks));
 	let resolvedModifiers = $derived(mergeComponents(defaultModifiers, modifiers));
+
+	function getHoistedComments(node: BlockNode) {
+		if (node.type === 'list-item') return [];
+		return node.id ? (hoistedComments[node.id] ?? []) : [];
+	}
+
+	function getWrapperId(node: BlockNode) {
+		return node.type === 'list-item' ? undefined : node.id;
+	}
 </script>
 
 {#if Array.isArray(content)}
 	{#each content as node, index (generateBlockKey(node, index))}
 		{#if resolvedBlocks[node.type]}
 			{@const Block = resolvedBlocks[node.type] as unknown as import('svelte').Component}
-			<Block {node} {index} modifiers={resolvedModifiers} />
-			{#if hoistedComments[`heading-${index}`]?.length}
-				<div class="not-prose">
-					{#each hoistedComments[`heading-${index}`] as comment (comment.id)}
-						<HoistedCommentCallout {comment} />
-					{/each}
-				</div>
-			{/if}
+			{@const comments = getHoistedComments(node)}
+			<div id={getWrapperId(node)} class="scroll-mt-24">
+				<Block {node} {index} modifiers={resolvedModifiers} {hoistedComments} />
+				{#if comments.length}
+					<div class="not-prose">
+						{#each comments as comment (comment.id)}
+							<HoistedCommentCallout {comment} />
+						{/each}
+					</div>
+				{/if}
+			</div>
 		{:else}
 			<div class="blocks-renderer-unknown">
 				Unknown block type: <code>{node.type}</code>

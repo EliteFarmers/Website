@@ -1822,6 +1822,29 @@ export const zodGetMedalBracketsGraphQueryParams = zod.object({
 });
 
 /**
+ * Searches unsubmitted draft guides for admin review.
+ * @summary List unsubmitted draft guides
+ */
+export const zodAdminDraftGuidesQueryParams = zod.object({
+	query: zod.string().nullish(),
+	type: zod
+		.union([
+			zod.literal(0),
+			zod.literal(1),
+			zod.literal(2),
+			zod.literal(3),
+			zod.literal(4),
+			zod.literal(5),
+			zod.literal(6),
+			zod.literal(7),
+		])
+		.nullish(),
+	sort: zod.enum(['lastUpdatedDesc', 'lastUpdatedAsc', 'createdDesc', 'createdAsc', 'titleAsc', 'titleDesc']),
+	page: zod.number(),
+	pageSize: zod.number(),
+});
+
+/**
  * Approves a pending comment, making it visible to all users.
  * @summary Approve a comment
  */
@@ -2016,7 +2039,7 @@ export const zodUpdateGuideBody = zod.object({
 				.nullish(),
 		})
 		.nullish(),
-	concurrencyVersion: zod.number(),
+	concurrencyVersion: zod.number().describe('Opaque save token for the draft version the editor loaded.'),
 });
 
 /**
@@ -2085,33 +2108,6 @@ export const zodGetUserGuidesParams = zod.object({
 });
 
 /**
- * Downloads a remote HTTPS image server-side, validates it, and stores responsive variants in Elite object storage.
- * @summary Import guide image from URL
- */
-export const zodImportGuideImageParams = zod.object({
-	guideId: zod.number(),
-});
-
-export const zodImportGuideImageBodyUrlMin = 0;
-export const zodImportGuideImageBodyUrlMax = 2048;
-
-export const zodImportGuideImageBodyTitleMin = 0;
-export const zodImportGuideImageBodyTitleMax = 64;
-
-export const zodImportGuideImageBodyDescriptionMin = 0;
-export const zodImportGuideImageBodyDescriptionMax = 512;
-
-export const zodImportGuideImageBody = zod.object({
-	url: zod.string().min(zodImportGuideImageBodyUrlMin).max(zodImportGuideImageBodyUrlMax),
-	title: zod.string().min(zodImportGuideImageBodyTitleMin).max(zodImportGuideImageBodyTitleMax).nullish(),
-	description: zod
-		.string()
-		.min(zodImportGuideImageBodyDescriptionMin)
-		.max(zodImportGuideImageBodyDescriptionMax)
-		.nullish(),
-});
-
-/**
  * Returns all comments for a specific guide.
  * @summary List comments for a guide
  */
@@ -2155,8 +2151,8 @@ export const zodReplaceGuideAuthorsParams = zod.object({
 });
 
 export const zodReplaceGuideAuthorsBody = zod.object({
-	ownerId: zod.number().min(1),
-	editorIds: zod.array(zod.number()),
+	ownerId: zod.string().min(1),
+	editorIds: zod.array(zod.string()),
 });
 
 /**
@@ -2209,7 +2205,10 @@ export const zodUploadGuideLitematicParams = zod.object({
 	guideId: zod.number(),
 });
 
-export const zodUploadGuideLitematicBody = zod.instanceof(File);
+export const zodUploadGuideLitematicBody = zod.object({
+	displayName: zod.string().nullish(),
+	file: zod.instanceof(File),
+});
 
 /**
  * Cast an upvote (+1) or downvote (-1) on a comment.

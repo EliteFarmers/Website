@@ -12,6 +12,6 @@ export interface ReplaceGuideAuthorsRequest {
 	/**
 	 * @minLength 1
 	 */
-	ownerId: number | string | bigint;
-	editorIds: number | string | bigint[];
+	ownerId: string;
+	editorIds: string[];
 }

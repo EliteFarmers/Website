@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
-	import type { BlockNode, InlineNode } from '$comp/blocks/blocks';
+	import type { BlockNode } from '$comp/blocks/blocks';
 	import { CommentSectionContainer } from '$comp/comments';
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
@@ -12,6 +12,7 @@
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import { trackAnalytics } from '$lib/analytics';
 	import type { FullGuideDto } from '$lib/api/schemas';
+	import { collectGuideHoistTargets, ensureGuideBlockIds, getTextFromInlineNodes } from '$lib/guides/block-ids';
 	import type { CommentWithGuideAuthor, FullGuideWithAuthors, GuideAuthorDto } from '$lib/guides/types';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
@@ -91,11 +92,7 @@
 		}
 		return map;
 	});
-	let hoistTargets = $derived.by(() =>
-		parsedBlocks
-			? buildTableOfContentsFromBlocks(parsedBlocks).map((item) => ({ id: item.id, label: item.text || item.id }))
-			: []
-	);
+	let hoistTargets = $derived.by(() => (parsedBlocks ? collectGuideHoistTargets(parsedBlocks) : []));
 
 	// Component state
 	let userVote = $state<number | null>(null);
@@ -137,7 +134,7 @@
 
 		try {
 			const parsed = JSON.parse(content);
-			return Array.isArray(parsed) ? (parsed as BlockNode[]) : null;
+			return Array.isArray(parsed) ? ensureGuideBlockIds(parsed as BlockNode[]) : null;
 		} catch {
 			return null;
 		}
@@ -153,7 +150,7 @@
 		headings.forEach((heading, index) => {
 			const level = parseInt(heading.tagName[1]);
 			const text = heading.textContent || '';
-			const id = `heading-${index}`;
+			const id = `md-section-${index}`;
 			heading.id = id;
 			toc.push({ level, text, id });
 		});
@@ -161,25 +158,15 @@
 		return toc;
 	}
 
-	function getTextFromInlineNodes(nodes: InlineNode[]): string {
-		return nodes
-			.map((node) => {
-				if (node.type === 'text') return node.text;
-				if (node.type === 'link') return getTextFromInlineNodes(node.children);
-				return '';
-			})
-			.join('');
-	}
-
 	function buildTableOfContentsFromBlocks(blocks: BlockNode[]): TocItem[] {
 		const toc: TocItem[] = [];
-		blocks.forEach((block, index) => {
+		blocks.forEach((block) => {
 			if (block.type === 'heading') {
 				const text = getTextFromInlineNodes(block.children);
 				toc.push({
 					level: block.level,
 					text,
-					id: `heading-${index}`,
+					id: block.id ?? '',
 				});
 			}
 		});
@@ -419,9 +406,6 @@
 									<PlayerHead uuid={headName} class="size-6" />
 								{/if}
 								<span>{guideAuthor.author.name}</span>
-								{#if guideAuthor.isOwner}
-									<Badge variant="outline" class="px-1.5 py-0 text-[10px]">Owner</Badge>
-								{/if}
 							</div>
 						{/each}
 					</div>
@@ -579,8 +563,7 @@
 
 		{#if gbl.authorized}
 			<Button variant="outline" size="sm" onclick={() => (showReportDialog = true)}>
-				<Flag class="mr-2 h-4 w-4" />
-				Report
+				<Flag class="h-4 w-4" />
 			</Button>
 		{/if}
 
@@ -594,15 +577,15 @@
 					{/snippet}
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end">
-					{#if canManageGuide}
-						<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)}>Unpublish</DropdownMenu.Item>
-					{/if}
 					{#if canEditGuide}
 						<DropdownMenu.Item onclick={() => goto(`/guides/${guideData.slug}/edit`)}
 							>Edit</DropdownMenu.Item
 						>
 					{/if}
 					{#if canManageGuide}
+						<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)} class="text-destructive"
+							>Unpublish</DropdownMenu.Item
+						>
 						<DropdownMenu.Item onclick={() => (showDeleteDialog = true)} class="text-destructive">
 							Delete
 						</DropdownMenu.Item>
@@ -614,7 +597,7 @@
 
 	<ContentReportDialog
 		open={showReportDialog}
-		targetType="Guide"
+		targetType="guide"
 		targetId={guideData.id}
 		onOpenChange={(open) => (showReportDialog = open)}
 	/>

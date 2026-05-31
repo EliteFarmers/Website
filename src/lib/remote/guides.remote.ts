@@ -1,39 +1,99 @@
-import { command, getRequestEvent, query } from '$app/server';
-import { env } from '$env/dynamic/private';
+import { command, form, getRequestEvent, query } from '$app/server';
 import {
 	bookmarkGuide,
 	createGuide,
 	deleteGuide,
+	deleteGuideAsset,
+	getAccount,
 	getGuide,
 	getUserBookmarks,
 	getUserGuides,
+	listGuideAssets,
+	listGuideHistory,
 	listGuides,
 	listTags,
+	replaceGuideAuthors,
+	restoreGuideVersion,
 	submitGuideForApproval,
 	unbookmarkGuide,
 	unpublishGuide,
 	updateGuide,
+	uploadGuideImage,
+	uploadGuideLitematic,
 	voteGuide,
 } from '$lib/api';
 import type {
 	CreateGuideRequest,
 	GetGuideParams,
+	GuideAssetDto,
 	GuideSort,
 	GuideType,
 	ListGuidesParams,
+	ReplaceGuideAuthorsRequest,
 	UpdateGuideRequest,
 	VoteGuideRequest,
 } from '$lib/api/schemas';
-import { customFetch } from '$lib/api/custom-fetch';
-import type { GuideAssetDto, GuideVersionDto } from '$lib/guides/types';
 import { error } from '@sveltejs/kit';
 import * as z from 'zod';
 
-type ApiSuccess<T> = { status: 200; data: T } | { status: 204; data: null };
-type ApiError = { status: 400 | 401 | 403 | 404 | 500; data: unknown };
+type GuideAssetFormResult = { error: string | null; asset: GuideAssetDto | null };
+type UploadGuideImageFormInput = {
+	guideId: string | number;
+	title?: string;
+	description?: string;
+	image: File;
+};
+type UploadGuideLitematicFormInput = {
+	guideId: string | number;
+	displayName?: string;
+	file: File;
+};
 
-function apiUrl(path: string) {
-	return `${env.ELITE_API_URL}${path}`;
+function apiErrorMessage(data: unknown, fallback: string) {
+	if (!data || typeof data !== 'object') {
+		return fallback;
+	}
+
+	const record = data as Record<string, unknown>;
+	const errorMessage = firstErrorMessage(record.errors);
+	if (errorMessage) return errorMessage;
+
+	if (typeof record.message === 'string' && record.message.trim().length > 0) return record.message;
+	if (typeof record.detail === 'string' && record.detail.trim().length > 0) return record.detail;
+	if (typeof record.title === 'string' && record.title.trim().length > 0) return record.title;
+
+	return fallback;
+}
+
+function firstErrorMessage(errors: unknown): string | null {
+	if (!errors || typeof errors !== 'object') return null;
+
+	for (const value of Object.values(errors as Record<string, unknown>)) {
+		if (Array.isArray(value)) {
+			const message = value.find(
+				(entry): entry is string => typeof entry === 'string' && entry.trim().length > 0
+			);
+			if (message) return message;
+		}
+
+		if (typeof value === 'string' && value.trim().length > 0) return value;
+	}
+
+	return null;
+}
+
+function optionalText(value: unknown) {
+	const text = typeof value === 'string' ? value.trim() : '';
+	return text.length > 0 ? text : null;
+}
+
+function parseGuideId(value: string | number) {
+	const guideId = Number(value);
+	return Number.isInteger(guideId) && guideId > 0 ? guideId : null;
+}
+
+function getUploadedFile(value: unknown) {
+	return value instanceof File && value.size > 0 ? value : null;
 }
 
 /**
@@ -140,7 +200,7 @@ export const GetGuideAssets = query(z.number(), async (guideId) => {
 		error(401, 'Unauthorized');
 	}
 
-	const result = await customFetch<ApiSuccess<GuideAssetDto[]> | ApiError>(apiUrl(`/guides/${guideId}/assets`));
+	const result = await listGuideAssets(guideId);
 	if (result.response.status === 401) {
 		error(401, 'Unauthorized');
 	}
@@ -162,7 +222,7 @@ export const GetGuideHistory = query(z.number(), async (guideId) => {
 		error(401, 'Unauthorized');
 	}
 
-	const result = await customFetch<ApiSuccess<GuideVersionDto[]> | ApiError>(apiUrl(`/guides/${guideId}/history`));
+	const result = await listGuideHistory(guideId);
 	if (result.response.status === 401) {
 		error(401, 'Unauthorized');
 	}
@@ -249,7 +309,7 @@ export const updateGuideCommand = command(
 				statusText: result.response.statusText,
 				body: request,
 			});
-			return { error: 'Failed to update guide' };
+			return { error: apiErrorMessage(result.error, 'Failed to update guide') };
 		}
 
 		return { error: null, version: result.data.concurrencyVersion };
@@ -270,12 +330,7 @@ export const restoreGuideVersionCommand = command(
 			return { error: 'Unauthorized', version: null };
 		}
 
-		const result = await customFetch<ApiSuccess<{ concurrencyVersion: number }> | ApiError>(
-			apiUrl(`/guides/${guideId}/history/${versionId}/restore`),
-			{
-				method: 'POST',
-			}
-		);
+		const result = await restoreGuideVersion(guideId, versionId);
 
 		if (result.response.status === 401) {
 			return { error: 'Unauthorized', version: null };
@@ -288,7 +343,7 @@ export const restoreGuideVersionCommand = command(
 		}
 
 		GetGuideHistory(guideId).refresh();
-		return { error: null, version: result.data?.concurrencyVersion ?? null };
+		return { error: null, version: result.data.concurrencyVersion };
 	}
 );
 
@@ -307,16 +362,11 @@ export const replaceGuideAuthorsCommand = command(
 			return { error: 'Unauthorized' };
 		}
 
-		const result = await customFetch<ApiSuccess<null> | ApiError>(apiUrl(`/guides/${guideId}/authors`), {
-			method: 'PUT',
-			headers: {
-				'content-type': 'application/json',
-			},
-			body: JSON.stringify({
-				ownerId,
-				editorIds,
-			}),
-		});
+		const request: ReplaceGuideAuthorsRequest = {
+			ownerId,
+			editorIds: editorIds as unknown as ReplaceGuideAuthorsRequest['editorIds'],
+		};
+		const result = await replaceGuideAuthors(guideId, request);
 
 		if (result.response.status === 401) {
 			return { error: 'Unauthorized' };
@@ -325,9 +375,148 @@ export const replaceGuideAuthorsCommand = command(
 			return { error: 'You do not have permission to manage authors' };
 		}
 		if (!result.ok) {
-			return { error: 'Failed to update guide authors' };
+			return { error: apiErrorMessage(result.error, 'Failed to update guide authors') };
 		}
 
+		return { error: null };
+	}
+);
+
+/**
+ * Command: Resolve a Minecraft username into a linked Elite account.
+ */
+export const resolveGuideAuthorCommand = command(z.string().min(1).max(32), async (username) => {
+	const event = getRequestEvent();
+	if (!event.locals.access_token) {
+		return { error: 'Unauthorized', account: null };
+	}
+
+	const player = username.trim().replace(/[^a-zA-Z0-9_]/g, '');
+	if (!player) {
+		return { error: 'Enter a valid Minecraft username', account: null };
+	}
+
+	const result = await getAccount(player);
+	if (!result.ok) {
+		return { error: apiErrorMessage(result.error, 'Minecraft account not found'), account: null };
+	}
+
+	if (!result.data.discordId) {
+		return { error: 'That Minecraft account is not linked to an Elite account', account: null };
+	}
+
+	return {
+		error: null,
+		account: {
+			id: result.data.discordId,
+			name: result.data.formattedName || result.data.name,
+			uuid: result.data.id,
+		},
+	};
+});
+
+/**
+ * Form: Upload a guide image through the generated API client
+ */
+export const uploadGuideImageForm = form<UploadGuideImageFormInput, GuideAssetFormResult>(
+	'unchecked',
+	async ({ guideId: rawGuideId, title, description, image }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) {
+			return { error: 'Unauthorized', asset: null };
+		}
+
+		const guideId = parseGuideId(rawGuideId);
+		const file = getUploadedFile(image);
+		if (!guideId || !file) {
+			return { error: 'Select an image to upload', asset: null };
+		}
+
+		const result = await uploadGuideImage(guideId, {
+			image: file,
+			title: optionalText(title),
+			description: optionalText(description),
+		});
+
+		if (result.response.status === 401) {
+			return { error: 'Unauthorized', asset: null };
+		}
+		if (result.response.status === 403) {
+			return { error: 'You do not have permission to upload assets for this guide', asset: null };
+		}
+		if (!result.ok) {
+			return { error: apiErrorMessage(result.data, 'Failed to upload image'), asset: null };
+		}
+
+		GetGuideAssets(guideId).refresh();
+		return { error: null, asset: result.data };
+	}
+);
+
+/**
+ * Form: Upload a guide litematic through the generated API client
+ */
+export const uploadGuideLitematicForm = form<UploadGuideLitematicFormInput, GuideAssetFormResult>(
+	'unchecked',
+	async ({ guideId: rawGuideId, displayName, file }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) {
+			return { error: 'Unauthorized', asset: null };
+		}
+
+		const guideId = parseGuideId(rawGuideId);
+		const upload = getUploadedFile(file);
+		if (!guideId || !upload) {
+			return { error: 'Select a litematic file to upload', asset: null };
+		}
+
+		const result = await uploadGuideLitematic(guideId, {
+			file: upload,
+			displayName: optionalText(displayName),
+		});
+
+		if (result.response.status === 401) {
+			return { error: 'Unauthorized', asset: null };
+		}
+		if (result.response.status === 403) {
+			return { error: 'You do not have permission to upload assets for this guide', asset: null };
+		}
+		if (!result.ok) {
+			return { error: apiErrorMessage(result.data, 'Failed to upload litematic'), asset: null };
+		}
+
+		GetGuideAssets(guideId).refresh();
+		return { error: null, asset: result.data };
+	}
+);
+
+/**
+ * Command: Delete a guide asset through the generated API client
+ */
+export const deleteGuideAssetCommand = command(
+	z.object({
+		guideId: z.number(),
+		assetId: z.string().min(1),
+	}),
+	async ({ guideId, assetId }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) {
+			return { error: 'Unauthorized' };
+		}
+
+		const result = await deleteGuideAsset(guideId, assetId);
+
+		if (result.response.status === 401) {
+			return { error: 'Unauthorized' };
+		}
+		if (result.response.status === 403) {
+			return { error: 'You do not have permission to delete this asset' };
+		}
+		if (!result.ok) {
+			return { error: 'Failed to delete asset' };
+		}
+
+		GetGuideAssets(guideId).refresh();
 		return { error: null };
 	}
 );

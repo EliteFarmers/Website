@@ -1,20 +1,13 @@
 import { command, getRequestEvent, query } from '$app/server';
-import { env } from '$env/dynamic/private';
-import { customFetch } from '$lib/api/custom-fetch';
-import type { ContentReportDto, ContentReportStatus, ContentReportTargetType } from '$lib/guides/types';
+import { createContentReport, listContentReports, resolveContentReport } from '$lib/api';
+import { ContentReportStatus, ContentReportTargetType } from '$lib/api/schemas';
+import type { ContentReportStatus as ContentReportStatusValue } from '$lib/api/schemas';
 import { error } from '@sveltejs/kit';
 import * as z from 'zod';
 
-type ApiSuccess<T> = { status: 200; data: T } | { status: 204; data: null };
-type ApiError = { status: 400 | 401 | 403 | 404 | 500; data: unknown };
-
-function apiUrl(path: string) {
-	return `${env.ELITE_API_URL}${path}`;
-}
-
 export const createContentReportCommand = command(
 	z.object({
-		targetType: z.enum(['Guide', 'Comment']),
+		targetType: z.enum([ContentReportTargetType.guide, ContentReportTargetType.comment]),
 		targetId: z.number(),
 		reason: z.string().min(1).max(1000),
 	}),
@@ -24,13 +17,7 @@ export const createContentReportCommand = command(
 			return { error: 'Unauthorized' };
 		}
 
-		const result = await customFetch<ApiSuccess<null> | ApiError>(apiUrl('/reports'), {
-			method: 'POST',
-			headers: {
-				'content-type': 'application/json',
-			},
-			body: JSON.stringify({ targetType, targetId, reason }),
-		});
+		const result = await createContentReport({ targetType, targetId, reason });
 
 		if (result.response.status === 401) {
 			return { error: 'Unauthorized' };
@@ -49,7 +36,10 @@ export const createContentReportCommand = command(
 export const GetContentReports = query(
 	z
 		.object({
-			status: z.enum(['Open', 'Reviewed', 'Dismissed']).nullable().optional(),
+			status: z
+				.enum([ContentReportStatus.open, ContentReportStatus.reviewed, ContentReportStatus.dismissed])
+				.nullable()
+				.optional(),
 		})
 		.optional(),
 	async (params) => {
@@ -58,9 +48,8 @@ export const GetContentReports = query(
 			error(403, 'Insufficient permissions');
 		}
 
-		const status = params?.status ?? 'Open';
-		const search = status ? `?Status=${encodeURIComponent(status)}` : '';
-		const result = await customFetch<ApiSuccess<ContentReportDto[]> | ApiError>(apiUrl(`/admin/reports${search}`));
+		const status = params?.status ?? ContentReportStatus.open;
+		const result = await listContentReports({ status });
 
 		if (result.response.status === 403) {
 			error(403, 'Insufficient permissions');
@@ -76,7 +65,7 @@ export const GetContentReports = query(
 export const resolveContentReportCommand = command(
 	z.object({
 		reportId: z.number(),
-		status: z.enum(['Reviewed', 'Dismissed']),
+		status: z.enum([ContentReportStatus.reviewed, ContentReportStatus.dismissed]),
 		resolutionNote: z.string().max(1000).nullable().optional(),
 	}),
 	async ({ reportId, status, resolutionNote }) => {
@@ -85,12 +74,9 @@ export const resolveContentReportCommand = command(
 			return { error: 'Insufficient permissions' };
 		}
 
-		const result = await customFetch<ApiSuccess<null> | ApiError>(apiUrl(`/admin/reports/${reportId}/resolve`), {
-			method: 'POST',
-			headers: {
-				'content-type': 'application/json',
-			},
-			body: JSON.stringify({ status: status satisfies ContentReportStatus, resolutionNote }),
+		const result = await resolveContentReport(reportId, {
+			status: status satisfies ContentReportStatusValue,
+			resolutionNote,
 		});
 
 		if (result.response.status === 403) {
@@ -100,9 +86,9 @@ export const resolveContentReportCommand = command(
 			return { error: 'Failed to resolve report' };
 		}
 
-		GetContentReports({ status: 'Open' }).refresh();
+		GetContentReports({ status: ContentReportStatus.open }).refresh();
 		return { error: null };
 	}
 );
 
-export type { ContentReportTargetType };
+export type { ContentReportStatus, ContentReportTargetType } from '$lib/api/schemas';

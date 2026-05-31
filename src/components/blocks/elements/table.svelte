@@ -4,9 +4,10 @@
 
 	interface Props {
 		node: TableBlockNode;
+		hoistedComments?: Record<string, import('$lib/guides/types').CommentWithGuideAuthor[]>;
 	}
 
-	let { node }: Props = $props();
+	let { node, hoistedComments = {} }: Props = $props();
 </script>
 
 <div class="my-4 overflow-x-auto">
@@ -17,7 +18,7 @@
 					{#each { length: node.cols }, colIdx (colIdx)}
 						{@const cell = node.cells[rowIdx]?.[colIdx] ?? []}
 						<td class="border p-2 text-sm">
-							<BlockRenderer content={cell} />
+							<BlockRenderer content={cell} {hoistedComments} />
 						</td>
 					{/each}
 				</tr>

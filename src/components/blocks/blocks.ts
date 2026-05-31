@@ -1,4 +1,5 @@
 import type { Component, Snippet } from 'svelte';
+import type { CommentWithGuideAuthor } from '$lib/guides/types';
 
 export function isTextNode(n: InlineNode): n is TextNode {
 	return n?.type === 'text';
@@ -16,6 +17,10 @@ export function isItemPriceNode(n: InlineNode): n is ItemPriceBlockNode {
 	return n?.type === 'item-price';
 }
 
+export function isWikiLinkNode(n: InlineNode): n is WikiLinkInlineNode {
+	return n?.type === 'wiki-link';
+}
+
 export function getActiveModifiers(n: TextNode): Array<'bold' | 'italic' | 'underline' | 'strikethrough' | 'code'> {
 	const m: Array<'bold' | 'italic' | 'underline' | 'strikethrough' | 'code'> = [];
 	if (n.bold) m.push('bold');
@@ -31,6 +36,9 @@ export function mergeComponents<T>(def: T, over?: Partial<T>): T {
 }
 
 export function generateBlockKey(node: BlockNode, idx: number): string {
+	if (node.id) {
+		return node.id;
+	}
 	if (node.type === 'image' && node.image.hash) {
 		return `img-${node.image.hash}-${idx}`;
 	}
@@ -38,6 +46,10 @@ export function generateBlockKey(node: BlockNode, idx: number): string {
 		return `litematic-${node.assetId}-${idx}`;
 	}
 	return `${node.type}-${idx}`;
+}
+
+export interface BlockBase {
+	id?: string;
 }
 
 export interface TextNode {
@@ -56,30 +68,30 @@ export interface LinkNode {
 	children: (TextNode | LinkNode)[];
 }
 
-export type InlineNode = TextNode | LinkNode | SkyblockItemBlockNode | ItemPriceBlockNode;
+export type InlineNode = TextNode | LinkNode | SkyblockItemBlockNode | ItemPriceBlockNode | WikiLinkInlineNode;
 
-export interface ParagraphBlockNode {
+export interface ParagraphBlockNode extends BlockBase {
 	type: 'paragraph';
 	children: InlineNode[];
 }
 
-export interface HeadingBlockNode {
+export interface HeadingBlockNode extends BlockBase {
 	type: 'heading';
 	level: 1 | 2 | 3 | 4 | 5 | 6;
 	children: InlineNode[];
 }
 
-export interface QuoteBlockNode {
+export interface QuoteBlockNode extends BlockBase {
 	type: 'quote';
 	children: InlineNode[];
 }
 
-export interface CodeBlockNode {
+export interface CodeBlockNode extends BlockBase {
 	type: 'code';
 	children: TextNode[];
 }
 
-export interface ImageBlockNode {
+export interface ImageBlockNode extends BlockBase {
 	type: 'image';
 	image: {
 		assetId?: string;
@@ -87,6 +99,8 @@ export interface ImageBlockNode {
 		alternativeText?: string;
 		url: string;
 		caption?: string;
+		displaySize?: 'natural' | 'small' | 'medium' | 'large' | 'full';
+		align?: 'left' | 'center' | 'right';
 		width?: number;
 		height?: number;
 		sources?: Record<string, { url: string; width: number }>;
@@ -102,7 +116,7 @@ export interface ImageBlockNode {
 	};
 }
 
-export interface LitematicBlockNode {
+export interface LitematicBlockNode extends BlockBase {
 	type: 'litematic';
 	assetId: string;
 	fileName: string;
@@ -115,7 +129,7 @@ export interface LitematicBlockNode {
 	regionCount: number;
 }
 
-export interface SkyblockItemBlockNode {
+export interface SkyblockItemBlockNode extends BlockBase {
 	type: 'skyblock-item';
 	skyblockId: string;
 	size?: 'sm' | 'md' | 'lg';
@@ -123,44 +137,44 @@ export interface SkyblockItemBlockNode {
 	pet?: boolean;
 }
 
-export interface ItemPriceBlockNode {
+export interface ItemPriceBlockNode extends BlockBase {
 	type: 'item-price';
 	skyblockId: string;
 	multiplier?: number;
 }
 
-export interface TwoColumnBlockNode {
+export interface TwoColumnBlockNode extends BlockBase {
 	type: 'two-column';
 	variant?: 'plain' | 'bordered';
 	left: BlockNode[];
 	right: BlockNode[];
 }
 
-export interface YouTubeBlockNode {
+export interface YouTubeBlockNode extends BlockBase {
 	type: 'youtube';
 	videoId: string;
 }
 
 export type CalloutVariant = 'note' | 'tip' | 'warning' | 'danger' | 'success' | 'question' | 'example' | 'quote';
 
-export interface CalloutBlockNode {
+export interface CalloutBlockNode extends BlockBase {
 	type: 'callout';
 	variant: CalloutVariant;
 	children: BlockNode[];
 }
 
-export interface AccordionBlockNode {
+export interface AccordionBlockNode extends BlockBase {
 	type: 'accordion';
 	title: string;
 	children: BlockNode[];
 }
 
-export interface ListItemBlockNode {
+export interface ListItemBlockNode extends BlockBase {
 	type: 'list-item';
 	children: InlineNode[];
 }
 
-export interface ListBlockNode {
+export interface ListBlockNode extends BlockBase {
 	type: 'list';
 	format: 'ordered' | 'unordered';
 	children: (ListItemBlockNode | ListBlockNode)[];
@@ -172,7 +186,7 @@ export interface RecipeSlot {
 	count?: number;
 }
 
-export interface RecipeBlockNode {
+export interface RecipeBlockNode extends BlockBase {
 	type: 'recipe';
 	grid: RecipeSlot[];
 	output: RecipeSlot;
@@ -183,12 +197,28 @@ export interface ItemListItem {
 	quantity: number;
 }
 
-export interface ItemListBlockNode {
+export interface ItemListBlockNode extends BlockBase {
 	type: 'item-list';
 	items: ItemListItem[];
 }
 
-export interface TableBlockNode {
+export interface CreditsEntry {
+	username: string;
+	reason: string;
+}
+
+export interface CreditsBlockNode extends BlockBase {
+	type: 'credits';
+	entries: CreditsEntry[];
+}
+
+export interface WikiLinkInlineNode {
+	type: 'wiki-link';
+	url: string;
+	pageName: string;
+}
+
+export interface TableBlockNode extends BlockBase {
 	type: 'table';
 	rows: number;
 	cols: number;
@@ -200,7 +230,7 @@ export interface BlockGridCell {
 	overlayItem?: string;
 }
 
-export interface BlockGridBlockNode {
+export interface BlockGridBlockNode extends BlockBase {
 	type: 'block-grid';
 	rows: number;
 	cols: number;
@@ -224,6 +254,7 @@ export type BlockNode =
 	| AccordionBlockNode
 	| RecipeBlockNode
 	| ItemListBlockNode
+	| CreditsBlockNode
 	| TableBlockNode
 	| BlockGridBlockNode;
 
@@ -246,6 +277,7 @@ export interface BlockComponents {
 	accordion: Component<AccordionProps>;
 	recipe: Component<RecipeProps>;
 	'item-list': Component<ItemListProps>;
+	credits: Component<CreditsProps>;
 	table: Component<TableProps>;
 	'block-grid': Component<BlockGridProps>;
 }
@@ -282,6 +314,10 @@ export interface ItemListProps {
 	node: ItemListBlockNode;
 }
 
+export interface CreditsProps {
+	node: CreditsBlockNode;
+}
+
 export interface TableProps {
 	node: TableBlockNode;
 }
@@ -313,6 +349,7 @@ export interface BlockComponentProps {
 	node: BlockNode;
 	index: number;
 	modifiers: ModifierComponents;
+	hoistedComments?: Record<string, CommentWithGuideAuthor[]>;
 }
 
 export interface BlocksRendererProps {

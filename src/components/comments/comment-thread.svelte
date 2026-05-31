@@ -60,9 +60,9 @@
 	});
 </script>
 
-<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
 	{#each threadComments as comment (comment.id)}
-		<div class="flex flex-col gap-5">
+		<div class="flex flex-col gap-2">
 			<CommentItem
 				{comment}
 				childCount={childCountMap[comment.id] ?? 0}

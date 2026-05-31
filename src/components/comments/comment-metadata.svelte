@@ -25,7 +25,7 @@
 	});
 </script>
 
-<div class="flex scroll-mt-20 flex-row items-center gap-2" id="comment-{comment.sqid}">
+<div class="flex scroll-mt-20 flex-wrap items-center gap-2 sm:flex-row" id="comment-{comment.sqid}">
 	{#if authorName !== '[deleted]'}
 		{#if authorAvatar}
 			<UserIcon user={{ id: authorId, avatar: authorAvatar }} class="size-5 rounded-full" />
@@ -48,7 +48,7 @@
 
 	{#if !comment.isDeleted}
 		{#if isGuideAuthor}
-			<Badge variant="secondary" class="px-1.5 py-0 text-[10px]">OP</Badge>
+			<Badge variant="secondary" class="px-1.5 py-0 text-[10px]">Author</Badge>
 		{/if}
 
 		{#if isEdited}

@@ -34,6 +34,7 @@ export interface FullGuideDto {
 	isBookmarked?: boolean | null;
 	/** @nullable */
 	rejectionReason?: string | null;
+	/** Opaque save token for this returned guide version. */
 	concurrencyVersion: number;
 	assets: GuideAssetDto[];
 }

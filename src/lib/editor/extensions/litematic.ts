@@ -66,8 +66,8 @@ export const Litematic = Node.create({
 		return {
 			setLitematic:
 				(attrs) =>
-				({ commands }) =>
-					commands.insertContent({
+				({ commands, state }) =>
+					commands.insertContentAt(state.selection.to, {
 						type: this.name,
 						attrs,
 					}),

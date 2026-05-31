@@ -3,20 +3,26 @@
 	import {
 		onEditAccordion,
 		onEditBlockGrid,
+		onEditCredits,
 		onEditItemList,
 		onEditItemPrice,
 		onEditRecipe,
 		onEditSkyblockItem,
+		onEditWikiLink,
 		type EditAccordionEvent,
 		type EditBlockGridEvent,
+		type EditCreditsEvent,
 		type EditItemListEvent,
 		type EditItemPriceEvent,
 		type EditRecipeEvent,
 		type EditSkyblockItemEvent,
+		type EditWikiLinkEvent,
 	} from '$lib/editor/editor-events';
 	import { Accordion } from '$lib/editor/extensions/accordion';
+	import { BlockId } from '$lib/editor/extensions/block-id';
 	import { BlockGrid } from '$lib/editor/extensions/block-grid';
 	import { Callout } from '$lib/editor/extensions/callout';
+	import { Credits } from '$lib/editor/extensions/credits';
 	import { GuideImage } from '$lib/editor/extensions/guide-image';
 	import { ItemList } from '$lib/editor/extensions/item-list';
 	import { ItemPrice } from '$lib/editor/extensions/item-price';
@@ -24,6 +30,7 @@
 	import { Recipe } from '$lib/editor/extensions/recipe';
 	import { SkyblockItem } from '$lib/editor/extensions/skyblock-item';
 	import { ColumnLeft, ColumnRight, TwoColumn } from '$lib/editor/extensions/two-column';
+	import { WikiLink } from '$lib/editor/extensions/wiki-link';
 	import { YouTube } from '$lib/editor/extensions/youtube';
 	import { strapiToTiptap, tiptapToStrapi } from '$lib/editor/transformer';
 	import type { GuideAssetDto } from '$lib/guides/types';
@@ -46,6 +53,7 @@
 	import LinkIcon from '@lucide/svelte/icons/link';
 	import List from '@lucide/svelte/icons/list';
 	import ListOrdered from '@lucide/svelte/icons/list-ordered';
+	import BookOpen from '@lucide/svelte/icons/book-open';
 	import Package from '@lucide/svelte/icons/package';
 	import Plus from '@lucide/svelte/icons/plus';
 	import Quote from '@lucide/svelte/icons/quote';
@@ -56,6 +64,7 @@
 	import TableIcon from '@lucide/svelte/icons/table-2';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Unlink from '@lucide/svelte/icons/unlink';
+	import Users from '@lucide/svelte/icons/users';
 	import { Editor, type Content } from '@tiptap/core';
 	import Link from '@tiptap/extension-link';
 	import { Table } from '@tiptap/extension-table';
@@ -65,13 +74,17 @@
 	import StarterKit from '@tiptap/starter-kit';
 	import { onMount } from 'svelte';
 	import InsertAccordionDialog from './dialogs/insert-accordion-dialog.svelte';
+	import ImageSettingsDialog from './dialogs/image-settings-dialog.svelte';
 	import InsertBlockGridDialog from './dialogs/insert-block-grid-dialog.svelte';
 	import InsertCalloutDialog from './dialogs/insert-callout-dialog.svelte';
+	import InsertCreditsDialog from './dialogs/insert-credits-dialog.svelte';
 	import GuideAssetsDialog from './dialogs/guide-assets-dialog.svelte';
 	import InsertItemDialog from './dialogs/insert-item-dialog.svelte';
 	import InsertItemListDialog from './dialogs/insert-item-list-dialog.svelte';
+	import LitematicSettingsDialog from './dialogs/litematic-settings-dialog.svelte';
 	import InsertPriceDialog from './dialogs/insert-price-dialog.svelte';
 	import InsertRecipeDialog from './dialogs/insert-recipe-dialog.svelte';
+	import InsertWikiLinkDialog from './dialogs/insert-wiki-link-dialog.svelte';
 	import InsertYouTubeDialog from './dialogs/insert-youtube-dialog.svelte';
 
 	let {
@@ -100,6 +113,8 @@
 	let showItemListDialog = $state(false);
 	let showBlockGridDialog = $state(false);
 	let showAccordionDialog = $state(false);
+	let showCreditsDialog = $state(false);
+	let showWikiLinkDialog = $state(false);
 	let showAssetsDialog = $state(false);
 	let editSkyblockItem = $state<EditSkyblockItemEvent | null>(null);
 	let editItemPrice = $state<EditItemPriceEvent | null>(null);
@@ -107,6 +122,12 @@
 	let editItemList = $state<EditItemListEvent | null>(null);
 	let editBlockGrid = $state<EditBlockGridEvent | null>(null);
 	let editAccordion = $state<EditAccordionEvent | null>(null);
+	let editCredits = $state<EditCreditsEvent | null>(null);
+	let editWikiLink = $state<EditWikiLinkEvent | null>(null);
+	let editImage = $state<{ pos: number; attrs: Record<string, unknown> } | null>(null);
+	let editLitematic = $state<{ pos: number; attrs: Record<string, unknown> } | null>(null);
+	let showImageSettingsDialog = $state(false);
+	let showLitematicSettingsDialog = $state(false);
 
 	onMount(() => {
 		// Subscribe to edit events from node views
@@ -134,6 +155,14 @@
 			editAccordion = data;
 			showAccordionDialog = true;
 		});
+		const unsubscribeCredits = onEditCredits((data) => {
+			editCredits = data;
+			showCreditsDialog = true;
+		});
+		const unsubscribeWikiLink = onEditWikiLink((data) => {
+			editWikiLink = data;
+			showWikiLinkDialog = true;
+		});
 
 		let initialContent: string | unknown = '';
 		if (typeof content === 'string') {
@@ -160,6 +189,7 @@
 			element: element,
 			extensions: [
 				StarterKit,
+				BlockId,
 				Link.configure({
 					openOnClick: false,
 				}),
@@ -175,6 +205,8 @@
 				Accordion,
 				Recipe,
 				ItemList,
+				Credits,
+				WikiLink,
 				Table.configure({ resizable: true }),
 				TableRow,
 				TableCell,
@@ -198,6 +230,27 @@
 				attributes: {
 					class: 'prose dark:prose-invert max-w-none focus:outline-none min-h-[300px] p-4',
 				},
+				handleClickOn: (_view, _pos, node, nodePos) => {
+					if (node.type.name === 'image') {
+						editImage = {
+							pos: nodePos,
+							attrs: { ...node.attrs },
+						};
+						showImageSettingsDialog = true;
+						return false;
+					}
+
+					if (node.type.name === 'litematic') {
+						editLitematic = {
+							pos: nodePos,
+							attrs: { ...node.attrs },
+						};
+						showLitematicSettingsDialog = true;
+						return false;
+					}
+
+					return false;
+				},
 			},
 		});
 
@@ -208,6 +261,8 @@
 			unsubscribeItemList();
 			unsubscribeBlockGrid();
 			unsubscribeAccordion();
+			unsubscribeCredits();
+			unsubscribeWikiLink();
 			editor?.destroy();
 		};
 	});
@@ -236,13 +291,6 @@
 		if (!editor) return;
 		if (guideId) {
 			showAssetsDialog = true;
-			return;
-		}
-
-		const url = window.prompt('Image URL');
-
-		if (url) {
-			editor.chain().focus().setImage({ src: url }).run();
 		}
 	}
 </script>
@@ -373,7 +421,7 @@
 					<Unlink class="h-4 w-4" />
 				</Button>
 			{/if}
-			<Button variant="ghost" size="icon" onclick={addImage} title="Image">
+			<Button variant="ghost" size="icon" onclick={addImage} title="Image" disabled={!guideId}>
 				<ImageIcon class="h-4 w-4" />
 			</Button>
 
@@ -462,6 +510,17 @@
 					title="Insert Item List"
 				>
 					<ShoppingCart class="h-4 w-4" />
+				</Button>
+				<Button variant="ghost" size="icon" onclick={() => (showCreditsDialog = true)} title="Insert Credits">
+					<Users class="h-4 w-4" />
+				</Button>
+				<Button
+					variant="ghost"
+					size="icon"
+					onclick={() => (showWikiLinkDialog = true)}
+					title="Insert Wiki Link"
+				>
+					<BookOpen class="h-4 w-4" />
 				</Button>
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger>
@@ -587,6 +646,14 @@
 							<ShoppingCart class="mr-2 h-4 w-4" />
 							Item List
 						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => (showCreditsDialog = true)}>
+							<Users class="mr-2 h-4 w-4" />
+							Credits
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => (showWikiLinkDialog = true)}>
+							<BookOpen class="mr-2 h-4 w-4" />
+							Wiki Link
+						</DropdownMenu.Item>
 						<DropdownMenu.Item
 							onclick={() =>
 								editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
@@ -672,6 +739,26 @@
 	editNode={editItemList}
 />
 
+<InsertCreditsDialog
+	open={showCreditsDialog}
+	onOpenChange={(v) => {
+		showCreditsDialog = v;
+		if (!v) editCredits = null;
+	}}
+	{editor}
+	editNode={editCredits}
+/>
+
+<InsertWikiLinkDialog
+	open={showWikiLinkDialog}
+	onOpenChange={(v) => {
+		showWikiLinkDialog = v;
+		if (!v) editWikiLink = null;
+	}}
+	{editor}
+	editNode={editWikiLink}
+/>
+
 <InsertBlockGridDialog
 	open={showBlockGridDialog}
 	onOpenChange={(v) => {
@@ -690,6 +777,26 @@
 	}}
 	{editor}
 	editNode={editAccordion}
+/>
+
+<ImageSettingsDialog
+	open={showImageSettingsDialog}
+	onOpenChange={(v) => {
+		showImageSettingsDialog = v;
+		if (!v) editImage = null;
+	}}
+	{editor}
+	editNode={editImage}
+/>
+
+<LitematicSettingsDialog
+	open={showLitematicSettingsDialog}
+	onOpenChange={(v) => {
+		showLitematicSettingsDialog = v;
+		if (!v) editLitematic = null;
+	}}
+	{editor}
+	editNode={editLitematic}
 />
 
 <GuideAssetsDialog
@@ -778,6 +885,59 @@
 	.editor-content :global(.ProseMirror img) {
 		max-width: 100%;
 		height: auto;
+		cursor: pointer;
+		border-radius: 0.125rem;
+	}
+
+	.editor-content :global(.ProseMirror img.ProseMirror-selectednode) {
+		outline: 2px solid var(--primary);
+		outline-offset: 2px;
+	}
+
+	.editor-content :global(.ProseMirror img[data-image-size='natural']) {
+		width: auto;
+		max-width: 100%;
+	}
+
+	.editor-content :global(.ProseMirror img[data-image-size='small']) {
+		width: min(100%, 20rem);
+	}
+
+	.editor-content :global(.ProseMirror img[data-image-size='medium']) {
+		width: min(100%, 32rem);
+	}
+
+	.editor-content :global(.ProseMirror img[data-image-size='large']) {
+		width: min(100%, 47.5rem);
+	}
+
+	.editor-content :global(.ProseMirror img[data-image-size='full']) {
+		width: 100%;
+	}
+
+	.editor-content :global(.ProseMirror img[data-image-align='left']) {
+		display: block;
+		margin-right: auto;
+	}
+
+	.editor-content :global(.ProseMirror img[data-image-align='center']) {
+		display: block;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.editor-content :global(.ProseMirror img[data-image-align='right']) {
+		display: block;
+		margin-left: auto;
+	}
+
+	.editor-content :global(.ProseMirror [data-litematic]) {
+		cursor: pointer;
+	}
+
+	.editor-content :global(.ProseMirror .ProseMirror-selectednode[data-litematic]) {
+		outline: 2px solid var(--primary);
+		outline-offset: 2px;
 	}
 
 	/* Tables */

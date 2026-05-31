@@ -46,7 +46,11 @@
 	let isEditing = $state(false);
 </script>
 
-<div class="flex flex-col gap-2">
+<div
+	class="flex flex-col gap-2 rounded-md border {comment.liftedElementId
+		? 'bg-card border-accent py-2 pr-2'
+		: 'border-transparent'}"
+>
 	<!-- Comment body with left border -->
 	<div class="flex flex-row gap-2">
 		<!-- Collapse button and left border -->
@@ -129,13 +133,8 @@
 				{/if}
 
 				{#if childCount && childCount > 0 && !isExpanded}
-					<Button
-						variant="ghost"
-						size="sm"
-						onclick={onToggleCollapse}
-						class="text-muted-foreground hover:text-foreground p-0"
-					>
-						<span class="text-muted-foreground text-xs">
+					<Button variant="ghost" size="sm" onclick={onToggleCollapse} class="h-6">
+						<span class="text-primary text-xs font-semibold">
 							{childCount}
 							{childCount === 1 ? 'reply' : 'replies'}
 						</span>

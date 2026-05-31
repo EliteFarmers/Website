@@ -13,6 +13,8 @@ import type {
 	AddExcludedTimespanRequestAddExcludedTimespanRequestBody,
 	AddProductImageParams,
 	AddStyleImageParams,
+	AdminDraftGuideListResponse,
+	AdminDraftGuidesParams,
 	AdminEventMemberDto,
 	AdminLinkAccountRequest,
 	AdminOrderDetailDto,
@@ -164,7 +166,6 @@ import type {
 	HarvestFeastCurrentRequest,
 	HoistCommentRequest,
 	HypixelInventoryDto,
-	ImportGuideImageRouteRequest,
 	IncomingAccountDto,
 	IncomingGuildChannelDto,
 	IncomingGuildDto,
@@ -256,6 +257,7 @@ import type {
 	UpdateToolSettingRequest,
 	UpdateUserSettingsDto,
 	UploadCurrentContestsBody,
+	UploadGuideLitematicDto,
 	UploadImageDto,
 	UpsertManagedResourcePackBody,
 	UpsertTebexProductSettingsRequest,
@@ -6435,6 +6437,57 @@ export const getMedalBracketsGraph = async (
 };
 
 /**
+ * Searches unsubmitted draft guides for admin review.
+ * @summary List unsubmitted draft guides
+ */
+export type adminDraftGuidesResponse200 = {
+	data: AdminDraftGuideListResponse;
+	status: 200;
+};
+
+export type adminDraftGuidesResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type adminDraftGuidesResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type adminDraftGuidesResponseSuccess = adminDraftGuidesResponse200 & {
+	headers: Headers;
+};
+export type adminDraftGuidesResponseError = (adminDraftGuidesResponse401 | adminDraftGuidesResponse403) & {
+	headers: Headers;
+};
+
+export type adminDraftGuidesResponse = adminDraftGuidesResponseSuccess | adminDraftGuidesResponseError;
+
+export const getAdminDraftGuidesUrl = (params: AdminDraftGuidesParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/admin/guides/drafts?${stringifiedParams}`
+		: `${ELITE_API_URL}/admin/guides/drafts`;
+};
+
+export const adminDraftGuides = async (params: AdminDraftGuidesParams, options?: RequestInit) => {
+	return customFetch<adminDraftGuidesResponse>(getAdminDraftGuidesUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * Retrieves a list of guides waiting for approval.
  * @summary Get pending guides
  */
@@ -7277,51 +7330,6 @@ export const getUserGuides = async (accountId: string | bigint | number, options
 };
 
 /**
- * Downloads a remote HTTPS image server-side, validates it, and stores responsive variants in Elite object storage.
- * @summary Import guide image from URL
- */
-export type importGuideImageResponse200 = {
-	data: GuideAssetDto;
-	status: 200;
-};
-
-export type importGuideImageResponse400 = {
-	data: ErrorResponse;
-	status: 400;
-};
-
-export type importGuideImageResponse401 = {
-	data: void;
-	status: 401;
-};
-
-export type importGuideImageResponseSuccess = importGuideImageResponse200 & {
-	headers: Headers;
-};
-export type importGuideImageResponseError = (importGuideImageResponse400 | importGuideImageResponse401) & {
-	headers: Headers;
-};
-
-export type importGuideImageResponse = importGuideImageResponseSuccess | importGuideImageResponseError;
-
-export const getImportGuideImageUrl = (guideId: string | number) => {
-	return `${ELITE_API_URL}/guides/${guideId}/images/import`;
-};
-
-export const importGuideImage = async (
-	guideId: string | number,
-	importGuideImageRouteRequest: ImportGuideImageRouteRequest,
-	options?: RequestInit
-) => {
-	return customFetch<importGuideImageResponse>(getImportGuideImageUrl(guideId), {
-		...options,
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...options?.headers },
-		body: JSON.stringify(importGuideImageRouteRequest),
-	});
-};
-
-/**
  * Returns all comments for a specific guide.
  * @summary List comments for a guide
  */
@@ -7765,11 +7773,14 @@ export const getUploadGuideLitematicUrl = (guideId: string | number) => {
 
 export const uploadGuideLitematic = async (
 	guideId: string | number,
-	uploadGuideLitematicBody: Blob,
+	uploadGuideLitematicDto: UploadGuideLitematicDto,
 	options?: RequestInit
 ) => {
 	const formData = new FormData();
-	formData.append('data', uploadGuideLitematicBody);
+	if (uploadGuideLitematicDto.displayName !== undefined && uploadGuideLitematicDto.displayName !== null) {
+		formData.append(`displayName`, uploadGuideLitematicDto.displayName);
+	}
+	formData.append(`file`, uploadGuideLitematicDto.file);
 
 	return customFetch<uploadGuideLitematicResponse>(getUploadGuideLitematicUrl(guideId), {
 		...options,

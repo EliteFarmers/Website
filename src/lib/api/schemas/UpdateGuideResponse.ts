@@ -9,5 +9,6 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  */
 
 export interface UpdateGuideResponse {
+	/** Opaque save token for the new current draft version. */
 	concurrencyVersion: number;
 }

@@ -1,3 +1,4 @@
+import { buildImageSrcset, getLargestImageSourceUrl, GUIDE_IMAGE_SIZES } from '$lib/guides/responsive-images';
 import Image from '@tiptap/extension-image';
 
 export const GuideImage = Image.extend({
@@ -21,7 +22,26 @@ export const GuideImage = Image.extend({
 					}
 				},
 				renderHTML: (attributes) =>
-					attributes.sources ? { 'data-sources': JSON.stringify(attributes.sources) } : {},
+					attributes.sources
+						? {
+								'data-sources': JSON.stringify(attributes.sources),
+								src: getLargestImageSourceUrl(attributes.sources) ?? attributes.src,
+								srcset: buildImageSrcset(attributes.sources),
+								sizes: GUIDE_IMAGE_SIZES,
+								loading: 'lazy',
+								decoding: 'async',
+							}
+						: {},
+			},
+			displaySize: {
+				default: 'natural',
+				parseHTML: (element) => element.getAttribute('data-image-size') || 'natural',
+				renderHTML: (attributes) => ({ 'data-image-size': attributes.displaySize || 'natural' }),
+			},
+			align: {
+				default: 'center',
+				parseHTML: (element) => element.getAttribute('data-image-align') || 'center',
+				renderHTML: (attributes) => ({ 'data-image-align': attributes.align || 'center' }),
 			},
 			width: {
 				default: null,

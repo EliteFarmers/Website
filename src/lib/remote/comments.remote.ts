@@ -1,17 +1,21 @@
 import { command, getRequestEvent, query } from '$app/server';
-import { env } from '$env/dynamic/private';
-import { createComment, deleteComment, editComment, listComments, voteComment } from '$lib/api';
-import { customFetch } from '$lib/api/custom-fetch';
-import type { CreateCommentRequest, EditCommentRequest, VoteCommentRequest } from '$lib/api/schemas';
+import {
+	clearHoistedComment,
+	createComment,
+	deleteComment,
+	editComment,
+	hoistComment,
+	listComments,
+	voteComment,
+} from '$lib/api';
+import type {
+	CreateCommentRequest,
+	EditCommentRequest,
+	HoistCommentRequest,
+	VoteCommentRequest,
+} from '$lib/api/schemas';
 import { error } from '@sveltejs/kit';
 import * as z from 'zod';
-
-type ApiSuccess<T> = { status: 200; data: T } | { status: 204; data: null };
-type ApiError = { status: 400 | 401 | 403 | 404 | 500; data: unknown };
-
-function apiUrl(path: string) {
-	return `${env.ELITE_API_URL}${path}`;
-}
 
 /**
  * Query: Get all comments for a guide
@@ -81,22 +85,17 @@ export const hoistCommentCommand = command(
 			return { error: 'Unauthorized' };
 		}
 
-		const result = await customFetch<ApiSuccess<null> | ApiError>(
-			apiUrl(`/guides/${guideId}/comments/${commentId}/hoist`),
-			{
-				method: 'POST',
-				headers: {
-					'content-type': 'application/json',
-				},
-				body: JSON.stringify({ liftedElementId }),
-			}
-		);
+		const request: HoistCommentRequest = { liftedElementId };
+		const result = await hoistComment(guideId, commentId, request);
 
 		if (result.response.status === 401) {
 			return { error: 'Unauthorized' };
 		}
 		if (result.response.status === 403) {
 			return { error: 'You do not have permission to hoist this comment' };
+		}
+		if (result.response.status === 400) {
+			return { error: 'That guide block no longer exists. Refresh the guide and try again.' };
 		}
 		if (!result.ok) {
 			return { error: 'Failed to hoist comment' };
@@ -120,12 +119,7 @@ export const clearHoistedCommentCommand = command(
 			return { error: 'Unauthorized' };
 		}
 
-		const result = await customFetch<ApiSuccess<null> | ApiError>(
-			apiUrl(`/guides/${guideId}/comments/${commentId}/hoist`),
-			{
-				method: 'DELETE',
-			}
-		);
+		const result = await clearHoistedComment(guideId, commentId);
 
 		if (result.response.status === 401) {
 			return { error: 'Unauthorized' };

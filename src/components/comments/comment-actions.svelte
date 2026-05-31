@@ -1,18 +1,18 @@
 <script lang="ts">
+	import ContentReportDialog from '$comp/reports/content-report-dialog.svelte';
 	import type { CommentDto } from '$lib/api';
 	import type { CommentWithGuideAuthor } from '$lib/guides/types';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { approveCommentCommand } from '$lib/remote/admin-guides.remote';
 	import { Button } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
-	import Flag from '@lucide/svelte/icons/flag';
 	import EllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
+	import Flag from '@lucide/svelte/icons/flag';
 	import MessageSquare from '@lucide/svelte/icons/message-square';
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import Pin from '@lucide/svelte/icons/pin';
 	import PinOff from '@lucide/svelte/icons/pin-off';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
-	import ContentReportDialog from '$comp/reports/content-report-dialog.svelte';
 	import HoistCommentDialog, { type HoistTarget } from './hoist-comment-dialog.svelte';
 
 	interface Props {
@@ -38,7 +38,12 @@
 	let typedComment = $derived(comment as CommentWithGuideAuthor);
 </script>
 
-<div class="flex flex-row items-center gap-1">
+<div class="flex flex-row items-center gap-2">
+	{#if comment.liftedElementId}
+		<a href="#{comment.liftedElementId}">
+			<Pin class="size-4 rotate-45 fill-current" />
+		</a>
+	{/if}
 	{#if hasMenu}
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
@@ -118,7 +123,7 @@
 
 <ContentReportDialog
 	open={showReportDialog}
-	targetType="Comment"
+	targetType="comment"
 	targetId={comment.id}
 	onOpenChange={(open) => (showReportDialog = open)}
 />
