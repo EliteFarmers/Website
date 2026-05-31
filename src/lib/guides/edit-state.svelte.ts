@@ -14,6 +14,7 @@ import {
 	updateGuideCommand,
 } from '$lib/remote/guides.remote';
 import { getContext, setContext } from 'svelte';
+import { SvelteDate } from 'svelte/reactivity';
 
 export type EditableGuideAuthor = {
 	id: string;
@@ -291,7 +292,7 @@ export class GuideEditState {
 			this.lastSavedSnapshot = snapshotToSave;
 
 			this.saveStatus = 'saved';
-			this.lastSaveTime = new Date();
+			this.lastSaveTime = new SvelteDate();
 			notifySuccess('Guide saved');
 
 			setTimeout(() => {
@@ -510,7 +511,7 @@ export class GuideEditState {
 			this.loadEditorContent(version.content);
 			this.concurrencyVersion = result.version ?? this.concurrencyVersion;
 			this.lastSavedSnapshot = this.getSaveSnapshot();
-			this.lastSaveTime = new Date();
+			this.lastSaveTime = new SvelteDate();
 			notifySuccess('Guide revision restored');
 			return true;
 		} catch (err) {

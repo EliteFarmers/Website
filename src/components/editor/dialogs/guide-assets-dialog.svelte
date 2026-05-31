@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { GuideAssetDto } from '$lib/guides/types';
 	import { tiptapContentReferencesAsset } from '$lib/guides/assets';
 	import { getLargestImageSourceUrl } from '$lib/guides/responsive-images';
+	import type { GuideAssetDto } from '$lib/guides/types';
 	import { isImageAsset, isLitematicAsset } from '$lib/guides/types';
 	import { deleteGuideAssetCommand, uploadGuideImageForm, uploadGuideLitematicForm } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
@@ -39,17 +39,13 @@
 	let isWorking = $state(false);
 	let errorMessage = $state('');
 	let uploadStatus = $state('');
-	let localAssets = $state<GuideAssetDto[]>([]);
+	let localAssets = $derived(assets ?? []);
 	let imageFileInput = $state<HTMLInputElement | null>(null);
 	let urlImageFileInput = $state<HTMLInputElement | null>(null);
 	let litematicFileInput = $state<HTMLInputElement | null>(null);
 	const imageUploadForm = uploadGuideImageForm.for('direct-image');
 	const urlImageUploadForm = uploadGuideImageForm.for('url-image');
 	const supportedImageTypes = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif']);
-
-	$effect(() => {
-		localAssets = assets ?? [];
-	});
 
 	let imageAssets = $derived(localAssets.filter(isImageAsset));
 	let litematicAssets = $derived(localAssets.filter(isLitematicAsset));

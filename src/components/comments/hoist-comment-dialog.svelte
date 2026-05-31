@@ -21,11 +21,7 @@
 
 	let { open, targets, initialTarget, onOpenChange, onSubmit }: Props = $props();
 
-	let selectedTarget = $state('');
-
-	$effect(() => {
-		selectedTarget = initialTarget || targets[0]?.id || '';
-	});
+	let selectedTarget = $derived(initialTarget || targets[0]?.id || '');
 
 	function submit() {
 		if (!selectedTarget) return;
