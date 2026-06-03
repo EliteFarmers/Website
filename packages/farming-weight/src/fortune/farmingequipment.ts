@@ -188,7 +188,7 @@ export class FarmingEquipment extends UpgradeableBase {
 			}
 		}
 
-		// Lotus Piece Specific
+		// Peony Piece Specific
 		if (this.info.family === 'LOTUS') {
 			// Green thumb from lore as a fallback
 			if (!this.options?.uniqueVisitors) {

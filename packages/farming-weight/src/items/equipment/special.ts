@@ -29,7 +29,7 @@ export class ZorrosCape extends BaseItem {
 	override upgrade = {
 		id: 'LOTUS_CLOAK',
 		reason: UpgradeReason.Situational,
-		why: "A maxed Lotus Cloak provides slightly more fortune outside of a Jacob's contest, but significantly less fortune during one compared to a maxed Zorro's Cape.",
+		why: "A maxed Peony Cloak provides slightly more fortune outside of a Jacob's contest, but significantly less fortune during one compared to a maxed Zorro's Cape.",
 	};
 }
 

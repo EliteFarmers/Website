@@ -80,7 +80,7 @@ const lotusNecklace = {
 	count: 1,
 	skyblockId: 'LOTUS_NECKLACE',
 	uuid: '2c0af2b1-234d-4a7d-8560-10a2b0eb8da4',
-	name: '§5Rooted Lotus Necklace',
+	name: '§5Rooted Peony Necklace',
 	lore: [
 		'§7Health: §a+21 §9(+11)',
 		'§7Farming Fortune: §a+41 §9(+15)',
@@ -109,7 +109,7 @@ const lotusNecklace = {
 	attributes: { modifier: 'rooted', timestamp: '1676441040000', rarity_upgrades: '1' },
 };
 
-test('Lotus Necklace Test', () => {
+test('Peony Necklace Test', () => {
 	const necklace = new FarmingEquipment(lotusNecklace, {
 		uniqueVisitors: 84,
 	});
@@ -132,10 +132,10 @@ test('equipment stat breakdown uses item contribution sources', () => {
 	});
 
 	const breakdown = necklace.getStatBreakdown(Stat.FarmingFortune);
-	expect(breakdown['§5Rooted Lotus Necklace']?.value).toBe(5);
-	expect(breakdown['§5Rooted Lotus Necklace (Rooted)']?.value).toBe(15);
+	expect(breakdown['§5Rooted Peony Necklace']?.value).toBe(5);
+	expect(breakdown['§5Rooted Peony Necklace (Rooted)']?.value).toBe(15);
 	expect(breakdown['Enchant: Green Thumb']?.value).toBe(21);
-	expect(breakdown['§5Rooted Lotus Necklace (Salesperson)']?.value).toBe(15);
+	expect(breakdown['§5Rooted Peony Necklace (Salesperson)']?.value).toBe(15);
 });
 
 const pestVest = {

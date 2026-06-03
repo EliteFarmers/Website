@@ -14,6 +14,7 @@ import type { Effect, EffectEnvironment } from '../effects/types.js';
 import {
 	FARMING_PET_ITEMS,
 	FARMING_PETS,
+	type FarmingPetAbility,
 	type FarmingPetInfo,
 	type FarmingPetItemInfo,
 	FarmingPetStatType,
@@ -39,6 +40,8 @@ function getPetItemId(item: FarmingPetItemInfo): string | undefined {
 function improvesRequestedStat(upgrade: FortuneUpgrade, stats: readonly Stat[]): boolean {
 	return stats.some((stat) => (upgrade.stats?.[stat] ?? 0) > 0);
 }
+
+type ComputedPetAbilityStats = ReturnType<FarmingPetAbility['computed']>;
 
 export class FarmingPet {
 	public declare readonly pet: FarmingPetType;
@@ -84,7 +87,8 @@ export class FarmingPet {
 
 	private computeFortune(
 		stat: Stat = Stat.FarmingFortune,
-		player?: FarmingPlayer
+		player?: FarmingPlayer,
+		abilityStatsCache?: Map<FarmingPetAbility, ComputedPetAbilityStats>
 	): { fortune: number; breakdown: Record<string, number> } {
 		let fortune = 0;
 		const breakdown: Record<string, number> = {};
@@ -123,13 +127,18 @@ export class FarmingPet {
 			const hyperLevel = getChipLevel(getChipInputLevel(this.options?.chips, 'hypercharge'));
 			const perLevel = getChipTempMultiplierPerLevel('hypercharge', hyperLevel);
 			const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
+			const abilityContext = { player, options: this.options ?? {} };
 
 			for (const ability of this.info.abilities) {
-				if (ability.exists && !ability.exists({ player, options: this.options ?? {} }, this)) {
+				if (ability.exists && !ability.exists(abilityContext, this)) {
 					continue;
 				}
 
-				const stats = ability.computed({ player, options: this.options ?? {} }, this);
+				let stats = abilityStatsCache?.get(ability);
+				if (!stats) {
+					stats = ability.computed(abilityContext, this);
+					abilityStatsCache?.set(ability, stats);
+				}
 				const fortuneStat = stats[stat];
 
 				let value = getStatValue(fortuneStat, this.options);
@@ -187,9 +196,10 @@ export class FarmingPet {
 	getEffects(_env: EffectEnvironment, player?: FarmingPlayer): Effect[] {
 		const sourceName = this.info.name ?? this.type;
 		const stats: Partial<Record<Stat, number>> = {};
+		const abilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
 
 		for (const stat of Object.values(Stat)) {
-			const { fortune } = this.computeFortune(stat, player);
+			const { fortune } = this.computeFortune(stat, player, abilityStatsCache);
 			if (fortune) stats[stat] = fortune;
 		}
 
@@ -199,9 +209,10 @@ export class FarmingPet {
 	getFullBreakdown(player?: FarmingPlayer): StatBreakdown {
 		const full: StatBreakdown = {};
 		let baseFortune = 0;
+		const abilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
 
 		for (const stat of Object.values(Stat)) {
-			const { fortune, breakdown } = this.computeFortune(stat, player);
+			const { fortune, breakdown } = this.computeFortune(stat, player, abilityStatsCache);
 			if (!fortune) continue;
 
 			// Track base farming fortune for late context
@@ -323,10 +334,14 @@ export class FarmingPet {
 		return new FarmingPet({ ...this.pet, ...changes }, this.options);
 	}
 
-	private getStatTotals(stats: readonly Stat[], player?: FarmingPlayer): Partial<Record<Stat, number>> {
+	private getStatTotals(
+		stats: readonly Stat[],
+		player?: FarmingPlayer,
+		abilityStatsCache?: Map<FarmingPetAbility, ComputedPetAbilityStats>
+	): Partial<Record<Stat, number>> {
 		const totals: Partial<Record<Stat, number>> = {};
 		for (const stat of stats) {
-			const value = this.getFortune(stat, player);
+			const value = this.computeFortune(stat, player, abilityStatsCache).fortune;
 			if (value !== 0) totals[stat] = value;
 		}
 		return totals;
@@ -338,10 +353,12 @@ export class FarmingPet {
 		player?: FarmingPlayer
 	): FortuneSourceProgress[] {
 		const progress = new Map<string, FortuneSourceProgress>();
+		const currentAbilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
+		const maxAbilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
 
 		for (const stat of stats) {
-			const currentBreakdown = this.computeFortune(stat, player).breakdown;
-			const maxBreakdown = maxPet.computeFortune(stat, player).breakdown;
+			const currentBreakdown = this.computeFortune(stat, player, currentAbilityStatsCache).breakdown;
+			const maxBreakdown = maxPet.computeFortune(stat, player, maxAbilityStatsCache).breakdown;
 			const sourceNames = new Set([...Object.keys(currentBreakdown), ...Object.keys(maxBreakdown)]);
 
 			for (const name of sourceNames) {
@@ -381,8 +398,12 @@ export class FarmingPet {
 
 	private getDeltaStats(next: FarmingPet, player: FarmingPlayer | undefined): Partial<Record<Stat, number>> {
 		const deltaStats: Partial<Record<Stat, number>> = {};
+		const currentAbilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
+		const nextAbilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
 		for (const stat of Object.values(Stat)) {
-			const delta = next.getFortune(stat, player) - this.getFortune(stat, player);
+			const delta =
+				next.computeFortune(stat, player, nextAbilityStatsCache).fortune -
+				this.computeFortune(stat, player, currentAbilityStatsCache).fortune;
 			if (delta !== 0) deltaStats[stat] = +delta.toFixed(4);
 		}
 		return deltaStats;
@@ -405,9 +426,14 @@ export class FarmingPet {
 
 	getProgress(stats?: Stat[], player?: FarmingPlayer): FortuneSourceProgress[] {
 		const queryStats = stats && stats.length > 0 ? stats : [Stat.FarmingFortune];
-		const currentStats = this.getStatTotals(queryStats, player);
+		const currentAbilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
+		const currentStats = this.getStatTotals(queryStats, player, currentAbilityStatsCache);
 		const maxPet = this.withChanges({ exp: this.getXpForLevel(this.info.maxLevel ?? 100) });
-		const maxStats = maxPet.getStatTotals(queryStats, player);
+		const maxStats = maxPet.getStatTotals(
+			queryStats,
+			player,
+			new Map<FarmingPetAbility, ComputedPetAbilityStats>()
+		);
 
 		const perStat: NonNullable<FortuneSourceProgress['stats']> = {};
 		for (const stat of queryStats) {
@@ -421,7 +447,9 @@ export class FarmingPet {
 			};
 		}
 
-		const current = currentStats[Stat.FarmingFortune] ?? this.getFortune(Stat.FarmingFortune, player);
+		const current =
+			currentStats[Stat.FarmingFortune] ??
+			this.computeFortune(Stat.FarmingFortune, player, currentAbilityStatsCache).fortune;
 		const max = Math.max(maxStats[Stat.FarmingFortune] ?? 0, current);
 		const upgrades = this.getUpgrades({ stats: queryStats }, player);
 		const breakdownProgress = this.getBreakdownProgress(maxPet, queryStats, player);

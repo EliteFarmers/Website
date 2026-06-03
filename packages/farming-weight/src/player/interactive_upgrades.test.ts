@@ -726,13 +726,13 @@ test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () 
 	expect(hasUniqueGem).toBe(true);
 });
 
-test('Interactive Upgrade: Lotus Necklace Green Thumb Chain', () => {
+test('Interactive Upgrade: Peony Necklace Green Thumb Chain', () => {
 	const squeakyLotusNecklace: EliteItemDto = {
 		id: 397,
 		count: 1,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: '1ab0455d-10a4-4a4e-b8b8-a4b76b720e02',
-		name: '§9Squeaky Lotus Necklace',
+		name: '§9Squeaky Peony Necklace',
 		lore: [
 			'§9§lRARE NECKLACE',
 			'',
@@ -809,7 +809,7 @@ test('Equipment in ArmorSet Preserved After Clone', () => {
 		count: 1,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: 'armorset-test-uuid',
-		name: '§9Lotus Necklace',
+		name: '§9Peony Necklace',
 		lore: [],
 		enchantments: {},
 		attributes: { modifier: 'squeaky' },
@@ -967,7 +967,7 @@ test('Enchant Chain Works with Zero Fortune Increase', () => {
 		count: 1,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: 'zero-fortune-test-uuid',
-		name: '§9Lotus Necklace',
+		name: '§9Peony Necklace',
 		lore: [],
 		enchantments: {},
 		attributes: { modifier: 'squeaky' },

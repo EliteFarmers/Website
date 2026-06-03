@@ -4,10 +4,10 @@ import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforge-types.js';
 import { Stat } from '../constants/stats.js';
 import {
-	type FortuneUpgrade,
-	type FortuneUpgradeGroupMeta,
-	UpgradeAction,
-	UpgradeCategory,
+    type FortuneUpgrade,
+    type FortuneUpgradeGroupMeta,
+    UpgradeAction,
+    UpgradeCategory,
 } from '../constants/upgrades.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import type { EliteItemDto } from '../fortune/item.js';
@@ -561,7 +561,7 @@ test('getUpgradeRateImpact applies starting lotus equipment purchases', () => {
 		farmingLevel: 20,
 	});
 
-	const upgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Lotus Cloak');
+	const upgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Peony Cloak');
 
 	expect(upgrade).toBeDefined();
 	expect(upgrade?.increase).toBeGreaterThan(0);
@@ -590,7 +590,7 @@ test('getUpgradeRateImpact keeps Lotus to Blossom salesperson piece bonus positi
 				count: 1,
 				skyblockId: 'LOTUS_NECKLACE',
 				uuid: 'lotus-necklace-piece-bonus',
-				name: 'Rooted Lotus Necklace',
+				name: 'Rooted Peony Necklace',
 				lore: [
 					'§7Farming Fortune: §a+40.5 §9(+15)',
 					'',

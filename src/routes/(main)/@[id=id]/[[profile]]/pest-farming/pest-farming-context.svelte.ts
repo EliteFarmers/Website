@@ -513,6 +513,9 @@ export class PestFarmingPageContext {
 		const uuid = progress.item?.uuid;
 		if (!uuid) return progress.upgrades ?? [];
 
+		const tool = this.pestPlayer.crop.tools.find((item) => item.item.uuid === uuid);
+		if (tool) return tool.getUpgrades({ stats: this.cropContextStats });
+
 		const vacuum = this.pestPlayer.vacuums.find((item) => item.item.uuid === uuid);
 		if (vacuum) return vacuum.getUpgrades({ stats: VACUUM_STATS });
 

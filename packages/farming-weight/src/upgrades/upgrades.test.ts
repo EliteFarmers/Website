@@ -184,7 +184,7 @@ const lotusNecklace = {
 	count: 1,
 	skyblockId: 'LOTUS_NECKLACE',
 	uuid: '2c0af2b1-234d-4a7d-8560-10a2b0eb8da4',
-	name: '§5Rooted Lotus Necklace',
+	name: '§5Rooted Peony Necklace',
 	lore: ['§5§l§ka§r §5§l§5§lEPIC NECKLACE §5§l§ka'],
 	enchantments: { green_thumb: 4 },
 	attributes: {
@@ -292,7 +292,7 @@ test('Lotus to Blossom Necklace upgrade shows correct fortune delta', () => {
 		damage: 3,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
-		name: '§5Rooted Lotus Necklace',
+		name: '§5Rooted Peony Necklace',
 		lore: ['§5§l§ka§r §5§lEPIC NECKLACE §5§l§ka'],
 		enchantments: { green_thumb: 5 },
 		attributes: {
@@ -329,7 +329,7 @@ test('Lotus to Blossom Necklace upgrade includes piece bonus delta', () => {
 		damage: 3,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
-		name: '§5Rooted Lotus Necklace',
+		name: '§5Rooted Peony Necklace',
 		lore: [
 			'§7Farming Fortune: §a+40.5 §9(+15)',
 			'',

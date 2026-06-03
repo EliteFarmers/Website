@@ -44,7 +44,7 @@ test('rate calculation state key changes when active equipment is swapped', () =
 	const player = new FarmingPlayer({
 		equipment: [
 			item('BLOSSOM_BELT', 'blossom-belt', 'Blossom Belt', Rarity.Legendary),
-			item('LOTUS_BELT', 'lotus-belt', 'Lotus Belt', Rarity.Legendary),
+			item('LOTUS_BELT', 'lotus-belt', 'Peony Belt', Rarity.Legendary),
 		],
 	});
 	const replacement = player.equipment.find((piece) => piece.item.uuid === 'lotus-belt');
