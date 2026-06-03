@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -10,15 +11,35 @@
 		config: Record<string, unknown>;
 		onCreated?: (el: HTMLDivElement | null) => void;
 		recreateOnRouteChange?: boolean;
+		showWhenAuthenticated?: boolean;
+		showWhenUnauthenticated?: boolean;
 	}
 
-	let { recreateOnRouteChange = true, ...rest }: Props = $props();
+	let {
+		recreateOnRouteChange = true,
+		showWhenAuthenticated = true,
+		showWhenUnauthenticated = true,
+		...rest
+	}: Props = $props();
 
-	let displayAds = $state(true);
+	let displayAds = $derived.by(() => {
+		if (!browser) {
+			return false;
+		}
+		const session = page.data.session;
+		const isAdFree = session?.flags?.includes('AD_FREE') || session?.perms?.viewAdminPages;
+
+		if (page.data.ads === false || isAdFree) {
+			return false;
+		}
+
+		return session ? showWhenAuthenticated : showWhenUnauthenticated;
+	});
 
 	afterNavigate(() => {
-		const hasAdFreeFlag = page.data.session?.flags.includes('AD_FREE');
-		displayAds = hasAdFreeFlag ? false : !page.route.id?.includes('/(auth)');
+		if (page.data.ads === false) {
+			displayAds = false;
+		}
 	});
 </script>
 

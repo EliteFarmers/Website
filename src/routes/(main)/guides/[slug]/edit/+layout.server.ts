@@ -6,5 +6,7 @@ export const load: LayoutServerLoad = async ({ locals, params }) => {
 		redirect(307, `/login?redirect=/guides/${params.slug}/edit`);
 	}
 
-	return {};
+	return {
+		ads: false,
+	};
 };

@@ -7,6 +7,7 @@ export const load = (async ({ locals }) => {
 	const badges = locals.cache?.badges ?? [];
 
 	return {
+		ads: false,
 		products,
 		styles: locals.cache?.styles ?? [],
 		categories,
