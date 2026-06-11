@@ -81,8 +81,9 @@ export const getColumns = (
 			accessorKey: 'costper',
 			accessorFn: (row) => {
 				if (costFn) {
-					const increase = (costPerValueFn?.(row) ?? row.increase) || row.max || 0;
-					return increase > 0 ? Math.round(costFn(row, itemsLookup) / increase) : 0;
+					const value = costPerValueFn?.(row);
+					const increase = (value ?? row.increase) || row.max || 0;
+					return increase > 0 ? Math.round(costFn(row, itemsLookup) / increase) : Number.MAX_SAFE_INTEGER;
 				}
 				return 0;
 			},

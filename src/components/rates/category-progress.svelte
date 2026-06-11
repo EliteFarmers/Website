@@ -51,7 +51,7 @@
 			{/if}
 		</div>
 		<div class="grid w-full grid-cols-1 gap-1.5 md:grid-cols-2 lg:grid-cols-3">
-			{#each visibleProgress as p, i (p.name + p.current + (p.item?.uuid ?? ''))}
+			{#each visibleProgress as p, i (p.key ?? p.name + p.current + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item || p.upgrades?.length}
 					<button
 						class="bg-card hover:bg-card/40 w-full cursor-pointer rounded-md border px-1"

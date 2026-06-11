@@ -1,10 +1,12 @@
 import { normalizeAttributes } from '../constants/attributes.js';
 import {
 	getChipInputLevel,
+	getChipInputRarity,
 	getChipLevel,
 	getChipTempMultiplierPerLevel,
 	normalizeChipId,
 	normalizeChipLevels,
+	normalizeChipRarities,
 } from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
@@ -13,8 +15,10 @@ import { getContributoryStats, Stat, type StatBreakdown } from '../constants/sta
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import {
 	type EffectSummary,
+	type FortuneSourceType,
 	type FortuneUpgrade,
 	getQueryStats,
+	includesFortuneSourceType,
 	type StatQueryOptions,
 	UpgradeAction,
 	UpgradeCategory,
@@ -56,6 +60,7 @@ export function createFarmingPlayer(options: PlayerOptions) {
 export interface PlayerStatQuery {
 	stats: Stat[];
 	crop?: Crop;
+	sourceTypes?: StatQueryOptions['sourceTypes'];
 }
 
 export interface PlayerStatView {
@@ -135,6 +140,7 @@ export class FarmingPlayer {
 		this.activeAccessories = [];
 		this.options.attributes = normalizeAttributes(this.options.attributes);
 		this.options.chips = normalizeChipLevels(this.options.chips);
+		this.options.chipRarities = normalizeChipRarities(this.options.chipRarities);
 
 		this.populatePets();
 		this.populateTools();
@@ -284,20 +290,29 @@ export class FarmingPlayer {
 		this.permFortune = this.getGeneralFortune();
 	}
 
-	getProgress(stats?: Stat[]) {
-		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, stats);
+	getProgress(options?: Stat[] | StatQueryOptions) {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, {
+			...query,
+			defaultSourceType: 'general',
+		});
 	}
 
-	getPetProgress(stats?: Stat[]) {
+	getPetProgress(options?: Stat[] | StatQueryOptions) {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		if (!includesFortuneSourceType(query, 'pet')) return [];
+		const stats = query?.stats ?? (query?.stat ? [query.stat] : undefined);
 		return this.pets.flatMap((pet) => pet.getProgress(stats, this));
 	}
 
 	getUpgrades(options?: StatQueryOptions) {
 		const hasExplicitStats = (options?.stats?.length ?? 0) > 0 || options?.stat !== undefined;
 		const stats = hasExplicitStats ? getQueryStats(options) : undefined;
-		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, stats).flatMap(
-			(source) => source.upgrades ?? []
-		);
+		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, {
+			stats,
+			sourceTypes: options?.sourceTypes,
+			defaultSourceType: 'general',
+		}).flatMap((source) => source.upgrades ?? []);
 
 		const armorSetUpgrades = this.armorSet.getUpgrades(options);
 		if (armorSetUpgrades.length > 0) {
@@ -306,7 +321,7 @@ export class FarmingPlayer {
 
 		// For non-FarmingFortune stats (e.g. Overbloom), tool upgrades aren't tied to a single
 		// crop and won't be surfaced by getCropUpgrades, so include them here.
-		if (stats?.some((stat) => stat !== Stat.FarmingFortune)) {
+		if (includesFortuneSourceType(options, 'farmingTool') && stats?.some((stat) => stat !== Stat.FarmingFortune)) {
 			const tools =
 				this.options.selectedCrop !== undefined
 					? [this.getSelectedCropTool(this.options.selectedCrop)].filter((tool) => tool !== undefined)
@@ -334,7 +349,7 @@ export class FarmingPlayer {
 
 		const env = this.buildEnvironment(query.crop);
 		const effects = effectsToSummaries(this.collectEffects(env), stats);
-		const upgrades = this.getUpgrades({ stats });
+		const upgrades = this.getUpgrades({ stats, sourceTypes: query.sourceTypes });
 
 		return {
 			totals,
@@ -344,16 +359,18 @@ export class FarmingPlayer {
 		};
 	}
 
-	getCropUpgrades(crop?: Crop, tool?: FarmingTool) {
+	getCropUpgrades(crop?: Crop, tool?: FarmingTool, options?: StatQueryOptions) {
 		const upgrades = [] as FortuneUpgrade[];
 		if (!crop) return upgrades;
 
-		const cropUpgrades = this.getCropProgress(crop);
+		const cropUpgrades = this.getCropProgress(crop, options);
 		for (const source of cropUpgrades) {
 			if (source.upgrades) {
 				upgrades.push(...source.upgrades);
 			}
 		}
+
+		if (!includesFortuneSourceType(options, 'farmingTool')) return upgrades;
 
 		const cropTool = tool ?? this.getSelectedCropTool(crop);
 		if (cropTool) {
@@ -570,12 +587,14 @@ export class FarmingPlayer {
 		let sum = 0;
 		const breakdown: StatBreakdown = {};
 
-		// Hypercharge multiplier scales by chip rarity tiers:
-		// Rare (<=10): 1 + 0.03 * level
-		// Epic (<=15): 1 + 0.03 * level
-		// Legendary (>15): 2x boost to temporary fortune sources
+		// Hypercharge multiplier scales by the assumed chip rarity.
 		const hyperLevel = getChipLevel(getChipInputLevel(this.options.chips, 'hypercharge')) ?? 0;
-		const perLevel = getChipTempMultiplierPerLevel('hypercharge', hyperLevel) ?? 0;
+		const perLevel =
+			getChipTempMultiplierPerLevel(
+				'hypercharge',
+				hyperLevel,
+				getChipInputRarity(this.options.chipRarities, 'hypercharge')
+			) ?? 0;
 		const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
 
 		if (!this.options.temporaryFortune) {
@@ -620,12 +639,13 @@ export class FarmingPlayer {
 		};
 	}
 
-	getCropProgress(crop: Crop, stats?: Stat[]) {
+	getCropProgress(crop: Crop, options?: Stat[] | StatQueryOptions) {
+		const query = Array.isArray(options) ? { stats: options } : options;
 		return getSourceProgress<{ crop: Crop; player: FarmingPlayer }>(
 			{ crop, player: this },
 			CROP_FORTUNE_SOURCES,
 			false,
-			stats
+			query
 		);
 	}
 
@@ -646,6 +666,7 @@ export class FarmingPlayer {
 			mooshroom: this.selectedPet?.type === FarmingPets.MooshroomCow,
 			maxTool: tool?.getCurrentLevelProgress().maxed ?? false,
 			chips: this.options.chips,
+			chipRarities: this.options.chipRarities,
 			pet: this.selectedPet,
 			effects,
 			env,
@@ -983,6 +1004,15 @@ export class FarmingPlayer {
 			}
 			this.permFortune = this.getGeneralFortune();
 			this.tempFortune = this.getTempFortune();
+		} else if (type === 'chip_rarity' && id && value) {
+			this.options.chipRarities ??= {};
+			const normalizedId = normalizeChipId(id);
+			if (normalizedId) {
+				this.options.chipRarities[normalizedId] = String(value);
+			}
+			this.options.chipRarities = normalizeChipRarities(this.options.chipRarities);
+			this.permFortune = this.getGeneralFortune();
+			this.tempFortune = this.getTempFortune();
 		} else if (type === 'crop_upgrade' && key && value) {
 			this.options.cropUpgrades ??= {};
 			// @ts-ignore
@@ -1161,6 +1191,7 @@ export class FarmingPlayer {
 			maxDepth?: number;
 			crop?: Crop;
 			stats?: Stat[];
+			sourceTypes?: FortuneSourceType[];
 			includeAllTierUpgradeChildren?: boolean;
 		}
 	): UpgradeTreeNode {
@@ -1181,6 +1212,7 @@ export class FarmingPlayer {
 			visited,
 			usedConflictKeys,
 			stats,
+			options?.sourceTypes,
 			includeAllTierUpgradeChildren
 		);
 	}
@@ -1193,6 +1225,7 @@ export class FarmingPlayer {
 		visited: Set<string>,
 		usedConflictKeys: Set<string>,
 		stats: Stat[],
+		sourceTypes: FortuneSourceType[] | undefined,
 		includeAllTierUpgradeChildren: boolean
 	): UpgradeTreeNode {
 		// Create unique key for this upgrade to detect cycles
@@ -1273,7 +1306,7 @@ export class FarmingPlayer {
 				this.accessories.find((a) => a.item.uuid === upgrade.meta?.itemUuid);
 
 			if (originalItem && 'getUpgrades' in originalItem && typeof originalItem.getUpgrades === 'function') {
-				for (const originalUpgrade of originalItem.getUpgrades() as FortuneUpgrade[]) {
+				for (const originalUpgrade of originalItem.getUpgrades({ sourceTypes }) as FortuneUpgrade[]) {
 					if (originalUpgrade.conflictKey) {
 						childConflictKeys.add(originalUpgrade.conflictKey);
 					}
@@ -1283,7 +1316,7 @@ export class FarmingPlayer {
 
 		// Find follow-up upgrades for the same target, excluding those with already-used conflict keys
 		const primaryStat = stats[0] ?? Stat.FarmingFortune;
-		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop, primaryStat).filter(
+		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop, primaryStat, sourceTypes).filter(
 			(u) => !u.conflictKey || !childConflictKeys.has(u.conflictKey)
 		);
 
@@ -1297,6 +1330,7 @@ export class FarmingPlayer {
 				new Set(visited),
 				childConflictKeys,
 				stats,
+				sourceTypes,
 				includeAllTierUpgradeChildren
 			);
 			node.children.push(childNode);
@@ -1359,7 +1393,8 @@ export class FarmingPlayer {
 		player: FarmingPlayer,
 		appliedUpgrade: FortuneUpgrade,
 		crop: Crop | undefined,
-		primaryStat: Stat
+		primaryStat: Stat,
+		sourceTypes?: FortuneSourceType[]
 	): FortuneUpgrade[] {
 		const meta = appliedUpgrade.meta;
 		if (!meta) return [];
@@ -1377,7 +1412,7 @@ export class FarmingPlayer {
 				player.accessories.find((a) => a.item.skyblockId === newItemId);
 
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
-				upgrades.push(...(target.getUpgrades({ stat: primaryStat }) as FortuneUpgrade[]));
+				upgrades.push(...(target.getUpgrades({ stat: primaryStat, sourceTypes }) as FortuneUpgrade[]));
 			}
 		} else if (itemUuid) {
 			// Item-specific upgrade - find upgrades for the same item
@@ -1391,8 +1426,8 @@ export class FarmingPlayer {
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
 				const itemUpgrades =
 					target instanceof FarmingPet
-						? target.getUpgrades({ stat: primaryStat }, player)
-						: (target.getUpgrades({ stat: primaryStat }) as FortuneUpgrade[]);
+						? target.getUpgrades({ stat: primaryStat, sourceTypes }, player)
+						: (target.getUpgrades({ stat: primaryStat, sourceTypes }) as FortuneUpgrade[]);
 				// Filter to only include upgrades of the same type (enchant chains, tier upgrades, etc.)
 				// For gem upgrades, also match on slot to only show follow-ups for that specific slot
 				for (const u of itemUpgrades) {
@@ -1407,7 +1442,7 @@ export class FarmingPlayer {
 			}
 		} else if (meta.type === 'skill' || meta.type === 'plot' || meta.type === 'attribute') {
 			// General upgrades - find the next level of the same upgrade type
-			const generalUpgrades = player.getUpgrades({ stat: primaryStat });
+			const generalUpgrades = player.getUpgrades({ stat: primaryStat, sourceTypes });
 			for (const u of generalUpgrades) {
 				if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
 					upgrades.push(u);
@@ -1415,7 +1450,7 @@ export class FarmingPlayer {
 			}
 		} else if (meta.type === 'crop_upgrade' && crop) {
 			// Crop-specific upgrades
-			const cropUpgrades = player.getCropUpgrades(crop);
+			const cropUpgrades = player.getCropUpgrades(crop, undefined, { stat: primaryStat, sourceTypes });
 			for (const u of cropUpgrades) {
 				if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
 					upgrades.push(u);

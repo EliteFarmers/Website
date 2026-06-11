@@ -1,34 +1,30 @@
-import { getChipInputLevel, getChipLevel, getChipRarity, normalizeChipLevels } from '../constants/chips.js';
-import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
+import {
+    getChipInputLevel,
+    getChipInputRarity,
+    getChipLevel,
+    getChipRarity,
+    normalizeChipLevels,
+    normalizeChipRarities,
+} from '../constants/chips.js';
+import { Crop, CROP_INFO, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { Rarity, REFORGES } from '../constants/reforges.js';
 import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO, type SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
 import { produceAddedDrops, resolveDropEffects } from '../effects/resolver.js';
 import type {
-	AppliedEffect,
-	DropContext,
-	DropTag,
-	Effect,
-	EffectEnvironment,
-	EffectsBreakdown,
+    AppliedEffect,
+    DropContext,
+    DropTag,
+    Effect,
+    EffectEnvironment,
+    EffectsBreakdown,
 } from '../effects/types.js';
 import type { FarmingPet } from '../fortune/farmingpet.js';
 import { BEST_FARMING_TOOLS } from '../items/tools.js';
 
 /**
- * New effect-driven detailed-drops calculator.
- *
- * Replaces the legacy `ratesModifier` plumbing for shards/chips/reforges and
- * the `overbloom` / `overbloomBreakdown` inputs with declarative `Effect[]`
- * resolution. Built-in crop drops still flow through the same baseline math
- * (drops, NPC coins, special-crop pre-bonus) - the difference is everything
- * scoped: `add-rare-pct` (Overbloom), `mul-rare` (Cropeetle, armor sets),
- * `mul-drop` (Deep Fried), and `add-drop` (Warty Bug Shard) are all resolved
- * through the effect pipeline with proper per-drop scoping.
- *
- * Bountiful and Mooshroom remain bespoke - they're coin-side computations,
- * not scoped multipliers, and the architecture plan keeps them out of v1.
+ * Effect-driven detailed-drops calculator options
  */
 export interface CalculateDetailedDropsFromEffectsOptions {
 	crop: Crop;
@@ -41,6 +37,7 @@ export interface CalculateDetailedDropsFromEffectsOptions {
 	maxTool?: boolean;
 	pet?: FarmingPet;
 	chips?: Record<string, number | null | undefined>;
+	chipRarities?: Record<string, string | Rarity | null | undefined>;
 	toolReforge?: string;
 	/** Effects collected via `FarmingPlayer.collectEffects(env)`. */
 	effects: readonly Effect[];
@@ -50,13 +47,6 @@ export interface CalculateDetailedDropsFromEffectsOptions {
 
 /**
  * Output of {@link calculateDetailedDropsFromEffects}.
- *
- * Compared to the legacy `DetailedDropsResult`, the `rareItemBonus`/
- * `rareItemBonusBreakdown` pair is replaced by:
- *  - `appliedEffects`: per-item `AppliedEffect[]` describing every effect that
- *    touched the drop (phase, op, source, resolved amount).
- *  - `effectsBreakdown`: per-source totals across all drops, surfaced in the
- *    UI as the new "Overbloom (and friends)" breakdown.
  */
 export interface DetailedDropsFromEffectsResult {
 	npcPrice: number;
@@ -172,6 +162,7 @@ export function calculateDetailedDropsFromEffects(
 	const calcOptions: CalculateDetailedDropsFromEffectsOptions = {
 		...options,
 		chips: normalizeChipLevels(options.chips ?? {}),
+		chipRarities: normalizeChipRarities(options.chipRarities ?? {}),
 	};
 	const { crop, blocksBroken, env, effects } = calcOptions;
 
@@ -252,7 +243,7 @@ export function calculateDetailedDropsFromEffects(
 		if (calcOptions.chips) {
 			const level = getChipLevel(getChipInputLevel(calcOptions.chips, 'mechamind'));
 			if (level > 0) {
-				const rarity = getChipRarity(level);
+				const rarity = getChipRarity(level, getChipInputRarity(calcOptions.chipRarities, 'mechamind'));
 				let perLevel = 0.015;
 				if (rarity === Rarity.Epic) perLevel = 0.02;
 				else if (rarity === Rarity.Legendary) perLevel = 0.025;

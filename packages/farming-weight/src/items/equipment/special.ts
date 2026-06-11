@@ -3,6 +3,7 @@ import { Stat } from '../../constants/stats.js';
 import { UpgradeReason } from '../../constants/upgrades.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
+import { PESTHUNTER_EQUIPMENT_RECOMMENDATION } from './pesthunter.js';
 
 export class ZorrosCape extends BaseItem {
 	get skyblockId() {
@@ -48,6 +49,7 @@ export class PestVest extends BaseItem {
 	}
 
 	override slot = GearSlot.Cloak;
+	override recommendation = PESTHUNTER_EQUIPMENT_RECOMMENDATION;
 	override baseStats = {
 		[Stat.BonusPestChance]: 10,
 		[Stat.PestCooldownReduction]: 15,

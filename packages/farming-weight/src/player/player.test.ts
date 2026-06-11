@@ -4,10 +4,10 @@ import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforge-types.js';
 import { Stat } from '../constants/stats.js';
 import {
-    type FortuneUpgrade,
-    type FortuneUpgradeGroupMeta,
-    UpgradeAction,
-    UpgradeCategory,
+	type FortuneUpgrade,
+	type FortuneUpgradeGroupMeta,
+	UpgradeAction,
+	UpgradeCategory,
 } from '../constants/upgrades.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import type { EliteItemDto } from '../fortune/item.js';
@@ -106,6 +106,22 @@ test('Hypercharge chip temp fortune scaling test', () => {
 
 	// Doubled
 	expect(player.tempFortuneBreakdown['Century Cake']?.value).toBe(10);
+});
+
+test('Hypercharge chip temp fortune uses saved rarity assumptions', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			hypercharge: 10,
+		},
+		chipRarities: {
+			hypercharge: Rarity.Legendary,
+		},
+		temporaryFortune: {
+			centuryCake: true,
+		},
+	});
+
+	expect(player.tempFortuneBreakdown['Century Cake']?.value).toBe(7.5);
 });
 
 test('Garden chips stat contribution test', () => {
@@ -220,10 +236,64 @@ test('Overdrive chip contest crop fortune test', () => {
 	});
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
-	expect(cropFortune.breakdown['Overdrive Chip']?.value).toBe(100);
+	expect(cropFortune.breakdown['Overdrive Chip']?.value).toBe(140);
 
 	const other = player.getCropFortune(Crop.Carrot);
 	expect(other.breakdown['Overdrive Chip']).toBeUndefined();
+});
+
+test('Overdrive chip contest crop fortune uses saved rarity assumptions', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			overdrive: 10,
+		},
+		chipRarities: {
+			overdrive: Rarity.Legendary,
+		},
+		jacobContest: {
+			enabled: true,
+			crop: Crop.Wheat,
+		},
+	});
+
+	expect(player.getCropFortune(Crop.Wheat).breakdown['Overdrive Chip']?.value).toBe(70);
+});
+
+test('Garden chip level and rarity upgrades apply to player options', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			cropshot: 1,
+		},
+	});
+
+	const levelUpgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Cropshot Chip 2');
+	expect(levelUpgrade).toBeDefined();
+	expect(levelUpgrade?.cost?.sowdust).toBe(100_000);
+
+	player.applyUpgrade(levelUpgrade!);
+	expect(player.options.chips?.cropshot).toBe(2);
+	expect(player.getStat(Stat.FarmingFortune)).toBe(6);
+
+	const cappedRarePlayer = new FarmingPlayer({
+		chips: {
+			cropshot: 10,
+		},
+		chipRarities: {
+			cropshot: Rarity.Rare,
+		},
+	});
+
+	const rarityUpgrade = cappedRarePlayer
+		.getUpgrades({ stat: Stat.FarmingFortune })
+		.find((u) => u.title === 'Epic Cropshot Chip');
+
+	expect(rarityUpgrade).toBeDefined();
+	expect(rarityUpgrade?.increase).toBe(10);
+	expect(rarityUpgrade?.cost?.items).toStrictEqual({ CROPSHOT_GARDEN_CHIP: 3 });
+
+	cappedRarePlayer.applyUpgrade(rarityUpgrade!);
+	expect(cappedRarePlayer.options.chipRarities?.cropshot).toBe(Rarity.Epic);
+	expect(cappedRarePlayer.getStat(Stat.FarmingFortune)).toBe(40);
 });
 
 test('Garden chips appear in progress output', () => {

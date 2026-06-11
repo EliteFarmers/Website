@@ -44,6 +44,7 @@ export function buildGroupedUpgrades(upgrades: FortuneUpgrade[]): FortuneUpgrade
 
 		const stats = sumStats(sorted);
 		const cost = mergeUpgradeCosts(sorted);
+		const recommendation = sorted.find((upgrade) => upgrade.recommendation)?.recommendation;
 
 		result.push({
 			title: group.label,
@@ -59,6 +60,7 @@ export function buildGroupedUpgrades(upgrades: FortuneUpgrade[]): FortuneUpgrade
 				memberCount: sorted.length,
 			},
 			groupedUpgrades: sorted,
+			recommendation,
 			meta: {
 				type: 'upgrade_group',
 				id: group.id,

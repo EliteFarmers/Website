@@ -1,4 +1,9 @@
-import { getChipInputLevel, getChipLevel, getChipTempMultiplierPerLevel } from '../constants/chips.js';
+import {
+	getChipInputLevel,
+	getChipInputRarity,
+	getChipLevel,
+	getChipTempMultiplierPerLevel,
+} from '../constants/chips.js';
 import type { LateCalculationContext, LateCalculationResult } from '../constants/latecalc.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { getStatValue, Stat, type StatBreakdown } from '../constants/stats.js';
@@ -6,6 +11,7 @@ import {
 	type FortuneSourceProgress,
 	type FortuneUpgrade,
 	getQueryStats,
+	includesFortuneSourceType,
 	type StatQueryOptions,
 	UpgradeAction,
 	UpgradeCategory,
@@ -125,7 +131,11 @@ export class FarmingPet {
 		// Pet abilities
 		if (this.info.abilities) {
 			const hyperLevel = getChipLevel(getChipInputLevel(this.options?.chips, 'hypercharge'));
-			const perLevel = getChipTempMultiplierPerLevel('hypercharge', hyperLevel);
+			const perLevel = getChipTempMultiplierPerLevel(
+				'hypercharge',
+				hyperLevel,
+				getChipInputRarity(this.options?.chipRarities, 'hypercharge')
+			);
 			const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
 			const abilityContext = { player, options: this.options ?? {} };
 
@@ -470,6 +480,8 @@ export class FarmingPet {
 	}
 
 	getUpgrades(options?: StatQueryOptions, player?: FarmingPlayer): FortuneUpgrade[] {
+		if (!includesFortuneSourceType(options, 'pet')) return [];
+
 		const stats = getQueryStats(options);
 		const upgrades: FortuneUpgrade[] = [];
 		const maxLevel = this.info.maxLevel ?? 100;

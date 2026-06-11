@@ -2,7 +2,7 @@ import type { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat, type StatBreakdown } from '../constants/stats.js';
-import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import type { FortuneSourceProgress, StatQueryOptions } from '../constants/upgrades.js';
 import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
 import { resolveOverbloomBreakdown, resolveStatBreakdown } from '../effects/resolver.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
@@ -50,8 +50,12 @@ export class FarmingEquipment extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false): FortuneSourceProgress[] {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed, {
+			...query,
+			defaultSourceType: 'equipment',
+		});
 	}
 
 	setOptions(options: PlayerOptions) {

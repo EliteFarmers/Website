@@ -9,6 +9,6 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  */
 
 /**
- * Garden chips
+ * Garden chip rarity assumptions
  */
-export type MemberFortuneSettingsDtoChips = { [key: string]: number };
+export type MemberFortuneSettingsDtoChipRarities = { [key: string]: string };

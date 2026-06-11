@@ -1,18 +1,35 @@
 import { Stat } from '../constants/stats.js';
-import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import type { FortuneSourceProgress, FortuneSourceType, StatQueryOptions } from '../constants/upgrades.js';
 import type {
 	DynamicFortuneSource,
 	DynamicUpgradeSource,
 	UpgradeSourceProgress,
 } from './sources/dynamicfortunesources.js';
 
+export interface SourceProgressOptions extends Pick<StatQueryOptions, 'stat' | 'stats' | 'sourceTypes'> {
+	defaultSourceType?: FortuneSourceType;
+}
+
+function resolveSourceProgressOptions(options?: Stat[] | SourceProgressOptions): SourceProgressOptions {
+	if (Array.isArray(options)) return { stats: options };
+	return options ?? {};
+}
+
+function sourceTypeMatches(sourceType: FortuneSourceType | undefined, sourceTypes: FortuneSourceType[] | undefined) {
+	if (!sourceTypes?.length) return true;
+	if (!sourceType) return false;
+	return sourceTypes.includes(sourceType);
+}
+
 export function getSourceProgress<T extends object>(
 	upgradeable: T,
 	sources: DynamicFortuneSource<T>[],
 	zeroed = false,
-	stats?: Stat[]
+	options?: Stat[] | SourceProgressOptions
 ): FortuneSourceProgress[] {
 	const result = [] as FortuneSourceProgress[];
+	const query = resolveSourceProgressOptions(options);
+	const stats = query.stats && query.stats.length > 0 ? query.stats : query.stat ? [query.stat] : undefined;
 
 	// Ensure the item fortune is up to date
 	if ('getFortune' in upgradeable && typeof upgradeable.getFortune === 'function') {
@@ -20,6 +37,8 @@ export function getSourceProgress<T extends object>(
 	}
 
 	for (const source of sources) {
+		const sourceType = source.sourceType ?? query.defaultSourceType;
+		if (!sourceTypeMatches(sourceType, query.sourceTypes)) continue;
 		if (!source.exists(upgradeable)) continue;
 
 		const alwaysInclude = source.alwaysInclude === true;

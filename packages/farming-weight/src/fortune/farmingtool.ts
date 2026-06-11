@@ -7,6 +7,7 @@ import {
 	type FortuneSourceProgress,
 	type FortuneUpgrade,
 	getQueryStats,
+	includesFortuneSourceType,
 	type StatQueryOptions,
 } from '../constants/upgrades.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
@@ -145,19 +146,27 @@ export class FarmingTool extends UpgradeableBase {
 		this.rebuildTool(item, options);
 	}
 
-	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false): FortuneSourceProgress[] {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed, {
+			...query,
+			defaultSourceType: 'farmingTool',
+		});
 	}
 
 	getUpgrades(options?: StatQueryOptions): FortuneUpgrade[] {
+		if (!includesFortuneSourceType(options, 'farmingTool')) return [];
+
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
 		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
 		const stats = getQueryStats(options, [Stat.FarmingFortune, Stat.Overbloom]);
 
-		const upgrades = getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, false, stats).flatMap(
-			(source) => source.upgrades ?? []
-		);
+		const upgrades = getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, false, {
+			stats,
+			sourceTypes: options?.sourceTypes,
+			defaultSourceType: 'farmingTool',
+		}).flatMap((source) => source.upgrades ?? []);
 
 		if (self) {
 			upgrades.push(self);

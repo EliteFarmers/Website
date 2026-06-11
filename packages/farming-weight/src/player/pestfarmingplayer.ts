@@ -1,8 +1,9 @@
-import type { Crop } from '../constants/crops.js';
+import { CROP_INFO, Crop } from '../constants/crops.js';
 import { CROP_FARMING_STATS, PEST_FARMING_STATS, Stat, type StatBreakdown, VACUUM_STATS } from '../constants/stats.js';
 import type {
 	EffectSummary,
 	FortuneSourceProgress,
+	FortuneSourceType,
 	FortuneUpgrade,
 	StatQueryOptions,
 	UpgradeTreeNode,
@@ -19,7 +20,7 @@ import type { FarmingPet } from '../fortune/farmingpet.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { Vacuum } from '../fortune/vacuum.js';
 import { GearSlot } from '../items/armor.js';
-import { filterAndSortUpgrades, getUpgradeDelta } from '../upgrades/upgradeutils.js';
+import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { createFarmingPlayer, type FarmingPlayer } from './player.js';
 import type { PlayerOptions } from './playeroptions.js';
 
@@ -35,38 +36,17 @@ export const PEST_ARMOR_SLOTS = [GearSlot.Helmet, GearSlot.Chestplate, GearSlot.
 
 export const PEST_EQUIPMENT_SLOTS = [GearSlot.Necklace, GearSlot.Cloak, GearSlot.Belt, GearSlot.Gloves] as const;
 
+export const PEST_KILL_PHASE_STATS: Stat[] = [Stat.PestKillFortune, Stat.FarmingFortune, Stat.Overbloom, Stat.Damage];
+
 export const PEST_FARMING_PHASE_STATS: Record<PestFarmingPhase, Stat[]> = {
 	[PestFarmingPhase.Farm]: [...CROP_FARMING_STATS, Stat.PestCooldownReduction],
 	[PestFarmingPhase.Spawn]: [Stat.BonusPestChance, Stat.PestCooldownReduction],
-	[PestFarmingPhase.Kill]: [Stat.PestKillFortune, Stat.FarmingFortune, Stat.Overbloom, Stat.Damage],
+	[PestFarmingPhase.Kill]: PEST_KILL_PHASE_STATS,
 };
 
-export const PEST_DEFAULT_WEIGHTS: Partial<Record<Stat, number>> = {
-	[Stat.BonusPestChance]: 1_000_000,
-	[Stat.PestKillFortune]: 10_000,
-	[Stat.PestCooldownReduction]: 1_000,
-	[Stat.Overbloom]: 100,
-	[Stat.FarmingFortune]: 1,
-};
-
-export const PEST_PHASE_WEIGHTS: Record<PestFarmingPhase, Partial<Record<Stat, number>>> = {
-	[PestFarmingPhase.Farm]: {
-		[Stat.PestCooldownReduction]: 10_000,
-		[Stat.Overbloom]: 100,
-		[Stat.FarmingFortune]: 1,
-	},
-	[PestFarmingPhase.Spawn]: {
-		[Stat.BonusPestChance]: 1_000_000,
-		[Stat.PestCooldownReduction]: 10_000,
-		[Stat.FarmingFortune]: 1,
-	},
-	[PestFarmingPhase.Kill]: {
-		[Stat.PestKillFortune]: 10_000,
-		[Stat.Overbloom]: 100,
-		[Stat.FarmingFortune]: 1,
-		[Stat.Damage]: 1,
-	},
-};
+const PEST_KILL_PLAYER_SOURCE_TYPES: FortuneSourceType[] = ['general', 'crop', 'armor', 'equipment', 'pet'];
+const PEST_KILL_VACUUM_SOURCE_TYPES: FortuneSourceType[] = ['vacuum'];
+const ALL_CROPS = Object.values(Crop) as Crop[];
 
 export interface PestArmorSetLoadout {
 	id: string;
@@ -100,19 +80,6 @@ export interface PestStatView {
 
 export function createPestFarmingPlayer(options: PestFarmingPlayerOptions) {
 	return new PestFarmingPlayer(options);
-}
-
-export function getPestUpgradePriority(
-	upgrade: FortuneUpgrade,
-	weights: Partial<Record<Stat, number>> = PEST_DEFAULT_WEIGHTS
-): number {
-	return Object.entries(weights).reduce((sum, [stat, weight]) => {
-		return sum + getUpgradeDelta(upgrade, stat as Stat) * (weight ?? 0);
-	}, 0);
-}
-
-export function getPestPhaseUpgradePriority(phase: PestFarmingPhase, upgrade: FortuneUpgrade): number {
-	return getPestUpgradePriority(upgrade, PEST_PHASE_WEIGHTS[phase]);
 }
 
 function cloneItem(item: EliteItemDto): EliteItemDto {
@@ -156,8 +123,47 @@ function sumStatBreakdown(breakdown: StatBreakdown): number {
 function getUpgradeIdentity(upgrade: FortuneUpgrade): string {
 	return (
 		upgrade.conflictKey ??
-		`${upgrade.title}:${upgrade.action}:${upgrade.meta?.type ?? ''}:${upgrade.meta?.id ?? ''}`
+		[
+			upgrade.title,
+			upgrade.action,
+			upgrade.meta?.type ?? '',
+			upgrade.meta?.id ?? '',
+			upgrade.meta?.key ?? '',
+			upgrade.meta?.itemUuid ?? '',
+			upgrade.onto?.slot ?? '',
+		].join(':')
 	);
+}
+
+function getPhaseSourceTypes(phase: PestFarmingPhase, options?: StatQueryOptions): FortuneSourceType[] | undefined {
+	return options?.sourceTypes ?? (phase === PestFarmingPhase.Kill ? PEST_KILL_PLAYER_SOURCE_TYPES : undefined);
+}
+
+function getPhaseQueryOptions(phase: PestFarmingPhase, stats: Stat[], options?: StatQueryOptions): StatQueryOptions {
+	return {
+		...options,
+		stats,
+		sourceTypes: getPhaseSourceTypes(phase, options),
+	};
+}
+
+function getVacuumQueryOptions(options?: StatQueryOptions): StatQueryOptions {
+	return {
+		...options,
+		stats: VACUUM_STATS,
+		sourceTypes: PEST_KILL_VACUUM_SOURCE_TYPES,
+	};
+}
+
+function getSelectedCropKillStats(stats: Stat[], crop?: Crop): Stat[] {
+	const cropStat = crop ? CROP_INFO[crop]?.fortuneType : undefined;
+	if (!cropStat || stats.includes(cropStat)) return stats;
+	return [...stats, cropStat];
+}
+
+function getUpgradeCrop(upgrade: FortuneUpgrade): Crop | undefined {
+	const key = upgrade.meta?.key;
+	return ALL_CROPS.includes(key as Crop) ? (key as Crop) : undefined;
 }
 
 function hasArmorPieces(loadout: PestArmorSetLoadout | undefined): boolean {
@@ -217,9 +223,8 @@ export class PestFarmingPlayer {
 	}
 
 	private createArmorSetLoadouts(saved?: PestArmorSetLoadout[]): PestArmorSetLoadout[] {
-		const defaultMain = this.pickArmorPieces(PEST_PHASE_WEIGHTS[PestFarmingPhase.Farm]);
+		const defaultMain = this.pickArmorPieces();
 		const defaultSpawn = this.pickArmorPieces(
-			PEST_PHASE_WEIGHTS[PestFarmingPhase.Spawn],
 			new Set(Object.values(defaultMain).filter((uuid): uuid is string => typeof uuid === 'string'))
 		);
 		const defaults: PestArmorSetLoadout[] = [
@@ -251,11 +256,7 @@ export class PestFarmingPlayer {
 				used.add(uuid);
 			}
 
-			const weights =
-				id === PEST_SPAWN_ARMOR_SET_ID
-					? PEST_PHASE_WEIGHTS[PestFarmingPhase.Spawn]
-					: PEST_PHASE_WEIGHTS[PestFarmingPhase.Farm];
-			const filled = this.pickArmorPieces(weights, used, pieces);
+			const filled = this.pickArmorPieces(used, pieces);
 			for (const uuid of Object.values(filled)) {
 				if (uuid) used.add(uuid);
 			}
@@ -275,7 +276,7 @@ export class PestFarmingPlayer {
 			if (uuid && this.findEquipment(slot, uuid)) selected[slot] = uuid;
 		}
 
-		return this.pickEquipmentPieces(PEST_DEFAULT_WEIGHTS, selected);
+		return this.pickEquipmentPieces(selected);
 	}
 
 	private createPhaseLoadouts(
@@ -430,7 +431,6 @@ export class PestFarmingPlayer {
 	}
 
 	private pickArmorPieces(
-		weights: Partial<Record<Stat, number>>,
 		excluded = new Set<string>(),
 		initial: Partial<Record<GearSlot, string | null>> = {}
 	): Partial<Record<GearSlot, string | null>> {
@@ -456,7 +456,6 @@ export class PestFarmingPlayer {
 
 		const selected = selectArmorLoadoutPieces(this.inventory.armor, {
 			slots: PEST_ARMOR_SLOTS,
-			scorePiece: (piece) => this.getPieceScore(piece, weights),
 			excluded,
 			initial: initialPieces,
 		});
@@ -470,10 +469,7 @@ export class PestFarmingPlayer {
 		return result;
 	}
 
-	private pickEquipmentPieces(
-		weights: Partial<Record<Stat, number>>,
-		initial: Partial<Record<GearSlot, string>> = {}
-	): Partial<Record<GearSlot, string>> {
+	private pickEquipmentPieces(initial: Partial<Record<GearSlot, string>> = {}): Partial<Record<GearSlot, string>> {
 		const result = { ...initial };
 		for (const slot of PEST_EQUIPMENT_SLOTS) {
 			if (result[slot]) continue;
@@ -481,25 +477,16 @@ export class PestFarmingPlayer {
 				.filter((piece) => piece.slot === slot)
 				.reduce<FarmingEquipment | undefined>((current, candidate) => {
 					if (!current) return candidate;
-					return this.getPieceScore(candidate, weights) > this.getPieceScore(current, weights)
-						? candidate
-						: current;
+					return candidate.fortune > current.fortune ? candidate : current;
 				}, undefined);
 			if (best?.item.uuid) result[slot] = best.item.uuid;
 		}
 		return result;
 	}
 
-	private pickBestPetId(phase: PestFarmingPhase): string | undefined {
+	private pickBestPetId(_phase: PestFarmingPhase): string | undefined {
 		const selectedUuid = this.options.selectedPet?.pet.uuid ?? undefined;
-		const weights = PEST_PHASE_WEIGHTS[phase];
-		const best = this.inventory.pets.reduce<FarmingPet | undefined>((current, candidate) => {
-			if (!current) return candidate;
-			return this.getPetScore(candidate, phase, weights) > this.getPetScore(current, phase, weights)
-				? candidate
-				: current;
-		}, undefined);
-		return best?.pet.uuid ?? selectedUuid;
+		return selectedUuid ?? this.inventory.selectedPet?.pet.uuid ?? this.inventory.pets[0]?.pet.uuid ?? undefined;
 	}
 
 	private findArmor(slot: GearSlot, uuid: string): FarmingArmor | undefined {
@@ -530,25 +517,6 @@ export class PestFarmingPlayer {
 		return this.phases[phase].armorSet;
 	}
 
-	getPieceScore(
-		piece: FarmingArmor | FarmingEquipment,
-		weights: Partial<Record<Stat, number>> = PEST_DEFAULT_WEIGHTS
-	): number {
-		return Object.entries(weights).reduce((sum, [stat, weight]) => {
-			return sum + piece.getStat(stat as Stat, this.options.selectedCrop) * (weight ?? 0);
-		}, 0);
-	}
-
-	getPetScore(
-		pet: FarmingPet,
-		phase: PestFarmingPhase,
-		weights: Partial<Record<Stat, number>> = PEST_PHASE_WEIGHTS[phase]
-	): number {
-		return Object.entries(weights).reduce((sum, [stat, weight]) => {
-			return sum + pet.getFortune(stat as Stat, this.phases?.[phase] ?? this.inventory) * (weight ?? 0);
-		}, 0);
-	}
-
 	selectVacuum(vacuum: Vacuum): void {
 		this.selectedVacuum = vacuum;
 	}
@@ -562,22 +530,37 @@ export class PestFarmingPlayer {
 		}, undefined);
 	}
 
-	getCropProgress(crop: Crop, stats?: Stat[]): FortuneSourceProgress[] {
-		return this.crop.getCropProgress(crop, stats);
+	getCropProgress(crop: Crop, options?: Stat[] | StatQueryOptions): FortuneSourceProgress[] {
+		return this.crop.getCropProgress(crop, options);
 	}
 
 	getPhaseProgress(
 		phase: PestFarmingPhase,
 		stats: Stat[] = PEST_FARMING_PHASE_STATS[phase]
 	): FortuneSourceProgress[] {
-		return this.phases[phase].getProgress(stats);
+		const queryStats =
+			phase === PestFarmingPhase.Kill ? getSelectedCropKillStats(stats, this.options.selectedCrop) : stats;
+		const options = getPhaseQueryOptions(phase, queryStats);
+		const progress = [...this.phases[phase].getProgress(options)];
+		if (phase === PestFarmingPhase.Kill && this.options.selectedCrop) {
+			const crop = this.options.selectedCrop;
+			progress.push(
+				...this.phases[phase].getCropProgress(crop, options).map((entry) => ({
+					...entry,
+					key: `kill-crop:${crop}:${entry.key ?? entry.name}:${entry.item?.uuid ?? ''}`,
+				}))
+			);
+		}
+		return progress;
 	}
 
 	getPhaseGearProgress(
 		phase: PestFarmingPhase,
 		stats: Stat[] = PEST_FARMING_PHASE_STATS[phase]
 	): FortuneSourceProgress[] {
-		return this.phases[phase].armorSet.getProgress(stats);
+		const queryStats =
+			phase === PestFarmingPhase.Kill ? getSelectedCropKillStats(stats, this.options.selectedCrop) : stats;
+		return this.phases[phase].armorSet.getProgress(getPhaseQueryOptions(phase, queryStats));
 	}
 
 	getArmorSetProgress(armorSetId: string, stats: Stat[] = PEST_FARMING_STATS): FortuneSourceProgress[] {
@@ -589,7 +572,7 @@ export class PestFarmingPlayer {
 	}
 
 	getVacuumProgress(stats: Stat[] = VACUUM_STATS): FortuneSourceProgress[] {
-		return this.selectedVacuum?.getProgress(stats) ?? [];
+		return this.selectedVacuum?.getProgress({ stats, sourceTypes: PEST_KILL_VACUUM_SOURCE_TYPES }) ?? [];
 	}
 
 	getPhaseStat(phase: PestFarmingPhase, stat: Stat, crop?: Crop): number {
@@ -612,10 +595,17 @@ export class PestFarmingPlayer {
 		stats: Stat[] = PEST_FARMING_PHASE_STATS[phase],
 		crop?: Crop
 	): PestStatView {
-		const playerView = this.phases[phase].getStatView({ stats, crop });
+		const queryCrop = crop ?? this.options.selectedCrop;
+		const queryStats = phase === PestFarmingPhase.Kill ? getSelectedCropKillStats(stats, queryCrop) : stats;
+		const phaseOptions = getPhaseQueryOptions(phase, queryStats);
+		const playerView = this.phases[phase].getStatView({
+			stats: queryStats,
+			crop: queryCrop,
+			sourceTypes: phaseOptions.sourceTypes,
+		});
 		const totals: Partial<Record<Stat, number>> = {};
 		const breakdowns: Partial<Record<Stat, StatBreakdown>> = {};
-		for (const stat of stats) {
+		for (const stat of queryStats) {
 			const playerBreakdown = playerView.breakdowns[stat] ?? {};
 			const breakdown =
 				phase === PestFarmingPhase.Kill && this.selectedVacuum && VACUUM_STATS.includes(stat)
@@ -629,21 +619,28 @@ export class PestFarmingPlayer {
 			totals,
 			breakdowns,
 			effects: playerView.effects,
-			upgrades: this.getPhaseUpgrades(phase, { stats }),
+			upgrades: this.getPhaseUpgrades(phase, phaseOptions),
 		};
 	}
 
 	getPhaseUpgrades(phase: PestFarmingPhase, options?: StatQueryOptions): FortuneUpgrade[] {
 		const stats = options?.stats ?? (options?.stat ? [options.stat] : PEST_FARMING_PHASE_STATS[phase]);
+		const queryStats =
+			phase === PestFarmingPhase.Kill ? getSelectedCropKillStats(stats, this.options.selectedCrop) : stats;
+		const phaseOptions = getPhaseQueryOptions(phase, queryStats, options);
 		const player = this.phases[phase];
-		const upgrades = [...player.getUpgrades({ ...options, stats })];
+		const upgrades = [...player.getUpgrades(phaseOptions)];
 
 		if (phase === PestFarmingPhase.Farm && this.options.selectedCrop) {
 			upgrades.push(...player.getCropUpgrades(this.options.selectedCrop));
 		}
 
+		if (phase === PestFarmingPhase.Kill && this.options.selectedCrop) {
+			upgrades.push(...player.getCropUpgrades(this.options.selectedCrop, undefined, phaseOptions));
+		}
+
 		if (phase === PestFarmingPhase.Kill && this.selectedVacuum) {
-			upgrades.push(...this.selectedVacuum.getUpgrades({ ...options, stats: VACUUM_STATS }));
+			upgrades.push(...this.selectedVacuum.getUpgrades(getVacuumQueryOptions(options)));
 		}
 
 		const deduped = new Map<string, FortuneUpgrade>();
@@ -652,9 +649,7 @@ export class PestFarmingPlayer {
 			if (!deduped.has(key)) deduped.set(key, upgrade);
 		}
 
-		return filterAndSortUpgrades([...deduped.values()], { ...options, stats }).sort(
-			(a, b) => getPestPhaseUpgradePriority(phase, b) - getPestPhaseUpgradePriority(phase, a)
-		);
+		return filterAndSortUpgrades([...deduped.values()], phaseOptions);
 	}
 
 	applyPhaseUpgrade(phase: PestFarmingPhase, upgrade: FortuneUpgrade): void {
@@ -763,18 +758,28 @@ export class PestFarmingPlayer {
 	expandPhaseUpgrade(
 		phase: PestFarmingPhase,
 		upgrade: FortuneUpgrade,
-		options?: { maxDepth?: number; stats?: Stat[]; includeAllTierUpgradeChildren?: boolean; crop?: Crop }
+		options?: {
+			maxDepth?: number;
+			stats?: Stat[];
+			sourceTypes?: FortuneSourceType[];
+			includeAllTierUpgradeChildren?: boolean;
+			crop?: Crop;
+		}
 	): UpgradeTreeNode {
 		const vacuum = upgrade.meta?.itemUuid
 			? this.vacuums.find((candidate) => candidate.item.uuid === upgrade.meta?.itemUuid)
 			: undefined;
 		if (phase === PestFarmingPhase.Kill && vacuum) {
-			return vacuum.expandUpgrade(upgrade, { ...options, stats: options?.stats ?? VACUUM_STATS });
+			return vacuum.expandUpgrade(upgrade, getVacuumQueryOptions(options));
 		}
+		const baseStats = options?.stats ?? PEST_FARMING_PHASE_STATS[phase];
+		const crop = options?.crop ?? getUpgradeCrop(upgrade) ?? this.options.selectedCrop;
+		const stats = phase === PestFarmingPhase.Kill ? getSelectedCropKillStats(baseStats, crop) : baseStats;
 		return this.phases[phase].expandUpgrade(upgrade, {
 			...options,
-			stats: options?.stats ?? PEST_FARMING_PHASE_STATS[phase],
-			crop: options?.crop ?? this.options.selectedCrop,
+			stats,
+			sourceTypes: getPhaseSourceTypes(phase, options),
+			crop,
 		});
 	}
 

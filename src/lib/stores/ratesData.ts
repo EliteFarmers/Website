@@ -28,6 +28,7 @@ export interface RatesData {
 	v: number;
 	settings: boolean;
 	tool?: FarmingTool;
+	chipRarities: Record<string, string>;
 	communityCenter: number;
 	selectedPet?: string;
 	strength: number;
@@ -57,6 +58,7 @@ export const MissingRatesDataSchema = z.object({
 const defaultData = {
 	v: 9,
 	settings: false,
+	chipRarities: {},
 	communityCenter: 0,
 	strength: 0,
 	bzMode: 'order',
@@ -141,6 +143,7 @@ function normalizeRatesData(data?: PartialRatesData | null): RatesData {
 		...defaultData,
 		...(data ?? {}),
 		v: defaultData.v,
+		chipRarities: data?.chipRarities ?? {},
 		temp: {
 			...defaultData.temp,
 			...(data?.temp ?? {}),

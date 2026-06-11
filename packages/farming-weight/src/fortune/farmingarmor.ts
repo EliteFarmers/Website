@@ -8,6 +8,7 @@ import {
 	type FortuneSourceProgress,
 	type FortuneUpgrade,
 	getQueryStats,
+	includesFortuneSourceType,
 	type StatQueryOptions,
 } from '../constants/upgrades.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
@@ -505,16 +506,18 @@ export class ArmorLoadout {
 		return Math.max(...applicableBonuses.map((bonus) => bonus.count)) as 1 | 2 | 3 | 4;
 	}
 
-	getProgress(stats?: Stat[], zeroed = false) {
-		return getSourceProgress<ArmorLoadout>(this, ARMOR_LOADOUT_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false) {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<ArmorLoadout>(this, ARMOR_LOADOUT_FORTUNE_SOURCES, zeroed, query);
 	}
 
 	getUpgrades(options?: StatQueryOptions) {
 		const hasExplicitStats = (options?.stats?.length ?? 0) > 0 || options?.stat !== undefined;
 		const stats = hasExplicitStats ? getQueryStats(options) : undefined;
-		const upgrades = getSourceProgress<ArmorLoadout>(this, ARMOR_LOADOUT_FORTUNE_SOURCES, false, stats).flatMap(
-			(source) => source.upgrades ?? []
-		);
+		const upgrades = getSourceProgress<ArmorLoadout>(this, ARMOR_LOADOUT_FORTUNE_SOURCES, false, {
+			stats,
+			sourceTypes: options?.sourceTypes,
+		}).flatMap((source) => source.upgrades ?? []);
 		return filterAndSortUpgrades(upgrades, options);
 	}
 
@@ -774,19 +777,18 @@ export class EquipmentLoadout {
 		return breakdown;
 	}
 
-	getProgress(stats?: Stat[], zeroed = false) {
-		return getSourceProgress<EquipmentLoadout>(this, EQUIPMENT_LOADOUT_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false) {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<EquipmentLoadout>(this, EQUIPMENT_LOADOUT_FORTUNE_SOURCES, zeroed, query);
 	}
 
 	getUpgrades(options?: StatQueryOptions) {
 		const hasExplicitStats = (options?.stats?.length ?? 0) > 0 || options?.stat !== undefined;
 		const stats = hasExplicitStats ? getQueryStats(options) : undefined;
-		const upgrades = getSourceProgress<EquipmentLoadout>(
-			this,
-			EQUIPMENT_LOADOUT_FORTUNE_SOURCES,
-			false,
-			stats
-		).flatMap((source) => source.upgrades ?? []);
+		const upgrades = getSourceProgress<EquipmentLoadout>(this, EQUIPMENT_LOADOUT_FORTUNE_SOURCES, false, {
+			stats,
+			sourceTypes: options?.sourceTypes,
+		}).flatMap((source) => source.upgrades ?? []);
 		return filterAndSortUpgrades(upgrades, options);
 	}
 
@@ -1015,16 +1017,18 @@ export class ArmorSet {
 		return this.armorLoadout.specialDropsCount(crop);
 	}
 
-	getProgress(stats?: Stat[], zeroed = false) {
-		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false) {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed, query);
 	}
 
 	getUpgrades(options?: StatQueryOptions) {
 		const hasExplicitStats = (options?.stats?.length ?? 0) > 0 || options?.stat !== undefined;
 		const stats = hasExplicitStats ? getQueryStats(options) : undefined;
-		const upgrades = getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, false, stats).flatMap(
-			(source) => source.upgrades ?? []
-		);
+		const upgrades = getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, false, {
+			stats,
+			sourceTypes: options?.sourceTypes,
+		}).flatMap((source) => source.upgrades ?? []);
 		return filterAndSortUpgrades(upgrades, options);
 	}
 
@@ -1260,17 +1264,19 @@ export class FarmingArmor extends UpgradeableBase {
 	}
 
 	getUpgrades(options?: StatQueryOptions): FortuneUpgrade[] {
+		const sourceType = this.type === ReforgeTarget.Equipment ? 'equipment' : 'armor';
+		if (!includesFortuneSourceType(options, sourceType)) return [];
+
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
 		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
 		const stats = getQueryStats(options, [Stat.FarmingFortune, Stat.Overbloom]);
 
-		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(
-			this,
-			GEAR_FORTUNE_SOURCES,
-			false,
-			stats
-		).flatMap((source) => source.upgrades ?? []);
+		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, false, {
+			stats,
+			sourceTypes: options?.sourceTypes,
+			defaultSourceType: sourceType,
+		}).flatMap((source) => source.upgrades ?? []);
 
 		if (self) {
 			upgrades.push(self);
@@ -1292,8 +1298,13 @@ export class FarmingArmor extends UpgradeableBase {
 		return getLastItemUpgradeableTo(this, FARMING_ARMOR_INFO);
 	}
 
-	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false): FortuneSourceProgress[] {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		const sourceType = this.type === ReforgeTarget.Equipment ? 'equipment' : 'armor';
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed, {
+			...query,
+			defaultSourceType: sourceType,
+		});
 	}
 
 	static isValid(item: EliteItemDto): boolean {

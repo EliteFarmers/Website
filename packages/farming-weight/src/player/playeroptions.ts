@@ -1,4 +1,5 @@
 import type { Crop } from '../constants/crops.js';
+import type { Rarity } from '../constants/reforges.js';
 import type { TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import type { Upgrade } from '../constants/upgrades.js';
 import type { FarmingAccessory } from '../fortune/farmingaccessory.js';
@@ -44,6 +45,7 @@ export interface FortuneMissingFromAPI {
 
 	attributes?: Record<string, number>;
 	chips?: Partial<FarmingPlayerGardenChips>;
+	chipRarities?: Record<string, Rarity | string | null | undefined>;
 	/**
 	 * Raw SkyBlock profile perk levels. Carnival Harvest Feast perks use keys like
 	 * `natural_talent` and `fortunate_feasting`.

@@ -3,9 +3,29 @@ import { Crop } from '../constants/crops.js';
 import { Pest } from '../constants/pests.js';
 import { Stat } from '../constants/stats.js';
 import { PestFarmingPhase, PestFarmingPlayer } from '../player/pestfarmingplayer.js';
+import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 import { calculatePestCropDropAmount, PEST_DROP_DEFINITIONS } from './pest-drops.js';
 import { DEFAULT_PEST_CYCLE_SETTINGS, PestFarmingRateCalculator } from './pest-farming-rate-calculator.js';
 import type { PestCycleSettings, PestRatePriceBook } from './pest-rate-types.js';
+
+function emptyCropRates(blocksBroken = 0): DetailedDropsFromEffectsResult {
+	return {
+		npcPrice: 0,
+		collection: 0,
+		npcCoins: 0,
+		fortune: 0,
+		blocksBroken,
+		coinSources: {},
+		otherCollection: {},
+		items: {},
+		currencies: {},
+		rngItems: {},
+		specialCropBonus: 0,
+		specialCropBonusBreakdown: {},
+		appliedEffects: {},
+		effectsBreakdown: {},
+	};
+}
 
 test('pest crop drops use farming, associated crop, and pest kill fortune through scaling', () => {
 	expect(
@@ -17,6 +37,64 @@ test('pest crop drops use farming, associated crop, and pest kill fortune throug
 			pestKillFortune: 1_000,
 		})
 	).toBeCloseTo(1 + 2500 / 35, 8);
+});
+
+test('pest rate calculation uses each pest drop crop fortune even when farming another crop', () => {
+	const cropFortunes: Partial<Record<Crop, number>> = {
+		[Crop.Wheat]: 0,
+		[Crop.Cactus]: 700,
+	};
+	const player = {
+		crop: { getRates: (_crop: Crop, blocks: number) => emptyCropRates(blocks) },
+		spawn: { getRates: (_crop: Crop, blocks: number) => emptyCropRates(blocks) },
+		kill: {
+			getStatBreakdown: (stat: Stat, crop?: Crop) => ({
+				'Test Crop Fortune': {
+					value: crop ? (cropFortunes[crop] ?? 0) : 0,
+					stat,
+				},
+			}),
+			buildEnvironment: () => ({}),
+			collectEffects: () => [],
+		},
+		getPhaseStat: (phase: PestFarmingPhase, stat: Stat) => {
+			if (phase === PestFarmingPhase.Kill && stat === Stat.FarmingFortune) return 100;
+			if (phase === PestFarmingPhase.Kill && stat === Stat.PestKillFortune) return 300;
+			return 0;
+		},
+	} as unknown as PestFarmingPlayer;
+	const miteDrop = PEST_DROP_DEFINITIONS[Pest.Mite].guaranteedDrops[0]!;
+
+	const result = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+			attraction: {
+				excludedPests: Object.values(Pest).filter((pest) => pest !== Pest.Mite),
+			},
+		},
+		priceBook: {
+			version: 'test',
+			items: {
+				[miteDrop.itemId]: { coins: 1, source: 'manual' },
+			},
+			missingItemMode: 'zero',
+		},
+	}).calculate();
+	const miteDrops = result.breakdown.pestDrops.byPest[Pest.Mite]!;
+	const expectedMiteCropDrops =
+		calculatePestCropDropAmount({
+			baseAmount: miteDrop.baseAmount,
+			scalingFortune: miteDrop.scalingFortune,
+			farmingFortune: 100,
+			cropFortune: 700,
+			pestKillFortune: 300,
+		}) * miteDrops.expectedPests;
+
+	expect(result.phaseStats.associatedCropFortune[Crop.Wheat]).toBe(0);
+	expect(result.phaseStats.associatedCropFortune[Crop.Cactus]).toBe(700);
+	expect(miteDrops.items[miteDrop.itemId]).toBeCloseTo(expectedMiteCropDrops, 8);
 });
 
 test('bonus pest chance controls expected pests per spawn', () => {

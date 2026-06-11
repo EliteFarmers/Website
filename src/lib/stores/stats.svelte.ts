@@ -83,6 +83,7 @@ export class PlayerStats {
 				data.communityCenter = this.fortuneSettings?.communityCenter ?? data.communityCenter;
 				data.strength = this.fortuneSettings?.strength ?? data.strength;
 				data.rosewaterFlasks = this.fortuneSettings?.rosewaterFlasks ?? data.rosewaterFlasks;
+				data.chipRarities = this.fortuneSettings?.chipRarities ?? data.chipRarities;
 				return data;
 			});
 		}

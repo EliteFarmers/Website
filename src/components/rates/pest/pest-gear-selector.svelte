@@ -30,7 +30,7 @@
 		selectPiece: (slot: GearSlot, uuid: string) => void;
 		clearPiece?: (slot: GearSlot) => void;
 		getPieceBreakdown: (piece: FarmingArmor | FarmingEquipment) => StatBreakdown;
-		getPieceScore: (piece: FarmingArmor | FarmingEquipment) => number;
+		getPieceRateImpact: (piece: FarmingArmor | FarmingEquipment) => number;
 		overallBreakdown?: Record<string, { value: number; stat: Stat }>;
 		slots?: readonly GearSlot[];
 		blockedUuids?: Record<string, string>;
@@ -45,7 +45,7 @@
 		selectPiece,
 		clearPiece,
 		getPieceBreakdown,
-		getPieceScore,
+		getPieceRateImpact,
 		overallBreakdown,
 		slots,
 		blockedUuids = {},
@@ -58,6 +58,12 @@
 			([slot]) => !slots || slots.includes(slot)
 		)
 	);
+
+	function formatRate(value: number): string {
+		return value.toLocaleString(undefined, {
+			maximumFractionDigits: 0,
+		});
+	}
 </script>
 
 <section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
@@ -87,9 +93,9 @@
 			{@const eligible = options.filter(
 				(o) => !o.item.uuid || !blockedUuids[o.item.uuid] || o.item.uuid === piece?.item.uuid
 			)}
-			{@const bestScore = eligible.reduce((max, p) => Math.max(max, getPieceScore(p)), 0)}
-			{@const currentScore = piece ? getPieceScore(piece) : 0}
-			{@const isBest = !piece || currentScore >= bestScore}
+			{@const sortedOptions = [...options].sort((a, b) => getPieceRateImpact(b) - getPieceRateImpact(a))}
+			{@const bestRateDelta = eligible.reduce((max, p) => Math.max(max, getPieceRateImpact(p)), 0)}
+			{@const hasBetterRateOption = piece && bestRateDelta > 0}
 
 			<div
 				class="hover:bg-muted/30 flex w-full items-center justify-between gap-2 rounded-md py-2 transition-colors"
@@ -110,12 +116,13 @@
 									value={piece?.item.uuid ?? ''}
 									onValueChange={(value) => value && selectPiece(slot, value)}
 								>
-									{#each options as option, i (option.item.uuid ?? i)}
+									{#each sortedOptions as option, i (option.item.uuid ?? i)}
 										{#if option.item.uuid}
 											{@const blockedBy =
 												option.item.uuid !== piece?.item.uuid
 													? blockedUuids[option.item.uuid]
 													: undefined}
+											{@const rateDelta = getPieceRateImpact(option)}
 											<DropdownMenu.RadioItem
 												value={option.item.uuid}
 												disabled={!!blockedBy}
@@ -131,6 +138,15 @@
 														<span class="text-muted-foreground text-xs whitespace-nowrap"
 															>(on {blockedBy})</span
 														>
+													{/if}
+													{#if rateDelta !== 0}
+														<span
+															class="{rateDelta > 0
+																? 'dark:text-completed'
+																: 'text-muted-foreground'} ml-auto text-xs whitespace-nowrap tabular-nums"
+														>
+															{rateDelta > 0 ? '+' : ''}{formatRate(rateDelta)}/hr
+														</span>
 													{/if}
 												</div>
 											</DropdownMenu.RadioItem>
@@ -165,7 +181,7 @@
 				</div>
 				{#if piece}
 					<div class="flex items-center gap-2">
-						{#if !isBest}
+						{#if hasBetterRateOption}
 							<Popover.Mobile>
 								{#snippet trigger()}
 									<span
@@ -176,7 +192,7 @@
 									</span>
 								{/snippet}
 								<p class="max-w-xs text-sm">
-									A higher-scoring pest gear option exists for this slot. Use the swap button to equip
+									A higher-rate pest gear option exists for this slot. Use the swap button to equip
 									it.
 								</p>
 							</Popover.Mobile>

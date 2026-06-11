@@ -1,20 +1,18 @@
 import { expect, test } from 'vitest';
+import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
+import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { Vacuum } from '../fortune/vacuum.js';
 import { FARMING_ARMOR_INFO } from '../items/armor.js';
 import { GearSlot } from '../items/definitions.js';
 import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { FarmingPets, type FarmingPetType } from '../items/pets.js';
-import {
-	PEST_FARMING_PHASE_STATS,
-	PEST_PHASE_WEIGHTS,
-	PestFarmingPhase,
-	PestFarmingPlayer,
-} from './pestfarmingplayer.js';
+import { FARMING_TOOLS } from '../items/tools.js';
+import { PEST_FARMING_PHASE_STATS, PestFarmingPhase, PestFarmingPlayer } from './pestfarmingplayer.js';
 
 function armor(id: keyof typeof FARMING_ARMOR_INFO, uuid: string, slot?: string) {
 	const item = FarmingArmor.fakeItem(FARMING_ARMOR_INFO[id]!)!;
@@ -27,6 +25,15 @@ function equipment(id: keyof typeof FARMING_EQUIPMENT_INFO, uuid: string) {
 	const item = FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[id]!)!;
 	item.item.uuid = uuid;
 	return item;
+}
+
+function tool(id: keyof typeof FARMING_TOOLS, uuid: string, overrides: Partial<EliteItemDto> = {}): EliteItemDto {
+	const item = FarmingTool.fakeItem(FARMING_TOOLS[id]!)!;
+	item.item.uuid = uuid;
+	item.item.enchantments = overrides.enchantments ?? item.item.enchantments;
+	item.item.attributes = { ...item.item.attributes, ...(overrides.attributes ?? {}) };
+	item.item.gems = overrides.gems ?? item.item.gems;
+	return item.item;
 }
 
 function pet(type: FarmingPets, uuid: string, heldItem?: string): FarmingPetType {
@@ -178,12 +185,63 @@ test('farm phase includes pest cooldown reduction as a relevant phase stat', () 
 	const farmCooldownUpgrades = player.getPhaseUpgrades(PestFarmingPhase.Farm);
 
 	expect(PEST_FARMING_PHASE_STATS[PestFarmingPhase.Farm]).toContain(Stat.PestCooldownReduction);
-	expect(PEST_PHASE_WEIGHTS[PestFarmingPhase.Farm][Stat.PestCooldownReduction]).toBeGreaterThan(
-		PEST_PHASE_WEIGHTS[PestFarmingPhase.Farm][Stat.FarmingFortune] ?? 0
-	);
 	expect(view.totals[Stat.PestCooldownReduction]).toBe(10);
 	expect(view.upgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
 	expect(farmCooldownUpgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
+});
+
+test('kill phase excludes farming tool upgrades while farm phase still includes them', () => {
+	const wheatToolUuid = 'wheat-tool';
+	const player = new PestFarmingPlayer({
+		selectedCrop: Crop.Wheat,
+		tools: [tool('THEORETICAL_HOE_WHEAT_1', wheatToolUuid)],
+	});
+
+	const farmUpgrades = player.getPhaseUpgrades(PestFarmingPhase.Farm);
+	const killUpgrades = player.getPhaseUpgrades(PestFarmingPhase.Kill);
+	const killProgress = player.getPhaseProgress(PestFarmingPhase.Kill);
+
+	expect(farmUpgrades.some((upgrade) => upgrade.meta?.itemUuid === wheatToolUuid)).toBe(true);
+	expect(killUpgrades.some((upgrade) => upgrade.meta?.itemUuid === wheatToolUuid)).toBe(false);
+	expect(killProgress.some((progress) => progress.item?.uuid === wheatToolUuid)).toBe(false);
+});
+
+test('kill phase only surfaces selected crop fortune upgrades', () => {
+	const player = new PestFarmingPlayer({
+		selectedCrop: Crop.Wheat,
+		tools: [tool('THEORETICAL_HOE_WHEAT_1', 'wheat-tool')],
+	});
+
+	const killStats = PEST_FARMING_PHASE_STATS[PestFarmingPhase.Kill];
+	const killUpgrades = player.getPhaseUpgrades(PestFarmingPhase.Kill);
+	const killProgressKeys = player
+		.getPhaseProgress(PestFarmingPhase.Kill)
+		.map((progress) => progress.key)
+		.filter((key): key is string => key !== undefined);
+
+	expect(killStats).not.toContain(Stat.WheatFortune);
+	expect(killStats).not.toContain(Stat.CactusFortune);
+	expect(new Set(killProgressKeys).size).toBe(killProgressKeys.length);
+	expect(killProgressKeys.some((key) => key.includes(`kill-crop:${Crop.Wheat}:`))).toBe(true);
+	expect(killProgressKeys.some((key) => key.includes(`kill-crop:${Crop.Cactus}:`))).toBe(false);
+	expect(
+		killUpgrades.some((upgrade) => upgrade.meta?.type === 'crop_upgrade' && upgrade.meta.key === Crop.Wheat)
+	).toBe(true);
+	expect(
+		killUpgrades.some((upgrade) => upgrade.meta?.type === 'crop_upgrade' && upgrade.meta.key === Crop.Cactus)
+	).toBe(false);
+});
+
+test('kill phase keeps vacuum upgrades after excluding farming tools', () => {
+	const player = new PestFarmingPlayer({
+		selectedCrop: Crop.Wheat,
+		tools: [tool('THEORETICAL_HOE_WHEAT_1', 'wheat-tool'), vacuum('INFINI_VACUUM_HOOVERIUS', { enchantments: {} })],
+	});
+
+	const killUpgrades = player.getPhaseUpgrades(PestFarmingPhase.Kill);
+
+	expect(killUpgrades.some((upgrade) => upgrade.meta?.itemUuid === 'wheat-tool')).toBe(false);
+	expect(killUpgrades.some((upgrade) => upgrade.title === 'Bug Blender 1')).toBe(true);
 });
 
 test('explicitly cleared armor slots stay empty instead of being auto-filled', () => {

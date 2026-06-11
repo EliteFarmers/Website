@@ -683,7 +683,7 @@ export * from './MemberDetailsDto';
 export * from './MemberDetailsDtoMeta';
 export * from './MemberFortuneSettingsDto';
 export * from './MemberFortuneSettingsDtoAttributes';
-export * from './MemberFortuneSettingsDtoChips';
+export * from './MemberFortuneSettingsDtoChipRarities';
 export * from './MemberLeaderboardCosmeticsDto';
 export * from './MemberStatsDto';
 export * from './MemberStatsDtoAbiphone';

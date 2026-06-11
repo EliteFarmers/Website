@@ -7,6 +7,7 @@ import type {
 	StatQueryOptions,
 	Upgrade,
 	UpgradeCost,
+	UpgradeRecommendation,
 } from '../constants/upgrades.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import type { EliteItemDto } from './item.js';
@@ -28,6 +29,7 @@ export interface UpgradeableInfo {
 	cost?: UpgradeCost;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 	skillReq?: Partial<Record<string, number>>;
+	recommendation?: UpgradeRecommendation;
 }
 
 export interface Upgradeable {

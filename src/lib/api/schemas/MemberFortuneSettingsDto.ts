@@ -8,7 +8,7 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 import type { MemberFortuneSettingsDtoAttributes } from './MemberFortuneSettingsDtoAttributes';
-import type { MemberFortuneSettingsDtoChips } from './MemberFortuneSettingsDtoChips';
+import type { MemberFortuneSettingsDtoChipRarities } from './MemberFortuneSettingsDtoChipRarities';
 
 export interface MemberFortuneSettingsDto {
 	/** Amount of strength used for mooshroom fortune */
@@ -19,6 +19,6 @@ export interface MemberFortuneSettingsDto {
 	rosewaterFlasks: number;
 	/** Attribute shards */
 	attributes: MemberFortuneSettingsDtoAttributes;
-	/** Garden chips */
-	chips: MemberFortuneSettingsDtoChips;
+	/** Garden chip rarity assumptions */
+	chipRarities: MemberFortuneSettingsDtoChipRarities;
 }

@@ -9,10 +9,17 @@ import {
 } from '../../constants/attributes.js';
 import {
 	GARDEN_CHIP_MAX_LEVEL,
+	GARDEN_CHIP_RARITY_MAX_LEVELS,
 	GARDEN_CHIPS,
 	type GardenChipInfo,
+	type GardenChipRarity,
+	getChipInputRarity,
 	getChipLevel,
+	getChipMaxLevelForRarity,
+	getChipNextLevelCost,
 	getChipRarity,
+	getChipRarityUpgradeCost,
+	getNextChipRarity,
 } from '../../constants/chips.js';
 import { CROP_INFO, type Crop } from '../../constants/crops.js';
 import {
@@ -111,11 +118,12 @@ function gardenChipEffectSummaries(
 	player: FarmingPlayer,
 	chipId: keyof typeof GARDEN_CHIPS,
 	stats?: Stat[],
-	level?: number
+	level?: number,
+	rarity?: GardenChipRarity
 ) {
 	const source = GARDEN_CHIP_CLASSES[chipId];
 	const effectPlayer =
-		level === undefined
+		level === undefined && rarity === undefined
 			? player
 			: ({
 					...player,
@@ -123,7 +131,11 @@ function gardenChipEffectSummaries(
 						...player.options,
 						chips: {
 							...player.options.chips,
-							[chipId]: level,
+							...(level === undefined ? {} : { [chipId]: level }),
+						},
+						chipRarities: {
+							...player.options.chipRarities,
+							...(rarity === undefined ? {} : { [chipId]: rarity }),
 						},
 					},
 				} as FarmingPlayer);
@@ -229,7 +241,10 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				.filter(Boolean) as FortuneUpgrade[];
 		},
 		progress: (player, stats) => {
-			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_SHARD_PROGRESS_SOURCES, false, stats);
+			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_SHARD_PROGRESS_SOURCES, false, {
+				stats,
+				defaultSourceType: 'general',
+			});
 		},
 	},
 	{
@@ -252,7 +267,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			// Only return current fortune from chips with farming fortune increases
 			const totalCurrent = Object.entries(GARDEN_CHIPS).reduce((acc, [chipId, chip]) => {
 				const level = getChipLevel(player.options.chips?.[chipId as keyof typeof GARDEN_CHIPS]);
-				const fortunePerLevel = chip.statsPerRarity?.[Rarity.Legendary]?.[Stat.FarmingFortune] ?? 0;
+				const rarity = getChipRarity(
+					level,
+					getChipInputRarity(player.options.chipRarities, chipId as keyof typeof GARDEN_CHIPS)
+				);
+				const fortunePerLevel = chip.statsPerRarity?.[rarity]?.[Stat.FarmingFortune] ?? 0;
 				return acc + fortunePerLevel * level;
 			}, 0);
 			return totalCurrent;
@@ -266,13 +285,19 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		currentStat: (player, stat) => {
 			return Object.entries(GARDEN_CHIPS).reduce((acc, [chipId, chip]) => {
 				const level = getChipLevel(player.options.chips?.[chipId as keyof typeof GARDEN_CHIPS]);
-				const rarity = getChipRarity(level);
+				const rarity = getChipRarity(
+					level,
+					getChipInputRarity(player.options.chipRarities, chipId as keyof typeof GARDEN_CHIPS)
+				);
 				const per = chip.statsPerRarity?.[rarity]?.[stat] ?? 0;
 				return acc + per * level;
 			}, 0);
 		},
 		progress: (player, stats) => {
-			return getSourceProgress<FarmingPlayer>(player, GARDEN_CHIP_SOURCES, false, stats);
+			return getSourceProgress<FarmingPlayer>(player, GARDEN_CHIP_SOURCES, false, {
+				stats,
+				defaultSourceType: 'general',
+			});
 		},
 		upgrades: (player, stats) => {
 			return GARDEN_CHIP_SOURCES.flatMap((source) => source.upgrades?.(player, stats)).filter(
@@ -1081,6 +1106,7 @@ function createCarnivalHarvestFeastSources(): DynamicFortuneSource<FarmingPlayer
 	];
 	return perks.map((perk) => ({
 		name: perk.name,
+		sourceType: 'general',
 		wiki: () => perk.wiki,
 		exists: () => true,
 		active: (player) => {
@@ -1177,6 +1203,7 @@ function mapShardSource(
 ): DynamicFortuneSource<FarmingAttributeShardSourceContext> {
 	const result = {
 		name: shard.name,
+		sourceType: 'general',
 		wiki: () => shard.wiki,
 		exists: () => true,
 		active: shard.active,
@@ -1275,6 +1302,7 @@ function mapShardSource(
 function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer> {
 	return {
 		name: chip.name,
+		sourceType: 'general',
 		alwaysInclude: true,
 		wiki: () => chip.wiki,
 		exists: () => true,
@@ -1287,7 +1315,7 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 		},
 		currentStat: (player, stat) => {
 			const level = getChipLevel(player.options.chips?.[chipId]);
-			const rarity = getChipRarity(level);
+			const rarity = getChipRarity(level, getChipInputRarity(player.options.chipRarities, chipId));
 			const per = chip.statsPerRarity?.[rarity]?.[stat] ?? 0;
 			return per * level;
 		},
@@ -1304,59 +1332,132 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 		},
 		progress: (player) => {
 			const level = getChipLevel(player.options.chips?.[chipId]);
+			const rarity = getChipRarity(level, getChipInputRarity(player.options.chipRarities, chipId));
+			const maxLevel = getChipMaxLevelForRarity(rarity);
 			return [
 				{
 					name: 'Level',
 					current: level,
+					max: maxLevel,
+					ratio: Math.min(isNaN(level / maxLevel) ? 0 : level / maxLevel, 1),
+				},
+				{
+					name: 'Rarity',
+					current: GARDEN_CHIP_RARITY_MAX_LEVELS[rarity],
 					max: GARDEN_CHIP_MAX_LEVEL,
-					ratio: Math.min(isNaN(level / GARDEN_CHIP_MAX_LEVEL) ? 0 : level / GARDEN_CHIP_MAX_LEVEL, 1),
+					ratio: GARDEN_CHIP_RARITY_MAX_LEVELS[rarity] / GARDEN_CHIP_MAX_LEVEL,
 				},
 			];
 		},
 		upgrades: (player, stats) => {
 			const currentLevel = getChipLevel(player.options.chips?.[chipId]);
-			if (currentLevel >= GARDEN_CHIP_MAX_LEVEL) return [];
+			const currentRarity = getChipRarity(currentLevel, getChipInputRarity(player.options.chipRarities, chipId));
+			const maxLevel = getChipMaxLevelForRarity(currentRarity);
+			const upgrades: FortuneUpgrade[] = [];
 
-			const nextLevel = currentLevel + 1;
-			const effects = gardenChipEffectSummaries(player, chipId, stats, nextLevel);
-
-			// If a specific stat is requested, only offer upgrades that affect it.
-			if (stats && stats.length > 0 && chip.statsPerRarity) {
-				const affectsRequested = stats.some((s) => (chip.statsPerRarity?.[Rarity.Legendary]?.[s] ?? 0) !== 0);
-				if (!affectsRequested && effects.length === 0) return [];
+			if (currentLevel <= 0) {
+				upgrades.push(createChipLevelUpgrade(player, chipId, chip, 0, Rarity.Rare, stats));
+			} else if (currentLevel < maxLevel) {
+				upgrades.push(createChipLevelUpgrade(player, chipId, chip, currentLevel, currentRarity, stats));
 			}
 
-			const deltaStats: Partial<Record<Stat, number>> = {};
-			const currentRarity = getChipRarity(currentLevel);
-			const nextRarity = getChipRarity(nextLevel);
-			for (const [k, v] of Object.entries(chip.statsPerRarity?.[nextRarity] ?? {})) {
-				const stat = k as Stat;
-				const before = (chip.statsPerRarity?.[currentRarity]?.[stat] ?? 0) * currentLevel;
-				const after = (v ?? 0) * nextLevel;
-				const diff = after - before;
-				if (diff !== 0) deltaStats[stat] = diff;
+			const nextRarity = getNextChipRarity(currentRarity);
+			if (nextRarity && currentLevel >= GARDEN_CHIP_RARITY_MAX_LEVELS[currentRarity]) {
+				upgrades.push(
+					createChipRarityUpgrade(player, chipId, chip, currentLevel, currentRarity, nextRarity, stats)
+				);
 			}
 
-			return [
-				{
-					title: `${chip.name} ${nextLevel}`,
-					increase: deltaStats[Stat.FarmingFortune] ?? 0,
-					stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
-					effects: effects.length > 0 ? effects : undefined,
-					action: UpgradeAction.LevelUp,
-					category: UpgradeCategory.Misc,
-					cost: {
-						items: {
-							[chip.skyblockId]: 1,
-						},
-					},
-					meta: {
-						type: 'chip',
-						id: chip.skyblockId,
-						value: nextLevel,
-					},
-				},
-			];
+			return upgrades.filter((upgrade) => isRelevantChipUpgrade(upgrade, stats));
 		},
 	};
+}
+
+function createChipLevelUpgrade(
+	player: FarmingPlayer,
+	chipId: keyof typeof GARDEN_CHIPS,
+	chip: GardenChipInfo,
+	currentLevel: number,
+	rarity: GardenChipRarity,
+	stats?: Stat[]
+): FortuneUpgrade {
+	const nextLevel = currentLevel + 1;
+	const effects = gardenChipEffectSummaries(player, chipId, stats, nextLevel, rarity);
+	const deltaStats = getChipDeltaStats(chip, currentLevel, nextLevel, rarity, rarity);
+
+	return {
+		title: currentLevel <= 0 ? chip.name : `${chip.name} ${nextLevel}`,
+		increase: deltaStats[Stat.FarmingFortune] ?? 0,
+		stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
+		effects: effects.length > 0 ? effects : undefined,
+		action: currentLevel <= 0 ? UpgradeAction.Unlock : UpgradeAction.LevelUp,
+		category: UpgradeCategory.Misc,
+		cost: currentLevel <= 0 ? { items: { [chip.skyblockId]: 1 } } : { sowdust: getChipNextLevelCost(currentLevel) },
+		meta: {
+			type: 'chip',
+			id: chip.skyblockId,
+			value: nextLevel,
+		},
+	};
+}
+
+function createChipRarityUpgrade(
+	player: FarmingPlayer,
+	chipId: keyof typeof GARDEN_CHIPS,
+	chip: GardenChipInfo,
+	currentLevel: number,
+	currentRarity: GardenChipRarity,
+	nextRarity: GardenChipRarity,
+	stats?: Stat[]
+): FortuneUpgrade {
+	const effects = gardenChipEffectSummaries(player, chipId, stats, currentLevel, nextRarity);
+	const deltaStats = getChipDeltaStats(chip, currentLevel, currentLevel, currentRarity, nextRarity);
+
+	return {
+		title: `${nextRarity} ${chip.name}`,
+		increase: deltaStats[Stat.FarmingFortune] ?? 0,
+		stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
+		effects: effects.length > 0 ? effects : undefined,
+		action: UpgradeAction.Upgrade,
+		category: UpgradeCategory.Misc,
+		cost: {
+			items: {
+				[chip.skyblockId]: getChipRarityUpgradeCost(currentRarity),
+			},
+		},
+		meta: {
+			type: 'chip_rarity',
+			id: chip.skyblockId,
+			value: nextRarity,
+		},
+	};
+}
+
+function getChipDeltaStats(
+	chip: GardenChipInfo,
+	currentLevel: number,
+	nextLevel: number,
+	currentRarity: GardenChipRarity,
+	nextRarity: GardenChipRarity
+): Partial<Record<Stat, number>> {
+	const result: Partial<Record<Stat, number>> = {};
+	const statKeys = new Set<Stat>([
+		...(Object.keys(chip.statsPerRarity?.[currentRarity] ?? {}) as Stat[]),
+		...(Object.keys(chip.statsPerRarity?.[nextRarity] ?? {}) as Stat[]),
+	]);
+
+	for (const stat of statKeys) {
+		const before = (chip.statsPerRarity?.[currentRarity]?.[stat] ?? 0) * currentLevel;
+		const after = (chip.statsPerRarity?.[nextRarity]?.[stat] ?? 0) * nextLevel;
+		const diff = after - before;
+		if (diff !== 0) result[stat] = diff;
+	}
+
+	return result;
+}
+
+function isRelevantChipUpgrade(upgrade: FortuneUpgrade, stats?: Stat[]): boolean {
+	if (!stats || stats.length === 0) return true;
+	if (!upgrade.stats && !upgrade.effects) return true;
+	return stats.some((stat) => (upgrade.stats?.[stat] ?? 0) !== 0) || (upgrade.effects?.length ?? 0) > 0;
 }
