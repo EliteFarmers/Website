@@ -3,7 +3,7 @@ import type { Rarity, RarityRecord, ReforgeTarget } from '../constants/reforges.
 import type { Skill } from '../constants/skills.js';
 import type { SpecialCrop } from '../constants/specialcrops.js';
 import type { Stat, StatsRecord } from '../constants/stats.js';
-import type { Upgrade, UpgradeCost } from '../constants/upgrades.js';
+import type { Upgrade, UpgradeCost, UpgradeRecommendation } from '../constants/upgrades.js';
 import type { GemSlotCost, GemSlotRequirement } from '../fortune/upgradeable.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import type { FarmingToolType, GearSlot, ItemDefinition } from './definitions.js';
@@ -19,6 +19,7 @@ export abstract class BaseItem implements ItemDefinition {
 	stats?: RarityRecord<StatsRecord>;
 	baseStats?: Partial<Record<Stat, number>>;
 	cost?: UpgradeCost;
+	recommendation?: UpgradeRecommendation;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 	skillReq?: Partial<Record<string, number>>;
 	type?: FarmingToolType | ReforgeTarget;

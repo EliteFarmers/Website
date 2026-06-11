@@ -192,6 +192,7 @@ export function getSelfFortuneUpgrade(
 					id: nextInfo.skyblockId,
 				},
 				group: nextItem.group,
+				recommendation: nextItem.recommendation ?? nextInfo.recommendation,
 				conflictKey: getItemScopedConflictKey(upgradeable, `item_tier:${nextInfo.skyblockId}`),
 			} satisfies FortuneUpgrade,
 		};
@@ -305,6 +306,7 @@ export function getSelfFortuneUpgrade(
 							: (upgradeable.item.uuid ?? undefined),
 				},
 				group: nextItem.group,
+				recommendation: nextItem.recommendation ?? nextInfo.recommendation,
 				conflictKey: getItemScopedConflictKey(upgradeable, `item_tier:${nextItem.id}`),
 			} satisfies FortuneUpgrade,
 		};

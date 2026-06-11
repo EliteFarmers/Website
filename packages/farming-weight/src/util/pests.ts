@@ -13,6 +13,42 @@ import {
 	type Pest,
 } from '../constants/pests.js';
 
+type BestiaryBracketEntries = readonly (readonly [number, number])[];
+
+const PEST_BESTIARY_ENTRIES = Object.entries(PEST_BESTIARY_IDS) as [string, Pest | null][];
+const SORTED_DEFAULT_GARDEN_BESTIARY_PEST_BRACKET = sortBestiaryBracketEntries(
+	DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	'desc'
+);
+const SORTED_PEST_BESTIARY_BRACKETS = Object.fromEntries(
+	Object.entries(BESTIARY_PEST_BRACKETS).map(([pest, brackets]) => [
+		pest,
+		sortBestiaryBracketEntries(brackets, 'desc'),
+	])
+) as Record<Pest, BestiaryBracketEntries>;
+const SORTED_GARDEN_BESTIARY_BRACKETS = Object.fromEntries(
+	Object.entries(GARDEN_BESTIARY_BRACKETS).map(([bestiaryId, brackets]) => [
+		bestiaryId,
+		sortBestiaryBracketEntries(brackets, 'desc'),
+	])
+) as Record<string, BestiaryBracketEntries>;
+const ASCENDING_DEFAULT_GARDEN_BESTIARY_PEST_BRACKET = sortBestiaryBracketEntries(
+	DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	'asc'
+);
+const ASCENDING_PEST_BESTIARY_BRACKETS = Object.fromEntries(
+	Object.entries(BESTIARY_PEST_BRACKETS).map(([pest, brackets]) => [
+		pest,
+		sortBestiaryBracketEntries(brackets, 'asc'),
+	])
+) as Record<Pest, BestiaryBracketEntries>;
+const ASCENDING_GARDEN_BESTIARY_BRACKETS = Object.fromEntries(
+	Object.entries(GARDEN_BESTIARY_BRACKETS).map(([bestiaryId, brackets]) => [
+		bestiaryId,
+		sortBestiaryBracketEntries(brackets, 'asc'),
+	])
+) as Record<string, BestiaryBracketEntries>;
+
 export function fortuneFromPests(pests: number): number {
 	return PEST_EXCHANGE_RATES[pests as keyof typeof PEST_EXCHANGE_RATES] ?? 0;
 }
@@ -20,21 +56,15 @@ export function fortuneFromPests(pests: number): number {
 export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>, onlyPests = true): number {
 	let reachedBrackets = 0;
 
-	const brackets = BESTIARY_PEST_BRACKETS;
-
-	for (const [bestiaryId, pestId] of Object.entries(PEST_BESTIARY_IDS) as [string, Pest | null][]) {
+	for (const [bestiaryId, pestId] of PEST_BESTIARY_ENTRIES) {
 		if (onlyPests && !pestId) continue;
 		const kills = bestiaryKills[bestiaryId];
 		if (!kills) continue;
 
-		const bracket = Object.entries(
-			(pestId ? brackets[pestId] : GARDEN_BESTIARY_BRACKETS[bestiaryId]) ?? DEFAULT_GARDEN_BESTIARY_PEST_BRACKET
-		).sort((a, b) => b[1] - a[1]);
+		const bracket = getSortedBestiaryBrackets(bestiaryId, pestId, 'desc');
+		const unlocked = bracket.find(([, bracketKills]) => kills >= bracketKills);
 
-		// Find the highest reached bracket for this pest
-		const unlocked = bracket.find((b) => +kills >= b[1]);
-
-		reachedBrackets += unlocked ? +unlocked[0] : 0;
+		reachedBrackets += unlocked ? unlocked[0] : 0;
 	}
 
 	return reachedBrackets;
@@ -51,15 +81,11 @@ export function getGardenBestiaryProgress(
 		string,
 		{ kills: number; nextBracketKills: number | null; bracketsUnlocked: number; name: string }
 	> = {};
-	const brackets = BESTIARY_PEST_BRACKETS;
 
-	for (const [bestiaryId, pestId] of Object.entries(PEST_BESTIARY_IDS) as [string, Pest | null][]) {
+	for (const [bestiaryId, pestId] of PEST_BESTIARY_ENTRIES) {
 		const kills = bestiaryKills[bestiaryId] || 0;
 		const pestName = GARDEN_BESTIARY_NAMES[bestiaryId] || 'Unknown Pest';
-		const bracket =
-			(pestId ? brackets[pestId] : GARDEN_BESTIARY_BRACKETS[bestiaryId]) ?? DEFAULT_GARDEN_BESTIARY_PEST_BRACKET;
-
-		const sortedBrackets = Object.entries(bracket).sort((a, b) => +a[1] - +b[1]);
+		const sortedBrackets = getSortedBestiaryBrackets(bestiaryId, pestId, 'asc');
 		let bracketsUnlocked = 0;
 		let nextBracketKills: number | null = null;
 		for (const [bracketLevel, bracketKills] of sortedBrackets) {
@@ -85,7 +111,7 @@ export function uncountedCropsFromPests(pestKills: Record<string, number>): Part
 	const crops = {} as Partial<Record<Crop, number>>;
 	const brackets = PEST_COLLECTION_BRACKETS;
 
-	for (const [bestiaryKey, pestId] of Object.entries(PEST_BESTIARY_IDS) as [string, Pest | null][]) {
+	for (const [bestiaryKey, pestId] of PEST_BESTIARY_ENTRIES) {
 		let kills = pestKills[bestiaryKey];
 		if (!kills || !pestId) continue;
 
@@ -132,4 +158,32 @@ export function uncountedCropsFromPests(pestKills: Record<string, number>): Part
 	}
 
 	return crops;
+}
+
+function sortBestiaryBracketEntries(
+	brackets: Record<number, number>,
+	direction: 'asc' | 'desc'
+): BestiaryBracketEntries {
+	const multiplier = direction === 'asc' ? 1 : -1;
+	return Object.entries(brackets)
+		.map(([level, kills]) => [Number(level), kills] as const)
+		.sort((a, b) => (a[1] - b[1]) * multiplier);
+}
+
+function getSortedBestiaryBrackets(
+	bestiaryId: string,
+	pestId: Pest | null,
+	direction: 'asc' | 'desc'
+): BestiaryBracketEntries {
+	if (direction === 'asc') {
+		return (
+			(pestId ? ASCENDING_PEST_BESTIARY_BRACKETS[pestId] : ASCENDING_GARDEN_BESTIARY_BRACKETS[bestiaryId]) ??
+			ASCENDING_DEFAULT_GARDEN_BESTIARY_PEST_BRACKET
+		);
+	}
+
+	return (
+		(pestId ? SORTED_PEST_BESTIARY_BRACKETS[pestId] : SORTED_GARDEN_BESTIARY_BRACKETS[bestiaryId]) ??
+		SORTED_DEFAULT_GARDEN_BESTIARY_PEST_BRACKET
+	);
 }

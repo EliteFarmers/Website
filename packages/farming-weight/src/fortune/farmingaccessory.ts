@@ -1,6 +1,6 @@
 import type { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
-import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import type { FortuneSourceProgress, StatQueryOptions } from '../constants/upgrades.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
 import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../items/accessories.js';
 import { statsToEffects } from '../items/sources/effects-util.js';
@@ -30,8 +30,12 @@ export class FarmingAccessory extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false): FortuneSourceProgress[] {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zeroed, {
+			...query,
+			defaultSourceType: 'general',
+		});
 	}
 
 	setOptions(options: PlayerOptions) {

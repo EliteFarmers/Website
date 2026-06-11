@@ -6,13 +6,19 @@ import { getLevelProgress } from '$lib/format';
 import { getItemsFromUpgrades } from '$lib/items';
 import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 import { getItems } from '$lib/remote/items.remote';
-import { getRatesData, type PestFarmingData, type RatesData } from '$lib/stores/ratesData';
+import {
+	getRatesData,
+	type PestFarmingData,
+	type PestFarmingRateSettings,
+	type RatesData,
+} from '$lib/stores/ratesData';
 import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
 import { getStatsContext } from '$lib/stores/stats.svelte';
 import {
 	createPestFarmingPlayer,
 	Crop,
 	CROP_INFO,
+	DEFAULT_PEST_CYCLE_SETTINGS,
 	FarmingArmor,
 	FarmingEquipment,
 	FarmingPet,
@@ -22,16 +28,14 @@ import {
 	getCropMilestoneLevels,
 	getCropUpgrades,
 	getGardenLevel,
-	getPestPhaseUpgradePriority,
 	PEST_ARMOR_SLOTS,
-	PEST_DEFAULT_WEIGHTS,
 	PEST_EQUIPMENT_SLOTS,
 	PEST_FARMING_PHASE_STATS,
 	PEST_FARMING_STATS,
 	PEST_MAIN_ARMOR_SET_ID,
-	PEST_PHASE_WEIGHTS,
 	PEST_SPAWN_ARMOR_SET_ID,
 	PestFarmingPhase,
+	PestFarmingRateCalculator,
 	Stat,
 	STAT_NAMES,
 	Vacuum,
@@ -40,8 +44,12 @@ import {
 	type FortuneSourceProgress,
 	type FortuneUpgrade,
 	type PestArmorSetLoadout,
+	type PestCycleSettings,
 	type PestFarmingPlayerOptions,
+	type PestFarmingUpgradeRateImpact,
 	type PestPhaseLoadout,
+	type PestRateItemPrice,
+	type PestRatePriceBook,
 	type StatBreakdown,
 	type UpgradeTreeNode,
 } from 'farming-weight';
@@ -92,6 +100,35 @@ const sumStatBreakdown = (breakdown: StatBreakdown): number =>
 	Object.values(breakdown).reduce((sum, entry) => sum + entry.value, 0);
 
 type PestFarmingPlayer = ReturnType<typeof createPestFarmingPlayer>;
+type RatesItemPriceEntry = RatesItemPriceData[string];
+
+function getUpgradeIdentity(upgrade: FortuneUpgrade): string {
+	return (
+		upgrade.conflictKey ??
+		`${upgrade.title}:${upgrade.action}:${upgrade.meta?.type ?? ''}:${upgrade.meta?.id ?? upgrade.meta?.key ?? ''}`
+	);
+}
+
+function getItemSellValue(item: RatesItemPriceEntry | undefined): PestRateItemPrice | undefined {
+	if (!item) return undefined;
+
+	const npc = item.bazaar?.npc || item.item?.npc_sell_price || 0;
+	const bazaar = item.bazaar?.averageSellOrder || item.bazaar?.averageSell || 0;
+	const auctionPrices = item.auctions
+		?.map((auction) => (auction.lowest > 0 ? auction.lowest : auction.last))
+		.filter((price) => price > 0);
+	const auction = auctionPrices?.length ? Math.min(...auctionPrices) : 0;
+	const marketValues = [
+		{ coins: bazaar, source: 'bazaar' },
+		{ coins: auction, source: 'auction' },
+	].filter((price): price is PestRateItemPrice => price.coins > 0);
+	const market = marketValues.length ? marketValues.sort((a, b) => a.coins - b.coins)[0] : undefined;
+
+	if (npc > 0 && npc >= (market?.coins ?? 0)) {
+		return { coins: npc, source: 'npc' };
+	}
+	return market;
+}
 
 export class PestFarmingPageContext {
 	readonly ctx = getStatsContext();
@@ -114,9 +151,17 @@ export class PestFarmingPageContext {
 	sharedEquipment = $state<Partial<Record<GearSlot, string>>>({});
 	activePhase = $state<PestFarmingPhase>(PestFarmingPhase.Farm);
 	itemsData = $state<RatesItemPriceData>({});
+	itemsVersion = $state(0);
 
 	#skipNextRatesDataRefresh = false;
 	#profileKey = '';
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	#rateImpactMemo = new Map<string, PestFarmingUpgradeRateImpact>();
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	#gearRateImpactMemo = new Map<string, number>();
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	#petRateImpactMemo = new Map<string, number>();
+	#lastItemRequestKey = '';
 
 	pets = $derived.by(() => (this.ctx.ready ? FarmingPet.fromArray(this.ctx.pets) : []));
 	tools = $derived.by(() => (this.ctx.ready ? FarmingTool.fromArray(this.ctx.tools as EliteItemDto[]) : []));
@@ -133,6 +178,37 @@ export class PestFarmingPageContext {
 	selectedVacuum = $derived(
 		this.vacuums.find((vacuum) => vacuum.item.uuid === this.selectedVacuumId) ?? this.vacuums[0]
 	);
+	pestRateSettings = $derived.by<PestCycleSettings>(() => ({
+		...DEFAULT_PEST_CYCLE_SETTINGS,
+		...this.rates.pestFarming.rateSettings,
+		sprayedPlot: this.rates.pestFarming.sprayedPlot,
+	}));
+	pestRatePriceBook = $derived.by<PestRatePriceBook>(() => {
+		void this.itemsVersion;
+		return {
+			version: String(this.itemsVersion),
+			missingItemMode: 'zero',
+			items: Object.fromEntries(
+				Object.entries(this.itemsData)
+					.map(([itemId, item]) => [itemId, getItemSellValue(item)] as const)
+					.filter((entry): entry is readonly [string, PestRateItemPrice] => entry[1] !== undefined)
+			),
+		};
+	});
+	pestRateCalculator = $derived.by(() => {
+		this.trackPestVersion();
+		return new PestFarmingRateCalculator({
+			player: this.pestPlayer,
+			options: {
+				crop: this.selectedCropKey,
+				cycle: this.pestRateSettings,
+			},
+			priceBook: this.pestRatePriceBook,
+		});
+	});
+	pestRateResult = $derived.by(() => this.pestRateCalculator.calculate());
+	pestRateStateKey = $derived(this.pestRateResult.stateKey);
+	pestRateVersion = $derived(`${this.activePhase}:${this.pestRateStateKey}`);
 
 	harvestFeastPerks = $derived.by(() => {
 		const current = this.ctx.member.current?.stats?.carnival?.harvestFeast;
@@ -189,7 +265,7 @@ export class PestFarmingPageContext {
 
 	pestStats = $derived.by(() => {
 		this.trackPestVersion();
-		return PEST_FARMING_PHASE_STATS[this.activePhase].map((stat) => {
+		return this.getPhaseStats(this.activePhase).map((stat) => {
 			const breakdown = this.pestPlayer.getPhaseStatBreakdown(this.activePhase, stat, this.selectedCropKey);
 			return {
 				stat,
@@ -237,13 +313,13 @@ export class PestFarmingPageContext {
 		this.trackPestVersion();
 		return this.pestPlayer.getArmorSetProgress(
 			this.activePhaseLoadout.armorSetId,
-			PEST_FARMING_PHASE_STATS[this.activePhase]
+			this.getPhaseStats(this.activePhase)
 		);
 	});
 
 	activePhaseGeneralProgress = $derived.by(() => {
 		this.trackPestVersion();
-		const stats = PEST_FARMING_PHASE_STATS[this.activePhase];
+		const stats = this.getPhaseStats(this.activePhase);
 		const progress = this.pestPlayer.getPhaseProgress(this.activePhase, stats);
 		const hasRelevantStat = (p: FortuneSourceProgress) =>
 			!!p.stats &&
@@ -261,7 +337,7 @@ export class PestFarmingPageContext {
 	activePhaseUpgrades = $derived.by(() => {
 		this.trackPestVersion();
 		return this.pestPlayer.getPhaseUpgrades(this.activePhase, {
-			stats: PEST_FARMING_PHASE_STATS[this.activePhase],
+			stats: this.getPhaseStats(this.activePhase),
 			includeUpgradeGroups: true,
 		});
 	});
@@ -295,7 +371,9 @@ export class PestFarmingPageContext {
 		return [...this.visibleProgressUpgrades, ...this.activePhaseUpgrades];
 	});
 
-	neededItems = $derived(getItemsFromUpgrades(this.neededItemUpgrades));
+	rateOutputItems = $derived.by(() => this.pestRateCalculator.getRequiredPriceItems(this.pestRateResult));
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	neededItems = $derived([...new Set([...getItemsFromUpgrades(this.neededItemUpgrades), ...this.rateOutputItems])]);
 	debouncedItems = new Debounced(() => this.neededItems, 1000);
 
 	constructor() {
@@ -401,25 +479,75 @@ export class PestFarmingPageContext {
 		return breakdown;
 	}
 
+	getPhaseStats(phase: PestFarmingPhase): Stat[] {
+		const stats = PEST_FARMING_PHASE_STATS[phase];
+		if (phase !== PestFarmingPhase.Kill) return stats;
+
+		const cropStat = CROP_INFO[this.selectedCropKey]?.fortuneType;
+		if (!cropStat || stats.includes(cropStat)) return stats;
+
+		return [...stats, cropStat];
+	}
+
 	getPhasePieceBreakdown(piece: FarmingArmor | FarmingEquipment): StatBreakdown {
-		return this.getPieceBreakdown(piece, PEST_FARMING_PHASE_STATS[this.activePhase]);
+		return this.getPieceBreakdown(piece, this.getPhaseStats(this.activePhase));
 	}
 
 	getSharedEquipmentPieceBreakdown(piece: FarmingArmor | FarmingEquipment): StatBreakdown {
 		return this.getPieceBreakdown(piece, SHARED_EQUIPMENT_STATS);
 	}
 
-	getPhasePieceScore(piece: FarmingArmor | FarmingEquipment): number {
-		return this.pestPlayer.getPieceScore(piece, PEST_PHASE_WEIGHTS[this.activePhase]);
+	getPhasePieceRateImpact(piece: FarmingArmor | FarmingEquipment): number {
+		const slot = piece.slot;
+		const uuid = piece.item.uuid;
+		const armorSetId = this.activePhaseLoadout.armorSetId;
+		if (!slot || !uuid) return 0;
+		if (this.pestPlayer.getArmorSetLoadout(armorSetId)?.pieces[slot] === uuid) return 0;
+
+		const key = `${this.pestRateStateKey}:armor:${armorSetId}:${slot}:${uuid}`;
+		const cached = this.#gearRateImpactMemo.get(key);
+		if (cached !== undefined) return cached;
+
+		const armorSets = this.getStoredArmorSets().map((set) =>
+			set.id === armorSetId
+				? {
+						...set,
+						pieces: {
+							...set.pieces,
+							[slot]: uuid,
+						},
+					}
+				: set
+		);
+		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ armorSets }));
+		if (this.#gearRateImpactMemo.size > 1000) this.#gearRateImpactMemo.clear();
+		this.#gearRateImpactMemo.set(key, delta);
+		return delta;
 	}
 
-	getSharedEquipmentPieceScore(piece: FarmingArmor | FarmingEquipment): number {
-		return this.pestPlayer.getPieceScore(piece, PEST_DEFAULT_WEIGHTS);
+	getSharedEquipmentPieceRateImpact(piece: FarmingArmor | FarmingEquipment): number {
+		const slot = piece.slot;
+		const uuid = piece.item.uuid;
+		if (!slot || !uuid) return 0;
+		if (this.sharedEquipment[slot] === uuid) return 0;
+
+		const key = `${this.pestRateStateKey}:equipment:${slot}:${uuid}`;
+		const cached = this.#gearRateImpactMemo.get(key);
+		if (cached !== undefined) return cached;
+
+		const sharedEquipment = {
+			...this.sharedEquipment,
+			[slot]: uuid,
+		};
+		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ sharedEquipment }));
+		if (this.#gearRateImpactMemo.size > 1000) this.#gearRateImpactMemo.clear();
+		this.#gearRateImpactMemo.set(key, delta);
+		return delta;
 	}
 
 	getPetBreakdown(pet: FarmingPet, phase: PestFarmingPhase): StatBreakdown {
 		const breakdown: StatBreakdown = {};
-		const phaseStats = PEST_FARMING_PHASE_STATS[phase];
+		const phaseStats = this.getPhaseStats(phase);
 		const stats: readonly Stat[] = phaseStats.includes(Stat.FarmingFortune)
 			? phaseStats
 			: [...phaseStats, Stat.FarmingFortune];
@@ -430,23 +558,45 @@ export class PestFarmingPageContext {
 		return breakdown;
 	}
 
-	getPetPhaseScore(pet: FarmingPet, phase: PestFarmingPhase): number {
-		return this.pestPlayer.getPetScore(pet, phase);
+	getPetRateImpact(pet: FarmingPet, phase: PestFarmingPhase): number {
+		const uuid = pet.pet.uuid;
+		if (!uuid) return 0;
+		if (this.phaseLoadouts[phase]?.petId === uuid) return 0;
+
+		const key = `${this.pestRateStateKey}:pet:${phase}:${uuid}`;
+		const cached = this.#petRateImpactMemo.get(key);
+		if (cached !== undefined) return cached;
+
+		const phaseLoadouts = {
+			...this.phaseLoadouts,
+			[phase]: {
+				...this.phaseLoadouts[phase],
+				petId: uuid,
+			},
+		};
+		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ phaseLoadouts }));
+		if (this.#petRateImpactMemo.size > 1000) this.#petRateImpactMemo.clear();
+		this.#petRateImpactMemo.set(key, delta);
+		return delta;
 	}
 
 	getProgressUpgrades(progress: FortuneSourceProgress): FortuneUpgrade[] {
 		const uuid = progress.item?.uuid;
 		if (!uuid) return progress.upgrades ?? [];
 
+		const tool = this.pestPlayer.crop.tools.find((item) => item.item.uuid === uuid);
+		if (tool && this.activePhase === PestFarmingPhase.Kill) return [];
+		if (tool) return tool.getUpgrades({ stats: this.cropContextStats });
+
 		const vacuum = this.pestPlayer.vacuums.find((item) => item.item.uuid === uuid);
-		if (vacuum) return vacuum.getUpgrades({ stats: VACUUM_STATS });
+		if (vacuum) return vacuum.getUpgrades({ stats: VACUUM_STATS, sourceTypes: ['vacuum'] });
 
 		return progress.upgrades ?? [];
 	}
 
 	expandPhaseUpgrade(phase: PestFarmingPhase, upgrade: FortuneUpgrade): UpgradeTreeNode {
 		return this.pestPlayer.expandPhaseUpgrade(phase, upgrade, {
-			stats: PEST_FARMING_PHASE_STATS[phase],
+			stats: this.getPhaseStats(phase),
 			crop: this.selectedCropKey,
 			maxDepth: PEST_UPGRADE_TREE_MAX_DEPTH,
 		});
@@ -459,7 +609,7 @@ export class PestFarmingPageContext {
 	hasPhaseUpgradePath(phase: PestFarmingPhase, upgrade: FortuneUpgrade): boolean {
 		return (
 			this.pestPlayer.expandPhaseUpgrade(phase, upgrade, {
-				stats: PEST_FARMING_PHASE_STATS[phase],
+				stats: this.getPhaseStats(phase),
 				crop: this.selectedCropKey,
 				maxDepth: 1,
 			}).children.length > 0
@@ -583,8 +733,54 @@ export class PestFarmingPageContext {
 		trackAnalytics('pest_farming.phase_pet_selected', { phase });
 	}
 
-	getPhaseUpgradeScore(upgrade: FortuneUpgrade): number {
-		return getPestPhaseUpgradePriority(this.activePhase, upgrade);
+	getPestRateImpact(upgrade: FortuneUpgrade): PestFarmingUpgradeRateImpact | undefined {
+		const result = this.pestRateResult;
+		const key = `${this.pestRateStateKey}:${this.activePhase}:${getUpgradeIdentity(upgrade)}`;
+		const cached = this.#rateImpactMemo.get(key);
+		if (cached) return cached;
+
+		const impact = this.pestRateCalculator.calculateUpgradeImpact({
+			phase: this.activePhase,
+			upgrade,
+			before: result,
+		});
+		if (this.#rateImpactMemo.size > 500) this.#rateImpactMemo.clear();
+		this.#rateImpactMemo.set(key, impact);
+		return impact;
+	}
+
+	getPestRateImpactValue(upgrade: FortuneUpgrade): number {
+		const impact = this.getPestRateImpact(upgrade);
+		const value = impact?.valuationDelta.coinsPerHour ?? 0;
+		return Number.isFinite(value) ? value : 0;
+	}
+
+	#createEvaluationPlayer(patch: Partial<PestFarmingPlayerOptions>): PestFarmingPlayer {
+		return createPestFarmingPlayer({
+			...this.options,
+			armorSets: this.getStoredArmorSets(),
+			phaseLoadouts: this.phaseLoadouts,
+			sharedEquipment: this.sharedEquipment,
+			selectedVacuumId: this.selectedVacuumId,
+			...patch,
+		} as PestFarmingPlayerOptions);
+	}
+
+	#getRateDeltaForPlayer(player: PestFarmingPlayer): number {
+		const before = this.pestRateResult.valuation.coinsPerHour;
+		const after = this.pestRateCalculator.withPlayer(player).calculate().valuation.coinsPerHour;
+		const delta = after - before;
+		return Number.isFinite(delta) ? delta : 0;
+	}
+
+	setPestRateSetting<K extends keyof PestFarmingRateSettings>(key: K, value: PestFarmingRateSettings[K]): void {
+		this.#updatePestFarmingData({
+			rateSettings: {
+				...this.rates.pestFarming.rateSettings,
+				[key]: value,
+			},
+		});
+		trackAnalytics('pest_farming.rate_setting_changed', { key });
 	}
 
 	setSprayedPlot(checked: boolean): void {
@@ -640,6 +836,7 @@ export class PestFarmingPageContext {
 			dnaMilestone: this.ctx.member.current?.unparsed?.dnaMilestone ?? 0,
 			attributes: this.ctx.member.current?.memberData?.attributes ?? {},
 			chips: this.ctx.member.current?.memberData?.garden?.chips ?? {},
+			chipRarities: this.rates.chipRarities,
 			perks: this.ctx.member.current?.unparsed?.perks ?? undefined,
 			harvestFeast: this.harvestFeastOptions,
 
@@ -677,10 +874,16 @@ export class PestFarmingPageContext {
 
 	#loadItemPrices(): void {
 		const items = this.debouncedItems.current;
-		if (items.length === 0) return;
+		const missingItems = items.filter((item) => !this.itemsData[item]);
+		if (missingItems.length === 0) return;
 
-		void getItems(items).then((data) => {
+		const requestKey = [...missingItems].sort().join(':');
+		if (requestKey === this.#lastItemRequestKey) return;
+		this.#lastItemRequestKey = requestKey;
+
+		void getItems(missingItems).then((data) => {
 			this.itemsData = { ...this.itemsData, ...data };
+			this.itemsVersion++;
 		});
 	}
 

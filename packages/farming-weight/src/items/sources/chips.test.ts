@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { buildEffectEnvironment } from '../../effects/environment.js';
 import { createFarmingPlayer } from '../../player/player.js';
@@ -36,6 +37,27 @@ describe('garden chip source effects', () => {
 				op: 'add-stat',
 				stat: Stat.FarmingFortune,
 				value: 48,
+			},
+		]);
+	});
+
+	test('generic chips use explicit rarity assumptions when API level is below rarity cap', () => {
+		const player = createFarmingPlayer({
+			chips: {
+				cropshot: 10,
+			},
+			chipRarities: {
+				CROPSHOT_GARDEN_CHIP: Rarity.Legendary,
+			},
+		});
+		const env = buildEffectEnvironment(player);
+
+		expect(GARDEN_CHIP_CLASSES.cropshot.getEffects(player, env)).toEqual([
+			{
+				source: 'Cropshot Chip',
+				op: 'add-stat',
+				stat: Stat.FarmingFortune,
+				value: 50,
 			},
 		]);
 	});

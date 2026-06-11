@@ -18,6 +18,7 @@
 	const copper = $derived((upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0));
 	const bits = $derived((upgrade.cost?.bits ?? 0) + (upgrade.cost?.applyCost?.bits ?? 0));
 	const kernels = $derived((upgrade.cost?.kernels ?? 0) + (upgrade.cost?.applyCost?.kernels ?? 0));
+	const sowdust = $derived(upgrade.cost?.sowdust ?? 0);
 	const goldMedal = $derived(upgrade.cost?.medals?.gold ?? 0);
 </script>
 
@@ -58,14 +59,20 @@
 			<span class="text-muted-foreground">kernel{kernels === 1 ? '' : 's'}</span>
 		</p>
 	{/if}
+	{#if sowdust > 0}
+		<p class="text-sm">
+			<span class="dark:text-completed">{sowdust.toLocaleString()}</span>
+			<span class="text-muted-foreground">sowdust</span>
+		</p>
+	{/if}
 	{#if goldMedal > 0}
 		<p class="text-sm">
 			<span class="dark:text-completed">{goldMedal.toLocaleString()}</span>
 			<span class="text-muted-foreground">gold medal{goldMedal === 1 ? '' : 's'}</span>
 		</p>
 	{/if}
-	{#if totalCost || !(copper > 0 || bits > 0 || kernels > 0 || goldMedal > 0)}
-		{#if totalCost === 0 && !(copper > 0 || bits > 0 || kernels > 0 || goldMedal > 0)}
+	{#if totalCost || !(copper > 0 || bits > 0 || kernels > 0 || sowdust > 0 || goldMedal > 0)}
+		{#if totalCost === 0 && !(copper > 0 || bits > 0 || kernels > 0 || sowdust > 0 || goldMedal > 0)}
 			<span class="text-muted-foreground">Not Available</span>
 		{:else}
 			<span class="mt-1"

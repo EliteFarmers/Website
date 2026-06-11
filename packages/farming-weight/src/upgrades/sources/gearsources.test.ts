@@ -206,7 +206,7 @@ const lotusNecklace = {
 	count: 1,
 	skyblockId: 'LOTUS_NECKLACE',
 	uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
-	name: '§5Rooted Lotus Necklace',
+	name: '§5Rooted Peony Necklace',
 	lore: [
 		'§7Health: §a+21 §9(+11)',
 		'§7Farming Fortune: §a+40.5 §9(+15)',
@@ -279,7 +279,7 @@ const maxLotusBracelet = {
 	count: 1,
 	skyblockId: 'LOTUS_BRACELET',
 	uuid: '4e13528f-d1d2-455e-90b2-d1552932be74',
-	name: '§5Rooted Lotus Bracelet',
+	name: '§5Rooted Peony Bracelet',
 	lore: [
 		'§7Health: §a+21 §9(+11)',
 		'§7Farming Fortune: §a+41 §9(+15)',

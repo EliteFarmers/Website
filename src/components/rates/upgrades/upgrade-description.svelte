@@ -3,7 +3,7 @@
 	import ItemRequirements from '$comp/items/item-requirements.svelte';
 	import ScrollingName from '$comp/items/scrolling-name.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
-	import { UpgradeAction, UpgradeCategory, type FortuneUpgrade } from 'farming-weight';
+	import { UpgradeAction, UpgradeCategory, UpgradeRecommendationKind, type FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
@@ -65,6 +65,18 @@
 			<span class="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs leading-none">Set Upgrade</span>
 			{#if upgrade.group?.warning}
 				{upgrade.group.warning}
+			{/if}
+		</p>
+	{/if}
+	{#if upgrade.recommendation}
+		<p class="text-muted-foreground text-xs">
+			<span class="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs leading-none">
+				{upgrade.recommendation.label}
+			</span>
+			{#if upgrade.recommendation.kind === UpgradeRecommendationKind.Progression}
+				{upgrade.recommendation.description ?? 'Recommended for progression, not just immediate rate.'}
+			{:else if upgrade.recommendation.description}
+				{upgrade.recommendation.description}
 			{/if}
 		</p>
 	{/if}

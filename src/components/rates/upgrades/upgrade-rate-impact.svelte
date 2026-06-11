@@ -3,21 +3,34 @@
 	import * as Popover from '$ui/popover';
 	import { CROP_INFO, Crop, type UpgradeRateImpact } from 'farming-weight';
 
+	type AnyUpgradeRateImpact = UpgradeRateImpact<unknown, unknown>;
+	type CondensedRows<T> = {
+		rows: T[];
+		miscCount: number;
+		miscValue: number;
+	};
+
+	const SIGNIFICANT_ROW_MIN_RATIO = 0.005;
+	const SIGNIFICANT_ROW_MIN_VALUE = 1;
+	const SIGNIFICANT_ROW_LIMIT = 8;
+
 	interface Props {
-		impact?: UpgradeRateImpact;
+		impact?: AnyUpgradeRateImpact;
 		coins?: number;
 		totalCost?: number;
 		items?: RatesItemPriceData;
 		unavailableLabel?: string;
 	}
 
-	let { impact, coins = 0, totalCost = 0, items, unavailableLabel }: Props = $props();
+	let { impact, coins = undefined, totalCost = 0, items, unavailableLabel }: Props = $props();
 
-	const totalCoins = $derived(coins);
+	const totalCoins = $derived(coins ?? impact?.valuationDelta?.coinsPerHour ?? 0);
 	const payoffHours = $derived(totalCoins > 0 && totalCost > 0 ? totalCost / totalCoins : undefined);
-	const npcRows = $derived.by(() => sortedRows(impact?.delta.coinSources));
-	const rngRows = $derived.by(() =>
-		sortedRows(impact?.delta.rngItems).map(([itemId, amount]) => {
+	const npcRows = $derived.by(() =>
+		condenseRows(sortedRows(impact?.delta.coinSources), ([, value]) => value, totalCoins)
+	);
+	const rngRows = $derived.by(() => {
+		const rows = sortedRows(impact?.delta.rngItems).map(([itemId, amount]) => {
 			const price = getItemSellValue(itemId, items);
 			return {
 				itemId,
@@ -26,14 +39,18 @@
 				price,
 				coins: amount * price,
 			};
-		})
-	);
+		});
+		return condenseRows(rows, (row) => row.coins, totalCoins);
+	});
 	const currencyRows = $derived.by(() =>
-		sortedRows(impact?.delta.currencies).map(([currencyId, amount]) => ({
-			currencyId,
-			name: getCurrencyName(currencyId, items),
-			amount,
-		}))
+		condenseRows(
+			sortedRows(impact?.delta.currencies).map(([currencyId, amount]) => ({
+				currencyId,
+				name: getCurrencyName(currencyId, items),
+				amount,
+			})),
+			(row) => row.amount
+		)
 	);
 	const collectionRows = $derived.by(() => {
 		const itemRows = sortedRows(impact?.delta.items).map(([key, value]) => ({
@@ -50,16 +67,16 @@
 			}))
 			.filter((row) => row.key !== 'Normal' && !itemNames.has(row.key));
 
-		return [...itemRows, ...otherRows];
+		return condenseRows([...itemRows, ...otherRows], (row) => row.value);
 	});
 	const hasAnyDelta = $derived(
 		!!impact &&
 			(totalCoins !== 0 ||
 				impact.delta.collection !== 0 ||
-				npcRows.length > 0 ||
-				rngRows.length > 0 ||
-				currencyRows.length > 0 ||
-				collectionRows.length > 0)
+				hasRows(npcRows) ||
+				hasRows(rngRows) ||
+				hasRows(currencyRows) ||
+				hasRows(collectionRows))
 	);
 
 	function formatRate(value: number): string {
@@ -102,6 +119,31 @@
 		return Object.entries(record ?? {})
 			.filter(([, value]) => value !== 0)
 			.sort(([, a], [, b]) => Math.abs(b) - Math.abs(a));
+	}
+
+	function condenseRows<T>(rows: T[], getValue: (row: T) => number, totalValue?: number): CondensedRows<T> {
+		const finiteRows = rows.filter((row) => Number.isFinite(getValue(row)) && getValue(row) !== 0);
+		if (finiteRows.length === 0) return { rows: [], miscCount: 0, miscValue: 0 };
+
+		const absoluteTotal =
+			totalValue !== undefined && totalValue !== 0
+				? Math.abs(totalValue)
+				: finiteRows.reduce((sum, row) => sum + Math.abs(getValue(row)), 0);
+		const threshold = Math.max(SIGNIFICANT_ROW_MIN_VALUE, absoluteTotal * SIGNIFICANT_ROW_MIN_RATIO);
+		const significant = finiteRows.filter((row) => Math.abs(getValue(row)) >= threshold);
+		const insignificant = finiteRows.filter((row) => Math.abs(getValue(row)) < threshold);
+		const visible = significant.slice(0, SIGNIFICANT_ROW_LIMIT);
+		const hidden = [...significant.slice(SIGNIFICANT_ROW_LIMIT), ...insignificant];
+
+		return {
+			rows: visible,
+			miscCount: hidden.length,
+			miscValue: hidden.reduce((sum, row) => sum + getValue(row), 0),
+		};
+	}
+
+	function hasRows<T>(summary: CondensedRows<T>): boolean {
+		return summary.rows.length > 0 || summary.miscCount > 0;
 	}
 
 	function getItemName(itemId: string, itemsLookup?: RatesItemPriceData) {
@@ -189,10 +231,10 @@
 				{#if !hasAnyDelta}
 					<p class="text-muted-foreground">No output differences were reported for this upgrade.</p>
 				{:else}
-					{#if collectionRows.length > 0}
+					{#if hasRows(collectionRows)}
 						<div class="flex flex-col gap-1">
 							<p class="text-muted-foreground font-medium">Collection Deltas</p>
-							{#each collectionRows as row (row.id)}
+							{#each collectionRows.rows as row (row.id)}
 								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
 									<p class="truncate">{row.key}</p>
 									<p class="font-mono {row.value < 0 ? 'text-destructive' : 'dark:text-completed'}">
@@ -200,13 +242,25 @@
 									</p>
 								</div>
 							{/each}
+							{#if collectionRows.miscCount > 0}
+								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+									<p class="text-muted-foreground truncate">Misc</p>
+									<p
+										class="font-mono {collectionRows.miscValue < 0
+											? 'text-destructive'
+											: 'dark:text-completed'}"
+									>
+										{formatSigned(collectionRows.miscValue)}
+									</p>
+								</div>
+							{/if}
 						</div>
 					{/if}
 
-					{#if npcRows.length > 0}
+					{#if hasRows(npcRows)}
 						<div class="flex flex-col gap-1">
-							<p class="text-muted-foreground font-medium">NPC Coin Sources</p>
-							{#each npcRows as [source, value] (source)}
+							<p class="text-muted-foreground font-medium">Coin Sources</p>
+							{#each npcRows.rows as [source, value] (source)}
 								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
 									<p class="truncate">{source}</p>
 									<p class="font-mono {value < 0 ? 'text-destructive' : 'dark:text-completed'}">
@@ -214,13 +268,25 @@
 									</p>
 								</div>
 							{/each}
+							{#if npcRows.miscCount > 0}
+								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+									<p class="text-muted-foreground truncate">Misc</p>
+									<p
+										class="font-mono {npcRows.miscValue < 0
+											? 'text-destructive'
+											: 'dark:text-completed'}"
+									>
+										{formatSigned(npcRows.miscValue)}
+									</p>
+								</div>
+							{/if}
 						</div>
 					{/if}
 
-					{#if currencyRows.length > 0}
+					{#if hasRows(currencyRows)}
 						<div class="flex flex-col gap-1">
 							<p class="text-muted-foreground font-medium">Currency Deltas</p>
-							{#each currencyRows as row (row.currencyId)}
+							{#each currencyRows.rows as row (row.currencyId)}
 								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
 									<p class="truncate">{row.name}</p>
 									<p class="font-mono {row.amount < 0 ? 'text-destructive' : 'dark:text-completed'}">
@@ -228,13 +294,25 @@
 									</p>
 								</div>
 							{/each}
+							{#if currencyRows.miscCount > 0}
+								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+									<p class="text-muted-foreground truncate">Misc</p>
+									<p
+										class="font-mono {currencyRows.miscValue < 0
+											? 'text-destructive'
+											: 'dark:text-completed'}"
+									>
+										{formatSigned(currencyRows.miscValue)}
+									</p>
+								</div>
+							{/if}
 						</div>
 					{/if}
 
-					{#if rngRows.length > 0}
+					{#if hasRows(rngRows)}
 						<div class="flex flex-col gap-1">
 							<p class="text-muted-foreground font-medium">RNG Item Value</p>
-							{#each rngRows as row (row.itemId)}
+							{#each rngRows.rows as row (row.itemId)}
 								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
 									<div class="min-w-0">
 										<p class="truncate">{row.name}</p>
@@ -247,6 +325,20 @@
 									</p>
 								</div>
 							{/each}
+							{#if rngRows.miscCount > 0}
+								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+									<div class="min-w-0">
+										<p class="text-muted-foreground truncate">Misc</p>
+									</div>
+									<p
+										class="font-mono {rngRows.miscValue < 0
+											? 'text-destructive'
+											: 'dark:text-completed'}"
+									>
+										{formatSigned(rngRows.miscValue)}
+									</p>
+								</div>
+							{/if}
 						</div>
 					{/if}
 				{/if}

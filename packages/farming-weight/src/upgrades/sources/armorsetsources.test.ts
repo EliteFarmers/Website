@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Stat } from '../../constants/stats.js';
+import { UpgradeRecommendationKind } from '../../constants/upgrades.js';
 import { FarmingArmor } from '../../fortune/farmingarmor.js';
 import type { EliteItemDto } from '../../fortune/item.js';
 import { FARMING_ARMOR_INFO } from '../../items/armor.js';
@@ -279,14 +280,18 @@ test('pest-focused equipment upgrades prefer pest equipment and Squeaky while ke
 	const squeaky = upgrades.find(
 		(upgrade) => upgrade.title === 'Reforge to Squeaky' && upgrade.onto?.skyblockId === 'BLOSSOM_BELT'
 	);
+	const pesthunterBeltUpgrade = upgrades.find((upgrade) => upgrade.title === "Pesthunter's Belt");
 
 	expect(belt?.stats?.[Stat.BonusPestChance]?.max).toBeGreaterThan(2);
 	expect(belt?.stats?.[Stat.FarmingFortune]?.current).toBeGreaterThan(0);
 	expect(upgrades.findIndex((upgrade) => upgrade.title === "Pesthunter's Belt")).toBeLessThan(
 		upgrades.findIndex((upgrade) => upgrade.title === 'Reforge to Squeaky')
 	);
+	expect(pesthunterBeltUpgrade?.group).toBeUndefined();
+	expect(pesthunterBeltUpgrade?.recommendation?.kind).toBe(UpgradeRecommendationKind.Progression);
 	expect(squeaky?.increase).toBe(2);
 	expect(squeaky?.stats?.[Stat.BonusPestChance]).toBe(2);
+	expect(squeaky?.stats?.[Stat.PestCooldownReduction]).toBe(2.5);
 	expect(squeaky?.stats?.[Stat.FarmingFortune]).toBe(-8);
 });
 

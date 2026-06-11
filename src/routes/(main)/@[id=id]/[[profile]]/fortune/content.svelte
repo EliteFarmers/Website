@@ -191,6 +191,7 @@
 		dnaMilestone: ctx.member.current?.unparsed?.dnaMilestone ?? 0,
 		attributes: ctx.member.current?.memberData?.attributes ?? {},
 		chips: ctx.member.current?.memberData?.garden?.chips ?? {},
+		chipRarities: $ratesData.chipRarities,
 
 		perks: ctx.member.current?.unparsed?.perks ?? undefined,
 		harvestFeast: harvestFeastOptions,
@@ -784,12 +785,6 @@
 				<h2 class="mb-1 text-2xl">Farming Fortune</h2>
 				<div class="flex-1">
 					<div class="flex flex-1 flex-wrap items-center justify-start gap-2">
-						<Button
-							variant="outline"
-							size="sm"
-							href="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/pest-farming"
-							>Pest Farming</Button
-						>
 						<Button variant="ghost" class="text-muted-foreground mx-2" size="sm" onclick={toggleSettings}>
 							<Settings size={20} />
 						</Button>

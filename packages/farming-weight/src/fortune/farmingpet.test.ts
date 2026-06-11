@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { FarmingPlayer } from '../player/player.js';
 import { FarmingPet } from './farmingpet.js';
@@ -100,6 +101,14 @@ test('Slug Repugnant Aroma with Hypercharge chip', () => {
 	});
 	// Base = 100, multiplied by 1.30 (1 + 0.03 * 10) = 130
 	expect(petWithRareHypercharge.fortune).toBe(130);
+
+	// Level 10 Hypercharge can still be Legendary; the API does not expose this rarity.
+	const petWithLegendaryLevelTenHypercharge = new FarmingPet(slug, {
+		sprayedPlot: true,
+		chips: { hypercharge: 10 },
+		chipRarities: { hypercharge: Rarity.Legendary },
+	});
+	expect(petWithLegendaryLevelTenHypercharge.fortune).toBe(150);
 
 	// Level 100 Legendary Slug NOT on sprayed plot with Hypercharge (should have 0 fortune from Repugnant Aroma)
 	const petNotSprayed = new FarmingPet(slug, {

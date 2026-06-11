@@ -104,6 +104,7 @@ function getPestEquipmentPurchase(
 				[targetSkyblockId]: 1,
 			},
 		},
+		recommendation: target.info.recommendation,
 		meta: {
 			type: 'buy_item',
 			id: targetSkyblockId,
@@ -139,6 +140,7 @@ function equipmentSlotSources<T extends GearLoadoutSourceModel>(): DynamicFortun
 function armorSetBonus<T extends ArmorBonusSourceModel>(): DynamicFortuneSource<T> {
 	return {
 		name: 'Armor Set Bonus',
+		sourceType: 'armor',
 		exists: () => true,
 		wiki: () => 'https://w.elitesb.gg/Fermento_Armor#Four_Pieces_',
 		max: () => ARMOR_SET_BONUS.FERMENTO?.stats[4]?.[Stat.FarmingFortune] ?? 0,
@@ -156,6 +158,7 @@ function armorSetBonus<T extends ArmorBonusSourceModel>(): DynamicFortuneSource<
 function equipmentSetBonus<T extends EquipmentBonusSourceModel>(): DynamicFortuneSource<T> {
 	return {
 		name: 'Equipment Set Bonus',
+		sourceType: 'equipment',
 		exists: (set) => set.equipmentSetBonuses.length > 0,
 		wiki: () => 'https://w.elitesb.gg/Pesthunter%27s_Gloves',
 		max: () => 0,
@@ -193,6 +196,7 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 function gearslot<T extends GearLoadoutSourceModel>([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<T> {
 	return {
 		name: slot,
+		sourceType: info.target === ReforgeTarget.Armor ? 'armor' : 'equipment',
 		exists: () => true,
 		wiki: (set) => {
 			const current = set.getPiece(slot as GearSlot);
@@ -307,6 +311,7 @@ function gearslot<T extends GearLoadoutSourceModel>([slot, info]: [string, GearS
 					type: 'buy_item',
 					id: itemToPurchase.skyblockId,
 				},
+				recommendation: itemToPurchase.recommendation,
 			};
 
 			if (itemToPurchase.skillReq) {

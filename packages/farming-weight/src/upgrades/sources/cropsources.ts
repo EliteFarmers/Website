@@ -1,6 +1,7 @@
-import { getChipLevel } from '../../constants/chips.js';
+import { getChipInputRarity, getChipLevel, getChipRarity } from '../../constants/chips.js';
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
+import { Rarity } from '../../constants/reforges.js';
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
@@ -12,12 +13,19 @@ import { getCropDisplayName, getItemIdFromCrop } from '../../util/names.js';
 import { getFakeItem, ITEM_REGISTRY } from '../itemregistry.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
+const OVERDRIVE_FORTUNE_PER_LEVEL = {
+	[Rarity.Rare]: 5,
+	[Rarity.Epic]: 6,
+	[Rarity.Legendary]: 7,
+} as const;
+
 export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	player: FarmingPlayer;
 	crop: Crop;
 }>[] = [
 	{
 		name: 'Farming Tool',
+		sourceType: 'farmingTool',
 		exists: () => true,
 		wiki: ({ player, crop }) => {
 			return (
@@ -67,6 +75,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: 'Exportable Crop',
+		sourceType: 'crop',
 		wiki: () => 'https://w.elitesb.gg/Carrolyn',
 		exists: ({ crop }) => CROP_INFO[crop].exportable === true,
 		max: () => EXPORTABLE_CROP_FORTUNE,
@@ -110,6 +119,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: GARDEN_CROP_UPGRADES.name,
+		sourceType: 'crop',
 		exists: () => true,
 		wiki: () => GARDEN_CROP_UPGRADES.wiki,
 		current: ({ player, crop }) => {
@@ -158,6 +168,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: COCOA_FORTUNE_UPGRADE.name,
+		sourceType: 'crop',
 		exists: ({ crop }) => crop === Crop.CocoaBeans,
 		wiki: () => COCOA_FORTUNE_UPGRADE.wiki,
 		current: ({ player }) => {
@@ -204,6 +215,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: 'Helianthus Relic Family',
+		sourceType: 'crop',
 		exists: ({ player, crop }) => {
 			const fortuneType = CROP_INFO[crop].fortuneType;
 			const artifactFortune = FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0;
@@ -312,6 +324,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: 'Personal Best',
+		sourceType: 'crop',
 		exists: () => true,
 		wiki: () => 'https://w.elitesb.gg/Anita#Personal_Bests',
 		max: () => 100,
@@ -372,24 +385,29 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: 'Overdrive Chip',
+		sourceType: 'crop',
 		exists: ({ player, crop }) => {
 			return !!(player.options.jacobContest?.enabled && player.options.jacobContest.crop === crop);
 		},
 		wiki: () => 'https://w.elitesb.gg/Overdrive_Chip',
-		max: () => 25,
+		max: () => OVERDRIVE_FORTUNE_PER_LEVEL[Rarity.Legendary] * 20,
 		current: ({ player, crop }) => {
 			if (!player.options.jacobContest?.enabled || player.options.jacobContest.crop !== crop) return 0;
-			const level = getChipLevel(player.options.chips?.overdrive);
-			return 5 * level;
+			return getOverdriveFortune(player);
 		},
 		currentStat: ({ player, crop }, stat) => {
 			if (!player.options.jacobContest?.enabled || player.options.jacobContest.crop !== crop) return 0;
 			const fortuneType = CROP_INFO[crop].fortuneType;
 			if (fortuneType === stat) {
-				const level = getChipLevel(player.options.chips?.overdrive);
-				return 5 * level;
+				return getOverdriveFortune(player);
 			}
 			return 0;
 		},
 	},
 ];
+
+function getOverdriveFortune(player: FarmingPlayer): number {
+	const level = getChipLevel(player.options.chips?.overdrive);
+	const rarity = getChipRarity(level, getChipInputRarity(player.options.chipRarities, 'overdrive'));
+	return (OVERDRIVE_FORTUNE_PER_LEVEL[rarity] ?? 0) * level;
+}

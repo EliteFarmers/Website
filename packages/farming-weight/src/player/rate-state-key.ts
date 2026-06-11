@@ -81,6 +81,7 @@ function itemStateKey(item?: EliteItemDto | null): string {
 function rateOptionStateKey(options: PlayerOptions): string {
 	return stableValueKey({
 		chips: options.chips,
+		chipRarities: options.chipRarities,
 		harvestFeast: options.harvestFeast,
 		jacobContest: options.jacobContest,
 		selectedCrop: options.selectedCrop,

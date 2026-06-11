@@ -13,6 +13,17 @@ export enum UpgradeReason {
 	Situational = 'situational', // Worth using in some situations
 }
 
+export enum UpgradeRecommendationKind {
+	Progression = 'progression',
+	Situational = 'situational',
+}
+
+export interface UpgradeRecommendation {
+	kind: UpgradeRecommendationKind;
+	label: string;
+	description?: string;
+}
+
 // export interface UpgradeCost {
 // 	items: Record<string, number>;
 // 	coins?: number;
@@ -30,6 +41,7 @@ export interface FortuneSource {
 }
 
 export interface FortuneSourceProgress {
+	key?: string;
 	name: string;
 	/**
 	 * When present and true, this entry should be included in `getProgress()` output
@@ -89,6 +101,7 @@ export interface UpgradeCost {
 	copper?: number;
 	bits?: number;
 	kernels?: number;
+	sowdust?: number;
 	medals?: Partial<Record<Exclude<JacobContestMedal, 'platinum' | 'diamond'>, number>>;
 	applyCost?: Omit<UpgradeCost, 'applyCost'>;
 }
@@ -120,6 +133,9 @@ function addCost(left: UpgradeCost, right: UpgradeCost) {
 	}
 	if (right.kernels) {
 		left.kernels = (left.kernels || 0) + (right.kernels || 0);
+	}
+	if (right.sowdust) {
+		left.sowdust = (left.sowdust || 0) + (right.sowdust || 0);
 	}
 
 	if (right.medals) {
@@ -206,6 +222,7 @@ export interface UpgradeInfo<T = number> {
 	wiki?: string;
 	conflictKey?: string;
 	improvements?: UpgradeInfoImprovement<T>[];
+	recommendation?: UpgradeRecommendation;
 }
 
 export interface UpgradeMeta {
@@ -222,6 +239,7 @@ export interface UpgradeMeta {
 		| 'attribute'
 		| 'crop_upgrade'
 		| 'chip'
+		| 'chip_rarity'
 		| 'pet_item'
 		| 'pet_level'
 		| 'setting'
@@ -268,13 +286,19 @@ export interface FortuneUpgrade {
 	group?: FortuneUpgradeGroupMeta | UpgradeGroupDefinition;
 	groupedUpgrades?: FortuneUpgrade[];
 	improvements?: FortuneUpgradeImprovement[];
+	recommendation?: UpgradeRecommendation;
 	meta?: UpgradeMeta;
 	skillReq?: Partial<Record<string, number>> | undefined;
 }
 
+export const FORTUNE_SOURCE_TYPES = ['general', 'crop', 'armor', 'equipment', 'pet', 'farmingTool', 'vacuum'] as const;
+
+export type FortuneSourceType = (typeof FORTUNE_SOURCE_TYPES)[number];
+
 export interface StatQueryOptions {
 	stat?: Stat;
 	stats?: Stat[];
+	sourceTypes?: FortuneSourceType[];
 	includeUpgradeGroups?: boolean;
 }
 
@@ -282,6 +306,13 @@ export function getQueryStats(options?: StatQueryOptions, fallback: Stat[] = [St
 	if (options?.stats && options.stats.length > 0) return [...options.stats];
 	if (options?.stat) return [options.stat];
 	return [...fallback];
+}
+
+export function includesFortuneSourceType(
+	options: StatQueryOptions | undefined,
+	sourceType: FortuneSourceType
+): boolean {
+	return !options?.sourceTypes?.length || options.sourceTypes.includes(sourceType);
 }
 
 export interface UpgradeTreeNode {
@@ -300,6 +331,7 @@ export interface Upgrade {
 	why?: string;
 	preferred?: boolean;
 	group?: UpgradeGroupDefinition;
+	recommendation?: UpgradeRecommendation;
 }
 
 export interface InitialItems {

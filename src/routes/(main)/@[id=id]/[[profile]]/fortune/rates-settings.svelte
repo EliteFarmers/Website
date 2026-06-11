@@ -14,7 +14,19 @@
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
-	import { Stat, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
+	import {
+		compareRarity,
+		GARDEN_CHIP_RARITIES,
+		GARDEN_CHIPS,
+		getChipInputLevel,
+		getChipInputRarity,
+		getChipRarity,
+		Stat,
+		TEMPORARY_FORTUNE,
+		ZorroMode,
+		type GardenChipId,
+		type GardenChipRarity,
+	} from 'farming-weight';
 
 	const ratesData = getRatesData();
 	const gbl = getGlobalContext();
@@ -28,6 +40,45 @@
 	}
 
 	let { player }: Props = $props();
+
+	const gardenChipEntries = Object.entries(GARDEN_CHIPS) as [GardenChipId, (typeof GARDEN_CHIPS)[GardenChipId]][];
+
+	function getDetectedChipLevel(chipId: GardenChipId) {
+		const chips = (ctx.member.current?.memberData?.garden?.chips ?? {}) as Record<
+			string,
+			number | null | undefined
+		>;
+		return getChipInputLevel(chips, chipId);
+	}
+
+	function getSavedChipRarity(chipId: GardenChipId) {
+		return getChipInputRarity($ratesData.chipRarities, chipId);
+	}
+
+	function getChipRarityOptions(chipId: GardenChipId) {
+		const inferred = getChipRarity(getDetectedChipLevel(chipId));
+		return [
+			{
+				value: '',
+				label: `Inferred (${inferred})`,
+			},
+			...GARDEN_CHIP_RARITIES.filter((rarity) => compareRarity(rarity, inferred) >= 0).map((rarity) => ({
+				value: rarity,
+				label: rarity,
+			})),
+		];
+	}
+
+	function setSavedChipRarity(chipId: GardenChipId, rarity?: GardenChipRarity | string) {
+		const chip = GARDEN_CHIPS[chipId];
+		const next = { ...($ratesData.chipRarities ?? {}) };
+		delete next[chipId];
+		delete next[chip.skyblockId];
+		if (rarity) {
+			next[chip.skyblockId] = rarity;
+		}
+		$ratesData.chipRarities = next;
+	}
 </script>
 
 <div class="relative w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
@@ -319,12 +370,36 @@
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Garden Chips</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">Set the level of each garden chip you have!</p>
+	<p class="text-muted-foreground px-1 text-sm">Set the rarity of each garden chip you have.</p>
 	<SettingBigSeperator />
 
-	<p class="border-completed rounded-md border p-2 text-sm">
-		These settings have been removed! Garden chip levels are now automatically detected from your profile data!
-	</p>
+	{#each gardenChipEntries as [chipId, chip], index (chipId)}
+		{@const level = getDetectedChipLevel(chipId)}
+		{@const savedRarity = getSavedChipRarity(chipId)}
+		{@const effectiveRarity = getChipRarity(level, savedRarity)}
+		<SettingListItem
+			title={chip.name}
+			description={`Level ${level.toLocaleString()} - ${effectiveRarity}`}
+			wiki={chip.wiki}
+		>
+			{#snippet child()}
+				<div class="flex w-full max-w-56 flex-row items-center justify-end gap-2">
+					<span class="text-muted-foreground w-14 text-right text-sm">Lvl {level.toLocaleString()}</span>
+					<Select.Simple
+						size="sm"
+						value={savedRarity ?? ''}
+						change={(value) => {
+							setSavedChipRarity(chipId, value || undefined);
+						}}
+						options={getChipRarityOptions(chipId)}
+					/>
+				</div>
+			{/snippet}
+		</SettingListItem>
+		{#if index < gardenChipEntries.length - 1}
+			<SettingSeperator />
+		{/if}
+	{/each}
 
 	<SettingBigSeperator />
 
@@ -377,6 +452,9 @@
 						<input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
 						<input type="hidden" name="flasks" value={$ratesData.rosewaterFlasks ?? 0} />
 						<input type="hidden" name="strength" value={$ratesData.strength ?? 0} />
+						{#each Object.entries($ratesData.chipRarities ?? {}) as [chipId, rarity] (chipId)}
+							<input type="hidden" name={`CHIP_RARITY_${chipId}`} value={rarity} />
+						{/each}
 						<Button type="submit" disabled={loading}>Save</Button>
 					</form>
 				</div>

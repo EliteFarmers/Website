@@ -6,15 +6,17 @@
 	import UpgradesTable from './data-table.svelte';
 	import UpgradeTreeWrapper from './upgrade-tree-wrapper.svelte';
 
+	type AnyUpgradeRateImpact = UpgradeRateImpact<unknown, unknown>;
+
 	interface Props {
 		upgrades: FortuneUpgrade[];
 		items?: RatesItemPriceData;
-		version?: number;
+		version?: number | string;
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
 		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
 		hasUpgradePath?: (upgrade: FortuneUpgrade) => boolean;
-		rateImpactFn?: (upgrade: FortuneUpgrade) => UpgradeRateImpact | undefined;
+		rateImpactFn?: (upgrade: FortuneUpgrade) => AnyUpgradeRateImpact | undefined;
 		rateImpactUnavailableLabel?: string;
 		costPerValueFn?: (upgrade: FortuneUpgrade) => number;
 		costPerHeader?: string;

@@ -10,15 +10,17 @@ import UpgradeFortune from './upgrade-fortune.svelte';
 import UpgradeRateImpactCell from './upgrade-rate-impact.svelte';
 import UpgradeTitle from './upgrade-title.svelte';
 
+type AnyUpgradeRateImpact = UpgradeRateImpact<unknown, unknown>;
+
 export const getColumns = (
 	itemsLookup?: RatesItemPriceData,
 	costFn?: (upgrade: FortuneUpgrade, items?: RatesItemPriceData) => number,
 	applyUpgrade?: (upgrade: FortuneUpgrade) => void,
 	expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode,
 	canExpandUpgrade?: (upgrade: FortuneUpgrade) => boolean,
-	rateImpactFn?: (upgrade: FortuneUpgrade) => UpgradeRateImpact | undefined,
+	rateImpactFn?: (upgrade: FortuneUpgrade) => AnyUpgradeRateImpact | undefined,
 	rateImpactUnavailableLabel?: string,
-	_version?: number,
+	_version?: number | string,
 	costPerValueFn?: (upgrade: FortuneUpgrade) => number,
 	costPerHeader = 'Cost Per Fortune'
 ) =>
@@ -79,8 +81,9 @@ export const getColumns = (
 			accessorKey: 'costper',
 			accessorFn: (row) => {
 				if (costFn) {
-					const increase = (costPerValueFn?.(row) ?? row.increase) || row.max || 0;
-					return increase > 0 ? Math.round(costFn(row, itemsLookup) / increase) : 0;
+					const value = costPerValueFn?.(row);
+					const increase = (value ?? row.increase) || row.max || 0;
+					return increase > 0 ? Math.round(costFn(row, itemsLookup) / increase) : Number.MAX_SAFE_INTEGER;
 				}
 				return 0;
 			},
@@ -131,8 +134,9 @@ export const getColumns = (
 		},
 	] as ColumnDef<FortuneUpgrade>[];
 
-function getRateImpactCoinValue(impact: UpgradeRateImpact | undefined, itemsLookup?: RatesItemPriceData) {
+function getRateImpactCoinValue(impact: AnyUpgradeRateImpact | undefined, itemsLookup?: RatesItemPriceData) {
 	if (!impact) return 0;
+	if (impact.valuationDelta?.coinsPerHour !== undefined) return impact.valuationDelta.coinsPerHour;
 
 	let total = impact.delta.npcCoins;
 	for (const [itemId, amount] of Object.entries(impact.delta.rngItems ?? {})) {

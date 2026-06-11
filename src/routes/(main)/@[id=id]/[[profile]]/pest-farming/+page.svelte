@@ -37,6 +37,21 @@
 		$ratesData.settings = true;
 		trackAnalytics('pest_farming.settings_opened');
 	}
+
+	function formatNumber(value: number, maximumFractionDigits = 0) {
+		return value.toLocaleString(undefined, { maximumFractionDigits });
+	}
+
+	function formatRate(value: number) {
+		return `${formatNumber(value)}/hr`;
+	}
+
+	function formatDuration(seconds: number) {
+		const totalSeconds = Math.max(0, Math.round(seconds));
+		const minutes = Math.floor(totalSeconds / 60);
+		const remainingSeconds = totalSeconds % 60;
+		return minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${remainingSeconds}s`;
+	}
 </script>
 
 <StatsHead
@@ -73,6 +88,87 @@
 			</section>
 
 			<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
+				<header class="flex flex-col gap-1">
+					<h2 class="text-xl leading-tight font-semibold">Rate Breakdown</h2>
+					<p class="text-muted-foreground text-sm">
+						{formatNumber(pest.pestRateResult.breakdown.pestSpawning.expectedPestsPerSpawn, 2)} expected pests
+						every {formatDuration(pest.pestRateResult.debug.cycleSeconds)} cycle.
+					</p>
+				</header>
+				<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+					<div class="bg-muted/30 rounded-md border p-3">
+						<p class="text-muted-foreground text-xs font-medium">Total</p>
+						<p class="text-xl font-semibold">{formatRate(pest.pestRateResult.valuation.coinsPerHour)}</p>
+					</div>
+					<div class="bg-muted/30 rounded-md border p-3">
+						<p class="text-muted-foreground text-xs font-medium">Crop Breaking</p>
+						<p class="text-xl font-semibold">
+							{formatRate(pest.pestRateResult.valuation.byBucket.cropBreaking)}
+						</p>
+					</div>
+					<div class="bg-muted/30 rounded-md border p-3">
+						<p class="text-muted-foreground text-xs font-medium">Pest Drops</p>
+						<p class="text-xl font-semibold">
+							{formatRate(
+								pest.pestRateResult.valuation.byBucket.pestDrops +
+									pest.pestRateResult.valuation.byBucket.npcCoins
+							)}
+						</p>
+					</div>
+					<div class="bg-muted/30 rounded-md border p-3">
+						<p class="text-muted-foreground text-xs font-medium">Rare Drops</p>
+						<p class="text-xl font-semibold">
+							{formatRate(pest.pestRateResult.valuation.byBucket.rngDrops)}
+						</p>
+					</div>
+					{#if pest.pestRateResult.valuation.byBucket.pestExchanges}
+						<div class="bg-muted/30 rounded-md border p-3">
+							<p class="text-muted-foreground text-xs font-medium">Pest Exchanges</p>
+							<p class="text-xl font-semibold">
+								{formatRate(pest.pestRateResult.valuation.byBucket.pestExchanges)}
+							</p>
+						</div>
+					{/if}
+					{#if pest.pestRateResult.valuation.byBucket.pestShards}
+						<div class="bg-muted/30 rounded-md border p-3">
+							<p class="text-muted-foreground text-xs font-medium">Pest Shards</p>
+							<p class="text-xl font-semibold">
+								{formatRate(pest.pestRateResult.valuation.byBucket.pestShards)}
+							</p>
+						</div>
+					{/if}
+					{#if pest.pestRateResult.valuation.byBucket.costs}
+						<div class="bg-muted/30 rounded-md border p-3">
+							<p class="text-muted-foreground text-xs font-medium">Costs</p>
+							<p class="text-xl font-semibold">
+								{formatRate(pest.pestRateResult.valuation.byBucket.costs)}
+							</p>
+						</div>
+					{/if}
+					{#if pest.pestRateResult.valuation.byBucket.feastRareCrops}
+						<div class="bg-muted/30 rounded-md border p-3">
+							<p class="text-muted-foreground text-xs font-medium">Feast Rare Crops</p>
+							<p class="text-xl font-semibold">
+								{formatRate(pest.pestRateResult.valuation.byBucket.feastRareCrops)}
+							</p>
+						</div>
+					{/if}
+				</div>
+
+				<p class="text-muted-foreground text-sm">
+					Not what you expected? Change the
+					<button
+						type="button"
+						class="text-foreground hover:text-primary focus-visible:ring-ring rounded-sm font-medium underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none"
+						onclick={openSettings}
+					>
+						settings
+					</button>
+					to dial in your rates.
+				</p>
+			</section>
+
+			<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
 				<header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 					<div class="flex flex-col gap-1">
 						<h2 class="text-xl leading-tight font-semibold">{pest.selectedCropName} Fortune</h2>
@@ -103,7 +199,7 @@
 				selectPiece={(slot, uuid) => pest.selectSharedEquipment(slot, uuid)}
 				clearPiece={(slot) => pest.clearSharedEquipment(slot)}
 				getPieceBreakdown={(piece) => pest.getSharedEquipmentPieceBreakdown(piece)}
-				getPieceScore={(piece) => pest.getSharedEquipmentPieceScore(piece)}
+				getPieceRateImpact={(piece) => pest.getSharedEquipmentPieceRateImpact(piece)}
 			>
 				<CategoryProgress
 					name="Shared Equipment Progress"
@@ -238,7 +334,8 @@
 											>
 												{#each pest.pets
 													.filter((pet) => !!pet.pet.uuid)
-													.sort((a, b) => pest.getPetPhaseScore(b, pest.activePhase) - pest.getPetPhaseScore(a, pest.activePhase)) as pet, i (pet.pet.uuid ?? i)}
+													.sort((a, b) => pest.getPetRateImpact(b, pest.activePhase) - pest.getPetRateImpact(a, pest.activePhase)) as pet, i (pet.pet.uuid ?? i)}
+													{@const petRateDelta = pest.getPetRateImpact(pet, pest.activePhase)}
 													<DropdownMenu.RadioItem value={pet.pet.uuid ?? ''}>
 														<div class="flex flex-row items-center gap-2">
 															<ItemRender
@@ -247,6 +344,17 @@
 																class="size-6"
 															/>
 															<FormattedText text={pet.getFormattedName()} />
+															{#if petRateDelta !== 0}
+																<span
+																	class="{petRateDelta > 0
+																		? 'dark:text-completed'
+																		: 'text-muted-foreground'} ml-auto text-xs whitespace-nowrap tabular-nums"
+																>
+																	{petRateDelta > 0 ? '+' : ''}{formatRate(
+																		petRateDelta
+																	)}
+																</span>
+															{/if}
 														</div>
 													</DropdownMenu.RadioItem>
 												{/each}
@@ -298,7 +406,7 @@
 							pest.selectArmorSetPiece(pest.activePhaseLoadout.armorSetId, slot, uuid)}
 						clearPiece={(slot) => pest.clearArmorSetPiece(pest.activePhaseLoadout.armorSetId, slot)}
 						getPieceBreakdown={(piece) => pest.getPhasePieceBreakdown(piece)}
-						getPieceScore={(piece) => pest.getPhasePieceScore(piece)}
+						getPieceRateImpact={(piece) => pest.getPhasePieceRateImpact(piece)}
 						blockedUuids={pest.armorSetConflictLabels}
 					>
 						{#snippet headerAction()}
@@ -382,9 +490,11 @@
 						applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
 						expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
 						hasUpgradePath={(upgrade) => pest.hasActivePhaseUpgradePath(upgrade)}
-						costPerValueFn={(upgrade) => pest.getPhaseUpgradeScore(upgrade)}
-						costPerHeader="Cost Per Phase Score"
-						version={pest.pestVersion}
+						rateImpactFn={(upgrade) => pest.getPestRateImpact(upgrade)}
+						rateImpactUnavailableLabel="Loading Rates"
+						costPerValueFn={(upgrade) => pest.getPestRateImpactValue(upgrade) / 1000}
+						costPerHeader="Cost / 1k Coins/hr"
+						version={pest.pestRateVersion}
 					/>
 				</section>
 			</section>

@@ -10,7 +10,7 @@ export class LotusBracelet extends BaseItem {
 		return 'LOTUS_BRACELET';
 	}
 	get name() {
-		return 'Lotus Bracelet';
+		return 'Peony Bracelet';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Lotus_Bracelet';
@@ -35,7 +35,7 @@ export class LotusBelt extends BaseItem {
 		return 'LOTUS_BELT';
 	}
 	get name() {
-		return 'Lotus Belt';
+		return 'Peony Belt';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Lotus_Belt';
@@ -60,7 +60,7 @@ export class LotusNecklace extends BaseItem {
 		return 'LOTUS_NECKLACE';
 	}
 	get name() {
-		return 'Lotus Necklace';
+		return 'Peony Necklace';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Lotus_Necklace';
@@ -85,7 +85,7 @@ export class LotusCloak extends BaseItem {
 		return 'LOTUS_CLOAK';
 	}
 	get name() {
-		return 'Lotus Cloak';
+		return 'Peony Cloak';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Lotus_Cloak';

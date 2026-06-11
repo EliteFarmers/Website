@@ -160,7 +160,7 @@ export const zodUpdateFortuneSettingsBody = zod.object({
 	communityCenter: zod.number().describe('Community center farming fortune level'),
 	rosewaterFlasks: zod.number().describe('Consumed Filled Rosewater Flasks'),
 	attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
-	chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
+	chipRarities: zod.record(zod.string(), zod.string()).describe('Garden chip rarity assumptions'),
 });
 
 /**

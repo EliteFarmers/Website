@@ -4,8 +4,10 @@ import { Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from 
 import { Stat, type StatBreakdown } from '../constants/stats.js';
 import {
 	type FortuneSourceProgress,
+	type FortuneSourceType,
 	type FortuneUpgrade,
 	getQueryStats,
+	includesFortuneSourceType,
 	type StatQueryOptions,
 	type UpgradeTreeNode,
 } from '../constants/upgrades.js';
@@ -61,18 +63,26 @@ export class Vacuum extends UpgradeableBase {
 		this.rebuildVacuum(item, options);
 	}
 
-	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<Vacuum>(this, VACUUM_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false): FortuneSourceProgress[] {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<Vacuum>(this, VACUUM_FORTUNE_SOURCES, zeroed, {
+			...query,
+			defaultSourceType: 'vacuum',
+		});
 	}
 
 	getUpgrades(options?: StatQueryOptions): FortuneUpgrade[] {
+		if (!includesFortuneSourceType(options, 'vacuum')) return [];
+
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
 		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
 		const stats = getQueryStats(options, DEFAULT_VACUUM_STATS);
-		const upgrades = getSourceProgress<Vacuum>(this, VACUUM_FORTUNE_SOURCES, false, stats).flatMap(
-			(source) => source.upgrades ?? []
-		);
+		const upgrades = getSourceProgress<Vacuum>(this, VACUUM_FORTUNE_SOURCES, false, {
+			stats,
+			sourceTypes: options?.sourceTypes,
+			defaultSourceType: 'vacuum',
+		}).flatMap((source) => source.upgrades ?? []);
 
 		if (self) {
 			upgrades.push(self);
@@ -314,10 +324,29 @@ export class Vacuum extends UpgradeableBase {
 
 	expandUpgrade(
 		upgrade: FortuneUpgrade,
-		options?: { maxDepth?: number; stats?: Stat[]; includeAllTierUpgradeChildren?: boolean }
+		options?: {
+			maxDepth?: number;
+			stats?: Stat[];
+			sourceTypes?: FortuneSourceType[];
+			includeAllTierUpgradeChildren?: boolean;
+		}
 	): UpgradeTreeNode {
-		const { maxDepth = 10, stats = DEFAULT_VACUUM_STATS, includeAllTierUpgradeChildren = false } = options ?? {};
-		return this.buildUpgradeTree(upgrade, 0, maxDepth, stats, includeAllTierUpgradeChildren, new Set(), new Set());
+		const {
+			maxDepth = 10,
+			stats = DEFAULT_VACUUM_STATS,
+			sourceTypes,
+			includeAllTierUpgradeChildren = false,
+		} = options ?? {};
+		return this.buildUpgradeTree(
+			upgrade,
+			0,
+			maxDepth,
+			stats,
+			sourceTypes,
+			includeAllTierUpgradeChildren,
+			new Set(),
+			new Set()
+		);
 	}
 
 	private buildUpgradeTree(
@@ -325,6 +354,7 @@ export class Vacuum extends UpgradeableBase {
 		depth: number,
 		maxDepth: number,
 		stats: Stat[],
+		sourceTypes: FortuneSourceType[] | undefined,
 		includeAllTierUpgradeChildren: boolean,
 		visited: Set<string>,
 		usedConflictKeys: Set<string>
@@ -366,12 +396,12 @@ export class Vacuum extends UpgradeableBase {
 			upgrade.meta?.type === 'buy_item' &&
 			upgrade.meta.itemUuid
 		) {
-			for (const originalUpgrade of this.getUpgrades({ stats })) {
+			for (const originalUpgrade of this.getUpgrades({ stats, sourceTypes })) {
 				if (originalUpgrade.conflictKey) childConflictKeys.add(originalUpgrade.conflictKey);
 			}
 		}
 
-		for (const followUp of upgraded.getFollowUpUpgrades(upgrade, stats[0] ?? Stat.PestKillFortune)) {
+		for (const followUp of upgraded.getFollowUpUpgrades(upgrade, stats[0] ?? Stat.PestKillFortune, sourceTypes)) {
 			if (followUp.conflictKey && childConflictKeys.has(followUp.conflictKey)) continue;
 			node.children.push(
 				upgraded.buildUpgradeTree(
@@ -379,6 +409,7 @@ export class Vacuum extends UpgradeableBase {
 					depth + 1,
 					maxDepth,
 					stats,
+					sourceTypes,
 					includeAllTierUpgradeChildren,
 					new Set(visited),
 					childConflictKeys
@@ -391,11 +422,15 @@ export class Vacuum extends UpgradeableBase {
 		return node;
 	}
 
-	private getFollowUpUpgrades(appliedUpgrade: FortuneUpgrade, primaryStat: Stat): FortuneUpgrade[] {
+	private getFollowUpUpgrades(
+		appliedUpgrade: FortuneUpgrade,
+		primaryStat: Stat,
+		sourceTypes?: FortuneSourceType[]
+	): FortuneUpgrade[] {
 		const meta = appliedUpgrade.meta;
 		if (!meta) return [];
 
-		return this.getUpgrades({ stat: primaryStat }).filter((upgrade) => {
+		return this.getUpgrades({ stat: primaryStat, sourceTypes }).filter((upgrade) => {
 			if (meta.type === 'gem') return upgrade.meta?.type === meta.type && upgrade.meta?.slot === meta.slot;
 			if (meta.type === 'item') return upgrade.meta?.type === meta.type && upgrade.meta?.id === meta.id;
 			if (meta.type === 'buy_item') return upgrade.meta?.type === meta.type;
