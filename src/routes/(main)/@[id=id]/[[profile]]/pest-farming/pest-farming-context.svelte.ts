@@ -34,8 +34,8 @@ import {
 	PEST_FARMING_STATS,
 	PEST_MAIN_ARMOR_SET_ID,
 	PEST_SPAWN_ARMOR_SET_ID,
-	PestFarmingRateCalculator,
 	PestFarmingPhase,
+	PestFarmingRateCalculator,
 	Stat,
 	STAT_NAMES,
 	Vacuum,
@@ -155,8 +155,11 @@ export class PestFarmingPageContext {
 
 	#skipNextRatesDataRefresh = false;
 	#profileKey = '';
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	#rateImpactMemo = new Map<string, PestFarmingUpgradeRateImpact>();
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	#gearRateImpactMemo = new Map<string, number>();
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	#petRateImpactMemo = new Map<string, number>();
 	#lastItemRequestKey = '';
 
@@ -369,6 +372,7 @@ export class PestFarmingPageContext {
 	});
 
 	rateOutputItems = $derived.by(() => this.pestRateCalculator.getRequiredPriceItems(this.pestRateResult));
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	neededItems = $derived([...new Set([...getItemsFromUpgrades(this.neededItemUpgrades), ...this.rateOutputItems])]);
 	debouncedItems = new Debounced(() => this.neededItems, 1000);
 

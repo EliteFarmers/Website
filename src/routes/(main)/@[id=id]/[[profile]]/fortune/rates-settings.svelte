@@ -23,9 +23,9 @@
 		getChipRarity,
 		Stat,
 		TEMPORARY_FORTUNE,
+		ZorroMode,
 		type GardenChipId,
 		type GardenChipRarity,
-		ZorroMode,
 	} from 'farming-weight';
 
 	const ratesData = getRatesData();
@@ -376,7 +376,6 @@
 	{#each gardenChipEntries as [chipId, chip], index (chipId)}
 		{@const level = getDetectedChipLevel(chipId)}
 		{@const savedRarity = getSavedChipRarity(chipId)}
-		{@const inferredRarity = getChipRarity(level)}
 		{@const effectiveRarity = getChipRarity(level, savedRarity)}
 		<SettingListItem
 			title={chip.name}
