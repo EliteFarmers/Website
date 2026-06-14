@@ -106,7 +106,7 @@
 		{/if}
 
 		<svelte:boundary onerror={(e) => console.error(e)}>
-			<BlockRenderer content={article.content as RootNode} />
+			<BlockRenderer content={article.content as RootNode} renderTextAsHtml />
 		</svelte:boundary>
 	</article>
 </main>

@@ -7,7 +7,7 @@
 	import Ul from '$comp/markdown/default/ul.svelte';
 	import Li from './li.svelte';
 
-	const { node, modifiers, hoistedComments = {} }: ListProps = $props();
+	const { node, modifiers, hoistedComments = {}, renderTextAsHtml = false }: ListProps = $props();
 
 	function getHoistedComments(child: (typeof node.children)[number]) {
 		return child.id ? (hoistedComments[child.id] ?? []) : [];
@@ -20,7 +20,7 @@
 			{#if 'format' in child}
 				{@const comments = getHoistedComments(child)}
 				<li class="list-none">
-					<List node={child} {modifiers} index={i} {hoistedComments} />
+					<List node={child} {modifiers} index={i} {hoistedComments} {renderTextAsHtml} />
 					{#if comments.length}
 						<div class="not-prose">
 							{#each comments as comment (comment.id)}
@@ -30,7 +30,7 @@
 					{/if}
 				</li>
 			{:else}
-				<Li node={child} {modifiers} index={i} {hoistedComments} />
+				<Li node={child} {modifiers} index={i} {hoistedComments} {renderTextAsHtml} />
 			{/if}
 		{/each}
 	</Ol>
@@ -40,7 +40,7 @@
 			{#if 'format' in child}
 				{@const comments = getHoistedComments(child)}
 				<li class="list-none">
-					<List node={child} {modifiers} index={i} {hoistedComments} />
+					<List node={child} {modifiers} index={i} {hoistedComments} {renderTextAsHtml} />
 					{#if comments.length}
 						<div class="not-prose">
 							{#each comments as comment (comment.id)}
@@ -50,7 +50,7 @@
 					{/if}
 				</li>
 			{:else}
-				<Li node={child} {modifiers} index={i} {hoistedComments} />
+				<Li node={child} {modifiers} index={i} {hoistedComments} {renderTextAsHtml} />
 			{/if}
 		{/each}
 	</Ul>

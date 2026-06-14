@@ -63,6 +63,7 @@ export interface ActiveArmorSetBonus {
 type GearPiece = FarmingArmor | FarmingEquipment;
 
 export const ARMOR_LOADOUT_SLOTS = [GearSlot.Helmet, GearSlot.Chestplate, GearSlot.Leggings, GearSlot.Boots] as const;
+const ARMOR_LOADOUT_SLOT_NAMES = new Set(['HELMET', 'CHESTPLATE', 'LEGGINGS', 'BOOTS']);
 
 type ArmorPieceSelection = Partial<Record<GearSlot, FarmingArmor>>;
 
@@ -122,19 +123,18 @@ function getStartingEquipmentPiece(slot: GearSlot): FarmingEquipment | undefined
 	return FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as FarmingArmorInfo);
 }
 
-function parseInventorySlot(slot: string | null | undefined): { inventory: string; index: number } | undefined {
+function parseInventorySlot(slot: string | null | undefined): { inventory: string; parts: string[] } | undefined {
 	if (!slot) return undefined;
 
 	const separator = slot.indexOf(':');
 	if (separator < 0) return undefined;
 
 	const inventory = slot.slice(0, separator).toLowerCase();
-	const slotValue = slot.slice(separator + 1);
-	if (!/^\d+$/.test(slotValue)) return undefined;
+	const parts = slot.slice(separator + 1).split(':');
 
 	return {
 		inventory,
-		index: Number(slotValue),
+		parts,
 	};
 }
 
@@ -142,14 +142,21 @@ export function getArmorInventorySetKey(item: EliteItemDto): string | undefined 
 	const parsed = parseInventorySlot(item.slot);
 	if (!parsed) return undefined;
 
-	if (parsed.inventory === 'armor' && parsed.index >= 0 && parsed.index <= 3) {
+	const [firstPart, secondPart] = parsed.parts;
+
+	if (parsed.inventory === 'armor' && parsed.parts.length === 1 && /^\d+$/.test(firstPart ?? '')) {
+		const index = Number(firstPart);
+		if (index < 0 || index > 3) return undefined;
 		return 'armor:equipped';
 	}
 
-	if (parsed.inventory === 'wardrobe' && parsed.index >= 0) {
-		const page = Math.floor(parsed.index / 36);
-		const column = (parsed.index + 1) % 9;
-		return `wardrobe:${page}:${column}`;
+	if (
+		parsed.inventory === 'wardrobe' &&
+		parsed.parts.length === 2 &&
+		/^\d+$/.test(firstPart ?? '') &&
+		ARMOR_LOADOUT_SLOT_NAMES.has((secondPart ?? '').toUpperCase())
+	) {
+		return `wardrobe:${firstPart}`;
 	}
 
 	return undefined;

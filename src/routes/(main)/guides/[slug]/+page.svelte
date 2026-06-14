@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
-	import type { BlockNode } from '$comp/blocks/blocks';
+	import type { BlockNode, RootNode } from '$comp/blocks/blocks';
 	import { CommentSectionContainer } from '$comp/comments';
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
@@ -25,7 +25,6 @@
 		unpublishGuideCommand,
 		voteGuideCommand,
 	} from '$lib/remote/guides.remote';
-	import { getHtmlFromMarkdown } from '$lib/remote/md.remote';
 	import {
 		AlertDialog,
 		AlertDialogAction,
@@ -47,6 +46,7 @@
 	import ThumbsDown from '@lucide/svelte/icons/thumbs-down';
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
 	import { useDebounce } from 'runed';
+	import { untrack } from 'svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -62,11 +62,10 @@
 	const slug = page.params.slug as string;
 	const draft = page.url.searchParams.get('draft') === 'true';
 
-	// Load guide and comments
-	const guidePromise = $derived(GetGuide({ slug, draft }));
+	// Load comments. Guide data is already fetched and rendered by +page.server.ts.
 	const commentsPromise = $derived(GetGuideComments(slug));
 
-	const guideData = $derived((guidePromise?.current ?? data.guide) as FullGuideWithAuthors | undefined);
+	let guideData = $state(untrack(() => data.guide) as FullGuideWithAuthors | undefined);
 	const COMMENTS_SECTION_ID = 'comments';
 	type TocItem = { level: number; text: string; id: string; isFooter?: boolean };
 
@@ -82,6 +81,8 @@
 	let canEditGuide = $derived(Boolean(gbl.session?.perms.admin || isGuideAuthor));
 	let canManageGuide = $derived(Boolean(gbl.session?.perms.admin || isOwner));
 	let parsedBlocks = $derived.by(() => parseGuideBlocks(guideData?.content));
+	let renderedBlocks = $derived((guideData?.renderedBlocks ?? null) as RootNode | null);
+	let renderedHtml = $derived(guideData?.renderedHtml ?? '');
 	let commentsData = $derived((commentsPromise?.current ?? []) as CommentWithGuideAuthor[]);
 	let hoistedComments = $derived.by(() => {
 		const map: Record<string, CommentWithGuideAuthor[]> = {};
@@ -116,7 +117,7 @@
 		const result = await voteGuideCommand({ guideId, value });
 		if (result.error) {
 			notifyError(result.error);
-			guidePromise.refresh();
+			void refreshGuide();
 		}
 	}, 400);
 
@@ -127,14 +128,14 @@
 		isBookmarked = !!guide.isBookmarked;
 	});
 
-	function parseGuideBlocks(content: string | undefined): BlockNode[] | null {
+	function parseGuideBlocks(content: string | undefined): RootNode | null {
 		if (!content || (!content.trim().startsWith('[') && !content.trim().startsWith('{'))) {
 			return null;
 		}
 
 		try {
 			const parsed = JSON.parse(content);
-			return Array.isArray(parsed) ? ensureGuideBlockIds(parsed as BlockNode[]) : null;
+			return Array.isArray(parsed) ? ensureGuideBlockIds(parsed as RootNode) : null;
 		} catch {
 			return null;
 		}
@@ -177,6 +178,16 @@
 		return [...toc, { level: 1, text: 'Comments', id: COMMENTS_SECTION_ID, isFooter: true }];
 	}
 
+	async function refreshGuide() {
+		try {
+			guideData = (await GetGuide({ slug, draft })) as FullGuideWithAuthors;
+			return guideData;
+		} catch (err) {
+			console.error('Failed to refresh guide:', err);
+			return null;
+		}
+	}
+
 	async function handleVote(guideId: number, value: 1 | -1) {
 		if (!page.data.session) {
 			notifyError('Please log in to vote');
@@ -188,14 +199,13 @@
 		const delta = nextVote - oldVote;
 		userVote = nextVote;
 
-		guidePromise.withOverride((current) => {
-			if (!current || current.id !== guideId) return current;
-			return {
-				...current,
-				score: current.score + delta,
+		if (guideData?.id === guideId) {
+			guideData = {
+				...guideData,
+				score: guideData.score + delta,
 				userVote: nextVote,
 			};
-		});
+		}
 
 		pendingGuideVote = nextVote;
 		pendingGuideVoteGuideId = guideId;
@@ -213,34 +223,34 @@
 
 		const oldBookmarked = isBookmarked;
 		const nextBookmarked = !oldBookmarked;
+		const previousGuide = guideData;
 		isBookmarked = nextBookmarked;
+		if (guideData) {
+			guideData = { ...guideData, isBookmarked: nextBookmarked };
+		}
 
 		const cmd = nextBookmarked ? bookmarkGuideCommand : unbookmarkGuideCommand;
-		const releaseBookmarkOverride = guidePromise.withOverride((current) => {
-			if (!current) return current;
-			return { ...current, isBookmarked: nextBookmarked };
-		});
 
 		try {
 			const result = await cmd(guideId);
 
 			if (result.error) {
 				isBookmarked = oldBookmarked;
+				guideData = previousGuide;
 				notifyError(result.error);
 				return;
 			}
 
-			await guidePromise.refresh();
+			await refreshGuide();
 			notifySuccess(nextBookmarked ? 'Guide bookmarked' : 'Bookmark removed');
 			trackAnalytics('guides.bookmark', {
 				bookmarked: nextBookmarked,
 			});
 		} catch (err) {
 			isBookmarked = oldBookmarked;
+			guideData = previousGuide;
 			notifyError('Failed to update bookmark');
 			console.error(err);
-		} finally {
-			releaseBookmarkOverride();
 		}
 	}
 
@@ -423,7 +433,7 @@
 				</div>
 
 				<div class="mt-2 flex flex-wrap items-center justify-center gap-2">
-					{@render guideActions()}
+					{@render guideActions(guideData)}
 				</div>
 			</div>
 		</div>
@@ -432,7 +442,13 @@
 
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
 			<div class="lg:col-span-3">
-				{#if parsedBlocks}
+				{#if renderedBlocks}
+					{#key guideData.content}
+						<div class="prose dark:prose-invert mb-8 max-w-none">
+							<BlockRenderer content={renderedBlocks} {hoistedComments} renderTextAsHtml />
+						</div>
+					{/key}
+				{:else if parsedBlocks}
 					{#key guideData.content}
 						<div class="prose dark:prose-invert mb-8 max-w-none">
 							<BlockRenderer content={parsedBlocks} {hoistedComments} />
@@ -440,16 +456,14 @@
 					{/key}
 				{:else}
 					<div class="prose dark:prose-invert mb-8 max-w-none">
-						{#await getHtmlFromMarkdown(guideData.content) then html}
-							<RenderHtml content={html} />
-						{/await}
+						<RenderHtml content={renderedHtml} />
 					</div>
 				{/if}
 
 				<Separator class="my-8" />
 
 				<div class="mt-2 mb-4 flex flex-wrap items-center justify-start gap-2">
-					{@render guideActions()}
+					{@render guideActions(guideData)}
 				</div>
 
 				<div id={COMMENTS_SECTION_ID} class="scroll-mt-20">
@@ -470,10 +484,8 @@
 					{@const toc = buildTableOfContentsFromBlocks(parsedBlocks)}
 					{@render tableOfContents(toc, 'top-20')}
 				{:else}
-					{#await getHtmlFromMarkdown(guideData.content) then html}
-						{@const toc = buildTableOfContents(html)}
-						{@render tableOfContents(toc, 'top-4')}
-					{/await}
+					{@const toc = buildTableOfContents(renderedHtml)}
+					{@render tableOfContents(toc, 'top-4')}
 				{/if}
 			</div>
 		</div>
@@ -490,7 +502,7 @@
 			<div class="flex justify-end gap-3">
 				<AlertDialogCancel>Cancel</AlertDialogCancel>
 				<AlertDialogAction
-					onclick={() => handleDeleteGuide(guideData.id)}
+					onclick={() => handleDeleteGuide(guideData!.id)}
 					disabled={isLoadingDelete}
 					class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 				>
@@ -515,7 +527,7 @@
 			<div class="flex justify-end gap-3">
 				<AlertDialogCancel>Cancel</AlertDialogCancel>
 				<AlertDialogAction
-					onclick={() => handleUnpublishGuide(guideData.id)}
+					onclick={() => handleUnpublishGuide(guideData!.id)}
 					disabled={isLoadingUnpublish}
 					class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 				>
@@ -529,29 +541,29 @@
 		</AlertDialogContent>
 	</AlertDialog>
 
-	{#snippet guideActions()}
+	{#snippet guideActions(guide: FullGuideWithAuthors)}
 		<div class="bg-card flex items-center rounded-lg border">
 			<Button
 				variant={userVote === 1 ? 'default' : 'ghost'}
 				size="sm"
-				onclick={() => handleVote(guideData.id, 1)}
+				onclick={() => handleVote(guide.id, 1)}
 				class="rounded-none rounded-l-md border-r px-3"
 			>
 				<ThumbsUp class="mr-2 h-4 w-4" />
 				Like
 			</Button>
-			<span class="min-w-8 px-3 py-1 text-center text-sm font-semibold">{guideData.score.toLocaleString()}</span>
+			<span class="min-w-8 px-3 py-1 text-center text-sm font-semibold">{guide.score.toLocaleString()}</span>
 			<Button
 				variant={userVote === -1 ? 'default' : 'ghost'}
 				size="sm"
-				onclick={() => handleVote(guideData.id, -1)}
+				onclick={() => handleVote(guide.id, -1)}
 				class="rounded-none rounded-r-md border-l px-3"
 			>
 				<ThumbsDown class="h-4 w-4" />
 			</Button>
 		</div>
 
-		<Button variant={isBookmarked ? 'default' : 'outline'} size="sm" onclick={() => handleBookmark(guideData.id)}>
+		<Button variant={isBookmarked ? 'default' : 'outline'} size="sm" onclick={() => handleBookmark(guide.id)}>
 			<Star class="mr-2 h-4 w-4" />
 			Bookmark
 		</Button>
@@ -578,9 +590,7 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end">
 					{#if canEditGuide}
-						<DropdownMenu.Item onclick={() => goto(`/guides/${guideData.slug}/edit`)}
-							>Edit</DropdownMenu.Item
-						>
+						<DropdownMenu.Item onclick={() => goto(`/guides/${guide.slug}/edit`)}>Edit</DropdownMenu.Item>
 					{/if}
 					{#if canManageGuide}
 						<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)} class="text-destructive"

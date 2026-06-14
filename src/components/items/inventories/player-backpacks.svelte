@@ -6,6 +6,7 @@
 	import InventorySlot from './inventory-slot.svelte';
 
 	const ctx = getStatsContext();
+	const inventorySlotClass = 'size-12 sm:size-16';
 
 	let data = $derived(
 		ctx.member.current
@@ -29,19 +30,28 @@
 	const icons = $derived(data?.current?.['icons_backpack']);
 </script>
 
-<div class="flex flex-wrap items-start justify-center gap-4">
+<div class="flex w-full flex-wrap items-start justify-center gap-4 overflow-x-auto">
 	{#if data?.current}
 		{#each backpacks as [invName, inventoryData] (invName)}
-			<div class="flex flex-col items-start gap-1">
+			<div class="flex min-w-max flex-col items-start gap-3">
 				<div class="flex flex-row items-center gap-3">
 					{#if icons}
-						<InventorySlot inventoryId={icons?.id} item={icons?.items[+invName.split('_')[1]] ?? null} />
+						<InventorySlot
+							inventoryId={icons?.id}
+							item={icons?.items[+invName.split('_')[1]] ?? null}
+							class={inventorySlotClass}
+						/>
 						<p class="text-lg font-semibold">
 							<FormattedText text={icons?.items[+invName.split('_')[1]]?.name ?? 'Unknown'} />
 						</p>
 					{/if}
 				</div>
-				<InventoryBasic inventory={inventoryData} wrap={true} inventorySize={200} />
+				<InventoryBasic
+					inventory={inventoryData}
+					wrap={true}
+					inventorySize={200}
+					slotClass={inventorySlotClass}
+				/>
 			</div>
 		{/each}
 	{/if}
