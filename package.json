@@ -5,7 +5,7 @@
 	"engines": {
 		"node": ">=24.0.0"
 	},
-	"packageManager": "pnpm@10.15.0",
+	"packageManager": "pnpm@10.34.3",
 	"scripts": {
 		"dev": "concurrently \"pnpm:dev:content\" \"pnpm:dev:svelte\"",
 		"dev:fw": "pnpm -C packages/farming-weight build:watch",
@@ -74,11 +74,11 @@
 		"@types/eslint": "^9.6.1",
 		"@types/node": "^24.10.0",
 		"@types/qs": "^6.14.0",
-		"@typeschema/class-validator": "^0.2.0",
+		"@typeschema/class-validator": "^0.3.0",
 		"@vinejs/vine": "^1.8.0",
 		"arktype": "^2.1.25",
-		"bits-ui": "2.18.0",
-		"class-validator": "^0.14.2",
+		"bits-ui": "2.18.1",
+		"class-validator": "^0.15.0",
 		"classnames": "^2.5.1",
 		"clsx": "^2.1.1",
 		"concurrently": "^9.2.1",
@@ -99,7 +99,7 @@
 		"globals": "^17.6.0",
 		"joi": "^17.13.3",
 		"layercake": "^10.0.2",
-		"layerchart": "2.0.0-next.62",
+		"layerchart": "2.0.0-next.65",
 		"marked": "^18.0.3",
 		"mdsx": "^0.0.7",
 		"mode-watcher": "^1.1.0",
