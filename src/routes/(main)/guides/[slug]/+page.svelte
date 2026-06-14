@@ -587,12 +587,10 @@
 							<Ellipsis class="h-4 w-4" />
 						</Button>
 					{/snippet}
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content align="end">
-						{#if canEditGuide}
-						<DropdownMenu.Item onclick={() => goto(`/guides/${guide.slug}/edit`)}
-							>Edit</DropdownMenu.Item
-						>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content align="end">
+					{#if canEditGuide}
+						<DropdownMenu.Item onclick={() => goto(`/guides/${guide.slug}/edit`)}>Edit</DropdownMenu.Item>
 					{/if}
 					{#if canManageGuide}
 						<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)} class="text-destructive"

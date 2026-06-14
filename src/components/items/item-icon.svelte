@@ -16,7 +16,12 @@
 	const gbl = getGlobalContext();
 </script>
 
-<div class={cn('bg-card relative grid aspect-square size-9 place-items-center rounded-md border shadow-md sm:size-12', customClass)}>
+<div
+	class={cn(
+		'bg-card relative grid aspect-square size-9 place-items-center rounded-md border shadow-md sm:size-12',
+		customClass
+	)}
+>
 	{#if loading && !errored}
 		<LoaderCircle class="col-start-1 row-start-1 size-6 animate-spin sm:size-8" />
 	{/if}

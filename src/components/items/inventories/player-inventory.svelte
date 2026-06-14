@@ -29,7 +29,9 @@
 <div class="my-4 w-full overflow-x-auto px-2">
 	{#if data?.current}
 		<div class="flex min-w-max flex-col items-center gap-4 md:flex-row md:items-start md:justify-center md:gap-6">
-			<div class="flex w-full flex-row items-center justify-between gap-3 md:w-fit md:items-start md:justify-center">
+			<div
+				class="flex w-full flex-row items-center justify-between gap-3 md:w-fit md:items-start md:justify-center"
+			>
 				{#if armor}
 					<div class="flex flex-row-reverse gap-2 md:flex-col-reverse">
 						<InventoryBasic inventory={armor} slotClass={inventorySlotClass} />
