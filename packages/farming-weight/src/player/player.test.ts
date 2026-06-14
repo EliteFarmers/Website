@@ -58,9 +58,9 @@ test('armor loadout prefers the equipped set before loose higher-value pieces', 
 test('armor loadout groups wardrobe columns and fills missing set slots from loose pieces', () => {
 	const player = new FarmingPlayer({
 		armor: [
-			farmingArmorItem('FERMENTO_HELMET', 'wardrobe-helmet', 'wardrobe:0'),
-			farmingArmorItem('FERMENTO_CHESTPLATE', 'wardrobe-chestplate', 'wardrobe:9'),
-			farmingArmorItem('FERMENTO_LEGGINGS', 'wardrobe-leggings', 'wardrobe:18'),
+			farmingArmorItem('FERMENTO_HELMET', 'wardrobe-helmet', 'wardrobe:0:HELMET'),
+			farmingArmorItem('FERMENTO_CHESTPLATE', 'wardrobe-chestplate', 'wardrobe:0:CHESTPLATE'),
+			farmingArmorItem('FERMENTO_LEGGINGS', 'wardrobe-leggings', 'wardrobe:0:LEGGINGS'),
 			farmingArmorItem('HELIANTHUS_HELMET', 'loose-helmet'),
 			farmingArmorItem('HELIANTHUS_BOOTS', 'loose-boots'),
 		],
