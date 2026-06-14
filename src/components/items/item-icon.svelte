@@ -16,14 +16,16 @@
 	const gbl = getGlobalContext();
 </script>
 
-<div class={cn('bg-card relative aspect-square size-9 rounded-md border shadow-md sm:size-12', customClass)}>
+<div class={cn('bg-card relative grid aspect-square size-9 place-items-center rounded-md border shadow-md sm:size-12', customClass)}>
 	{#if loading && !errored}
-		<LoaderCircle class="m-1.5 size-5 animate-spin sm:m-3 sm:size-6" />
+		<LoaderCircle class="col-start-1 row-start-1 size-6 animate-spin sm:size-8" />
 	{/if}
 
 	<img
 		loading="lazy"
-		class="h-full w-full rounded-md p-1 {loading || errored ? 'opacity-0' : 'opacity-100'} pixelated aspect-square"
+		class="col-start-1 row-start-1 aspect-square h-full w-full rounded-md p-1 {loading || errored
+			? 'opacity-0'
+			: 'opacity-100'} pixelated"
 		src="{url}{gbl.packsParam && url.includes('?') ? gbl.packsParam.replace('?', '&') : gbl.packsParam}"
 		alt="Item"
 		onload={() => (loading = false)}

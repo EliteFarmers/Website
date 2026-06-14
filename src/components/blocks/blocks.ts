@@ -350,12 +350,14 @@ export interface BlockComponentProps {
 	index: number;
 	modifiers: ModifierComponents;
 	hoistedComments?: Record<string, CommentWithGuideAuthor[]>;
+	renderTextAsHtml?: boolean;
 }
 
 export interface BlocksRendererProps {
 	content: RootNode;
 	blocks?: Partial<BlockComponents>;
 	modifiers?: Partial<ModifierComponents>;
+	renderTextAsHtml?: boolean;
 }
 
 export interface ParagraphProps extends BlockComponentProps {
@@ -394,9 +396,11 @@ export interface ListItemProps extends BlockComponentProps {
 export interface InlineRendererProps {
 	nodes: InlineNode[];
 	modifiers: ModifierComponents;
+	renderTextAsHtml?: boolean;
 }
 
 export interface TextRendererProps {
 	node: TextNode;
 	modifiers: ModifierComponents;
+	renderTextAsHtml?: boolean;
 }

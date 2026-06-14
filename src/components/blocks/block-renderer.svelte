@@ -42,6 +42,7 @@
 		blocks = {},
 		modifiers = {},
 		hoistedComments = {},
+		renderTextAsHtml = false,
 	}: BlocksRendererProps & { hoistedComments?: Record<string, CommentWithGuideAuthor[]> } = $props();
 
 	const defaultBlocks: BlockComponents = {
@@ -94,7 +95,7 @@
 			{@const Block = resolvedBlocks[node.type] as unknown as import('svelte').Component}
 			{@const comments = getHoistedComments(node)}
 			<div id={getWrapperId(node)} class="scroll-mt-24">
-				<Block {node} {index} modifiers={resolvedModifiers} {hoistedComments} />
+				<Block {node} {index} modifiers={resolvedModifiers} {hoistedComments} {renderTextAsHtml} />
 				{#if comments.length}
 					<div class="not-prose">
 						{#each comments as comment (comment.id)}

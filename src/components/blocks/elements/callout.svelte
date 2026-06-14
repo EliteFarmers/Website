@@ -5,9 +5,10 @@
 	interface Props {
 		node: CalloutBlockNode;
 		hoistedComments?: Record<string, import('$lib/guides/types').CommentWithGuideAuthor[]>;
+		renderTextAsHtml?: boolean;
 	}
 
-	let { node, hoistedComments = {} }: Props = $props();
+	let { node, hoistedComments = {}, renderTextAsHtml = false }: Props = $props();
 
 	const variantClasses: Record<string, string> = {
 		note: 'border-blue-600/20 bg-blue-400/20 dark:border-blue-800/20 dark:bg-blue-600/10',
@@ -52,6 +53,6 @@
 		{label}
 	</div>
 	<div class="space-y-2">
-		<BlockRenderer content={node.children} {hoistedComments} />
+		<BlockRenderer content={node.children} {hoistedComments} {renderTextAsHtml} />
 	</div>
 </div>

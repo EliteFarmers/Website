@@ -1,4 +1,5 @@
 import { getGuide } from '$lib/api';
+import { renderGuideContentForDisplay } from '$lib/guides/render-content.server';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -10,6 +11,6 @@ export const load = (async ({ params, url }) => {
 	}
 
 	return {
-		guide,
+		guide: guide ? await renderGuideContentForDisplay(guide) : guide,
 	};
 }) satisfies PageServerLoad;

@@ -7,9 +7,10 @@
 	interface Props {
 		inventory: HypixelInventoryOverviewDto;
 		inventorySize?: number;
+		slotClass?: string;
 	}
 
-	let { inventory, inventorySize }: Props = $props();
+	let { inventory, inventorySize, slotClass = undefined }: Props = $props();
 
 	const ctx = getStatsContext();
 
@@ -23,5 +24,5 @@
 </script>
 
 {#if data.current?.[inventory.name]}
-	<InventoryBasic inventory={data.current?.[inventory.name]} wrap={true} {inventorySize} />
+	<InventoryBasic inventory={data.current?.[inventory.name]} wrap={true} {inventorySize} {slotClass} />
 {/if}

@@ -33,6 +33,7 @@ import type {
 	UpdateGuideRequest,
 	VoteGuideRequest,
 } from '$lib/api/schemas';
+import { renderGuideContentForDisplay } from '$lib/guides/render-content.server';
 import { error } from '@sveltejs/kit';
 import * as z from 'zod';
 
@@ -127,7 +128,12 @@ export const GetGuide = query(
 			error(result.response.status, 'Failed to fetch guide');
 		}
 
-		return result.data;
+		try {
+			return await renderGuideContentForDisplay(result.data);
+		} catch (err) {
+			console.error('Error rendering guide content:', err);
+			error(500, 'Failed to render guide content');
+		}
 	}
 );
 
