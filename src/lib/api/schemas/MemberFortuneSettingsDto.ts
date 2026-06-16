@@ -19,6 +19,6 @@ export interface MemberFortuneSettingsDto {
 	rosewaterFlasks: number;
 	/** Attribute shards */
 	attributes: MemberFortuneSettingsDtoAttributes;
-	/** Garden chip rarity assumptions */
+	/** User-provided Garden Chip rarity assumptions. API data only exposes chip levels. */
 	chipRarities: MemberFortuneSettingsDtoChipRarities;
 }

@@ -160,7 +160,9 @@ export const zodUpdateFortuneSettingsBody = zod.object({
 	communityCenter: zod.number().describe('Community center farming fortune level'),
 	rosewaterFlasks: zod.number().describe('Consumed Filled Rosewater Flasks'),
 	attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
-	chipRarities: zod.record(zod.string(), zod.string()).describe('Garden chip rarity assumptions'),
+	chipRarities: zod
+		.record(zod.string(), zod.string())
+		.describe('User-provided Garden Chip rarity assumptions. API data only exposes chip levels.'),
 });
 
 /**
@@ -3309,6 +3311,49 @@ export const zodDeleteNotificationParams = zod.object({
 });
 
 /**
+ * @summary Disable a browser push subscription
+ */
+export const zodDeleteNotificationPushSubscriptionParams = zod.object({
+	id: zod.string(),
+});
+
+/**
+ * @summary Update notification preferences
+ */
+export const zodUpdateNotificationPreferencesBody = zod.object({
+	preferences: zod.array(
+		zod.object({
+			type: zod.enum([
+				'system',
+				'guideApproved',
+				'guideEditApproved',
+				'guideRejected',
+				'guideDeleted',
+				'commentApproved',
+				'commentEditApproved',
+				'commentRejected',
+				'newComment',
+				'newReply',
+				'shopPurchase',
+				'guideSubmitted',
+				'shopRefund',
+				'giftReceived',
+				'giftReassignable',
+				'giftClaimed',
+				'dataExportReady',
+				'badgeUnlocked',
+				'managedPackApproved',
+				'managedPackOwnershipAssigned',
+				'auctionSold',
+			]),
+			channel: zod.enum(['inApp', 'browserPush', 'discordDm']),
+			enabled: zod.coerce.boolean<boolean>(),
+			updatedAt: zod.iso.datetime({}).nullish(),
+		})
+	),
+});
+
+/**
  * Retrieve paginated notifications for the authenticated user.
  * @summary Get user notifications
  */
@@ -3323,6 +3368,31 @@ export const zodGetNotificationsQueryParams = zod.object({
  */
 export const zodMarkNotificationReadParams = zod.object({
 	id: zod.string(),
+});
+
+/**
+ * @summary Update notification delivery attempt status
+ */
+export const zodUpdateNotificationDeliveryAttemptParams = zod.object({
+	attemptId: zod.string(),
+});
+
+export const zodUpdateNotificationDeliveryAttemptBody = zod.object({
+	status: zod.enum(['pending', 'succeeded', 'failed', 'skipped']),
+	reasonCode: zod.string().nullish(),
+	failureMessage: zod.string().nullish(),
+});
+
+/**
+ * @summary Create or update a browser push subscription
+ */
+export const zodUpsertNotificationPushSubscriptionBody = zod.object({
+	endpoint: zod.string(),
+	keys: zod.object({
+		p256Dh: zod.string(),
+		auth: zod.string(),
+	}),
+	deviceName: zod.string().nullish(),
 });
 
 /**

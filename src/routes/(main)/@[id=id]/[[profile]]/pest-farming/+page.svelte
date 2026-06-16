@@ -5,6 +5,7 @@
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import CategoryProgress from '$comp/rates/category-progress.svelte';
 	import PestGearSelector from '$comp/rates/pest/pest-gear-selector.svelte';
+	import PestRateBreakdown from '$comp/rates/pest/pest-rate-breakdown.svelte';
 	import PestStatsSummary from '$comp/rates/pest/pest-stats-summary.svelte';
 	import VacuumSelector from '$comp/rates/pest/vacuum-selector.svelte';
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
@@ -45,13 +46,6 @@
 	function formatRate(value: number) {
 		return `${formatNumber(value)}/hr`;
 	}
-
-	function formatDuration(seconds: number) {
-		const totalSeconds = Math.max(0, Math.round(seconds));
-		const minutes = Math.floor(totalSeconds / 60);
-		const remainingSeconds = totalSeconds % 60;
-		return minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${remainingSeconds}s`;
-	}
 </script>
 
 <StatsHead
@@ -87,86 +81,12 @@
 				<Cropselector radio={true} analyticsEvent="pest_farming.crop_selected" />
 			</section>
 
-			<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
-				<header class="flex flex-col gap-1">
-					<h2 class="text-xl leading-tight font-semibold">Rate Breakdown</h2>
-					<p class="text-muted-foreground text-sm">
-						{formatNumber(pest.pestRateResult.breakdown.pestSpawning.expectedPestsPerSpawn, 2)} expected pests
-						every {formatDuration(pest.pestRateResult.debug.cycleSeconds)} cycle.
-					</p>
-				</header>
-				<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-					<div class="bg-muted/30 rounded-md border p-3">
-						<p class="text-muted-foreground text-xs font-medium">Total</p>
-						<p class="text-xl font-semibold">{formatRate(pest.pestRateResult.valuation.coinsPerHour)}</p>
-					</div>
-					<div class="bg-muted/30 rounded-md border p-3">
-						<p class="text-muted-foreground text-xs font-medium">Crop Breaking</p>
-						<p class="text-xl font-semibold">
-							{formatRate(pest.pestRateResult.valuation.byBucket.cropBreaking)}
-						</p>
-					</div>
-					<div class="bg-muted/30 rounded-md border p-3">
-						<p class="text-muted-foreground text-xs font-medium">Pest Drops</p>
-						<p class="text-xl font-semibold">
-							{formatRate(
-								pest.pestRateResult.valuation.byBucket.pestDrops +
-									pest.pestRateResult.valuation.byBucket.npcCoins
-							)}
-						</p>
-					</div>
-					<div class="bg-muted/30 rounded-md border p-3">
-						<p class="text-muted-foreground text-xs font-medium">Rare Drops</p>
-						<p class="text-xl font-semibold">
-							{formatRate(pest.pestRateResult.valuation.byBucket.rngDrops)}
-						</p>
-					</div>
-					{#if pest.pestRateResult.valuation.byBucket.pestExchanges}
-						<div class="bg-muted/30 rounded-md border p-3">
-							<p class="text-muted-foreground text-xs font-medium">Pest Exchanges</p>
-							<p class="text-xl font-semibold">
-								{formatRate(pest.pestRateResult.valuation.byBucket.pestExchanges)}
-							</p>
-						</div>
-					{/if}
-					{#if pest.pestRateResult.valuation.byBucket.pestShards}
-						<div class="bg-muted/30 rounded-md border p-3">
-							<p class="text-muted-foreground text-xs font-medium">Pest Shards</p>
-							<p class="text-xl font-semibold">
-								{formatRate(pest.pestRateResult.valuation.byBucket.pestShards)}
-							</p>
-						</div>
-					{/if}
-					{#if pest.pestRateResult.valuation.byBucket.costs}
-						<div class="bg-muted/30 rounded-md border p-3">
-							<p class="text-muted-foreground text-xs font-medium">Costs</p>
-							<p class="text-xl font-semibold">
-								{formatRate(pest.pestRateResult.valuation.byBucket.costs)}
-							</p>
-						</div>
-					{/if}
-					{#if pest.pestRateResult.valuation.byBucket.feastRareCrops}
-						<div class="bg-muted/30 rounded-md border p-3">
-							<p class="text-muted-foreground text-xs font-medium">Feast Rare Crops</p>
-							<p class="text-xl font-semibold">
-								{formatRate(pest.pestRateResult.valuation.byBucket.feastRareCrops)}
-							</p>
-						</div>
-					{/if}
-				</div>
-
-				<p class="text-muted-foreground text-sm">
-					Not what you expected? Change the
-					<button
-						type="button"
-						class="text-foreground hover:text-primary focus-visible:ring-ring rounded-sm font-medium underline underline-offset-2 focus-visible:ring-2 focus-visible:outline-none"
-						onclick={openSettings}
-					>
-						settings
-					</button>
-					to dial in your rates.
-				</p>
-			</section>
+			<PestRateBreakdown
+				result={pest.pestRateResult}
+				priceBook={pest.pestRatePriceBook}
+				items={pest.itemsData}
+				{openSettings}
+			/>
 
 			<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
 				<header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

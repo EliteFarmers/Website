@@ -32,4 +32,5 @@ export const NotificationType = {
 	badgeUnlocked: 'badgeUnlocked',
 	managedPackApproved: 'managedPackApproved',
 	managedPackOwnershipAssigned: 'managedPackOwnershipAssigned',
+	auctionSold: 'auctionSold',
 } as const;

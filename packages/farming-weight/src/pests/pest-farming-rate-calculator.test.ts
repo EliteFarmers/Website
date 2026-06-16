@@ -148,6 +148,128 @@ test('spawn phase bonus pest chance upgrades report positive pest rate impact', 
 	expect(impact.valuationDelta.coinsPerHour).toBeGreaterThan(0);
 });
 
+test('crop breaking does not double count crop item NPC valuation', () => {
+	const bountifulCoinsPerPhase = 100;
+	const fermentoPerPhase = 1;
+	const cropRates = (blocks: number): DetailedDropsFromEffectsResult => ({
+		...emptyCropRates(blocks),
+		items: {
+			[Crop.NetherWart]: blocks,
+			FERMENTO: fermentoPerPhase,
+		},
+		npcCoins: blocks * 4 + bountifulCoinsPerPhase,
+		coinSources: {
+			Collection: blocks * 4,
+			Bountiful: bountifulCoinsPerPhase,
+		},
+	});
+	const player = {
+		crop: { getRates: (_crop: Crop, blocks: number) => cropRates(blocks) },
+		spawn: { getRates: (_crop: Crop, blocks: number) => cropRates(blocks) },
+		kill: {
+			getStatBreakdown: (stat: Stat) => ({
+				'Test Crop Fortune': {
+					value: 0,
+					stat,
+				},
+			}),
+			buildEnvironment: () => ({}),
+			collectEffects: () => [],
+		},
+		getPhaseStat: () => 0,
+	} as unknown as PestFarmingPlayer;
+
+	const createCalculator = (intervalSeconds?: number) =>
+		new PestFarmingRateCalculator({
+			player,
+			options: {
+				crop: Crop.Wheat,
+				cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+				intervalSeconds,
+			},
+			priceBook: {
+				version: 'test',
+				items: {
+					[Crop.NetherWart]: { coins: 4, source: 'npc' },
+					FERMENTO: { coins: 10, source: 'manual' },
+				},
+				missingItemMode: 'zero',
+			},
+		});
+
+	const result = createCalculator().calculate();
+	const bucketTotal = Object.values(result.valuation.byBucket).reduce((sum, value) => sum + value, 0);
+	const cropBlocksPerHour = (result.debug.farmBlocks + result.debug.spawnBlocks) * result.debug.cyclesPerHour;
+	const expectedCropBreaking =
+		cropBlocksPerHour * 4 +
+		fermentoPerPhase * 2 * 10 * result.debug.cyclesPerHour +
+		bountifulCoinsPerPhase * 2 * result.debug.cyclesPerHour;
+	const directPestCoinsPerHour = result.breakdown.pestDrops.total.npcCoins * (3600 / result.debug.cycleSeconds);
+
+	expect(result.valuation.byBucket.cropBreaking).toBeCloseTo(expectedCropBreaking, 8);
+	expect(result.valuation.byBucket.npcCoins).toBeCloseTo(directPestCoinsPerHour, 8);
+	expect(bucketTotal).toBeCloseTo(result.valuation.coinsPerHour, 8);
+
+	const halfHourResult = createCalculator(1800).calculate();
+	const halfHourBucketTotal = Object.values(halfHourResult.valuation.byBucket).reduce((sum, value) => sum + value, 0);
+
+	expect(halfHourBucketTotal).toBeCloseTo(halfHourResult.valuation.coinsPerHour, 8);
+});
+
+test('crop breaking uses the best crop tool for max tool outputs', () => {
+	const player = new PestFarmingPlayer({
+		tools: [
+			{
+				id: 292,
+				count: 1,
+				skyblockId: 'THEORETICAL_HOE_WARTS_1',
+				uuid: 'early-pest-nether-wart-hoe',
+				name: 'Early Newton Nether Warts Hoe',
+				lore: [],
+				enchantments: {},
+				attributes: {},
+			},
+			{
+				id: 293,
+				count: 1,
+				skyblockId: 'THEORETICAL_HOE_WARTS_3',
+				uuid: 'maxed-pest-nether-wart-hoe',
+				name: 'Bountiful Newton Nether Warts Hoe',
+				lore: [],
+				enchantments: {},
+				attributes: {
+					levelable_lvl: '50',
+					levelable_exp: '0',
+					modifier: 'bountiful',
+				},
+			},
+		],
+	});
+
+	const result = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.NetherWart,
+			cycle: {
+				...DEFAULT_PEST_CYCLE_SETTINGS,
+				blocksPerSecond: 1_000,
+				spawnBlocksPerSecond: 1_000,
+			},
+		},
+		priceBook: {
+			version: 'test',
+			items: {
+				[Crop.NetherWart]: { coins: 4, source: 'npc' },
+				TOOL_EXP_CAPSULE: { coins: 100_000, source: 'npc' },
+			},
+			missingItemMode: 'zero',
+		},
+	}).calculate();
+
+	expect(result.breakdown.cropBreaking.total.items.TOOL_EXP_CAPSULE).toBeGreaterThan(0);
+	expect(result.breakdown.cropBreaking.total.npcCoins).toBeGreaterThan(0);
+});
+
 const SHEET_INTERVAL_SECONDS = 3600;
 const SHEET_BLOCKS_PER_SECOND = 19.8;
 const SHEET_COOLDOWN_SECONDS = 135;
@@ -260,6 +382,7 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 	const result = calculator.calculate();
 	const pestDropCoins =
 		result.valuation.byBucket.pestDrops + result.valuation.byBucket.rngDrops + result.valuation.byBucket.npcCoins;
+	const bucketTotal = Object.values(result.valuation.byBucket).reduce((sum, value) => sum + value, 0);
 
 	expect(result.debug.cooldownSeconds).toBeCloseTo(SHEET_COOLDOWN_SECONDS, 8);
 	expect(result.debug.expectedSpawnWaitSeconds).toBeCloseTo(SHEET_SPAWN_WAIT_SECONDS, 8);
@@ -272,6 +395,9 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Locust]).toBeCloseTo(12 / 58, 8);
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Slug]).toBeCloseTo(36 / 58, 8);
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Firefly]).toBe(0);
+	expect(result.breakdown.economy.pestExchanges.items.PESTHUNTER_RELIC).toBeGreaterThan(0);
+	expect(result.breakdown.economy.pestShards.rngItems.SHARD_PEST).toBeGreaterThan(0);
+	expect(result.breakdown.economy.costs.items.PLANT_MATTER).toBeLessThan(0);
 
 	expect(pestDropCoins).toBeCloseTo(SHEET_BUCKETS.pestDrops, 1);
 	expect(result.valuation.byBucket.cropBreaking).toBeCloseTo(SHEET_BUCKETS.cropBreaking, 1);
@@ -279,6 +405,7 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 	expect(result.valuation.byBucket.pestShards).toBeCloseTo(SHEET_BUCKETS.pestShards, 1);
 	expect(result.valuation.byBucket.costs).toBeCloseTo(SHEET_BUCKETS.sprayonatorCost, 1);
 	expect(result.valuation.byBucket.feastRareCrops).toBe(SHEET_BUCKETS.feastRareCrops);
+	expect(bucketTotal).toBeCloseTo(SHEET_BUCKETS.total, 1);
 	expect(result.valuation.coinsPerHour).toBeCloseTo(SHEET_BUCKETS.total, 1);
 });
 

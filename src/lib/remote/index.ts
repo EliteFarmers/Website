@@ -4,5 +4,6 @@ export * from './graphs.remote';
 export * from './guilds.remote';
 export * from './info.remote';
 export * from './leaderboards.remote';
+export * from './notifications.remote';
 export * from './payments.remote';
 export * from './profiles.remote';

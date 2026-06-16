@@ -112,6 +112,20 @@ test('phase loadouts use phase armor, shared equipment, and independent pets', (
 	expect(player.getPhasePlayer(PestFarmingPhase.Kill).selectedPet?.pet.uuid).toBe('hedgehog');
 });
 
+test('default shared equipment prefers pest equipment over generic farming fortune', () => {
+	const player = new PestFarmingPlayer({
+		equipment: [
+			equipment('BLOSSOM_BELT', 'blossom-belt'),
+			equipment('PESTHUNTERS_BELT', 'pesthunter-belt'),
+			equipment('BLOSSOM_CLOAK', 'blossom-cloak'),
+			equipment('PEST_VEST', 'pest-vest'),
+		],
+	});
+
+	expect(player.sharedEquipment[GearSlot.Belt]).toBe('pesthunter-belt');
+	expect(player.sharedEquipment[GearSlot.Cloak]).toBe('pest-vest');
+});
+
 test('default pest armor loadouts prefer equipped and separate wardrobe sets before loose pieces', () => {
 	const player = new PestFarmingPlayer({
 		armor: [

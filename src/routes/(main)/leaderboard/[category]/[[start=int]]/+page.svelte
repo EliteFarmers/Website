@@ -56,6 +56,7 @@
 			)
 			.join('\n')
 	);
+	const description = $derived(`${title} for Hypixel Skyblock.\n\n${topTen}`);
 
 	// Scroll back down to the buttons after navigating to prevent page jumping
 	afterNavigate(({ from }) => {
@@ -97,7 +98,8 @@
 
 <Head
 	{title}
-	description="{title} for Hypixel Skyblock.\n\n{topTen}"
+	{description}
+	imageUrl={data.leaderboard.icon}
 	canonicalPath="/leaderboard/{data.leaderboard.id}{lb?.offset ? `/${lb.offset + 1}` : ''}"
 />
 

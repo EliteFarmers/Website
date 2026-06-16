@@ -7,8 +7,8 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { NotificationPreferenceDto } from './NotificationPreferenceDto';
 
-/**
- * User-provided Garden Chip rarity assumptions. API data only exposes chip levels.
- */
-export type MemberFortuneSettingsDtoChipRarities = { [key: string]: string };
+export interface UpdateNotificationPreferencesRequest {
+	preferences: NotificationPreferenceDto[];
+}

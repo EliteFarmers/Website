@@ -136,6 +136,7 @@ export class PestFarmingRateCalculator {
 					byPest: pestDrops.byPest,
 					total: pestDrops.total,
 				},
+				economy,
 				timing: debug,
 			},
 			perCycle,
@@ -471,23 +472,51 @@ export class PestFarmingRateCalculator {
 		const missingCurrencyIds = new Set<string>();
 		const valueBucket = (quantity: PestRateQuantities, scale = 1) =>
 			valueQuantities(quantity, this.priceBook, missingItemIds, missingCurrencyIds) * scale;
-		const cropBreaking = valueBucket(buckets.cropBreaking, intervalScale);
-		const pestDrops = valueBucket({ ...buckets.pestDrops, rngItems: {}, npcCoins: 0 }, intervalScale);
-		const rngDrops = valueBucket(
-			{ items: {}, rngItems: buckets.pestDrops.rngItems, currencies: {}, collections: {}, npcCoins: 0 },
-			intervalScale
-		);
-		const pestExchanges = valueBucket(buckets.pestExchanges, intervalScale);
-		const pestShards = valueBucket(buckets.pestShards, intervalScale);
-		const costs = valueBucket(buckets.costs, intervalScale);
-		const feastRareCrops = valueBucket(buckets.feastRareCrops, intervalScale);
-		const currencies = valueBucket(
-			{ items: {}, rngItems: {}, currencies: perCycle.currencies, collections: {}, npcCoins: 0 },
-			intervalScale
-		);
-		const npcCoins = perInterval.npcCoins;
-		const coinsPerInterval = valueQuantities(perInterval, this.priceBook, missingItemIds, missingCurrencyIds);
 		const intervalSeconds = this.options.intervalSeconds ?? DEFAULT_INTERVAL_SECONDS;
+		const perHourScale = 3600 / intervalSeconds;
+		const valueBucketPerHour = (quantity: PestRateQuantities, scale = intervalScale) =>
+			valueBucket(quantity, scale) * perHourScale;
+		const cropBreaking = valueBucketPerHour(buckets.cropBreaking);
+		const pestDrops = valueBucketPerHour({ ...buckets.pestDrops, rngItems: {}, npcCoins: 0 });
+		const rngDrops = valueBucketPerHour({
+			items: {},
+			rngItems: buckets.pestDrops.rngItems,
+			currencies: {},
+			collections: {},
+			npcCoins: 0,
+		});
+		const pestExchanges = valueBucketPerHour(buckets.pestExchanges);
+		const pestShards = valueBucketPerHour(buckets.pestShards);
+		const costs = valueBucketPerHour(buckets.costs);
+		const feastRareCrops = valueBucketPerHour(buckets.feastRareCrops);
+		const unbucketedCurrencies = diffRecord(
+			sumNumberRecords(
+				buckets.cropBreaking.currencies,
+				buckets.pestDrops.currencies,
+				buckets.pestExchanges.currencies,
+				buckets.pestShards.currencies,
+				buckets.costs.currencies,
+				buckets.feastRareCrops.currencies
+			),
+			perCycle.currencies
+		);
+		const currencies = valueBucketPerHour({
+			items: {},
+			rngItems: {},
+			currencies: unbucketedCurrencies,
+			collections: {},
+			npcCoins: 0,
+		});
+		const bucketedNpcCoins =
+			buckets.cropBreaking.npcCoins +
+			buckets.pestDrops.npcCoins +
+			buckets.pestExchanges.npcCoins +
+			buckets.pestShards.npcCoins +
+			buckets.costs.npcCoins +
+			buckets.feastRareCrops.npcCoins;
+		const unbucketedNpcCoins = perCycle.npcCoins - bucketedNpcCoins;
+		const npcCoins = (buckets.pestDrops.npcCoins + zeroTiny(unbucketedNpcCoins)) * intervalScale * perHourScale;
+		const coinsPerInterval = valueQuantities(perInterval, this.priceBook, missingItemIds, missingCurrencyIds);
 
 		return {
 			complete: missingItemIds.size === 0 && missingCurrencyIds.size === 0,
@@ -538,9 +567,15 @@ function sumCropRateResults(results: DetailedDropsFromEffectsResult[]): PestRate
 			collections: Object.fromEntries(
 				Object.entries(result.items).filter(([itemId]) => Object.values(Crop).includes(itemId as Crop))
 			) as Partial<Record<Crop, number>>,
-			npcCoins: result.npcCoins,
+			npcCoins: directCropCoins(result),
 		}))
 	);
+}
+
+function directCropCoins(result: DetailedDropsFromEffectsResult): number {
+	return Object.entries(result.coinSources).reduce((total, [source, coins]) => {
+		return source.startsWith('Bountiful') ? total + coins : total;
+	}, 0);
 }
 
 function pestDropsToQuantities(result: DetailedPestDropsResult): PestRateQuantities {
@@ -694,6 +729,18 @@ function diffRecord(
 		if (diff !== 0) result[key] = diff;
 	}
 	return result;
+}
+
+function sumNumberRecords(...records: Record<string, number>[]): Record<string, number> {
+	const result: Record<string, number> = {};
+	for (const record of records) {
+		for (const [key, value] of Object.entries(record)) addRecord(result, key, value);
+	}
+	return result;
+}
+
+function zeroTiny(value: number): number {
+	return Math.abs(value) < 1e-9 ? 0 : value;
 }
 
 function sumRecord(record: Record<string, number> | Partial<Record<Crop, number>>): number {

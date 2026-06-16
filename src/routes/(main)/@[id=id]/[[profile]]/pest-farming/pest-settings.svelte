@@ -4,11 +4,18 @@
 	import SettingHeader from '$comp/settings/setting-header.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
-	import type { PestFarmingRateSettings } from '$lib/stores/ratesData';
+	import type { PestFarmingRateSettings, PestFarmingTimeOfDay } from '$lib/stores/ratesData';
 	import { NumberInput } from '$ui/number-input';
 	import * as Select from '$ui/select';
 	import { Switch } from '$ui/switch';
-	import { Stat, TEMPORARY_FORTUNE } from 'farming-weight';
+	import {
+		GARDEN_BESTIARY_NAMES,
+		NATURAL_PESTS,
+		Pest,
+		Stat,
+		TEMPORARY_FORTUNE,
+		type TemporaryFarmingFortune,
+	} from 'farming-weight';
 	import type { PestFarmingPageContext } from './pest-farming-context.svelte';
 
 	interface Props {
@@ -22,6 +29,30 @@
 		{ value: 'normal', label: 'Pest Repellent' },
 		{ value: 'max', label: 'Pest Repellent MAX' },
 	] satisfies { value: PestFarmingRateSettings['pestRepellent']; label: string }[];
+
+	const timeOfDayOptions = [
+		{ value: 'day', label: 'Day' },
+		{ value: 'night', label: 'Night' },
+	] satisfies { value: PestFarmingTimeOfDay; label: string }[];
+
+	const pestName = (pestId: Pest) => GARDEN_BESTIARY_NAMES[`pest_${pestId}_1`] ?? pestId;
+	const pestOptions = NATURAL_PESTS.map((pestId) => ({ value: pestId, label: pestName(pestId) }));
+	type TemporaryFortuneToggleKey = Exclude<keyof TemporaryFarmingFortune, 'pestTurnIn'>;
+	const pestTurnInTitle = `${TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)`;
+	const temporaryFortuneSources = [
+		{ key: 'harvestPotion', total: 50 },
+		{ key: 'magic8Ball', total: 25 },
+		{ key: 'springFilter', total: 25 },
+		{ key: 'anitaContest', total: 25 },
+		{ key: 'chocolateTruffle', total: 30 },
+		{ key: 'celestialMasonJar', total: 15 },
+		{ key: 'melonJuiceMixin', total: 15 },
+		{ key: 'finnsFocaccia', total: 5, stat: Stat.Overbloom },
+	] satisfies { key: TemporaryFortuneToggleKey; total: number; stat?: Stat }[];
+
+	function isTemporaryFortuneEnabled(key: TemporaryFortuneToggleKey) {
+		return pest.rates.useTemp && Boolean(pest.rates.temp[key]);
+	}
 </script>
 
 <div class="relative w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
@@ -45,13 +76,71 @@
 			/>
 		</div>
 	</SettingListItem>
+	<SettingBigSeperator />
+
+	<SettingHeader class="mt-8 font-normal">
+		<span class="text-xl font-semibold">Temporary Fortune</span>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown
+				total={pest.tempFortune}
+				breakdown={pest.tempFortuneBreakdown}
+				enabled={pest.rates.useTemp}
+			/>
+			<Switch checked={pest.rates.useTemp} onCheckedChange={(checked) => pest.setUseTemporaryFortune(checked)} />
+		</div>
+	</SettingHeader>
+	<SettingBigSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.centuryCake.name} wiki={TEMPORARY_FORTUNE.centuryCake.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={5} enabled={pest.rates.temp.centuryCake && pest.rates.useTemp} />
+			<Switch
+				checked={pest.rates.temp.centuryCake}
+				onCheckedChange={(checked) => pest.setTemporaryFortune('centuryCake', checked)}
+				disabled={!pest.rates.useTemp}
+			/>
+		</div>
+	</SettingListItem>
 	<SettingSeperator />
 
-	<SettingListItem
-		title={TEMPORARY_FORTUNE.stinkyCheesePotion.name}
-		description="Bonus pest chance potion."
-		wiki={TEMPORARY_FORTUNE.stinkyCheesePotion.wiki}
-	>
+	<SettingListItem title={pestTurnInTitle} wiki={TEMPORARY_FORTUNE.pestTurnIn.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={200} enabled={pest.rates.temp.pestTurnIn > 0 && pest.rates.useTemp} />
+			<Switch
+				checked={pest.rates.temp.pestTurnIn > 0}
+				onCheckedChange={(checked) => pest.setTemporaryFortune('pestTurnIn', checked ? 200 : 0)}
+				disabled={!pest.rates.useTemp}
+			/>
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	{#each temporaryFortuneSources as source (source.key)}
+		<SettingListItem title={TEMPORARY_FORTUNE[source.key].name} wiki={TEMPORARY_FORTUNE[source.key].wiki}>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				{#if source.stat}
+					<FortuneBreakdown
+						breakdown={{
+							[TEMPORARY_FORTUNE[source.key].name]: { value: source.total, stat: source.stat },
+						}}
+						enabled={isTemporaryFortuneEnabled(source.key)}
+					/>
+				{:else}
+					<FortuneBreakdown total={source.total} enabled={isTemporaryFortuneEnabled(source.key)} />
+				{/if}
+				<Switch
+					checked={Boolean(pest.rates.temp[source.key])}
+					onCheckedChange={(checked) => pest.setTemporaryFortune(source.key, checked)}
+					disabled={!pest.rates.useTemp}
+				/>
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
+	{/each}
+
+	<SettingListItem title={TEMPORARY_FORTUNE.stinkyCheesePotion.name} wiki={TEMPORARY_FORTUNE.stinkyCheesePotion.wiki}>
 		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
 			<FortuneBreakdown
 				breakdown={{
@@ -60,10 +149,56 @@
 				enabled={pest.rates.useTemp && pest.rates.temp.stinkyCheesePotion}
 			/>
 			<Switch
-				checked={pest.rates.useTemp && pest.rates.temp.stinkyCheesePotion}
-				onCheckedChange={(checked) => pest.setStinkyCheesePotion(checked)}
+				checked={pest.rates.temp.stinkyCheesePotion}
+				onCheckedChange={(checked) => pest.setTemporaryFortune('stinkyCheesePotion', checked)}
+				disabled={!pest.rates.useTemp}
 			/>
 		</div>
+	</SettingListItem>
+	<SettingBigSeperator />
+
+	<SettingHeader class="mt-8 text-xl">Pest Attraction</SettingHeader>
+	<p class="text-muted-foreground px-1 text-sm">
+		Weights that change which pests spawn. The selected crop's matching pest is applied automatically.
+	</p>
+	<SettingBigSeperator />
+
+	<SettingListItem
+		title="Time of Day"
+		description={pest.lockedPestTimeOfDay
+			? `${pest.selectedCropName} can only be farmed during ${pest.lockedPestTimeOfDay}.`
+			: 'Day excludes Firefly spawns. Night excludes Dragonfly spawns.'}
+	>
+		<Select.Simple
+			class="my-1 h-10 min-w-32"
+			value={pest.pestTimeOfDay}
+			disabled={!!pest.lockedPestTimeOfDay}
+			change={(value) => pest.setPestTimeOfDay(value ?? 'day')}
+			options={timeOfDayOptions}
+		/>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title="Sprayonator Target" description="Pest attracted by the sprayed plot bonus.">
+		<Select.Simple
+			class="my-1 h-10 min-w-40"
+			value={pest.rates.pestFarming.attraction.sprayonatorTarget ?? Pest.Slug}
+			change={(value) => pest.setPestAttraction('sprayonatorTarget', value)}
+			options={pestOptions}
+		/>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem
+		title="Hooverius Vinyl Target"
+		description="Extra attracted pest from Hooverius vinyl. Applies only when Hooverius is selected."
+	>
+		<Select.Simple
+			class="my-1 h-10 min-w-40"
+			value={pest.rates.pestFarming.attraction.hooveriusVinylTarget ?? Pest.Slug}
+			change={(value) => pest.setPestAttraction('hooveriusVinylTarget', value)}
+			options={pestOptions}
+		/>
 	</SettingListItem>
 	<SettingBigSeperator />
 

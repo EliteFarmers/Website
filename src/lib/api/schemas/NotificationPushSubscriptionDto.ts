@@ -7,8 +7,15 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { NotificationPushSubscriptionStatus } from './NotificationPushSubscriptionStatus';
 
-/**
- * User-provided Garden Chip rarity assumptions. API data only exposes chip levels.
- */
-export type MemberFortuneSettingsDtoChipRarities = { [key: string]: string };
+export interface NotificationPushSubscriptionDto {
+	id: bigint;
+	status: NotificationPushSubscriptionStatus;
+	createdAt: string;
+	lastSeenAt: string;
+	/** @nullable */
+	disabledAt?: string | null;
+	/** @nullable */
+	deviceName?: string | null;
+}

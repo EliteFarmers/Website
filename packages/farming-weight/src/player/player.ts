@@ -650,7 +650,7 @@ export class FarmingPlayer {
 	}
 
 	getRates(crop: Crop, blocksBroken: number): DetailedDropsFromEffectsResult {
-		const tool = this.getBestTool(crop);
+		const tool = this.getSelectedCropTool(crop);
 		const cropFortune = this.getCropFortune(crop, tool);
 		const fortune = cropFortune.fortune;
 

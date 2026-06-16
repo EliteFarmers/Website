@@ -8,7 +8,6 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-/**
- * User-provided Garden Chip rarity assumptions. API data only exposes chip levels.
- */
-export type MemberFortuneSettingsDtoChipRarities = { [key: string]: string };
+export interface GetNotificationPushPublicKeyResponse {
+	publicKey: string;
+}

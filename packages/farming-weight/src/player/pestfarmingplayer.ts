@@ -46,6 +46,7 @@ export const PEST_FARMING_PHASE_STATS: Record<PestFarmingPhase, Stat[]> = {
 
 const PEST_KILL_PLAYER_SOURCE_TYPES: FortuneSourceType[] = ['general', 'crop', 'armor', 'equipment', 'pet'];
 const PEST_KILL_VACUUM_SOURCE_TYPES: FortuneSourceType[] = ['vacuum'];
+const PEST_EQUIPMENT_SELECTION_STATS = [Stat.BonusPestChance, Stat.PestCooldownReduction, Stat.PestKillFortune];
 const ALL_CROPS = Object.values(Crop) as Crop[];
 
 export interface PestArmorSetLoadout {
@@ -477,7 +478,7 @@ export class PestFarmingPlayer {
 				.filter((piece) => piece.slot === slot)
 				.reduce<FarmingEquipment | undefined>((current, candidate) => {
 					if (!current) return candidate;
-					return candidate.fortune > current.fortune ? candidate : current;
+					return comparePestEquipment(candidate, current) > 0 ? candidate : current;
 				}, undefined);
 			if (best?.item.uuid) result[slot] = best.item.uuid;
 		}
@@ -820,4 +821,14 @@ export class PestFarmingPlayer {
 			sharedEquipment: { ...this.sharedEquipment },
 		});
 	}
+}
+
+function comparePestEquipment(a: FarmingEquipment, b: FarmingEquipment): number {
+	const pestDelta = getPestEquipmentScore(a) - getPestEquipmentScore(b);
+	if (pestDelta !== 0) return pestDelta;
+	return a.fortune - b.fortune;
+}
+
+function getPestEquipmentScore(piece: FarmingEquipment): number {
+	return PEST_EQUIPMENT_SELECTION_STATS.reduce((score, stat) => score + piece.getStat(stat), 0);
 }

@@ -16,6 +16,7 @@
 	import DataExport from './data-export.svelte';
 	import DiscordAccount from './discordAccount.svelte';
 	import MinecraftAccount from './minecraftAccount.svelte';
+	import NotificationSettings from './notification-settings.svelte';
 
 	interface Props {
 		data: PageData;
@@ -174,6 +175,11 @@
 			</p>
 			<LinkingGuide username={user?.username ?? ''} />
 		</div>
+	{/snippet}
+
+	{@render section(notificationSection)}
+	{#snippet notificationSection()}
+		<NotificationSettings />
 	{/snippet}
 
 	{@render section(dataExportSection)}

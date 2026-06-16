@@ -10,6 +10,7 @@ import {
 	getRatesData,
 	type PestFarmingData,
 	type PestFarmingRateSettings,
+	type PestFarmingTimeOfDay,
 	type RatesData,
 } from '$lib/stores/ratesData';
 import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
@@ -18,6 +19,7 @@ import {
 	createPestFarmingPlayer,
 	Crop,
 	CROP_INFO,
+	CROP_TO_PEST,
 	DEFAULT_PEST_CYCLE_SETTINGS,
 	FarmingArmor,
 	FarmingEquipment,
@@ -34,6 +36,7 @@ import {
 	PEST_FARMING_STATS,
 	PEST_MAIN_ARMOR_SET_ID,
 	PEST_SPAWN_ARMOR_SET_ID,
+	Pest,
 	PestFarmingPhase,
 	PestFarmingRateCalculator,
 	Stat,
@@ -44,6 +47,7 @@ import {
 	type FortuneSourceProgress,
 	type FortuneUpgrade,
 	type PestArmorSetLoadout,
+	type PestAttractionSettings,
 	type PestCycleSettings,
 	type PestFarmingPlayerOptions,
 	type PestFarmingUpgradeRateImpact,
@@ -51,6 +55,7 @@ import {
 	type PestRateItemPrice,
 	type PestRatePriceBook,
 	type StatBreakdown,
+	type TemporaryFarmingFortune,
 	type UpgradeTreeNode,
 } from 'farming-weight';
 import { Debounced } from 'runed';
@@ -101,6 +106,21 @@ const sumStatBreakdown = (breakdown: StatBreakdown): number =>
 
 type PestFarmingPlayer = ReturnType<typeof createPestFarmingPlayer>;
 type RatesItemPriceEntry = RatesItemPriceData[string];
+const BASE_CROP_ITEM_IDS = new Set<string>(Object.values(Crop));
+const STATIC_NPC_ITEM_PRICES: Record<string, PestRateItemPrice> = {
+	'SLUG;3': { coins: 500_000, source: 'npc' },
+	'SLUG;4': { coins: 5_000_000, source: 'npc' },
+};
+
+function getLockedPestTimeOfDay(crop: Crop): PestFarmingTimeOfDay | undefined {
+	if (crop === Crop.Sunflower) return 'day';
+	if (crop === Crop.Moonflower) return 'night';
+	return undefined;
+}
+
+function getExcludedPestForTime(timeOfDay: PestFarmingTimeOfDay): Pest {
+	return timeOfDay === 'day' ? Pest.Firefly : Pest.Dragonfly;
+}
 
 function getUpgradeIdentity(upgrade: FortuneUpgrade): string {
 	return (
@@ -109,10 +129,14 @@ function getUpgradeIdentity(upgrade: FortuneUpgrade): string {
 	);
 }
 
-function getItemSellValue(item: RatesItemPriceEntry | undefined): PestRateItemPrice | undefined {
+function getItemSellValue(itemId: string, item: RatesItemPriceEntry | undefined): PestRateItemPrice | undefined {
 	if (!item) return undefined;
 
 	const npc = item.bazaar?.npc || item.item?.npc_sell_price || 0;
+	if (BASE_CROP_ITEM_IDS.has(itemId)) {
+		return npc > 0 ? { coins: npc, source: 'npc' } : undefined;
+	}
+
 	const bazaar = item.bazaar?.averageSellOrder || item.bazaar?.averageSell || 0;
 	const auctionPrices = item.auctions
 		?.map((auction) => (auction.lowest > 0 ? auction.lowest : auction.last))
@@ -178,6 +202,23 @@ export class PestFarmingPageContext {
 	selectedVacuum = $derived(
 		this.vacuums.find((vacuum) => vacuum.item.uuid === this.selectedVacuumId) ?? this.vacuums[0]
 	);
+	lockedPestTimeOfDay = $derived(getLockedPestTimeOfDay(this.selectedCropKey));
+	pestTimeOfDay = $derived(this.lockedPestTimeOfDay ?? this.rates.pestFarming.timeOfDay);
+	pestAttraction = $derived.by<PestAttractionSettings>(() => {
+		const settings = this.rates.pestFarming.attraction;
+		const excludedPests = new Set(settings.excludedPests ?? []);
+		excludedPests.add(getExcludedPestForTime(this.pestTimeOfDay));
+		const isHooverius = this.selectedVacuum?.item.skyblockId === 'INFINI_VACUUM_HOOVERIUS';
+
+		return {
+			...settings,
+			selectedPest: CROP_TO_PEST[this.selectedCropKey],
+			sprayonatorTarget: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorTarget : undefined,
+			hooveriusVinylTarget: isHooverius ? settings.hooveriusVinylTarget : undefined,
+			hooveriusVinylMultiplier: isHooverius ? settings.hooveriusVinylMultiplier : undefined,
+			excludedPests: [...excludedPests],
+		};
+	});
 	pestRateSettings = $derived.by<PestCycleSettings>(() => ({
 		...DEFAULT_PEST_CYCLE_SETTINGS,
 		...this.rates.pestFarming.rateSettings,
@@ -188,11 +229,14 @@ export class PestFarmingPageContext {
 		return {
 			version: String(this.itemsVersion),
 			missingItemMode: 'zero',
-			items: Object.fromEntries(
-				Object.entries(this.itemsData)
-					.map(([itemId, item]) => [itemId, getItemSellValue(item)] as const)
-					.filter((entry): entry is readonly [string, PestRateItemPrice] => entry[1] !== undefined)
-			),
+			items: {
+				...STATIC_NPC_ITEM_PRICES,
+				...Object.fromEntries(
+					Object.entries(this.itemsData)
+						.map(([itemId, item]) => [itemId, getItemSellValue(itemId, item)] as const)
+						.filter((entry): entry is readonly [string, PestRateItemPrice] => entry[1] !== undefined)
+				),
+			},
 		};
 	});
 	pestRateCalculator = $derived.by(() => {
@@ -202,6 +246,7 @@ export class PestFarmingPageContext {
 			options: {
 				crop: this.selectedCropKey,
 				cycle: this.pestRateSettings,
+				attraction: this.pestAttraction,
 			},
 			priceBook: this.pestRatePriceBook,
 		});
@@ -278,6 +323,16 @@ export class PestFarmingPageContext {
 	cropFortune = $derived.by(() => {
 		this.trackPestVersion();
 		return this.pestPlayer.crop.getCropFortune(this.selectedCropKey);
+	});
+
+	tempFortune = $derived.by(() => {
+		this.trackPestVersion();
+		return this.pestPlayer.crop.tempFortune;
+	});
+
+	tempFortuneBreakdown = $derived.by(() => {
+		this.trackPestVersion();
+		return this.pestPlayer.crop.tempFortuneBreakdown;
 	});
 
 	cropContextStats = $derived.by(() => {
@@ -783,20 +838,51 @@ export class PestFarmingPageContext {
 		trackAnalytics('pest_farming.rate_setting_changed', { key });
 	}
 
+	setPestTimeOfDay(timeOfDay: PestFarmingTimeOfDay): void {
+		if (this.lockedPestTimeOfDay) return;
+		this.#updatePestFarmingData({ timeOfDay });
+		trackAnalytics('pest_farming.time_of_day_changed', { timeOfDay });
+	}
+
+	setPestAttraction<K extends keyof PestAttractionSettings>(key: K, value: PestAttractionSettings[K]): void {
+		this.#updatePestFarmingData({
+			attraction: {
+				...this.rates.pestFarming.attraction,
+				[key]: value,
+			},
+		});
+		trackAnalytics('pest_farming.attraction_changed', { key });
+	}
+
 	setSprayedPlot(checked: boolean): void {
 		this.#updatePestFarmingData({ sprayedPlot: checked });
 		this.refreshPestPlayerWith({ sprayedPlot: checked });
 	}
 
-	setStinkyCheesePotion(checked: boolean): void {
-		const useTemp = checked ? true : this.rates.useTemp;
-		const temp = { ...this.rates.temp, stinkyCheesePotion: checked };
+	setUseTemporaryFortune(checked: boolean): void {
+		this.#updateRatesData((rates) => ({
+			...rates,
+			useTemp: checked,
+		}));
+		this.refreshPestPlayerWith({ temporaryFortune: checked ? this.rates.temp : undefined });
+	}
+
+	setTemporaryFortune<K extends keyof TemporaryFarmingFortune>(
+		key: K,
+		value: Required<TemporaryFarmingFortune>[K]
+	): void {
+		const temp = { ...this.rates.temp, [key]: value };
+		const useTemp = value ? true : this.rates.useTemp;
 		this.#updateRatesData((rates) => ({
 			...rates,
 			useTemp,
 			temp,
 		}));
 		this.refreshPestPlayerWith({ temporaryFortune: useTemp ? temp : undefined });
+	}
+
+	setStinkyCheesePotion(checked: boolean): void {
+		this.setTemporaryFortune('stinkyCheesePotion', checked);
 	}
 
 	#buildOptions(previous: Partial<PestFarmingPlayerOptions> = {}): PestFarmingPlayerOptions {

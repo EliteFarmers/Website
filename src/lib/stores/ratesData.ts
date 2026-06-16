@@ -3,6 +3,8 @@ import {
 	PEST_MAIN_ARMOR_SET_ID,
 	PEST_SPAWN_ARMOR_SET_ID,
 	DEFAULT_PEST_CYCLE_SETTINGS,
+	Pest,
+	type PestAttractionSettings,
 	PestFarmingPhase,
 	ZorroMode,
 	type FarmingTool,
@@ -14,6 +16,7 @@ import { writable, type Writable } from 'svelte/store';
 import * as z from 'zod';
 
 export type PestFarmingRateSettings = Omit<PestCycleSettings, 'sprayedPlot'>;
+export type PestFarmingTimeOfDay = 'day' | 'night';
 
 export interface PestFarmingData {
 	selectedCrop?: string;
@@ -21,6 +24,8 @@ export interface PestFarmingData {
 	sprayedPlot: boolean;
 	pesthunterAccessoryEnabled: boolean;
 	mantidPestKills: number;
+	timeOfDay: PestFarmingTimeOfDay;
+	attraction: PestAttractionSettings;
 	rateSettings: PestFarmingRateSettings;
 }
 
@@ -90,6 +95,12 @@ const defaultData = {
 		sprayedPlot: true,
 		pesthunterAccessoryEnabled: true,
 		mantidPestKills: 0,
+		timeOfDay: 'day',
+		attraction: {
+			sprayonatorTarget: Pest.Slug,
+			hooveriusVinylTarget: Pest.Slug,
+			hooveriusVinylMultiplier: 3,
+		},
 		rateSettings: {
 			blocksPerSecond: DEFAULT_PEST_CYCLE_SETTINGS.blocksPerSecond,
 			spawnBlocksPerSecond: DEFAULT_PEST_CYCLE_SETTINGS.spawnBlocksPerSecond,
@@ -130,6 +141,12 @@ function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingD
 		sprayedPlot: data?.sprayedPlot ?? defaultData.pestFarming.sprayedPlot,
 		pesthunterAccessoryEnabled: true,
 		mantidPestKills: 0,
+		timeOfDay: data?.timeOfDay ?? defaultData.pestFarming.timeOfDay,
+		attraction: {
+			...defaultData.pestFarming.attraction,
+			...(data?.attraction ?? {}),
+			excludedPests: data?.attraction?.excludedPests ?? defaultData.pestFarming.attraction.excludedPests,
+		},
 		rateSettings: {
 			...defaultData.pestFarming.rateSettings,
 			...(data?.rateSettings ?? {}),
