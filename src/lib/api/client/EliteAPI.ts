@@ -133,6 +133,8 @@ import type {
 	GetMedalBracketsParams,
 	GetMultiplePlayerRanks200,
 	GetMultiplePlayerRanksParams,
+	GetNotificationPreferencesResponse,
+	GetNotificationPushPublicKeyResponse,
 	GetNotificationsParams,
 	GetNotificationsResponse,
 	GetPetTextureParams,
@@ -190,6 +192,7 @@ import type {
 	MemberFortuneSettingsDto,
 	MinecraftAccountDto,
 	NetworthBreakdown,
+	NotificationPushSubscriptionDto,
 	OrderStatusDto,
 	PauseRecurringPaymentRequest,
 	PendingGiftDto,
@@ -253,6 +256,8 @@ import type {
 	UpdateJacobFeatureParams,
 	UpdateJacobFeatureRequestUpdateJacobFeature,
 	UpdateJacobLeaderboardRequestUpdateJacobLeaderboard,
+	UpdateNotificationDeliveryAttemptRequest,
+	UpdateNotificationPreferencesRequest,
 	UpdateTagRequest,
 	UpdateToolSettingRequest,
 	UpdateUserSettingsDto,
@@ -260,6 +265,7 @@ import type {
 	UploadGuideLitematicDto,
 	UploadImageDto,
 	UpsertManagedResourcePackBody,
+	UpsertNotificationPushSubscriptionRequest,
 	UpsertTebexProductSettingsRequest,
 	UserGuideDto,
 	UserOrderDto,
@@ -9242,10 +9248,21 @@ export type uploadCurrentHarvestFeastResponse204 = {
 	status: 204;
 };
 
+export type uploadCurrentHarvestFeastResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
 export type uploadCurrentHarvestFeastResponseSuccess = uploadCurrentHarvestFeastResponse204 & {
 	headers: Headers;
 };
-export type uploadCurrentHarvestFeastResponse = uploadCurrentHarvestFeastResponseSuccess;
+export type uploadCurrentHarvestFeastResponseError = uploadCurrentHarvestFeastResponse400 & {
+	headers: Headers;
+};
+
+export type uploadCurrentHarvestFeastResponse =
+	| uploadCurrentHarvestFeastResponseSuccess
+	| uploadCurrentHarvestFeastResponseError;
 
 export const getUploadCurrentHarvestFeastUrl = () => {
 	return `${ELITE_API_URL}/harvest-feast/current`;
@@ -10427,6 +10444,151 @@ export const deleteNotification = async (id: string, options?: RequestInit) => {
 };
 
 /**
+ * @summary Disable a browser push subscription
+ */
+export type deleteNotificationPushSubscriptionResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteNotificationPushSubscriptionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteNotificationPushSubscriptionResponseSuccess = deleteNotificationPushSubscriptionResponse204 & {
+	headers: Headers;
+};
+export type deleteNotificationPushSubscriptionResponseError = deleteNotificationPushSubscriptionResponse401 & {
+	headers: Headers;
+};
+
+export type deleteNotificationPushSubscriptionResponse =
+	| deleteNotificationPushSubscriptionResponseSuccess
+	| deleteNotificationPushSubscriptionResponseError;
+
+export const getDeleteNotificationPushSubscriptionUrl = (id: string) => {
+	return `${ELITE_API_URL}/notifications/push/subscriptions/${id}`;
+};
+
+export const deleteNotificationPushSubscription = async (id: string, options?: RequestInit) => {
+	return customFetch<deleteNotificationPushSubscriptionResponse>(getDeleteNotificationPushSubscriptionUrl(id), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * @summary Get notification preferences
+ */
+export type getNotificationPreferencesResponse200 = {
+	data: GetNotificationPreferencesResponse;
+	status: 200;
+};
+
+export type getNotificationPreferencesResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getNotificationPreferencesResponseSuccess = getNotificationPreferencesResponse200 & {
+	headers: Headers;
+};
+export type getNotificationPreferencesResponseError = getNotificationPreferencesResponse401 & {
+	headers: Headers;
+};
+
+export type getNotificationPreferencesResponse =
+	| getNotificationPreferencesResponseSuccess
+	| getNotificationPreferencesResponseError;
+
+export const getGetNotificationPreferencesUrl = () => {
+	return `${ELITE_API_URL}/notifications/preferences`;
+};
+
+export const getNotificationPreferences = async (options?: RequestInit) => {
+	return customFetch<getNotificationPreferencesResponse>(getGetNotificationPreferencesUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Update notification preferences
+ */
+export type updateNotificationPreferencesResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type updateNotificationPreferencesResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type updateNotificationPreferencesResponseSuccess = updateNotificationPreferencesResponse204 & {
+	headers: Headers;
+};
+export type updateNotificationPreferencesResponseError = updateNotificationPreferencesResponse401 & {
+	headers: Headers;
+};
+
+export type updateNotificationPreferencesResponse =
+	| updateNotificationPreferencesResponseSuccess
+	| updateNotificationPreferencesResponseError;
+
+export const getUpdateNotificationPreferencesUrl = () => {
+	return `${ELITE_API_URL}/notifications/preferences`;
+};
+
+export const updateNotificationPreferences = async (
+	updateNotificationPreferencesRequest: UpdateNotificationPreferencesRequest,
+	options?: RequestInit
+) => {
+	return customFetch<updateNotificationPreferencesResponse>(getUpdateNotificationPreferencesUrl(), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(updateNotificationPreferencesRequest),
+	});
+};
+
+/**
+ * @summary Get browser push public key
+ */
+export type getNotificationPushPublicKeyResponse200 = {
+	data: GetNotificationPushPublicKeyResponse;
+	status: 200;
+};
+
+export type getNotificationPushPublicKeyResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getNotificationPushPublicKeyResponseSuccess = getNotificationPushPublicKeyResponse200 & {
+	headers: Headers;
+};
+export type getNotificationPushPublicKeyResponseError = getNotificationPushPublicKeyResponse401 & {
+	headers: Headers;
+};
+
+export type getNotificationPushPublicKeyResponse =
+	| getNotificationPushPublicKeyResponseSuccess
+	| getNotificationPushPublicKeyResponseError;
+
+export const getGetNotificationPushPublicKeyUrl = () => {
+	return `${ELITE_API_URL}/notifications/push/public-key`;
+};
+
+export const getNotificationPushPublicKey = async (options?: RequestInit) => {
+	return customFetch<getNotificationPushPublicKeyResponse>(getGetNotificationPushPublicKeyUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * Retrieve paginated notifications for the authenticated user.
  * @summary Get user notifications
  */
@@ -10537,6 +10699,87 @@ export const markNotificationRead = async (id: string, options?: RequestInit) =>
 	return customFetch<markNotificationReadResponse>(getMarkNotificationReadUrl(id), {
 		...options,
 		method: 'POST',
+	});
+};
+
+/**
+ * @summary Update notification delivery attempt status
+ */
+export type updateNotificationDeliveryAttemptResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type updateNotificationDeliveryAttemptResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type updateNotificationDeliveryAttemptResponseSuccess = updateNotificationDeliveryAttemptResponse204 & {
+	headers: Headers;
+};
+export type updateNotificationDeliveryAttemptResponseError = updateNotificationDeliveryAttemptResponse401 & {
+	headers: Headers;
+};
+
+export type updateNotificationDeliveryAttemptResponse =
+	| updateNotificationDeliveryAttemptResponseSuccess
+	| updateNotificationDeliveryAttemptResponseError;
+
+export const getUpdateNotificationDeliveryAttemptUrl = (attemptId: string) => {
+	return `${ELITE_API_URL}/bot/notifications/delivery-attempts/${attemptId}`;
+};
+
+export const updateNotificationDeliveryAttempt = async (
+	attemptId: string,
+	updateNotificationDeliveryAttemptRequest: UpdateNotificationDeliveryAttemptRequest,
+	options?: RequestInit
+) => {
+	return customFetch<updateNotificationDeliveryAttemptResponse>(getUpdateNotificationDeliveryAttemptUrl(attemptId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(updateNotificationDeliveryAttemptRequest),
+	});
+};
+
+/**
+ * @summary Create or update a browser push subscription
+ */
+export type upsertNotificationPushSubscriptionResponse200 = {
+	data: NotificationPushSubscriptionDto;
+	status: 200;
+};
+
+export type upsertNotificationPushSubscriptionResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type upsertNotificationPushSubscriptionResponseSuccess = upsertNotificationPushSubscriptionResponse200 & {
+	headers: Headers;
+};
+export type upsertNotificationPushSubscriptionResponseError = upsertNotificationPushSubscriptionResponse401 & {
+	headers: Headers;
+};
+
+export type upsertNotificationPushSubscriptionResponse =
+	| upsertNotificationPushSubscriptionResponseSuccess
+	| upsertNotificationPushSubscriptionResponseError;
+
+export const getUpsertNotificationPushSubscriptionUrl = () => {
+	return `${ELITE_API_URL}/notifications/push/subscriptions`;
+};
+
+export const upsertNotificationPushSubscription = async (
+	upsertNotificationPushSubscriptionRequest: UpsertNotificationPushSubscriptionRequest,
+	options?: RequestInit
+) => {
+	return customFetch<upsertNotificationPushSubscriptionResponse>(getUpsertNotificationPushSubscriptionUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(upsertNotificationPushSubscriptionRequest),
 	});
 };
 

@@ -8,7 +8,12 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-/**
- * User-provided Garden Chip rarity assumptions. API data only exposes chip levels.
- */
-export type MemberFortuneSettingsDtoChipRarities = { [key: string]: string };
+export type NotificationPushSubscriptionStatus =
+	(typeof NotificationPushSubscriptionStatus)[keyof typeof NotificationPushSubscriptionStatus];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const NotificationPushSubscriptionStatus = {
+	active: 'active',
+	disabled: 'disabled',
+	expired: 'expired',
+} as const;

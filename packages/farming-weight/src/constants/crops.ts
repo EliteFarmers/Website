@@ -14,7 +14,7 @@ export enum Crop {
 	Pumpkin = 'PUMPKIN',
 	SugarCane = 'SUGAR_CANE',
 	Wheat = 'WHEAT',
-	Seeds = 'WHEAT_SEEDS',
+	Seeds = 'SEEDS',
 	Sunflower = 'DOUBLE_PLANT',
 	Moonflower = 'MOONFLOWER',
 	WildRose = 'WILD_ROSE',

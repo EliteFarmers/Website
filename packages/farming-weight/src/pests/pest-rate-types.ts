@@ -160,6 +160,12 @@ export interface PestFarmingRateBreakdown {
 		byPest: Partial<Record<Pest, DetailedPestDropsResult>>;
 		total: PestRateQuantities;
 	};
+	economy: {
+		pestExchanges: PestRateQuantities;
+		pestShards: PestRateQuantities;
+		costs: PestRateQuantities;
+		feastRareCrops: PestRateQuantities;
+	};
 	timing: PestCycleDebug;
 }
 

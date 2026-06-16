@@ -1252,6 +1252,43 @@ test('getRates includes Tool Exp Capsules for maxed crop tools', () => {
 	expect(rates.coinSources['Tool Exp Capsule']).toBe(100_000);
 });
 
+test('getRates uses the selected best crop tool instead of the first matching tool', () => {
+	const player = new FarmingPlayer({
+		tools: [
+			{
+				id: 292,
+				count: 1,
+				skyblockId: 'THEORETICAL_HOE_WARTS_1',
+				uuid: 'early-nether-wart-hoe',
+				name: 'Early Newton Nether Warts Hoe',
+				lore: [],
+				enchantments: {},
+				attributes: {},
+			},
+			{
+				id: 293,
+				count: 1,
+				skyblockId: 'THEORETICAL_HOE_WARTS_3',
+				uuid: 'selected-maxed-nether-wart-hoe',
+				name: 'Bountiful Newton Nether Warts Hoe',
+				lore: [],
+				enchantments: {},
+				attributes: {
+					levelable_lvl: '50',
+					levelable_exp: '0',
+					modifier: 'bountiful',
+				},
+			},
+		],
+	});
+
+	const rates = player.getRates(Crop.NetherWart, 100_000);
+
+	expect(rates.items['TOOL_EXP_CAPSULE']).toBe(1);
+	expect(rates.coinSources['Tool Exp Capsule']).toBe(100_000);
+	expect(rates.coinSources.Bountiful).toBeGreaterThan(0);
+});
+
 test('Sunset enchantment grants daytime Overbloom and affects player rate calculations', () => {
 	const player = new FarmingPlayer({
 		armor: [
