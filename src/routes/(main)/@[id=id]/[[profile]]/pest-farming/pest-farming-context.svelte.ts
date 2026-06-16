@@ -30,13 +30,13 @@ import {
 	getCropMilestoneLevels,
 	getCropUpgrades,
 	getGardenLevel,
+	Pest,
 	PEST_ARMOR_SLOTS,
 	PEST_EQUIPMENT_SLOTS,
 	PEST_FARMING_PHASE_STATS,
 	PEST_FARMING_STATS,
 	PEST_MAIN_ARMOR_SET_ID,
 	PEST_SPAWN_ARMOR_SET_ID,
-	Pest,
 	PestFarmingPhase,
 	PestFarmingRateCalculator,
 	Stat,
@@ -206,6 +206,7 @@ export class PestFarmingPageContext {
 	pestTimeOfDay = $derived(this.lockedPestTimeOfDay ?? this.rates.pestFarming.timeOfDay);
 	pestAttraction = $derived.by<PestAttractionSettings>(() => {
 		const settings = this.rates.pestFarming.attraction;
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const excludedPests = new Set(settings.excludedPests ?? []);
 		excludedPests.add(getExcludedPestForTime(this.pestTimeOfDay));
 		const isHooverius = this.selectedVacuum?.item.skyblockId === 'INFINI_VACUUM_HOOVERIUS';
