@@ -28,6 +28,32 @@ export default defineConfig({
 			},
 		},
 	},
+	stream: {
+		input: {
+			target: process.env.STREAM_API_URL + '/openapi/public.json',
+		},
+		output: {
+			baseUrl: '${STREAM_API_URL}',
+			client: 'fetch',
+			target: './src/lib/stream-api/client/StreamAPI.ts',
+			schemas: './src/lib/stream-api/schemas',
+			namingConvention: 'PascalCase',
+			override: {
+				useBigInt: true,
+				transformer: './src/lib/api/util/fetch-transformer.ts',
+				mutator: {
+					path: './src/lib/stream-api/custom-fetch-placeholder.ts',
+					name: 'customFetch',
+				},
+			},
+		},
+		hooks: {
+			afterAllFilesWrite: {
+				command: 'pnpm postprocess-stream-api',
+				injectGeneratedDirsAndFiles: false,
+			},
+		},
+	},
 	zod: {
 		input: {
 			target: process.env.ELITE_API_URL + '/openapi/admin-v1.json',
@@ -61,6 +87,43 @@ export default defineConfig({
 		hooks: {
 			afterAllFilesWrite: {
 				command: 'pnpm postprocess-zod',
+				injectGeneratedDirsAndFiles: false,
+			},
+		},
+	},
+	streamZod: {
+		input: {
+			target: process.env.STREAM_API_URL + '/openapi/public.json',
+		},
+		output: {
+			client: 'zod',
+			target: './src/lib/stream-api/client/StreamAPI.zod.ts',
+			fileExtension: '.zod.ts',
+			namingConvention: 'PascalCase',
+			override: {
+				useBigInt: true,
+				zod: {
+					coerce: {
+						param: ['boolean', 'bigint'],
+						query: ['boolean', 'bigint'],
+						body: ['boolean', 'bigint'],
+						header: ['boolean', 'bigint'],
+						response: ['boolean', 'bigint'],
+					},
+					generate: {
+						param: true,
+						body: true,
+						response: false,
+						query: true,
+						header: true,
+					},
+				},
+				transformer: './src/lib/api/util/zod-transformer.ts',
+			},
+		},
+		hooks: {
+			afterAllFilesWrite: {
+				command: 'pnpm postprocess-stream-zod',
 				injectGeneratedDirsAndFiles: false,
 			},
 		},

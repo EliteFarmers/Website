@@ -17,6 +17,8 @@ export interface NotificationDto {
 	/** @nullable */
 	message?: string | null;
 	/** @nullable */
+	plainMessage?: string | null;
+	/** @nullable */
 	link?: string | null;
 	isRead: boolean;
 	createdAt: string;

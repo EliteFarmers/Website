@@ -10561,21 +10561,10 @@ export type getNotificationPushPublicKeyResponse200 = {
 	status: 200;
 };
 
-export type getNotificationPushPublicKeyResponse401 = {
-	data: void;
-	status: 401;
-};
-
 export type getNotificationPushPublicKeyResponseSuccess = getNotificationPushPublicKeyResponse200 & {
 	headers: Headers;
 };
-export type getNotificationPushPublicKeyResponseError = getNotificationPushPublicKeyResponse401 & {
-	headers: Headers;
-};
-
-export type getNotificationPushPublicKeyResponse =
-	| getNotificationPushPublicKeyResponseSuccess
-	| getNotificationPushPublicKeyResponseError;
+export type getNotificationPushPublicKeyResponse = getNotificationPushPublicKeyResponseSuccess;
 
 export const getGetNotificationPushPublicKeyUrl = () => {
 	return `${ELITE_API_URL}/notifications/push/public-key`;

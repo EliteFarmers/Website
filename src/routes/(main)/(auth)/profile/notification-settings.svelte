@@ -30,6 +30,7 @@
 	let publicKey = $derived(publicKeyQuery.current?.publicKey ?? '');
 	let pushSupported = $state(false);
 	let browserPermission = $state<NotificationPermission>('default');
+	let pushError = $state<string | null>(null);
 
 	$effect(() => {
 		if (!browser) return;
@@ -43,6 +44,7 @@
 
 	async function toggle(type: string, channel: string, enabled: boolean) {
 		saving = true;
+		pushError = null;
 		try {
 			let next = preferences.map((p) => ({ type: p.type, channel: p.channel, enabled: p.enabled }));
 			const index = next.findIndex((p) => p.type === type && p.channel === channel);
@@ -69,35 +71,58 @@
 	}
 
 	async function ensureBrowserPushSubscription() {
-		if (!pushSupported || !publicKey) return false;
+		if (!pushSupported) {
+			pushError = 'Browser notifications are not supported in this browser.';
+			return false;
+		}
+		if (!publicKey) {
+			pushError = 'Browser notifications are not configured yet.';
+			return false;
+		}
 
 		const permission = await Notification.requestPermission();
 		browserPermission = permission;
-		if (permission !== 'granted') return false;
-
-		const registration = await navigator.serviceWorker.register('/service-worker.js');
-		const existing = await registration.pushManager.getSubscription();
-		const subscription =
-			existing ??
-			(await registration.pushManager.subscribe({
-				userVisibleOnly: true,
-				applicationServerKey: urlBase64ToUint8Array(publicKey),
-			}));
-		const json = subscription.toJSON();
-		const result = await UpsertNotificationPushSubscription({
-			endpoint: json.endpoint ?? subscription.endpoint,
-			keys: {
-				p256Dh: json.keys?.p256dh ?? '',
-				auth: json.keys?.auth ?? '',
-			},
-			deviceName: navigator.userAgent.slice(0, 128),
-		});
-
-		if (result.data?.id) {
-			localStorage.setItem('elite_push_subscription_id', result.data.id.toString());
+		if (permission !== 'granted') {
+			pushError =
+				permission === 'denied'
+					? 'Browser notifications are blocked in this browser.'
+					: 'Browser notification permission was not granted.';
+			return false;
 		}
 
-		return result.ok;
+		try {
+			const registration = await navigator.serviceWorker.register('/service-worker.js');
+			const existing = await registration.pushManager.getSubscription();
+			const subscription =
+				existing ??
+				(await registration.pushManager.subscribe({
+					userVisibleOnly: true,
+					applicationServerKey: urlBase64ToUint8Array(publicKey),
+				}));
+			const json = subscription.toJSON();
+			const result = await UpsertNotificationPushSubscription({
+				endpoint: json.endpoint ?? subscription.endpoint,
+				keys: {
+					p256Dh: json.keys?.p256dh ?? '',
+					auth: json.keys?.auth ?? '',
+				},
+				deviceName: navigator.userAgent.slice(0, 128),
+			});
+
+			if (result.data?.id) {
+				localStorage.setItem('elite_push_subscription_id', result.data.id.toString());
+			}
+
+			if (!result.ok) {
+				pushError = 'Browser notification subscription could not be saved.';
+			}
+
+			return result.ok;
+		} catch (error) {
+			console.error('Failed to enable browser notifications', error);
+			pushError = 'Browser notification subscription failed.';
+			return false;
+		}
 	}
 
 	async function disableBrowserPushSubscription() {
@@ -152,5 +177,8 @@
 	</div>
 	{#if pushSupported && browserPermission === 'denied'}
 		<p class="text-muted-foreground text-sm">Browser notifications are blocked in this browser.</p>
+	{/if}
+	{#if pushError}
+		<p class="text-destructive text-sm">{pushError}</p>
 	{/if}
 </div>
