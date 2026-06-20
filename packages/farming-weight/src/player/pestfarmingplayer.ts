@@ -285,7 +285,7 @@ export class PestFarmingPlayer {
 	): Record<PestFarmingPhase, PestPhaseLoadout> {
 		const mainId = this.armorSetLoadouts[0]?.id ?? PEST_MAIN_ARMOR_SET_ID;
 		const spawnSet = this.armorSetLoadouts.find((set) => set.id === PEST_SPAWN_ARMOR_SET_ID);
-		const defaultSpawnId = hasArmorPieces(spawnSet) ? PEST_SPAWN_ARMOR_SET_ID : mainId;
+		const defaultSpawnId = spawnSet && hasArmorPieces(spawnSet) ? spawnSet.id : mainId;
 
 		return Object.fromEntries(
 			PEST_FARMING_PHASES.map((phase) => {

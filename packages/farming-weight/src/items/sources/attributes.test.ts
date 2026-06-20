@@ -233,7 +233,7 @@ describe('GalaxyFishShard', () => {
 });
 
 describe('PestShard', () => {
-	test('emits pest-only Overbloom at level 1', () => {
+	test('emits pest-specific flat Overbloom at level 1', () => {
 		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { pest_luck: 1 } });
 		const env = buildEffectEnvironment(player);
 		const effects = new PestShard().getEffects(player, env);
@@ -252,7 +252,7 @@ describe('PestShard', () => {
 		});
 	});
 
-	test('only buffs pest drops and reaches +20 at max level', () => {
+	test('only buffs pest drops and reaches +20 flat Overbloom at max level', () => {
 		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { pest_luck: 999 } });
 		const env = buildEffectEnvironment(player);
 		const effects = new PestShard().getEffects(player, env);
@@ -260,7 +260,7 @@ describe('PestShard', () => {
 		const pest = dropCtx({
 			dropKind: 'pest',
 			itemId: 'PEST_DROP',
-			tags: new Set(['pest']),
+			tags: new Set(['pest', 'overbloom']),
 		});
 		const cropie = dropCtx({
 			itemId: 'CROPIE',

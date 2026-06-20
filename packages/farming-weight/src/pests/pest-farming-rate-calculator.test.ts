@@ -1,7 +1,11 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
 import { Pest } from '../constants/pests.js';
+import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
+import type { EliteItemDto } from '../fortune/item.js';
+import { FARMING_ARMOR_INFO } from '../items/armor.js';
+import { GearSlot } from '../items/definitions.js';
 import { PestFarmingPhase, PestFarmingPlayer } from '../player/pestfarmingplayer.js';
 import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 import { calculatePestCropDropAmount, PEST_DROP_DEFINITIONS } from './pest-drops.js';
@@ -25,6 +29,83 @@ function emptyCropRates(blocksBroken = 0): DetailedDropsFromEffectsResult {
 		appliedEffects: {},
 		effectsBreakdown: {},
 	};
+}
+
+function armorItem(
+	id: keyof typeof FARMING_ARMOR_INFO,
+	uuid: string,
+	attributes: NonNullable<EliteItemDto['attributes']> = {}
+): EliteItemDto {
+	const info = FARMING_ARMOR_INFO[id]!;
+	return {
+		name: info.name,
+		skyblockId: info.skyblockId,
+		uuid,
+		lore: [],
+		attributes: {
+			rarity: Rarity.Legendary,
+			...attributes,
+		},
+		enchantments: {},
+		gems: {},
+	};
+}
+
+function mantidArmor(id: keyof typeof FARMING_ARMOR_INFO, uuid: string): EliteItemDto {
+	return armorItem(id, uuid, { modifier: 'mantid' });
+}
+
+function pestPlayerWithArmorSets(options: {
+	main: [
+		keyof typeof FARMING_ARMOR_INFO,
+		keyof typeof FARMING_ARMOR_INFO,
+		keyof typeof FARMING_ARMOR_INFO,
+		keyof typeof FARMING_ARMOR_INFO,
+	];
+	spawn: [
+		keyof typeof FARMING_ARMOR_INFO,
+		keyof typeof FARMING_ARMOR_INFO,
+		keyof typeof FARMING_ARMOR_INFO,
+		keyof typeof FARMING_ARMOR_INFO,
+	];
+}): PestFarmingPlayer {
+	const mainUuids = ['main-helmet', 'main-chestplate', 'main-leggings', 'main-boots'] as const;
+	const spawnUuids = ['spawn-helmet', 'spawn-chestplate', 'spawn-leggings', 'spawn-boots'] as const;
+
+	return new PestFarmingPlayer({
+		armor: [
+			armorItem(options.main[0], mainUuids[0]),
+			armorItem(options.main[1], mainUuids[1]),
+			armorItem(options.main[2], mainUuids[2]),
+			armorItem(options.main[3], mainUuids[3]),
+			armorItem(options.spawn[0], spawnUuids[0]),
+			armorItem(options.spawn[1], spawnUuids[1]),
+			armorItem(options.spawn[2], spawnUuids[2]),
+			armorItem(options.spawn[3], spawnUuids[3]),
+		],
+		armorSets: [
+			{
+				id: 'main',
+				name: 'Farm/Kill Armor',
+				pieces: {
+					[GearSlot.Helmet]: mainUuids[0],
+					[GearSlot.Chestplate]: mainUuids[1],
+					[GearSlot.Leggings]: mainUuids[2],
+					[GearSlot.Boots]: mainUuids[3],
+				},
+			},
+			{
+				id: 'spawn',
+				name: 'Spawn Armor',
+				pieces: {
+					[GearSlot.Helmet]: spawnUuids[0],
+					[GearSlot.Chestplate]: spawnUuids[1],
+					[GearSlot.Leggings]: spawnUuids[2],
+					[GearSlot.Boots]: spawnUuids[3],
+				},
+			},
+		],
+	});
 }
 
 test('pest crop drops use farming, associated crop, and pest kill fortune through scaling', () => {
@@ -114,6 +195,105 @@ test('bonus pest chance controls expected pests per spawn', () => {
 	expect(result.perInterval.npcCoins).toBeGreaterThan(0);
 });
 
+test('selected crop does not bias pest type spawn weights', () => {
+	const player = new PestFarmingPlayer({});
+	const getProbabilities = (crop: Crop) =>
+		new PestFarmingRateCalculator({
+			player,
+			options: {
+				crop,
+				cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+			},
+		}).calculate().breakdown.pestSpawning.distribution.pestTypeProbabilities;
+
+	expect(getProbabilities(Crop.Wheat)).toEqual(getProbabilities(Crop.Potato));
+});
+
+test('best spawn phase armor set uses rate calculation to select the generated spawn set when it improves rates', () => {
+	const player = pestPlayerWithArmorSets({
+		main: ['FERMENTO_HELMET', 'FERMENTO_CHESTPLATE', 'FERMENTO_LEGGINGS', 'FERMENTO_BOOTS'],
+		spawn: ['HELIANTHUS_HELMET', 'HELIANTHUS_CHESTPLATE', 'HELIANTHUS_LEGGINGS', 'HELIANTHUS_BOOTS'],
+	});
+	const calculator = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+		},
+	});
+
+	expect(calculator.getBestSpawnPhaseArmorSetId(['main', 'spawn'])).toBe('spawn');
+});
+
+test('best spawn phase armor set uses rate calculation to reuse main armor when the spawn set is worse', () => {
+	const player = pestPlayerWithArmorSets({
+		main: ['HELIANTHUS_HELMET', 'HELIANTHUS_CHESTPLATE', 'HELIANTHUS_LEGGINGS', 'HELIANTHUS_BOOTS'],
+		spawn: ['CROPIE_HELMET', 'CROPIE_CHESTPLATE', 'CROPIE_LEGGINGS', 'CROPIE_BOOTS'],
+	});
+	const calculator = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+		},
+	});
+
+	expect(calculator.getBestSpawnPhaseArmorSetId(['main', 'spawn'])).toBe('main');
+});
+
+test('rate calculation can automatically use the best spawn armor candidate', () => {
+	const player = pestPlayerWithArmorSets({
+		main: ['HELIANTHUS_HELMET', 'HELIANTHUS_CHESTPLATE', 'HELIANTHUS_LEGGINGS', 'HELIANTHUS_BOOTS'],
+		spawn: ['CROPIE_HELMET', 'CROPIE_CHESTPLATE', 'CROPIE_LEGGINGS', 'CROPIE_BOOTS'],
+	});
+	const rawSpawnBonusPestChance = player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance);
+	const mainSelected = player.clone();
+	mainSelected.setPhaseArmorSet(PestFarmingPhase.Spawn, 'main');
+	const mainSpawnBonusPestChance = mainSelected.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance);
+
+	const result = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+		},
+		armorSelection: {
+			spawnArmorSetIds: ['main', 'spawn'],
+		},
+	}).calculate();
+
+	expect(rawSpawnBonusPestChance).toBeLessThan(mainSpawnBonusPestChance);
+	expect(result.phaseStats.spawnBonusPestChance).toBe(mainSpawnBonusPestChance);
+});
+
+test('pest rate calculation derives Mantid recent pest kills from expected spawned pests', () => {
+	const player = new PestFarmingPlayer({
+		armor: [
+			mantidArmor('HELIANTHUS_HELMET', 'mantid-helmet'),
+			mantidArmor('HELIANTHUS_CHESTPLATE', 'mantid-chestplate'),
+			mantidArmor('HELIANTHUS_LEGGINGS', 'mantid-leggings'),
+			mantidArmor('HELIANTHUS_BOOTS', 'mantid-boots'),
+		],
+	});
+	const baseBonusPestChance = player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance);
+	const expectedResolvedBonusPestChance = (baseBonusPestChance + 1) / 0.99;
+	const expectedPestsPerSpawn = 1 + expectedResolvedBonusPestChance / 100;
+
+	const result = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+		},
+	}).calculate();
+
+	expect(player.options.mantidPestKills).toBeUndefined();
+	expect(baseBonusPestChance).toBe(88);
+	expect(result.phaseStats.spawnBonusPestChance).toBeGreaterThan(baseBonusPestChance);
+	expect(result.phaseStats.spawnBonusPestChance).toBeCloseTo(expectedResolvedBonusPestChance, 6);
+	expect(result.breakdown.pestSpawning.expectedPestsPerSpawn).toBeCloseTo(expectedPestsPerSpawn, 6);
+});
+
 test('spawn phase bonus pest chance upgrades report positive pest rate impact', () => {
 	const player = new PestFarmingPlayer({
 		wrigglingLarva: 0,
@@ -146,6 +326,51 @@ test('spawn phase bonus pest chance upgrades report positive pest rate impact', 
 
 	expect(impact.delta.expectedPestsPerCycle).toBeGreaterThan(0);
 	expect(impact.valuationDelta.coinsPerHour).toBeGreaterThan(0);
+});
+
+test('upgrade impact completeness is based on missing delta prices', () => {
+	const player = new PestFarmingPlayer({
+		selectedCrop: Crop.Wheat,
+	});
+	const calculator = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+		},
+		priceBook: {
+			version: 'test',
+			items: {},
+			missingItemMode: 'exclude',
+		},
+	});
+	const before = calculator.calculate();
+	const noDeltaUpgrade = player
+		.getPhaseUpgrades(PestFarmingPhase.Farm, { includeUpgradeGroups: true })
+		.find((entry) => entry.title === 'Atmospheric Filter');
+	const cropDeltaUpgrade = player
+		.getPhaseUpgrades(PestFarmingPhase.Farm, { includeUpgradeGroups: true })
+		.find((entry) => entry.title === 'Farm Armor Helmet');
+
+	expect(before.valuation.complete).toBe(false);
+	expect(noDeltaUpgrade).toBeDefined();
+	expect(cropDeltaUpgrade).toBeDefined();
+
+	const noDeltaImpact = calculator.calculateUpgradeImpact({
+		phase: PestFarmingPhase.Farm,
+		upgrade: noDeltaUpgrade!,
+		before,
+	});
+	const cropDeltaImpact = calculator.calculateUpgradeImpact({
+		phase: PestFarmingPhase.Farm,
+		upgrade: cropDeltaUpgrade!,
+		before,
+	});
+
+	expect(noDeltaImpact.valuationDelta.complete).toBe(true);
+	expect(noDeltaImpact.valuationDelta.missingItemIds).toEqual([]);
+	expect(cropDeltaImpact.valuationDelta.complete).toBe(false);
+	expect(cropDeltaImpact.valuationDelta.missingItemIds).toContain(Crop.Wheat);
 });
 
 test('crop breaking does not double count crop item NPC valuation', () => {

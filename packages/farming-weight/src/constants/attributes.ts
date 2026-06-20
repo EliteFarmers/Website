@@ -209,6 +209,11 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		rarity: Rarity.Uncommon,
 		effect: 'rates',
 		wiki: 'https://w.elitesb.gg/Pest',
+		perLevelStats: {
+			[Stat.Overbloom]: {
+				value: 2,
+			},
+		},
 	},
 	visitor_bait: {
 		// Garden visitors 1% faster per level
