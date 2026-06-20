@@ -22,11 +22,16 @@
 	let isActive = $derived(active || isSidebarHrefActive(item.href, page.url.pathname));
 
 	const gbl = getGlobalContext();
+	const newExpiresAtMs = $derived((item.new ?? 0) * 1000);
+	const showNew = $derived(
+		item.new !== undefined && Date.now() < newExpiresAtMs && !gbl.seenSidebarItem(item.href, item.new)
+	);
 
 	$effect.pre(() => {
-		if (isActive && item.new) {
+		if (isActive && item.new !== undefined) {
+			const newExpiresAt = item.new;
 			untrack(() => {
-				gbl.markSidebarItemSeen(item.href, item.new ?? 0);
+				gbl.markSidebarItemSeen(item.href, newExpiresAt);
 			});
 		}
 	});
@@ -46,7 +51,7 @@
 					<item.icon />
 				{/if}
 				<span>{item.title}</span>
-				{#if item.new && !gbl.seenSidebarItem(item.href, item.new)}
+				{#if showNew}
 					<span class="bg-destructive/50 text-primary ml-auto rounded-sm px-2 py-0.5 text-xs font-medium"
 						>New</span
 					>

@@ -33,6 +33,8 @@
 		"generate-api": "pnpm orval",
 		"postprocess-api": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.ts && pnpm prettier --write ./src/lib/api/client/EliteAPI.ts ./src/lib/api/schemas",
 		"postprocess-zod": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.zod.ts && pnpm prettier --write ./src/lib/api/client/EliteAPI.zod.ts",
+		"postprocess-stream-api": "node ./src/lib/api/util/morph-api.ts ./src/lib/stream-api/client/StreamAPI.ts STREAM_API_URL && pnpm prettier --write ./src/lib/stream-api/client/StreamAPI.ts ./src/lib/stream-api/schemas",
+		"postprocess-stream-zod": "node ./src/lib/api/util/morph-api.ts ./src/lib/stream-api/client/StreamAPI.zod.ts && pnpm prettier --write ./src/lib/stream-api/client/StreamAPI.zod.ts",
 		"postprocess-cms": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteCms.zod.ts && pnpm prettier --write ./src/lib/api/client/EliteCms.zod.ts"
 	},
 	"dependencies": {

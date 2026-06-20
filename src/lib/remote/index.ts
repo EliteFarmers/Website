@@ -7,3 +7,4 @@ export * from './leaderboards.remote';
 export * from './notifications.remote';
 export * from './payments.remote';
 export * from './profiles.remote';
+export * from './streamers.remote';

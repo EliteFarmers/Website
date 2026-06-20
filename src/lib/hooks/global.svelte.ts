@@ -315,16 +315,16 @@ export class GlobalContext {
 		return this.data?.minecraftAccounts?.some((a) => a === uuid);
 	}
 
-	seenSidebarItem(key: string, version: number) {
-		return (this.data?.newSidebar?.[key] || 0) >= version;
+	seenSidebarItem(key: string, expiresAt: number) {
+		return (this.data?.newSidebar?.[key] || 0) >= expiresAt;
 	}
 
-	markSidebarItemSeen(key: string, version: number) {
+	markSidebarItemSeen(key: string, expiresAt: number) {
 		this.#data.current = {
 			...this.#data.current,
 			newSidebar: {
 				...this.#data.current.newSidebar,
-				[key]: version,
+				[key]: expiresAt,
 			},
 		};
 	}

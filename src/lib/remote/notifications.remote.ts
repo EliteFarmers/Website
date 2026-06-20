@@ -1,4 +1,4 @@
-import { command, prerender, query } from '$app/server';
+import { command, query } from '$app/server';
 import {
 	deleteNotificationPushSubscription,
 	getNotificationPreferences,
@@ -47,7 +47,7 @@ export const UpdateNotificationPreferences = command(preferenceListSchema, async
 	return { ok: response.ok, error };
 });
 
-export const GetNotificationPushPublicKey = prerender(async () => {
+export const GetNotificationPushPublicKey = query(async () => {
 	const { data } = await getNotificationPushPublicKey();
 	return data;
 });
