@@ -20,10 +20,9 @@ export type PestFarmingTimeOfDay = 'day' | 'night';
 
 export interface PestFarmingData {
 	selectedCrop?: string;
-	phaseLoadouts: Record<PestFarmingPhase, { armorSetId: string }>;
+	phaseLoadouts: Partial<Record<PestFarmingPhase, { armorSetId: string }>>;
 	sprayedPlot: boolean;
 	pesthunterAccessoryEnabled: boolean;
-	mantidPestKills: number;
 	timeOfDay: PestFarmingTimeOfDay;
 	attraction: PestAttractionSettings;
 	rateSettings: PestFarmingRateSettings;
@@ -87,14 +86,9 @@ const defaultData = {
 	infestedPlotProbability: 0.2,
 	zorroMode: ZorroMode.Normal,
 	pestFarming: {
-		phaseLoadouts: {
-			[PestFarmingPhase.Farm]: { armorSetId: PEST_MAIN_ARMOR_SET_ID },
-			[PestFarmingPhase.Spawn]: { armorSetId: PEST_SPAWN_ARMOR_SET_ID },
-			[PestFarmingPhase.Kill]: { armorSetId: PEST_MAIN_ARMOR_SET_ID },
-		},
+		phaseLoadouts: {},
 		sprayedPlot: true,
 		pesthunterAccessoryEnabled: true,
-		mantidPestKills: 0,
 		timeOfDay: 'day',
 		attraction: {
 			sprayonatorTarget: Pest.Slug,
@@ -120,33 +114,46 @@ const defaultData = {
 	},
 } as RatesData;
 
+function isLegacyDefaultPhaseLoadouts(loadouts?: Partial<PestFarmingData['phaseLoadouts']>): boolean {
+	return (
+		loadouts?.[PestFarmingPhase.Farm]?.armorSetId === PEST_MAIN_ARMOR_SET_ID &&
+		loadouts?.[PestFarmingPhase.Spawn]?.armorSetId === PEST_SPAWN_ARMOR_SET_ID &&
+		loadouts?.[PestFarmingPhase.Kill]?.armorSetId === PEST_MAIN_ARMOR_SET_ID
+	);
+}
+
+function normalizePestAttractionSettings(
+	data?: (Partial<PestAttractionSettings> & { selectedPest?: Pest }) | null
+): PestAttractionSettings {
+	const attraction = { ...(data ?? {}) };
+	delete attraction.selectedPest;
+	return {
+		...defaultData.pestFarming.attraction,
+		...attraction,
+		excludedPests: attraction.excludedPests ?? defaultData.pestFarming.attraction.excludedPests,
+	};
+}
+
 function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingData {
 	const armorSetIds = new Set([PEST_MAIN_ARMOR_SET_ID, PEST_SPAWN_ARMOR_SET_ID]);
-	const normalizePhaseLoadout = (phase: PestFarmingPhase, fallbackArmorSetId: string): { armorSetId: string } => {
-		const loadout = data?.phaseLoadouts?.[phase];
-		const armorSetId =
-			loadout?.armorSetId && armorSetIds.has(loadout.armorSetId) ? loadout.armorSetId : fallbackArmorSetId;
-		return {
-			armorSetId,
-		};
-	};
+	const phaseLoadouts: PestFarmingData['phaseLoadouts'] = {};
+
+	if (!isLegacyDefaultPhaseLoadouts(data?.phaseLoadouts)) {
+		for (const phase of [PestFarmingPhase.Farm, PestFarmingPhase.Spawn, PestFarmingPhase.Kill]) {
+			const armorSetId = data?.phaseLoadouts?.[phase]?.armorSetId;
+			if (armorSetId && armorSetIds.has(armorSetId)) {
+				phaseLoadouts[phase] = { armorSetId };
+			}
+		}
+	}
 
 	return {
 		selectedCrop: data?.selectedCrop,
-		phaseLoadouts: {
-			[PestFarmingPhase.Farm]: normalizePhaseLoadout(PestFarmingPhase.Farm, PEST_MAIN_ARMOR_SET_ID),
-			[PestFarmingPhase.Spawn]: normalizePhaseLoadout(PestFarmingPhase.Spawn, PEST_SPAWN_ARMOR_SET_ID),
-			[PestFarmingPhase.Kill]: normalizePhaseLoadout(PestFarmingPhase.Kill, PEST_MAIN_ARMOR_SET_ID),
-		},
+		phaseLoadouts,
 		sprayedPlot: data?.sprayedPlot ?? defaultData.pestFarming.sprayedPlot,
 		pesthunterAccessoryEnabled: true,
-		mantidPestKills: 0,
 		timeOfDay: data?.timeOfDay ?? defaultData.pestFarming.timeOfDay,
-		attraction: {
-			...defaultData.pestFarming.attraction,
-			...(data?.attraction ?? {}),
-			excludedPests: data?.attraction?.excludedPests ?? defaultData.pestFarming.attraction.excludedPests,
-		},
+		attraction: normalizePestAttractionSettings(data?.attraction),
 		rateSettings: {
 			...defaultData.pestFarming.rateSettings,
 			...(data?.rateSettings ?? {}),

@@ -18,6 +18,9 @@
 			const percent = (effect.value - 1) * 100;
 			return `${percent > 0 ? '+' : ''}${(+percent.toFixed(2)).toLocaleString()}%`;
 		}
+		if (effect.valueDisplay === 'stat') {
+			return `${effect.value > 0 ? '+' : ''}${(+effect.value.toFixed(2)).toLocaleString()}`;
+		}
 		if (effect.op === 'add-rare-pct') {
 			return `+${(+effect.value.toFixed(2)).toLocaleString()}%`;
 		}

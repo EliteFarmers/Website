@@ -19,7 +19,6 @@ import {
 	createPestFarmingPlayer,
 	Crop,
 	CROP_INFO,
-	CROP_TO_PEST,
 	DEFAULT_PEST_CYCLE_SETTINGS,
 	FarmingArmor,
 	FarmingEquipment,
@@ -167,11 +166,7 @@ export class PestFarmingPageContext {
 	pestVersion = $state(0);
 	selectedVacuumId = $state('');
 	armorSets = $state<PestArmorSetLoadout[]>([]);
-	phaseLoadouts = $state<Record<PestFarmingPhase, PestPhaseLoadout>>({
-		[PestFarmingPhase.Farm]: { armorSetId: PEST_MAIN_ARMOR_SET_ID },
-		[PestFarmingPhase.Spawn]: { armorSetId: PEST_SPAWN_ARMOR_SET_ID },
-		[PestFarmingPhase.Kill]: { armorSetId: PEST_MAIN_ARMOR_SET_ID },
-	});
+	phaseLoadouts = $state<Partial<Record<PestFarmingPhase, PestPhaseLoadout>>>({});
 	sharedEquipment = $state<Partial<Record<GearSlot, string>>>({});
 	activePhase = $state<PestFarmingPhase>(PestFarmingPhase.Farm);
 	itemsData = $state<RatesItemPriceData>({});
@@ -213,7 +208,6 @@ export class PestFarmingPageContext {
 
 		return {
 			...settings,
-			selectedPest: CROP_TO_PEST[this.selectedCropKey],
 			sprayonatorTarget: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorTarget : undefined,
 			hooveriusVinylTarget: isHooverius ? settings.hooveriusVinylTarget : undefined,
 			hooveriusVinylMultiplier: isHooverius ? settings.hooveriusVinylMultiplier : undefined,
@@ -229,7 +223,7 @@ export class PestFarmingPageContext {
 		void this.itemsVersion;
 		return {
 			version: String(this.itemsVersion),
-			missingItemMode: 'zero',
+			missingItemMode: 'exclude',
 			items: {
 				...STATIC_NPC_ITEM_PRICES,
 				...Object.fromEntries(
@@ -242,15 +236,7 @@ export class PestFarmingPageContext {
 	});
 	pestRateCalculator = $derived.by(() => {
 		this.trackPestVersion();
-		return new PestFarmingRateCalculator({
-			player: this.pestPlayer,
-			options: {
-				crop: this.selectedCropKey,
-				cycle: this.pestRateSettings,
-				attraction: this.pestAttraction,
-			},
-			priceBook: this.pestRatePriceBook,
-		});
+		return this.#createRateCalculator();
 	});
 	pestRateResult = $derived.by(() => this.pestRateCalculator.calculate());
 	pestRateStateKey = $derived(this.pestRateResult.stateKey);
@@ -428,8 +414,30 @@ export class PestFarmingPageContext {
 	});
 
 	rateOutputItems = $derived.by(() => this.pestRateCalculator.getRequiredPriceItems(this.pestRateResult));
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
-	neededItems = $derived([...new Set([...getItemsFromUpgrades(this.neededItemUpgrades), ...this.rateOutputItems])]);
+	rateImpactItems = $derived.by(() => {
+		void this.itemsVersion;
+		this.trackPestVersion();
+		const calculator = this.#createRateCalculator();
+		const result = calculator.calculate();
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const items = new Set<string>();
+		for (const upgrade of this.neededItemUpgrades) {
+			const impact = this.#calculatePestRateImpact(calculator, result, this.activePhase, upgrade);
+			for (const itemId of impact.valuationDelta.missingItemIds) {
+				if (!this.itemsData[itemId]) items.add(itemId);
+			}
+		}
+		return [...items];
+	});
+
+	neededItems = $derived([
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		...new Set([
+			...getItemsFromUpgrades(this.neededItemUpgrades),
+			...this.rateOutputItems,
+			...this.rateImpactItems,
+		]),
+	]);
 	debouncedItems = new Debounced(() => this.neededItems, 1000);
 
 	constructor() {
@@ -441,12 +449,22 @@ export class PestFarmingPageContext {
 		$effect(() => this.#syncExternalState());
 		$effect(() => this.#syncSelectedCrop());
 		$effect(() => this.#syncVacuumSelection());
+		$effect(() => this.#syncDefaultSpawnArmorSelection());
 
 		onMount(() => this.#restoreSavedCrop());
 	}
 
 	refreshPestPlayer() {
-		this.pestPlayer = createPestFarmingPlayer(this.options);
+		let player = createPestFarmingPlayer(this.options);
+		const phaseLoadouts = this.#getRateSelectedDefaultPhaseLoadouts(player);
+		if (phaseLoadouts) {
+			this.options = {
+				...this.options,
+				phaseLoadouts,
+			} as PestFarmingPlayerOptions;
+			player = createPestFarmingPlayer(this.options);
+		}
+		this.pestPlayer = player;
 		this.#syncSessionSelectionsFromPestPlayer();
 		this.pestVersion++;
 	}
@@ -460,19 +478,16 @@ export class PestFarmingPageContext {
 		return `${this.ctx.uuid}:${this.ctx.selectedProfile?.profileId ?? ''}`;
 	}
 
-	#getPersistedPhaseLoadouts(): Record<PestFarmingPhase, PestPhaseLoadout> {
+	#getPersistedPhaseLoadouts(): Partial<Record<PestFarmingPhase, PestPhaseLoadout>> {
 		const loadouts = this.rates.pestFarming.phaseLoadouts;
-		return {
-			[PestFarmingPhase.Farm]: {
-				armorSetId: loadouts[PestFarmingPhase.Farm]?.armorSetId ?? PEST_MAIN_ARMOR_SET_ID,
-			},
-			[PestFarmingPhase.Spawn]: {
-				armorSetId: loadouts[PestFarmingPhase.Spawn]?.armorSetId ?? PEST_SPAWN_ARMOR_SET_ID,
-			},
-			[PestFarmingPhase.Kill]: {
-				armorSetId: loadouts[PestFarmingPhase.Kill]?.armorSetId ?? PEST_MAIN_ARMOR_SET_ID,
-			},
-		};
+		return Object.fromEntries(
+			[PestFarmingPhase.Farm, PestFarmingPhase.Spawn, PestFarmingPhase.Kill]
+				.map((phase) => {
+					const armorSetId = loadouts[phase]?.armorSetId;
+					return armorSetId ? [phase, { armorSetId }] : undefined;
+				})
+				.filter((entry): entry is [PestFarmingPhase, PestPhaseLoadout] => entry !== undefined)
+		);
 	}
 
 	#getPersistablePhaseLoadouts(
@@ -502,6 +517,50 @@ export class PestFarmingPageContext {
 		) as Record<PestFarmingPhase, PestPhaseLoadout>;
 		this.sharedEquipment = { ...this.pestPlayer.sharedEquipment };
 		this.selectedVacuumId = this.pestPlayer.selectedVacuum?.item.uuid ?? this.selectedVacuumId;
+	}
+
+	#syncDefaultSpawnArmorSelection(): void {
+		void this.pestRatePriceBook.version;
+		if (this.rates.pestFarming.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId) return;
+
+		const phaseLoadouts = this.#getRateSelectedDefaultPhaseLoadouts(this.pestPlayer);
+		if (!phaseLoadouts) return;
+
+		this.options = {
+			...this.options,
+			phaseLoadouts,
+		} as PestFarmingPlayerOptions;
+		untrack(() => this.refreshPestPlayer());
+	}
+
+	#getRateSelectedDefaultPhaseLoadouts(
+		player: PestFarmingPlayer
+	): Record<PestFarmingPhase, PestPhaseLoadout> | undefined {
+		const candidates = this.#getDefaultSpawnArmorCandidateIds(player);
+		if (!candidates) return;
+
+		const bestId = this.#createRateCalculator(player).getBestSpawnPhaseArmorSetId(candidates);
+		if (!bestId || player.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId === bestId) return;
+
+		return {
+			...player.phaseLoadouts,
+			[PestFarmingPhase.Spawn]: {
+				...player.phaseLoadouts[PestFarmingPhase.Spawn],
+				armorSetId: bestId,
+			},
+		};
+	}
+
+	#getDefaultSpawnArmorCandidateIds(player: PestFarmingPlayer): readonly string[] | undefined {
+		if (this.rates.pestFarming.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId) return undefined;
+
+		const mainId =
+			player.armorSetLoadouts.find((set) => set.id === PEST_MAIN_ARMOR_SET_ID)?.id ??
+			player.armorSetLoadouts[0]?.id;
+		const spawnId = player.armorSetLoadouts.find((set) => set.id === PEST_SPAWN_ARMOR_SET_ID)?.id;
+		if (!mainId || !spawnId || mainId === spawnId) return undefined;
+
+		return [mainId, spawnId];
 	}
 
 	trackPestVersion(): number {
@@ -760,10 +819,11 @@ export class PestFarmingPageContext {
 
 	selectPhaseArmorSet(phase: PestFarmingPhase, armorSetId: string): void {
 		if (!this.pestPlayer.setPhaseArmorSet(phase, armorSetId)) return;
+		const baseLoadouts = this.pestPlayer.phaseLoadouts;
 		const phaseLoadouts = {
-			...this.phaseLoadouts,
+			...baseLoadouts,
 			[phase]: {
-				...this.phaseLoadouts[phase],
+				...baseLoadouts[phase],
 				armorSetId,
 			},
 		};
@@ -776,10 +836,11 @@ export class PestFarmingPageContext {
 
 	selectPhasePet(phase: PestFarmingPhase, petId: string): void {
 		if (!this.pestPlayer.setPhasePet(phase, petId)) return;
+		const baseLoadouts = this.pestPlayer.phaseLoadouts;
 		const phaseLoadouts = {
-			...this.phaseLoadouts,
+			...baseLoadouts,
 			[phase]: {
-				...this.phaseLoadouts[phase],
+				...baseLoadouts[phase],
 				petId,
 			},
 		};
@@ -790,13 +851,23 @@ export class PestFarmingPageContext {
 	}
 
 	getPestRateImpact(upgrade: FortuneUpgrade): PestFarmingUpgradeRateImpact | undefined {
-		const result = this.pestRateResult;
-		const key = `${this.pestRateStateKey}:${this.activePhase}:${getUpgradeIdentity(upgrade)}`;
+		const calculator = this.#createRateCalculator();
+		const result = calculator.calculate();
+		return this.#calculatePestRateImpact(calculator, result, this.activePhase, upgrade);
+	}
+
+	#calculatePestRateImpact(
+		calculator: PestFarmingRateCalculator,
+		result: ReturnType<PestFarmingRateCalculator['calculate']>,
+		phase: PestFarmingPhase,
+		upgrade: FortuneUpgrade
+	): PestFarmingUpgradeRateImpact {
+		const key = `${result.stateKey}:${phase}:${getUpgradeIdentity(upgrade)}`;
 		const cached = this.#rateImpactMemo.get(key);
 		if (cached) return cached;
 
-		const impact = this.pestRateCalculator.calculateUpgradeImpact({
-			phase: this.activePhase,
+		const impact = calculator.calculateUpgradeImpact({
+			phase,
 			upgrade,
 			before: result,
 		});
@@ -822,9 +893,23 @@ export class PestFarmingPageContext {
 		} as PestFarmingPlayerOptions);
 	}
 
+	#createRateCalculator(player = this.pestPlayer): PestFarmingRateCalculator {
+		const spawnArmorSetIds = this.#getDefaultSpawnArmorCandidateIds(player);
+		return new PestFarmingRateCalculator({
+			player,
+			options: {
+				crop: this.selectedCropKey,
+				cycle: this.pestRateSettings,
+				attraction: this.pestAttraction,
+			},
+			priceBook: this.pestRatePriceBook,
+			armorSelection: spawnArmorSetIds ? { spawnArmorSetIds } : undefined,
+		});
+	}
+
 	#getRateDeltaForPlayer(player: PestFarmingPlayer): number {
 		const before = this.pestRateResult.valuation.coinsPerHour;
-		const after = this.pestRateCalculator.withPlayer(player).calculate().valuation.coinsPerHour;
+		const after = this.#createRateCalculator(player).calculate().valuation.coinsPerHour;
 		const delta = after - before;
 		return Number.isFinite(delta) ? delta : 0;
 	}
@@ -903,7 +988,7 @@ export class PestFarmingPageContext {
 			pets: this.pets,
 			selectedVacuumId,
 			armorSets,
-			phaseLoadouts,
+			phaseLoadouts: Object.keys(phaseLoadouts).length > 0 ? phaseLoadouts : undefined,
 			sharedEquipment,
 			selectedCrop: this.selectedCropKey,
 
@@ -946,7 +1031,6 @@ export class PestFarmingPageContext {
 			wrigglingLarva: Number(this.ctx.member.current?.unparsed?.consumed?.wriggling_larva ?? 0),
 			sprayedPlot: rates.pestFarming.sprayedPlot,
 			pesthunterAccessoryEnabled: true,
-			mantidPestKills: 0,
 			infestedPlotProbability: rates.infestedPlotProbability,
 			cocoaFortuneUpgrade: this.ctx.member.current?.chocolateFactory?.cocoaFortuneUpgrades,
 			temporaryFortune: rates.useTemp ? rates.temp : undefined,

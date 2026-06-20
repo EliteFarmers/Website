@@ -1334,20 +1334,25 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 			const level = getChipLevel(player.options.chips?.[chipId]);
 			const rarity = getChipRarity(level, getChipInputRarity(player.options.chipRarities, chipId));
 			const maxLevel = getChipMaxLevelForRarity(rarity);
-			return [
+			const progress = [
 				{
 					name: 'Level',
 					current: level,
 					max: maxLevel,
 					ratio: Math.min(isNaN(level / maxLevel) ? 0 : level / maxLevel, 1),
 				},
-				{
+			];
+
+			if (chip.statsPerRarity) {
+				progress.push({
 					name: 'Rarity',
 					current: GARDEN_CHIP_RARITY_MAX_LEVELS[rarity],
 					max: GARDEN_CHIP_MAX_LEVEL,
 					ratio: GARDEN_CHIP_RARITY_MAX_LEVELS[rarity] / GARDEN_CHIP_MAX_LEVEL,
-				},
-			];
+				});
+			}
+
+			return progress;
 		},
 		upgrades: (player, stats) => {
 			const currentLevel = getChipLevel(player.options.chips?.[chipId]);

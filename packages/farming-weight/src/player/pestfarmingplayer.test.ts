@@ -154,6 +154,86 @@ test('default pest armor loadouts prefer equipped and separate wardrobe sets bef
 	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).helmet?.item.uuid).toBe('spawn-helmet');
 });
 
+test('default spawn phase uses the separate armor set when available', () => {
+	const player = new PestFarmingPlayer({
+		armor: [
+			armor('FERMENTO_HELMET', 'main-helmet'),
+			armor('FERMENTO_CHESTPLATE', 'main-chestplate'),
+			armor('FERMENTO_LEGGINGS', 'main-leggings'),
+			armor('FERMENTO_BOOTS', 'main-boots'),
+			armor('HELIANTHUS_HELMET', 'spawn-helmet'),
+			armor('HELIANTHUS_CHESTPLATE', 'spawn-chestplate'),
+			armor('HELIANTHUS_LEGGINGS', 'spawn-leggings'),
+			armor('HELIANTHUS_BOOTS', 'spawn-boots'),
+		],
+		armorSets: [
+			{
+				id: 'main',
+				name: 'Main Armor',
+				pieces: {
+					[GearSlot.Helmet]: 'main-helmet',
+					[GearSlot.Chestplate]: 'main-chestplate',
+					[GearSlot.Leggings]: 'main-leggings',
+					[GearSlot.Boots]: 'main-boots',
+				},
+			},
+			{
+				id: 'spawn',
+				name: 'Spawn Armor',
+				pieces: {
+					[GearSlot.Helmet]: 'spawn-helmet',
+					[GearSlot.Chestplate]: 'spawn-chestplate',
+					[GearSlot.Leggings]: 'spawn-leggings',
+					[GearSlot.Boots]: 'spawn-boots',
+				},
+			},
+		],
+	});
+
+	expect(player.phaseLoadouts[PestFarmingPhase.Spawn].armorSetId).toBe('spawn');
+	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).helmet?.item.uuid).toBe('spawn-helmet');
+});
+
+test('default spawn phase keeps the generated spawn armor set as a rate-selection candidate', () => {
+	const player = new PestFarmingPlayer({
+		armor: [
+			armor('FERMENTO_HELMET', 'main-helmet'),
+			armor('FERMENTO_CHESTPLATE', 'main-chestplate'),
+			armor('FERMENTO_LEGGINGS', 'main-leggings'),
+			armor('FERMENTO_BOOTS', 'main-boots'),
+			armor('CROPIE_HELMET', 'spawn-helmet'),
+			armor('CROPIE_CHESTPLATE', 'spawn-chestplate'),
+			armor('CROPIE_LEGGINGS', 'spawn-leggings'),
+			armor('CROPIE_BOOTS', 'spawn-boots'),
+		],
+		armorSets: [
+			{
+				id: 'main',
+				name: 'Main Armor',
+				pieces: {
+					[GearSlot.Helmet]: 'main-helmet',
+					[GearSlot.Chestplate]: 'main-chestplate',
+					[GearSlot.Leggings]: 'main-leggings',
+					[GearSlot.Boots]: 'main-boots',
+				},
+			},
+			{
+				id: 'spawn',
+				name: 'Spawn Armor',
+				pieces: {
+					[GearSlot.Helmet]: 'spawn-helmet',
+					[GearSlot.Chestplate]: 'spawn-chestplate',
+					[GearSlot.Leggings]: 'spawn-leggings',
+					[GearSlot.Boots]: 'spawn-boots',
+				},
+			},
+		],
+	});
+
+	expect(player.phaseLoadouts[PestFarmingPhase.Spawn].armorSetId).toBe('spawn');
+	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).helmet?.item.uuid).toBe('spawn-helmet');
+});
+
 test('phase armor and shared equipment progress are scoped to their loadout types', () => {
 	const player = new PestFarmingPlayer({
 		armor: [armor('HELIANTHUS_HELMET', 'main-helmet')],

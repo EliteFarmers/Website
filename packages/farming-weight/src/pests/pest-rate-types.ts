@@ -27,7 +27,6 @@ export interface PestCycleSettings {
 }
 
 export interface PestAttractionSettings {
-	selectedPest?: Pest;
 	sprayonatorTarget?: Pest;
 	hooveriusVinylTarget?: Pest;
 	hooveriusVinylMultiplier?: number;
@@ -83,10 +82,15 @@ export interface PestRatePriceBook {
 	missingItemMode?: 'exclude' | 'zero';
 }
 
+export interface PestFarmingRateArmorSelection {
+	spawnArmorSetIds?: readonly string[];
+}
+
 export interface PestFarmingRateCalculatorInput {
 	player: PestFarmingPlayer;
 	options: PestFarmingRateOptions;
 	priceBook?: PestRatePriceBook;
+	armorSelection?: PestFarmingRateArmorSelection;
 }
 
 export interface PestCycleDebug {
@@ -221,6 +225,7 @@ export interface PestRateValuationDelta {
 	coinsPerHour: number;
 	costPerCoinsPerHour?: number;
 	missingItemIds: string[];
+	missingCurrencyIds: string[];
 }
 
 export interface PestFarmingUpgradeRateImpact

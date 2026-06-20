@@ -145,8 +145,8 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 
 	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
 		current: 5,
-		max: 10,
-		ratio: 0.5,
+		max: 30,
+		ratio: 5 / 30,
 	});
 	expect(attributeShards?.effects).toContainEqual(
 		expect.objectContaining({
@@ -206,6 +206,54 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 	// Should NOT appear in plain FarmingFortune upgrades (no FF impact).
 	const ffUpgrades = player.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(ffUpgrades.find((u) => u.title === 'Cropeetle 6')).toBeUndefined();
+});
+
+test('Pest shard surfaces pest-specific flat Overbloom progress under Attribute Shards', () => {
+	const player = new FarmingPlayer({
+		attributes: { pest_luck: 15 },
+	});
+
+	const progress = player.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const attributeShards = progress.find((p) => p.name === 'Attribute Shards');
+	const pestShard = attributeShards?.progress?.find((p) => p.name === 'Pest Shard');
+
+	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 10,
+		max: 30,
+		ratio: 10 / 30,
+	});
+	expect(pestShard?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 10,
+		max: 20,
+		ratio: 0.5,
+	});
+	expect(pestShard?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Pest Shard',
+			op: 'add-rare-pct',
+			value: 10,
+			scope: { tags: ['pest'] },
+			description: 'Pest Overbloom',
+			relatedStats: [Stat.Overbloom],
+			valueDisplay: 'stat',
+			valueStat: Stat.Overbloom,
+		})
+	);
+});
+
+test('progress-only garden chips show one nested progress bar', () => {
+	const player = new FarmingPlayer({
+		chips: { synthesis: 4, cropshot: 4 },
+	});
+
+	const chips = player.getProgress([Stat.FarmingFortune, Stat.Overbloom]).find((p) => p.name === 'Garden Chips');
+	const synthesis = chips?.progress?.find((p) => p.name === 'Synthesis Chip');
+	const cropshot = chips?.progress?.find((p) => p.name === 'Cropshot Chip');
+
+	expect(synthesis?.stats).toBeUndefined();
+	expect(synthesis?.progress?.map((p) => p.name)).toStrictEqual(['Level']);
+	expect(cropshot?.stats?.[Stat.FarmingFortune]).toBeDefined();
+	expect(cropshot?.progress?.map((p) => p.name)).toStrictEqual(['Level', 'Rarity']);
 });
 
 test('Freshly Baked Talisman purchase costs 25 kernels', () => {
