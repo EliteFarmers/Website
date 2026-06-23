@@ -7,55 +7,55 @@ import { getItemsFromUpgrades } from '$lib/items';
 import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 import { getItems } from '$lib/remote/items.remote';
 import {
-    getRatesData,
-    type PestFarmingData,
-    type PestFarmingRateSettings,
-    type PestFarmingTimeOfDay,
-    type RatesData,
+	getRatesData,
+	type PestFarmingData,
+	type PestFarmingRateSettings,
+	type PestFarmingTimeOfDay,
+	type RatesData,
 } from '$lib/stores/ratesData';
 import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
 import { getStatsContext } from '$lib/stores/stats.svelte';
 import {
-    createPestFarmingPlayer,
-    Crop,
-    CROP_INFO,
-    DEFAULT_PEST_CYCLE_SETTINGS,
-    FarmingArmor,
-    FarmingEquipment,
-    FarmingPet,
-    FarmingTool,
-    GearSlot,
-    getCropFromName,
-    getCropMilestoneLevels,
-    getCropUpgrades,
-    getGardenLevel,
-    Pest,
-    PEST_ARMOR_SLOTS,
-    PEST_EQUIPMENT_SLOTS,
-    PEST_FARMING_PHASE_STATS,
-    PEST_FARMING_STATS,
-    PEST_MAIN_ARMOR_SET_ID,
-    PEST_SPAWN_ARMOR_SET_ID,
-    PestFarmingPhase,
-    PestFarmingRateCalculator,
-    Stat,
-    STAT_NAMES,
-    Vacuum,
-    VACUUM_STATS,
-    type EliteItemDto,
-    type FortuneSourceProgress,
-    type FortuneUpgrade,
-    type PestArmorSetLoadout,
-    type PestAttractionSettings,
-    type PestCycleSettings,
-    type PestFarmingPlayerOptions,
-    type PestFarmingUpgradeRateImpact,
-    type PestPhaseLoadout,
-    type PestRateItemPrice,
-    type PestRatePriceBook,
-    type StatBreakdown,
-    type TemporaryFarmingFortune,
-    type UpgradeTreeNode,
+	createPestFarmingPlayer,
+	Crop,
+	CROP_INFO,
+	DEFAULT_PEST_CYCLE_SETTINGS,
+	FarmingArmor,
+	FarmingEquipment,
+	FarmingPet,
+	FarmingTool,
+	GearSlot,
+	getCropFromName,
+	getCropMilestoneLevels,
+	getCropUpgrades,
+	getGardenLevel,
+	Pest,
+	PEST_ARMOR_SLOTS,
+	PEST_EQUIPMENT_SLOTS,
+	PEST_FARMING_PHASE_STATS,
+	PEST_FARMING_STATS,
+	PEST_MAIN_ARMOR_SET_ID,
+	PEST_SPAWN_ARMOR_SET_ID,
+	PestFarmingPhase,
+	PestFarmingRateCalculator,
+	Stat,
+	STAT_NAMES,
+	Vacuum,
+	VACUUM_STATS,
+	type EliteItemDto,
+	type FortuneSourceProgress,
+	type FortuneUpgrade,
+	type PestArmorSetLoadout,
+	type PestAttractionSettings,
+	type PestCycleSettings,
+	type PestFarmingPlayerOptions,
+	type PestFarmingUpgradeRateImpact,
+	type PestPhaseLoadout,
+	type PestRateItemPrice,
+	type PestRatePriceBook,
+	type StatBreakdown,
+	type TemporaryFarmingFortune,
+	type UpgradeTreeNode,
 } from 'farming-weight';
 import { Debounced } from 'runed';
 import { onMount, untrack } from 'svelte';
@@ -648,12 +648,12 @@ export class PestFarmingPageContext {
 		const armorSets = this.getStoredArmorSets().map((set) =>
 			set.id === armorSetId
 				? {
-						...set,
-						pieces: {
-							...set.pieces,
-							[slot]: uuid,
-						},
-					}
+					...set,
+					pieces: {
+						...set.pieces,
+						[slot]: uuid,
+					},
+				}
 				: set
 		);
 		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ armorSets }));
@@ -801,12 +801,12 @@ export class PestFarmingPageContext {
 		const next = armorSets.map((set) =>
 			set.id === armorSetId
 				? {
-						...set,
-						pieces: {
-							...set.pieces,
-							[slot]: uuid,
-						},
-					}
+					...set,
+					pieces: {
+						...set.pieces,
+						[slot]: uuid,
+					},
+				}
 				: set
 		);
 		this.updateArmorSets(next);
@@ -1069,9 +1069,9 @@ export class PestFarmingPageContext {
 			temporaryFortune: rates.useTemp ? rates.temp : undefined,
 			zorro: rates.zorroMode
 				? {
-						enabled: this.ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
-						mode: rates.zorroMode,
-					}
+					enabled: this.ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
+					mode: rates.zorroMode,
+				}
 				: undefined,
 		} as PestFarmingPlayerOptions;
 	}
