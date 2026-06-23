@@ -7,55 +7,55 @@ import { getItemsFromUpgrades } from '$lib/items';
 import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 import { getItems } from '$lib/remote/items.remote';
 import {
-	getRatesData,
-	type PestFarmingData,
-	type PestFarmingRateSettings,
-	type PestFarmingTimeOfDay,
-	type RatesData,
+    getRatesData,
+    type PestFarmingData,
+    type PestFarmingRateSettings,
+    type PestFarmingTimeOfDay,
+    type RatesData,
 } from '$lib/stores/ratesData';
 import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
 import { getStatsContext } from '$lib/stores/stats.svelte';
 import {
-	createPestFarmingPlayer,
-	Crop,
-	CROP_INFO,
-	DEFAULT_PEST_CYCLE_SETTINGS,
-	FarmingArmor,
-	FarmingEquipment,
-	FarmingPet,
-	FarmingTool,
-	GearSlot,
-	getCropFromName,
-	getCropMilestoneLevels,
-	getCropUpgrades,
-	getGardenLevel,
-	Pest,
-	PEST_ARMOR_SLOTS,
-	PEST_EQUIPMENT_SLOTS,
-	PEST_FARMING_PHASE_STATS,
-	PEST_FARMING_STATS,
-	PEST_MAIN_ARMOR_SET_ID,
-	PEST_SPAWN_ARMOR_SET_ID,
-	PestFarmingPhase,
-	PestFarmingRateCalculator,
-	Stat,
-	STAT_NAMES,
-	Vacuum,
-	VACUUM_STATS,
-	type EliteItemDto,
-	type FortuneSourceProgress,
-	type FortuneUpgrade,
-	type PestArmorSetLoadout,
-	type PestAttractionSettings,
-	type PestCycleSettings,
-	type PestFarmingPlayerOptions,
-	type PestFarmingUpgradeRateImpact,
-	type PestPhaseLoadout,
-	type PestRateItemPrice,
-	type PestRatePriceBook,
-	type StatBreakdown,
-	type TemporaryFarmingFortune,
-	type UpgradeTreeNode,
+    createPestFarmingPlayer,
+    Crop,
+    CROP_INFO,
+    DEFAULT_PEST_CYCLE_SETTINGS,
+    FarmingArmor,
+    FarmingEquipment,
+    FarmingPet,
+    FarmingTool,
+    GearSlot,
+    getCropFromName,
+    getCropMilestoneLevels,
+    getCropUpgrades,
+    getGardenLevel,
+    Pest,
+    PEST_ARMOR_SLOTS,
+    PEST_EQUIPMENT_SLOTS,
+    PEST_FARMING_PHASE_STATS,
+    PEST_FARMING_STATS,
+    PEST_MAIN_ARMOR_SET_ID,
+    PEST_SPAWN_ARMOR_SET_ID,
+    PestFarmingPhase,
+    PestFarmingRateCalculator,
+    Stat,
+    STAT_NAMES,
+    Vacuum,
+    VACUUM_STATS,
+    type EliteItemDto,
+    type FortuneSourceProgress,
+    type FortuneUpgrade,
+    type PestArmorSetLoadout,
+    type PestAttractionSettings,
+    type PestCycleSettings,
+    type PestFarmingPlayerOptions,
+    type PestFarmingUpgradeRateImpact,
+    type PestPhaseLoadout,
+    type PestRateItemPrice,
+    type PestRatePriceBook,
+    type StatBreakdown,
+    type TemporaryFarmingFortune,
+    type UpgradeTreeNode,
 } from 'farming-weight';
 import { Debounced } from 'runed';
 import { onMount, untrack } from 'svelte';
@@ -137,15 +137,18 @@ function getItemSellValue(itemId: string, item: RatesItemPriceEntry | undefined)
 	}
 
 	const bazaar = item.bazaar?.averageSellOrder || item.bazaar?.averageSell || 0;
-	const auctionPrices = item.auctions
-		?.map((auction) => (auction.lowest > 0 ? auction.lowest : auction.last))
-		.filter((price) => price > 0);
-	const auction = auctionPrices?.length ? Math.min(...auctionPrices) : 0;
-	const marketValues = [
-		{ coins: bazaar, source: 'bazaar' },
-		{ coins: auction, source: 'auction' },
-	].filter((price): price is PestRateItemPrice => price.coins > 0);
-	const market = marketValues.length ? marketValues.sort((a, b) => a.coins - b.coins)[0] : undefined;
+	const auction = item.auctions?.reduce<number>((min, a) => {
+		const price = a.lowest > 0 ? a.lowest : a.last;
+		return price > 0 && price < min ? price : min;
+	}, Infinity) ?? Infinity;
+	const auctionPrice = isFinite(auction) ? auction : 0;
+
+	const market: PestRateItemPrice | undefined =
+		bazaar > 0 && (auctionPrice <= 0 || bazaar <= auctionPrice)
+			? { coins: bazaar, source: 'bazaar' }
+			: auctionPrice > 0
+				? { coins: auctionPrice, source: 'auction' }
+				: undefined;
 
 	if (npc > 0 && npc >= (market?.coins ?? 0)) {
 		return { coins: npc, source: 'npc' };
@@ -181,8 +184,16 @@ export class PestFarmingPageContext {
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	#petRateImpactMemo = new Map<string, number>();
 	#lastItemRequestKey = '';
+	#lastRateStateKey = '';
+	#lastGearRateStateKey = '';
+	#lastPetRateStateKey = '';
 
 	pets = $derived.by(() => (this.ctx.ready ? FarmingPet.fromArray(this.ctx.pets) : []));
+	sortedPets = $derived.by(() =>
+		this.pets
+			.filter((pet) => !!pet.pet.uuid)
+			.sort((a, b) => this.getPetRateImpact(b, this.activePhase) - this.getPetRateImpact(a, this.activePhase))
+	);
 	tools = $derived.by(() => (this.ctx.ready ? FarmingTool.fromArray(this.ctx.tools as EliteItemDto[]) : []));
 	vacuums = $derived.by(() => (this.ctx.ready ? Vacuum.fromArray(this.ctx.tools as EliteItemDto[]) : []));
 	armor = $derived.by(() => (this.ctx.ready ? FarmingArmor.fromArray(this.ctx.armor as EliteItemDto[]) : []));
@@ -219,18 +230,22 @@ export class PestFarmingPageContext {
 		...this.rates.pestFarming.rateSettings,
 		sprayedPlot: this.rates.pestFarming.sprayedPlot,
 	}));
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	#itemPriceCache = new Map<string, PestRateItemPrice>();
 	pestRatePriceBook = $derived.by<PestRatePriceBook>(() => {
 		void this.itemsVersion;
+		for (const [itemId, item] of Object.entries(this.itemsData)) {
+			if (!this.#itemPriceCache.has(itemId)) {
+				const price = getItemSellValue(itemId, item);
+				if (price !== undefined) this.#itemPriceCache.set(itemId, price);
+			}
+		}
 		return {
 			version: String(this.itemsVersion),
 			missingItemMode: 'exclude',
 			items: {
 				...STATIC_NPC_ITEM_PRICES,
-				...Object.fromEntries(
-					Object.entries(this.itemsData)
-						.map(([itemId, item]) => [itemId, getItemSellValue(itemId, item)] as const)
-						.filter((entry): entry is readonly [string, PestRateItemPrice] => entry[1] !== undefined)
-				),
+				...Object.fromEntries(this.#itemPriceCache),
 			},
 		};
 	});
@@ -417,12 +432,15 @@ export class PestFarmingPageContext {
 	rateImpactItems = $derived.by(() => {
 		void this.itemsVersion;
 		this.trackPestVersion();
-		const calculator = this.#createRateCalculator();
-		const result = calculator.calculate();
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const items = new Set<string>();
 		for (const upgrade of this.neededItemUpgrades) {
-			const impact = this.#calculatePestRateImpact(calculator, result, this.activePhase, upgrade);
+			const impact = this.#calculatePestRateImpact(
+				this.pestRateCalculator,
+				this.pestRateResult,
+				this.activePhase,
+				upgrade
+			);
 			for (const itemId of impact.valuationDelta.missingItemIds) {
 				if (!this.itemsData[itemId]) items.add(itemId);
 			}
@@ -430,14 +448,14 @@ export class PestFarmingPageContext {
 		return [...items];
 	});
 
-	neededItems = $derived([
+	neededItems = $derived.by(() => {
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		...new Set([
-			...getItemsFromUpgrades(this.neededItemUpgrades),
-			...this.rateOutputItems,
-			...this.rateImpactItems,
-		]),
-	]);
+		const seen = new Set<string>();
+		for (const id of getItemsFromUpgrades(this.neededItemUpgrades)) seen.add(id);
+		for (const id of this.rateOutputItems) seen.add(id);
+		for (const id of this.rateImpactItems) seen.add(id);
+		return [...seen];
+	});
 	debouncedItems = new Debounced(() => this.neededItems, 1000);
 
 	constructor() {
@@ -619,6 +637,10 @@ export class PestFarmingPageContext {
 		if (!slot || !uuid) return 0;
 		if (this.pestPlayer.getArmorSetLoadout(armorSetId)?.pieces[slot] === uuid) return 0;
 
+		if (this.#lastGearRateStateKey !== this.pestRateStateKey) {
+			this.#gearRateImpactMemo.clear();
+			this.#lastGearRateStateKey = this.pestRateStateKey;
+		}
 		const key = `${this.pestRateStateKey}:armor:${armorSetId}:${slot}:${uuid}`;
 		const cached = this.#gearRateImpactMemo.get(key);
 		if (cached !== undefined) return cached;
@@ -635,7 +657,6 @@ export class PestFarmingPageContext {
 				: set
 		);
 		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ armorSets }));
-		if (this.#gearRateImpactMemo.size > 1000) this.#gearRateImpactMemo.clear();
 		this.#gearRateImpactMemo.set(key, delta);
 		return delta;
 	}
@@ -646,6 +667,10 @@ export class PestFarmingPageContext {
 		if (!slot || !uuid) return 0;
 		if (this.sharedEquipment[slot] === uuid) return 0;
 
+		if (this.#lastGearRateStateKey !== this.pestRateStateKey) {
+			this.#gearRateImpactMemo.clear();
+			this.#lastGearRateStateKey = this.pestRateStateKey;
+		}
 		const key = `${this.pestRateStateKey}:equipment:${slot}:${uuid}`;
 		const cached = this.#gearRateImpactMemo.get(key);
 		if (cached !== undefined) return cached;
@@ -655,7 +680,6 @@ export class PestFarmingPageContext {
 			[slot]: uuid,
 		};
 		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ sharedEquipment }));
-		if (this.#gearRateImpactMemo.size > 1000) this.#gearRateImpactMemo.clear();
 		this.#gearRateImpactMemo.set(key, delta);
 		return delta;
 	}
@@ -678,6 +702,10 @@ export class PestFarmingPageContext {
 		if (!uuid) return 0;
 		if (this.phaseLoadouts[phase]?.petId === uuid) return 0;
 
+		if (this.#lastPetRateStateKey !== this.pestRateStateKey) {
+			this.#petRateImpactMemo.clear();
+			this.#lastPetRateStateKey = this.pestRateStateKey;
+		}
 		const key = `${this.pestRateStateKey}:pet:${phase}:${uuid}`;
 		const cached = this.#petRateImpactMemo.get(key);
 		if (cached !== undefined) return cached;
@@ -690,7 +718,6 @@ export class PestFarmingPageContext {
 			},
 		};
 		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ phaseLoadouts }));
-		if (this.#petRateImpactMemo.size > 1000) this.#petRateImpactMemo.clear();
 		this.#petRateImpactMemo.set(key, delta);
 		return delta;
 	}
@@ -851,9 +878,12 @@ export class PestFarmingPageContext {
 	}
 
 	getPestRateImpact(upgrade: FortuneUpgrade): PestFarmingUpgradeRateImpact | undefined {
-		const calculator = this.#createRateCalculator();
-		const result = calculator.calculate();
-		return this.#calculatePestRateImpact(calculator, result, this.activePhase, upgrade);
+		return this.#calculatePestRateImpact(
+			this.pestRateCalculator,
+			this.pestRateResult,
+			this.activePhase,
+			upgrade
+		);
 	}
 
 	#calculatePestRateImpact(
@@ -862,6 +892,10 @@ export class PestFarmingPageContext {
 		phase: PestFarmingPhase,
 		upgrade: FortuneUpgrade
 	): PestFarmingUpgradeRateImpact {
+		if (this.#lastRateStateKey !== result.stateKey) {
+			this.#rateImpactMemo.clear();
+			this.#lastRateStateKey = result.stateKey;
+		}
 		const key = `${result.stateKey}:${phase}:${getUpgradeIdentity(upgrade)}`;
 		const cached = this.#rateImpactMemo.get(key);
 		if (cached) return cached;
@@ -871,7 +905,6 @@ export class PestFarmingPageContext {
 			upgrade,
 			before: result,
 		});
-		if (this.#rateImpactMemo.size > 500) this.#rateImpactMemo.clear();
 		this.#rateImpactMemo.set(key, impact);
 		return impact;
 	}

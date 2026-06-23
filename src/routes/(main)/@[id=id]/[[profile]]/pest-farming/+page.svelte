@@ -39,8 +39,14 @@
 		trackAnalytics('pest_farming.settings_opened');
 	}
 
+	const _formatters = new Map<number, Intl.NumberFormat>();
 	function formatNumber(value: number, maximumFractionDigits = 0) {
-		return value.toLocaleString(undefined, { maximumFractionDigits });
+		let fmt = _formatters.get(maximumFractionDigits);
+		if (!fmt) {
+			fmt = new Intl.NumberFormat(undefined, { maximumFractionDigits });
+			_formatters.set(maximumFractionDigits, fmt);
+		}
+		return fmt.format(value);
 	}
 
 	function formatRate(value: number) {
@@ -252,9 +258,7 @@
 												onValueChange={(value) =>
 													value && pest.selectPhasePet(pest.activePhase, value)}
 											>
-												{#each pest.pets
-													.filter((pet) => !!pet.pet.uuid)
-													.sort((a, b) => pest.getPetRateImpact(b, pest.activePhase) - pest.getPetRateImpact(a, pest.activePhase)) as pet, i (pet.pet.uuid ?? i)}
+												{#each pest.sortedPets as pet, i (pet.pet.uuid ?? i)}
 													{@const petRateDelta = pest.getPetRateImpact(pet, pest.activePhase)}
 													<DropdownMenu.RadioItem value={pet.pet.uuid ?? ''}>
 														<div class="flex flex-row items-center gap-2">
