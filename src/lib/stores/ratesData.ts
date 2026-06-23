@@ -1,13 +1,14 @@
 import { browser } from '$app/environment';
 import {
-	PEST_MAIN_ARMOR_SET_ID,
-	PEST_SPAWN_ARMOR_SET_ID,
 	DEFAULT_PEST_CYCLE_SETTINGS,
 	Pest,
-	type PestAttractionSettings,
+	PEST_MAIN_ARMOR_SET_ID,
+	PEST_SPAWN_ARMOR_SET_ID,
 	PestFarmingPhase,
+	Spray,
 	ZorroMode,
 	type FarmingTool,
+	type PestAttractionSettings,
 	type PestCycleSettings,
 	type TemporaryFarmingFortune,
 } from 'farming-weight';
@@ -91,9 +92,8 @@ const defaultData = {
 		pesthunterAccessoryEnabled: true,
 		timeOfDay: 'day',
 		attraction: {
-			sprayonatorTarget: Pest.Slug,
+			sprayonatorMaterial: Spray.PlantMatter,
 			hooveriusVinylTarget: Pest.Slug,
-			hooveriusVinylMultiplier: 3,
 		},
 		rateSettings: {
 			blocksPerSecond: DEFAULT_PEST_CYCLE_SETTINGS.blocksPerSecond,

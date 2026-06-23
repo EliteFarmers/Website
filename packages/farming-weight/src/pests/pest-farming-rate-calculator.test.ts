@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
-import { Pest } from '../constants/pests.js';
+import { Pest, Spray } from '../constants/pests.js';
+import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import type { EliteItemDto } from '../fortune/item.js';
@@ -577,11 +578,9 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 			crop: Crop.Wheat,
 			cycle: sheetCycleSettings,
 			attraction: {
-				pestTypeWeightMultipliers: {
-					[Pest.Locust]: 12,
-					[Pest.Slug]: 36,
-					[Pest.Firefly]: 0,
-				},
+				sprayonatorMaterial: Spray.PlantMatter,
+				hooveriusVinylTarget: Pest.Slug,
+				excludedPests: [Pest.Firefly],
 			},
 			economy: {
 				pestExchange: {
@@ -619,7 +618,7 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 	expect(result.breakdown.pestSpawning.pestsPerInterval).toBeCloseTo(SHEET_PESTS_PER_INTERVAL, 6);
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Locust]).toBeCloseTo(12 / 58, 8);
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Slug]).toBeCloseTo(36 / 58, 8);
-	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Firefly]).toBe(0);
+	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities).not.property(Pest.Firefly);
 	expect(result.breakdown.economy.pestExchanges.items.PESTHUNTER_RELIC).toBeGreaterThan(0);
 	expect(result.breakdown.economy.pestShards.rngItems.SHARD_PEST).toBeGreaterThan(0);
 	expect(result.breakdown.economy.costs.items.PLANT_MATTER).toBeLessThan(0);
@@ -661,10 +660,32 @@ function createSheetFixturePlayer(): PestFarmingPlayer {
 		buildEnvironment: () => ({}),
 		collectEffects: () => [],
 	};
+	const spawn = {
+		getRates,
+		selectedPet: {
+			pet: {
+				type: FarmingPets.Mosquito,
+				info: {
+					abilities: [
+						{
+							computed: {
+								[Stat.SmoothJazz]: 0.5
+							}
+						}
+					]
+				},
+			},
+			getFortune: (stat: Stat) => {
+				if (stat == Stat.SmoothJazz) {
+					return 0.5;
+				}
+			},
+		},
+	}
 
 	return {
 		crop: { getRates },
-		spawn: { getRates },
+		spawn,
 		kill,
 		getPhaseStat: (phase: PestFarmingPhase, stat: Stat) => {
 			if (phase === PestFarmingPhase.Farm && stat === Stat.PestCooldownReduction) return 55;

@@ -12,6 +12,8 @@
 		GARDEN_BESTIARY_NAMES,
 		NATURAL_PESTS,
 		Pest,
+		Spray,
+		SPRAY_NAMES,
 		Stat,
 		TEMPORARY_FORTUNE,
 		type TemporaryFarmingFortune,
@@ -37,6 +39,8 @@
 
 	const pestName = (pestId: Pest) => GARDEN_BESTIARY_NAMES[`pest_${pestId}_1`] ?? pestId;
 	const pestOptions = NATURAL_PESTS.map((pestId) => ({ value: pestId, label: pestName(pestId) }));
+	const sprayName = (sprayId: Spray) => SPRAY_NAMES[`spray_${sprayId}_1`] ?? sprayId;
+	const sprayOptions = Object.values(Spray).map((sprayId) => ({ value: sprayId, label: sprayName(sprayId) }));
 	type TemporaryFortuneToggleKey = Exclude<keyof TemporaryFarmingFortune, 'pestTurnIn'>;
 	const pestTurnInTitle = `${TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)`;
 	const temporaryFortuneSources = [
@@ -179,12 +183,16 @@
 	</SettingListItem>
 	<SettingSeperator />
 
-	<SettingListItem title="Sprayonator Target" description="Pest attracted by the sprayed plot bonus.">
+	<SettingListItem
+		title="Sprayonator Material"
+		description="Material used by Sprayonator."
+		wiki="https://w.elitesb.gg/Sprayonator"
+	>
 		<Select.Simple
 			class="my-1 h-10 min-w-40"
-			value={pest.rates.pestFarming.attraction.sprayonatorTarget ?? Pest.Slug}
-			change={(value) => pest.setPestAttraction('sprayonatorTarget', value)}
-			options={pestOptions}
+			value={pest.rates.pestFarming.attraction.sprayonatorMaterial ?? Spray.PlantMatter}
+			change={(value) => pest.setPestAttraction('sprayonatorMaterial', value)}
+			options={sprayOptions}
 		/>
 	</SettingListItem>
 	<SettingSeperator />

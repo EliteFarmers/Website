@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Rarity } from '../constants/reforges.js';
 import { Stat, type StatValue } from '../constants/stats.js';
-import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPetStatType, FarmingPets } from '../items/pets.js';
+import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPets, FarmingPetStatType } from '../items/pets.js';
 import { FarmingPet } from './farmingpet.js';
 
 function getPetInfo(id: FarmingPets): NonNullable<(typeof FARMING_PETS)[FarmingPets]> {
@@ -125,12 +125,14 @@ describe('Pet Definitions Integrity', () => {
 
 	test('Mosquito pet has correct stats and abilities', () => {
 		const mosquito = getPetInfo(FarmingPets.Mosquito);
-		const ability = mosquito.abilities?.[0];
+		const firstAbility = mosquito.abilities?.[0];
+		const secondAbility = mosquito.abilities?.[1];
 		expect(mosquito.name).toBe('Mosquito');
 		expectStatValue(mosquito.perLevelStats?.[Stat.Speed], 0.2);
 		expectStatValue(mosquito.perLevelStats?.[Stat.BonusPestChance], 0.5);
-		expect(mosquito.abilities).toHaveLength(1);
-		expect(ability?.name).toBe("Buzzin' Barterer");
+		expect(mosquito.abilities).toHaveLength(2);
+		expect(firstAbility?.name).toBe("Buzzin' Barterer");
+		expect(secondAbility?.name).toBe("Smooth Jazz");
 	});
 
 	test('Rose Dragon pet has correct max level and abilities', () => {

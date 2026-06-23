@@ -1,5 +1,5 @@
 import type { Crop } from '../constants/crops.js';
-import type { Pest } from '../constants/pests.js';
+import type { Pest, Spray } from '../constants/pests.js';
 import type { FortuneUpgrade } from '../constants/upgrades.js';
 import type { PestFarmingPhase, PestFarmingPlayer } from '../player/pestfarmingplayer.js';
 import type { DetailedDropsFromEffectsDelta, UpgradeRateImpact } from '../player/player.js';
@@ -27,9 +27,8 @@ export interface PestCycleSettings {
 }
 
 export interface PestAttractionSettings {
-	sprayonatorTarget?: Pest;
+	sprayonatorMaterial?: Spray;
 	hooveriusVinylTarget?: Pest;
-	hooveriusVinylMultiplier?: number;
 	includeSpecialPests?: boolean;
 	pestTypeWeightMultipliers?: Partial<Record<Pest, number>>;
 	excludedPests?: Pest[];

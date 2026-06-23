@@ -208,7 +208,7 @@ export class PestFarmingPageContext {
 
 		return {
 			...settings,
-			sprayonatorTarget: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorTarget : undefined,
+			sprayonatorMaterial: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorMaterial : undefined,
 			hooveriusVinylTarget: isHooverius ? settings.hooveriusVinylTarget : undefined,
 			hooveriusVinylMultiplier: isHooverius ? settings.hooveriusVinylMultiplier : undefined,
 			excludedPests: [...excludedPests],

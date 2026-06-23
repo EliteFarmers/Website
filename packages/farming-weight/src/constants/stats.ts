@@ -42,6 +42,7 @@ export enum Stat {
 	PestCooldownReduction = 'Pest Cooldown Reduction',
 	Overbloom = 'Overbloom',
 	FishingSpeed = 'Fishing Speed',
+	SmoothJazz = 'Smooth Jazz',
 }
 
 /**
@@ -179,6 +180,7 @@ export const PEST_FARMING_STATS: Stat[] = [
 	Stat.PestCooldownReduction,
 	Stat.FarmingFortune,
 	Stat.Overbloom,
+	Stat.SmoothJazz,
 ];
 
 export const VACUUM_STATS: Stat[] = [Stat.PestKillFortune, Stat.Damage, Stat.FarmingFortune];
@@ -232,4 +234,5 @@ export const STAT_NAMES: Record<Stat, string> = {
 	[Stat.PestCooldownReduction]: 'Pest Cooldown Reduction',
 	[Stat.Overbloom]: 'Overbloom',
 	[Stat.FishingSpeed]: 'Fishing Speed',
+	[Stat.SmoothJazz]: 'Smooth Jazz',
 };

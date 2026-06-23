@@ -1,5 +1,5 @@
 import { Crop } from '../constants/crops.js';
-import { Pest } from '../constants/pests.js';
+import { Pest, SPRAY_TO_PESTS } from '../constants/pests.js';
 import { Stat } from '../constants/stats.js';
 import type { FortuneUpgrade } from '../constants/upgrades.js';
 import { resolveDropEffects } from '../effects/resolver.js';
@@ -442,7 +442,8 @@ export class PestFarmingRateCalculator {
 		if (guaranteedBeforeCap < availablePestSlots) {
 			expectedPestsPerSpawn += extraPestChance;
 		}
-		const pestTypeWeights = getPestTypeWeights(this.options.attraction);
+		const smoothJazzMultiplier = this.getSmoothJazzMultiplier();
+		const pestTypeWeights = getPestTypeWeights(this.options.attraction, smoothJazzMultiplier);
 		const totalWeight = Object.values(pestTypeWeights).reduce((sum, weight) => sum + weight, 0);
 		const pestTypeProbabilities = Object.fromEntries(
 			Object.entries(pestTypeWeights).map(([pest, weight]) => [pest, totalWeight > 0 ? weight / totalWeight : 0])
@@ -457,6 +458,12 @@ export class PestFarmingRateCalculator {
 			pestTypeWeights,
 			pestTypeProbabilities,
 		};
+	}
+
+	private getSmoothJazzMultiplier(): number {
+		const spawnPet = this.player.spawn.selectedPet;
+		const smoothJazzValue = 1 + ((spawnPet !== undefined) ? spawnPet.getFortune(Stat.SmoothJazz) ?? 0 : 0);
+		return smoothJazzValue;
 	}
 
 	private calculatePestDrops(
@@ -867,21 +874,21 @@ function diffValuation(
 	};
 }
 
-function getPestTypeWeights(attraction?: PestAttractionSettings): Partial<Record<Pest, number>> {
+function getPestTypeWeights(attraction?: PestAttractionSettings, smoothJazzMultiplier?: number): Partial<Record<Pest, number>> {
 	const pests = attraction?.includeSpecialPests ? [...NATURAL_PESTS, Pest.Mouse, Pest.LunarMoth] : NATURAL_PESTS;
 	const weights: Partial<Record<Pest, number>> = Object.fromEntries(pests.map((pest) => [pest, 1]));
-	if (attraction?.sprayonatorTarget && weights[attraction.sprayonatorTarget] !== undefined) {
-		weights[attraction.sprayonatorTarget] = (weights[attraction.sprayonatorTarget] ?? 1) * 12;
+	if (attraction?.sprayonatorMaterial && SPRAY_TO_PESTS[attraction.sprayonatorMaterial] !== undefined) {
+		for (const spray_pest of SPRAY_TO_PESTS[attraction.sprayonatorMaterial] ?? []) {
+			if (weights[spray_pest] !== undefined)
+				weights[spray_pest] = weights[spray_pest] * 12;
+		}
 	}
 	if (attraction?.hooveriusVinylTarget && weights[attraction.hooveriusVinylTarget] !== undefined) {
 		weights[attraction.hooveriusVinylTarget] =
-			(weights[attraction.hooveriusVinylTarget] ?? 1) * (attraction.hooveriusVinylMultiplier ?? 2);
+			(weights[attraction.hooveriusVinylTarget] ?? 1) * 2 * (smoothJazzMultiplier ?? 1);
 	}
 	for (const pest of attraction?.excludedPests ?? []) {
 		delete weights[pest];
-	}
-	for (const [pest, multiplier] of Object.entries(attraction?.pestTypeWeightMultipliers ?? {}) as [Pest, number][]) {
-		if (weights[pest] !== undefined) weights[pest] = (weights[pest] ?? 1) * multiplier;
 	}
 	return weights;
 }
