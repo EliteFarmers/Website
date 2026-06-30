@@ -6,6 +6,7 @@ import {
 	Pest,
 	type PestAttractionSettings,
 	PestFarmingPhase,
+	Spray,
 	ZorroMode,
 	type FarmingTool,
 	type PestCycleSettings,
@@ -91,9 +92,8 @@ const defaultData = {
 		pesthunterAccessoryEnabled: true,
 		timeOfDay: 'day',
 		attraction: {
-			sprayonatorTarget: Pest.Slug,
+			sprayonatorMaterial: Spray.PlantMatter,
 			hooveriusVinylTarget: Pest.Slug,
-			hooveriusVinylMultiplier: 3,
 		},
 		rateSettings: {
 			blocksPerSecond: DEFAULT_PEST_CYCLE_SETTINGS.blocksPerSecond,
