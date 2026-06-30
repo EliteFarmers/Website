@@ -663,25 +663,11 @@ function createSheetFixturePlayer(): PestFarmingPlayer {
 	const spawn = {
 		getRates,
 		selectedPet: {
-			pet: {
-				type: FarmingPets.Mosquito,
-				info: {
-					abilities: [
-						{
-							computed: {
-								[Stat.SmoothJazz]: 0.5
-							}
-						}
-					]
-				},
-			},
-			getFortune: (stat: Stat) => {
-				if (stat == Stat.SmoothJazz) {
-					return 0.5;
-				}
-			},
+			type: FarmingPets.Mosquito,
+			rarity: Rarity.Legendary,
+			level: 100,
 		},
-	}
+	};
 
 	return {
 		crop: { getRates },

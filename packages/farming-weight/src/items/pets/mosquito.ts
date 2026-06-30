@@ -44,29 +44,5 @@ export class MosquitoPet extends FarmingPetDefinition {
 				};
 			},
 		},
-		{
-			name: "Smooth Jazz",
-			exists: () => true,
-			computed: (_, pet) => {
-				const perLevel = (() => {
-					switch (pet.rarity) {
-						case Rarity.Common:
-						case Rarity.Uncommon:
-							return 0.0025;
-						case Rarity.Rare:
-							return 0.0035;
-						default:
-							return 0.0050;
-					}
-				})();
-				return {
-					[Stat.SmoothJazz]: {
-						name: "Smooth Jazz",
-						value: pet.level * perLevel,
-						type: FarmingPetStatType.Ability,
-					},
-				}
-			}
-		}
 	];
 }

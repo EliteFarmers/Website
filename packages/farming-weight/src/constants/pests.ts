@@ -242,8 +242,8 @@ export const SPRAY_TO_PESTS: Record<Spray, Pest[]> = {
 	[Spray.Dung]: [Pest.Beetle, Pest.Fly],
 	[Spray.HoneyJar]: [Pest.Moth, Pest.Cricket],
 	[Spray.TastyCheese]: [Pest.Rat, Pest.Mite],
-	[Spray.Jelly]: [Pest.Mantis, Pest.Dragonfly, Pest.Firefly]
-}
+	[Spray.Jelly]: [Pest.Mantis, Pest.Dragonfly, Pest.Firefly],
+};
 
 export const SPRAY_NAMES: Record<string, string> = {
 	[`spray_${Spray.Compost}_1`]: 'Compost',
