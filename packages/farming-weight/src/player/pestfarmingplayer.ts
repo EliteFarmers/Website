@@ -1,4 +1,4 @@
-import { Crop, CROP_INFO } from '../constants/crops.js';
+import { CROP_INFO, Crop } from '../constants/crops.js';
 import { FarmingPets } from '../constants/pets.js';
 import { CROP_FARMING_STATS, PEST_FARMING_STATS, Stat, type StatBreakdown, VACUUM_STATS } from '../constants/stats.js';
 import type {
@@ -488,12 +488,15 @@ export class PestFarmingPlayer {
 
 	private pickBestPetId(phase: PestFarmingPhase): string | undefined {
 		const selectedUuid = this.options.selectedPet?.pet.uuid ?? undefined;
-		const defaultUuid = selectedUuid ?? this.inventory.selectedPet?.pet.uuid ?? this.inventory.pets[0]?.pet.uuid ?? undefined;
+		const defaultUuid =
+			selectedUuid ?? this.inventory.selectedPet?.pet.uuid ?? this.inventory.pets[0]?.pet.uuid ?? undefined;
 		switch(phase) {
 			case PestFarmingPhase.Spawn:
-				return this.inventory.pets.find(pet => pet.type === FarmingPets.Mosquito)?.pet.uuid ??
-					this.inventory.pets.find(pet => pet.type === FarmingPets.Slug)?.pet.uuid ??
-					defaultUuid;
+				return (
+					this.inventory.pets.find((pet) => pet.type === FarmingPets.Mosquito)?.pet.uuid ??
+					this.inventory.pets.find((pet) => pet.type === FarmingPets.Slug)?.pet.uuid ??
+					defaultUuid
+				);
 			default:
 				return defaultUuid;
 		}
