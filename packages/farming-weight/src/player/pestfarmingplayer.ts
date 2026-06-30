@@ -490,7 +490,7 @@ export class PestFarmingPlayer {
 		const selectedUuid = this.options.selectedPet?.pet.uuid ?? undefined;
 		const defaultUuid =
 			selectedUuid ?? this.inventory.selectedPet?.pet.uuid ?? this.inventory.pets[0]?.pet.uuid ?? undefined;
-		switch(phase) {
+		switch (phase) {
 			case PestFarmingPhase.Spawn:
 				return (
 					this.inventory.pets.find((pet) => pet.type === FarmingPets.Mosquito)?.pet.uuid ??
