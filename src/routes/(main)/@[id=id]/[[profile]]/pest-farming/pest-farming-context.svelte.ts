@@ -210,7 +210,6 @@ export class PestFarmingPageContext {
 			...settings,
 			sprayonatorMaterial: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorMaterial : undefined,
 			hooveriusVinylTarget: isHooverius ? settings.hooveriusVinylTarget : undefined,
-			hooveriusVinylMultiplier: isHooverius ? settings.hooveriusVinylMultiplier : undefined,
 			excludedPests: [...excludedPests],
 		};
 	});

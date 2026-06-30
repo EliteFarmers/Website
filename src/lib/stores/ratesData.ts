@@ -1,14 +1,14 @@
 import { browser } from '$app/environment';
 import {
-	DEFAULT_PEST_CYCLE_SETTINGS,
-	Pest,
 	PEST_MAIN_ARMOR_SET_ID,
 	PEST_SPAWN_ARMOR_SET_ID,
+	DEFAULT_PEST_CYCLE_SETTINGS,
+	Pest,
+	type PestAttractionSettings,
 	PestFarmingPhase,
 	Spray,
 	ZorroMode,
 	type FarmingTool,
-	type PestAttractionSettings,
 	type PestCycleSettings,
 	type TemporaryFarmingFortune,
 } from 'farming-weight';
