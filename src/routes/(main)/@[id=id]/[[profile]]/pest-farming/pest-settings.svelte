@@ -215,9 +215,10 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.blocksPerSecond}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('blocksPerSecond', value ?? 0)}
 			min={0}
-			max={80}
+			max={20}
 		/>
 	</SettingListItem>
 	<SettingSeperator />
@@ -229,9 +230,10 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.spawnBlocksPerSecond}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('spawnBlocksPerSecond', value ?? 0)}
 			min={0}
-			max={80}
+			max={20}
 		/>
 	</SettingListItem>
 	<SettingSeperator />
@@ -243,6 +245,7 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.farmSwapBeforeCooldownSeconds}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('farmSwapBeforeCooldownSeconds', value ?? 0)}
 			min={0}
 			max={120}
@@ -254,6 +257,7 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.farmToSpawnSwapSeconds}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('farmToSpawnSwapSeconds', value ?? 0)}
 			min={0}
 			max={60}
@@ -265,6 +269,7 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.spawnToKillSwapSeconds}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('spawnToKillSwapSeconds', value ?? 0)}
 			min={0}
 			max={60}
@@ -276,6 +281,7 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.fixedKillSetupSeconds}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('fixedKillSetupSeconds', value ?? 0)}
 			min={0}
 			max={120}
@@ -287,6 +293,7 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.fixedPestSearchSeconds}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('fixedPestSearchSeconds', value ?? 0)}
 			min={0}
 			max={300}
@@ -298,6 +305,7 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.secondsPerPestKill}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('secondsPerPestKill', value ?? 0)}
 			min={0}
 			max={60}
@@ -309,6 +317,7 @@
 		<NumberInput
 			class="my-1 h-10 max-w-32"
 			value={pest.pestRateSettings.returnToFarmSeconds}
+			inputmode="decimal"
 			onValueChange={(value) => pest.setPestRateSetting('returnToFarmSeconds', value ?? 0)}
 			min={0}
 			max={120}
