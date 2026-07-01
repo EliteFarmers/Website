@@ -488,7 +488,7 @@ export class PestFarmingPageContext {
 				.map((phase) => {
 					const armorSetId = loadouts[phase]?.armorSetId;
 					const petId = loadouts[phase]?.petId;
-					return armorSetId || petId ? [phase, { armorSetId, petId }] : undefined;
+					return armorSetId ? [phase, { armorSetId, petId }] : undefined;
 				})
 				.filter((entry): entry is [PestFarmingPhase, PestPhaseLoadout] => entry !== undefined)
 		);
@@ -561,7 +561,7 @@ export class PestFarmingPageContext {
 			},
 			[PestFarmingPhase.Spawn]: {
 				...player.phaseLoadouts[PestFarmingPhase.Spawn],
-				...(candidates !== undefined && bestId === undefined && { armorSetId: bestId }),
+				...(bestId !== undefined && { armorSetId: bestId }),
 				...(this.#getDefaultPhasePetId(player, PestFarmingPhase.Spawn) !== undefined && {
 					petId: this.#getDefaultPhasePetId(player, PestFarmingPhase.Spawn),
 				}),
