@@ -57,7 +57,7 @@ export interface PestArmorSetLoadout {
 
 export interface PestPhaseLoadout {
 	armorSetId: string;
-	petId?: string;
+	petId: string | undefined;
 }
 
 export const PEST_MAIN_ARMOR_SET_ID = 'main';
@@ -674,7 +674,10 @@ export class PestFarmingPlayer {
 		const armorSetIds = itemUuid ? this.getArmorSetIdsForUuid(itemUuid) : [];
 		if (armorSetIds.length > 0) {
 			for (const phaseKey of PEST_FARMING_PHASES) {
-				if (armorSetIds.includes(this.phaseLoadouts[phaseKey].armorSetId)) {
+				if (
+					this.phaseLoadouts[phaseKey].armorSetId &&
+					armorSetIds.includes(this.phaseLoadouts[phaseKey].armorSetId)
+				) {
 					this.phases[phaseKey].applyUpgrade(upgrade);
 				}
 			}

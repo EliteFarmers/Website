@@ -6,6 +6,7 @@ import {
 	Pest,
 	type PestAttractionSettings,
 	PestFarmingPhase,
+	type PestPhaseLoadout,
 	ZorroMode,
 	type FarmingTool,
 	type PestCycleSettings,
@@ -20,7 +21,7 @@ export type PestFarmingTimeOfDay = 'day' | 'night';
 
 export interface PestFarmingData {
 	selectedCrop?: string;
-	phaseLoadouts: Partial<Record<PestFarmingPhase, { armorSetId: string }>>;
+	phaseLoadouts: Partial<Record<PestFarmingPhase, PestPhaseLoadout>>;
 	sprayedPlot: boolean;
 	pesthunterAccessoryEnabled: boolean;
 	timeOfDay: PestFarmingTimeOfDay;
@@ -141,8 +142,9 @@ function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingD
 	if (!isLegacyDefaultPhaseLoadouts(data?.phaseLoadouts)) {
 		for (const phase of [PestFarmingPhase.Farm, PestFarmingPhase.Spawn, PestFarmingPhase.Kill]) {
 			const armorSetId = data?.phaseLoadouts?.[phase]?.armorSetId;
+			const petId = data?.phaseLoadouts?.[phase]?.petId;
 			if (armorSetId && armorSetIds.has(armorSetId)) {
-				phaseLoadouts[phase] = { armorSetId };
+				phaseLoadouts[phase] = { armorSetId, petId };
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 import type { Crop } from '../constants/crops.js';
 import type { Pest } from '../constants/pests.js';
 import type { FortuneUpgrade } from '../constants/upgrades.js';
+import type { FarmingPet } from '../fortune/farmingpet.js';
 import type { PestFarmingPhase, PestFarmingPlayer } from '../player/pestfarmingplayer.js';
 import type { DetailedDropsFromEffectsDelta, UpgradeRateImpact } from '../player/player.js';
 import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
@@ -233,4 +234,9 @@ export interface PestFarmingUpgradeRateImpact
 	phase: PestFarmingPhase;
 	upgradeKey: string;
 	valuationDelta: PestRateValuationDelta;
+}
+
+export interface PetsCoinsPerHour {
+	pet: FarmingPet;
+	coinsPerHour: number;
 }
