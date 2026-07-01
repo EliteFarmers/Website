@@ -20,7 +20,7 @@ export type PestFarmingTimeOfDay = 'day' | 'night';
 
 export interface PestFarmingData {
 	selectedCrop?: string;
-	phaseLoadouts: Partial<Record<PestFarmingPhase, { armorSetId: string }>>;
+	phaseLoadouts: Partial<Record<PestFarmingPhase, { armorSetId: string; petId: string }>>;
 	sprayedPlot: boolean;
 	pesthunterAccessoryEnabled: boolean;
 	timeOfDay: PestFarmingTimeOfDay;

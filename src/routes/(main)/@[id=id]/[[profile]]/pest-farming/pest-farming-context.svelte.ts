@@ -53,6 +53,7 @@ import {
 	type PestPhaseLoadout,
 	type PestRateItemPrice,
 	type PestRatePriceBook,
+	type PetsCoinsPerHour,
 	type StatBreakdown,
 	type TemporaryFarmingFortune,
 	type UpgradeTreeNode,
@@ -449,20 +450,22 @@ export class PestFarmingPageContext {
 		$effect(() => this.#syncExternalState());
 		$effect(() => this.#syncSelectedCrop());
 		$effect(() => this.#syncVacuumSelection());
-		$effect(() => this.#syncDefaultSpawnArmorSelection());
+		$effect(() => this.#syncDefaultPhaseLoadouts());
 
 		onMount(() => this.#restoreSavedCrop());
 	}
 
-	refreshPestPlayer() {
+	refreshPestPlayer(skip_default = false) {
 		let player = createPestFarmingPlayer(this.options);
-		const phaseLoadouts = this.#getRateSelectedDefaultPhaseLoadouts(player);
-		if (phaseLoadouts) {
-			this.options = {
-				...this.options,
-				phaseLoadouts,
-			} as PestFarmingPlayerOptions;
-			player = createPestFarmingPlayer(this.options);
+		if (!skip_default) {
+			const phaseLoadouts = this.#getRateSelectedDefaultPhaseLoadouts(player);
+			if (phaseLoadouts) {
+				this.options = {
+					...this.options,
+					phaseLoadouts,
+				} as PestFarmingPlayerOptions;
+				player = createPestFarmingPlayer(this.options);
+			}
 		}
 		this.pestPlayer = player;
 		this.#syncSessionSelectionsFromPestPlayer();
@@ -484,7 +487,8 @@ export class PestFarmingPageContext {
 			[PestFarmingPhase.Farm, PestFarmingPhase.Spawn, PestFarmingPhase.Kill]
 				.map((phase) => {
 					const armorSetId = loadouts[phase]?.armorSetId;
-					return armorSetId ? [phase, { armorSetId }] : undefined;
+					const petId = loadouts[phase]?.petId;
+					return armorSetId || petId ? [phase, { armorSetId, petId }] : undefined;
 				})
 				.filter((entry): entry is [PestFarmingPhase, PestPhaseLoadout] => entry !== undefined)
 		);
@@ -494,9 +498,18 @@ export class PestFarmingPageContext {
 		loadouts: Record<PestFarmingPhase, PestPhaseLoadout>
 	): PestFarmingData['phaseLoadouts'] {
 		return {
-			[PestFarmingPhase.Farm]: { armorSetId: loadouts[PestFarmingPhase.Farm].armorSetId },
-			[PestFarmingPhase.Spawn]: { armorSetId: loadouts[PestFarmingPhase.Spawn].armorSetId },
-			[PestFarmingPhase.Kill]: { armorSetId: loadouts[PestFarmingPhase.Kill].armorSetId },
+			[PestFarmingPhase.Farm]: {
+				armorSetId: loadouts[PestFarmingPhase.Farm].armorSetId,
+				petId: loadouts[PestFarmingPhase.Farm].petId,
+			},
+			[PestFarmingPhase.Spawn]: {
+				armorSetId: loadouts[PestFarmingPhase.Spawn].armorSetId,
+				petId: loadouts[PestFarmingPhase.Spawn].petId,
+			},
+			[PestFarmingPhase.Kill]: {
+				armorSetId: loadouts[PestFarmingPhase.Kill].armorSetId,
+				petId: loadouts[PestFarmingPhase.Kill].petId,
+			},
 		};
 	}
 
@@ -519,10 +532,8 @@ export class PestFarmingPageContext {
 		this.selectedVacuumId = this.pestPlayer.selectedVacuum?.item.uuid ?? this.selectedVacuumId;
 	}
 
-	#syncDefaultSpawnArmorSelection(): void {
+	#syncDefaultPhaseLoadouts(): void {
 		void this.pestRatePriceBook.version;
-		if (this.rates.pestFarming.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId) return;
-
 		const phaseLoadouts = this.#getRateSelectedDefaultPhaseLoadouts(this.pestPlayer);
 		if (!phaseLoadouts) return;
 
@@ -530,23 +541,36 @@ export class PestFarmingPageContext {
 			...this.options,
 			phaseLoadouts,
 		} as PestFarmingPlayerOptions;
-		untrack(() => this.refreshPestPlayer());
+		untrack(() => this.refreshPestPlayer(true));
 	}
 
 	#getRateSelectedDefaultPhaseLoadouts(
 		player: PestFarmingPlayer
 	): Record<PestFarmingPhase, PestPhaseLoadout> | undefined {
 		const candidates = this.#getDefaultSpawnArmorCandidateIds(player);
-		if (!candidates) return;
-
-		const bestId = this.#createRateCalculator(player).getBestSpawnPhaseArmorSetId(candidates);
-		if (!bestId || player.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId === bestId) return;
-
+		const bestId = candidates
+			? this.#createRateCalculator(player).getBestSpawnPhaseArmorSetId(candidates)
+			: undefined;
 		return {
 			...player.phaseLoadouts,
+			[PestFarmingPhase.Farm]: {
+				...player.phaseLoadouts[PestFarmingPhase.Farm],
+				...(this.#getDefaultPhasePetId(player, PestFarmingPhase.Farm) !== undefined && {
+					petId: this.#getDefaultPhasePetId(player, PestFarmingPhase.Farm),
+				}),
+			},
 			[PestFarmingPhase.Spawn]: {
 				...player.phaseLoadouts[PestFarmingPhase.Spawn],
-				armorSetId: bestId,
+				...(candidates !== undefined && bestId === undefined && { armorSetId: bestId }),
+				...(this.#getDefaultPhasePetId(player, PestFarmingPhase.Spawn) !== undefined && {
+					petId: this.#getDefaultPhasePetId(player, PestFarmingPhase.Spawn),
+				}),
+			},
+			[PestFarmingPhase.Kill]: {
+				...player.phaseLoadouts[PestFarmingPhase.Kill],
+				...(this.#getDefaultPhasePetId(player, PestFarmingPhase.Kill) !== undefined && {
+					petId: this.#getDefaultPhasePetId(player, PestFarmingPhase.Kill),
+				}),
 			},
 		};
 	}
@@ -561,6 +585,11 @@ export class PestFarmingPageContext {
 		if (!mainId || !spawnId || mainId === spawnId) return undefined;
 
 		return [mainId, spawnId];
+	}
+
+	#getDefaultPhasePetId(player: PestFarmingPlayer, phase: PestFarmingPhase): string | undefined {
+		if (this.rates.pestFarming.phaseLoadouts[phase]?.petId) return undefined;
+		return this.#createRateCalculator(player).getBestPhasePetId(phase);
 	}
 
 	trackPestVersion(): number {
@@ -671,6 +700,10 @@ export class PestFarmingPageContext {
 			if (value) breakdown[STAT_NAMES[stat]] = { value, stat };
 		}
 		return breakdown;
+	}
+
+	getPhasePets(phase: PestFarmingPhase): PetsCoinsPerHour[] {
+		return this.#createRateCalculator(this.pestPlayer).getPetsCoinsPerHour(this.pets, phase);
 	}
 
 	getPetRateImpact(pet: FarmingPet, phase: PestFarmingPhase): number {
@@ -846,6 +879,7 @@ export class PestFarmingPageContext {
 		};
 		this.phaseLoadouts = phaseLoadouts;
 		this.options = { ...this.options, phaseLoadouts } as PestFarmingPlayerOptions;
+		this.#updatePestFarmingData({ phaseLoadouts: this.#getPersistablePhaseLoadouts(phaseLoadouts) });
 		this.pestVersion++;
 		trackAnalytics('pest_farming.phase_pet_selected', { phase });
 	}

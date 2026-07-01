@@ -252,26 +252,25 @@
 												onValueChange={(value) =>
 													value && pest.selectPhasePet(pest.activePhase, value)}
 											>
-												{#each pest.pets
-													.filter((pet) => !!pet.pet.uuid)
-													.sort((a, b) => pest.getPetRateImpact(b, pest.activePhase) - pest.getPetRateImpact(a, pest.activePhase)) as pet, i (pet.pet.uuid ?? i)}
-													{@const petRateDelta = pest.getPetRateImpact(pet, pest.activePhase)}
-													<DropdownMenu.RadioItem value={pet.pet.uuid ?? ''}>
+												{#each pest
+													.getPhasePets(pest.activePhase)
+													.filter((petData) => !!petData.pet.pet.uuid) as petData, i (petData.pet.pet.uuid ?? i)}
+													<DropdownMenu.RadioItem value={petData.pet.pet.uuid ?? ''}>
 														<div class="flex flex-row items-center gap-2">
 															<ItemRender
-																skyblockId={pet.pet.type ?? ''}
+																skyblockId={petData.pet.pet.type ?? ''}
 																pet
 																class="size-6"
 															/>
-															<FormattedText text={pet.getFormattedName()} />
-															{#if petRateDelta !== 0}
+															<FormattedText text={petData.pet.getFormattedName()} />
+															{#if petData.coinsPerHour !== 0}
 																<span
-																	class="{petRateDelta > 0
+																	class="{petData.coinsPerHour > 0
 																		? 'dark:text-completed'
 																		: 'text-muted-foreground'} ml-auto text-xs whitespace-nowrap tabular-nums"
 																>
-																	{petRateDelta > 0 ? '+' : ''}{formatRate(
-																		petRateDelta
+																	{petData.coinsPerHour > 0 ? '+' : ''}{formatRate(
+																		petData.coinsPerHour
 																	)}
 																</span>
 															{/if}

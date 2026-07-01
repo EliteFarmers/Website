@@ -4,7 +4,8 @@ import { Stat } from '../constants/stats.js';
 import type { FortuneUpgrade } from '../constants/upgrades.js';
 import { resolveDropEffects } from '../effects/resolver.js';
 import type { DropTag } from '../effects/types.js';
-import { PestFarmingPhase, type PestFarmingPlayer } from '../player/pestfarmingplayer.js';
+import type { FarmingPet } from '../fortune/farmingpet.js';
+import { createPestFarmingPlayer, PestFarmingPhase, type PestFarmingPlayer } from '../player/pestfarmingplayer.js';
 import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 import {
 	calculatePestCropDropAmount,
@@ -32,6 +33,7 @@ import type {
 	PestRateValuationDelta,
 	PestRateValuationResult,
 	PestSpawnDistribution,
+	PetsCoinsPerHour,
 } from './pest-rate-types.js';
 
 const DEFAULT_INTERVAL_SECONDS = 3600;
@@ -249,6 +251,44 @@ export class PestFarmingRateCalculator {
 			}
 		}
 		return bestId;
+	}
+
+	getPetsCoinsPerHour(pets: FarmingPet[], phase: PestFarmingPhase): PetsCoinsPerHour[] {
+		const petRates = pets.map((pet) => {
+			const petId = pet.pet.uuid;
+			if (!petId) return { pet, coinsPerHour: 0 };
+
+			const phaseLoadouts = {
+				...this.player.phaseLoadouts,
+				[phase]: {
+					...this.player.phaseLoadouts[phase],
+					petId: petId,
+				},
+			};
+
+			// Calculate rates using a new calculator, skipping pet sort to avoid recursion
+			const calculator = new PestFarmingRateCalculator({
+				player: createPestFarmingPlayer({
+					...this.player.options,
+					phaseLoadouts,
+				}),
+				options: this.options,
+				priceBook: this.priceBook,
+			});
+			const result = calculator.calculate();
+			const coinsPerHour = result.valuation.coinsPerHour;
+
+			return { pet, coinsPerHour };
+		});
+
+		// Sort petRates by coinsPerHour descending
+		return petRates.sort((a, b) => b.coinsPerHour - a.coinsPerHour);
+	}
+
+	getBestPhasePetId(phase: PestFarmingPhase): string | undefined {
+		const phasePlayer = this.player.getPhasePlayer(phase);
+		const petRates = this.getPetsCoinsPerHour(phasePlayer.pets, phase);
+		return petRates[0]?.pet.pet.uuid ?? undefined;
 	}
 
 	private calculateSpawnArmorSetRate(armorSetId: string): number {
