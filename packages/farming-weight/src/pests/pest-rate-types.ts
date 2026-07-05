@@ -30,7 +30,6 @@ export interface PestAttractionSettings {
 	sprayonatorMaterial?: Spray;
 	hooveriusVinylTarget?: Pest;
 	includeSpecialPests?: boolean;
-	pestTypeWeightMultipliers?: Partial<Record<Pest, number>>;
 	excludedPests?: Pest[];
 }
 
