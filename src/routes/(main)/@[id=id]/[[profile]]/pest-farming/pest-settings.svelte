@@ -9,13 +9,14 @@
 	import * as Select from '$ui/select';
 	import { Switch } from '$ui/switch';
 	import {
-		GARDEN_BESTIARY_NAMES,
 		NATURAL_PESTS,
 		Pest,
 		Spray,
 		SPRAY_NAMES,
+		SPRAY_TO_PESTS,
 		Stat,
 		TEMPORARY_FORTUNE,
+		getPestName,
 		type TemporaryFarmingFortune,
 	} from 'farming-weight';
 	import type { PestFarmingPageContext } from './pest-farming-context.svelte';
@@ -37,10 +38,15 @@
 		{ value: 'night', label: 'Night' },
 	] satisfies { value: PestFarmingTimeOfDay; label: string }[];
 
-	const pestName = (pestId: Pest) => GARDEN_BESTIARY_NAMES[`pest_${pestId}_1`] ?? pestId;
-	const pestOptions = NATURAL_PESTS.map((pestId) => ({ value: pestId, label: pestName(pestId) }));
+	const pestOptions = NATURAL_PESTS.map((pestId) => ({ value: pestId, label: getPestName(pestId) }));
 	const sprayName = (sprayId: Spray) => SPRAY_NAMES[`spray_${sprayId}_1`] ?? sprayId;
-	const sprayOptions = Object.values(Spray).map((sprayId) => ({ value: sprayId, label: sprayName(sprayId) }));
+	const sprayOptions = Object.values(Spray).map((sprayId) => {
+		const targetedPests = SPRAY_TO_PESTS[sprayId]?.map(getPestName).join(', ');
+		return {
+			value: sprayId,
+			label: targetedPests ? `${sprayName(sprayId)} (${targetedPests})` : sprayName(sprayId),
+		};
+	});
 	type TemporaryFortuneToggleKey = Exclude<keyof TemporaryFarmingFortune, 'pestTurnIn'>;
 	const pestTurnInTitle = `${TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)`;
 	const temporaryFortuneSources = [
@@ -163,7 +169,7 @@
 
 	<SettingHeader class="mt-8 text-xl">Pest Attraction</SettingHeader>
 	<p class="text-muted-foreground px-1 text-sm">
-		Weights that change which pests spawn. The selected crop's matching pest is applied automatically.
+		Weights that change which pests spawn. Spray material and Hooverius vinyl choices affect attraction.
 	</p>
 	<SettingBigSeperator />
 

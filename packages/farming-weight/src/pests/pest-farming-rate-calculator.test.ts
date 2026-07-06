@@ -210,6 +210,59 @@ test('selected crop does not bias pest type spawn weights', () => {
 	expect(getProbabilities(Crop.Wheat)).toEqual(getProbabilities(Crop.Potato));
 });
 
+test('mosquito smooth jazz uses rarity breakpoints for vinyl attraction', () => {
+	const getVinylTargetWeight = (selectedPet?: { type: FarmingPets; rarity?: Rarity; level?: number }) => {
+		const getRates = (_crop: Crop, blocks: number) => emptyCropRates(blocks);
+		const player = {
+			crop: { getRates },
+			spawn: { getRates, selectedPet },
+			kill: {
+				getStatBreakdown: () => ({}),
+				buildEnvironment: () => ({}),
+				collectEffects: () => [],
+			},
+			getPhaseStat: () => 0,
+			phaseLoadouts: {},
+			armorSetLoadouts: [],
+			sharedEquipment: {},
+			selectedVacuum: undefined,
+		} as unknown as PestFarmingPlayer;
+
+		return (
+			new PestFarmingRateCalculator({
+				player,
+				options: {
+					crop: Crop.Wheat,
+					cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+					attraction: {
+						hooveriusVinylTarget: Pest.Slug,
+					},
+				},
+			}).calculate().breakdown.pestSpawning.distribution.pestTypeWeights[Pest.Slug] ?? 0
+		);
+	};
+	const getMosquitoWeight = (rarity: Rarity) =>
+		getVinylTargetWeight({
+			type: FarmingPets.Mosquito,
+			rarity,
+			level: 100,
+		});
+
+	expect(getVinylTargetWeight()).toBeCloseTo(2, 8);
+	expect(
+		getVinylTargetWeight({
+			type: FarmingPets.Slug,
+			rarity: Rarity.Legendary,
+			level: 100,
+		})
+	).toBeCloseTo(2, 8);
+	expect(getMosquitoWeight(Rarity.Common)).toBeCloseTo(2.5, 8);
+	expect(getMosquitoWeight(Rarity.Uncommon)).toBeCloseTo(2.5, 8);
+	expect(getMosquitoWeight(Rarity.Rare)).toBeCloseTo(2.7, 8);
+	expect(getMosquitoWeight(Rarity.Epic)).toBeCloseTo(3, 8);
+	expect(getMosquitoWeight(Rarity.Legendary)).toBeCloseTo(3, 8);
+});
+
 test('best spawn phase armor set uses rate calculation to select the generated spawn set when it improves rates', () => {
 	const player = pestPlayerWithArmorSets({
 		main: ['FERMENTO_HELMET', 'FERMENTO_CHESTPLATE', 'FERMENTO_LEGGINGS', 'FERMENTO_BOOTS'],

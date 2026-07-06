@@ -198,6 +198,14 @@ export const GARDEN_BESTIARY_NAMES: Record<string, string> = {
 	timestalk_clone_100: 'Timestalk Clone',
 };
 
+export const PEST_BESTIARY_ID_BY_PEST = Object.fromEntries(
+	Object.entries(PEST_BESTIARY_IDS).flatMap(([bestiaryId, pestId]) => (pestId ? [[pestId, bestiaryId]] : []))
+) as Record<Pest, string>;
+
+export function getPestName(pestId: Pest): string {
+	return GARDEN_BESTIARY_NAMES[PEST_BESTIARY_ID_BY_PEST[pestId]] ?? pestId;
+}
+
 export const GARDEN_BESTIARY_BRACKETS: Record<string, Record<number, number>> = {
 	zombuddy_1: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	timestalk_clone_100: TIMESTALK_CLONE_BESTIARY_BRACKET,
