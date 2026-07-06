@@ -400,6 +400,39 @@ test('Interactive Upgrade: Expand Upgrade Tree', () => {
 	expect(originalTool?.item.enchantments?.cultivating).toBeUndefined();
 });
 
+test('Interactive Upgrade: enchant tree uses all tracked stats for follow-up upgrades', () => {
+	const sunsetHelmet: EliteItemDto = {
+		id: 301,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: 'sunset-tree-helmet-uuid',
+		name: '§dFermento Helmet',
+		lore: [],
+		enchantments: {
+			ultimate_sunset: 2,
+		},
+		attributes: {},
+	};
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(sunsetHelmet)],
+	});
+	const trackedStats = [Stat.PestKillFortune, Stat.FarmingFortune, Stat.Overbloom, Stat.Damage];
+	const sunset = player
+		.getUpgrades({ stats: trackedStats })
+		.find((upgrade) => upgrade.meta?.type === 'enchant' && upgrade.meta.key === 'ultimate_sunset');
+
+	expect(sunset).toBeDefined();
+
+	const tree = player.expandUpgrade(sunset!, {
+		maxDepth: 2,
+		stats: trackedStats,
+	});
+	const nextSunset = tree.children.find((child) => child.upgrade.title === 'Sunset 4');
+
+	expect(nextSunset).toBeDefined();
+	expect(nextSunset?.upgrade.stats?.[Stat.Overbloom]).toBe(1);
+});
+
 const squashHelmet: EliteItemDto = {
 	id: 301,
 	count: 1,

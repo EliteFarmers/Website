@@ -689,6 +689,7 @@
 							amount={info.items[selectedCropKey] ?? info.collection}
 							otherCoins={info.npcCoins -
 								(info.items[selectedCropKey] ?? info.collection) * info.npcPrice}
+							referenceOnlyPrices={ctx.isNonClassicProfile}
 						/>
 						<Accordion.Root type="single" class="w-full">
 							<Accordion.Item value="collection" class="outline-border w-full rounded-md px-2 outline">
@@ -815,6 +816,7 @@
 								})}
 							costFn={getUpgradeCost}
 							items={itemsData}
+							referenceOnlyPrices={ctx.isNonClassicProfile}
 							equip={(p) => getToolEquipConfig(p, cropToolSwitchOptions)}
 							getUpgrades={getProgressUpgrades}
 						>
@@ -831,6 +833,7 @@
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
+						referenceOnlyPrices={ctx.isNonClassicProfile}
 						equip={(p) => getGearEquipConfig(p)}
 					/>
 					<CategoryProgress
@@ -839,6 +842,7 @@
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
+						referenceOnlyPrices={ctx.isNonClassicProfile}
 						equip={(p) => getToolEquipConfig(p, allToolOptions) ?? getGearEquipConfig(p)}
 						getUpgrades={getProgressUpgrades}
 					/>
@@ -886,6 +890,7 @@
 			})}
 		costFn={getUpgradeCost}
 		items={itemsData}
+		referenceOnlyPrices={ctx.isNonClassicProfile}
 	/>
 </div>
 

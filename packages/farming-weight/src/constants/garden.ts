@@ -732,7 +732,7 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 	tomioka: {
 		name: 'Tomioka',
 		rarity: Rarity.Rare,
-		wiki: 'https://w.elitesb.gg/Hub_Villagers#Dialogueioka',
+		wiki: 'https://w.elitesb.gg/Tomioka',
 	},
 	trevor: {
 		name: 'Trevor',

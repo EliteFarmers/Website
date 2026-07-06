@@ -18,10 +18,22 @@
 			onChange: (value: string) => void;
 		} | null;
 		getUpgrades?: (progress: FortuneSourceProgress) => FortuneUpgrade[];
+		referenceOnlyPrices?: boolean;
 		children?: import('svelte').Snippet;
 	}
 
-	let { name, progress, items, costFn, applyUpgrade, expandUpgrade, equip, getUpgrades, children }: Props = $props();
+	let {
+		name,
+		progress,
+		items,
+		costFn,
+		applyUpgrade,
+		expandUpgrade,
+		equip,
+		getUpgrades,
+		referenceOnlyPrices = false,
+		children,
+	}: Props = $props();
 
 	let progressModal = $state(false);
 	let shownProgressIndex = $state<number | null>(null);
@@ -80,6 +92,7 @@
 	{applyUpgrade}
 	{expandUpgrade}
 	{getUpgrades}
+	{referenceOnlyPrices}
 	equipOptions={equipConfig?.options}
 	equipValue={equipConfig?.value}
 	equipPlaceholder={equipConfig?.placeholder}

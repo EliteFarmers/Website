@@ -34,6 +34,7 @@
 		equipPlaceholder?: string;
 		onEquipValueChange?: (value: string) => void;
 		getUpgrades?: (progress: FortuneSourceProgress) => FortuneUpgrade[];
+		referenceOnlyPrices?: boolean;
 	}
 
 	let {
@@ -48,6 +49,7 @@
 		equipPlaceholder,
 		onEquipValueChange,
 		getUpgrades,
+		referenceOnlyPrices = false,
 	}: Props = $props();
 
 	let selectedEquipValue = $derived(equipValue ?? '');
@@ -149,7 +151,7 @@
 			{#if hasUpgrades && totalCost > 0}
 				<div class="flex flex-col items-end justify-center text-left sm:text-right">
 					<p class="text-muted-foreground text-sm">Completion Cost</p>
-					<p class="text-completed text-2xl font-bold">
+					<p class="{referenceOnlyPrices ? 'text-muted-foreground' : 'text-completed'} text-2xl font-bold">
 						{Math.round(totalCost).toLocaleString()}
 					</p>
 				</div>
@@ -259,7 +261,14 @@
 					<div class="flex flex-col gap-2">
 						{#each sortedUpgrades as upgrade (getUpgradeKey(upgrade))}
 							{#if expandUpgrade}
-								<LazyUpgradeTree {upgrade} {expandUpgrade} {items} {costFn} {applyUpgrade} />
+								<LazyUpgradeTree
+									{upgrade}
+									{expandUpgrade}
+									{items}
+									{costFn}
+									{applyUpgrade}
+									{referenceOnlyPrices}
+								/>
 							{/if}
 						{/each}
 					</div>

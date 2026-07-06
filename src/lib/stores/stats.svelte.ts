@@ -37,6 +37,10 @@ export class PlayerStats {
 	#style = $state.raw<WeightStyleWithDataDto | WeightStyleListDto | undefined>(undefined);
 	#ready = $state(false);
 	#hideFromIndex = $derived(this.#account.settings?.misc?.hideFromSearchIndex ?? false);
+	#isNonClassicProfile = $derived.by(() => {
+		const mode = this.#selectedProfile?.gameMode;
+		return !!mode && mode !== 'classic';
+	});
 
 	#tools = $state.raw<ItemDto[]>([]);
 	#pets = $state.raw<PetDto[]>([]);
@@ -185,6 +189,10 @@ export class PlayerStats {
 
 	get selectedProfile() {
 		return this.#selectedProfile;
+	}
+
+	get isNonClassicProfile() {
+		return this.#isNonClassicProfile;
 	}
 
 	get profiles() {

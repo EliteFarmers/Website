@@ -11,9 +11,10 @@
 		priceBook: PestRatePriceBook;
 		items: RatesItemPriceData;
 		openSettings: () => void;
+		referenceOnlyPrices?: boolean;
 	}
 
-	let { result, priceBook, items, openSettings }: Props = $props();
+	let { result, priceBook, items, openSettings, referenceOnlyPrices = false }: Props = $props();
 
 	function formatNumber(value: number, maximumFractionDigits = 0) {
 		return value.toLocaleString(undefined, { maximumFractionDigits });
@@ -68,7 +69,7 @@
 
 	<div class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
 		<div class="flex flex-col gap-3">
-			<div class="bg-card rounded-lg border px-4 py-3">
+			<div class="bg-card rounded-lg border px-4 py-3 {referenceOnlyPrices ? 'opacity-60' : ''}">
 				<p class="text-muted-foreground text-xs font-medium">Total Coins</p>
 				<p class="font-mono text-2xl leading-tight font-semibold tabular-nums">
 					{formatRate(result.valuation.coinsPerHour)}
@@ -108,7 +109,9 @@
 								<p
 									class="{row.value < 0
 										? 'text-destructive'
-										: 'text-foreground'} font-mono text-sm font-semibold tabular-nums"
+										: referenceOnlyPrices
+											? 'text-muted-foreground'
+											: 'text-foreground'} font-mono text-sm font-semibold tabular-nums"
 								>
 									{formatRate(row.value)}
 								</p>

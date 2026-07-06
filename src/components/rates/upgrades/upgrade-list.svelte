@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { RatesItemPriceData } from '$lib/api/elite.js';
+	import type { SortingState } from '@tanstack/table-core';
 	import type { FortuneUpgrade, UpgradeInfo, UpgradeRateImpact, UpgradeTreeNode } from 'farming-weight';
 	import { untrack } from 'svelte';
 	import { getColumns } from './columns.js';
@@ -20,6 +21,8 @@
 		rateImpactUnavailableLabel?: string;
 		costPerValueFn?: (upgrade: FortuneUpgrade) => number;
 		costPerHeader?: string;
+		initialSorting?: SortingState;
+		referenceOnlyPrices?: boolean;
 	}
 
 	let {
@@ -34,6 +37,8 @@
 		rateImpactUnavailableLabel,
 		costPerValueFn,
 		costPerHeader,
+		initialSorting,
+		referenceOnlyPrices = false,
 	}: Props = $props();
 
 	let hasPathCache = {} as Record<string, boolean>;
@@ -52,7 +57,9 @@
 	}
 
 	function canExpandUpgrade(upgrade: FortuneUpgrade) {
-		if (!expandUpgrade || !hasUpgradePath) return false;
+		if (!expandUpgrade) return false;
+		if (!hasUpgradePath) return false;
+
 		const key = `${version ?? 0}::${getUpgradeKey(upgrade)}`;
 		const cached = hasPathCache[key];
 		if (cached !== undefined) return cached;
@@ -73,7 +80,8 @@
 			rateImpactUnavailableLabel,
 			version,
 			costPerValueFn,
-			costPerHeader
+			costPerHeader,
+			referenceOnlyPrices
 		)
 	);
 
@@ -87,10 +95,18 @@
 </script>
 
 <div class="w-full max-w-6xl py-2">
-	<UpgradesTable data={tableData} {columns} initialSorting={[{ id: 'costper', desc: false }]}>
+	<UpgradesTable data={tableData} {columns} initialSorting={initialSorting ?? [{ id: 'costper', desc: false }]}>
 		{#snippet renderSubComponent({ row })}
 			{#if expandUpgrade}
-				<UpgradeTreeWrapper upgrade={row.original} {items} {expandUpgrade} {costFn} {applyUpgrade} {row} />
+				<UpgradeTreeWrapper
+					upgrade={row.original}
+					{items}
+					{expandUpgrade}
+					{costFn}
+					{applyUpgrade}
+					{row}
+					{referenceOnlyPrices}
+				/>
 			{/if}
 		{/snippet}
 	</UpgradesTable>

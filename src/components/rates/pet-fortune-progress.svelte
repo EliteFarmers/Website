@@ -15,9 +15,10 @@
 		items?: RatesItemPriceData;
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
 		expandUpgrade: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
+		referenceOnlyPrices?: boolean;
 	}
 
-	let { player, pets: petList, items, costFn, expandUpgrade }: Props = $props();
+	let { player, pets: petList, items, costFn, expandUpgrade, referenceOnlyPrices = false }: Props = $props();
 
 	const petStats = [Stat.FarmingFortune, Stat.Overbloom];
 	let selectedPetId = $state<string | undefined>(undefined);
@@ -133,7 +134,7 @@
 				<div class="flex flex-col gap-2">
 					<h3 class="text-muted-foreground text-sm font-bold tracking-wider uppercase">Available Upgrades</h3>
 					{#each sortedUpgrades as upgrade, i (getUpgradeKey(upgrade, i))}
-						<LazyUpgradeTree {upgrade} {items} {costFn} {expandUpgrade} />
+						<LazyUpgradeTree {upgrade} {items} {costFn} {expandUpgrade} {referenceOnlyPrices} />
 					{/each}
 				</div>
 			{:else}

@@ -11,9 +11,18 @@
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
 		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		defaultOpen?: boolean;
+		referenceOnlyPrices?: boolean;
 	}
 
-	let { upgrade, items, expandUpgrade, costFn, applyUpgrade, defaultOpen = false }: Props = $props();
+	let {
+		upgrade,
+		items,
+		expandUpgrade,
+		costFn,
+		applyUpgrade,
+		defaultOpen = false,
+		referenceOnlyPrices = false,
+	}: Props = $props();
 
 	let node = $state<UpgradeTreeNode | null>(null);
 	let nodeKey = $state('');
@@ -32,7 +41,7 @@
 </script>
 
 {#if node}
-	<UpgradeTree {node} {items} {costFn} {applyUpgrade} {defaultOpen} />
+	<UpgradeTree {node} {items} {costFn} {applyUpgrade} {defaultOpen} {referenceOnlyPrices} />
 {:else}
 	<p class="text-muted-foreground py-2 text-center text-sm italic">Loading upgrade path...</p>
 {/if}

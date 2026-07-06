@@ -1316,7 +1316,7 @@ export class FarmingPlayer {
 
 		// Find follow-up upgrades for the same target, excluding those with already-used conflict keys
 		const primaryStat = stats[0] ?? Stat.FarmingFortune;
-		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop, primaryStat, sourceTypes).filter(
+		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop, stats, sourceTypes).filter(
 			(u) => !u.conflictKey || !childConflictKeys.has(u.conflictKey)
 		);
 
@@ -1393,12 +1393,13 @@ export class FarmingPlayer {
 		player: FarmingPlayer,
 		appliedUpgrade: FortuneUpgrade,
 		crop: Crop | undefined,
-		primaryStat: Stat,
+		stats: Stat[],
 		sourceTypes?: FortuneSourceType[]
 	): FortuneUpgrade[] {
 		const meta = appliedUpgrade.meta;
 		if (!meta) return [];
 
+		const queryStats = stats.length > 0 ? stats : [Stat.FarmingFortune];
 		const itemUuid = meta.itemUuid;
 		const upgrades: FortuneUpgrade[] = [];
 
@@ -1412,7 +1413,7 @@ export class FarmingPlayer {
 				player.accessories.find((a) => a.item.skyblockId === newItemId);
 
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
-				upgrades.push(...(target.getUpgrades({ stat: primaryStat, sourceTypes }) as FortuneUpgrade[]));
+				upgrades.push(...(target.getUpgrades({ stats: queryStats, sourceTypes }) as FortuneUpgrade[]));
 			}
 		} else if (itemUuid) {
 			// Item-specific upgrade - find upgrades for the same item
@@ -1426,8 +1427,8 @@ export class FarmingPlayer {
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
 				const itemUpgrades =
 					target instanceof FarmingPet
-						? target.getUpgrades({ stat: primaryStat, sourceTypes }, player)
-						: (target.getUpgrades({ stat: primaryStat, sourceTypes }) as FortuneUpgrade[]);
+						? target.getUpgrades({ stats: queryStats, sourceTypes }, player)
+						: (target.getUpgrades({ stats: queryStats, sourceTypes }) as FortuneUpgrade[]);
 				// Filter to only include upgrades of the same type (enchant chains, tier upgrades, etc.)
 				// For gem upgrades, also match on slot to only show follow-ups for that specific slot
 				for (const u of itemUpgrades) {
@@ -1442,7 +1443,7 @@ export class FarmingPlayer {
 			}
 		} else if (meta.type === 'skill' || meta.type === 'plot' || meta.type === 'attribute') {
 			// General upgrades - find the next level of the same upgrade type
-			const generalUpgrades = player.getUpgrades({ stat: primaryStat, sourceTypes });
+			const generalUpgrades = player.getUpgrades({ stats: queryStats, sourceTypes });
 			for (const u of generalUpgrades) {
 				if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
 					upgrades.push(u);
@@ -1450,7 +1451,7 @@ export class FarmingPlayer {
 			}
 		} else if (meta.type === 'crop_upgrade' && crop) {
 			// Crop-specific upgrades
-			const cropUpgrades = player.getCropUpgrades(crop, undefined, { stat: primaryStat, sourceTypes });
+			const cropUpgrades = player.getCropUpgrades(crop, undefined, { stats: queryStats, sourceTypes });
 			for (const u of cropUpgrades) {
 				if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
 					upgrades.push(u);
