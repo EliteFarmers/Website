@@ -20,9 +20,17 @@
 		totalCost?: number;
 		items?: RatesItemPriceData;
 		unavailableLabel?: string;
+		referenceOnlyPrices?: boolean;
 	}
 
-	let { impact, coins = undefined, totalCost = 0, items, unavailableLabel }: Props = $props();
+	let {
+		impact,
+		coins = undefined,
+		totalCost = 0,
+		items,
+		unavailableLabel,
+		referenceOnlyPrices = false,
+	}: Props = $props();
 
 	const totalCoins = $derived(coins ?? impact?.valuationDelta?.coinsPerHour ?? 0);
 	const payoffHours = $derived(totalCoins > 0 && totalCost > 0 ? totalCost / totalCoins : undefined);
@@ -217,7 +225,9 @@
 						<p class="text-muted-foreground font-medium">Payoff Estimate</p>
 						<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
 							<p class="truncate">Upgrade Cost</p>
-							<p class="font-mono">{formatRate(totalCost)}</p>
+							<p class="font-mono {referenceOnlyPrices ? 'text-muted-foreground' : ''}">
+								{formatRate(totalCost)}
+							</p>
 						</div>
 						<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
 							<p class="truncate">Time to Pay Off</p>

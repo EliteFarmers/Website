@@ -16,11 +16,12 @@
 		amount: number;
 		otherCoins?: number;
 		result: DetailedDropsFromEffectsResult;
+		referenceOnlyPrices?: boolean;
 	}
 
 	const ratesData = getRatesData();
 
-	let { crop, amount, otherCoins = 0, result }: Props = $props();
+	let { crop, amount, otherCoins = 0, result, referenceOnlyPrices = false }: Props = $props();
 
 	const results = $derived(getPossibleResultsFromCrops(crop, amount));
 	let includeRng = $state(true);
@@ -141,7 +142,10 @@
 		{@const rngTotal = Object.values(rng).reduce((a, b) => a + b, 0)}
 
 		<Accordion.Root type="single" class="w-full" value="bazaar">
-			<Accordion.Item value="bazaar" class="outline-border w-full rounded-md px-2 outline">
+			<Accordion.Item
+				value="bazaar"
+				class="outline-border w-full rounded-md px-2 outline {referenceOnlyPrices ? 'opacity-60' : ''}"
+			>
 				<Accordion.Trigger class="py-2 hover:no-underline">
 					<div class="flex w-full items-center justify-between gap-2 pr-2">
 						<span class="text-xl font-semibold">Bazaar Profit</span>

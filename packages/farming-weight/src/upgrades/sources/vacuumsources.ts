@@ -272,12 +272,7 @@ export const VACUUM_FORTUNE_SOURCES: DynamicFortuneSource<Vacuum>[] = [
 							[INSECT_POWER_SHARD.skyblockId]: nextCost,
 						},
 					},
-					onto: {
-						name: vacuum.item.name,
-						skyblockId: vacuum.item.skyblockId,
-					},
 					meta: {
-						itemUuid: vacuum.item.uuid ?? undefined,
 						type: 'attribute',
 						key: INSECT_POWER_ATTRIBUTE,
 						value: getShardsForLevel(Rarity.Uncommon, nextLevel),

@@ -665,9 +665,9 @@ export class PestFarmingPageContext {
 		const stats: readonly Stat[] = phaseStats.includes(Stat.FarmingFortune)
 			? phaseStats
 			: [...phaseStats, Stat.FarmingFortune];
-		for (const stat of stats) {
-			const value = pet.getFortune(stat, this.pestPlayer.getPhasePlayer(phase));
-			if (value) breakdown[STAT_NAMES[stat]] = { value, stat };
+		const phasePlayer = this.pestPlayer.getPhasePlayer(phase);
+		for (const [source, entry] of Object.entries(pet.getFullBreakdown(phasePlayer))) {
+			if (stats.includes(entry.stat)) breakdown[source] = { ...entry };
 		}
 		return breakdown;
 	}

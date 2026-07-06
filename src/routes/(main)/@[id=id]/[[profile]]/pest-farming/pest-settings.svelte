@@ -9,6 +9,7 @@
 	import * as Select from '$ui/select';
 	import { Switch } from '$ui/switch';
 	import {
+		getPestName,
 		NATURAL_PESTS,
 		Pest,
 		Spray,
@@ -16,7 +17,6 @@
 		SPRAY_TO_PESTS,
 		Stat,
 		TEMPORARY_FORTUNE,
-		getPestName,
 		type TemporaryFarmingFortune,
 	} from 'farming-weight';
 	import type { PestFarmingPageContext } from './pest-farming-context.svelte';
@@ -352,17 +352,6 @@
 		/>
 	</SettingListItem>
 	<SettingSeperator />
-
-	<SettingListItem title="Max Active Pests" description="Maximum pests that can be alive on your Garden.">
-		<NumberInput
-			class="my-1 h-10 max-w-32"
-			value={pest.pestRateSettings.maxActivePests}
-			onValueChange={(value) => pest.setPestRateSetting('maxActivePests', value ?? 1)}
-			min={1}
-			max={8}
-		/>
-	</SettingListItem>
-	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Cycle Modifiers</SettingHeader>
 	<SettingBigSeperator />

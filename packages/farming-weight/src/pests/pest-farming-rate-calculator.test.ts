@@ -263,6 +263,28 @@ test('mosquito smooth jazz uses rarity breakpoints for vinyl attraction', () => 
 	expect(getMosquitoWeight(Rarity.Legendary)).toBeCloseTo(3, 8);
 });
 
+test('sprayonator boosts both material pests while Hooverius vinyl boosts only its selected pest', () => {
+	const player = new PestFarmingPlayer({});
+	const result = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+			attraction: {
+				sprayonatorMaterial: Spray.PlantMatter,
+				hooveriusVinylTarget: Pest.Slug,
+				excludedPests: [Pest.Firefly],
+			},
+		},
+	}).calculate();
+
+	const probabilities = result.breakdown.pestSpawning.distribution.pestTypeProbabilities;
+	expect(probabilities[Pest.Slug]).toBeCloseTo(24 / 46, 8);
+	expect(probabilities[Pest.Locust]).toBeCloseTo(12 / 46, 8);
+	expect(probabilities[Pest.Mosquito]).toBeCloseTo(1 / 46, 8);
+	expect(probabilities[Pest.Firefly]).toBeUndefined();
+});
+
 test('best spawn phase armor set uses rate calculation to select the generated spawn set when it improves rates', () => {
 	const player = pestPlayerWithArmorSets({
 		main: ['FERMENTO_HELMET', 'FERMENTO_CHESTPLATE', 'FERMENTO_LEGGINGS', 'FERMENTO_BOOTS'],

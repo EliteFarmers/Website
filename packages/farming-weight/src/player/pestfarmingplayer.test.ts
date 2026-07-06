@@ -679,9 +679,39 @@ test('Praying Mantis Shard vacuum upgrades update shared pest farming attributes
 		.find((entry) => entry.title === 'Praying Mantis 1');
 
 	expect(upgrade?.stats?.[Stat.Damage]).toBe(25);
+	expect(upgrade?.onto).toBeUndefined();
+	expect(upgrade?.meta?.itemUuid).toBeUndefined();
 	player.applyPhaseUpgrade(PestFarmingPhase.Kill, upgrade!);
 
 	expect(player.options.attributes?.insect_power).toBe(1);
 	expect(player.selectedVacuum?.getInsectPowerDamageLevel()).toBe(1);
 	expect(player.getPhaseStat(PestFarmingPhase.Kill, Stat.Damage)).toBe(275);
+});
+
+test('Rose Dragon Symbiosis is available from pest phase pet breakdowns', () => {
+	const player = new PestFarmingPlayer({
+		pets: [
+			{
+				uuid: 'rose-dragon',
+				type: FarmingPets.RoseDragon,
+				tier: Rarity.Legendary,
+				exp: 10 ** 20,
+			},
+			{
+				uuid: 'elephant',
+				type: FarmingPets.Elephant,
+				tier: Rarity.Legendary,
+				exp: 10 ** 20,
+			},
+		],
+		phaseLoadouts: {
+			[PestFarmingPhase.Kill]: { armorSetId: 'main', petId: 'rose-dragon' },
+		},
+	});
+	const phasePlayer = player.getPhasePlayer(PestFarmingPhase.Kill);
+
+	expect(phasePlayer.selectedPet?.getFullBreakdown(phasePlayer).Symbiosis).toStrictEqual({
+		value: 3,
+		stat: Stat.FarmingFortune,
+	});
 });

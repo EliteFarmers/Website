@@ -24,7 +24,6 @@
 
 	const ctx = getStatsContext();
 	const ratesData = getRatesData();
-	const mode = $derived(ctx.selectedProfile?.gameMode);
 
 	async function getBazaarData(items: string[]) {
 		if (!browser) return undefined;
@@ -194,7 +193,7 @@
 			.then((data) => {
 				if (cancelled) return;
 				if (data) {
-					Object.assign(itemsData, data);
+					itemsData = { ...itemsData, ...data };
 					itemsVersion++;
 				}
 				isInitialLoad = false;
@@ -219,9 +218,10 @@
 		if (missing.length > 0) {
 			for (const id of missing) requestedFallbackItems.add(id);
 			Promise.all(missing.map((id) => getItem(id))).then((results) => {
-				results.forEach((res, i) => {
-					itemsData[missing[i]] = res;
-				});
+				itemsData = {
+					...itemsData,
+					...Object.fromEntries(results.map((res, i) => [missing[i], res])),
+				};
 				itemsVersion++;
 			});
 		}
@@ -247,12 +247,6 @@
 		</div>
 	</div>
 
-	{#if (mode ?? 'classic') !== 'classic'}
-		<div class="flex flex-row items-center gap-2 text-sm">
-			<TriangleAlert size={20} class="text-completed -mb-1" />
-			<p>These upgrades use Bazaar and Auction House prices which aren't available in this game mode.</p>
-		</div>
-	{/if}
 	<p class="text-muted-foreground font-emoji text-sm">Every available fortune upgrade for {ctx.ignMeta}!</p>
 	{#if !crop || crop.length === 0}
 		<div class="flex flex-row items-center gap-2 text-sm">
@@ -270,10 +264,11 @@
 		<UpgradeList
 			{upgrades}
 			items={itemsData}
-			version={itemsVersion + rateImpactCache.version}
+			version="{itemsVersion}:{rateImpactCache.version}"
 			costFn={getUpgradeCost}
 			rateImpactFn={getRateImpact}
 			rateImpactUnavailableLabel={crop ? undefined : 'Select a Crop'}
+			referenceOnlyPrices={ctx.isNonClassicProfile}
 			applyUpgrade={(u) => {
 				$player.applyUpgrade(u);
 				player.refresh();
@@ -295,8 +290,12 @@
 
 		{#if upgrades.length > 0}
 			<p class="max-w-xl text-center">
-				This list is generated based on averaged Bazaar and Auction House prices. Prices may vary and are not
-				guaranteed to be accurate at the time of purchase.
+				{#if ctx.isNonClassicProfile}
+					Market prices are shown for reference on this game mode.
+				{:else}
+					This list is generated based on averaged Bazaar and Auction House prices. Prices may vary and are
+					not guaranteed to be accurate at the time of purchase.
+				{/if}
 			</p>
 		{/if}
 	</div>

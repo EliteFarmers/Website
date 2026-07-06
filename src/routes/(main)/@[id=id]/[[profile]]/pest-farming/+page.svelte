@@ -85,6 +85,7 @@
 				result={pest.pestRateResult}
 				priceBook={pest.pestRatePriceBook}
 				items={pest.itemsData}
+				referenceOnlyPrices={ctx.isNonClassicProfile}
 				{openSettings}
 			/>
 
@@ -106,6 +107,7 @@
 					progress={pest.cropProgress}
 					items={pest.itemsData}
 					costFn={getUpgradeCost}
+					referenceOnlyPrices={ctx.isNonClassicProfile}
 					applyUpgrade={(upgrade) => pest.applyPhaseUpgrade(PestFarmingPhase.Farm, upgrade)}
 					expandUpgrade={(upgrade) => pest.expandPhaseUpgrade(PestFarmingPhase.Farm, upgrade)}
 					getUpgrades={(progress) => pest.getProgressUpgrades(progress)}
@@ -126,6 +128,7 @@
 					progress={pest.sharedEquipmentProgress}
 					items={pest.itemsData}
 					costFn={getUpgradeCost}
+					referenceOnlyPrices={ctx.isNonClassicProfile}
 					applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
 					expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
 					getUpgrades={(progress) => pest.getProgressUpgrades(progress)}
@@ -142,6 +145,7 @@
 					progress={pest.vacuumProgress}
 					items={pest.itemsData}
 					costFn={getUpgradeCost}
+					referenceOnlyPrices={ctx.isNonClassicProfile}
 					applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
 					expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
 					getUpgrades={(progress) => pest.getProgressUpgrades(progress)}
@@ -353,6 +357,7 @@
 							progress={pest.activeArmorSetProgress}
 							items={pest.itemsData}
 							costFn={getUpgradeCost}
+							referenceOnlyPrices={ctx.isNonClassicProfile}
 							applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
 							expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
 							getUpgrades={(progress) => pest.getProgressUpgrades(progress)}
@@ -369,6 +374,7 @@
 						progress={pest.activePhaseGeneralProgress}
 						items={pest.itemsData}
 						costFn={getUpgradeCost}
+						referenceOnlyPrices={ctx.isNonClassicProfile}
 						applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
 						expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
 						getUpgrades={(progress) => pest.getProgressUpgrades(progress)}
@@ -414,6 +420,8 @@
 						rateImpactUnavailableLabel="Loading Rates"
 						costPerValueFn={(upgrade) => pest.getPestRateImpactValue(upgrade) / 1000}
 						costPerHeader="Cost / 1k Coins/hr"
+						initialSorting={ctx.isNonClassicProfile ? [{ id: 'rateImpact', desc: true }] : undefined}
+						referenceOnlyPrices={ctx.isNonClassicProfile}
 						version={pest.pestRateVersion}
 					/>
 				</section>

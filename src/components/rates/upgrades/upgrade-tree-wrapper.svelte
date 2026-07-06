@@ -14,9 +14,10 @@
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
 		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		row?: Row<FortuneUpgrade>;
+		referenceOnlyPrices?: boolean;
 	}
 
-	let { upgrade, items, expandUpgrade, costFn, applyUpgrade, row }: Props = $props();
+	let { upgrade, items, expandUpgrade, costFn, applyUpgrade, row, referenceOnlyPrices = false }: Props = $props();
 
 	let tree = $state<UpgradeTreeNode | null>(null);
 	let treeKey = $state('');
@@ -70,7 +71,14 @@
 		<p class="text-muted-foreground py-2 text-center text-sm italic">Loading upgrade path...</p>
 	{:else if tree.children.length > 0}
 		{#each tree.children as child, i (getUpgradeKey(child.upgrade, i))}
-			<UpgradeTree node={child} {items} {costFn} {applyUpgrade} defaultOpen={tree.children.length === 1} />
+			<UpgradeTree
+				node={child}
+				{items}
+				{costFn}
+				{applyUpgrade}
+				{referenceOnlyPrices}
+				defaultOpen={tree.children.length === 1}
+			/>
 		{/each}
 	{:else}
 		<p class="text-muted-foreground py-2 text-center text-sm italic">No further upgrades available in this path.</p>

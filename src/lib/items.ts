@@ -72,8 +72,9 @@ export function getUpgradeCostBreakdown(
 		for (const [item, amount] of Object.entries(requiredItems ?? {})) {
 			const itemCost = items?.[item];
 			if (!itemCost) continue;
-			const lowestPrice = itemCost.auctions?.length
-				? Math.min(...itemCost.auctions.filter((a) => a.lowest > 0).map((a) => a.lowest))
+			const auctionPrices = itemCost.auctions?.filter((a) => a.lowest > 0).map((a) => a.lowest) ?? [];
+			const lowestPrice = auctionPrices.length
+				? Math.min(...auctionPrices)
 				: (itemCost.bazaar?.averageBuyOrder ?? 0);
 
 			total += lowestPrice * amount;

@@ -22,7 +22,8 @@ export const getColumns = (
 	rateImpactUnavailableLabel?: string,
 	_version?: number | string,
 	costPerValueFn?: (upgrade: FortuneUpgrade) => number,
-	costPerHeader = 'Cost Per Fortune'
+	costPerHeader = 'Cost Per Fortune',
+	referenceOnlyPrices = false
 ) =>
 	[
 		{
@@ -72,6 +73,7 @@ export const getColumns = (
 								totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
 								items: itemsLookup,
 								unavailableLabel: rateImpactUnavailableLabel,
+								referenceOnlyPrices,
 							});
 						},
 					} satisfies ColumnDef<FortuneUpgrade>,
@@ -92,6 +94,7 @@ export const getColumns = (
 					upgrade: row.original,
 					totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
 					value: costPerValueFn?.(row.original),
+					referenceOnlyPrices,
 				});
 			},
 			enableSorting: true,
@@ -114,6 +117,7 @@ export const getColumns = (
 					upgrade: row.original,
 					items: itemsLookup,
 					totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
+					referenceOnlyPrices,
 				}),
 			enableSorting: true,
 			accessorFn: (row) => {

@@ -1,5 +1,12 @@
 import { page } from '$app/state';
-import type { AnnouncementDto, AuthorizedAccountDto, EntitlementDto, NotificationDto, PendingGiftDto } from '$lib/api';
+import type {
+	AnnouncementDto,
+	AuthorizedAccountDto,
+	EntitlementDto,
+	NotificationDto,
+	PendingGiftDto,
+	ResourcePackDto,
+} from '$lib/api';
 import type { AuthSession } from '$lib/api/auth';
 import { getAuthorizedAccount } from '$lib/remote';
 import { ClaimGift, DeclineGift, GetPendingGifts } from '$lib/remote/gifts.remote';
@@ -13,6 +20,7 @@ type ConstructorData = {
 	user?: AuthorizedAccountDto | null;
 	session?: AuthSession | null;
 	announcements?: AnnouncementDto[];
+	texturePacks?: ResourcePackDto[] | null;
 };
 
 type PersistedData = {
@@ -72,12 +80,13 @@ export class GlobalContext {
 		});
 	}
 
-	setValues({ user, session, announcements }: ConstructorData) {
+	setValues({ user, session, announcements, texturePacks }: ConstructorData) {
 		this.#session = session ?? undefined;
 		if (user !== undefined) {
 			this.user = user;
 		}
 		this.#announcements = announcements ?? this.#announcements ?? [];
+		this.dropUnavailablePacks(texturePacks);
 	}
 
 	get initialized() {
@@ -213,6 +222,24 @@ export class GlobalContext {
 	removeLocalTexturePackOverride(packId: string) {
 		this.localTexturePackOverrides = this.localTexturePackOverrides.filter((pack) => pack.id !== packId);
 		this.packs = this.packs.filter((pack) => pack.id !== packId);
+	}
+
+	dropUnavailablePacks(texturePacks: Pick<ResourcePackDto, 'id'>[] | null | undefined) {
+		if (!texturePacks?.length) return;
+
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const availablePackIds = new Set(texturePacks.map((pack) => pack.id));
+		for (const pack of this.localTexturePackOverrides) {
+			availablePackIds.add(pack.id);
+		}
+
+		const packs = this.packs.filter((pack) => availablePackIds.has(pack.id));
+		if (packs.length === this.packs.length) {
+			this.updatePacksParam();
+			return;
+		}
+
+		this.packs = packs;
 	}
 
 	get allAnnouncements() {
