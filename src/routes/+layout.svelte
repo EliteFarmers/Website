@@ -27,7 +27,13 @@
 	let isHover = $state(new IsHover());
 	setContext('isHover', isHover);
 
-	initGlobalContext((() => ({ session: data.session, announcements: data.cache?.announcements ?? [] }))());
+	initGlobalContext(
+		(() => ({
+			session: data.session,
+			announcements: data.cache?.announcements ?? [],
+			texturePacks: data.cache?.texturepacks ?? [],
+		}))()
+	);
 	initThemeContext();
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -39,7 +45,11 @@
 	const gbl = getGlobalContext();
 
 	$effect.pre(() => {
-		const newData = { session: data.session, announcements: data.cache?.announcements ?? [] };
+		const newData = {
+			session: data.session,
+			announcements: data.cache?.announcements ?? [],
+			texturePacks: data.cache?.texturepacks ?? [],
+		};
 		untrack(() => gbl.setValues(newData));
 	});
 

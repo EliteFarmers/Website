@@ -45,6 +45,7 @@
 	let availableItems = $state<PackItem[]>([]);
 
 	$effect(() => {
+		gbl.dropUnavailablePacks(availablePacks);
 		enabledItems = buildPackItems(true);
 		availableItems = buildPackItems(false);
 	});
