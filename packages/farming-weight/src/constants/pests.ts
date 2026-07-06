@@ -18,6 +18,15 @@ export enum Pest {
 	LunarMoth = 'lunar_moth',
 }
 
+export enum Spray {
+	Compost = 'compost',
+	PlantMatter = 'plant_matter',
+	Dung = 'dung',
+	HoneyJar = 'honey_jar',
+	TastyCheese = 'tasty_cheese',
+	Jelly = 'jelly',
+}
+
 export const FORTUNE_PER_PEST_BRACKET = 0.4;
 
 export const DEFAULT_GARDEN_BESTIARY_PEST_BRACKET: Record<number, number> = {
@@ -189,6 +198,14 @@ export const GARDEN_BESTIARY_NAMES: Record<string, string> = {
 	timestalk_clone_100: 'Timestalk Clone',
 };
 
+export const PEST_BESTIARY_ID_BY_PEST = Object.fromEntries(
+	Object.entries(PEST_BESTIARY_IDS).flatMap(([bestiaryId, pestId]) => (pestId ? [[pestId, bestiaryId]] : []))
+) as Record<Pest, string>;
+
+export function getPestName(pestId: Pest): string {
+	return GARDEN_BESTIARY_NAMES[PEST_BESTIARY_ID_BY_PEST[pestId]] ?? pestId;
+}
+
 export const GARDEN_BESTIARY_BRACKETS: Record<string, Record<number, number>> = {
 	zombuddy_1: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	timestalk_clone_100: TIMESTALK_CLONE_BESTIARY_BRACKET,
@@ -225,6 +242,24 @@ export const CROP_TO_PEST: Record<Crop, Pest> = {
 	[Crop.Sunflower]: Pest.Dragonfly,
 	[Crop.Moonflower]: Pest.Firefly,
 	[Crop.WildRose]: Pest.Mantis,
+};
+
+export const SPRAY_TO_PESTS: Record<Spray, Pest[]> = {
+	[Spray.Compost]: [Pest.Worm, Pest.Mosquito],
+	[Spray.PlantMatter]: [Pest.Locust, Pest.Slug],
+	[Spray.Dung]: [Pest.Beetle, Pest.Fly],
+	[Spray.HoneyJar]: [Pest.Moth, Pest.Cricket],
+	[Spray.TastyCheese]: [Pest.Rat, Pest.Mite],
+	[Spray.Jelly]: [Pest.Mantis, Pest.Dragonfly, Pest.Firefly],
+};
+
+export const SPRAY_NAMES: Record<string, string> = {
+	[`spray_${Spray.Compost}_1`]: 'Compost',
+	[`spray_${Spray.PlantMatter}_1`]: 'Plant Matter',
+	[`spray_${Spray.Dung}_1`]: 'Dung',
+	[`spray_${Spray.HoneyJar}_1`]: 'Honey Jar',
+	[`spray_${Spray.TastyCheese}_1`]: 'Tasty Cheese',
+	[`spray_${Spray.Jelly}_1`]: 'Jelly',
 };
 
 export const PEST_COLLECTION_BRACKETS = [0, 50, 100, 250, 500, 750, 1000];

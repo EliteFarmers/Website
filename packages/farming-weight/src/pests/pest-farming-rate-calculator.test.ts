@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
-import { Pest } from '../constants/pests.js';
+import { Pest, Spray } from '../constants/pests.js';
+import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import type { EliteItemDto } from '../fortune/item.js';
@@ -207,6 +208,59 @@ test('selected crop does not bias pest type spawn weights', () => {
 		}).calculate().breakdown.pestSpawning.distribution.pestTypeProbabilities;
 
 	expect(getProbabilities(Crop.Wheat)).toEqual(getProbabilities(Crop.Potato));
+});
+
+test('mosquito smooth jazz uses rarity breakpoints for vinyl attraction', () => {
+	const getVinylTargetWeight = (selectedPet?: { type: FarmingPets; rarity?: Rarity; level?: number }) => {
+		const getRates = (_crop: Crop, blocks: number) => emptyCropRates(blocks);
+		const player = {
+			crop: { getRates },
+			spawn: { getRates, selectedPet },
+			kill: {
+				getStatBreakdown: () => ({}),
+				buildEnvironment: () => ({}),
+				collectEffects: () => [],
+			},
+			getPhaseStat: () => 0,
+			phaseLoadouts: {},
+			armorSetLoadouts: [],
+			sharedEquipment: {},
+			selectedVacuum: undefined,
+		} as unknown as PestFarmingPlayer;
+
+		return (
+			new PestFarmingRateCalculator({
+				player,
+				options: {
+					crop: Crop.Wheat,
+					cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+					attraction: {
+						hooveriusVinylTarget: Pest.Slug,
+					},
+				},
+			}).calculate().breakdown.pestSpawning.distribution.pestTypeWeights[Pest.Slug] ?? 0
+		);
+	};
+	const getMosquitoWeight = (rarity: Rarity) =>
+		getVinylTargetWeight({
+			type: FarmingPets.Mosquito,
+			rarity,
+			level: 100,
+		});
+
+	expect(getVinylTargetWeight()).toBeCloseTo(2, 8);
+	expect(
+		getVinylTargetWeight({
+			type: FarmingPets.Slug,
+			rarity: Rarity.Legendary,
+			level: 100,
+		})
+	).toBeCloseTo(2, 8);
+	expect(getMosquitoWeight(Rarity.Common)).toBeCloseTo(2.5, 8);
+	expect(getMosquitoWeight(Rarity.Uncommon)).toBeCloseTo(2.5, 8);
+	expect(getMosquitoWeight(Rarity.Rare)).toBeCloseTo(2.7, 8);
+	expect(getMosquitoWeight(Rarity.Epic)).toBeCloseTo(3, 8);
+	expect(getMosquitoWeight(Rarity.Legendary)).toBeCloseTo(3, 8);
 });
 
 test('best spawn phase armor set uses rate calculation to select the generated spawn set when it improves rates', () => {
@@ -577,11 +631,9 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 			crop: Crop.Wheat,
 			cycle: sheetCycleSettings,
 			attraction: {
-				pestTypeWeightMultipliers: {
-					[Pest.Locust]: 12,
-					[Pest.Slug]: 36,
-					[Pest.Firefly]: 0,
-				},
+				sprayonatorMaterial: Spray.PlantMatter,
+				hooveriusVinylTarget: Pest.Slug,
+				excludedPests: [Pest.Firefly],
 			},
 			economy: {
 				pestExchange: {
@@ -619,7 +671,7 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 	expect(result.breakdown.pestSpawning.pestsPerInterval).toBeCloseTo(SHEET_PESTS_PER_INTERVAL, 6);
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Locust]).toBeCloseTo(12 / 58, 8);
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Slug]).toBeCloseTo(36 / 58, 8);
-	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Firefly]).toBe(0);
+	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities).not.property(Pest.Firefly);
 	expect(result.breakdown.economy.pestExchanges.items.PESTHUNTER_RELIC).toBeGreaterThan(0);
 	expect(result.breakdown.economy.pestShards.rngItems.SHARD_PEST).toBeGreaterThan(0);
 	expect(result.breakdown.economy.costs.items.PLANT_MATTER).toBeLessThan(0);
@@ -661,10 +713,18 @@ function createSheetFixturePlayer(): PestFarmingPlayer {
 		buildEnvironment: () => ({}),
 		collectEffects: () => [],
 	};
+	const spawn = {
+		getRates,
+		selectedPet: {
+			type: FarmingPets.Mosquito,
+			rarity: Rarity.Legendary,
+			level: 100,
+		},
+	};
 
 	return {
 		crop: { getRates },
-		spawn: { getRates },
+		spawn,
 		kill,
 		getPhaseStat: (phase: PestFarmingPhase, stat: Stat) => {
 			if (phase === PestFarmingPhase.Farm && stat === Stat.PestCooldownReduction) return 55;

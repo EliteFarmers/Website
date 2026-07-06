@@ -2,8 +2,8 @@ import type { RatesItemPriceData } from '$lib/api/elite';
 import {
 	Crop,
 	CROP_INFO,
-	GARDEN_BESTIARY_NAMES,
 	Pest,
+	getPestName,
 	type DetailedDropsFromEffectsResult,
 	type DetailedPestDropsResult,
 	type PestFarmingRateResult,
@@ -230,10 +230,6 @@ export function buildPestRateBreakdown(options: BuildOptions): PestRateBreakdown
 			},
 		],
 	};
-}
-
-function getPestName(pestId: Pest) {
-	return GARDEN_BESTIARY_NAMES[`pest_${pestId}_1`] ?? formatIdentifier(pestId);
 }
 
 function formatIdentifier(value: string) {
