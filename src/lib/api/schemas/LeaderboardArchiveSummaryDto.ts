@@ -7,8 +7,14 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { LeaderboardArchiveSnapshotKind } from './LeaderboardArchiveSnapshotKind';
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface LeaderboardArchiveSummaryDto {
+	kind: LeaderboardArchiveSnapshotKind;
+	periodIdentifier: string;
+	capturedAt: string;
+	entryCount: number;
+	compressedByteCount: bigint;
+	uncompressedByteCount: bigint;
+	formatVersion: number;
+}

@@ -30,9 +30,11 @@ type PersistedData = {
 	packs?: { id: string; on: boolean; order: number }[];
 	localTexturePackOverrides?: LocalTexturePackOverride[];
 	newSidebar?: Record<string, number>;
+	packPreferenceVersion?: number;
 };
 
 type PackPreference = { id: string; on: boolean; order: number };
+const PACK_PREFERENCE_VERSION = 1;
 
 export class GlobalContext {
 	#user = $state<AuthorizedAccountDto | undefined>();
@@ -44,12 +46,14 @@ export class GlobalContext {
 		packs: [],
 		localTexturePackOverrides: [],
 		newSidebar: {},
+		packPreferenceVersion: 0,
 	});
 	#announcements = $state<AnnouncementDto[]>([]);
 	#notifications = $state<NotificationDto[]>([]);
 	#pendingGifts = $state<PendingGiftDto[]>([]);
 	#initialized = $state(false);
 	#packsParam = $state('');
+	#packVersions = new Map<string, string>();
 	#userQuery = $state<RemoteQuery<AuthorizedAccountDto | undefined>>();
 	#accesses = $derived.by(() =>
 		(this.#user?.entitlements ?? []).reduce(
@@ -86,7 +90,11 @@ export class GlobalContext {
 			this.user = user;
 		}
 		this.#announcements = announcements ?? this.#announcements ?? [];
+		if (texturePacks) {
+			this.#packVersions = new Map(texturePacks.map((pack) => [pack.id, pack.version]));
+		}
 		this.dropUnavailablePacks(texturePacks);
+		this.applyDefaultPacks(texturePacks);
 	}
 
 	get initialized() {
@@ -132,6 +140,7 @@ export class GlobalContext {
 			packs: this.data.packs ?? [],
 			localTexturePackOverrides: this.data.localTexturePackOverrides ?? [],
 			newSidebar: this.data.newSidebar ?? {},
+			packPreferenceVersion: this.data.packPreferenceVersion ?? 0,
 		};
 
 		this.updatePacksParam();
@@ -180,7 +189,16 @@ export class GlobalContext {
 	}
 
 	updatePacksParam() {
-		this.#packsParam = this.enabledPackIds.length ? '?packs=' + this.enabledPackIds.join(',') : '';
+		const packIds = this.enabledPackIds;
+		if (!packIds.length) {
+			this.#packsParam = '';
+			return;
+		}
+
+		const params = new URLSearchParams({ packs: packIds.join(',') });
+		const versions = packIds.map((id) => this.#packVersions.get(id)).filter((version) => version !== undefined);
+		if (versions.length) params.set('v', versions.join(','));
+		this.#packsParam = `?${params.toString()}`;
 	}
 
 	hasPackEnabled(packId: string) {
@@ -240,6 +258,19 @@ export class GlobalContext {
 		}
 
 		this.packs = packs;
+	}
+
+	applyDefaultPacks(texturePacks: ResourcePackDto[] | null | undefined) {
+		if (!texturePacks?.length || (this.data.packPreferenceVersion ?? 0) >= PACK_PREFERENCE_VERSION) return;
+
+		const defaultPack = texturePacks.find((pack) => pack.id === 'hypixel' && pack.defaultEnabled);
+		if (!defaultPack) return;
+
+		this.packs = [{ id: defaultPack.id, on: true, order: 0 }];
+		this.#data.current = {
+			...this.#data.current,
+			packPreferenceVersion: PACK_PREFERENCE_VERSION,
+		};
 	}
 
 	get allAnnouncements() {

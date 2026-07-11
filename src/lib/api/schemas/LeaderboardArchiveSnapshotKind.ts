@@ -8,7 +8,11 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type LeaderboardArchiveSnapshotKind =
+	(typeof LeaderboardArchiveSnapshotKind)[keyof typeof LeaderboardArchiveSnapshotKind];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LeaderboardArchiveSnapshotKind = {
+	daily: 'daily',
+	monthly: 'monthly',
+} as const;

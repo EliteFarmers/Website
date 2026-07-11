@@ -8,6 +8,8 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 import type {
+	AcceptedHarvestFeastCurrentRequest,
+	AcceptedUpcomingJacobContestsRequest,
 	AccountSearchResultDto,
 	AccountWithPermsDto,
 	AddExcludedTimespanRequestAddExcludedTimespanRequestBody,
@@ -21,9 +23,13 @@ import type {
 	AdminOrdersResponseDto,
 	AdminUnlinkAccountRequest,
 	AnnouncementDto,
+	ArchiveCurrentLeaderboardsRequest,
 	AuctionDto,
 	AuctionHouseDto,
+	AuctionObservedBatchRequest,
 	AuctionOverviewResponse,
+	AuctionPriceHistoryBatchRequest,
+	AuctionSummaryBatchRequest,
 	AuditLogFiltersResponse,
 	AuthRefreshDto,
 	AuthResponseDto,
@@ -35,6 +41,8 @@ import type {
 	BanParticipationRequestBanParticipationRequestBody,
 	BanPlayerRequestBanPlayerRequestBody,
 	BazaarOverviewResponse,
+	BazaarSnapshotUpsertRequest,
+	BazaarSummaryUpsertRequest,
 	ChangeTeamOwnerRequest,
 	ClaimGiftRequest,
 	CommentDto,
@@ -85,6 +93,7 @@ import type {
 	FarmingInventoryDto,
 	FarmingWeightAllProfilesDto,
 	FarmingWeightDto,
+	FiresalesUpsertRequest,
 	ForceAddMemberAdminParams,
 	FullGuideDto,
 	GardenDto,
@@ -126,6 +135,8 @@ import type {
 	GetItemTextureParams,
 	GetItemsFromBytesRequest,
 	GetItemsFromBytesResponse,
+	GetLeaderboardArchivesParams,
+	GetLeaderboardArchivesResponse,
 	GetLeaderboardParams,
 	GetManagedResourcePackAuditLogsParams,
 	GetManagedResourcePackVersionsParams,
@@ -174,8 +185,10 @@ import type {
 	IncomingGuildRoleDto,
 	InventoryItemMetaResponse,
 	ItemRelatedResponse,
+	ItemsUpsertRequest,
 	JacobContestWithParticipationsDto,
 	JoinEventParams,
+	LeaderboardArchiveRunResult,
 	LeaderboardDto,
 	LeaderboardPositionDto,
 	LeaderboardPositionsDto,
@@ -193,9 +206,11 @@ import type {
 	MinecraftAccountDto,
 	NetworthBreakdown,
 	NotificationPushSubscriptionDto,
+	OfficialHypixelPackDto,
 	OrderStatusDto,
 	PauseRecurringPaymentRequest,
 	PendingGiftDto,
+	PersistenceResult,
 	PlayerDataDto,
 	PrivateGuildDto,
 	ProblemDetails,
@@ -205,6 +220,7 @@ import type {
 	ProfileNamesDto,
 	ProviderEventDto,
 	PublicGuildDto,
+	RecentlyEndedAuctionBatchRequest,
 	ReconciliationResultDto,
 	RejectGuideRequest,
 	RejectManagedResourcePackVersionRequest,
@@ -1453,6 +1469,55 @@ export const getRoles = async (options?: RequestInit) => {
 	return customFetch<getRolesResponse>(getGetRolesUrl(), {
 		...options,
 		method: 'GET',
+	});
+};
+
+/**
+ * Backfills or repairs daily/monthly compressed current leaderboard archive artifacts.
+ * @summary Archive current leaderboards
+ */
+export type archiveCurrentLeaderboardsResponse200 = {
+	data: LeaderboardArchiveRunResult;
+	status: 200;
+};
+
+export type archiveCurrentLeaderboardsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type archiveCurrentLeaderboardsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type archiveCurrentLeaderboardsResponseSuccess = archiveCurrentLeaderboardsResponse200 & {
+	headers: Headers;
+};
+export type archiveCurrentLeaderboardsResponseError = (
+	| archiveCurrentLeaderboardsResponse401
+	| archiveCurrentLeaderboardsResponse403
+) & {
+	headers: Headers;
+};
+
+export type archiveCurrentLeaderboardsResponse =
+	| archiveCurrentLeaderboardsResponseSuccess
+	| archiveCurrentLeaderboardsResponseError;
+
+export const getArchiveCurrentLeaderboardsUrl = () => {
+	return `${ELITE_API_URL}/admin/leaderboards/archive-current`;
+};
+
+export const archiveCurrentLeaderboards = async (
+	archiveCurrentLeaderboardsRequest: ArchiveCurrentLeaderboardsRequest,
+	options?: RequestInit
+) => {
+	return customFetch<archiveCurrentLeaderboardsResponse>(getArchiveCurrentLeaderboardsUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(archiveCurrentLeaderboardsRequest),
 	});
 };
 
@@ -9537,6 +9602,77 @@ export const getLeaderboard = async (leaderboard: string, params?: GetLeaderboar
 };
 
 /**
+ * Streams a Brotli-compressed JSON archive artifact for a leaderboard period.
+ * @summary Get archived leaderboard artifact
+ */
+export type getLeaderboardArchiveResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type getLeaderboardArchiveResponseSuccess = getLeaderboardArchiveResponse204 & {
+	headers: Headers;
+};
+export type getLeaderboardArchiveResponse = getLeaderboardArchiveResponseSuccess;
+
+export const getGetLeaderboardArchiveUrl = (leaderboard: string, kind: string, period: string) => {
+	return `${ELITE_API_URL}/leaderboard/${leaderboard}/archive/${kind}/${period}`;
+};
+
+export const getLeaderboardArchive = async (
+	leaderboard: string,
+	kind: string,
+	period: string,
+	options?: RequestInit
+) => {
+	return customFetch<getLeaderboardArchiveResponse>(getGetLeaderboardArchiveUrl(leaderboard, kind, period), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Lists available daily and monthly archive artifacts for a leaderboard.
+ * @summary Get archived leaderboard periods
+ */
+export type getLeaderboardArchivesResponse200 = {
+	data: GetLeaderboardArchivesResponse;
+	status: 200;
+};
+
+export type getLeaderboardArchivesResponseSuccess = getLeaderboardArchivesResponse200 & {
+	headers: Headers;
+};
+export type getLeaderboardArchivesResponse = getLeaderboardArchivesResponseSuccess;
+
+export const getGetLeaderboardArchivesUrl = (leaderboard: string, params?: GetLeaderboardArchivesParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/leaderboard/${leaderboard}/archives?${stringifiedParams}`
+		: `${ELITE_API_URL}/leaderboard/${leaderboard}/archives`;
+};
+
+export const getLeaderboardArchives = async (
+	leaderboard: string,
+	params?: GetLeaderboardArchivesParams,
+	options?: RequestInit
+) => {
+	return customFetch<getLeaderboardArchivesResponse>(getGetLeaderboardArchivesUrl(leaderboard, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * @summary Get Leaderboards
  */
 export type getLeaderboardsResponse200 = {
@@ -12602,6 +12738,260 @@ export const skyblockGemShop = async (options?: RequestInit) => {
 	});
 };
 
+export type acceptHarvestFeastCurrentResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type acceptHarvestFeastCurrentResponseSuccess = acceptHarvestFeastCurrentResponse200 & {
+	headers: Headers;
+};
+export type acceptHarvestFeastCurrentResponse = acceptHarvestFeastCurrentResponseSuccess;
+
+export const getAcceptHarvestFeastCurrentUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/harvest-feast/current`;
+};
+
+export const acceptHarvestFeastCurrent = async (
+	acceptedHarvestFeastCurrentRequest: AcceptedHarvestFeastCurrentRequest,
+	options?: RequestInit
+) => {
+	return customFetch<acceptHarvestFeastCurrentResponse>(getAcceptHarvestFeastCurrentUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(acceptedHarvestFeastCurrentRequest),
+	});
+};
+
+export type acceptUpcomingJacobContestsResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type acceptUpcomingJacobContestsResponseSuccess = acceptUpcomingJacobContestsResponse200 & {
+	headers: Headers;
+};
+export type acceptUpcomingJacobContestsResponse = acceptUpcomingJacobContestsResponseSuccess;
+
+export const getAcceptUpcomingJacobContestsUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/contests/upcoming`;
+};
+
+export const acceptUpcomingJacobContests = async (
+	acceptedUpcomingJacobContestsRequest: AcceptedUpcomingJacobContestsRequest,
+	options?: RequestInit
+) => {
+	return customFetch<acceptUpcomingJacobContestsResponse>(getAcceptUpcomingJacobContestsUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(acceptedUpcomingJacobContestsRequest),
+	});
+};
+
+export type upsertAuctionPriceHistoryResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type upsertAuctionPriceHistoryResponseSuccess = upsertAuctionPriceHistoryResponse200 & {
+	headers: Headers;
+};
+export type upsertAuctionPriceHistoryResponse = upsertAuctionPriceHistoryResponseSuccess;
+
+export const getUpsertAuctionPriceHistoryUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/auctions/price-history`;
+};
+
+export const upsertAuctionPriceHistory = async (
+	auctionPriceHistoryBatchRequest: AuctionPriceHistoryBatchRequest,
+	options?: RequestInit
+) => {
+	return customFetch<upsertAuctionPriceHistoryResponse>(getUpsertAuctionPriceHistoryUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(auctionPriceHistoryBatchRequest),
+	});
+};
+
+export type upsertAuctionSummariesResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type upsertAuctionSummariesResponseSuccess = upsertAuctionSummariesResponse200 & {
+	headers: Headers;
+};
+export type upsertAuctionSummariesResponse = upsertAuctionSummariesResponseSuccess;
+
+export const getUpsertAuctionSummariesUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/auctions/summaries`;
+};
+
+export const upsertAuctionSummaries = async (
+	auctionSummaryBatchRequest: AuctionSummaryBatchRequest,
+	options?: RequestInit
+) => {
+	return customFetch<upsertAuctionSummariesResponse>(getUpsertAuctionSummariesUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(auctionSummaryBatchRequest),
+	});
+};
+
+export type upsertBazaarSnapshotsResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type upsertBazaarSnapshotsResponseSuccess = upsertBazaarSnapshotsResponse200 & {
+	headers: Headers;
+};
+export type upsertBazaarSnapshotsResponse = upsertBazaarSnapshotsResponseSuccess;
+
+export const getUpsertBazaarSnapshotsUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/bazaar/snapshots`;
+};
+
+export const upsertBazaarSnapshots = async (
+	bazaarSnapshotUpsertRequest: BazaarSnapshotUpsertRequest,
+	options?: RequestInit
+) => {
+	return customFetch<upsertBazaarSnapshotsResponse>(getUpsertBazaarSnapshotsUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(bazaarSnapshotUpsertRequest),
+	});
+};
+
+export type upsertBazaarSummariesResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type upsertBazaarSummariesResponseSuccess = upsertBazaarSummariesResponse200 & {
+	headers: Headers;
+};
+export type upsertBazaarSummariesResponse = upsertBazaarSummariesResponseSuccess;
+
+export const getUpsertBazaarSummariesUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/bazaar/summaries`;
+};
+
+export const upsertBazaarSummaries = async (
+	bazaarSummaryUpsertRequest: BazaarSummaryUpsertRequest,
+	options?: RequestInit
+) => {
+	return customFetch<upsertBazaarSummariesResponse>(getUpsertBazaarSummariesUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(bazaarSummaryUpsertRequest),
+	});
+};
+
+export type upsertFiresalesResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type upsertFiresalesResponseSuccess = upsertFiresalesResponse200 & {
+	headers: Headers;
+};
+export type upsertFiresalesResponse = upsertFiresalesResponseSuccess;
+
+export const getUpsertFiresalesUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/firesales`;
+};
+
+export const upsertFiresales = async (firesalesUpsertRequest: FiresalesUpsertRequest, options?: RequestInit) => {
+	return customFetch<upsertFiresalesResponse>(getUpsertFiresalesUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(firesalesUpsertRequest),
+	});
+};
+
+export type upsertItemsResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type upsertItemsResponseSuccess = upsertItemsResponse200 & {
+	headers: Headers;
+};
+export type upsertItemsResponse = upsertItemsResponseSuccess;
+
+export const getUpsertItemsUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/items`;
+};
+
+export const upsertItems = async (itemsUpsertRequest: ItemsUpsertRequest, options?: RequestInit) => {
+	return customFetch<upsertItemsResponse>(getUpsertItemsUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(itemsUpsertRequest),
+	});
+};
+
+export type upsertObservedAuctionsResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type upsertObservedAuctionsResponseSuccess = upsertObservedAuctionsResponse200 & {
+	headers: Headers;
+};
+export type upsertObservedAuctionsResponse = upsertObservedAuctionsResponseSuccess;
+
+export const getUpsertObservedAuctionsUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/auctions/observed`;
+};
+
+export const upsertObservedAuctions = async (
+	auctionObservedBatchRequest: AuctionObservedBatchRequest,
+	options?: RequestInit
+) => {
+	return customFetch<upsertObservedAuctionsResponse>(getUpsertObservedAuctionsUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(auctionObservedBatchRequest),
+	});
+};
+
+export type upsertRecentlyEndedAuctionsResponse200 = {
+	data: PersistenceResult;
+	status: 200;
+};
+
+export type upsertRecentlyEndedAuctionsResponseSuccess = upsertRecentlyEndedAuctionsResponse200 & {
+	headers: Headers;
+};
+export type upsertRecentlyEndedAuctionsResponse = upsertRecentlyEndedAuctionsResponseSuccess;
+
+export const getUpsertRecentlyEndedAuctionsUrl = () => {
+	return `${ELITE_API_URL}/internal/resources/auctions/recently-ended`;
+};
+
+export const upsertRecentlyEndedAuctions = async (
+	recentlyEndedAuctionBatchRequest: RecentlyEndedAuctionBatchRequest,
+	options?: RequestInit
+) => {
+	return customFetch<upsertRecentlyEndedAuctionsResponse>(getUpsertRecentlyEndedAuctionsUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(recentlyEndedAuctionBatchRequest),
+	});
+};
+
 /**
  * Get similar items and trend data for a specific item.
  * @summary Get Related Items and Trends
@@ -14052,6 +14442,31 @@ export const getBlockTexture = async (blockId: string, params?: GetBlockTextureP
 };
 
 /**
+ * Returns the web font generated from the official Hypixel resource pack bitmap providers.
+ * @summary Get Hypixel SkyBlock glyph font
+ */
+export type getHypixelGlyphFontResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type getHypixelGlyphFontResponseSuccess = getHypixelGlyphFontResponse204 & {
+	headers: Headers;
+};
+export type getHypixelGlyphFontResponse = getHypixelGlyphFontResponseSuccess;
+
+export const getGetHypixelGlyphFontUrl = () => {
+	return `${ELITE_API_URL}/resources/fonts/hypixel-skyblock.ttf`;
+};
+
+export const getHypixelGlyphFont = async (options?: RequestInit) => {
+	return customFetch<getHypixelGlyphFontResponse>(getGetHypixelGlyphFontUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * @summary Get Inventory Item Texture Metadata
  */
 export type getInventoryItemMetaResponse200 = {
@@ -14172,6 +14587,31 @@ export const getGetItemTextureUrl = (itemId: string, params?: GetItemTexturePara
 
 export const getItemTexture = async (itemId: string, params?: GetItemTextureParams, options?: RequestInit) => {
 	return customFetch<getItemTextureResponse>(getGetItemTextureUrl(itemId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Proxies normalized official-pack metadata from ResourcesAPI.
+ * @summary Get the official Hypixel SkyBlock resource pack
+ */
+export type getOfficialHypixelPackResponse200 = {
+	data: OfficialHypixelPackDto;
+	status: 200;
+};
+
+export type getOfficialHypixelPackResponseSuccess = getOfficialHypixelPackResponse200 & {
+	headers: Headers;
+};
+export type getOfficialHypixelPackResponse = getOfficialHypixelPackResponseSuccess;
+
+export const getGetOfficialHypixelPackUrl = () => {
+	return `${ELITE_API_URL}/resources/packs/hypixel`;
+};
+
+export const getOfficialHypixelPack = async (options?: RequestInit) => {
+	return customFetch<getOfficialHypixelPackResponse>(getGetOfficialHypixelPackUrl(), {
 		...options,
 		method: 'GET',
 	});

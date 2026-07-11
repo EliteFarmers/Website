@@ -7,8 +7,8 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { FiresaleDto } from './FiresaleDto';
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface FiresalesUpsertRequest {
+	sales: FiresaleDto[];
+}

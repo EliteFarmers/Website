@@ -8,22 +8,25 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-export interface ResourcePackDto {
-	id: string;
-	name: string;
-	version: string;
-	description: string;
-	authors: string[];
+export interface AuctionSummaryDto {
+	skyblockId: string;
+	variantKey: string;
 	/** @nullable */
-	downloadUrl?: string | null;
-	supportsCit: boolean;
+	lowest?: number | null;
+	lowestVolume: number;
 	/** @nullable */
-	packFormat?: number | null;
+	lowestObservedAt?: string | null;
 	/** @nullable */
-	iconDataUrl?: string | null;
-	defaultEnabled: boolean;
+	lowest3Day?: number | null;
+	lowest3DayVolume: number;
 	/** @nullable */
-	fontUrl?: string | null;
+	lowest7Day?: number | null;
+	lowest7DayVolume: number;
 	/** @nullable */
-	fontVersion?: string | null;
+	rawLowest?: number | null;
+	/** @nullable */
+	lastLowest?: number | null;
+	/** @nullable */
+	lastLowestAt?: string | null;
+	calculatedAt: string;
 }

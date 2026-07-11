@@ -7,8 +7,14 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { OfficialHypixelPackVersionDto } from './OfficialHypixelPackVersionDto';
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface OfficialHypixelPackDto {
+	id: string;
+	lastUpdated: bigint;
+	deployId: string;
+	versions: OfficialHypixelPackVersionDto[];
+	selectedVersion: OfficialHypixelPackVersionDto;
+	fontUrl: string;
+	fontSha256: string;
+}

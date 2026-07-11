@@ -8,22 +8,11 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-export interface ResourcePackDto {
-	id: string;
-	name: string;
-	version: string;
-	description: string;
-	authors: string[];
+export interface ArchiveCurrentLeaderboardsRequest {
+	kind: string;
 	/** @nullable */
-	downloadUrl?: string | null;
-	supportsCit: boolean;
+	period?: string | null;
 	/** @nullable */
-	packFormat?: number | null;
-	/** @nullable */
-	iconDataUrl?: string | null;
-	defaultEnabled: boolean;
-	/** @nullable */
-	fontUrl?: string | null;
-	/** @nullable */
-	fontVersion?: string | null;
+	leaderboard?: string | null;
+	overwrite: boolean;
 }

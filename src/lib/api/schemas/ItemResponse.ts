@@ -21,6 +21,8 @@ export interface ItemResponse {
 	/** @nullable */
 	id?: string | null;
 	/** @nullable */
+	item_model?: string | null;
+	/** @nullable */
 	material?: string | null;
 	/** @nullable */
 	color?: string | null;
