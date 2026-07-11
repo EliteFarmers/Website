@@ -7,23 +7,11 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { BazaarOrderDto } from './BazaarOrderDto';
 
-export interface ResourcePackDto {
-	id: string;
-	name: string;
-	version: string;
-	description: string;
-	authors: string[];
+export interface BazaarOrdersDto {
 	/** @nullable */
-	downloadUrl?: string | null;
-	supportsCit: boolean;
+	sellSummary?: BazaarOrderDto[] | null;
 	/** @nullable */
-	packFormat?: number | null;
-	/** @nullable */
-	iconDataUrl?: string | null;
-	defaultEnabled: boolean;
-	/** @nullable */
-	fontUrl?: string | null;
-	/** @nullable */
-	fontVersion?: string | null;
+	buySummary?: BazaarOrderDto[] | null;
 }

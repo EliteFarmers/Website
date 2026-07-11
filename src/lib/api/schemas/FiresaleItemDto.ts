@@ -8,7 +8,11 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface FiresaleItemDto {
+	slotId: number;
+	itemId: string;
+	amount: number;
+	price: number;
+	startsAt: bigint;
+	endsAt: bigint;
+}

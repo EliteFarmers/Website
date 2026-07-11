@@ -8,7 +8,13 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type LeaderboardArchiveResultStatus =
+	(typeof LeaderboardArchiveResultStatus)[keyof typeof LeaderboardArchiveResultStatus];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LeaderboardArchiveResultStatus = {
+	Created: 0,
+	Skipped: 1,
+	Overwritten: 2,
+	Failed: 3,
+} as const;

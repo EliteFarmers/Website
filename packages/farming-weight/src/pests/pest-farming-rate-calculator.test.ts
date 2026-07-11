@@ -525,7 +525,7 @@ test('crop breaking uses the best crop tool for max tool outputs', () => {
 				count: 1,
 				skyblockId: 'THEORETICAL_HOE_WARTS_1',
 				uuid: 'early-pest-nether-wart-hoe',
-				name: 'Early Newton Nether Warts Hoe',
+				name: 'Early Newton Nether Wart Cutter Hoe',
 				lore: [],
 				enchantments: {},
 				attributes: {},
@@ -535,7 +535,7 @@ test('crop breaking uses the best crop tool for max tool outputs', () => {
 				count: 1,
 				skyblockId: 'THEORETICAL_HOE_WARTS_3',
 				uuid: 'maxed-pest-nether-wart-hoe',
-				name: 'Bountiful Newton Nether Warts Hoe',
+				name: 'Bountiful Newton Nether Wart Cutter Hoe',
 				lore: [],
 				enchantments: {},
 				attributes: {

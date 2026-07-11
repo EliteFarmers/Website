@@ -10,7 +10,7 @@ const netherwartHoe = {
 	count: 1,
 	skyblockId: 'THEORETICAL_HOE_WARTS_3',
 	uuid: '103d2e1f-0351-429f-b116-c85e81886597',
-	name: '§dBountiful Newton Nether Warts Hoe',
+	name: '§dBountiful Newton Nether Wart Cutter Hoe',
 	lore: [
 		'§7Speed: §a+13 §9(+13)',
 		'§7Farming Fortune: §a+128 §2(+5) §9(+10) §d(+18)',
@@ -235,7 +235,7 @@ const t1WheatHoe = {
 	count: 1,
 	skyblockId: 'THEORETICAL_HOE_WHEAT_1',
 	uuid: '2b15e5f1-94e3-424e-a265-461ca617672b',
-	name: "§fEuclid's Wheat Hoe",
+	name: "§fEuclid's Wheat Sickle",
 	lore: [
 		'§7Wheat Fortune: §a+10',
 		' §8[§8☘§8]',
@@ -261,7 +261,7 @@ const t3CaneHoe = {
 	count: 1,
 	skyblockId: 'THEORETICAL_HOE_CANE_3',
 	uuid: '00000000-0000-0000-0000-000000000000',
-	name: '§6Turing Sugar Cane Hoe',
+	name: '§6Turing Sugar Cane Cutter',
 	lore: [
 		'§7Farming Fortune: §a+0',
 		'§7Sugar Cane Fortune: §a+0',
@@ -374,7 +374,7 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 
 	expect(upgrades).toHaveLength(6);
 
-	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Hoe Mk. II");
+	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Sickle Mk. II");
 	expect(selfUpgrade).toBeDefined();
 	expect(selfUpgrade?.increase).toBe(0);
 	expect(selfUpgrade?.action).toBe(UpgradeAction.Upgrade);
@@ -486,7 +486,7 @@ const wildRoseHoe = {
 	damage: 0,
 	skyblockId: 'THEORETICAL_HOE_WILD_ROSE_1',
 	uuid: 'd8ee617c-e391-4d8b-b8c5-d2bfea1197e2',
-	name: '§aWild Rose Hoe Mk. I',
+	name: '§aWild Rose Cutter Mk. I',
 	lore: [
 		'§7Wild Rose Fortune: §6+4',
 		'§7Farming Wisdom: §3+1',
@@ -515,7 +515,7 @@ const wildRoseHoe = {
 	},
 };
 
-test('Wild Rose Hoe Upgrades', () => {
+test('Wild Rose Cutter Upgrades', () => {
 	const tool = new FarmingTool(wildRoseHoe);
 	expect(tool.fortune).toBeGreaterThan(0);
 
@@ -524,13 +524,13 @@ test('Wild Rose Hoe Upgrades', () => {
 	// Tool Level should have item info for frontend dialog
 	const toolLevelProgress = progress.find((p) => p.name === 'Tool Level');
 	expect(toolLevelProgress?.item?.skyblockId).toBe('THEORETICAL_HOE_WILD_ROSE_1');
-	expect(toolLevelProgress?.info?.name).toBe('Wild Rose Hoe Mk. I');
+	expect(toolLevelProgress?.info?.name).toBe('Wild Rose Cutter Mk. I');
 
 	// tool.getUpgrades() should return all available upgrades
 	const upgrades = tool.getUpgrades();
 	expect(upgrades.length).toBeGreaterThan(0);
 
-	const selfUpgrade = upgrades.find((u) => u.title === 'Wild Rose Hoe Mk. II');
+	const selfUpgrade = upgrades.find((u) => u.title === 'Wild Rose Cutter Mk. II');
 	expect(selfUpgrade).toBeDefined();
 });
 

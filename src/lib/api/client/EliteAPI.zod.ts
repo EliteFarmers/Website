@@ -281,6 +281,17 @@ export const zodRemoveRoleFromUserParams = zod.object({
 });
 
 /**
+ * Backfills or repairs daily/monthly compressed current leaderboard archive artifacts.
+ * @summary Archive current leaderboards
+ */
+export const zodArchiveCurrentLeaderboardsBody = zod.object({
+	kind: zod.string(),
+	period: zod.string().nullish(),
+	leaderboard: zod.string().nullish(),
+	overwrite: zod.coerce.boolean<boolean>(),
+});
+
+/**
  * This enables a player's data from Hypixel to be refreshed on the next request.
  * @summary Reset a player's cooldowns
  */
@@ -2981,6 +2992,28 @@ export const zodGetLeaderboardQueryParams = zod.object({
 });
 
 /**
+ * Streams a Brotli-compressed JSON archive artifact for a leaderboard period.
+ * @summary Get archived leaderboard artifact
+ */
+export const zodGetLeaderboardArchiveParams = zod.object({
+	leaderboard: zod.string(),
+	kind: zod.string(),
+	period: zod.string(),
+});
+
+/**
+ * Lists available daily and monthly archive artifacts for a leaderboard.
+ * @summary Get archived leaderboard periods
+ */
+export const zodGetLeaderboardArchivesParams = zod.object({
+	leaderboard: zod.string(),
+});
+
+export const zodGetLeaderboardArchivesQueryParams = zod.object({
+	kind: zod.string().nullish(),
+});
+
+/**
  * @summary Get multiple leaderboard ranks for a player
  */
 export const zodGetMultiplePlayerRanksParams = zod.object({
@@ -3798,6 +3831,307 @@ export const zodSearchBazaarProductsQueryParams = zod.object({
 	query: zod.string().nullish(),
 	category: zod.string().nullish(),
 	limit: zod.number(),
+});
+
+export const zodAcceptHarvestFeastCurrentBody = zod.object({
+	skyBlockYear: zod.number(),
+	skyBlockMonth: zod.number(),
+	current: zod.array(zod.string()),
+	next: zod.record(zod.string(), zod.number().nullable()),
+	isGrandFeast: zod.coerce.boolean<boolean>(),
+	requestHash: zod.string(),
+	submittedAt: zod.iso.datetime({}),
+});
+
+export const zodAcceptUpcomingJacobContestsBody = zod.object({
+	skyBlockYear: zod.number(),
+	contests: zod.record(zod.string(), zod.array(zod.string())),
+	acceptedAt: zod.iso.datetime({}),
+	requestHash: zod.string().nullish(),
+});
+
+export const zodUpsertAuctionPriceHistoryBody = zod.object({
+	histories: zod.array(
+		zod.object({
+			skyblockId: zod.string(),
+			variantKey: zod.string(),
+			bucketStart: zod.number(),
+			lowestBinPrice: zod.number().nullish(),
+			averageBinPrice: zod.number().nullish(),
+			binListings: zod.number(),
+			lowestSalePrice: zod.number().nullish(),
+			averageSalePrice: zod.number().nullish(),
+			saleAuctions: zod.number(),
+			itemsSold: zod.number(),
+			calculatedAt: zod.iso.datetime({}),
+		})
+	),
+});
+
+export const zodUpsertAuctionSummariesBody = zod.object({
+	summaries: zod.array(
+		zod.object({
+			skyblockId: zod.string(),
+			variantKey: zod.string(),
+			lowest: zod.number().nullish(),
+			lowestVolume: zod.number(),
+			lowestObservedAt: zod.iso.datetime({}).nullish(),
+			lowest3Day: zod.number().nullish(),
+			lowest3DayVolume: zod.number(),
+			lowest7Day: zod.number().nullish(),
+			lowest7DayVolume: zod.number(),
+			rawLowest: zod.number().nullish(),
+			lastLowest: zod.number().nullish(),
+			lastLowestAt: zod.iso.datetime({}).nullish(),
+			calculatedAt: zod.iso.datetime({}),
+		})
+	),
+});
+
+export const zodUpsertBazaarSnapshotsBody = zod.object({
+	snapshots: zod.array(
+		zod.object({
+			productId: zod.string(),
+			recordedAt: zod.iso.datetime({}),
+			instaSellPrice: zod.number(),
+			instaBuyPrice: zod.number(),
+			buyOrderPrice: zod.number(),
+			topBuyOrderPrice: zod.number(),
+			sellOrderPrice: zod.number(),
+			topSellOrderPrice: zod.number(),
+		})
+	),
+});
+
+export const zodUpsertBazaarSummariesBody = zod.object({
+	summaries: zod.array(
+		zod.object({
+			productId: zod.string(),
+			recordedAt: zod.iso.datetime({}),
+			instaSellPrice: zod.number(),
+			instaBuyPrice: zod.number(),
+			buyOrderPrice: zod.number(),
+			topBuyOrderPrice: zod.number(),
+			sellOrderPrice: zod.number(),
+			topSellOrderPrice: zod.number(),
+			calculationTimestamp: zod.iso.datetime({}),
+			avgInstaSellPrice: zod.number(),
+			avgInstaBuyPrice: zod.number(),
+			avgBuyOrderPrice: zod.number(),
+			avgTopBuyOrderPrice: zod.number(),
+			avgSellOrderPrice: zod.number(),
+			avgTopSellOrderPrice: zod.number(),
+			orders: zod.object({
+				sellSummary: zod
+					.array(
+						zod.object({
+							amount: zod.number(),
+							pricePerUnit: zod.number(),
+							orders: zod.number(),
+						})
+					)
+					.nullish(),
+				buySummary: zod
+					.array(
+						zod.object({
+							amount: zod.number(),
+							pricePerUnit: zod.number(),
+							orders: zod.number(),
+						})
+					)
+					.nullish(),
+			}),
+		})
+	),
+});
+
+export const zodUpsertFiresalesBody = zod.object({
+	sales: zod.array(
+		zod.object({
+			startsAt: zod.number(),
+			endsAt: zod.number(),
+			items: zod.array(
+				zod.object({
+					slotId: zod.number(),
+					itemId: zod.string(),
+					amount: zod.number(),
+					price: zod.number(),
+					startsAt: zod.number(),
+					endsAt: zod.number(),
+				})
+			),
+		})
+	),
+});
+
+export const zodUpsertItemsBody = zod.object({
+	items: zod.array(
+		zod.object({
+			itemId: zod.string(),
+			npcSellPrice: zod.number(),
+			data: zod
+				.object({
+					id: zod.string().nullish(),
+					item_model: zod.string().nullish(),
+					material: zod.string().nullish(),
+					color: zod.string().nullish(),
+					durability: zod.number(),
+					skin: zod
+						.object({
+							value: zod.string().nullish(),
+							signature: zod.string().nullish(),
+						})
+						.nullish(),
+					name: zod.string().nullish(),
+					category: zod.string().nullish(),
+					tier: zod.string().nullish(),
+					unstackable: zod.coerce.boolean<boolean>(),
+					glowing: zod.coerce.boolean<boolean>(),
+					npc_sell_price: zod.number(),
+					can_auction: zod.coerce.boolean<boolean>(),
+					can_trade: zod.coerce.boolean<boolean>(),
+					can_place: zod.coerce.boolean<boolean>(),
+					gemstone_slots: zod
+						.array(
+							zod.object({
+								slot_type: zod.string().nullish(),
+								costs: zod.array(
+									zod.object({
+										type: zod.string(),
+										item_id: zod.string().nullish(),
+										coins: zod.number(),
+									})
+								),
+								requirements: zod.array(
+									zod.object({
+										type: zod.string(),
+										skill: zod.string().nullish(),
+										data_key: zod.string().nullish(),
+										value: zod.string().nullish(),
+										operator: zod.string().nullish(),
+										level: zod.number(),
+									})
+								),
+							})
+						)
+						.nullish(),
+					requirements: zod
+						.array(
+							zod.object({
+								type: zod.string(),
+								skill: zod.string().nullish(),
+								data_key: zod.string().nullish(),
+								value: zod.string().nullish(),
+								operator: zod.string().nullish(),
+								level: zod.number(),
+							})
+						)
+						.nullish(),
+					museum: zod.coerce.boolean<boolean>(),
+					museum_data: zod
+						.object({
+							donation_xp: zod.number(),
+							parent: zod.record(zod.string(), zod.string()),
+							type: zod.string().nullish(),
+							armor_set_donation_xp: zod.record(zod.string(), zod.number()).nullish(),
+							game_stage: zod.string().nullish(),
+						})
+						.nullish(),
+					stats: zod.record(zod.string(), zod.number()).nullish(),
+					generator_tier: zod.number(),
+					dungeon_item_conversion_cost: zod
+						.object({
+							essence_type: zod.string().nullish(),
+							amount: zod.number(),
+						})
+						.nullish(),
+					upgrade_costs: zod
+						.array(
+							zod.array(
+								zod.object({
+									type: zod.string().nullish(),
+									essence_type: zod.string().nullish(),
+									item_id: zod.string().nullish(),
+									amount: zod.number(),
+								})
+							)
+						)
+						.nullish(),
+					catacombs_requirements: zod
+						.array(
+							zod.object({
+								type: zod.string().nullish(),
+								dungeon_type: zod.string().nullish(),
+								level: zod.number(),
+							})
+						)
+						.nullish(),
+					hide_from_viewrecipe_command: zod.coerce.boolean<boolean>(),
+					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
+					item_specific: zod
+						.object({
+							rootElement: zod.unknown(),
+						})
+						.nullish(),
+				})
+				.nullish(),
+		})
+	),
+});
+
+export const zodUpsertObservedAuctionsBody = zod.object({
+	ingestedAt: zod.iso.datetime({}),
+	lastSeenAt: zod.number(),
+	binPrices: zod.array(
+		zod.object({
+			auctionUuid: zod.string(),
+			skyblockId: zod.string(),
+			variantKey: zod.string(),
+			price: zod.number(),
+			listedAt: zod.number(),
+			lastSeenAt: zod.number(),
+			ingestedAt: zod.iso.datetime({}),
+		})
+	),
+	auctions: zod.array(
+		zod.object({
+			auctionId: zod.string(),
+			sellerUuid: zod.string(),
+			sellerProfileUuid: zod.string(),
+			start: zod.number(),
+			end: zod.number(),
+			price: zod.number(),
+			startingBid: zod.number(),
+			highestBid: zod.number().nullish(),
+			count: zod.number(),
+			bin: zod.coerce.boolean<boolean>(),
+			itemUuid: zod.string().nullish(),
+			skyblockId: zod.string().nullish(),
+			variantKey: zod.string(),
+			itemBytesBase64: zod.string().nullish(),
+			lastUpdatedAt: zod.iso.datetime({}),
+		})
+	),
+});
+
+export const zodUpsertRecentlyEndedAuctionsBody = zod.object({
+	auctions: zod.array(
+		zod.object({
+			auctionId: zod.string(),
+			sellerUuid: zod.string(),
+			sellerProfileUuid: zod.string(),
+			buyerUuid: zod.string(),
+			buyerProfileUuid: zod.string(),
+			timestamp: zod.number(),
+			price: zod.number(),
+			bin: zod.coerce.boolean<boolean>(),
+			count: zod.number(),
+			itemUuid: zod.string().nullish(),
+			skyblockId: zod.string().nullish(),
+			variantKey: zod.string(),
+			itemBytesBase64: zod.string().nullish(),
+		})
+	),
 });
 
 /**

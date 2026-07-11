@@ -7,8 +7,14 @@
 Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: admin-v1
  */
+import type { AcceptedHarvestFeastCurrentRequestNext } from './AcceptedHarvestFeastCurrentRequestNext';
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface AcceptedHarvestFeastCurrentRequest {
+	skyBlockYear: number;
+	skyBlockMonth: number;
+	current: string[];
+	next: AcceptedHarvestFeastCurrentRequestNext;
+	isGrandFeast: boolean;
+	requestHash: string;
+	submittedAt: string;
+}

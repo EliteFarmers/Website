@@ -1,11 +1,20 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@font-face {
+	font-family: 'Hypixel SkyBlock Glyphs';
+	src: url('/api/hypixel-font') format('truetype');
+	font-display: swap;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
 	:root {
-		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		font-family: 'Hypixel SkyBlock Glyphs', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		--font-mono:
+			'Hypixel SkyBlock Glyphs', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+			'Courier New', monospace;
 
 		--background: hsl(0 0% 100%);
 		--foreground: hsl(240 10% 3.9%);
