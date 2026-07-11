@@ -15,6 +15,7 @@ import type { LocalTexturePackOverride } from '$lib/texture-packs';
 import type { RemoteQuery } from '@sveltejs/kit';
 import { PersistedState } from 'runed';
 import { getContext, setContext, tick } from 'svelte';
+import { SvelteMap } from 'svelte/reactivity';
 
 type ConstructorData = {
 	user?: AuthorizedAccountDto | null;
@@ -53,7 +54,7 @@ export class GlobalContext {
 	#pendingGifts = $state<PendingGiftDto[]>([]);
 	#initialized = $state(false);
 	#packsParam = $state('');
-	#packVersions = new Map<string, string>();
+	#packVersions = new SvelteMap<string, string>();
 	#userQuery = $state<RemoteQuery<AuthorizedAccountDto | undefined>>();
 	#accesses = $derived.by(() =>
 		(this.#user?.entitlements ?? []).reduce(
@@ -91,7 +92,7 @@ export class GlobalContext {
 		}
 		this.#announcements = announcements ?? this.#announcements ?? [];
 		if (texturePacks) {
-			this.#packVersions = new Map(texturePacks.map((pack) => [pack.id, pack.version]));
+			this.#packVersions = new SvelteMap<string, string>(texturePacks.map((pack) => [pack.id, pack.version]));
 		}
 		this.dropUnavailablePacks(texturePacks);
 		this.applyDefaultPacks(texturePacks);
@@ -195,6 +196,7 @@ export class GlobalContext {
 			return;
 		}
 
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const params = new URLSearchParams({ packs: packIds.join(',') });
 		const versions = packIds.map((id) => this.#packVersions.get(id)).filter((version) => version !== undefined);
 		if (versions.length) params.set('v', versions.join(','));
