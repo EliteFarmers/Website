@@ -5,13 +5,13 @@ import { BaseItem } from '../base-item.js';
 import { FarmingToolType } from '../definitions.js';
 import { T1_TOOL_GEMS, T2_TOOL_GEMS, T3_TOOL_GEMS } from './gem-slots.js';
 
-// Gauss Carrot Hoe
+// Gauss Carrot Shovel
 export class GaussCarrotHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_CARROT_1';
 	}
 	get name() {
-		return 'Gauss Carrot Hoe Mk. I';
+		return 'Gauss Carrot Shovel Mk. I';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Carrot_Hoe';
@@ -40,7 +40,7 @@ export class GaussCarrotHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_CARROT_2';
 	}
 	get name() {
-		return 'Gauss Carrot Hoe Mk. II';
+		return 'Gauss Carrot Shovel Mk. II';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Carrot_Hoe';
@@ -69,7 +69,7 @@ export class GaussCarrotHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_CARROT_3';
 	}
 	get name() {
-		return 'Gauss Carrot Hoe Mk. III';
+		return 'Gauss Carrot Shovel Mk. III';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Carrot_Hoe';
@@ -83,13 +83,13 @@ export class GaussCarrotHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Newton Nether Warts Hoe
+// Newton Nether Wart Cutter Hoe
 export class NewtonNetherWartsHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_WARTS_1';
 	}
 	get name() {
-		return 'Newton Nether Warts Hoe Mk. I';
+		return 'Newton Nether Wart Cutter Hoe Mk. I';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
@@ -118,7 +118,7 @@ export class NewtonNetherWartsHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_WARTS_2';
 	}
 	get name() {
-		return 'Newton Nether Warts Hoe Mk. II';
+		return 'Newton Nether Wart Cutter Hoe Mk. II';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
@@ -147,7 +147,7 @@ export class NewtonNetherWartsHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_WARTS_3';
 	}
 	get name() {
-		return 'Newton Nether Warts Hoe Mk. III';
+		return 'Newton Nether Wart Cutter Hoe Mk. III';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
@@ -161,13 +161,13 @@ export class NewtonNetherWartsHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Pythagorean Potato Hoe
+// Pythagorean Potato Shovel
 export class PythagoreanPotatoHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_POTATO_1';
 	}
 	get name() {
-		return 'Pythagorean Potato Hoe Mk. I';
+		return 'Pythagorean Potato Shovel Mk. I';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
@@ -196,7 +196,7 @@ export class PythagoreanPotatoHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_POTATO_2';
 	}
 	get name() {
-		return 'Pythagorean Potato Hoe Mk. II';
+		return 'Pythagorean Potato Shovel Mk. II';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
@@ -225,7 +225,7 @@ export class PythagoreanPotatoHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_POTATO_3';
 	}
 	get name() {
-		return 'Pythagorean Potato Hoe Mk. III';
+		return 'Pythagorean Potato Shovel Mk. III';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
@@ -239,13 +239,13 @@ export class PythagoreanPotatoHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Turing Sugar Cane Hoe
+// Turing Sugar Cane Cutter
 export class TuringSugarCaneHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_CANE_1';
 	}
 	get name() {
-		return 'Turing Sugar Cane Hoe Mk. I';
+		return 'Turing Sugar Cane Cutter Mk. I';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
@@ -274,7 +274,7 @@ export class TuringSugarCaneHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_CANE_2';
 	}
 	get name() {
-		return 'Turing Sugar Cane Hoe Mk. II';
+		return 'Turing Sugar Cane Cutter Mk. II';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
@@ -303,7 +303,7 @@ export class TuringSugarCaneHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_CANE_3';
 	}
 	get name() {
-		return 'Turing Sugar Cane Hoe Mk. III';
+		return 'Turing Sugar Cane Cutter Mk. III';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
@@ -317,13 +317,13 @@ export class TuringSugarCaneHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Euclid's Wheat Hoe
+// Euclid's Wheat Sickle
 export class EuclidsWheatHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_WHEAT_1';
 	}
 	get name() {
-		return "Euclid's Wheat Hoe Mk. I";
+		return "Euclid's Wheat Sickle Mk. I";
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Wheat_Hoe';
@@ -352,7 +352,7 @@ export class EuclidsWheatHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_WHEAT_2';
 	}
 	get name() {
-		return "Euclid's Wheat Hoe Mk. II";
+		return "Euclid's Wheat Sickle Mk. II";
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Wheat_Hoe';
@@ -381,7 +381,7 @@ export class EuclidsWheatHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_WHEAT_3';
 	}
 	get name() {
-		return "Euclid's Wheat Hoe Mk. III";
+		return "Euclid's Wheat Sickle Mk. III";
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Wheat_Hoe';
@@ -395,13 +395,13 @@ export class EuclidsWheatHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Eclipse Hoe (Sunflower/Moonflower)
+// Eclipse Sickle (Sunflower/Moonflower)
 export class EclipseHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_SUNFLOWER_1';
 	}
 	get name() {
-		return 'Eclipse Hoe Mk. I';
+		return 'Eclipse Sickle Mk. I';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Eclipse_Hoe';
@@ -431,7 +431,7 @@ export class EclipseHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_SUNFLOWER_2';
 	}
 	get name() {
-		return 'Eclipse Hoe Mk. II';
+		return 'Eclipse Sickle Mk. II';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Eclipse_Hoe';
@@ -461,7 +461,7 @@ export class EclipseHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_SUNFLOWER_3';
 	}
 	get name() {
-		return 'Eclipse Hoe Mk. III';
+		return 'Eclipse Sickle Mk. III';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Eclipse_Hoe';
@@ -475,13 +475,13 @@ export class EclipseHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Wild Rose Hoe
+// Wild Rose Cutter
 export class WildRoseHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_WILD_ROSE_1';
 	}
 	get name() {
-		return 'Wild Rose Hoe Mk. I';
+		return 'Wild Rose Cutter Mk. I';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
@@ -510,7 +510,7 @@ export class WildRoseHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_WILD_ROSE_2';
 	}
 	get name() {
-		return 'Wild Rose Hoe Mk. II';
+		return 'Wild Rose Cutter Mk. II';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
@@ -539,7 +539,7 @@ export class WildRoseHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_WILD_ROSE_3';
 	}
 	get name() {
-		return 'Wild Rose Hoe Mk. III';
+		return 'Wild Rose Cutter Mk. III';
 	}
 	get wiki() {
 		return 'https://w.elitesb.gg/Wild_Rose_Hoe';

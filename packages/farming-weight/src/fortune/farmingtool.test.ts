@@ -9,7 +9,7 @@ const netherwartHoe = {
 	count: 1,
 	skyblockId: 'THEORETICAL_HOE_WARTS_3',
 	uuid: '103d2e1f-0351-429f-b116-c85e81886597',
-	name: '§dBountiful Newton Nether Warts Hoe',
+	name: '§dBountiful Newton Nether Wart Cutter Hoe',
 	lore: [
 		'§7Speed: §a+13 §9(+13)',
 		'§7Farming Fortune: §a+128 §2(+5) §9(+10) §d(+18)',

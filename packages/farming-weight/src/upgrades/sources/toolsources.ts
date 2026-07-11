@@ -287,7 +287,7 @@ function enchantSourceBuilder(
 			const maxOverbloom =
 				currentOverbloom > 0 ? getMaxStatFromEnchant(enchant, Stat.Overbloom, tool.options, tool.crops[0]) : 0;
 
-			// For multi-crop tools (e.g., Eclipse Hoe), take the best single-crop value to avoid double counting
+			// For multi-crop tools (e.g., Eclipse Sickle), take the best single-crop value to avoid double counting
 			if (tool.crops.length > 1) {
 				let best = 0;
 				for (const crop of tool.crops) {
