@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { toReadable } from '$lib/format';
-	import { Area, Axis, Chart, Highlight, Layer, Tooltip } from 'layerchart';
+	import { Area, Axis, Chart, Highlight, Svg, Tooltip } from 'layerchart/svg';
 
 	interface Props {
 		data: { date: string; value: number }[];
@@ -41,14 +41,14 @@
 <div class="m-2 h-50 rounded dark:scheme-dark">
 	<Chart
 		{data}
-		x="date"
+		x={(d) => Number(d.date)}
 		y="value"
 		{yDomain}
 		yNice
 		padding={{ left: 48, bottom: 16, top: 5, right: 48 }}
 		tooltipContext={{ mode: 'bisect-x' }}
 	>
-		<Layer type="svg" class="fill-primary stroke-muted-foreground">
+		<Svg class="fill-primary stroke-muted-foreground">
 			<Axis
 				placement="left"
 				rule
@@ -75,7 +75,7 @@
 				line={{ class: 'stroke-3 fill-transparent', stroke: color }}
 			/>
 			<Highlight y={(d) => d.value} points={{ fill: color }} />
-		</Layer>
+		</Svg>
 		<Tooltip.Root class="bg-card">
 			{#snippet children({ data })}
 				<Tooltip.Header>

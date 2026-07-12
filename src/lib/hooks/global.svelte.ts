@@ -22,6 +22,8 @@ type ConstructorData = {
 	session?: AuthSession | null;
 	announcements?: AnnouncementDto[];
 	texturePacks?: ResourcePackDto[] | null;
+	previewPack?: LocalTexturePackOverride | null;
+	clearPreviewPackId?: string | null;
 };
 
 type PersistedData = {
@@ -85,7 +87,7 @@ export class GlobalContext {
 		});
 	}
 
-	setValues({ user, session, announcements, texturePacks }: ConstructorData) {
+	setValues({ user, session, announcements, texturePacks, previewPack, clearPreviewPackId }: ConstructorData) {
 		this.#session = session ?? undefined;
 		if (user !== undefined) {
 			this.user = user;
@@ -93,6 +95,12 @@ export class GlobalContext {
 		this.#announcements = announcements ?? this.#announcements ?? [];
 		if (texturePacks) {
 			this.#packVersions = new SvelteMap<string, string>(texturePacks.map((pack) => [pack.id, pack.version]));
+		}
+		if (clearPreviewPackId) {
+			this.removeLocalTexturePackOverride(clearPreviewPackId);
+		}
+		if (previewPack) {
+			this.upsertLocalTexturePackOverride(previewPack, true);
 		}
 		this.dropUnavailablePacks(texturePacks);
 		this.applyDefaultPacks(texturePacks);
