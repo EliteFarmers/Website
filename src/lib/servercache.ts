@@ -295,7 +295,8 @@ export const cache = {
 };
 
 let intervals: (number | NodeJS.Timeout)[] = [];
-let remoteReloadSignalVersion = 0 as number | bigint;
+let remoteReloadSignalVersion = 0;
+let remoteReloadCheckInFlight: Promise<void> | undefined;
 
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
@@ -323,8 +324,10 @@ export async function initCachedItems() {
 	// Api url is imported just to prevent this file from accidentally being included in the client bundle
 	if (building || !ELITE_API_URL) return;
 
+	if (ELITE_API_TOKEN && !dev) {
+		await initializeRemoteReloadSignalVersion();
+	}
 	await reloadCachedItems();
-	await initializeRemoteReloadSignalVersion();
 
 	for (const i of intervals) {
 		clearInterval(i);
@@ -341,7 +344,9 @@ export async function initCachedItems() {
 		)
 	); // 1 hour
 
-	intervals.push(setInterval(checkForRemoteReloadSignal, SERVER_CACHE_RELOAD_POLL_INTERVAL));
+	if (ELITE_API_TOKEN && !dev) {
+		intervals.push(setInterval(checkForRemoteReloadSignal, SERVER_CACHE_RELOAD_POLL_INTERVAL));
+	}
 
 	for (const entry of Object.values(cacheEntries)) {
 		if (!('interval' in entry)) continue;
@@ -350,24 +355,50 @@ export async function initCachedItems() {
 }
 
 async function initializeRemoteReloadSignalVersion() {
-	if (!ELITE_API_TOKEN) return;
 	try {
-		remoteReloadSignalVersion = (await getWebsiteCacheReloadSignal())?.data?.version ?? 0;
+		const result = await getWebsiteCacheReloadSignal();
+		if (!result.response.ok) {
+			throw new Error(`Website cache reload signal failed with status ${result.response.status}`);
+		}
+
+		remoteReloadSignalVersion = parseReloadSignalVersion(result.data?.version);
 	} catch (error) {
 		console.error('Failed to initialize remote website cache reload signal:', error);
 	}
 }
 
-async function checkForRemoteReloadSignal() {
-	try {
-		const version = await getWebsiteCacheReloadSignal().then((res) => res.data?.version);
-		if (!version || version <= remoteReloadSignalVersion) return;
+function checkForRemoteReloadSignal() {
+	if (remoteReloadCheckInFlight) return;
 
-		await reloadCachedItems();
-		remoteReloadSignalVersion = version;
-	} catch (error) {
-		console.error('Failed to poll remote website cache reload signal:', error);
+	remoteReloadCheckInFlight = pollForRemoteReloadSignal()
+		.catch((error) => {
+			console.error('Failed to poll remote website cache reload signal:', error);
+		})
+		.finally(() => {
+			remoteReloadCheckInFlight = undefined;
+		});
+}
+
+async function pollForRemoteReloadSignal() {
+	const result = await getWebsiteCacheReloadSignal();
+	if (!result.response.ok) {
+		throw new Error(`Website cache reload signal failed with status ${result.response.status}`);
 	}
+
+	const version = parseReloadSignalVersion(result.data?.version);
+	if (!version || version <= remoteReloadSignalVersion) return;
+
+	await reloadCachedItems();
+	remoteReloadSignalVersion = version;
+}
+
+function parseReloadSignalVersion(version: number | bigint | undefined) {
+	const numericVersion = Number(version ?? 0);
+	if (!Number.isSafeInteger(numericVersion) || numericVersion < 0) {
+		throw new Error('Website cache reload signal returned an invalid version');
+	}
+
+	return numericVersion;
 }
 
 async function refreshCacheItem(item: (typeof cacheEntries)[keyof typeof cacheEntries]) {

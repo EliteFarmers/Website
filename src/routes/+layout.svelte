@@ -32,6 +32,8 @@
 			session: data.session,
 			announcements: data.cache?.announcements ?? [],
 			texturePacks: data.cache?.texturepacks ?? [],
+			previewPack: data.previewPack,
+			clearPreviewPackId: data.clearPreviewPackId,
 		}))()
 	);
 	initThemeContext();
@@ -49,8 +51,23 @@
 			session: data.session,
 			announcements: data.cache?.announcements ?? [],
 			texturePacks: data.cache?.texturepacks ?? [],
+			previewPack: data.previewPack,
+			clearPreviewPackId: data.clearPreviewPackId,
 		};
 		untrack(() => gbl.setValues(newData));
+	});
+
+	$effect(() => {
+		if (!data.previewPack && !data.clearPreviewPackId) return;
+
+		const previewUrl = new URL(window.location.href);
+		previewUrl.searchParams.delete('previewPack');
+		previewUrl.searchParams.delete('clearPreviewPack');
+		window.history.replaceState(
+			window.history.state,
+			'',
+			`${previewUrl.pathname}${previewUrl.search}${previewUrl.hash}`
+		);
 	});
 
 	// Force hard navigation if the websites was updated
