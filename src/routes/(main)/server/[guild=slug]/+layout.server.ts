@@ -14,7 +14,12 @@ export const load = (async ({ params, url }) => {
 		throw error(404, 'Guild not found');
 	}
 
-	const properUrl = guildData.name.replaceAll(' ', '-') + '-' + guildData.id;
+	const guildSlug = guildData.name
+		.replace(/[^a-zA-Z0-9 -]/g, '')
+		.replaceAll(' ', '-')
+		.replace(/-+/g, '-')
+		.replace(/^-|-$/g, '');
+	const properUrl = `${guildSlug}-${guildData.id}`;
 
 	if (properUrl !== guild && !url.pathname.endsWith('/join')) {
 		throw redirect(307, `/server/${properUrl}`);
