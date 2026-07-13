@@ -10,6 +10,7 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
 import type { ProfileMemberDataDtoAttributes } from './ProfileMemberDataDtoAttributes';
 import type { ProfileMemberShardDataDto } from './ProfileMemberShardDataDto';
 import type { ProfileMemberGardenDataDto } from './ProfileMemberGardenDataDto';
+import type { ProfileMemberLoadoutDataDto } from './ProfileMemberLoadoutDataDto';
 
 /**
  * Per-skill gear bundles indicating which staged catalog items/pets the player owns across
@@ -19,4 +20,5 @@ export interface ProfileMemberDataDto {
 	attributes: ProfileMemberDataDtoAttributes;
 	capturedShards: ProfileMemberShardDataDto[];
 	garden: ProfileMemberGardenDataDto;
+	loadouts: ProfileMemberLoadoutDataDto[];
 }

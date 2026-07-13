@@ -13,6 +13,8 @@ export interface HypixelInventoryOverviewDto {
 	id: string;
 	/** @maxLength 64 */
 	name: string;
+	/** Number of slots rendered for this inventory, including empty slots. */
+	slotCount: number;
 	/** @nullable */
 	metadata?: HypixelInventoryOverviewDtoMetadata;
 }

@@ -5,6 +5,7 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import ItemDialog from '../item-dialog.svelte';
 	import InventoryBasic from './inventory-basic.svelte';
+	import InventoryPlaceholder from './inventory-placeholder.svelte';
 	import InventorySlot from './inventory-slot.svelte';
 
 	const inventories = ['wardrobe', 'armor'];
@@ -43,6 +44,7 @@
 
 	const armor = $derived(data?.current?.['armor']);
 	const wardrobe = $derived(data?.current?.['wardrobe']);
+	const wardrobeOverview = $derived(ctx.member.current?.inventories.find((inv) => inv.name === 'wardrobe'));
 	const equippedSlot = $derived(wardrobe?.metadata?.['equipped_slot'] ?? '-1');
 	let selectedItem = $state<ItemDto | null>(null);
 	let open = $state(false);
@@ -169,6 +171,16 @@
 				</div>
 			</div>
 		{/if}
+	{:else if wardrobeOverview}
+		<div class="flex w-full flex-wrap items-start justify-center gap-4">
+			<InventoryPlaceholder
+				slotCount={wardrobeOverview.slotCount}
+				inventorySize={9 * 4}
+				slotsPerColumn={wardrobeOverview.metadata?.source === 'loadout.armor' ? 4 : 1}
+				slotClass={inventorySlotClass}
+				gridClass="grid w-fit grid-cols-9 items-start justify-center gap-2"
+			/>
+		</div>
 	{/if}
 </div>
 

@@ -11,6 +11,8 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
 export interface PetDto {
 	/** @nullable */
 	uuid?: string | null;
+	/** @nullable */
+	localId?: string | null;
 	type: string;
 	exp: number;
 	active: boolean;

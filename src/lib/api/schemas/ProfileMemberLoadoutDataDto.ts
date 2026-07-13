@@ -8,11 +8,20 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 
-export interface ProblemDetailsError {
-	name: string;
-	reason: string;
+export interface ProfileMemberLoadoutDataDto {
+	id: number;
 	/** @nullable */
-	code?: string | null;
+	armorSetId?: number | null;
 	/** @nullable */
-	severity?: string | null;
+	equipmentSetId?: number | null;
+	/** @nullable */
+	powerStone?: string | null;
+	/** @nullable */
+	tuningPointsSlot?: number | null;
+	/** @nullable */
+	miningCoreSelectedSlot?: number | null;
+	/** @nullable */
+	foragingCoreSelectedSlot?: number | null;
+	/** @nullable */
+	petLocalId?: string | null;
 }

@@ -852,6 +852,7 @@ export * from './ProfileMemberGardenChipsDataDto';
 export * from './ProfileMemberGardenDataDto';
 export * from './ProfileMemberGardenDataDtoChips';
 export * from './ProfileMemberGardenDataDtoMutations';
+export * from './ProfileMemberLoadoutDataDto';
 export * from './ProfileMemberMutationDataDto';
 export * from './ProfileMemberNetworthDto';
 export * from './ProfileMemberShardDataDto';

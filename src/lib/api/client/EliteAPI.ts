@@ -14593,7 +14593,6 @@ export const getItemTexture = async (itemId: string, params?: GetItemTexturePara
 };
 
 /**
- * Proxies normalized official-pack metadata from ResourcesAPI.
  * @summary Get the official Hypixel SkyBlock resource pack
  */
 export type getOfficialHypixelPackResponse200 = {
@@ -14916,21 +14915,10 @@ export type getWebsiteCacheReloadSignalResponse200 = {
 	status: 200;
 };
 
-export type getWebsiteCacheReloadSignalResponse401 = {
-	data: void;
-	status: 401;
-};
-
 export type getWebsiteCacheReloadSignalResponseSuccess = getWebsiteCacheReloadSignalResponse200 & {
 	headers: Headers;
 };
-export type getWebsiteCacheReloadSignalResponseError = getWebsiteCacheReloadSignalResponse401 & {
-	headers: Headers;
-};
-
-export type getWebsiteCacheReloadSignalResponse =
-	| getWebsiteCacheReloadSignalResponseSuccess
-	| getWebsiteCacheReloadSignalResponseError;
+export type getWebsiteCacheReloadSignalResponse = getWebsiteCacheReloadSignalResponseSuccess;
 
 export const getGetWebsiteCacheReloadSignalUrl = () => {
 	return `${ELITE_API_URL}/website/cache/reload-signal`;
@@ -14951,21 +14939,10 @@ export type requestWebsiteCacheReloadResponse200 = {
 	status: 200;
 };
 
-export type requestWebsiteCacheReloadResponse401 = {
-	data: void;
-	status: 401;
-};
-
 export type requestWebsiteCacheReloadResponseSuccess = requestWebsiteCacheReloadResponse200 & {
 	headers: Headers;
 };
-export type requestWebsiteCacheReloadResponseError = requestWebsiteCacheReloadResponse401 & {
-	headers: Headers;
-};
-
-export type requestWebsiteCacheReloadResponse =
-	| requestWebsiteCacheReloadResponseSuccess
-	| requestWebsiteCacheReloadResponseError;
+export type requestWebsiteCacheReloadResponse = requestWebsiteCacheReloadResponseSuccess;
 
 export const getRequestWebsiteCacheReloadUrl = () => {
 	return `${ELITE_API_URL}/website/cache/reload-signal`;
