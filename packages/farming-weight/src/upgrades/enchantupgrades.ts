@@ -1,8 +1,35 @@
+import { CROP_INFO } from '../constants/crops.js';
 import { EnchantTierProcurement, FARMING_ENCHANTS, type FarmingEnchant } from '../constants/enchants.js';
 import { Stat } from '../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
+import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
+import { effectsToSummaries } from '../effects/summary.js';
 import type { Upgradeable } from '../fortune/upgradeable.js';
-import { getMaxStatFromEnchant, getStatFromEnchant } from '../util/enchants.js';
+import { enchantEffects } from '../items/sources/enchants.js';
+import { getMaxStatFromEnchant, getOptimisticStatFromEnchant } from '../util/enchants.js';
+import { getItemScopedConflictKey } from './upgradekeys.js';
+
+const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((crop) => crop.fortuneType));
+
+function getDisplayedIncrease(stats: Partial<Record<Stat, number>> | undefined, stat: Stat): number {
+	if (!stats) return 0;
+
+	if (stat === Stat.FarmingFortune) {
+		return stats[Stat.FarmingFortune] ?? 0;
+	}
+
+	if (CROP_FORTUNE_STATS.has(stat)) {
+		return (stats[stat] ?? 0) + (stats[Stat.FarmingFortune] ?? 0);
+	}
+
+	return stats[stat] ?? 0;
+}
+
+function getEnchantEffectSummaries(upgradeable: Upgradeable, enchantId: string, level: number, stat: Stat) {
+	const env = buildEffectEnvironmentFromOptions(upgradeable.options, upgradeable.crop);
+	const effects = enchantEffects(enchantId, level, env, upgradeable.options ?? {}, true);
+	return effectsToSummaries(effects, [stat]);
+}
 
 export function getUpgradeableEnchants(upgradeable: Upgradeable, stat: Stat = Stat.FarmingFortune): FortuneUpgrade[] {
 	if (!upgradeable.type) return [];
@@ -37,10 +64,11 @@ export function getUpgradeableEnchant(
 	// If this enchant can never affect the selected stat, skip it entirely
 	// unless explicitly requested (used for progress-only enchants).
 	const maxForStat = getMaxStatFromEnchant(enchant, stat, upgradeable.options, upgradeable.crop);
+	const maxEffectSummaries = getEnchantEffectSummaries(upgradeable, enchantId, enchant.maxLevel, stat);
 	const includeWhenNoStatImpact = options?.includeWhenNoStatImpact === true;
-	if (maxForStat <= 0 && !includeWhenNoStatImpact) return result;
+	if (maxForStat <= 0 && maxEffectSummaries.length === 0 && !includeWhenNoStatImpact) return result;
 	const currentForStat = applied
-		? getStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop)
+		? getOptimisticStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop)
 		: 0;
 	if (maxForStat > 0 && maxForStat <= currentForStat && !includeWhenNoStatImpact) return result;
 
@@ -49,7 +77,13 @@ export function getUpgradeableEnchant(
 		const procurement = enchant.levels[enchant.minLevel]?.procurement;
 		const deltaStats: Partial<Record<Stat, number>> = {};
 		for (const stat of Object.values(Stat)) {
-			const val = getStatFromEnchant(enchant.minLevel, enchant, stat, upgradeable.options, upgradeable.crop);
+			const val = getOptimisticStatFromEnchant(
+				enchant.minLevel,
+				enchant,
+				stat,
+				upgradeable.options,
+				upgradeable.crop
+			);
 			if (val !== 0) deltaStats[stat] = val;
 		}
 		// Some enchants (e.g. Dedication) are crop-computed and can evaluate to 0
@@ -65,19 +99,21 @@ export function getUpgradeableEnchant(
 
 		const hasStats = Object.keys(deltaStats).length > 0;
 		const stats = hasStats ? deltaStats : undefined;
-		const increase = stats?.[Stat.FarmingFortune] ?? 0;
+		const increase = getDisplayedIncrease(stats, stat);
+		const effects = getEnchantEffectSummaries(upgradeable, enchantId, enchant.minLevel, stat);
 
 		result.push({
 			title: enchant.name + ' 1',
 			increase,
 			stats,
+			effects: effects.length > 0 ? effects : undefined,
 			wiki: enchant.wiki,
 			action:
 				!procurement || procurement === EnchantTierProcurement.Normal
 					? UpgradeAction.Apply
 					: UpgradeAction.LevelUp,
 			category: UpgradeCategory.Enchant,
-			conflictKey: `enchant:${enchantId}:1`,
+			conflictKey: getItemScopedConflictKey(upgradeable, `enchant:${enchantId}:1`),
 			cost: {
 				items: {
 					[enchantNameToId(enchant) + '_1']: 1,
@@ -104,8 +140,8 @@ export function getUpgradeableEnchant(
 	// Add an entry for upgrading the enchantment
 	const deltaStats: Partial<Record<Stat, number>> = {};
 	for (const stat of Object.values(Stat)) {
-		const before = getStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop);
-		const after = getStatFromEnchant(applied + 1, enchant, stat, upgradeable.options, upgradeable.crop);
+		const before = getOptimisticStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop);
+		const after = getOptimisticStatFromEnchant(applied + 1, enchant, stat, upgradeable.options, upgradeable.crop);
 		const diff = after - before;
 		if (diff !== 0) deltaStats[stat] = diff;
 	}
@@ -120,7 +156,8 @@ export function getUpgradeableEnchant(
 
 	const hasStats = Object.keys(deltaStats).length > 0;
 	const stats = hasStats ? deltaStats : undefined;
-	const increase = stats?.[Stat.FarmingFortune] ?? 0;
+	const increase = getDisplayedIncrease(stats, stat);
+	const effects = getEnchantEffectSummaries(upgradeable, enchantId, applied + 1, stat);
 
 	const nextEnchant = enchant.levels[applied + 1];
 	if (!nextEnchant) return result;
@@ -160,9 +197,10 @@ export function getUpgradeableEnchant(
 		title: enchant.name + ' ' + (applied + 1),
 		increase,
 		stats,
+		effects: effects.length > 0 ? effects : undefined,
 		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
 		category: UpgradeCategory.Enchant,
-		conflictKey: `enchant:${enchantId}:${applied + 1}`,
+		conflictKey: getItemScopedConflictKey(upgradeable, `enchant:${enchantId}:${applied + 1}`),
 		cost: cost,
 		wiki: enchant.wiki,
 		onto: {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import Head from '$comp/head.svelte';
 	import TableOfContents from '$comp/posts/toc/toc.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { type PostData } from '$lib/posts';
 	import { ScrollArea } from '$ui/scroll-area/index.js';
 	import Construction from '@lucide/svelte/icons/construction';

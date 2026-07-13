@@ -2,8 +2,8 @@
 	import { page } from '$app/state';
 	import Event from '$comp/discord/event.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import Head from '$comp/head.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import * as Accordion from '$ui/accordion';

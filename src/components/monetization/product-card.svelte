@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { ProductDto } from '$lib/api';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { cn } from '$lib/utils';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import Gift from '@lucide/svelte/icons/gift';
 	import Package from '@lucide/svelte/icons/package';
 
 	interface Props {
@@ -11,9 +13,11 @@
 
 	let { product, class: className = '' }: Props = $props();
 
+	const globalContext = getGlobalContext();
 	const image = $derived(product.thumbnail?.url ?? '');
 	const dollars = $derived(((product.price ?? 0) / 100).toFixed(2));
 	const free = $derived(!product.price || +dollars === 0);
+	const isOwned = $derived.by(() => globalContext.authorized && globalContext.ownsProduct(product.id));
 	const isNew = $derived(
 		product.releasedAt ? new Date(product.releasedAt).getTime() > Date.now() - 1000 * 60 * 60 * 24 * 7 : false
 	);
@@ -35,11 +39,18 @@
 				class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
 			/>
 		{:else}
-			<Package size={48} class="text-muted-foreground/50" />
+			<Package size={48} class="text-muted-foreground opacity-50" />
+		{/if}
+		{#if isOwned}
+			<span
+				class="bg-primary shadow-primary/30 text-primary-foreground absolute top-2 left-2 rounded-full px-2 py-0.5 text-xs font-semibold shadow-md"
+			>
+				Owned
+			</span>
 		{/if}
 		{#if isNew}
 			<span
-				class="bg-destructive shadow-destructive/50 absolute top-2 right-2 rounded-full px-2 py-0.5 text-xs font-semibold text-white shadow-md"
+				class="bg-destructive shadow-destructive/50 text-destructive-foreground absolute top-2 right-2 rounded-full px-2 py-0.5 text-xs font-semibold shadow-md"
 				>NEW</span
 			>
 		{/if}
@@ -71,7 +82,11 @@
 			<div
 				class="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors"
 			>
-				<ArrowRight size={16} />
+				{#if isOwned}
+					<Gift size={16} />
+				{:else}
+					<ArrowRight size={16} />
+				{/if}
 			</div>
 		</div>
 	</div>

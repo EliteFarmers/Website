@@ -15,7 +15,7 @@ export class HedgehogPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Hedgehog_Pet';
+		return 'https://w.elitesb.gg/Hedgehog_Pet';
 	}
 
 	override perLevelStats = {
@@ -31,6 +31,11 @@ export class HedgehogPet extends FarmingPetDefinition {
 			[Stat.PestKillFortune]: {
 				name: 'Fearsome Farmer',
 				value: 1,
+				type: FarmingPetStatType.Ability,
+			},
+			[Stat.Overbloom]: {
+				name: 'Fearsome Farmer',
+				value: 0.35,
 				type: FarmingPetStatType.Ability,
 			},
 		},

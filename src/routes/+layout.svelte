@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
 	import { updated } from '$app/state';
-	import GTag from '$comp/analytics/g-tag.svelte';
+	import UmamiAnalytics from '$comp/analytics/umami.svelte';
+	import GiftNotificationDialog from '$comp/gift-notification-dialog.svelte';
 	import PageToast from '$comp/page-toast.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
 	import { initAdContext } from '$lib/hooks/ads.svelte';
@@ -26,7 +27,15 @@
 	let isHover = $state(new IsHover());
 	setContext('isHover', isHover);
 
-	initGlobalContext((() => ({ session: data.session, announcements: data.cache?.announcements ?? [] }))());
+	initGlobalContext(
+		(() => ({
+			session: data.session,
+			announcements: data.cache?.announcements ?? [],
+			texturePacks: data.cache?.texturepacks ?? [],
+			previewPack: data.previewPack,
+			clearPreviewPackId: data.clearPreviewPackId,
+		}))()
+	);
 	initThemeContext();
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -38,8 +47,27 @@
 	const gbl = getGlobalContext();
 
 	$effect.pre(() => {
-		const newData = { session: data.session, announcements: data.cache?.announcements ?? [] };
+		const newData = {
+			session: data.session,
+			announcements: data.cache?.announcements ?? [],
+			texturePacks: data.cache?.texturepacks ?? [],
+			previewPack: data.previewPack,
+			clearPreviewPackId: data.clearPreviewPackId,
+		};
 		untrack(() => gbl.setValues(newData));
+	});
+
+	$effect(() => {
+		if (!data.previewPack && !data.clearPreviewPackId) return;
+
+		const previewUrl = new URL(window.location.href);
+		previewUrl.searchParams.delete('previewPack');
+		previewUrl.searchParams.delete('clearPreviewPack');
+		window.history.replaceState(
+			window.history.state,
+			'',
+			`${previewUrl.pathname}${previewUrl.search}${previewUrl.hash}`
+		);
 	});
 
 	// Force hard navigation if the websites was updated
@@ -50,16 +78,9 @@
 	});
 </script>
 
-<svelte:head>
-	<meta name="author" content="Kaeso" />
-	<meta name="robots" content="index, follow" />
-
-	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
-	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
-</svelte:head>
-
 {@render children?.()}
 
 <PageToast />
+<GiftNotificationDialog />
 <ThemeWatcher />
-<GTag />
+<UmamiAnalytics />

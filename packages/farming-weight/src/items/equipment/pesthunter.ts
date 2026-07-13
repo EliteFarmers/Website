@@ -1,8 +1,14 @@
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
-import { UpgradeReason } from '../../constants/upgrades.js';
+import { UpgradeReason, type UpgradeRecommendation, UpgradeRecommendationKind } from '../../constants/upgrades.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
+
+export const PESTHUNTER_EQUIPMENT_RECOMMENDATION: UpgradeRecommendation = {
+	kind: UpgradeRecommendationKind.Progression,
+	label: 'Pest setup',
+	description: 'Enables a stronger pest farming setup.',
+};
 
 export class PesthuntersGloves extends BaseItem {
 	get skyblockId() {
@@ -12,7 +18,7 @@ export class PesthuntersGloves extends BaseItem {
 		return "Pesthunter's Gloves";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pesthunter%27s_Gloves';
+		return 'https://w.elitesb.gg/Pesthunter%27s_Gloves';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -20,6 +26,7 @@ export class PesthuntersGloves extends BaseItem {
 
 	override family = 'PESTHUNTERS';
 	override slot = GearSlot.Gloves;
+	override recommendation = PESTHUNTER_EQUIPMENT_RECOMMENDATION;
 	override baseStats = {
 		[Stat.BonusPestChance]: 5,
 		[Stat.PestCooldownReduction]: 10,
@@ -34,7 +41,7 @@ export class PesthuntersBelt extends BaseItem {
 		return "Pesthunter's Belt";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pesthunter%27s_Belt';
+		return 'https://w.elitesb.gg/Pesthunter%27s_Belt';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -42,6 +49,7 @@ export class PesthuntersBelt extends BaseItem {
 
 	override family = 'PESTHUNTERS';
 	override slot = GearSlot.Belt;
+	override recommendation = PESTHUNTER_EQUIPMENT_RECOMMENDATION;
 	override baseStats = {
 		[Stat.BonusPestChance]: 5,
 		[Stat.PestCooldownReduction]: 10,
@@ -56,7 +64,7 @@ export class PesthuntersNecklace extends BaseItem {
 		return "Pesthunter's Necklace";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pesthunter%27s_Necklace';
+		return 'https://w.elitesb.gg/Pesthunter%27s_Necklace';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -64,6 +72,7 @@ export class PesthuntersNecklace extends BaseItem {
 
 	override family = 'PESTHUNTERS';
 	override slot = GearSlot.Necklace;
+	override recommendation = PESTHUNTER_EQUIPMENT_RECOMMENDATION;
 	override baseStats = {
 		[Stat.BonusPestChance]: 5,
 		[Stat.PestCooldownReduction]: 10,
@@ -78,7 +87,7 @@ export class PesthuntersCloak extends BaseItem {
 		return "Pesthunter's Cloak";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pesthunter%27s_Cloak';
+		return 'https://w.elitesb.gg/Pesthunter%27s_Cloak';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -86,6 +95,7 @@ export class PesthuntersCloak extends BaseItem {
 
 	override family = 'PESTHUNTERS';
 	override slot = GearSlot.Cloak;
+	override recommendation = PESTHUNTER_EQUIPMENT_RECOMMENDATION;
 	override baseStats = {
 		[Stat.BonusPestChance]: 5,
 		[Stat.PestCooldownReduction]: 10,
@@ -94,5 +104,6 @@ export class PesthuntersCloak extends BaseItem {
 		id: 'PEST_VEST',
 		reason: UpgradeReason.NextTier,
 		why: 'The Pest Vest provides more fortune and a higher bonus pest chance.',
+		recommendation: PESTHUNTER_EQUIPMENT_RECOMMENDATION,
 	};
 }

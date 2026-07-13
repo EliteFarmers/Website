@@ -1,11 +1,20 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@font-face {
+	font-family: 'Hypixel SkyBlock Glyphs';
+	src: url('/api/hypixel-font') format('truetype');
+	font-display: swap;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
 	:root {
-		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		font-family: 'Hypixel SkyBlock Glyphs', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		--font-mono:
+			'Hypixel SkyBlock Glyphs', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+			'Courier New', monospace;
 
 		--background: hsl(0 0% 100%);
 		--foreground: hsl(240 10% 3.9%);
@@ -60,6 +69,9 @@
 		--sunflower: hsl(48 100% 50%);
 		--moonflower: hsl(240, 20%, 70%);
 		--wildrose: hsl(340 65% 60%);
+
+		--overbloom: hsl(64, 61%, 40%);
+		--pestchance: hsl(111, 87%, 25%);
 
 		--sidebar-background: hsl(0 0% 98%);
 		--sidebar-foreground: hsl(240 5.3% 26.1%);
@@ -427,6 +439,9 @@
 	--color-moonflower: var(--moonflower);
 	--color-wildrose: var(--wildrose);
 
+	--color-overbloom: var(--overbloom);
+	--color-pestchance: var(--pestchance);
+
 	--color-progress: var(--progress);
 	--color-completed: var(--completed);
 	--color-link: var(--link);
@@ -503,6 +518,16 @@
 			grid-column: 1 / -1;
 			grid-row: 1 / -1;
 		}
+	}
+
+	.lc-tooltip-container {
+		--color-primary: var(--color-primary);
+
+		--color-surface-100: var(--color-card);
+		--color-surface-200: var(--color-card);
+		--color-surface-300: var(--color-card);
+
+		--color-surface-content: var(--color-card-foreground);
 	}
 
 	[data-rehype-pretty-code-figure] {

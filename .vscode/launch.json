@@ -8,23 +8,26 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Launch Server",
-			"runtimeArgs": ["run", "devhost"],
+			"runtimeArgs": ["run", "dev:svelte"],
 			"runtimeExecutable": "pnpm",
+			"env": {
+				"NODE_OPTIONS": "--inspect"
+			},
 			"skipFiles": ["<node_internals>/**"],
-			"console": "integratedTerminal"
+			"console": "integratedTerminal",
+			"serverReadyAction": {
+				"action": "openExternally",
+				"pattern": "Local:.*http://localhost:([0-9]+)"
+			}
 		},
 		{
-			"type": "firefox",
-			"request": "launch",
-			"name": "Launch Firefox",
-			"url": "http://localhost:5173",
-			"webRoot": "${workspaceFolder}/src"
+			"type": "node",
+			"request": "attach",
+			"name": "Attach to Server",
+			"port": 9229,
+			"restart": true,
+			"skipFiles": ["<node_internals>/**"]
 		}
 	],
-	"compounds": [
-		{
-			"name": "Compound",
-			"configurations": ["Launch Server", "Launch Firefox"]
-		}
-	]
+	"compounds": []
 }

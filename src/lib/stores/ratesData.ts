@@ -1,13 +1,39 @@
 import { browser } from '$app/environment';
-import { ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
+import {
+	PEST_MAIN_ARMOR_SET_ID,
+	PEST_SPAWN_ARMOR_SET_ID,
+	DEFAULT_PEST_CYCLE_SETTINGS,
+	Pest,
+	type PestAttractionSettings,
+	PestFarmingPhase,
+	Spray,
+	ZorroMode,
+	type FarmingTool,
+	type PestCycleSettings,
+	type TemporaryFarmingFortune,
+} from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 import * as z from 'zod';
 
-interface RatesData {
+export type PestFarmingRateSettings = Omit<PestCycleSettings, 'sprayedPlot'>;
+export type PestFarmingTimeOfDay = 'day' | 'night';
+
+export interface PestFarmingData {
+	selectedCrop?: string;
+	phaseLoadouts: Partial<Record<PestFarmingPhase, { armorSetId: string }>>;
+	sprayedPlot: boolean;
+	pesthunterAccessoryEnabled: boolean;
+	timeOfDay: PestFarmingTimeOfDay;
+	attraction: PestAttractionSettings;
+	rateSettings: PestFarmingRateSettings;
+}
+
+export interface RatesData {
 	v: number;
 	settings: boolean;
 	tool?: FarmingTool;
+	chipRarities: Record<string, string>;
 	communityCenter: number;
 	selectedPet?: string;
 	strength: number;
@@ -18,7 +44,13 @@ interface RatesData {
 	zorroMode: ZorroMode;
 	bzMode: 'order' | 'insta';
 	rosewaterFlasks: number;
+	pestFarming: PestFarmingData;
 }
+
+type PartialRatesData = Partial<Omit<RatesData, 'temp' | 'pestFarming'>> & {
+	temp?: Partial<RatesData['temp']>;
+	pestFarming?: Partial<PestFarmingData>;
+};
 
 export const MissingRatesDataSchema = z.object({
 	communityCenter: z.number().optional(),
@@ -29,8 +61,9 @@ export const MissingRatesDataSchema = z.object({
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 8,
+	v: 9,
 	settings: false,
+	chipRarities: {},
 	communityCenter: 0,
 	strength: 0,
 	bzMode: 'order',
@@ -45,25 +78,116 @@ const defaultData = {
 		magic8Ball: false,
 		flourSpray: false,
 		anitaContest: false,
+		celestialMasonJar: false,
+		melonJuiceMixin: false,
+		finnsFocaccia: false,
+		stinkyCheesePotion: false,
 	},
 	sprayedPlot: true,
 	infestedPlotProbability: 0.2,
 	zorroMode: ZorroMode.Normal,
+	pestFarming: {
+		phaseLoadouts: {},
+		sprayedPlot: true,
+		pesthunterAccessoryEnabled: true,
+		timeOfDay: 'day',
+		attraction: {
+			sprayonatorMaterial: Spray.PlantMatter,
+			hooveriusVinylTarget: Pest.Slug,
+		},
+		rateSettings: {
+			blocksPerSecond: DEFAULT_PEST_CYCLE_SETTINGS.blocksPerSecond,
+			spawnBlocksPerSecond: DEFAULT_PEST_CYCLE_SETTINGS.spawnBlocksPerSecond,
+			farmSwapBeforeCooldownSeconds: DEFAULT_PEST_CYCLE_SETTINGS.farmSwapBeforeCooldownSeconds,
+			farmToSpawnSwapSeconds: DEFAULT_PEST_CYCLE_SETTINGS.farmToSpawnSwapSeconds,
+			spawnToKillSwapSeconds: DEFAULT_PEST_CYCLE_SETTINGS.spawnToKillSwapSeconds,
+			fixedKillSetupSeconds: DEFAULT_PEST_CYCLE_SETTINGS.fixedKillSetupSeconds,
+			fixedPestSearchSeconds: DEFAULT_PEST_CYCLE_SETTINGS.fixedPestSearchSeconds,
+			secondsPerPestKill: DEFAULT_PEST_CYCLE_SETTINGS.secondsPerPestKill,
+			returnToFarmSeconds: DEFAULT_PEST_CYCLE_SETTINGS.returnToFarmSeconds,
+			activePestsAtCycleStart: DEFAULT_PEST_CYCLE_SETTINGS.activePestsAtCycleStart,
+			maxActivePests: DEFAULT_PEST_CYCLE_SETTINGS.maxActivePests,
+			atmosphericFilterAutumn: DEFAULT_PEST_CYCLE_SETTINGS.atmosphericFilterAutumn,
+			pestRepellent: DEFAULT_PEST_CYCLE_SETTINGS.pestRepellent,
+			finneganActive: DEFAULT_PEST_CYCLE_SETTINGS.finneganActive,
+		},
+	},
 } as RatesData;
 
-export function initRatesData(data = defaultData) {
+function isLegacyDefaultPhaseLoadouts(loadouts?: Partial<PestFarmingData['phaseLoadouts']>): boolean {
+	return (
+		loadouts?.[PestFarmingPhase.Farm]?.armorSetId === PEST_MAIN_ARMOR_SET_ID &&
+		loadouts?.[PestFarmingPhase.Spawn]?.armorSetId === PEST_SPAWN_ARMOR_SET_ID &&
+		loadouts?.[PestFarmingPhase.Kill]?.armorSetId === PEST_MAIN_ARMOR_SET_ID
+	);
+}
+
+function normalizePestAttractionSettings(
+	data?: (Partial<PestAttractionSettings> & { selectedPest?: Pest }) | null
+): PestAttractionSettings {
+	const attraction = { ...(data ?? {}) };
+	delete attraction.selectedPest;
+	return {
+		...defaultData.pestFarming.attraction,
+		...attraction,
+		excludedPests: attraction.excludedPests ?? defaultData.pestFarming.attraction.excludedPests,
+	};
+}
+
+function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingData {
+	const armorSetIds = new Set([PEST_MAIN_ARMOR_SET_ID, PEST_SPAWN_ARMOR_SET_ID]);
+	const phaseLoadouts: PestFarmingData['phaseLoadouts'] = {};
+
+	if (!isLegacyDefaultPhaseLoadouts(data?.phaseLoadouts)) {
+		for (const phase of [PestFarmingPhase.Farm, PestFarmingPhase.Spawn, PestFarmingPhase.Kill]) {
+			const armorSetId = data?.phaseLoadouts?.[phase]?.armorSetId;
+			if (armorSetId && armorSetIds.has(armorSetId)) {
+				phaseLoadouts[phase] = { armorSetId };
+			}
+		}
+	}
+
+	return {
+		selectedCrop: data?.selectedCrop,
+		phaseLoadouts,
+		sprayedPlot: data?.sprayedPlot ?? defaultData.pestFarming.sprayedPlot,
+		pesthunterAccessoryEnabled: true,
+		timeOfDay: data?.timeOfDay ?? defaultData.pestFarming.timeOfDay,
+		attraction: normalizePestAttractionSettings(data?.attraction),
+		rateSettings: {
+			...defaultData.pestFarming.rateSettings,
+			...(data?.rateSettings ?? {}),
+		},
+	};
+}
+
+function normalizeRatesData(data?: PartialRatesData | null): RatesData {
+	const resetPestFarming = data?.v !== defaultData.v;
+	return {
+		...defaultData,
+		...(data ?? {}),
+		v: defaultData.v,
+		chipRarities: data?.chipRarities ?? {},
+		temp: {
+			...defaultData.temp,
+			...(data?.temp ?? {}),
+		},
+		pestFarming: resetPestFarming ? normalizePestFarmingData() : normalizePestFarmingData(data?.pestFarming),
+	};
+}
+
+export function initRatesData(data: PartialRatesData = defaultData) {
+	let initialData = normalizeRatesData(data);
+
 	if (browser) {
 		const savedRatesData = localStorage.getItem('ratesData');
 
 		if (savedRatesData) {
-			data = JSON.parse(savedRatesData) as RatesData;
-
-			// Add in any missing fields from defaultData
-			data = { ...defaultData, ...data, v: defaultData.v };
+			initialData = normalizeRatesData(JSON.parse(savedRatesData) as PartialRatesData);
 		}
 	}
 
-	const store = writable<RatesData>(data);
+	const store = writable<RatesData>(initialData);
 
 	store.subscribe((rates) => {
 		if (browser) {
@@ -75,18 +199,20 @@ export function initRatesData(data = defaultData) {
 }
 
 export function getRatesData() {
-	const store = getContext<Writable<RatesData>>('ratesData');
+	let store = getContext<Writable<RatesData>>('ratesData');
+
+	if (!store) {
+		initRatesData();
+		store = getContext<Writable<RatesData>>('ratesData');
+	}
 
 	store.update((rates) => {
 		if (!rates || rates.v !== defaultData.v) {
-			rates = defaultData;
+			return normalizeRatesData();
 		}
 
-		return { ...defaultData, ...rates, v: defaultData.v };
+		return normalizeRatesData(rates);
 	});
 
-	if (store) return store;
-
-	initRatesData();
-	return getContext<Writable<RatesData>>('ratesData');
+	return store;
 }

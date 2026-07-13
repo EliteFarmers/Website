@@ -12,14 +12,14 @@ export class CactusKnife1 extends BaseItem {
 		return 'Cactus Knife Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cactus_Knife';
+		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Cactus];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T1_TOOL_GEMS;
 	override upgrade = {
 		id: 'CACTUS_KNIFE_2',
@@ -41,14 +41,14 @@ export class CactusKnife2 extends BaseItem {
 		return 'Cactus Knife Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cactus_Knife';
+		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Cactus];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T2_TOOL_GEMS;
 	override upgrade = {
 		id: 'CACTUS_KNIFE_3',
@@ -70,13 +70,13 @@ export class CactusKnife3 extends BaseItem {
 		return 'Cactus Knife Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cactus_Knife';
+		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
 	}
 
 	override crops = [Crop.Cactus];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T3_TOOL_GEMS;
 }

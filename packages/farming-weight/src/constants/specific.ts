@@ -7,7 +7,7 @@ export const GARDEN_CROP_UPGRADES: FortuneSource = {
 	cropSpecific: true,
 	fortunePerLevel: 5,
 	maxLevel: 9,
-	wiki: 'https://wiki.hypixel.net/Garden#Crop_Upgrades',
+	wiki: 'https://w.elitesb.gg/Garden#Crop_Upgrades',
 	upgradeCosts: {
 		1: {
 			copper: 5,
@@ -43,14 +43,14 @@ export const UNLOCKED_PLOTS: FortuneSource = {
 	name: 'Unlocked Plots',
 	fortunePerLevel: 3,
 	maxLevel: 24,
-	wiki: 'https://wiki.hypixel.net/Garden#Stat_Rewards',
+	wiki: 'https://w.elitesb.gg/Garden#Plots',
 };
 
 export const FARMING_LEVEL: FortuneSource = {
 	name: 'Farming Level',
 	fortunePerLevel: 4,
 	maxLevel: 60,
-	wiki: 'https://wiki.hypixel.net/Farming#Leveling_Rewards',
+	wiki: 'https://w.elitesb.gg/Farming#Leveling_Rewards',
 	upgradeCosts: {
 		51: {
 			medals: {
@@ -136,7 +136,7 @@ export const ANITA_FORTUNE_UPGRADE: FortuneSource = {
 	name: 'Anita Bonus Fortune',
 	fortunePerLevel: 4,
 	maxLevel: 15,
-	wiki: 'https://wiki.hypixel.net/Anita#Extra_Farming_Fortune',
+	wiki: 'https://w.elitesb.gg/Anita#Extra_Farming_Fortune',
 	upgradeCosts: {
 		1: {
 			medals: {
@@ -262,7 +262,7 @@ export const COMMUNITY_CENTER_UPGRADE: FortuneSource = {
 	name: 'Garden Farming Fortune',
 	fortunePerLevel: 4,
 	maxLevel: 10,
-	wiki: 'https://wiki.hypixel.net/Elizabeth#Garden_Farming_Fortune_',
+	wiki: 'https://w.elitesb.gg/Account_%26_Profile_Upgrades#Account_Upgrades',
 };
 
 export const PEST_BESTIARY_SOURCE: FortuneSource = {
@@ -272,28 +272,28 @@ export const PEST_BESTIARY_SOURCE: FortuneSource = {
 		(acc, bracket) => acc + Object.keys(bracket).length,
 		0
 	),
-	wiki: 'https://wiki.hypixel.net/Bestiary#Garden_',
+	wiki: 'https://w.elitesb.gg/Bestiary#Garden',
 };
 
 export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
 	name: 'Refined Dark Cacao Truffle',
 	fortunePerLevel: 1,
 	maxLevel: 5,
-	wiki: 'https://wiki.hypixel.net/Refined_Dark_Cacao_Truffle',
+	wiki: 'https://w.elitesb.gg/Refined_Dark_Cacao_Truffle',
 };
 
 export const FILLED_ROSEWATER_FLASK_SOURCE: FortuneSource = {
 	name: 'Filled Rosewater Flask',
 	fortunePerLevel: 1,
 	maxLevel: 5,
-	wiki: 'https://wiki.hypixel.net/Filled_Rosewater_Flask',
+	wiki: 'https://w.elitesb.gg/Filled_Rosewater_Flask',
 };
 
 export const DNA_MILESTONE_SOURCE: FortuneSource = {
 	name: 'DNA Analysis Milestone',
 	fortunePerLevel: 5,
 	maxLevel: 6,
-	wiki: 'https://wiki.hypixel.net/DNA_Analysis',
+	wiki: 'https://w.elitesb.gg/Crop_Analyzer#Milestones',
 };
 
 export const WRIGGLING_LARVA_SOURCE: FortuneSource = {
@@ -303,7 +303,17 @@ export const WRIGGLING_LARVA_SOURCE: FortuneSource = {
 		[Stat.BonusPestChance]: 2,
 	},
 	maxLevel: 5,
-	wiki: 'https://wiki.hypixel.net/Wriggling_Larva',
+	wiki: 'https://w.elitesb.gg/Wriggling_Larva',
+};
+
+export const SPRAYONATOR_SOURCE: FortuneSource = {
+	name: 'Sprayonator',
+	fortunePerLevel: 0,
+	statsPerLevel: {
+		[Stat.BonusPestChance]: 50,
+	},
+	maxLevel: 1,
+	wiki: 'https://w.elitesb.gg/Sprayonator',
 };
 
 export const COCOA_FORTUNE_UPGRADE: FortuneSource = {
@@ -311,5 +321,5 @@ export const COCOA_FORTUNE_UPGRADE: FortuneSource = {
 	cropSpecific: true,
 	fortunePerLevel: 1,
 	maxLevel: 25,
-	wiki: 'https://wiki.hypixel.net/Chocolate_Factory#Chocolate_Shop',
+	wiki: 'https://w.elitesb.gg/Chocolate_Factory#Chocolate_Shop',
 };

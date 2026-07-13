@@ -18,25 +18,52 @@
 			onChange: (value: string) => void;
 		} | null;
 		getUpgrades?: (progress: FortuneSourceProgress) => FortuneUpgrade[];
+		referenceOnlyPrices?: boolean;
 		children?: import('svelte').Snippet;
 	}
 
-	let { name, progress, items, costFn, applyUpgrade, expandUpgrade, equip, getUpgrades, children }: Props = $props();
+	let {
+		name,
+		progress,
+		items,
+		costFn,
+		applyUpgrade,
+		expandUpgrade,
+		equip,
+		getUpgrades,
+		referenceOnlyPrices = false,
+		children,
+	}: Props = $props();
 
 	let progressModal = $state(false);
 	let shownProgressIndex = $state<number | null>(null);
-	const shownProgress = $derived((shownProgressIndex !== null ? progress[shownProgressIndex] : null) ?? null);
+	const visibleProgress = $derived.by(() =>
+		progress.filter(
+			(p) =>
+				p.stats ||
+				p.nextInfo ||
+				p.maxInfo ||
+				p.item ||
+				p.upgrades?.length ||
+				p.progress?.some(
+					(child) => child.stats || child.nextInfo || child.maxInfo || child.item || child.upgrades?.length
+				)
+		)
+	);
+	const shownProgress = $derived((shownProgressIndex !== null ? visibleProgress[shownProgressIndex] : null) ?? null);
 	const equipConfig = $derived.by(() => (shownProgress && equip ? equip(shownProgress) : null));
 </script>
 
 <div class="flex w-full flex-1 flex-col justify-center gap-2">
-	<div class="mx-1 flex w-full flex-1 flex-col gap-2">
+	<div class="flex w-full flex-1 flex-col gap-2">
 		<div class="flex flex-row items-center gap-1">
 			{@render children?.()}
-			<h2 class="pl-1 text-xl">{name}</h2>
+			{#if name}
+				<h2 class="text-xl">{name}</h2>
+			{/if}
 		</div>
 		<div class="grid w-full grid-cols-1 gap-1.5 md:grid-cols-2 lg:grid-cols-3">
-			{#each progress as p, i (p.name + p.current + (p.item?.uuid ?? ''))}
+			{#each visibleProgress as p, i (p.key ?? p.name + p.current + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item || p.upgrades?.length}
 					<button
 						class="bg-card hover:bg-card/40 w-full cursor-pointer rounded-md border px-1"
@@ -65,6 +92,7 @@
 	{applyUpgrade}
 	{expandUpgrade}
 	{getUpgrades}
+	{referenceOnlyPrices}
 	equipOptions={equipConfig?.options}
 	equipValue={equipConfig?.value}
 	equipPlaceholder={equipConfig?.placeholder}

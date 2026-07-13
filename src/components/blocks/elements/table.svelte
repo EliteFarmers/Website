@@ -4,9 +4,11 @@
 
 	interface Props {
 		node: TableBlockNode;
+		hoistedComments?: Record<string, import('$lib/guides/types').CommentWithGuideAuthor[]>;
+		renderTextAsHtml?: boolean;
 	}
 
-	let { node }: Props = $props();
+	let { node, hoistedComments = {}, renderTextAsHtml = false }: Props = $props();
 </script>
 
 <div class="my-4 overflow-x-auto">
@@ -17,7 +19,7 @@
 					{#each { length: node.cols }, colIdx (colIdx)}
 						{@const cell = node.cells[rowIdx]?.[colIdx] ?? []}
 						<td class="border p-2 text-sm">
-							<BlockRenderer content={cell} />
+							<BlockRenderer content={cell} {hoistedComments} {renderTextAsHtml} />
 						</td>
 					{/each}
 				</tr>

@@ -94,6 +94,7 @@
 	onDestroy(() => {
 		if (retryTimeout) clearTimeout(retryTimeout);
 		removeAd();
+		onCreated(null);
 	});
 </script>
 

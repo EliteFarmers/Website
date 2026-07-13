@@ -1,10 +1,12 @@
 import type { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
-import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import type { FortuneSourceProgress, StatQueryOptions } from '../constants/upgrades.js';
+import type { Effect, EffectEnvironment } from '../effects/types.js';
 import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../items/accessories.js';
+import { statsToEffects } from '../items/sources/effects-util.js';
+import { gemEffects } from '../items/sources/gems.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
-import { registerItem } from '../upgrades/itemregistry.js';
 import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources.js';
 import { getGemStat, getPeridotFortune } from '../util/gems.js';
 import type { EliteItemDto } from './item.js';
@@ -28,8 +30,17 @@ export class FarmingAccessory extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false): FortuneSourceProgress[] {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zeroed, {
+			...query,
+			defaultSourceType: 'general',
+		});
+	}
+
+	setOptions(options: PlayerOptions) {
+		this.options = options;
+		this.getFortune();
 	}
 
 	getStat(stat: Stat): number {
@@ -37,6 +48,7 @@ export class FarmingAccessory extends UpgradeableBase {
 
 		// Base fortune
 		sum += this.info.baseStats?.[stat] ?? 0;
+		sum += this.getCalculatedStats()[stat] ?? 0;
 
 		// Gems
 		const gemStat = getGemStat(this.item, stat, this.rarity);
@@ -47,12 +59,30 @@ export class FarmingAccessory extends UpgradeableBase {
 		return sum;
 	}
 
+	/**
+	 * Returns the declarative `Effect[]` representation of every contribution
+	 * this accessory makes. Base stats, computed stats, and (halved) gem
+	 * stats.
+	 */
+	getEffects(_env: EffectEnvironment): Effect[] {
+		const sourceName = this.info.name;
+		const effects: Effect[] = [];
+
+		effects.push(...statsToEffects(this.info.baseStats, sourceName));
+		effects.push(...statsToEffects(this.getCalculatedStats(), sourceName));
+
+		effects.push(...gemEffects(this.item, this.rarity, `${sourceName} (Gems)`, 0.5));
+
+		return effects;
+	}
+
 	getFortune() {
 		this.fortuneBreakdown = {};
 		let sum = 0;
 
 		// Base fortune
-		const base = this.info.baseStats?.[Stat.FarmingFortune] ?? 0;
+		const base =
+			(this.info.baseStats?.[Stat.FarmingFortune] ?? 0) + (this.getCalculatedStats()[Stat.FarmingFortune] ?? 0);
 		if (base > 0) {
 			this.fortuneBreakdown['Base Stats'] = base;
 			sum += base;
@@ -61,7 +91,7 @@ export class FarmingAccessory extends UpgradeableBase {
 		// Gems
 		let peridot = getPeridotFortune(this.rarity, this.item);
 		if (peridot > 0) {
-			peridot = +(peridot / 2).toFixed(2); // Only half the fortune is applied on accessories
+			peridot = +(peridot / 2).toFixed(2); // Only half the stats are applied on accessories
 
 			this.fortuneBreakdown['Peridot Gems'] = peridot;
 			sum += peridot;
@@ -75,10 +105,10 @@ export class FarmingAccessory extends UpgradeableBase {
 		return FARMING_ACCESSORIES_INFO[item.skyblockId as keyof typeof FARMING_ACCESSORIES_INFO] !== undefined;
 	}
 
-	static fromArray(items: EliteItemDto[]): FarmingAccessory[] {
+	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingAccessory[] {
 		return items
 			.filter((item) => FarmingAccessory.isValid(item))
-			.map((item) => new FarmingAccessory(item))
+			.map((item) => new FarmingAccessory(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
 	}
 
@@ -96,12 +126,4 @@ export class FarmingAccessory extends UpgradeableBase {
 
 		return new FarmingAccessory(fake, options);
 	}
-}
-
-for (const item of Object.values(FARMING_ACCESSORIES_INFO)) {
-	if (!item) continue;
-	registerItem({
-		info: item,
-		fakeItem: (i, o) => FarmingAccessory.fakeItem(i, o),
-	});
 }

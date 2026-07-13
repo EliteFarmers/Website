@@ -1,4 +1,5 @@
 <script lang="ts" module>
+	import Bug from '@lucide/svelte/icons/bug';
 	import ChartArea from '@lucide/svelte/icons/chart-area';
 	import Clover from '@lucide/svelte/icons/clover';
 	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
@@ -14,7 +15,8 @@
 	import type { MinecraftAccountDto, ProfileDetailsDto } from '$lib/api';
 	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
 	import { formatIgn } from '$lib/format';
-	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getPageCtx, type Crumb, type SidebarSectionGroup } from '$lib/hooks/page.svelte';
+	import { createSidebarSection } from '$lib/sidebar-sections';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { watch } from 'runed';
 	import { tick } from 'svelte';
@@ -61,13 +63,19 @@
 			href: `${path}/fortune`,
 		},
 		{
+			icon: Bug,
+			name: 'Pest Farming',
+			href: `${path}/pest-farming`,
+			snippet: pestFarmingCrumb,
+		},
+		{
 			icon: Trophy,
 			name: 'ranks',
 			href: `${path}/ranks`,
 		},
 	]);
 
-	const subPage = $derived(subPages.find((subPages) => subPages.name === lastPath) ?? subPages[0]);
+	const subPage = $derived(subPages.find((subPage) => subPage.href?.split('/').at(-1) === lastPath) ?? subPages[0]);
 
 	const crumbs = $derived<Crumb[]>([
 		{
@@ -116,52 +124,56 @@
 		},
 	]);
 
-	const sidebarCrumbs = $derived<Crumb[]>([
+	const sidebarCrumbs = $derived<SidebarSectionGroup[]>([
 		{
-			icon: PlayerHead,
-			name: formatIgn(thisMember?.username, thisMember?.meta) || account?.name,
-			capitalize: false,
-			href: `/@${account?.name}`,
-			tooltip: 'Player',
-			data: {
-				uuid: account?.id,
-			},
-			dropdown: otherMembers?.map((m) => ({
-				name: formatIgn(m.username, m.meta),
-				capitalize: false,
-				href: `/@${m.uuid}/${profile?.profileId}`,
-				data: {
-					uuid: m.uuid,
+			items: [
+				{
+					icon: PlayerHead,
+					name: formatIgn(thisMember?.username, thisMember?.meta) || account?.name,
+					capitalize: false,
+					href: `/@${account?.name}`,
+					tooltip: 'Player',
+					data: {
+						uuid: account?.id,
+					},
+					dropdown: otherMembers?.map((m) => ({
+						name: formatIgn(m.username, m.meta),
+						capitalize: false,
+						href: `/@${m.uuid}/${profile?.profileId}`,
+						data: {
+							uuid: m.uuid,
+						},
+						icon: PlayerHead,
+					})),
 				},
-				icon: PlayerHead,
-			})),
+				{
+					icon: Gamemode,
+					name: profile?.profileName,
+					href: path,
+					tooltip: 'Profile',
+					data: {
+						gameMode: profile.gameMode,
+						popover: false,
+						class: 'size-4',
+						map: true,
+					},
+					dropdown: otherProfiles?.map((p) => ({
+						name: p.name ?? 'Unknown',
+						href: `/@${account?.name}/${p.name}`,
+						data: {
+							gameMode: p.gameMode,
+							popover: false,
+							class: 'size-4',
+							map: true,
+						},
+						icon: Gamemode,
+					})),
+				},
+			],
 		},
 		{
-			icon: Gamemode,
-			name: profile?.profileName,
-			href: path,
-			tooltip: 'Profile',
-			data: {
-				gameMode: profile.gameMode,
-				popover: false,
-				class: 'size-4',
-				map: true,
-			},
-			dropdown: otherProfiles?.map((p) => ({
-				name: p.name ?? 'Unknown',
-				href: `/@${account?.name}/${p.name}`,
-				data: {
-					gameMode: p.gameMode,
-					popover: false,
-					class: 'size-4',
-					map: true,
-				},
-				icon: Gamemode,
-			})),
-		},
-		{
-			...subPage,
-			dropdown: subPages.filter((p) => p.name !== subPage.name),
+			label: 'Stats',
+			items: subPages,
 		},
 	]);
 
@@ -172,7 +184,7 @@
 		() => [crumbs, sidebarCrumbs, account?.id, page.url.pathname],
 		() => {
 			pageCtx.setBreadcrumbs(crumbs);
-			pageCtx.setSidebar('Stats', sidebarCrumbs);
+			pageCtx.setSidebarSection(createSidebarSection('stats', sidebarCrumbs));
 			tick().then(() => {
 				favorites.setPage({
 					icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
@@ -203,4 +215,11 @@
 			<Gamemode class="size-4" gameMode={(crumb?.data?.mode ?? 'classic') as ProfileGameMode} popover={false} />
 		{/if}
 	</div>
+{/snippet}
+
+{#snippet pestFarmingCrumb(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
+	<span class="max-w-28 truncate first-letter:capitalize">{crumb?.name}</span>
+	<span class="border-destructive bg-destructive/40 rounded-md border px-1 text-xs leading-snug uppercase">
+		Beta
+	</span>
 {/snippet}

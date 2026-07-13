@@ -1,6 +1,12 @@
 import { expect, test } from 'vitest';
+import { GARDEN_VISITORS } from '../../constants/garden.js';
+import { Stat } from '../../constants/stats.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingArmor } from '../../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../../fortune/farmingequipment.js';
+
+const MAX_UNIQUE_VISITORS = Object.keys(GARDEN_VISITORS).length;
+const MAX_GREEN_THUMB_FORTUNE = MAX_UNIQUE_VISITORS * 0.25;
 
 const almostMaxHelmet = {
 	id: 397,
@@ -62,7 +68,7 @@ test('Almost maxed fermento fortune sources', () => {
 	expect(item.fortune).toBe(72);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
 
-	const upgrades = item.getUpgrades();
+	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(5);
 
 	const progress = item.getProgress();
@@ -200,7 +206,7 @@ const lotusNecklace = {
 	count: 1,
 	skyblockId: 'LOTUS_NECKLACE',
 	uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
-	name: '§5Rooted Lotus Necklace',
+	name: '§5Rooted Peony Necklace',
 	lore: [
 		'§7Health: §a+21 §9(+11)',
 		'§7Farming Fortune: §a+40.5 §9(+15)',
@@ -262,8 +268,8 @@ test('Lotus necklace fortune sources', () => {
 		{
 			name: 'Green Thumb',
 			current: 82 * 0.25,
-			max: 34.25,
-			ratio: (82 * 0.25) / 34.25,
+			max: MAX_GREEN_THUMB_FORTUNE,
+			ratio: (82 * 0.25) / MAX_GREEN_THUMB_FORTUNE,
 		},
 	]);
 });
@@ -273,7 +279,7 @@ const maxLotusBracelet = {
 	count: 1,
 	skyblockId: 'LOTUS_BRACELET',
 	uuid: '4e13528f-d1d2-455e-90b2-d1552932be74',
-	name: '§5Rooted Lotus Bracelet',
+	name: '§5Rooted Peony Bracelet',
 	lore: [
 		'§7Health: §a+21 §9(+11)',
 		'§7Farming Fortune: §a+41 §9(+15)',
@@ -300,10 +306,10 @@ const maxLotusBracelet = {
 
 test('Maxed lotus bracelet fortune sources', () => {
 	const bracelet = new FarmingEquipment(maxLotusBracelet, {
-		uniqueVisitors: 84,
+		uniqueVisitors: MAX_UNIQUE_VISITORS,
 	});
 
-	expect(bracelet.fortune).toBe(56);
+	expect(bracelet.fortune).toBe(35 + MAX_GREEN_THUMB_FORTUNE);
 
 	const progress = bracelet.getProgress();
 
@@ -337,9 +343,70 @@ test('Maxed lotus bracelet fortune sources', () => {
 		},
 		{
 			name: 'Green Thumb',
-			current: 84 * 0.25,
-			max: 34.25,
-			ratio: (84 * 0.25) / 34.25,
+			current: MAX_GREEN_THUMB_FORTUNE,
+			max: MAX_GREEN_THUMB_FORTUNE,
+			ratio: MAX_GREEN_THUMB_FORTUNE / MAX_GREEN_THUMB_FORTUNE,
 		},
 	]);
+});
+
+test('Sunset enchant on armor surfaces Overbloom progress and upgrade', () => {
+	// Sunset grants 1 Overbloom per level on non-Moonflower crops, max level 5.
+	const helmetWithSunset = {
+		...almostMaxHelmet,
+		enchantments: {
+			...almostMaxHelmet.enchantments,
+			ultimate_sunset: 3,
+		},
+	};
+	const item = new FarmingArmor(helmetWithSunset);
+
+	const progress = item.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const sunset = progress.find((p) => p.name === 'Sunset');
+	expect(sunset).toBeDefined();
+	expect(sunset?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 3,
+		max: 5,
+	});
+
+	// Sunset has no FarmingFortune contribution; should NOT appear as a FarmingFortune upgrade.
+	const ffUpgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
+	expect(ffUpgrades.find((u) => u.title?.startsWith('Sunset'))).toBeUndefined();
+
+	// Should appear as an Overbloom upgrade.
+	const overbloomUpgrades = item.getUpgrades({ stat: Stat.Overbloom });
+	const sunsetUpgrade = overbloomUpgrades.find((u) => u.title === 'Sunset 4');
+	expect(sunsetUpgrade).toMatchObject({
+		action: UpgradeAction.Apply,
+		category: UpgradeCategory.Enchant,
+	});
+	expect(sunsetUpgrade?.stats?.[Stat.Overbloom]).toBe(1);
+	expect(sunsetUpgrade?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Enchant: Sunset',
+			op: 'add-rare-pct',
+			value: 4,
+			relatedStats: [Stat.Overbloom],
+			scope: { tags: ['overbloom'] },
+		})
+	);
+
+	const defaultProgress = item.getProgress();
+	const defaultSunset = defaultProgress.find((p) => p.name === 'Sunset');
+	expect(defaultSunset).toMatchObject({
+		current: 3,
+		max: 5,
+	});
+
+	const defaultUpgrades = item.getUpgrades();
+	const defaultSunsetUpgrade = defaultUpgrades.find((u) => u.title === 'Sunset 4');
+	expect(defaultSunsetUpgrade).toBeDefined();
+	expect(defaultSunsetUpgrade?.stats?.[Stat.Overbloom]).toBe(1);
+	expect(defaultSunsetUpgrade?.effects).toContainEqual(
+		expect.objectContaining({
+			source: 'Enchant: Sunset',
+			op: 'add-rare-pct',
+			value: 4,
+		})
+	);
 });

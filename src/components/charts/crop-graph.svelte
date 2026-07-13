@@ -3,7 +3,7 @@
 	import { extent } from 'd3-array';
 	import { scaleLinear } from 'd3-scale';
 	import { Crop, CROP_TO_PEST, getCropDisplayName, getCropFromName } from 'farming-weight';
-	import { Area, Axis, Chart, Highlight, Layer, Tooltip } from 'layerchart';
+	import { Area, Axis, Chart, Highlight, Svg, Tooltip } from 'layerchart/svg';
 
 	interface Props {
 		data: { date: string; value: number; pests: number }[];
@@ -60,15 +60,15 @@
 <div class="m-2 h-50 rounded dark:scheme-dark">
 	<Chart
 		{data}
-		x="date"
+		x={(d) => Number(d.date)}
 		y="value"
 		{yDomain}
 		yNice
 		padding={{ left: 48, bottom: 16, top: 5, right: 48 }}
-		tooltip={{ mode: 'bisect-x' }}
+		tooltipContext={{ mode: 'bisect-x' }}
 	>
 		{#snippet children({ context })}
-			<Layer type="svg" class="fill-primary stroke-muted-foreground">
+			<Svg class="fill-primary stroke-muted-foreground">
 				<Axis
 					placement="left"
 					rule
@@ -113,7 +113,7 @@
 
 					<Highlight y={(d) => pestScale(d.pests)} points={{ fill: colorVars[crop] }} />
 				{/if}
-			</Layer>
+			</Svg>
 			<Tooltip.Root class="bg-card">
 				{#snippet children({ data })}
 					<Tooltip.Header>

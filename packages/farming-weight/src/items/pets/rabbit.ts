@@ -13,7 +13,7 @@ export class RabbitPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Rabbit_Pet';
+		return 'https://w.elitesb.gg/Rabbit_Pet';
 	}
 
 	override maxRarity = Rarity.Mythic;

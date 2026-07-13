@@ -19,9 +19,8 @@
 		type UpgradeInfo,
 		type UpgradeTreeNode,
 	} from 'farming-weight';
-	import { SvelteSet } from 'svelte/reactivity';
 	import FortuneProgress from './fortune-progress.svelte';
-	import UpgradeTree from './upgrades/upgrade-tree.svelte';
+	import LazyUpgradeTree from './upgrades/lazy-upgrade-tree.svelte';
 
 	interface Props {
 		open: boolean;
@@ -35,6 +34,7 @@
 		equipPlaceholder?: string;
 		onEquipValueChange?: (value: string) => void;
 		getUpgrades?: (progress: FortuneSourceProgress) => FortuneUpgrade[];
+		referenceOnlyPrices?: boolean;
 	}
 
 	let {
@@ -49,6 +49,7 @@
 		equipPlaceholder,
 		onEquipValueChange,
 		getUpgrades,
+		referenceOnlyPrices = false,
 	}: Props = $props();
 
 	let selectedEquipValue = $derived(equipValue ?? '');
@@ -64,35 +65,7 @@
 		return `${upgrade.category}|${upgrade.title}|${metaKey}|${upgrade.conflictKey ?? ''}`;
 	}
 
-	const allUpgrades = $derived.by(() => {
-		if (!expandUpgrade) return baseUpgrades;
-
-		const seen = new SvelteSet<string>();
-		const result: FortuneUpgrade[] = [];
-
-		const addIfNew = (upgrade: FortuneUpgrade) => {
-			const key = getUpgradeKey(upgrade);
-			if (!seen.has(key)) {
-				seen.add(key);
-				result.push(upgrade);
-			}
-		};
-
-		const traverse = (node: UpgradeTreeNode) => {
-			addIfNew(node.upgrade);
-			node.children.forEach(traverse);
-		};
-
-		for (const upgrade of baseUpgrades) {
-			const tree = expandUpgrade(upgrade);
-			addIfNew(tree.upgrade);
-			tree.children.forEach(traverse);
-		}
-
-		return result;
-	});
-
-	const hasUpgrades = $derived(allUpgrades.length > 0);
+	const hasUpgrades = $derived(baseUpgrades.length > 0);
 
 	const sortedUpgrades = $derived.by(() => {
 		const upgrades = [...baseUpgrades];
@@ -107,7 +80,7 @@
 
 	const totalCost = $derived.by(() => {
 		if (!costFn) return 0;
-		return allUpgrades.reduce((sum, u) => {
+		return baseUpgrades.reduce((sum, u) => {
 			const c = costFn(u, items);
 			return sum + (u.repeatable ?? 1) * c;
 		}, 0);
@@ -120,7 +93,11 @@
 			<div class="flex min-w-0 items-center gap-4">
 				{#if progress?.item?.skyblockId}
 					<div class="bg-background rounded-lg border p-2">
-						<ItemRender skyblockId={progress.item.skyblockId} class="size-12" />
+						<ItemRender
+							skyblockId={progress.item.skyblockId}
+							pet={progress.item.attributes?.pet === 'true'}
+							class="size-12"
+						/>
 					</div>
 				{/if}
 				<div class="flex min-w-0 flex-col items-start gap-1">
@@ -174,7 +151,7 @@
 			{#if hasUpgrades && totalCost > 0}
 				<div class="flex flex-col items-end justify-center text-left sm:text-right">
 					<p class="text-muted-foreground text-sm">Completion Cost</p>
-					<p class="text-completed text-2xl font-bold">
+					<p class="{referenceOnlyPrices ? 'text-muted-foreground' : 'text-completed'} text-2xl font-bold">
 						{Math.round(totalCost).toLocaleString()}
 					</p>
 				</div>
@@ -183,12 +160,12 @@
 		<div class="space-y-6 p-4 sm:p-6">
 			<!-- Details Section (Primary) -->
 			{#if progress}
-				<FortuneProgress {progress} barBg="bg-card" useItemName={false} />
+				<FortuneProgress {progress} barBg="bg-card" useItemName={false} showEffects />
 
 				{#if progress.progress?.length}
 					<div class="grid gap-2 md:grid-cols-2">
 						{#each progress.progress as p, i (i)}
-							<FortuneProgress progress={p} barBg="bg-card" />
+							<FortuneProgress progress={p} barBg="bg-card" showEffects />
 						{/each}
 					</div>
 				{/if}
@@ -280,13 +257,18 @@
 			{#if hasUpgrades}
 				<hr class="border-muted" />
 				<div>
-					<h3 class="text-muted-foreground mb-4 text-sm font-bold tracking-wider uppercase">
-						Available Upgrades
-					</h3>
+					<h3 class="text-muted-foreground mb-4 text-sm font-semibold">Available Upgrades</h3>
 					<div class="flex flex-col gap-2">
-						{#each sortedUpgrades as upgrade, i (i)}
+						{#each sortedUpgrades as upgrade (getUpgradeKey(upgrade))}
 							{#if expandUpgrade}
-								<UpgradeTree node={expandUpgrade(upgrade)} {items} {costFn} {applyUpgrade} />
+								<LazyUpgradeTree
+									{upgrade}
+									{expandUpgrade}
+									{items}
+									{costFn}
+									{applyUpgrade}
+									{referenceOnlyPrices}
+								/>
 							{/if}
 						{/each}
 					</div>

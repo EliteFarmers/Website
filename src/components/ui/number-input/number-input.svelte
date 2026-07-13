@@ -6,6 +6,7 @@
 	interface Props extends HTMLInputAttributes {
 		class?: string;
 		value?: number;
+		inputmode?: 'numeric' | 'decimal';
 		onValueChange?: (value: number | undefined) => void;
 	}
 
@@ -13,6 +14,7 @@
 		class: className = undefined,
 		value = $bindable(undefined),
 		onValueChange = undefined,
+		inputmode = 'numeric',
 		...rest
 	}: Props = $props();
 
@@ -30,6 +32,11 @@
 
 				if (isNaN(+v)) {
 					value = previousN;
+					return;
+				}
+
+				// Allow users to type a trailing decimal point
+				if (inputmode !== 'numeric' && String(v).endsWith('.')) {
 					return;
 				}
 
@@ -62,7 +69,7 @@
 	)}
 	bind:value
 	type="text"
-	inputmode="numeric"
+	{inputmode}
 	use:validator={value}
 	{...rest}
 />

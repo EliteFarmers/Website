@@ -21,9 +21,10 @@
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
 		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		defaultOpen?: boolean;
+		referenceOnlyPrices?: boolean;
 	}
 
-	let { node, items, costFn, applyUpgrade, defaultOpen = false }: Props = $props();
+	let { node, items, costFn, applyUpgrade, defaultOpen = false, referenceOnlyPrices = false }: Props = $props();
 
 	let isOpen = $derived(defaultOpen);
 	const upgrade = $derived(node.upgrade);
@@ -32,17 +33,29 @@
 		(upgrade.increase > 0 ? upgrade.increase : ((upgrade.stats ? upgrade.max : 0) ?? 0)) || 0
 	);
 
-	// Calculate copper and bits costs
+	// Calculate copper, bits, and kernel costs
 	const copperTotal = $derived((upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0));
 	const bitsTotal = $derived((upgrade.cost?.bits ?? 0) + (upgrade.cost?.applyCost?.bits ?? 0));
+	const kernelsTotal = $derived((upgrade.cost?.kernels ?? 0) + (upgrade.cost?.applyCost?.kernels ?? 0));
+	const hasItemCost = $derived(
+		Object.keys(upgrade.cost?.items ?? {}).length > 0 ||
+			Object.keys(upgrade.cost?.applyCost?.items ?? {}).length > 0
+	);
+	const coinValueClass = $derived(
+		referenceOnlyPrices && hasItemCost ? 'text-muted-foreground' : 'dark:text-completed'
+	);
 	const copperPerFF = $derived(fortuneForCost > 0 && copperTotal > 0 ? Math.round(copperTotal / fortuneForCost) : 0);
 	const bitsPerFF = $derived(fortuneForCost > 0 && bitsTotal > 0 ? Math.round(bitsTotal / fortuneForCost) : 0);
+	const kernelsPerFF = $derived(
+		fortuneForCost > 0 && kernelsTotal > 0 ? Math.round(kernelsTotal / fortuneForCost) : 0
+	);
 
-	// Use copper/bits if no coin cost, otherwise use coins
+	// Use copper/bits/kernels if no coin cost, otherwise use coins
 	const displayTotal = $derived.by(() => {
 		if (cost > 0) return cost;
 		if (copperTotal > 0) return copperTotal;
 		if (bitsTotal > 0) return bitsTotal;
+		if (kernelsTotal > 0) return kernelsTotal;
 		return 0;
 	});
 
@@ -50,6 +63,7 @@
 		if (cost > 0 && fortuneForCost > 0) return Math.round(cost / fortuneForCost);
 		if (copperPerFF > 0) return copperPerFF;
 		if (bitsPerFF > 0) return bitsPerFF;
+		if (kernelsPerFF > 0) return kernelsPerFF;
 		return 0;
 	});
 
@@ -57,6 +71,7 @@
 		if (cost > 0) return 'coins';
 		if (copperTotal > 0) return ' copper';
 		if (bitsTotal > 0) return ' bits';
+		if (kernelsTotal > 0) return ` kernel${kernelsTotal === 1 ? '' : 's'}`;
 		return '';
 	});
 
@@ -160,7 +175,7 @@
 		<div class="col-start-3 row-start-2 text-right tabular-nums sm:hidden">
 			{#if displayPerFF > 0}
 				<div>
-					<span class="dark:text-completed font-semibold">{formatCompact(displayPerFF)}</span>
+					<span class="{coinValueClass} font-semibold">{formatCompact(displayPerFF)}</span>
 					<span class="text-muted-foreground text-sm">{displayUnit} per</span>
 				</div>
 			{:else}
@@ -168,7 +183,7 @@
 			{/if}
 			{#if displayTotal > 0}
 				<div>
-					<span class="dark:text-completed font-semibold">{formatCompact(displayTotal)}</span>
+					<span class="{coinValueClass} font-semibold">{formatCompact(displayTotal)}</span>
 					<span class="text-muted-foreground text-sm">{displayUnit}</span>
 				</div>
 			{:else}
@@ -178,7 +193,7 @@
 
 		<div class="hidden text-right tabular-nums sm:block">
 			{#if displayPerFF > 0}
-				<span class="dark:text-completed font-semibold">{formatCompact(displayPerFF)}</span>
+				<span class="{coinValueClass} font-semibold">{formatCompact(displayPerFF)}</span>
 				<span class="text-muted-foreground text-sm">{displayUnit} per</span>
 			{:else}
 				<span class="text-muted-foreground text-sm">N/A</span>
@@ -187,7 +202,7 @@
 
 		<div class="hidden text-right tabular-nums sm:block">
 			{#if displayTotal > 0}
-				<span class="dark:text-completed font-semibold">{formatCompact(displayTotal)}</span>
+				<span class="{coinValueClass} font-semibold">{formatCompact(displayTotal)}</span>
 				<span class="text-muted-foreground text-sm">{displayUnit}</span>
 			{:else}
 				<span class="text-muted-foreground text-sm">N/A</span>
@@ -202,17 +217,17 @@
 					<div
 						class="flex w-full min-w-0 flex-col gap-3 p-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4"
 					>
-						<div class="min-w-0">
+						<div class="w-full">
 							<UpgradeDescription {upgrade} {items} />
 						</div>
-						<UpgradeCost {upgrade} {items} totalCost={cost} class="min-w-0" />
+						<UpgradeCost {upgrade} {items} totalCost={cost} {referenceOnlyPrices} class="min-w-0" />
 					</div>
 				{/if}
 
 				{#if hasChildren}
 					<div class="flex flex-col gap-2 pr-0 pb-0 pl-2" class:pt-2={!hasDetails}>
 						{#each node.children as child, i (getUpgradeKey(child.upgrade, i))}
-							<UpgradeTree node={child} {items} {costFn} {applyUpgrade} />
+							<UpgradeTree node={child} {items} {costFn} {applyUpgrade} {referenceOnlyPrices} />
 						{/each}
 					</div>
 				{/if}

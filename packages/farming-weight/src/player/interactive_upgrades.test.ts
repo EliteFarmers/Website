@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
@@ -165,6 +166,95 @@ test('Interactive Upgrade: Crop Upgrades and Others', () => {
 	}
 });
 
+test('Interactive Upgrade: Dedication IV uses crop fortune for its increase', () => {
+	const wheatHoe: EliteItemDto = {
+		id: 291,
+		count: 1,
+		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+		uuid: 'dedication-test-hoe-uuid',
+		name: "§aEuclid's Wheat Sickle",
+		lore: [],
+		enchantments: { dedication: 3 },
+		attributes: { modifier: 'blessed' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		tools: [new FarmingTool(wheatHoe)],
+		milestones: {
+			[Crop.Wheat]: 46,
+		},
+	});
+
+	const dedicationUpgrade = player
+		.getCropUpgrades(Crop.Wheat)
+		.find((u) => u.meta?.type === 'enchant' && u.meta?.key === 'dedication' && u.meta?.value === 4);
+
+	expect(dedicationUpgrade).toBeDefined();
+	expect(dedicationUpgrade?.stats?.[Stat.WheatFortune]).toBe(46);
+	expect(dedicationUpgrade?.increase).toBe(46);
+});
+
+test('Interactive Upgrade: Dedication IV is present in the crop upgrades list once', () => {
+	const wheatHoe: EliteItemDto = {
+		id: 291,
+		count: 1,
+		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+		uuid: 'dedication-table-hoe-uuid',
+		name: "§aEuclid's Wheat Sickle",
+		lore: [],
+		enchantments: { dedication: 3 },
+		attributes: { modifier: 'blessed' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		tools: [new FarmingTool(wheatHoe)],
+		selectedCrop: Crop.Wheat,
+		milestones: {
+			[Crop.Wheat]: 46,
+		},
+	});
+
+	const dedicationUpgrades = player
+		.getCropUpgrades(Crop.Wheat)
+		.filter((u) => u.meta?.type === 'enchant' && u.meta?.key === 'dedication' && u.meta?.value === 4);
+
+	expect(dedicationUpgrades).toHaveLength(1);
+	expect(dedicationUpgrades[0]?.increase).toBeGreaterThan(0);
+});
+
+test('Interactive Upgrade: Crop upgrades still include generic Farming Fortune tool upgrades', () => {
+	const wheatHoe: EliteItemDto = {
+		id: 291,
+		count: 1,
+		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+		uuid: 'dedication-reforge-hoe-uuid',
+		name: "§aEuclid's Wheat Sickle",
+		lore: [],
+		enchantments: { dedication: 3 },
+		attributes: { modifier: 'blessed' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		tools: [new FarmingTool(wheatHoe)],
+		milestones: {
+			[Crop.Wheat]: 46,
+		},
+	});
+
+	const cropUpgrades = player.getCropUpgrades(Crop.Wheat);
+	const dedicationUpgrade = cropUpgrades.find(
+		(u) => u.meta?.type === 'enchant' && u.meta?.key === 'dedication' && u.meta?.value === 4
+	);
+	const reforgeUpgrade = cropUpgrades.find((u) => u.meta?.type === 'reforge' && u.meta?.id === 'bountiful');
+
+	expect(dedicationUpgrade?.increase).toBe(46);
+	expect(reforgeUpgrade).toBeDefined();
+	expect(reforgeUpgrade?.increase).toBe(-4);
+});
+
 test('Interactive Upgrade: Buy New Item', () => {
 	// Test buying a Magic 8 Ball (General Upgrade)
 	const player = new FarmingPlayer({
@@ -191,7 +281,7 @@ test('Interactive Upgrade: Tool Tier Upgrade', () => {
 		count: 1,
 		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
 		uuid: 'upgrade-test-hoe-uuid',
-		name: "§aEuclid's Wheat Hoe",
+		name: "§aEuclid's Wheat Sickle",
 		lore: [],
 		enchantments: { dedication: 4, harvesting: 6 },
 		attributes: { modifier: 'blessed', farming_for_dummies_count: '3' },
@@ -216,6 +306,7 @@ test('Interactive Upgrade: Tool Tier Upgrade', () => {
 	if (tierUpgrade && tierUpgrade.meta?.id) {
 		const oldToolCount = player.tools.length;
 		const oldTool = player.tools[0];
+		expect(oldTool).toBeDefined();
 
 		player.applyUpgrade(tierUpgrade);
 
@@ -227,13 +318,13 @@ test('Interactive Upgrade: Tool Tier Upgrade', () => {
 		expect(newTool).toBeDefined();
 
 		// Verify enchantments, attributes, gems were transferred
-		expect(newTool?.item.enchantments?.dedication).toBe(oldTool.item.enchantments?.dedication);
-		expect(newTool?.item.enchantments?.harvesting).toBe(oldTool.item.enchantments?.harvesting);
-		expect(newTool?.item.attributes?.modifier).toBe(oldTool.item.attributes?.modifier);
+		expect(newTool?.item.enchantments?.dedication).toBe(oldTool!.item.enchantments?.dedication);
+		expect(newTool?.item.enchantments?.harvesting).toBe(oldTool!.item.enchantments?.harvesting);
+		expect(newTool?.item.attributes?.modifier).toBe(oldTool!.item.attributes?.modifier);
 		expect(newTool?.item.attributes?.farming_for_dummies_count).toBe(
-			oldTool.item.attributes?.farming_for_dummies_count
+			oldTool!.item.attributes?.farming_for_dummies_count
 		);
-		expect(newTool?.item.gems?.PERIDOT_0).toBe(oldTool.item.gems?.PERIDOT_0);
+		expect(newTool?.item.gems?.PERIDOT_0).toBe(oldTool!.item.gems?.PERIDOT_0);
 	}
 });
 
@@ -309,6 +400,39 @@ test('Interactive Upgrade: Expand Upgrade Tree', () => {
 	expect(originalTool?.item.enchantments?.cultivating).toBeUndefined();
 });
 
+test('Interactive Upgrade: enchant tree uses all tracked stats for follow-up upgrades', () => {
+	const sunsetHelmet: EliteItemDto = {
+		id: 301,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: 'sunset-tree-helmet-uuid',
+		name: '§dFermento Helmet',
+		lore: [],
+		enchantments: {
+			ultimate_sunset: 2,
+		},
+		attributes: {},
+	};
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(sunsetHelmet)],
+	});
+	const trackedStats = [Stat.PestKillFortune, Stat.FarmingFortune, Stat.Overbloom, Stat.Damage];
+	const sunset = player
+		.getUpgrades({ stats: trackedStats })
+		.find((upgrade) => upgrade.meta?.type === 'enchant' && upgrade.meta.key === 'ultimate_sunset');
+
+	expect(sunset).toBeDefined();
+
+	const tree = player.expandUpgrade(sunset!, {
+		maxDepth: 2,
+		stats: trackedStats,
+	});
+	const nextSunset = tree.children.find((child) => child.upgrade.title === 'Sunset 4');
+
+	expect(nextSunset).toBeDefined();
+	expect(nextSunset?.upgrade.stats?.[Stat.Overbloom]).toBe(1);
+});
+
 const squashHelmet: EliteItemDto = {
 	id: 301,
 	count: 1,
@@ -376,12 +500,12 @@ test('Interactive Upgrade: Equipment Purchase Shows Follow-up Upgrades', () => {
 
 	// The upgrade should be a purchase upgrade with proper meta
 	const purchaseUpgrade = cloakProgress!.upgrades![0];
-	expect(purchaseUpgrade.meta).toBeDefined();
-	expect(purchaseUpgrade.meta?.type).toBe('buy_item');
-	expect(purchaseUpgrade.meta?.id).toBeDefined();
+	expect(purchaseUpgrade?.meta).toBeDefined();
+	expect(purchaseUpgrade?.meta?.type).toBe('buy_item');
+	expect(purchaseUpgrade?.meta?.id).toBeDefined();
 
 	// Expand the upgrade tree
-	const tree = player.expandUpgrade(purchaseUpgrade, {
+	const tree = player.expandUpgrade(purchaseUpgrade!, {
 		maxDepth: 2,
 		stats: [Stat.FarmingFortune],
 	});
@@ -424,7 +548,7 @@ test('Upgrade Tree: Conflict Keys Prevent Duplicate Upgrade Types in Children', 
 	}
 
 	// Verify the reforge has a conflict key
-	expect(reforgeUpgrade.conflictKey).toBe('reforge');
+	expect(reforgeUpgrade.conflictKey).toBe(`reforge:${armorPiece!.item.uuid}`);
 
 	// Expand the upgrade tree
 	const tree = player.expandUpgrade(reforgeUpgrade, {
@@ -444,13 +568,13 @@ test('Upgrade Tree: Conflict Keys Prevent Duplicate Upgrade Types in Children', 
 	const allUpgrades = collectAllUpgrades(tree);
 
 	// There should only be ONE reforge upgrade in the entire tree (the root)
-	const reforgeUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === 'reforge');
+	const reforgeUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === `reforge:${armorPiece!.item.uuid}`);
 	expect(reforgeUpgrades.length).toBe(1);
-	expect(reforgeUpgrades[0].depth).toBe(0); // Should be at root only
+	expect(reforgeUpgrades[0]?.depth).toBe(0); // Should be at root only
 
 	// If there are children (e.g., item tier upgrades), they should not contain reforge upgrades
 	for (const child of tree.children) {
-		expect(child.upgrade.conflictKey).not.toBe('reforge');
+		expect(child.upgrade.conflictKey).not.toBe(`reforge:${armorPiece!.item.uuid}`);
 	}
 });
 
@@ -465,13 +589,13 @@ test('Upgrade Tree: Armor Piece Purchase Shows Complete Follow-up Tree', () => {
 	expect(helmetProgress!.upgrades!.length).toBeGreaterThan(0);
 
 	const purchaseUpgrade = helmetProgress!.upgrades![0];
-	expect(purchaseUpgrade.meta).toBeDefined();
-	expect(purchaseUpgrade.meta?.type).toBe('buy_item');
-	expect(purchaseUpgrade.meta?.id).toBeDefined();
+	expect(purchaseUpgrade?.meta).toBeDefined();
+	expect(purchaseUpgrade?.meta?.type).toBe('buy_item');
+	expect(purchaseUpgrade?.meta?.id).toBeDefined();
 
-	expect(purchaseUpgrade.conflictKey).toBe('item_purchase:Helmet');
+	expect(purchaseUpgrade?.conflictKey).toBe('item_purchase:Helmet');
 
-	const tree = player.expandUpgrade(purchaseUpgrade, {
+	const tree = player.expandUpgrade(purchaseUpgrade!, {
 		maxDepth: 2,
 		stats: [Stat.FarmingFortune],
 	});
@@ -534,7 +658,7 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 		return;
 	}
 
-	expect(recombUpgrade.conflictKey).toBe('recombobulate');
+	expect(recombUpgrade.conflictKey).toBe(`recombobulate:${armorPiece!.item.uuid}`);
 
 	const tree = player.expandUpgrade(recombUpgrade, {
 		maxDepth: 3,
@@ -550,10 +674,44 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 	}
 
 	const allUpgrades = collectAllUpgrades(tree);
-	const recombUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === 'recombobulate');
+	const recombUpgrades = allUpgrades.filter(
+		(u) => u.upgrade.conflictKey === `recombobulate:${armorPiece!.item.uuid}`
+	);
 
 	expect(recombUpgrades.length).toBe(1);
-	expect(recombUpgrades[0].depth).toBe(0);
+	expect(recombUpgrades[0]?.depth).toBe(0);
+});
+
+test('Interactive Upgrade: item rarity prefers attributes and recombobulate updates attributes', () => {
+	const fermentoHelmet: EliteItemDto = {
+		id: 301,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: 'attribute-rarity-test-uuid',
+		name: '§aMossy Fermento Helmet',
+		lore: ['§d§lMYTHIC HELMET'],
+		enchantments: {},
+		attributes: { modifier: 'mossy', rarity: Rarity.Epic },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(fermentoHelmet)],
+	});
+
+	const armor = player.armor.find((piece) => piece.item.uuid === 'attribute-rarity-test-uuid');
+	expect(armor).toBeDefined();
+	expect(armor?.rarity).toBe(Rarity.Epic);
+
+	const recombUpgrade = armor?.getUpgrades().find((upgrade) => upgrade.meta?.id === 'rarity_upgrades');
+	expect(recombUpgrade).toBeDefined();
+
+	player.applyUpgrade(recombUpgrade!);
+
+	const updatedArmor = player.armor.find((piece) => piece.item.uuid === 'attribute-rarity-test-uuid');
+	expect(updatedArmor?.rarity).toBe(Rarity.Legendary);
+	expect(updatedArmor?.item.attributes?.rarity).toBe(Rarity.Legendary);
+	expect(updatedArmor?.item.lore).toStrictEqual(['§d§lMYTHIC HELMET']);
 });
 
 test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () => {
@@ -589,23 +747,25 @@ test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () 
 
 	expect(tree.children.length).toBe(2);
 
-	const hasRecomb = tree.children.some((c) => c.upgrade.conflictKey === 'recombobulate');
+	const hasRecomb = tree.children.some((c) => c.upgrade.conflictKey === `recombobulate:${squashWithReforge.uuid}`);
 	expect(hasRecomb).toBe(false);
 
-	const hasPest1 = tree.children.some((c) => c.upgrade.conflictKey === 'enchant:pesterminator:1');
+	const hasPest1 = tree.children.some(
+		(c) => c.upgrade.conflictKey === `enchant:pesterminator:1:${squashWithReforge.uuid}`
+	);
 	expect(hasPest1).toBe(false);
 
 	const hasUniqueGem = tree.children.some((c) => c.upgrade.conflictKey?.includes('PERIDOT_1'));
 	expect(hasUniqueGem).toBe(true);
 });
 
-test('Interactive Upgrade: Lotus Necklace Green Thumb Chain', () => {
+test('Interactive Upgrade: Peony Necklace Green Thumb Chain', () => {
 	const squeakyLotusNecklace: EliteItemDto = {
 		id: 397,
 		count: 1,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: '1ab0455d-10a4-4a4e-b8b8-a4b76b720e02',
-		name: '§9Squeaky Lotus Necklace',
+		name: '§9Squeaky Peony Necklace',
 		lore: [
 			'§9§lRARE NECKLACE',
 			'',
@@ -682,7 +842,7 @@ test('Equipment in ArmorSet Preserved After Clone', () => {
 		count: 1,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: 'armorset-test-uuid',
-		name: '§9Lotus Necklace',
+		name: '§9Peony Necklace',
 		lore: [],
 		enchantments: {},
 		attributes: { modifier: 'squeaky' },
@@ -739,6 +899,63 @@ test('Gem Upgrade Chain Preserves Slot ID', () => {
 	expect(flawlessGem0?.meta?.slot).toBe('PERIDOT_0');
 });
 
+function maxedHelianthusArmor(skyblockId: string, uuid: string, name: string): EliteItemDto {
+	return {
+		id: 397,
+		count: 1,
+		skyblockId,
+		uuid,
+		name,
+		lore: [`§d§lMYTHIC ${name.toUpperCase()}`],
+		enchantments: {
+			pesterminator: 6,
+			ultimate_sunset: 5,
+		},
+		attributes: {
+			modifier: 'mossy',
+			rarity_upgrades: '1',
+		},
+		gems: {},
+	};
+}
+
+test('Available upgrades include missing Helianthus gems on all armor pieces', () => {
+	const pieces = [
+		maxedHelianthusArmor('HELIANTHUS_HELMET', 'helianthus-helmet-uuid', 'Helianthus Helmet'),
+		maxedHelianthusArmor('HELIANTHUS_CHESTPLATE', 'helianthus-chestplate-uuid', 'Helianthus Chestplate'),
+		maxedHelianthusArmor('HELIANTHUS_LEGGINGS', 'helianthus-leggings-uuid', 'Helianthus Leggings'),
+		maxedHelianthusArmor('HELIANTHUS_BOOTS', 'helianthus-boots-uuid', 'Helianthus Boots'),
+	];
+
+	const player = new FarmingPlayer({
+		armor: pieces.map((piece) => new FarmingArmor(piece)),
+	});
+
+	const seen = new Set<string>();
+	const availableUpgrades = [
+		...player.getUpgrades({ stat: Stat.FarmingFortune }),
+		...player.getUpgrades({ stat: Stat.Overbloom }),
+	].filter((upgrade) => {
+		const key = upgrade.conflictKey ?? `${upgrade.title}::${upgrade.action}`;
+		if (seen.has(key)) return false;
+		seen.add(key);
+		return true;
+	});
+
+	const gemUpgrades = availableUpgrades.filter(
+		(upgrade) => upgrade.meta?.type === 'gem' && upgrade.meta.value === 'FINE'
+	);
+
+	expect(gemUpgrades).toHaveLength(8);
+	expect(new Set(gemUpgrades.map((upgrade) => upgrade.conflictKey)).size).toBe(8);
+
+	for (const piece of pieces) {
+		const pieceGemUpgrades = gemUpgrades.filter((upgrade) => upgrade.meta?.itemUuid === piece.uuid);
+		expect(pieceGemUpgrades).toHaveLength(2);
+		expect(pieceGemUpgrades.map((upgrade) => upgrade.meta?.slot).sort()).toStrictEqual(['PERIDOT_0', 'PERIDOT_1']);
+	}
+});
+
 test('Tier Upgrade Children Include Gem Upgrade Chain', () => {
 	const squashHelmet: EliteItemDto = {
 		id: 301,
@@ -783,7 +1000,7 @@ test('Enchant Chain Works with Zero Fortune Increase', () => {
 		count: 1,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: 'zero-fortune-test-uuid',
-		name: '§9Lotus Necklace',
+		name: '§9Peony Necklace',
 		lore: [],
 		enchantments: {},
 		attributes: { modifier: 'squeaky' },
@@ -848,6 +1065,6 @@ test('Include All Tier Upgrade Children Option', () => {
 
 	expect(treeAll.children.length).toBeGreaterThan(treeFiltered.children.length);
 
-	const hasRecomb = treeAll.children.some((c) => c.upgrade.conflictKey === 'recombobulate');
+	const hasRecomb = treeAll.children.some((c) => c.upgrade.conflictKey === `recombobulate:${squashHelmet.uuid}`);
 	expect(hasRecomb).toBe(true);
 });

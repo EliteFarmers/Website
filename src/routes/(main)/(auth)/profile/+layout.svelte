@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { PROFILE_NAV_PAGES } from '$content/nav';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
+	import { createSidebarSection } from '$lib/sidebar-sections';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -9,9 +10,10 @@
 	let { children }: Props = $props();
 
 	const pageCtx = getPageCtx();
+	const accountSidebarSection = createSidebarSection('account', PROFILE_NAV_PAGES);
 
 	$effect.pre(() => {
-		pageCtx.setSidebar('Account', PROFILE_NAV_PAGES);
+		pageCtx.setSidebarSection(accountSidebarSection);
 	});
 </script>
 

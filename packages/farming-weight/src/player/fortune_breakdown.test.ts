@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
-import fullBreakdownExample from './full_breakdown_example.json';
+import fullBreakdownExample from './full_breakdown_example.json' with { type: 'json' };
 import { FarmingPlayer } from './player.js';
 import type { PlayerOptions } from './playeroptions.js';
 
@@ -71,7 +71,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 
 		// The Fermento Artifact should only appear in crop breakdown, not general breakdown
 		expect(player.breakdown['Fermento Artifact']).toBeUndefined();
-		expect(cropFortune.breakdown['Fermento Artifact'].value).toBe(30);
+		expect(cropFortune.breakdown['Fermento Artifact']?.value).toBe(30);
 
 		// Combined breakdown sum logic is outdated. We now check that cropFortune (Total) matches its breakdown sum.
 		const breakdownSum = Object.values(cropFortune.breakdown).reduce((sum, val) => sum + val.value, 0);
@@ -96,7 +96,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 		});
 
 		// General accessory should appear in breakdown
-		expect(player.breakdown['Helianthus Relic'].value).toBe(40);
+		expect(player.breakdown['Helianthus Relic']?.value).toBe(40);
 
 		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val.value, 0);
 		expect(breakdownSum).toBe(player.fortune);
@@ -110,7 +110,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			name: '§6Bountiful Melon Dicer Mk. III',
 			lore: ['§7Farming Fortune: §6+133.62 §2(+5) §9(+7) §d(+24)'],
 			enchantments: {
-				sunder: 6,
+				harvesting: 6,
 				dedication: 4,
 				cultivating: 10,
 				turbo_melon: 5,
@@ -197,7 +197,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			id: 397,
 			skyblockId: 'LOTUS_NECKLACE',
 			uuid: '9a89598c-e12e-4541-aca7-26d4c96d8f80',
-			name: '§5Rooted Lotus Necklace',
+			name: '§5Rooted Peony Necklace',
 			lore: ['§7Farming Fortune: §6+33.05'],
 			enchantments: { green_thumb: 3 },
 			attributes: { modifier: 'rooted', rarity_upgrades: '1' },
@@ -207,7 +207,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			id: 397,
 			skyblockId: 'LOTUS_CLOAK',
 			uuid: 'a652dfa5-4ccf-4e13-a6c7-8cda02eb6310',
-			name: '§5Rooted Lotus Cloak',
+			name: '§5Rooted Peony Cloak',
 			lore: ['§7Farming Fortune: §6+33.05'],
 			enchantments: { green_thumb: 3 },
 			attributes: { modifier: 'rooted', rarity_upgrades: '1' },
@@ -247,11 +247,10 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			anitaBonus: 5,
 			refinedTruffles: 5,
 			dnaMilestone: 1,
-			perks: { axed: 1 },
 			uniqueVisitors: 87,
 			chips: {
-				CROPSHOT_GARDEN_CHIP: 20,
-				HYPERCHARGE_GARDEN_CHIP: 20,
+				cropshot: 20,
+				hypercharge: 20,
 			},
 			temporaryFortune: {
 				pestTurnIn: 200,
@@ -267,7 +266,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 		expect(player.breakdown['Fermento Artifact']).toBeUndefined();
 
 		// Crop breakdown should include Fermento Artifact
-		expect(cropFortune.breakdown['Fermento Artifact'].value).toBe(30);
+		expect(cropFortune.breakdown['Fermento Artifact']?.value).toBe(30);
 
 		// General breakdown sum should match
 		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val.value, 0);
@@ -283,7 +282,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 		expect(keys).toContain('Mooshroom Cow');
 
 		if (keys.includes('Mooshroom Cow')) {
-			expect(cropFortune.breakdown['Mooshroom Cow'].value).toBeGreaterThanOrEqual(
+			expect(cropFortune.breakdown['Mooshroom Cow']?.value).toBeGreaterThanOrEqual(
 				player.breakdown['Mooshroom Cow']?.value ?? 0
 			);
 		}

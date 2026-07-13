@@ -6,5 +6,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		redirect(307, '/login?redirect=/guides/new');
 	}
 
-	return {};
+	return {
+		ads: false,
+	};
 };

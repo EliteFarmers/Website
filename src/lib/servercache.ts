@@ -1,40 +1,51 @@
 import { building, dev } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import { env as publicEnv } from '$env/dynamic/public';
+import { SkyBlockTime } from 'farming-weight';
 import fs from 'fs/promises';
 import {
 	getAnnouncement,
 	getAuctionHouseProducts,
+	getBadges,
 	getBazaarProducts,
+	getCategories,
+	getCurrentHarvestFeast,
 	getHypixelGuilds,
 	getLeaderboard,
 	getLeaderboards,
 	getProducts,
 	getPublicGuild,
+	getResourcePacks,
 	getSkyblockItems,
 	getStyles,
 	getTeamWordList,
 	getUpcomingEvents,
+	getWebsiteCacheReloadSignal,
 	skyblockGemShop,
 	SortHypixelGuildsBy,
 	type AnnouncementDto,
 	type AuctionHouseDto,
+	type BadgeDto,
 	type EventDetailsDto,
 	type EventTeamsWordListDto,
 	type GetBazaarProductsResponse,
 	type GetSkyblockItemsResponse,
 	type GuildDetailsDto,
+	type HarvestFeastCurrentDto,
 	type HypixelGuildDetailsDto,
 	type LeaderboardDto,
 	type ProductDto,
+	type ResourcePackDto,
+	type ShopCategoryDto,
 	type SkyblockGemShopsResponse,
-	type WeightStyleWithDataDto,
+	type WeightStyleListDto,
 } from './api';
 import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
 import { mdToHtml } from './md';
-const { ELITE_API_URL } = env;
+const { ELITE_API_URL, ELITE_API_TOKEN } = env;
 const { PUBLIC_COMMUNITY_ID } = publicEnv;
+const SERVER_CACHE_RELOAD_POLL_INTERVAL = 1000;
 
 const cacheEntries = {
 	events: {
@@ -45,16 +56,25 @@ const cacheEntries = {
 		},
 	},
 	products: {
-		data: [] as ProductDto[],
+		data: {
+			list: [] as ProductDto[],
+			new: false,
+		},
 		update: async () => {
 			const { data } = await getProducts();
-			return data ?? [];
+			return {
+				list: data ?? [],
+				// Check if any products were released in the last 3 days
+				new: (data ?? []).some((p) =>
+					p.releasedAt ? new Date(p.releasedAt).getTime() > Date.now() - 1000 * 60 * 60 * 24 * 3 : false
+				),
+			};
 		},
 	},
 	styles: {
 		data: {
-			list: [] as WeightStyleWithDataDto[],
-			lookup: {} as Record<string, WeightStyleWithDataDto>,
+			list: [] as WeightStyleListDto[],
+			lookup: {} as Record<string, WeightStyleListDto>,
 		},
 		update: async () => {
 			const { data } = await getStyles();
@@ -66,7 +86,7 @@ const cacheEntries = {
 							acc[style.id] = style;
 							return acc;
 						},
-						{} as Record<string, WeightStyleWithDataDto>
+						{} as Record<string, WeightStyleListDto>
 					) || {},
 			};
 		},
@@ -172,6 +192,43 @@ const cacheEntries = {
 			return { guilds: data?.guilds ?? [], total: data?.totalGuilds ?? null };
 		},
 	},
+	shopCategories: {
+		data: [] as ShopCategoryDto[],
+		update: async () => {
+			const { data } = await getCategories({ includeProducts: true });
+			return data ?? [];
+		},
+	},
+	badges: {
+		data: [] as BadgeDto[],
+		update: async () => {
+			const { data } = await getBadges();
+			return data ?? [];
+		},
+	},
+	texturepacks: {
+		data: [] as ResourcePackDto[],
+		update: async () => {
+			const { data } = await getResourcePacks();
+			return (data ?? []) as ResourcePackDto[];
+		},
+	},
+	harvestfeast: {
+		data: {} as HarvestFeastCurrentDto,
+		update: async () => {
+			const { data } = await getCurrentHarvestFeast();
+			return (
+				data ?? {
+					year: SkyBlockTime.now.year,
+					month: SkyBlockTime.now.month,
+					complete: false,
+					current: [],
+					next: {},
+					isGrandFeast: false,
+				}
+			);
+		},
+	},
 };
 
 export const cache = {
@@ -223,14 +280,36 @@ export const cache = {
 	get topguilds() {
 		return cacheEntries.topguilds.data;
 	},
+	get shopCategories() {
+		return cacheEntries.shopCategories.data;
+	},
+	get badges() {
+		return cacheEntries.badges.data;
+	},
+	get texturepacks() {
+		return cacheEntries.texturepacks.data;
+	},
+	get harvestfeast() {
+		return cacheEntries.harvestfeast.data;
+	},
 };
 
 let intervals: (number | NodeJS.Timeout)[] = [];
+let remoteReloadSignalVersion = 0;
+let remoteReloadCheckInFlight: Promise<void> | undefined;
 
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
 	try {
-		await Promise.allSettled(Object.values(cacheEntries).map(async (item) => refreshCacheItem(item)));
+		await Promise.allSettled(
+			Object.values(cacheEntries).map(async (item) => {
+				try {
+					await refreshCacheItem(item);
+				} catch (error) {
+					console.error('Error refreshing cache item:', error);
+				}
+			})
+		);
 
 		console.log('Cached items updated successfully.');
 	} catch (error) {
@@ -245,6 +324,9 @@ export async function initCachedItems() {
 	// Api url is imported just to prevent this file from accidentally being included in the client bundle
 	if (building || !ELITE_API_URL) return;
 
+	if (ELITE_API_TOKEN && !dev) {
+		await initializeRemoteReloadSignalVersion();
+	}
 	await reloadCachedItems();
 
 	for (const i of intervals) {
@@ -262,10 +344,61 @@ export async function initCachedItems() {
 		)
 	); // 1 hour
 
+	if (ELITE_API_TOKEN && !dev) {
+		intervals.push(setInterval(checkForRemoteReloadSignal, SERVER_CACHE_RELOAD_POLL_INTERVAL));
+	}
+
 	for (const entry of Object.values(cacheEntries)) {
 		if (!('interval' in entry)) continue;
 		intervals.push(setInterval(() => refreshCacheItem(entry), entry.interval * 1000));
 	}
+}
+
+async function initializeRemoteReloadSignalVersion() {
+	try {
+		const result = await getWebsiteCacheReloadSignal();
+		if (!result.response.ok) {
+			throw new Error(`Website cache reload signal failed with status ${result.response.status}`);
+		}
+
+		remoteReloadSignalVersion = parseReloadSignalVersion(result.data?.version);
+	} catch (error) {
+		console.error('Failed to initialize remote website cache reload signal:', error);
+	}
+}
+
+function checkForRemoteReloadSignal() {
+	if (remoteReloadCheckInFlight) return;
+
+	remoteReloadCheckInFlight = pollForRemoteReloadSignal()
+		.catch((error) => {
+			console.error('Failed to poll remote website cache reload signal:', error);
+		})
+		.finally(() => {
+			remoteReloadCheckInFlight = undefined;
+		});
+}
+
+async function pollForRemoteReloadSignal() {
+	const result = await getWebsiteCacheReloadSignal();
+	if (!result.response.ok) {
+		throw new Error(`Website cache reload signal failed with status ${result.response.status}`);
+	}
+
+	const version = parseReloadSignalVersion(result.data?.version);
+	if (!version || version <= remoteReloadSignalVersion) return;
+
+	await reloadCachedItems();
+	remoteReloadSignalVersion = version;
+}
+
+function parseReloadSignalVersion(version: number | bigint | undefined) {
+	const numericVersion = Number(version ?? 0);
+	if (!Number.isSafeInteger(numericVersion) || numericVersion < 0) {
+		throw new Error('Website cache reload signal returned an invalid version');
+	}
+
+	return numericVersion;
 }
 
 async function refreshCacheItem(item: (typeof cacheEntries)[keyof typeof cacheEntries]) {

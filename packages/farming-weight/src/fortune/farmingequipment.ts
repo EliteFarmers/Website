@@ -1,18 +1,26 @@
+import type { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
-import { Stat } from '../constants/stats.js';
-import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import { Stat, type StatBreakdown } from '../constants/stats.js';
+import type { FortuneSourceProgress, StatQueryOptions } from '../constants/upgrades.js';
+import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
+import { resolveOverbloomBreakdown, resolveStatBreakdown } from '../effects/resolver.js';
+import type { Effect, EffectEnvironment } from '../effects/types.js';
 import type { FarmingArmorInfo } from '../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
+import { statsToEffects } from '../items/sources/effects-util.js';
+import { enchantEffects } from '../items/sources/enchants.js';
+import { gemEffects } from '../items/sources/gems.js';
+import { reforgeEffects } from '../items/sources/reforges.js';
 import { type PlayerOptions, ZorroMode } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
-import { registerItem } from '../upgrades/itemregistry.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
 import { getGemStat } from '../util/gems.js';
 import { extractNumberFromLine } from '../util/lore.js';
 import type { FarmingArmor } from './farmingarmor.js';
 import type { EliteItemDto } from './item.js';
+import { getLotusToBlossomPieceBonus, setLotusPieceBonusLore } from './lotuspiecebonus.js';
 import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
 
@@ -42,8 +50,12 @@ export class FarmingEquipment extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed, stats);
+	getProgress(options?: Stat[] | StatQueryOptions, zeroed = false): FortuneSourceProgress[] {
+		const query = Array.isArray(options) ? { stats: options } : options;
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed, {
+			...query,
+			defaultSourceType: 'equipment',
+		});
 	}
 
 	setOptions(options: PlayerOptions) {
@@ -51,7 +63,7 @@ export class FarmingEquipment extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getStat(stat: Stat): number {
+	getStat(stat: Stat, crop?: Crop): number {
 		if (stat === Stat.FarmingFortune) {
 			return this.getFortune();
 		}
@@ -72,10 +84,82 @@ export class FarmingEquipment extends UpgradeableBase {
 			const enchant = FARMING_ENCHANTS[key];
 			if (!enchant || !level || enchant.cropSpecific) continue;
 
-			sum += getStatFromEnchant(level, enchant, stat, this.options);
+			sum += getStatFromEnchant(level, enchant, stat, this.options, crop);
 		}
 
 		return sum;
+	}
+
+	getStatBreakdown(stat: Stat, crop?: Crop): StatBreakdown {
+		if (this.item.skyblockId === 'ZORROS_CAPE' && stat === Stat.FarmingFortune) {
+			if (this.options?.zorro?.enabled === false) return {};
+			this.getFortune();
+			return Object.fromEntries(
+				Object.entries(this.fortuneBreakdown).map(([source, value]) => [
+					source,
+					{
+						value,
+						stat,
+					},
+				])
+			);
+		}
+
+		const env = buildEffectEnvironmentFromOptions(this.options, crop);
+		const effects = this.getEffects(env);
+		const resolved =
+			stat === Stat.Overbloom
+				? resolveOverbloomBreakdown(effects, { env, crop }, Stat.Overbloom)
+				: resolveStatBreakdown(effects, stat, { env, crop });
+
+		return Object.fromEntries(
+			Object.entries(resolved).map(([source, value]) => [
+				source,
+				{
+					value,
+					stat,
+				},
+			])
+		);
+	}
+
+	/**
+	 * Returns the declarative `Effect[]` representation of every contribution
+	 * this equipment piece makes: base stats, reforge, gems, enchants. Set
+	 * bonuses are emitted at the {@link ArmorSet} level.
+	 */
+	getEffects(env: EffectEnvironment): Effect[] {
+		const sourceName = this.item.name ?? this.info.name;
+		const effects: Effect[] = [];
+
+		effects.push(...statsToEffects(this.info.baseStats, sourceName));
+
+		if (this.reforge && this.item.attributes?.modifier) {
+			effects.push(
+				...reforgeEffects(this.item.attributes.modifier, this.rarity, `${sourceName} (${this.reforge.name})`)
+			);
+		}
+
+		effects.push(...gemEffects(this.item, this.rarity, `${sourceName} (Gems)`));
+
+		for (const [enchantId, level] of Object.entries(this.item.enchantments ?? {})) {
+			if (!level) continue;
+			effects.push(...enchantEffects(enchantId, level, env, this.options ?? {}));
+		}
+
+		if (this.info.family === 'LOTUS') {
+			const pieceBonus = this.getPieceBonus();
+			if (pieceBonus > 0) {
+				effects.push({
+					source: `${sourceName} (Salesperson)`,
+					op: 'add-stat',
+					stat: Stat.FarmingFortune,
+					value: pieceBonus,
+				});
+			}
+		}
+
+		return effects;
 	}
 
 	getFortune() {
@@ -108,7 +192,7 @@ export class FarmingEquipment extends UpgradeableBase {
 			}
 		}
 
-		// Lotus Piece Specific
+		// Peony Piece Specific
 		if (this.info.family === 'LOTUS') {
 			// Green thumb from lore as a fallback
 			if (!this.options?.uniqueVisitors) {
@@ -206,6 +290,17 @@ export class FarmingEquipment extends UpgradeableBase {
 		return found;
 	}
 
+	applyTierUpgradeStateTo(newItem: FarmingEquipment): void {
+		const upgradedPieceBonus = getLotusToBlossomPieceBonus(
+			this.item.skyblockId,
+			newItem.item.skyblockId,
+			this.getPieceBonus()
+		);
+		if (upgradedPieceBonus === undefined) return;
+
+		setLotusPieceBonusLore(newItem.item, upgradedPieceBonus);
+	}
+
 	static isValid(item: EliteItemDto): boolean {
 		return FARMING_EQUIPMENT_INFO[item.skyblockId as keyof typeof FARMING_EQUIPMENT_INFO] !== undefined;
 	}
@@ -236,11 +331,3 @@ export class FarmingEquipment extends UpgradeableBase {
 // For backwards compatibility
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LotusGear = FarmingEquipment;
-
-for (const item of Object.values(FARMING_EQUIPMENT_INFO)) {
-	if (!item) continue;
-	registerItem({
-		info: item,
-		fakeItem: (i, o) => FarmingEquipment.fakeItem(i, o),
-	});
-}

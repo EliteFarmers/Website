@@ -1,6 +1,19 @@
 import { command, getRequestEvent, query } from '$app/server';
-import { createComment, deleteComment, editComment, listComments, voteComment } from '$lib/api';
-import type { CreateCommentRequest, EditCommentRequest, VoteCommentRequest } from '$lib/api/schemas';
+import {
+	clearHoistedComment,
+	createComment,
+	deleteComment,
+	editComment,
+	hoistComment,
+	listComments,
+	voteComment,
+} from '$lib/api';
+import type {
+	CreateCommentRequest,
+	EditCommentRequest,
+	HoistCommentRequest,
+	VoteCommentRequest,
+} from '$lib/api/schemas';
 import { error } from '@sveltejs/kit';
 import * as z from 'zod';
 
@@ -53,7 +66,72 @@ export const createCommentCommand = command(
 			return { error: 'Failed to create comment', comment: null };
 		}
 
-		return { error: null, comment: null }; // API doesn't return comment data
+		return { error: null, comment: result.data };
+	}
+);
+
+/**
+ * Command: Hoist a comment near a guide heading or block
+ */
+export const hoistCommentCommand = command(
+	z.object({
+		guideId: z.number(),
+		commentId: z.number(),
+		liftedElementId: z.string().min(1).max(128),
+	}),
+	async ({ guideId, commentId, liftedElementId }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) {
+			return { error: 'Unauthorized' };
+		}
+
+		const request: HoistCommentRequest = { liftedElementId };
+		const result = await hoistComment(guideId, commentId, request);
+
+		if (result.response.status === 401) {
+			return { error: 'Unauthorized' };
+		}
+		if (result.response.status === 403) {
+			return { error: 'You do not have permission to hoist this comment' };
+		}
+		if (result.response.status === 400) {
+			return { error: 'That guide block no longer exists. Refresh the guide and try again.' };
+		}
+		if (!result.ok) {
+			return { error: 'Failed to hoist comment' };
+		}
+
+		return { error: null };
+	}
+);
+
+/**
+ * Command: Remove a comment hoist placement
+ */
+export const clearHoistedCommentCommand = command(
+	z.object({
+		guideId: z.number(),
+		commentId: z.number(),
+	}),
+	async ({ guideId, commentId }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) {
+			return { error: 'Unauthorized' };
+		}
+
+		const result = await clearHoistedComment(guideId, commentId);
+
+		if (result.response.status === 401) {
+			return { error: 'Unauthorized' };
+		}
+		if (result.response.status === 403) {
+			return { error: 'You do not have permission to clear this hoist' };
+		}
+		if (!result.ok) {
+			return { error: 'Failed to clear hoisted comment' };
+		}
+
+		return { error: null };
 	}
 );
 

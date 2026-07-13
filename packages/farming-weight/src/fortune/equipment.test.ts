@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../constants/stats.js';
 import { ZorroMode } from '../player/playeroptions.js';
 import { ArmorSet } from './farmingarmor.js';
 import { FarmingEquipment } from './farmingequipment.js';
@@ -79,7 +80,7 @@ const lotusNecklace = {
 	count: 1,
 	skyblockId: 'LOTUS_NECKLACE',
 	uuid: '2c0af2b1-234d-4a7d-8560-10a2b0eb8da4',
-	name: '§5Rooted Lotus Necklace',
+	name: '§5Rooted Peony Necklace',
 	lore: [
 		'§7Health: §a+21 §9(+11)',
 		'§7Farming Fortune: §a+41 §9(+15)',
@@ -108,7 +109,7 @@ const lotusNecklace = {
 	attributes: { modifier: 'rooted', timestamp: '1676441040000', rarity_upgrades: '1' },
 };
 
-test('Lotus Necklace Test', () => {
+test('Peony Necklace Test', () => {
 	const necklace = new FarmingEquipment(lotusNecklace, {
 		uniqueVisitors: 84,
 	});
@@ -123,6 +124,18 @@ test('Lotus Necklace Test', () => {
 	// Test fallback to Green Thumb from lore
 	const necklace2 = new FarmingEquipment(lotusNecklace);
 	expect(necklace2.fortuneBreakdown).toStrictEqual(necklace.fortuneBreakdown);
+});
+
+test('equipment stat breakdown uses item contribution sources', () => {
+	const necklace = new FarmingEquipment(lotusNecklace, {
+		uniqueVisitors: 84,
+	});
+
+	const breakdown = necklace.getStatBreakdown(Stat.FarmingFortune);
+	expect(breakdown['§5Rooted Peony Necklace']?.value).toBe(5);
+	expect(breakdown['§5Rooted Peony Necklace (Rooted)']?.value).toBe(15);
+	expect(breakdown['Enchant: Green Thumb']?.value).toBe(21);
+	expect(breakdown['§5Rooted Peony Necklace (Salesperson)']?.value).toBe(15);
 });
 
 const pestVest = {
@@ -163,6 +176,15 @@ test('Pest Vest Test', () => {
 	expect(vest.getFortune()).toBe(39);
 });
 
+test('equipment pest stat breakdown includes base pest sources', () => {
+	const vest = new FarmingEquipment(pestVest, {
+		uniqueVisitors: 84,
+	});
+
+	expect(vest.getStatBreakdown(Stat.BonusPestChance)['§6Rooted Pest Vest']?.value).toBe(10);
+	expect(vest.getStatBreakdown(Stat.PestCooldownReduction)['§6Rooted Pest Vest']?.value).toBe(15);
+});
+
 const pesthunterCloak = {
 	id: 397,
 	count: 1,
@@ -196,6 +218,10 @@ test('Pesthunter Cloak Test', () => {
 	});
 
 	expect(cloak.getFortune()).toBe(29);
+	expect(cloak.getStatBreakdown(Stat.PestCooldownReduction)["§dSqueaky Pesthunter's Cloak (Squeaky)"]?.value).toBe(
+		2.5
+	);
+	expect(cloak.getStat(Stat.PestCooldownReduction)).toBe(12.5);
 });
 
 test('Pesthunter Set Bonus Test', () => {

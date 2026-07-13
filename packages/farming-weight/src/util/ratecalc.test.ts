@@ -1,51 +1,173 @@
 import { expect, test } from 'vitest';
-import { Crop, MAX_CROP_FORTUNE } from '../constants/crops';
-import { FarmingPet } from '../fortune/farmingpet.js';
-import { calculateDetailedAverageDrops, calculateDetailedDrops, getPossibleResultsFromCrops } from './ratecalc.js';
+import { Crop, MAX_CROP_FORTUNE } from '../constants/crops.js';
+import { Stat } from '../constants/stats.js';
+import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
+import type { Effect } from '../effects/types.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
+import { getPossibleResultsFromCrops } from './ratecalc.js';
+import {
+	type CalculateDetailedDropsFromEffectsOptions,
+	calculateDetailedDropsFromEffects,
+	type DetailedDropsFromEffectsResult,
+} from './ratecalc-effects.js';
+
+const crops = [
+	Crop.Cactus,
+	Crop.Carrot,
+	Crop.CocoaBeans,
+	Crop.Melon,
+	Crop.Mushroom,
+	Crop.NetherWart,
+	Crop.Potato,
+	Crop.Pumpkin,
+	Crop.SugarCane,
+	Crop.Wheat,
+	Crop.Seeds,
+	Crop.Sunflower,
+	Crop.Moonflower,
+	Crop.WildRose,
+] as const;
+
+type DetailedOptions = Omit<CalculateDetailedDropsFromEffectsOptions, 'env' | 'effects'> & {
+	effects?: readonly Effect[];
+	harvestFeast?: PlayerOptions['harvestFeast'];
+	infestedPlotProbability?: number;
+};
+
+type AverageDetailedOptions = Omit<DetailedOptions, 'crop'> & {
+	cropFortune?: Partial<Record<Crop, number>>;
+};
+
+function cropResult(results: Record<Crop, DetailedDropsFromEffectsResult>, crop: Crop): DetailedDropsFromEffectsResult {
+	const result = results[crop];
+	expect(result, `${crop} result should be defined`).toBeDefined();
+	return result!;
+}
+
+function detailed(options: DetailedOptions): DetailedDropsFromEffectsResult {
+	const env = buildEffectEnvironmentFromOptions(
+		{
+			harvestFeast: options.harvestFeast,
+			infestedPlotProbability: options.infestedPlotProbability,
+			selectedCrop: options.crop,
+		},
+		options.crop
+	);
+
+	return calculateDetailedDropsFromEffects({
+		...options,
+		effects: options.effects ?? [],
+		env,
+	});
+}
+
+function averageDetailed(options: AverageDetailedOptions): Record<Crop, DetailedDropsFromEffectsResult> {
+	const result = {} as Record<Crop, DetailedDropsFromEffectsResult>;
+
+	for (const crop of crops) {
+		const fortune = (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0);
+		result[crop] = detailed({
+			...options,
+			crop,
+			farmingFortune: fortune > 0 ? fortune : undefined,
+		});
+	}
+
+	if (options.mooshroom) {
+		const mushroom = result[Crop.Mushroom]!;
+		const mooshroom = mushroom.otherCollection['Mushroom'] ?? 0;
+
+		mushroom.collection += mooshroom;
+		mushroom.otherCollection['Mooshroom'] = mooshroom;
+		delete mushroom.otherCollection['Mushroom'];
+	}
+
+	return result;
+}
+
+function overbloomEffect(value: number, source = 'Overbloom'): Effect {
+	return {
+		source,
+		op: 'add-rare-pct',
+		value,
+		scope: { tags: ['overbloom'] },
+		relatedStats: [Stat.Overbloom],
+	};
+}
+
+function wartyBugEffect(level = 10): Effect {
+	return {
+		source: 'Warty Bug Shard',
+		op: 'add-drop',
+		scope: { crops: [Crop.NetherWart] },
+		drop: {
+			itemId: 'WARTY',
+			chance: 0.00005 * level,
+			dropKind: 'rare',
+			tags: ['overbloom', 'rare-crop'],
+		},
+	};
+}
+
+function cropeetleEffect(level = 10): Effect {
+	return {
+		source: 'Cropeetle Shard',
+		op: 'mul-rare',
+		value: 1 + 0.02 * level,
+		scope: { tags: ['special-crop'] },
+		relatedStats: [Stat.Overbloom],
+	};
+}
 
 test('Rate calc test', () => {
-	const drops = calculateDetailedAverageDrops({
+	const drops = averageDetailed({
 		blocksBroken: 24_000,
 		farmingFortune: 100,
 		bountiful: true,
 		mooshroom: true,
 	});
 
-	expect(drops[Crop.Wheat].collection).toBe(48_000);
-	expect(drops[Crop.Wheat].npcPrice).toBe(6);
+	const wheat = cropResult(drops, Crop.Wheat);
+	const netherWart = cropResult(drops, Crop.NetherWart);
+	const sugarCane = cropResult(drops, Crop.SugarCane);
+	const cactus = cropResult(drops, Crop.Cactus);
+	const carrot = cropResult(drops, Crop.Carrot);
+	const melon = cropResult(drops, Crop.Melon);
+	const seeds = cropResult(drops, Crop.Seeds);
 
-	expect(drops[Crop.NetherWart].otherCollection['Fermento']).toBe(2);
-	expect(drops[Crop.SugarCane].otherCollection['Fermento']).toBe(2);
-	expect(drops[Crop.Cactus].otherCollection['Fermento']).toBe(2);
+	expect(wheat.collection).toBe(48_000);
+	expect(wheat.npcPrice).toBe(6);
 
-	expect(drops[Crop.Carrot].items[Crop.Carrot]).toBe(drops[Crop.Carrot].collection - 24000);
-	expect(drops[Crop.Carrot].items).toStrictEqual({
+	expect(netherWart.otherCollection['Fermento']).toBeCloseTo(1.68, 8);
+	expect(sugarCane.otherCollection['Fermento']).toBeCloseTo(1.68, 8);
+	expect(cactus.otherCollection['Fermento']).toBeCloseTo(1.68, 8);
+
+	expect(carrot.items[Crop.Carrot]).toBe(carrot.collection - 24000);
+	expect(carrot.items).toStrictEqual({
 		[Crop.Carrot]: 120000,
 		CROPIE: 12,
 		MUSHROOM_COLLECTION: 24000,
 	});
 
-	expect(drops[Crop.Melon].items).toStrictEqual({
-		[Crop.Melon]: 240000,
-		SQUASH: 7.2,
-		MUSHROOM_COLLECTION: 24000,
-	});
+	expect(melon.items[Crop.Melon]).toBe(240000);
+	expect(melon.items.SQUASH).toBeCloseTo(7.2, 8);
+	expect(melon.items.MUSHROOM_COLLECTION).toBe(24000);
 
-	expect(drops[Crop.SugarCane].items).toStrictEqual({
+	expect(sugarCane.items).toStrictEqual({
 		[Crop.SugarCane]: 96000,
 		FERMENTO: 1.68,
 		MUSHROOM_COLLECTION: 48000,
 	});
 
-	expect(drops[Crop.Seeds].items).toStrictEqual({
+	expect(seeds.items).toStrictEqual({
 		[Crop.Seeds]: 48000,
 		FERMENTO: 1.68,
 		MUSHROOM_COLLECTION: 24000,
 	});
-	expect(drops[Crop.Seeds].otherCollection['Replenish']).toBe(-24000);
-	expect(drops[Crop.Seeds].collection).toBe(48000 + 24000);
+	expect(seeds.otherCollection['Replenish']).toBe(-24000);
+	expect(seeds.collection).toBe(48000 + 24000);
 
-	expect(drops[Crop.Wheat].items).toStrictEqual({
+	expect(wheat.items).toStrictEqual({
 		[Crop.Wheat]: 48000,
 		[Crop.Seeds]: 48000,
 		CROPIE: 12,
@@ -56,30 +178,30 @@ test('Rate calc test', () => {
 test('Possible results - Wheat', () => {
 	const result = getPossibleResultsFromCrops(Crop.Wheat, 26000);
 
-	expect(result[Crop.Wheat].items).toBe(26000);
-	expect(result[Crop.Wheat].cost).toBe(0);
-	expect(result[Crop.Wheat].remainder).toBe(0);
+	expect(result[Crop.Wheat]?.items).toBe(26000);
+	expect(result[Crop.Wheat]?.cost).toBe(0);
+	expect(result[Crop.Wheat]?.remainder).toBe(0);
 
-	expect(result['ENCHANTED_WHEAT'].fractionalItems).toBe(162.5);
-	expect(result['ENCHANTED_WHEAT'].cost).toBe(0);
-	expect(result['ENCHANTED_HAY_BALE'].fractionalItems).toBe(1.015625);
+	expect(result['ENCHANTED_WHEAT']?.fractionalItems).toBe(162.5);
+	expect(result['ENCHANTED_WHEAT']?.cost).toBe(0);
+	expect(result['ENCHANTED_HAY_BALE']?.fractionalItems).toBe(1.015625);
 });
 
 test('Possible results - Carrot', () => {
 	const result = getPossibleResultsFromCrops(Crop.Carrot, 26000);
 
-	expect(result[Crop.Carrot].items).toBe(26000);
-	expect(result[Crop.Carrot].cost).toBe(0);
-	expect(result[Crop.Carrot].remainder).toBe(0);
+	expect(result[Crop.Carrot]?.items).toBe(26000);
+	expect(result[Crop.Carrot]?.cost).toBe(0);
+	expect(result[Crop.Carrot]?.remainder).toBe(0);
 
-	expect(result['ENCHANTED_CARROT'].fractionalItems).toBe(162.5);
-	expect(result['ENCHANTED_CARROT'].fractionalCost).toBe(0);
-	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalItems).toBe(1.015625);
-	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalCost).toBe(0);
+	expect(result['ENCHANTED_CARROT']?.fractionalItems).toBe(162.5);
+	expect(result['ENCHANTED_CARROT']?.fractionalCost).toBe(0);
+	expect(result['ENCHANTED_GOLDEN_CARROT']?.fractionalItems).toBe(1.015625);
+	expect(result['ENCHANTED_GOLDEN_CARROT']?.fractionalCost).toBe(0);
 });
 
 test('Max fortune results', () => {
-	const result = calculateDetailedDrops({
+	const result = detailed({
 		crop: Crop.Wheat,
 		blocksBroken: 100_000,
 		bountiful: true,
@@ -88,7 +210,7 @@ test('Max fortune results', () => {
 
 	expect(result.fortune).toBe(MAX_CROP_FORTUNE[Crop.Wheat]);
 
-	const result2 = calculateDetailedDrops({
+	const result2 = detailed({
 		crop: Crop.Wheat,
 		blocksBroken: 100_000,
 		farmingFortune: 173,
@@ -100,7 +222,7 @@ test('Max fortune results', () => {
 });
 
 test('Tool Exp Capsules include seeds for wheat', () => {
-	const result = calculateDetailedDrops({
+	const result = detailed({
 		crop: Crop.Wheat,
 		blocksBroken: 50_000,
 		farmingFortune: 100,
@@ -109,8 +231,8 @@ test('Tool Exp Capsules include seeds for wheat', () => {
 		maxTool: true,
 	});
 
-	// With 100 farming fortune: wheat collection = 100k, seeds (merged) = 100k
-	// Capsules are based on (wheat collection + seeds) / 200k => 1 capsule
+	// With 100 farming fortune: wheat collection = 100k, seeds (merged) = 100k.
+	// Capsules are based on (wheat collection + seeds) / 200k => 1 capsule.
 	expect(result.otherCollection['Seeds']).toBe(100_000);
 	expect(result.items[Crop.Seeds]).toBe(100_000);
 
@@ -120,7 +242,7 @@ test('Tool Exp Capsules include seeds for wheat', () => {
 });
 
 test('Tool Exp Capsules include seeds for wheat (average drops)', () => {
-	const drops = calculateDetailedAverageDrops({
+	const drops = averageDetailed({
 		blocksBroken: 50_000,
 		farmingFortune: 100,
 		bountiful: true,
@@ -128,202 +250,207 @@ test('Tool Exp Capsules include seeds for wheat (average drops)', () => {
 		maxTool: true,
 	});
 
-	expect(drops[Crop.Wheat].otherCollection['Seeds']).toBe(100_000);
-	expect(drops[Crop.Wheat].items['TOOL_EXP_CAPSULE']).toBe(1);
+	const wheat = cropResult(drops, Crop.Wheat);
+	expect(wheat.otherCollection['Seeds']).toBe(100_000);
+	expect(wheat.items['TOOL_EXP_CAPSULE']).toBe(1);
 });
 
 test('Warty RNG Drops', () => {
-	const result = calculateDetailedDrops({
+	const result = detailed({
 		crop: Crop.NetherWart,
 		blocksBroken: 100_000,
 		bountiful: true,
 		mooshroom: true,
-		attributes: {
-			wart_eater: 500, // Max level
-		},
+		effects: [wartyBugEffect()],
 	});
 
 	expect(result.fortune).toBe(MAX_CROP_FORTUNE[Crop.NetherWart]);
-	expect(result.rngItems?.['WARTY']).toBe(50); // 0.05% chance on 100k blocks broken is 50 drops
+	expect(result.rngItems?.['WARTY']).toBe(50);
 });
 
 test('Burrowing RNG Drops', () => {
-	const result = calculateDetailedDrops({
+	const result = detailed({
 		crop: Crop.Mushroom,
 		bountiful: true,
 		mooshroom: true,
-		blocksBroken: 250_000,
+		blocksBroken: 350_000,
 	});
 
 	expect(result.rngItems?.['BURROWING_SPORES']).toBe(1);
 });
 
-test('Cropeetle shard increases special crop bonus', () => {
-	const resultWithShard = calculateDetailedDrops({
+test('Cropeetle shard contributes a scoped special crop effect', () => {
+	const resultWithShard = detailed({
 		crop: Crop.Wheat,
 		blocksBroken: 100_000,
 		bountiful: true,
 		mooshroom: false,
-		attributes: {
-			crop_bug: 100, // Max level (10)
-		},
+		effects: [cropeetleEffect()],
 	});
 
-	const resultWithoutShard = calculateDetailedDrops({
+	const resultWithoutShard = detailed({
 		crop: Crop.Wheat,
 		blocksBroken: 100_000,
 		bountiful: true,
 		mooshroom: false,
 	});
 
-	// Max level (10) gives 20% bonus => 1.2x multiplier on special crops
-	expect(resultWithShard.specialCropBonus).toBe(0.2);
-	expect(resultWithShard.specialCropBonusBreakdown).toStrictEqual({ 'Cropeetle Shard': 0.2 });
-	expect(resultWithoutShard.specialCropBonus).toBe(0);
-
-	// Cropie values should be 20% higher with max shard
-	expect(resultWithShard.items['CROPIE']).toBeCloseTo(resultWithoutShard.items['CROPIE'] * 1.2, 1);
+	expect(resultWithShard.effectsBreakdown).toStrictEqual({});
+	expect(resultWithoutShard.effectsBreakdown).toStrictEqual({});
+	expect(resultWithShard.items['CROPIE']).toBeCloseTo(resultWithoutShard.items['CROPIE']! * 1.2, 1);
+	expect(resultWithShard.appliedEffects['CROPIE']).toContainEqual(
+		expect.objectContaining({
+			source: 'Cropeetle Shard',
+			op: 'mul-rare',
+			amount: 1.2,
+		})
+	);
 });
 
-test('Rarefinder chip increases rare item bonus', () => {
-	// Level 5 (Rare tier) = 2% per level = 10% bonus
-	const resultLevel5 = calculateDetailedDrops({
-		crop: Crop.NetherWart,
-		blocksBroken: 100_000,
+test('Special crop RNG drops preserve fractional expected precision', () => {
+	const result = detailed({
+		crop: Crop.Wheat,
+		blocksBroken: 12_345,
 		bountiful: true,
 		mooshroom: false,
-		chips: {
-			RAREFINDER_GARDEN_CHIP: 5,
-		},
-		attributes: {
-			SHARD_WARTYBUG: 500, // Include warty to see the effect
-		},
+		armorPieces: 4,
 	});
 
-	// Level 15 (Epic tier) = 2.5% per level = 37.5% bonus
-	const resultLevel15 = calculateDetailedDrops({
-		crop: Crop.NetherWart,
-		blocksBroken: 100_000,
-		bountiful: true,
-		mooshroom: false,
-		chips: {
-			RAREFINDER_GARDEN_CHIP: 15,
-		},
-		attributes: {
-			SHARD_WARTYBUG: 500,
-		},
-	});
-
-	// Level 20 (Legendary tier) = 3% per level = 60% bonus
-	const resultLevel20 = calculateDetailedDrops({
-		crop: Crop.NetherWart,
-		blocksBroken: 100_000,
-		bountiful: true,
-		mooshroom: false,
-		chips: {
-			RAREFINDER_GARDEN_CHIP: 20,
-		},
-		attributes: {
-			SHARD_WARTYBUG: 500,
-		},
-	});
-
-	// Special crop bonus should be 0 (Rarefinder only affects rare items now)
-	expect(resultLevel5.specialCropBonus).toBe(0);
-	expect(resultLevel15.specialCropBonus).toBe(0);
-	expect(resultLevel20.specialCropBonus).toBe(0);
-
-	// Rare item bonus
-	expect(resultLevel5.rareItemBonus).toBeCloseTo(0.1, 4);
-	expect(resultLevel5.rareItemBonusBreakdown).toStrictEqual({ 'Rarefinder Chip': 0.1, 'Warty Bug Shard (Base)': 0 });
-	expect(resultLevel15.rareItemBonus).toBeCloseTo(0.375, 4);
-	expect(resultLevel20.rareItemBonus).toBeCloseTo(0.6, 4);
-
-	// Warty drops should scale accordingly
-	// Base warty is 50 (0.05% * 100k blocks)
-	expect(resultLevel5.rngItems?.['WARTY']).toBeCloseTo(50 * 1.1, 1);
-	expect(resultLevel15.rngItems?.['WARTY']).toBeCloseTo(50 * 1.375, 1);
-	expect(resultLevel20.rngItems?.['WARTY']).toBeCloseTo(50 * 1.6, 1);
+	const expectedCropie = 12_345 * 0.0005;
+	expect(result.items['CROPIE']).toBe(expectedCropie);
+	expect(result.otherCollection.Cropie).toBe(expectedCropie);
+	expect(result.coinSources.Cropie).toBe(expectedCropie * 25_000);
+	expect(result.items['CROPIE']).not.toBe(+expectedCropie.toFixed(2));
 });
 
-test("Rose Dragon Dragon's Gluttony affects rare items only", () => {
-	// Mock a level 200 Rose Dragon pet
-	const mockPet = new FarmingPet({
-		type: 'ROSE_DRAGON',
-		exp: 10 ** 20,
-		tier: 'LEGENDARY',
-	});
-
-	const result = calculateDetailedDrops({
-		crop: Crop.Mushroom,
-		blocksBroken: 250_000,
+test('Non-provided effects do not change added Warty drops', () => {
+	const result = detailed({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
 		bountiful: true,
 		mooshroom: false,
-		pet: mockPet,
+		effects: [wartyBugEffect()],
 	});
 
-	// Level 200 * 0.002 = 0.4 (40% bonus) - only affects rareItemBonus now
 	expect(result.specialCropBonus).toBe(0);
-	expect(result.rareItemBonus).toBe(0.4);
-
-	// Burrowing spores base is 1 (4e-6 * 250k)
-	expect(result.rngItems?.['BURROWING_SPORES']).toBeCloseTo(1 * 1.4, 2);
+	expect(result.effectsBreakdown).toStrictEqual({});
+	expect(result.rngItems?.['WARTY']).toBeCloseTo(50, 2);
 });
 
-test('Multiple rate modifiers stack correctly with multiplicative formula', () => {
-	const mockPet = new FarmingPet({
-		type: 'ROSE_DRAGON',
-		exp: 10 ** 20,
-		tier: 'LEGENDARY',
-	});
-
-	const result = calculateDetailedDrops({
+test('Overbloom increases rare crops and rare item drops', () => {
+	const baseResult = detailed({
 		crop: Crop.NetherWart,
 		blocksBroken: 100_000,
 		bountiful: true,
 		mooshroom: false,
-		attributes: {
-			crop_bug: 100, // Max level 10 = 20% special crop bonus
-			wart_eater: 500,
-		},
-		chips: {
-			rarefinder: 15, // Epic tier = 37.5% rare item bonus
-		},
-		pet: mockPet,
+		effects: [wartyBugEffect()],
 	});
 
-	// Special crop bonus: Only Cropeetle 20%
-	expect(result.specialCropBonus).toBeCloseTo(0.2, 4);
+	const overbloomResult = detailed({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		effects: [wartyBugEffect(), overbloomEffect(5)],
+	});
 
-	// Rare item bonus: Rarefinder 37.5% + Dragon's Gluttony 40% = 77.5%
-	expect(result.rareItemBonus).toBeCloseTo(0.775, 4);
+	expect(overbloomResult.effectsBreakdown).toStrictEqual({
+		Overbloom: 5,
+	});
+	expect(overbloomResult.rngItems?.['WARTY']).toBeCloseTo(50 * 1.05, 2);
+	expect(overbloomResult.items['FERMENTO']).toBeCloseTo((baseResult.items['FERMENTO'] ?? 0) * 1.05, 2);
 
-	// Base warty is 50, with 77.5% bonus should be 88.75
-	expect(result.rngItems?.['WARTY']).toBeCloseTo(50 * 1.775, 1);
+	const baseMoonflower = detailed({
+		crop: Crop.Moonflower,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+	});
+
+	const moonflowerWithOverbloom = detailed({
+		crop: Crop.Moonflower,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		effects: [overbloomEffect(5)],
+	});
+
+	expect(moonflowerWithOverbloom.effectsBreakdown.Overbloom).toBe(5);
+	expect(moonflowerWithOverbloom.items['HELIANTHUS']).toBeCloseTo(
+		(baseMoonflower.items['HELIANTHUS'] ?? 0) * 1.05,
+		2
+	);
 });
 
-test('Rate modifiers do not affect results when level is 0', () => {
-	const resultWithZeroLevels = calculateDetailedDrops({
+test('Multiple additive rare effects stack correctly', () => {
+	const result = detailed({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		effects: [wartyBugEffect(), overbloomEffect(20, 'Natural Talent'), overbloomEffect(77.5, 'Sunset')],
+	});
+
+	expect(result.effectsBreakdown).toStrictEqual({
+		'Natural Talent': 20,
+		Sunset: 77.5,
+	});
+	expect(result.rngItems?.['WARTY']).toBeCloseTo(50 * 1.975, 1);
+});
+
+test('Melon NPC total matches the visible coin breakdown when rare effects are active', () => {
+	const result = detailed({
+		crop: Crop.Melon,
+		blocksBroken: 72_000,
+		farmingFortune: 100,
+		bountiful: true,
+		mooshroom: false,
+		armorPieces: 4,
+		effects: [overbloomEffect(20)],
+	});
+
+	const visibleTotal = Object.values(result.coinSources).reduce((sum, value) => sum + value, 0);
+
+	expect(result.coinSources.Squash).toBeCloseTo(1_944_000, 5);
+	expect(result.npcCoins).toBe(visibleTotal);
+});
+
+test('Average melon drops keep NPC total in sync with the visible coin breakdown', () => {
+	const result = cropResult(
+		averageDetailed({
+			blocksBroken: 72_000,
+			farmingFortune: 100,
+			bountiful: true,
+			mooshroom: false,
+			armorPieces: 4,
+			effects: [overbloomEffect(20)],
+		}),
+		Crop.Melon
+	);
+
+	const visibleTotal = Object.values(result.coinSources).reduce((sum, value) => sum + value, 0);
+
+	expect(result.coinSources.Squash).toBeCloseTo(1_944_000, 5);
+	expect(result.npcCoins).toBe(visibleTotal);
+});
+
+test('Absent effects leave results unchanged', () => {
+	const resultWithIdentityEffect = detailed({
 		crop: Crop.Wheat,
 		blocksBroken: 100_000,
 		bountiful: true,
 		mooshroom: false,
-		attributes: {
-			crop_bug: 0,
-		},
-		chips: {
-			rarefinder: 0,
-		},
+		effects: [cropeetleEffect(0)],
 	});
 
-	const resultWithoutModifiers = calculateDetailedDrops({
+	const resultWithoutModifiers = detailed({
 		crop: Crop.Wheat,
 		blocksBroken: 100_000,
 		bountiful: true,
 		mooshroom: false,
 	});
 
-	expect(resultWithZeroLevels.specialCropBonus).toBe(0);
-	expect(resultWithZeroLevels.rareItemBonus).toBe(0);
-	expect(resultWithZeroLevels.items['CROPIE']).toBe(resultWithoutModifiers.items['CROPIE']);
+	expect(resultWithIdentityEffect.specialCropBonus).toBe(0);
+	expect(resultWithIdentityEffect.effectsBreakdown).toStrictEqual({});
+	expect(resultWithIdentityEffect.items['CROPIE']).toBe(resultWithoutModifiers.items['CROPIE']);
 });

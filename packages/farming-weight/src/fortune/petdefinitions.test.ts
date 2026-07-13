@@ -1,8 +1,40 @@
 import { describe, expect, test } from 'vitest';
 import { Rarity } from '../constants/reforges.js';
-import { Stat } from '../constants/stats.js';
+import { Stat, type StatValue } from '../constants/stats.js';
 import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPetStatType, FarmingPets } from '../items/pets.js';
 import { FarmingPet } from './farmingpet.js';
+
+function getPetInfo(id: FarmingPets): NonNullable<(typeof FARMING_PETS)[FarmingPets]> {
+	const info = FARMING_PETS[id];
+	expect(info, `Pet ${id} should be defined`).toBeDefined();
+	return info!;
+}
+
+function getPetItemInfo(id: string): NonNullable<(typeof FARMING_PET_ITEMS)[string]> {
+	const info = FARMING_PET_ITEMS[id];
+	expect(info, `Pet item ${id} should be defined`).toBeDefined();
+	return info!;
+}
+
+function expectStatValue<T, C>(stat: StatValue<T, C> | undefined, value: number) {
+	expect(stat && 'value' in stat).toBe(true);
+	if (!stat || !('value' in stat)) {
+		throw new Error('Expected stat to have a flat value');
+	}
+
+	expect(stat.value).toBe(value);
+}
+
+function expectCalculatedStat<T, C>(stat: StatValue<T, C> | undefined) {
+	expect(stat && 'calculated' in stat).toBe(true);
+	if (!stat || !('calculated' in stat)) {
+		throw new Error('Expected stat to have a calculated value');
+	}
+
+	expect(stat.calculated).toBeDefined();
+}
+
+const MAX_LEVEL_EXP = 30000000000;
 
 describe('Pet Definitions Integrity', () => {
 	test('All farming pets are defined and have required fields', () => {
@@ -10,97 +42,103 @@ describe('Pet Definitions Integrity', () => {
 		expect(petIds.length).toBe(10);
 
 		for (const petId of petIds) {
-			const info = FARMING_PETS[petId];
-			expect(info, `Pet ${petId} should be defined`).toBeDefined();
+			const info = getPetInfo(petId);
 			expect(info.name, `Pet ${petId} should have a name`).toBeDefined();
 			expect(info.wiki, `Pet ${petId} should have a wiki link`).toBeDefined();
 		}
 	});
 
 	test('Elephant pet has correct per-level stats', () => {
-		const elephant = FARMING_PETS[FarmingPets.Elephant];
+		const elephant = getPetInfo(FarmingPets.Elephant);
 		expect(elephant.name).toBe('Elephant');
-		expect(elephant.perLevelStats?.[Stat.FarmingFortune]?.value).toBe(1.5);
+		expectStatValue(elephant.perLevelStats?.[Stat.FarmingFortune], 1.5);
 		expect(elephant.perLevelStats?.[Stat.FarmingFortune]?.type).toBe(FarmingPetStatType.Ability);
 	});
 
 	test('Mooshroom Cow pet has correct base stats and abilities', () => {
-		const mooshroom = FARMING_PETS[FarmingPets.MooshroomCow];
+		const mooshroom = getPetInfo(FarmingPets.MooshroomCow);
+		const ability = mooshroom.abilities?.[0];
 		expect(mooshroom.name).toBe('Mooshroom Cow');
 		expect(mooshroom.stats?.[Stat.FarmingFortune]?.type).toBe(FarmingPetStatType.Base);
-		expect(mooshroom.stats?.[Stat.FarmingFortune]?.calculated).toBeDefined();
+		expectCalculatedStat(mooshroom.stats?.[Stat.FarmingFortune]);
 		expect(mooshroom.abilities).toHaveLength(1);
-		expect(mooshroom.abilities?.[0].name).toBe('Farming Strength');
+		expect(ability?.name).toBe('Farming Strength');
 	});
 
 	test('Bee pet has correct per-rarity stats', () => {
-		const bee = FARMING_PETS[FarmingPets.Bee];
+		const bee = getPetInfo(FarmingPets.Bee);
 		expect(bee.name).toBe('Bee');
-		expect(bee.perLevelStats?.[Stat.Strength]?.value).toBe(0.3);
-		expect(bee.perRarityLevelStats?.[Rarity.Rare]?.[Stat.FarmingFortune]?.value).toBe(0.2);
-		expect(bee.perRarityLevelStats?.[Rarity.Epic]?.[Stat.FarmingFortune]?.value).toBe(0.3);
-		expect(bee.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.FarmingFortune]?.value).toBe(0.3);
+		expectStatValue(bee.perLevelStats?.[Stat.Strength], 0.3);
+		expectStatValue(bee.perRarityLevelStats?.[Rarity.Rare]?.[Stat.FarmingFortune], 0.2);
+		expectStatValue(bee.perRarityLevelStats?.[Rarity.Epic]?.[Stat.FarmingFortune], 0.3);
+		expectStatValue(bee.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.FarmingFortune], 0.3);
 	});
 
 	test('Rabbit pet has correct max rarity and per-rarity stats', () => {
-		const rabbit = FARMING_PETS[FarmingPets.Rabbit];
+		const rabbit = getPetInfo(FarmingPets.Rabbit);
 		expect(rabbit.name).toBe('Rabbit');
 		expect(rabbit.maxRarity).toBe(Rarity.Mythic);
-		expect(rabbit.perLevelStats?.[Stat.Speed]?.value).toBe(0.2);
-		expect(rabbit.perLevelStats?.[Stat.Health]?.value).toBe(1);
-		expect(rabbit.perRarityLevelStats?.[Rarity.Mythic]?.[Stat.FarmingWisdom]?.value).toBe(0.3);
+		expectStatValue(rabbit.perLevelStats?.[Stat.Speed], 0.2);
+		expectStatValue(rabbit.perLevelStats?.[Stat.Health], 1);
+		expectStatValue(rabbit.perRarityLevelStats?.[Rarity.Mythic]?.[Stat.FarmingWisdom], 0.3);
 	});
 
 	test('Slug pet has correct per-level stats and abilities', () => {
-		const slug = FARMING_PETS[FarmingPets.Slug];
+		const slug = getPetInfo(FarmingPets.Slug);
+		const ability = slug.abilities?.[0];
 		expect(slug.name).toBe('Slug');
-		expect(slug.perLevelStats?.[Stat.Defense]?.value).toBe(0.2);
-		expect(slug.perLevelStats?.[Stat.Intelligence]?.value).toBe(0.25);
-		expect(slug.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.BonusPestChance]?.value).toBe(0.4);
+		expectStatValue(slug.perLevelStats?.[Stat.Defense], 0.2);
+		expectStatValue(slug.perLevelStats?.[Stat.Intelligence], 0.25);
+		expectStatValue(slug.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.BonusPestChance], 0.4);
 		expect(slug.abilities).toHaveLength(1);
-		expect(slug.abilities?.[0].name).toBe('Repugnant Aroma');
-		expect(slug.abilities?.[0].temporary).toBe(true);
+		expect(ability?.name).toBe('Repugnant Aroma');
+		expect(ability?.temporary).toBe(true);
 	});
 
 	test('Hedgehog pet has correct abilities', () => {
-		const hedgehog = FARMING_PETS[FarmingPets.Hedgehog];
+		const hedgehog = getPetInfo(FarmingPets.Hedgehog);
+		const ability = hedgehog.abilities?.[0];
 		expect(hedgehog.name).toBe('Hedgehog');
-		expect(hedgehog.perLevelStats?.[Stat.Speed]?.value).toBe(0.15);
-		expect(hedgehog.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.PestKillFortune]?.value).toBe(1);
+		expectStatValue(hedgehog.perLevelStats?.[Stat.Speed], 0.15);
+		expectStatValue(hedgehog.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.PestKillFortune], 1);
+		expectStatValue(hedgehog.perRarityLevelStats?.[Rarity.Legendary]?.[Stat.Overbloom], 0.35);
 		expect(hedgehog.abilities).toHaveLength(1);
-		expect(hedgehog.abilities?.[0].name).toBe("Hunter's Insight");
+		expect(ability?.name).toBe("Hunter's Insight");
 	});
 
 	test('Chicken pet has correct per-level stats', () => {
-		const chicken = FARMING_PETS[FarmingPets.Chicken];
+		const chicken = getPetInfo(FarmingPets.Chicken);
 		expect(chicken.name).toBe('Chicken');
-		expect(chicken.perLevelStats?.[Stat.Speed]?.value).toBe(0.5);
-		expect(chicken.perLevelStats?.[Stat.FarmingFortune]?.value).toBe(0.5);
+		expectStatValue(chicken.perLevelStats?.[Stat.Speed], 0.5);
+		expectStatValue(chicken.perLevelStats?.[Stat.FarmingFortune], 0.5);
 	});
 
-	test('Pig pet has Trample ability', () => {
-		const pig = FARMING_PETS[FarmingPets.Pig];
+	test('Pig pet has Shining Stampede ability', () => {
+		const pig = getPetInfo(FarmingPets.Pig);
+		const ability = pig.abilities?.[0];
 		expect(pig.name).toBe('Pig');
-		expect(pig.perLevelStats?.[Stat.Speed]?.value).toBe(0.25);
+		expectStatValue(pig.perLevelStats?.[Stat.Speed], 0.25);
+		expectStatValue(pig.perLevelStats?.[Stat.PotatoFortune], 0.2);
 		expect(pig.abilities).toHaveLength(1);
-		expect(pig.abilities?.[0].name).toBe('Trample');
+		expect(ability?.name).toBe('Shining Stampede');
 	});
 
 	test('Mosquito pet has correct stats and abilities', () => {
-		const mosquito = FARMING_PETS[FarmingPets.Mosquito];
+		const mosquito = getPetInfo(FarmingPets.Mosquito);
+		const ability = mosquito.abilities?.[0];
 		expect(mosquito.name).toBe('Mosquito');
-		expect(mosquito.perLevelStats?.[Stat.Speed]?.value).toBe(0.2);
-		expect(mosquito.perLevelStats?.[Stat.BonusPestChance]?.value).toBe(0.5);
+		expectStatValue(mosquito.perLevelStats?.[Stat.Speed], 0.2);
+		expectStatValue(mosquito.perLevelStats?.[Stat.BonusPestChance], 0.5);
 		expect(mosquito.abilities).toHaveLength(1);
-		expect(mosquito.abilities?.[0].name).toBe("Buzzin' Barterer");
+		expect(ability?.name).toBe("Buzzin' Barterer");
 	});
 
 	test('Rose Dragon pet has correct max level and abilities', () => {
-		const roseDragon = FARMING_PETS[FarmingPets.RoseDragon];
+		const roseDragon = getPetInfo(FarmingPets.RoseDragon);
 		expect(roseDragon.name).toBe('Rose Dragon');
 		expect(roseDragon.maxLevel).toBe(200);
-		expect(roseDragon.stats?.[Stat.FarmingFortune]?.calculated).toBeDefined();
-		expect(roseDragon.stats?.[Stat.Speed]?.calculated).toBeDefined();
+		expectCalculatedStat(roseDragon.stats?.[Stat.FarmingFortune]);
+		expectCalculatedStat(roseDragon.stats?.[Stat.Speed]);
 		expect(roseDragon.abilities).toHaveLength(4);
 		expect(roseDragon.abilities?.map((a) => a.name)).toEqual([
 			'Garden Power',
@@ -113,18 +151,38 @@ describe('Pet Definitions Integrity', () => {
 
 describe('Pet Items Integrity', () => {
 	test('Yellow Bandana has correct stats', () => {
-		expect(FARMING_PET_ITEMS['YELLOW_BANDANA'].name).toBe('Yellow Bandana');
-		expect(FARMING_PET_ITEMS['YELLOW_BANDANA'].stats?.[Stat.FarmingFortune]?.value).toBe(30);
+		const item = getPetItemInfo('YELLOW_BANDANA');
+		expect(item.name).toBe('Yellow Bandana');
+		expectStatValue(item.stats?.[Stat.FarmingFortune], 30);
 	});
 
 	test('Green Bandana has calculated stats', () => {
-		expect(FARMING_PET_ITEMS['GREEN_BANDANA'].name).toBe('Green Bandana');
-		expect(FARMING_PET_ITEMS['GREEN_BANDANA'].stats?.[Stat.FarmingFortune]?.calculated).toBeDefined();
+		const item = getPetItemInfo('GREEN_BANDANA');
+		expect(item.name).toBe('Green Bandana');
+		expectCalculatedStat(item.stats?.[Stat.FarmingFortune]);
 	});
 
 	test('Brown Bandana has calculated pest chance stats', () => {
-		expect(FARMING_PET_ITEMS['BROWN_BANDANA'].name).toBe('Brown Bandana');
-		expect(FARMING_PET_ITEMS['BROWN_BANDANA'].stats?.[Stat.BonusPestChance]?.calculated).toBeDefined();
+		const item = getPetItemInfo('BROWN_BANDANA');
+		expect(item.name).toBe('Brown Bandana');
+		expectCalculatedStat(item.stats?.[Stat.BonusPestChance]);
+	});
+
+	test('pet stat relics have explicit stat modifiers', () => {
+		const minos = getPetItemInfo('MINOS_RELIC');
+		const hephaestus = getPetItemInfo('HEPHAESTUS_RELIC');
+		expect(minos.name).toBe('Minos Relic');
+		expect(minos.modifiers).toContainEqual({
+			kind: 'multiply-pet-stats',
+			statTypes: [FarmingPetStatType.Base],
+			multiplier: 4 / 3,
+		});
+		expect(hephaestus.name).toBe('Hephaestus Relic');
+		expect(hephaestus.modifiers).toContainEqual({
+			kind: 'multiply-pet-stats',
+			statTypes: [FarmingPetStatType.Base],
+			multiplier: 1.5,
+		});
 	});
 });
 
@@ -192,15 +250,15 @@ describe('Pet Fortune Calculations', () => {
 				farmingLevel: 60,
 				milestones: {
 					WHEAT: 46,
-					CARROT: 46,
-					POTATO: 46,
+					CARROT_ITEM: 46,
+					POTATO_ITEM: 46,
 					MELON: 46,
 					PUMPKIN: 46,
 					CACTUS: 46,
 					SUGAR_CANE: 46,
-					COCOA_BEANS: 46,
-					MUSHROOM: 46,
-					NETHER_WART: 46,
+					'INK_SACK:3': 46,
+					MUSHROOM_COLLECTION: 46,
+					NETHER_STALK: 46,
 				},
 				pets: [],
 			}
@@ -212,6 +270,7 @@ describe('Pet Fortune Calculations', () => {
 		// Symbiosis (level >= 200): 0 (no maxed pets in the options)
 		// Total: 40 + 180 + 69 = 289
 		expect(pet.fortune).toBe(289);
+		expect(pet.getFortune(Stat.Overbloom)).toBe(40);
 	});
 
 	test('Hedgehog Hunter Insight fortune', () => {
@@ -240,5 +299,118 @@ describe('Pet Fortune Calculations', () => {
 		expect(pet.level).toBe(100);
 		// 10 pests with all 15 tiers unlocked each = 150 tiers * 0.7 = 105 fortune
 		expect(pet.fortune).toBe(105);
+		expect(pet.getFortune(Stat.Overbloom)).toBe(35);
+	});
+});
+
+describe('Pet Item Modifier Calculations', () => {
+	test('Hephaestus Relic boosts base pet stats and keeps the bonus in its own breakdown line', () => {
+		const pet = new FarmingPet({
+			type: 'BEE',
+			exp: MAX_LEVEL_EXP,
+			tier: 'LEGENDARY',
+			heldItem: 'HEPHAESTUS_RELIC',
+		});
+
+		expect(pet.level).toBe(100);
+		expect(pet.fortune).toBe(45);
+		expect(pet.breakdown).toStrictEqual({
+			'Busy Buzz Buzz': 30,
+			'Hephaestus Relic': 15,
+		});
+	});
+
+	test('Minos Relic boosts base Bonus Pest Chance on Mosquito', () => {
+		const pet = new FarmingPet({
+			type: 'MOSQUITO',
+			exp: MAX_LEVEL_EXP,
+			tier: 'LEGENDARY',
+			heldItem: 'MINOS_RELIC',
+		});
+
+		const fullBreakdown = pet.getFullBreakdown();
+		expect(pet.level).toBe(100);
+		expect(pet.getFortune(Stat.BonusPestChance)).toBeCloseTo(50 * (4 / 3), 8);
+		expect(fullBreakdown['Bonus Pest Chance']).toStrictEqual({ value: 50, stat: Stat.BonusPestChance });
+		expect(fullBreakdown['Minos Relic']?.value).toBeCloseTo(50 / 3, 8);
+		expect(fullBreakdown['Minos Relic']?.stat).toBe(Stat.BonusPestChance);
+	});
+
+	test('pet stat relics do not boost ability-typed Farming Fortune', () => {
+		const pet = new FarmingPet({
+			type: 'ELEPHANT',
+			exp: MAX_LEVEL_EXP,
+			tier: 'LEGENDARY',
+			heldItem: 'HEPHAESTUS_RELIC',
+		});
+		const noItemPet = new FarmingPet({
+			type: 'ELEPHANT',
+			exp: MAX_LEVEL_EXP,
+			tier: 'LEGENDARY',
+			heldItem: null,
+		});
+
+		expect(pet.level).toBe(100);
+		expect(pet.fortune).toBe(150);
+		expect(pet.breakdown).toStrictEqual({
+			'Farming Fortune': 150,
+		});
+		expect(noItemPet.getUpgrades({ stat: Stat.FarmingFortune }).map((upgrade) => upgrade.title)).not.toContain(
+			'Hephaestus Relic'
+		);
+		expect(noItemPet.getUpgrades({ stat: Stat.FarmingFortune }).map((upgrade) => upgrade.title)).not.toContain(
+			'Minos Relic'
+		);
+	});
+
+	test('pet stat relics do not boost ability-typed pest stats while still boosting base stat types', () => {
+		const pet = new FarmingPet(
+			{
+				type: 'SLUG',
+				exp: MAX_LEVEL_EXP,
+				tier: 'LEGENDARY',
+				heldItem: 'HEPHAESTUS_RELIC',
+			},
+			{ sprayedPlot: true }
+		);
+		const noItemPet = new FarmingPet(
+			{
+				type: 'SLUG',
+				exp: MAX_LEVEL_EXP,
+				tier: 'LEGENDARY',
+				heldItem: null,
+			},
+			{ sprayedPlot: true }
+		);
+
+		expect(pet.getFortune(Stat.BonusPestChance)).toBe(40);
+		expect(pet.getFortune(Stat.FarmingFortune)).toBe(100);
+		expect(pet.getFortune(Stat.Defense)).toBe(30);
+		expect(
+			noItemPet
+				.getUpgrades({ stats: [Stat.BonusPestChance, Stat.FarmingFortune] })
+				.map((upgrade) => upgrade.title)
+		).not.toContain('Hephaestus Relic');
+		expect(
+			noItemPet
+				.getUpgrades({ stats: [Stat.BonusPestChance, Stat.FarmingFortune] })
+				.map((upgrade) => upgrade.title)
+		).not.toContain('Minos Relic');
+	});
+
+	test('pet stat relic upgrades are offered when the requested stat is a base pet stat', () => {
+		const pet = new FarmingPet({
+			type: 'BEE',
+			exp: MAX_LEVEL_EXP,
+			tier: 'LEGENDARY',
+			heldItem: null,
+		});
+
+		const upgrades = pet.getUpgrades({ stat: Stat.FarmingFortune });
+		const hephaestus = upgrades.find((upgrade) => upgrade.title === 'Hephaestus Relic');
+		const minos = upgrades.find((upgrade) => upgrade.title === 'Minos Relic');
+
+		expect(hephaestus?.stats?.[Stat.FarmingFortune]).toBe(15);
+		expect(minos?.stats?.[Stat.FarmingFortune]).toBeCloseTo(10, 8);
 	});
 });

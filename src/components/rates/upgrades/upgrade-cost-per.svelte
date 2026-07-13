@@ -4,9 +4,11 @@
 	interface Props {
 		upgrade: FortuneUpgrade;
 		totalCost: number;
+		value?: number;
+		referenceOnlyPrices?: boolean;
 	}
 
-	let { upgrade, totalCost }: Props = $props();
+	let { upgrade, totalCost, value, referenceOnlyPrices = false }: Props = $props();
 
 	const primaryStat = $derived.by(() => {
 		if (!upgrade.stats) return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
@@ -19,12 +21,24 @@
 				return { stat, value: value as number };
 			}
 		}
+		// Fall back to the largest non-zero non-fortune stat (e.g. Overbloom)
+		let best: { stat: Stat; value: number } | undefined;
+		for (const [statKey, value] of Object.entries(upgrade.stats)) {
+			if (!value) continue;
+			if (!best || Math.abs(value as number) > Math.abs(best.value)) {
+				best = { stat: statKey as Stat, value: value as number };
+			}
+		}
+		if (best) return best;
 		return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 	});
 
-	const increase = $derived(upgrade.increase || primaryStat.value || 0);
+	const hasExplicitValue = $derived(value !== undefined);
+	const increase = $derived(value ?? (upgrade.increase || primaryStat.value || 0));
 	const costPer = $derived.by(() => {
 		const cost = increase > 0 ? Math.round(totalCost / increase) : 0;
+
+		if (hasExplicitValue) return cost;
 
 		if (cost === 0 && upgrade.stats) {
 			return (upgrade.max ?? increase) > 0 ? Math.round(totalCost / (upgrade.max ?? increase)) : 0;
@@ -41,6 +55,17 @@
 		costPerFortune(increase, (upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0))
 	);
 	const bits = $derived(costPerFortune(increase, (upgrade.cost?.bits ?? 0) + (upgrade.cost?.applyCost?.bits ?? 0)));
+	const kernels = $derived(
+		costPerFortune(increase, (upgrade.cost?.kernels ?? 0) + (upgrade.cost?.applyCost?.kernels ?? 0))
+	);
+	const sowdust = $derived(costPerFortune(increase, upgrade.cost?.sowdust ?? 0));
+	const hasItemCost = $derived(
+		Object.keys(upgrade.cost?.items ?? {}).length > 0 ||
+			Object.keys(upgrade.cost?.applyCost?.items ?? {}).length > 0
+	);
+	const coinValueClass = $derived(
+		referenceOnlyPrices && hasItemCost ? 'text-muted-foreground' : 'dark:text-completed'
+	);
 </script>
 
 {#if copper > 0}
@@ -53,13 +78,23 @@
 		<span class="dark:text-completed">{bits.toLocaleString()}</span>
 		<span class="text-muted-foreground">bits</span>
 	</p>
+{:else if kernels > 0}
+	<p class="text-sm">
+		<span class="dark:text-completed">{kernels.toLocaleString()}</span>
+		<span class="text-muted-foreground">kernel{kernels === 1 ? '' : 's'}</span>
+	</p>
+{:else if sowdust > 0}
+	<p class="text-sm">
+		<span class="dark:text-completed">{sowdust.toLocaleString()}</span>
+		<span class="text-muted-foreground">sowdust</span>
+	</p>
 {/if}
 {#if costPer > 0}
 	<span>
-		<span class="dark:text-completed text-right font-semibold">{Math.round(costPer).toLocaleString()}</span>
+		<span class="{coinValueClass} text-right font-semibold">{Math.round(costPer).toLocaleString()}</span>
 		<span class="text-muted-foreground"> coins </span>
 	</span>
 {/if}
-{#if copper === 0 && bits === 0 && costPer === 0}
+{#if copper === 0 && bits === 0 && kernels === 0 && sowdust === 0 && costPer === 0}
 	<span class="text-muted-foreground">Not Available</span>
 {/if}

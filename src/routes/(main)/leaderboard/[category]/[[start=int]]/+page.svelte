@@ -3,10 +3,10 @@
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import Countdown from '$comp/countdown.svelte';
-	import Head from '$comp/head.svelte';
 	import LeaderboardEntriesColumns from '$comp/leaderboards/entries-columns.svelte';
 	import IntervalSelect from '$comp/leaderboards/interval-select.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import { formatLeaderboardAmount } from '$lib/format';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
@@ -56,6 +56,7 @@
 			)
 			.join('\n')
 	);
+	const description = $derived(`${title} for Hypixel Skyblock.\n\n${topTen}`);
 
 	// Scroll back down to the buttons after navigating to prevent page jumping
 	afterNavigate(({ from }) => {
@@ -97,7 +98,8 @@
 
 <Head
 	{title}
-	description="{title} for Hypixel Skyblock.\n\n{topTen}"
+	{description}
+	imageUrl={data.leaderboard.icon}
 	canonicalPath="/leaderboard/{data.leaderboard.id}{lb?.offset ? `/${lb.offset + 1}` : ''}"
 />
 

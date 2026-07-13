@@ -4,6 +4,7 @@ import Handshake from '@lucide/svelte/icons/handshake';
 import Home from '@lucide/svelte/icons/home';
 import Info from '@lucide/svelte/icons/info';
 import Newspaper from '@lucide/svelte/icons/newspaper';
+import Radio from '@lucide/svelte/icons/radio';
 import TextSearch from '@lucide/svelte/icons/text-search';
 import Ticket from '@lucide/svelte/icons/ticket';
 import Trophy from '@lucide/svelte/icons/trophy';
@@ -21,7 +22,7 @@ export const SIDEBAR_NAV = [
 		icon: Ticket as unknown as Component,
 	},
 	{
-		title: 'Top Players',
+		title: 'Leaderboards',
 		href: '/leaderboard',
 		icon: Trophy as unknown as Component,
 	},
@@ -54,5 +55,11 @@ export const SIDEBAR_NAV = [
 		title: 'Info',
 		href: '/info',
 		icon: Info as unknown as Component,
+	},
+	{
+		title: 'Streamers',
+		href: '/streamers',
+		icon: Radio as unknown as Component,
+		new: Date.UTC(2026, 7, 1) / 1000,
 	},
 ];

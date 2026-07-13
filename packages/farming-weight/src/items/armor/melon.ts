@@ -5,6 +5,9 @@ import { Stat } from '../../constants/stats.js';
 import { UpgradeReason } from '../../constants/upgrades.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
+import { armorTierGroup } from './groups.js';
+
+const MELON_TO_CROPIE_GROUP = armorTierGroup('MELON', 'CROPIE');
 
 export class MelonHelmet extends BaseItem {
 	get skyblockId() {
@@ -14,7 +17,7 @@ export class MelonHelmet extends BaseItem {
 		return 'Melon Helmet';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Armor';
+		return 'https://w.elitesb.gg/Melon_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -27,6 +30,7 @@ export class MelonHelmet extends BaseItem {
 	override upgrade = {
 		id: 'CROPIE_HELMET',
 		reason: UpgradeReason.NextTier,
+		group: MELON_TO_CROPIE_GROUP,
 		cost: {
 			items: {
 				ENCHANTED_HAY_BALE: 8,
@@ -54,7 +58,7 @@ export class MelonChestplate extends BaseItem {
 		return 'Melon Chestplate';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Armor';
+		return 'https://w.elitesb.gg/Melon_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -67,6 +71,7 @@ export class MelonChestplate extends BaseItem {
 	override upgrade = {
 		id: 'CROPIE_CHESTPLATE',
 		reason: UpgradeReason.NextTier,
+		group: MELON_TO_CROPIE_GROUP,
 		cost: {
 			items: {
 				ENCHANTED_HAY_BALE: 8,
@@ -95,7 +100,7 @@ export class MelonLeggings extends BaseItem {
 		return 'Melon Leggings';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Armor';
+		return 'https://w.elitesb.gg/Melon_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -108,6 +113,7 @@ export class MelonLeggings extends BaseItem {
 	override upgrade = {
 		id: 'CROPIE_LEGGINGS',
 		reason: UpgradeReason.NextTier,
+		group: MELON_TO_CROPIE_GROUP,
 		cost: {
 			items: {
 				ENCHANTED_HAY_BALE: 8,
@@ -136,7 +142,7 @@ export class MelonBoots extends BaseItem {
 		return 'Melon Boots';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Melon_Armor';
+		return 'https://w.elitesb.gg/Melon_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -149,6 +155,7 @@ export class MelonBoots extends BaseItem {
 	override upgrade = {
 		id: 'CROPIE_BOOTS',
 		reason: UpgradeReason.NextTier,
+		group: MELON_TO_CROPIE_GROUP,
 		cost: {
 			items: {
 				ENCHANTED_HAY_BALE: 16,

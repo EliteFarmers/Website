@@ -16,41 +16,41 @@ export const STORE_CODE = {
 export const SKYBLOCK_GEM_PACKAGES: GemPackage[] = [
 	{
 		gems: {
-			base: 675,
+			base: 700,
 		},
-		cost: 4.99,
-		url: 'https://store.hypixel.net/checkout/packages/add/4086443/single',
+		cost: 5.99,
+		url: 'https://store.hypixel.net/checkout/packages/add/7395187/single',
 	},
 	{
 		gems: {
-			base: 1350,
-			bonus: 40,
+			base: 1750,
+			bonus: 50,
 		},
-		cost: 9.99,
-		url: 'https://store.hypixel.net/checkout/packages/add/4086446/single',
+		cost: 14.99,
+		url: 'https://store.hypixel.net/checkout/packages/add/7395189/single',
 	},
 	{
 		gems: {
-			base: 3375,
-			bonus: 225,
+			base: 3500,
+			bonus: 250,
 		},
-		cost: 24.99,
-		url: 'https://store.hypixel.net/checkout/packages/add/4086447/single',
+		cost: 29.99,
+		url: 'https://store.hypixel.net/checkout/packages/add/7395191/single',
 	},
 	{
 		gems: {
-			base: 6750,
-			bonus: 550,
+			base: 7000,
+			bonus: 600,
 		},
-		cost: 49.99,
-		url: 'https://store.hypixel.net/checkout/packages/add/4086452/single',
+		cost: 59.99,
+		url: 'https://store.hypixel.net/checkout/packages/add/7395193/single',
 	},
 	{
 		gems: {
-			base: 13500,
-			bonus: 2900,
+			base: 14000,
+			bonus: 3000,
 		},
-		cost: 99.99,
-		url: 'https://store.hypixel.net/checkout/packages/add/4086454/single',
+		cost: 119.99,
+		url: 'https://store.hypixel.net/checkout/packages/add/7395194/single',
 	},
 ];

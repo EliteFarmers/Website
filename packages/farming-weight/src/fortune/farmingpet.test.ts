@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { FarmingPlayer } from '../player/player.js';
 import { FarmingPet } from './farmingpet.js';
@@ -88,7 +89,7 @@ test('Slug Repugnant Aroma with Hypercharge chip', () => {
 	// Level 100 Legendary Slug on sprayed plot with Hypercharge level 20 (Legendary = 5% per level = 100% boost)
 	const petWithHypercharge = new FarmingPet(slug, {
 		sprayedPlot: true,
-		chips: { HYPERCHARGE_GARDEN_CHIP: 20 },
+		chips: { hypercharge: 20 },
 	});
 	// Base = 100, multiplied by 2 (1 + 0.05 * 20) = 200
 	expect(petWithHypercharge.fortune).toBe(200);
@@ -96,15 +97,23 @@ test('Slug Repugnant Aroma with Hypercharge chip', () => {
 	// Level 100 Legendary Slug on sprayed plot with Hypercharge level 10 (Rare = 3% per level = 30% boost)
 	const petWithRareHypercharge = new FarmingPet(slug, {
 		sprayedPlot: true,
-		chips: { HYPERCHARGE_GARDEN_CHIP: 10 },
+		chips: { hypercharge: 10 },
 	});
 	// Base = 100, multiplied by 1.30 (1 + 0.03 * 10) = 130
 	expect(petWithRareHypercharge.fortune).toBe(130);
 
+	// Level 10 Hypercharge can still be Legendary; the API does not expose this rarity.
+	const petWithLegendaryLevelTenHypercharge = new FarmingPet(slug, {
+		sprayedPlot: true,
+		chips: { hypercharge: 10 },
+		chipRarities: { hypercharge: Rarity.Legendary },
+	});
+	expect(petWithLegendaryLevelTenHypercharge.fortune).toBe(150);
+
 	// Level 100 Legendary Slug NOT on sprayed plot with Hypercharge (should have 0 fortune from Repugnant Aroma)
 	const petNotSprayed = new FarmingPet(slug, {
 		sprayedPlot: false,
-		chips: { HYPERCHARGE_GARDEN_CHIP: 20 },
+		chips: { hypercharge: 20 },
 	});
 	expect(petNotSprayed.fortune).toBe(0);
 });
@@ -159,14 +168,13 @@ test('Rose Dragon Symbiosis appears in player breakdown', () => {
 
 	// Symbiosis: 3 fortune per maxed farming pet (2 maxed pets = 6 fortune)
 	expect(breakdown?.['Symbiosis']).toBeDefined();
-	expect(breakdown?.['Symbiosis'].value).toBe(6);
-	expect(breakdown?.['Symbiosis'].stat).toBe(Stat.FarmingFortune);
+	expect(breakdown?.['Symbiosis']?.value).toBe(6);
+	expect(breakdown?.['Symbiosis']?.stat).toBe(Stat.FarmingFortune);
 
 	expect(breakdown?.['Base Stats']).toBeDefined();
 });
 
-test('Pig Pet Trample shows reduction in pet breakdown', () => {
-	// Level 100 Legendary Pig Pet - Trample reduces total fortune by 75%
+test('Pig Pet Shining Stampede shows potato fortune in pet breakdown', () => {
 	const pig = {
 		uuid: 'test-pig-uuid',
 		type: 'PIG',
@@ -180,23 +188,138 @@ test('Pig Pet Trample shows reduction in pet breakdown', () => {
 
 	const player = new FarmingPlayer({
 		pets: [pig],
-		farmingLevel: 60, // 240 fortune from farming level
+		bestiaryKills: {
+			shiny_pig_1: 60,
+		},
 	});
 
 	expect(player.selectedPet?.type).toBe('PIG');
 
-	// Player's base fortune should be stored
-	expect(player.baseFortune).toBeGreaterThan(0);
-
-	// Get the pig's breakdown - should show Trample reduction
 	const breakdown = player.selectedPet?.getFullBreakdown(player);
 
-	// Trample should be defined with negative value (75% reduction of total fortune)
-	expect(breakdown?.['Trample (75% Reduction)']).toBeDefined();
-	expect(breakdown?.['Trample (75% Reduction)'].value).toBeLessThan(0);
-	expect(breakdown?.['Trample (75% Reduction)'].stat).toBe(Stat.FarmingFortune);
+	expect(breakdown?.['Potato Fortune']).toStrictEqual({ value: 20, stat: Stat.PotatoFortune });
+	expect(breakdown?.['Shining Stampede']).toStrictEqual({ value: 50, stat: Stat.PotatoFortune });
+});
 
-	// Verify the reduction value is -75% of player base fortune
-	const expectedReduction = -player.baseFortune * 0.75;
-	expect(breakdown?.['Trample (75% Reduction)'].value).toBeCloseTo(expectedReduction, 2);
+test('Pet progress exposes separate upgrades for each owned pet', () => {
+	const player = new FarmingPlayer({
+		gardenLevel: 15,
+		pets: [
+			{
+				uuid: 'test-elephant-progress',
+				type: 'ELEPHANT',
+				exp: 0,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+			{
+				uuid: 'test-bee-progress',
+				type: 'BEE',
+				exp: 0,
+				active: false,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+		],
+	});
+
+	const petProgress = player.getPetProgress([Stat.FarmingFortune]);
+
+	expect(petProgress.map((progress) => progress.name)).toStrictEqual(['Elephant Pet', 'Bee Pet']);
+	expect(
+		player.getProgress([Stat.FarmingFortune]).find((progress) => progress.name === 'Elephant Pet')
+	).toBeUndefined();
+
+	const elephant = petProgress.find((progress) => progress.name === 'Elephant Pet');
+	expect(elephant?.stats?.[Stat.FarmingFortune]).toStrictEqual({
+		current: 1.5,
+		max: 150,
+		ratio: 0.01,
+	});
+	expect(
+		elephant?.progress?.find((progress) => progress.name === 'Farming Fortune')?.stats?.[Stat.FarmingFortune]
+	).toStrictEqual({
+		current: 1.5,
+		max: 150,
+		ratio: 0.01,
+	});
+	expect(elephant?.upgrades?.find((upgrade) => upgrade.meta?.type === 'pet_level')?.title).toBe('Elephant Level 2');
+	expect(elephant?.upgrades?.find((upgrade) => upgrade.meta?.type === 'pet_item')?.title).toBe('Green Bandana');
+});
+
+test('Pet upgrades apply to the targeted pet only', () => {
+	const player = new FarmingPlayer({
+		gardenLevel: 15,
+		pets: [
+			{
+				uuid: 'test-elephant-upgrade',
+				type: 'ELEPHANT',
+				exp: 0,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+			{
+				uuid: 'test-bee-upgrade',
+				type: 'BEE',
+				exp: 0,
+				active: false,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			},
+		],
+	});
+
+	const elephantProgress = player
+		.getPetProgress([Stat.FarmingFortune])
+		.find((progress) => progress.name === 'Elephant Pet');
+	const levelUpgrade = elephantProgress?.upgrades?.find((upgrade) => upgrade.meta?.type === 'pet_level');
+	const itemUpgrade = elephantProgress?.upgrades?.find((upgrade) => upgrade.title === 'Green Bandana');
+
+	expect(levelUpgrade).toBeDefined();
+	expect(itemUpgrade).toBeDefined();
+
+	player.applyUpgrade(levelUpgrade!);
+	expect(player.pets.find((pet) => pet.pet.uuid === 'test-elephant-upgrade')?.level).toBe(2);
+	expect(player.pets.find((pet) => pet.pet.uuid === 'test-bee-upgrade')?.level).toBe(1);
+
+	player.applyUpgrade(itemUpgrade!);
+	expect(player.pets.find((pet) => pet.pet.uuid === 'test-elephant-upgrade')?.pet.heldItem).toBe('GREEN_BANDANA');
+	expect(player.selectedPet?.pet.heldItem).toBe('GREEN_BANDANA');
+});
+
+test('Pet upgrades exclude pet item swaps that lower requested fortune stats', () => {
+	const player = new FarmingPlayer({
+		gardenLevel: 15,
+		pets: [
+			{
+				uuid: 'test-elephant-downgrade',
+				type: 'ELEPHANT',
+				exp: 0,
+				active: true,
+				tier: 'LEGENDARY',
+				heldItem: 'GREEN_BANDANA',
+				candyUsed: 0,
+				skin: null,
+			},
+		],
+	});
+
+	const elephantProgress = player
+		.getPetProgress([Stat.FarmingFortune])
+		.find((progress) => progress.name === 'Elephant Pet');
+
+	expect(elephantProgress?.upgrades?.find((upgrade) => upgrade.title === 'Yellow Bandana')).toBeUndefined();
+	expect(
+		elephantProgress?.upgrades?.find((upgrade) => (upgrade.stats?.[Stat.FarmingFortune] ?? 0) < 0)
+	).toBeUndefined();
 });

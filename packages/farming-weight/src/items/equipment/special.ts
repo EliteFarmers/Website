@@ -3,6 +3,7 @@ import { Stat } from '../../constants/stats.js';
 import { UpgradeReason } from '../../constants/upgrades.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
+import { PESTHUNTER_EQUIPMENT_RECOMMENDATION } from './pesthunter.js';
 
 export class ZorrosCape extends BaseItem {
 	get skyblockId() {
@@ -12,7 +13,7 @@ export class ZorrosCape extends BaseItem {
 		return "Zorro's Cape";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Zorro%27s_Cape';
+		return 'https://w.elitesb.gg/Zorro%27s_Cape';
 	}
 	get maxRarity() {
 		return Rarity.Mythic;
@@ -29,7 +30,7 @@ export class ZorrosCape extends BaseItem {
 	override upgrade = {
 		id: 'LOTUS_CLOAK',
 		reason: UpgradeReason.Situational,
-		why: "A maxed Lotus Cloak provides slightly more fortune outside of a Jacob's contest, but significantly less fortune during one compared to a maxed Zorro's Cape.",
+		why: "A maxed Peony Cloak provides slightly more fortune outside of a Jacob's contest, but significantly less fortune during one compared to a maxed Zorro's Cape.",
 	};
 }
 
@@ -41,13 +42,14 @@ export class PestVest extends BaseItem {
 		return 'Pest Vest';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pest_Vest';
+		return 'https://w.elitesb.gg/Pest_Vest';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
 	}
 
 	override slot = GearSlot.Cloak;
+	override recommendation = PESTHUNTER_EQUIPMENT_RECOMMENDATION;
 	override baseStats = {
 		[Stat.BonusPestChance]: 10,
 		[Stat.PestCooldownReduction]: 15,

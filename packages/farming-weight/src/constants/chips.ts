@@ -1,9 +1,46 @@
-import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
-import { Rarity, type RarityRecord } from './reforges.js';
+import { compareRarity, Rarity, type RarityRecord } from './reforges.js';
 import { Stat } from './stats.js';
 
 export const GARDEN_CHIP_MAX_LEVEL = 20 as const;
-export const GARDEN_CHIP_WIKI = 'https://wiki.hypixel.net/Garden_Chip' as const;
+export const GARDEN_CHIP_WIKI = 'https://w.elitesb.gg/Garden_Chip' as const;
+export type GardenChipRarity = Rarity.Rare | Rarity.Epic | Rarity.Legendary;
+export const GARDEN_CHIP_RARITIES = [Rarity.Rare, Rarity.Epic, Rarity.Legendary] as const;
+export const GARDEN_CHIP_RARITY_MAX_LEVELS: Record<GardenChipRarity, number> = {
+	[Rarity.Rare]: 10,
+	[Rarity.Epic]: 15,
+	[Rarity.Legendary]: 20,
+};
+export const GARDEN_CHIP_SOWDUST_COSTS: Partial<Record<number, number>> = {
+	2: 100_000,
+	3: 200_000,
+	4: 300_000,
+	5: 400_000,
+	6: 550_000,
+	7: 700_000,
+	8: 850_000,
+	9: 1_000_000,
+	10: 1_150_000,
+	11: 1_300_000,
+	12: 1_450_000,
+	13: 1_600_000,
+	14: 1_750_000,
+	15: 1_900_000,
+	16: 2_050_000,
+	17: 2_200_000,
+	18: 2_350_000,
+	19: 2_500_000,
+	20: 2_650_000,
+};
+export const GARDEN_CHIP_RARITY_ITEM_TOTALS: Record<GardenChipRarity, number> = {
+	[Rarity.Rare]: 1,
+	[Rarity.Epic]: 4,
+	[Rarity.Legendary]: 16,
+};
+export const GARDEN_CHIP_RARITY_ITEM_COSTS: Record<GardenChipRarity, number> = {
+	[Rarity.Rare]: 1,
+	[Rarity.Epic]: GARDEN_CHIP_RARITY_ITEM_TOTALS[Rarity.Epic] - GARDEN_CHIP_RARITY_ITEM_TOTALS[Rarity.Rare],
+	[Rarity.Legendary]: GARDEN_CHIP_RARITY_ITEM_TOTALS[Rarity.Legendary] - GARDEN_CHIP_RARITY_ITEM_TOTALS[Rarity.Epic],
+};
 
 export type GardenChipId =
 	| 'cropshot'
@@ -30,10 +67,6 @@ export interface GardenChipInfo {
 	 * Used by Hypercharge Chip.
 	 */
 	tempMultiplierPerLevel?: RarityRecord<number>;
-	/**
-	 * Modifier for drop rates. Applied during rate calculations.
-	 */
-	ratesModifier?: (current: DetailedDropsResult, options: CalculateCropDetailedDropsOptions) => DetailedDropsResult;
 }
 
 export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
@@ -124,19 +157,16 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 		skyblockId: 'RAREFINDER_GARDEN_CHIP',
 		name: 'Rarefinder Chip',
 		wiki: GARDEN_CHIP_WIKI,
-		ratesModifier: (current, options) => {
-			const level = getChipLevel(getChipInputLevel(options.chips, 'rarefinder'));
-			if (level <= 0) return current;
-
-			const rarity = getChipRarity(level);
-			let perLevel = 0.02;
-			if (rarity === Rarity.Epic) perLevel = 0.025;
-			else if (rarity === Rarity.Legendary) perLevel = 0.03;
-
-			const bonus = level * perLevel;
-			current.rareItemBonus += bonus;
-			current.rareItemBonusBreakdown['Rarefinder Chip'] = bonus;
-			return current;
+		statsPerRarity: {
+			[Rarity.Rare]: {
+				[Stat.Overbloom]: 2,
+			},
+			[Rarity.Epic]: {
+				[Stat.Overbloom]: 2.5,
+			},
+			[Rarity.Legendary]: {
+				[Stat.Overbloom]: 3,
+			},
 		},
 	},
 };
@@ -171,25 +201,72 @@ export function getChipLevel(level?: number | null): number {
 	return Math.min(Math.max(Math.floor(level), 0), GARDEN_CHIP_MAX_LEVEL);
 }
 
-export function getChipRarity(level?: number | null): Rarity {
+export function getMinimumChipRarityForLevel(level?: number | null): GardenChipRarity {
 	const chipLevel = getChipLevel(level);
 	if (chipLevel > 15) return Rarity.Legendary;
 	if (chipLevel > 10) return Rarity.Epic;
 	return Rarity.Rare;
 }
 
-export function getChipStats(chipId: GardenChipId, level?: number | null): Partial<Record<Stat, number>> {
+export function normalizeChipRarity(rarity?: string | Rarity | null): GardenChipRarity | undefined {
+	if (!rarity) return undefined;
+	const normalized = String(rarity)
+		.trim()
+		.toLowerCase()
+		.replace(/[\s_-]+/g, '');
+	if (normalized === 'rare') return Rarity.Rare;
+	if (normalized === 'epic') return Rarity.Epic;
+	if (normalized === 'legendary') return Rarity.Legendary;
+	return undefined;
+}
+
+export function getChipRarity(level?: number | null, rarityOverride?: string | Rarity | null): GardenChipRarity {
+	const minimumRarity = getMinimumChipRarityForLevel(level);
+	const override = normalizeChipRarity(rarityOverride);
+	if (override && compareRarity(override, minimumRarity) >= 0) return override;
+	return minimumRarity;
+}
+
+export function getChipMaxLevelForRarity(rarity?: string | Rarity | null): number {
+	return GARDEN_CHIP_RARITY_MAX_LEVELS[normalizeChipRarity(rarity) ?? Rarity.Rare];
+}
+
+export function getChipNextLevelCost(level?: number | null): number {
+	return GARDEN_CHIP_SOWDUST_COSTS[getChipLevel(level) + 1] ?? 0;
+}
+
+export function getNextChipRarity(rarity?: string | Rarity | null): GardenChipRarity | undefined {
+	const current = normalizeChipRarity(rarity) ?? Rarity.Rare;
+	if (current === Rarity.Rare) return Rarity.Epic;
+	if (current === Rarity.Epic) return Rarity.Legendary;
+	return undefined;
+}
+
+export function getChipRarityUpgradeCost(rarity?: string | Rarity | null): number {
+	const nextRarity = getNextChipRarity(rarity);
+	return nextRarity ? GARDEN_CHIP_RARITY_ITEM_COSTS[nextRarity] : 0;
+}
+
+export function getChipStats(
+	chipId: GardenChipId,
+	level?: number | null,
+	rarityOverride?: string | Rarity | null
+): Partial<Record<Stat, number>> {
 	const chipInfo = GARDEN_CHIPS[chipId];
 	if (!chipInfo.statsPerRarity) return {};
-	const rarity = getChipRarity(level);
+	const rarity = getChipRarity(level, rarityOverride);
 	return chipInfo.statsPerRarity[rarity] ?? {};
 }
 
-/** Returns the per-level multiplier for temporary fortune sources for a chip, based on level-derived rarity. */
-export function getChipTempMultiplierPerLevel(chipId: GardenChipId, level?: number | null): number {
+/** Returns the per-level multiplier for temporary fortune sources for a chip, based on effective rarity. */
+export function getChipTempMultiplierPerLevel(
+	chipId: GardenChipId,
+	level?: number | null,
+	rarityOverride?: string | Rarity | null
+): number {
 	const chipInfo = GARDEN_CHIPS[chipId];
 	if (!chipInfo.tempMultiplierPerLevel) return 0;
-	const rarity = getChipRarity(level);
+	const rarity = getChipRarity(level, rarityOverride);
 	return chipInfo.tempMultiplierPerLevel[rarity] ?? 0;
 }
 
@@ -220,6 +297,22 @@ export function normalizeChipLevels(
 	return normalized;
 }
 
+export function normalizeChipRarities(
+	chipRarities?: Record<string, string | Rarity | null | undefined>
+): Partial<Record<GardenChipId, GardenChipRarity>> | undefined {
+	if (!chipRarities) return undefined;
+
+	const normalized: Partial<Record<GardenChipId, GardenChipRarity>> = {};
+	for (const [id, rarity] of Object.entries(chipRarities)) {
+		const chipId = normalizeChipId(id);
+		const chipRarity = normalizeChipRarity(rarity);
+		if (!chipId || !chipRarity) continue;
+		normalized[chipId] = chipRarity;
+	}
+
+	return normalized;
+}
+
 export function getChipInputLevel(
 	chips: Record<string, number | null | undefined> | undefined,
 	chipId: GardenChipId
@@ -239,6 +332,28 @@ export function getChipInputLevel(
 	}
 
 	return 0;
+}
+
+export function getChipInputRarity(
+	chipRarities: Record<string, string | Rarity | null | undefined> | undefined,
+	chipId: GardenChipId
+): GardenChipRarity | undefined {
+	if (!chipRarities) return undefined;
+
+	const direct = normalizeChipRarity(chipRarities[chipId]);
+	if (direct) return direct;
+
+	const legacyId = GARDEN_CHIPS[chipId].skyblockId;
+	const legacy = normalizeChipRarity(chipRarities[legacyId]);
+	if (legacy) return legacy;
+
+	for (const [id, rarity] of Object.entries(chipRarities)) {
+		const normalizedRarity = normalizeChipRarity(rarity);
+		if (!normalizedRarity) continue;
+		if (normalizeChipId(id) === chipId) return normalizedRarity;
+	}
+
+	return undefined;
 }
 
 /**

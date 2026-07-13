@@ -1,12 +1,12 @@
 import type { Crop } from '../constants/crops.js';
 import { Rarity, REFORGES, type Reforge, type ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
-import type { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades.js';
+import type { FortuneSourceProgress, FortuneUpgrade, StatQueryOptions, Upgrade } from '../constants/upgrades.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getItemProgress } from '../upgrades/progress.js';
 import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from '../upgrades/upgrades.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
-import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
+import { getRarityFromItem, previousRarity } from '../util/itemstats.js';
 import type { EliteItemDto } from './item.js';
 import type { Upgradeable, UpgradeableInfo } from './upgradeable.js';
 
@@ -48,12 +48,7 @@ export class UpgradeableBase implements Upgradeable {
 		this.options = options.options;
 		this.items = options.items;
 
-		if (this.item.lore) {
-			this.rarity = getRarityFromLore(this.item.lore);
-		} else {
-			this.rarity = previousRarity(this.info.maxRarity);
-			this.rarity ??= Rarity.Common;
-		}
+		this.rarity = getRarityFromItem(this.item, previousRarity(this.info.maxRarity) ?? Rarity.Common);
 
 		this.reforge = REFORGES[options.item.attributes?.modifier ?? ''] ?? undefined;
 		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
@@ -80,11 +75,11 @@ export class UpgradeableBase implements Upgradeable {
 	}
 
 	getCalculatedStats(): Partial<Record<Stat, number>> {
-		if (!this.info.computedStats || !this.options) return {};
-		return this.info.computedStats?.(this.options) ?? {};
+		if (!this.info.computedStats) return {};
+		return this.info.computedStats(this.options ?? {});
 	}
 
-	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[] {
+	getUpgrades(options?: StatQueryOptions): FortuneUpgrade[] {
 		const upgrades = getItemUpgrades(this, options);
 		return filterAndSortUpgrades(upgrades, options);
 	}

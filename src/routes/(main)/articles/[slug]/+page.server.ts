@@ -1,7 +1,7 @@
-import type { BlockNode, InlineNode, RootNode } from '$comp/blocks/blocks';
+import type { RootNode } from '$comp/blocks/blocks';
 import { env } from '$env/dynamic/private';
 import { fetchArticleBySlug } from '$lib/api/cms';
-import { mdToInline } from '$lib/md';
+import { renderInlineMarkdownInBlocks } from '$lib/md';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 const { STRAPI_API_URL, STRAPI_TOKEN } = env;
@@ -15,7 +15,7 @@ export const load = (async ({ params }) => {
 
 	const articleContent = data?.content;
 	if (articleContent) {
-		data.content = await hydrateMarkdown(data.content as RootNode);
+		data.content = await renderInlineMarkdownInBlocks(data.content as RootNode);
 	}
 
 	if (!data) {
@@ -26,25 +26,3 @@ export const load = (async ({ params }) => {
 		article: data,
 	};
 }) satisfies PageServerLoad;
-
-async function hydrateMarkdown(content: RootNode) {
-	for (const node of content) {
-		if (!('children' in node)) continue;
-		await hydrateChild(node);
-	}
-	return content;
-}
-
-async function hydrateChild(child: InlineNode | BlockNode) {
-	if ('children' in child && child.children) {
-		for (const grandChild of child.children) {
-			await hydrateChild(grandChild);
-		}
-	}
-
-	if (child.type === 'text') {
-		child.text = await mdToInline(child.text);
-	}
-
-	return child;
-}

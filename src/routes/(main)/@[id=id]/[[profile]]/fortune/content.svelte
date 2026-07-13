@@ -1,20 +1,23 @@
 <script lang="ts">
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import FloatingButton from '$comp/floating-button.svelte';
-	import Head from '$comp/head.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import JumpLink from '$comp/jump-link.svelte';
 	import CategoryProgress from '$comp/rates/category-progress.svelte';
 	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
 	import FarmingGear from '$comp/rates/farming-gear.svelte';
+	import PetFortuneProgress from '$comp/rates/pet-fortune-progress.svelte';
 	import PetSelector from '$comp/rates/pet-selector.svelte';
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
+	import { trackAnalytics } from '$lib/analytics';
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
-	import { getLevelProgress } from '$lib/format';
+	import { formatBoundaryError, getLevelProgress } from '$lib/format';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
+	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
@@ -29,31 +32,33 @@
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import {
 		ArmorSet,
-		calculateDetailedAverageDrops,
 		createFarmingPlayer,
 		createFarmingWeightCalculator,
 		Crop,
 		CROP_INFO,
 		FarmingArmor,
 		FarmingPet,
-		FarmingPets,
 		FarmingTool,
+		GearSlot,
 		getCropFromName,
 		getCropMilestoneLevels,
 		getCropUpgrades,
 		getGardenLevel,
 		LotusGear,
 		Stat,
+		STAT_ICONS,
+		Vacuum,
+		type AppliedEffect,
+		type DetailedDropsFromEffectsResult,
 		type EliteItemDto,
 		type FortuneSourceProgress,
 		type FortuneUpgrade,
-		type GearSlot,
 		type PlayerOptions,
 		type UpgradeTreeNode,
 	} from 'farming-weight';
 	import { Debounced } from 'runed';
 	import { onMount, untrack } from 'svelte';
-	import { SvelteSet } from 'svelte/reactivity';
+	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 	import BazaarRates from './bazaar-rates.svelte';
 	import CheapestUpgrades from './cheapest-upgrades.svelte';
 	import RatesSettings from './rates-settings.svelte';
@@ -65,6 +70,8 @@
 
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
+	const harvestFeast = getHarvestFeast();
+	const FORTUNE_QUERY_STATS = [Stat.FarmingFortune, Stat.Overbloom];
 
 	function updateSelectedTool(c: string) {
 		const crop = getCropFromName(c);
@@ -85,6 +92,13 @@
 		player.refresh();
 	}
 
+	function toggleSettings() {
+		$ratesData.settings = !$ratesData.settings;
+		if ($ratesData.settings) {
+			trackAnalytics('fortune.settings_opened');
+		}
+	}
+
 	function delayedUpdateSelectedTool(c: string) {
 		setTimeout(() => updateSelectedTool(c), 0);
 	}
@@ -92,12 +106,19 @@
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? getCropFromName(crop)) as Crop;
 
-	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
+	function harvestFeastCropKey(crop: string): Crop | undefined {
+		const direct = Object.values(Crop).find((value) => value === crop);
+		return direct ?? getCropFromName(PROPER_CROP_NAME[crop] ?? crop);
+	}
 
-	let pets = $derived.by(() => (ctx.member.ready ? FarmingPet.fromArray(ctx.pets) : []));
-	let tools = $derived.by(() => (ctx.member.ready ? FarmingTool.fromArray(ctx.tools as EliteItemDto[]) : []));
-	let armor = $derived.by(() => (ctx.member.ready ? FarmingArmor.fromArray(ctx.armor as EliteItemDto[]) : []));
-	let equipment = $derived.by(() => (ctx.member.ready ? LotusGear.fromArray(ctx.equipment as EliteItemDto[]) : []));
+	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
+	const blocksPerHour = $derived(72_000 * (bps / 20));
+
+	let pets = $derived.by(() => (ctx.ready ? FarmingPet.fromArray(ctx.pets) : []));
+	let tools = $derived.by(() => (ctx.ready ? FarmingTool.fromArray(ctx.tools as EliteItemDto[]) : []));
+	let vacuums = $derived.by(() => (ctx.ready ? Vacuum.fromArray(ctx.tools as EliteItemDto[]) : []));
+	let armor = $derived.by(() => (ctx.ready ? FarmingArmor.fromArray(ctx.armor as EliteItemDto[]) : []));
+	let equipment = $derived.by(() => (ctx.ready ? LotusGear.fromArray(ctx.equipment as EliteItemDto[]) : []));
 
 	// Deselect pet if it's not on this player
 	onMount(() => {
@@ -125,11 +146,34 @@
 
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
 	const selectedCropKey = $derived(cropKey(selectedCrop));
+	const harvestFeastPerks = $derived.by(() => {
+		const current = ctx.member.current?.stats?.carnival?.harvestFeast;
+		if (!current) return undefined;
+
+		return {
+			natural_talent: current.naturalTalent,
+			fortunate_feasting: current.fortunateFeasting,
+			feast_crashers: current.feastCrashers,
+		};
+	});
+	const harvestFeastOptions = $derived.by<PlayerOptions['harvestFeast']>(() => {
+		const current = harvestFeast.current;
+		const inSeasonCrops = (current?.current ?? [])
+			.map((crop) => harvestFeastCropKey(crop))
+			.filter((crop) => crop !== undefined);
+
+		return {
+			active: inSeasonCrops.length > 0,
+			inSeasonCrops,
+			grandFeast: current?.isGrandFeast ?? false,
+			perks: harvestFeastPerks,
+		};
+	});
 
 	let options = $derived({
 		tools: tools,
 		armor: armorSet,
-		accessories: (ctx.member.current?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
+		accessories: ctx.accessories as EliteItemDto[],
 		pets: pets,
 
 		selectedPet: (() => selectedPet)(),
@@ -147,8 +191,10 @@
 		dnaMilestone: ctx.member.current?.unparsed?.dnaMilestone ?? 0,
 		attributes: ctx.member.current?.memberData?.attributes ?? {},
 		chips: ctx.member.current?.memberData?.garden?.chips ?? {},
+		chipRarities: $ratesData.chipRarities,
 
 		perks: ctx.member.current?.unparsed?.perks ?? undefined,
+		harvestFeast: harvestFeastOptions,
 
 		farmingLevel: getLevelProgress(
 			'farming',
@@ -161,7 +207,7 @@
 		cropUpgrades: getCropUpgrades(
 			(ctx.member.current?.garden?.cropUpgrades ?? {}) as unknown as Record<string, number>
 		),
-		gardenLevel: getGardenLevel(ctx.member.current?.garden?.experience ?? 0).level,
+		gardenLevel: getGardenLevel(Number(ctx.member.current?.garden?.experience ?? 0)).level,
 
 		communityCenter: $ratesData.communityCenter,
 		filledRosewaterFlask: $ratesData.rosewaterFlasks,
@@ -200,8 +246,9 @@
 		return filtered;
 	});
 
-	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune]));
-	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune]));
+	const generalProgress = $derived($player.getProgress(FORTUNE_QUERY_STATS));
+	const gearProgress = $derived($player.armorSet.getProgress(FORTUNE_QUERY_STATS));
+	const petProgress = $derived($player.getPetProgress(FORTUNE_QUERY_STATS));
 	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
 
 	const cropToolSwitchOptions = $derived.by(() => {
@@ -279,16 +326,69 @@
 				const stat = tool.crops[0] ? CROP_INFO[tool.crops[0]]?.fortuneType : Stat.FarmingFortune;
 				return tool.getUpgrades({ stat: stat ?? Stat.FarmingFortune });
 			}
+
+			const pet = $player.pets.find((p) => p.pet.uuid === uuid);
+			if (pet) {
+				return pet.getUpgrades({ stats: FORTUNE_QUERY_STATS }, $player);
+			}
 		}
 		// Fall back to the progress upgrades
 		return p.upgrades ?? [];
 	}
 
-	const allProgress = $derived([...generalProgress, ...gearProgress, ...cropProgress]);
+	const allProgress = $derived([...generalProgress, ...gearProgress, ...petProgress, ...cropProgress]);
+
+	function expandProgressUpgrade(upgrade: FortuneUpgrade): UpgradeTreeNode {
+		return $player.expandUpgrade(upgrade, { stats: FORTUNE_QUERY_STATS });
+	}
 
 	function getUpgradeKey(upgrade: FortuneUpgrade): string {
 		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
 		return `${upgrade.category}|${upgrade.title}|${metaKey}|${upgrade.conflictKey ?? ''}`;
+	}
+
+	type DropEffectRow = {
+		key: string;
+		source: string;
+		value: string;
+		valueIcon?: string;
+		detail?: string;
+		sortValue: number;
+	};
+
+	function formatEffectAmount(effect: AppliedEffect): string {
+		const amount = effect.amount.toLocaleString(undefined, { maximumFractionDigits: 2 });
+		if (effect.valueDisplay === 'stat') return amount;
+		if (effect.valueDisplay === 'percent') return `+${amount}%`;
+		if (effect.valueDisplay === 'factor') return `${amount}x`;
+		if (effect.op === 'add-rare-pct') return `+${amount}%`;
+		return `${amount}x`;
+	}
+
+	function getDropEffectValueIcon(effect: AppliedEffect): string | undefined {
+		if (!effect.valueStat) return undefined;
+		return STAT_ICONS[effect.valueStat];
+	}
+
+	function getDropEffectRows(info: DetailedDropsFromEffectsResult): DropEffectRow[] {
+		const rows = new SvelteMap<string, DropEffectRow>();
+		for (const dropEffects of Object.values(info.appliedEffects)) {
+			for (const effect of dropEffects) {
+				const key = `${effect.source}|${effect.op}|${effect.amount}|${effect.description ?? ''}|${JSON.stringify(effect.scope ?? {})}`;
+				const sortValue = effect.op === 'add-rare-pct' ? effect.amount : Math.abs(effect.amount - 1) * 100;
+				const row: DropEffectRow = {
+					key,
+					source: effect.source,
+					value: formatEffectAmount(effect),
+					valueIcon: getDropEffectValueIcon(effect),
+					detail: effect.description,
+					sortValue,
+				};
+				const existing = rows.get(key);
+				if (!existing || row.sortValue > existing.sortValue) rows.set(key, row);
+			}
+		}
+		return [...rows.values()].sort((a, b) => b.sortValue - a.sortValue);
 	}
 
 	const allTreeUpgrades = $derived.by(() => {
@@ -308,7 +408,7 @@
 			// Use getProgressUpgrades to get tool upgrades correctly
 			const upgrades = getProgressUpgrades(p);
 			for (const u of upgrades) {
-				const tree = $player.expandUpgrade(u);
+				const tree = expandProgressUpgrade(u);
 				traverse(tree);
 			}
 		}
@@ -330,13 +430,16 @@
 	});
 
 	$effect(() => {
-		if (!ctx.member.ready) return;
+		if (!ctx.ready) return;
 
 		options = {
 			...untrack(() => $player.options),
+			tools,
+			armor: armorSet,
+			accessories: ctx.accessories as EliteItemDto[],
+			pets,
 			selectedPet: untrack(() => $player.selectedPet),
 			selectedTool: untrack(() => $player.selectedTool),
-			armor: untrack(() => $player.armorSet),
 			communityCenter: $ratesData.communityCenter,
 			filledRosewaterFlask: $ratesData.rosewaterFlasks,
 			strength: $ratesData.strength,
@@ -347,31 +450,20 @@
 				enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
 				mode: $ratesData.zorroMode,
 			},
+			harvestFeast: harvestFeastOptions,
 			selectedCrop: selectedCropKey,
 		};
 
 		untrack(() => {
-			player.update(() => createFarmingPlayer(options));
+			const nextPlayer = createFarmingPlayer(options);
+			player.update(() => nextPlayer);
 		});
 	});
 
-	const calculatorOptions = $derived.by(() => {
-		return {
-			farmingFortune: cropFortune.fortune,
-			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
-			mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
-			blocksBroken: blocksActuallyBroken,
-			armorPieces: $player.armorSet.specialDropsCount(selectedCropKey),
-			infestedPlotProbability: $ratesData.infestedPlotProbability,
-			maxTool: $player.selectedTool?.level === 50,
-			pet: $player.selectedPet,
-		} as Parameters<typeof calculateDetailedAverageDrops>[0];
+	const selected = $derived.by(() => {
+		if (!selectedCropKey || !$selectedCrops[selectedCrop]) return undefined;
+		return [selectedCropKey, $player.getRates(selectedCropKey, blocksActuallyBroken)] as const;
 	});
-	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
-
-	const selected = $derived(
-		Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? ''])
-	);
 
 	const weightGain = $derived.by(() => {
 		if (!selected) return 0;
@@ -399,7 +491,9 @@
 	});
 
 	$effect(() => {
-		delayedUpdateSelectedTool(selectedCrop);
+		if (tools.length) {
+			delayedUpdateSelectedTool(selectedCrop);
+		}
 	});
 </script>
 
@@ -408,12 +502,12 @@
 	description="See missing fortune upgrades, overall progress, and your expected farming rates in Hypixel Skyblock!"
 />
 
-<FloatingButton onclick={() => ($ratesData.settings = !$ratesData.settings)}>
+<FloatingButton onclick={toggleSettings}>
 	<Settings class="transition-all group-hover:rotate-90 md:size-6!" />
 </FloatingButton>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
-	<Cropselector radio={true} />
+	<Cropselector radio={true} analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
 		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 p-4 md:py-4">
@@ -424,12 +518,7 @@
 					<Fortunebreakdown title="Total Farming Fortune" total={totalFortune} breakdown={fortuneBreakdown} />
 				</div>
 				<div class="flex flex-1 justify-end">
-					<Button
-						variant="outline"
-						class="m-1"
-						size="sm"
-						onclick={() => ($ratesData.settings = !$ratesData.settings)}
-					>
+					<Button variant="outline" class="m-1" size="sm" onclick={toggleSettings}>
 						<Settings size={20} />
 					</Button>
 				</div>
@@ -495,6 +584,26 @@
 			<div id="rates-gear-selector" class="flex w-full flex-col gap-2">
 				<FarmingGear {player} />
 			</div>
+
+			{#if vacuums.length > 0}
+				<div
+					id="rates-vacuum-selector"
+					class="flex w-full items-center justify-between gap-3 rounded-md border p-4"
+				>
+					<div>
+						<p class="text-lg font-semibold">Pest Farming</p>
+						<p class="text-muted-foreground text-sm">
+							Vacuum stats and pest upgrades now have their own page.
+						</p>
+					</div>
+					<Button
+						variant="outline"
+						size="sm"
+						href="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/pest-farming"
+						>Pest Farming</Button
+					>
+				</div>
+			{/if}
 		</section>
 		<section class="bg-card w-full flex-1 rounded-md border-2 p-4">
 			<div class="flex h-full w-full max-w-lg flex-col gap-2 p-2">
@@ -502,6 +611,7 @@
 					{@const [cropId, info] = selected}
 					{@const coinBreakdown = Object.entries(info.coinSources).sort(([, a], [, b]) => b - a)}
 					{@const otherBreakdown = Object.entries(info.otherCollection).sort(([, a], [, b]) => b - a)}
+					{@const dropEffectRows = getDropEffectRows(info)}
 
 					<div class="flex flex-col items-start gap-2">
 						<div class="flex flex-row items-center gap-2 align-middle">
@@ -579,6 +689,7 @@
 							amount={info.items[selectedCropKey] ?? info.collection}
 							otherCoins={info.npcCoins -
 								(info.items[selectedCropKey] ?? info.collection) * info.npcPrice}
+							referenceOnlyPrices={ctx.isNonClassicProfile}
 						/>
 						<Accordion.Root type="single" class="w-full">
 							<Accordion.Item value="collection" class="outline-border w-full rounded-md px-2 outline">
@@ -606,51 +717,41 @@
 							<span class="text-xl font-semibold">Farming Weight Gain</span>
 							<span class="text-xl font-semibold">{weightGain.toLocaleString()}</span>
 						</div>
-						{#if info.specialCropBonus > 0 || info.rareItemBonus > 0}
+						{#if dropEffectRows.length > 0}
 							<Accordion.Root type="single" class="w-full">
-								<Accordion.Item value="modifiers" class="outline-border w-full rounded-md px-2 outline">
+								<Accordion.Item
+									value="drop-effects"
+									class="outline-border w-full rounded-md px-2 outline"
+								>
 									<Accordion.Trigger class="py-2 hover:no-underline">
 										<div class="flex w-full items-center justify-between gap-2 pr-2">
-											<span class="text-muted-foreground text-lg font-semibold"
-												>Rate Modifiers</span
-											>
-											<span class="text-muted-foreground text-sm">Active</span>
+											<span class="text-lg font-semibold">Drop Effects</span>
+											<span class="text-completed text-lg font-semibold">
+												{dropEffectRows.length.toLocaleString()}
+												{dropEffectRows.length === 1 ? 'effect' : 'effects'}
+											</span>
 										</div>
 									</Accordion.Trigger>
 									<Accordion.Content class="pb-2">
-										<div class="flex flex-col">
-											{#if info.specialCropBonus > 0}
-												<div class="flex w-full items-center justify-between py-1">
-													<span class="text-lg">Special Crop Bonus</span>
-													<span class="text-progress text-lg font-semibold"
-														>+{(info.specialCropBonus * 100).toFixed(1)}%</span
-													>
-												</div>
-												{#each Object.entries(info.specialCropBonusBreakdown) as [name, value] (name)}
-													<div class="flex w-full items-center justify-between py-1 pl-4">
-														<span class="text-muted-foreground text-sm">{name}</span>
-														<span class="text-muted-foreground text-sm"
-															>+{(value * 100).toFixed(1)}%</span
-														>
+										<div class="flex flex-col gap-2">
+											{#each dropEffectRows as effect (effect.key)}
+												<div class="flex w-full items-start justify-between gap-3 py-1 pl-2">
+													<div class="flex min-w-0 flex-col">
+														<span class="text-sm font-medium">{effect.source}</span>
+														{#if effect.detail}
+															<span class="text-muted-foreground text-sm"
+																>{effect.detail}</span
+															>
+														{/if}
 													</div>
-												{/each}
-											{/if}
-											{#if info.rareItemBonus > 0}
-												<div class="flex w-full items-center justify-between py-1">
-													<span class="text-lg">Rare Drop Bonus</span>
-													<span class="text-link text-lg font-semibold"
-														>+{(info.rareItemBonus * 100).toFixed(1)}%</span
-													>
+													<span class="text-muted-foreground shrink-0 text-sm font-medium">
+														{effect.value}
+														{#if effect.valueIcon}
+															<span class="font-mono">{effect.valueIcon}</span>
+														{/if}
+													</span>
 												</div>
-												{#each Object.entries(info.rareItemBonusBreakdown).filter(([, v]) => v > 0) as [name, value] (name)}
-													<div class="flex w-full items-center justify-between py-1 pl-4">
-														<span class="text-muted-foreground text-sm">{name}</span>
-														<span class="text-muted-foreground text-sm"
-															>+{(value * 100).toFixed(1)}%</span
-														>
-													</div>
-												{/each}
-											{/if}
+											{/each}
 										</div>
 									</Accordion.Content>
 								</Accordion.Item>
@@ -674,7 +775,7 @@
 		</section>
 	</div>
 
-	<Cropselector radio={true} href="#fortune" id="fortune" />
+	<Cropselector radio={true} href="#fortune" id="fortune" analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
 		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 p-4">
@@ -684,13 +785,8 @@
 				</div>
 				<h2 class="mb-1 text-2xl">Farming Fortune</h2>
 				<div class="flex-1">
-					<div class="flex flex-1 justify-start">
-						<Button
-							variant="ghost"
-							class="text-muted-foreground mx-2"
-							size="sm"
-							onclick={() => ($ratesData.settings = !$ratesData.settings)}
-						>
+					<div class="flex flex-1 flex-wrap items-center justify-start gap-2">
+						<Button variant="ghost" class="text-muted-foreground mx-2" size="sm" onclick={toggleSettings}>
 							<Settings size={20} />
 						</Button>
 					</div>
@@ -720,6 +816,7 @@
 								})}
 							costFn={getUpgradeCost}
 							items={itemsData}
+							referenceOnlyPrices={ctx.isNonClassicProfile}
 							equip={(p) => getToolEquipConfig(p, cropToolSwitchOptions)}
 							getUpgrades={getProgressUpgrades}
 						>
@@ -732,18 +829,20 @@
 					{/if}
 					<CategoryProgress
 						name="Gear Fortune"
-						progress={$player.armorSet.getProgress([Stat.FarmingFortune])}
+						progress={gearProgress}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
+						referenceOnlyPrices={ctx.isNonClassicProfile}
 						equip={(p) => getGearEquipConfig(p)}
 					/>
 					<CategoryProgress
 						name="General Fortune"
-						progress={$player.getProgress([Stat.FarmingFortune])}
+						progress={generalProgress}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
+						referenceOnlyPrices={ctx.isNonClassicProfile}
 						equip={(p) => getToolEquipConfig(p, allToolOptions) ?? getGearEquipConfig(p)}
 						getUpgrades={getProgressUpgrades}
 					/>
@@ -752,25 +851,47 @@
 		</section>
 	</div>
 
-	<Cropselector radio={true} href="#upgrades" id="upgrades" />
+	<Cropselector radio={true} href="#upgrades" id="upgrades" analyticsEvent="fortune.crop_selected" />
 
 	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
 		<svelte:boundary>
-			<CheapestUpgrades {player} crop={selectedCropKey} />
+			<CheapestUpgrades {player} crop={selectedCropKey} {blocksPerHour} />
 			{#snippet failed(error, reset)}
 				<div class="flex w-full flex-col items-center justify-center gap-4">
 					<p class="text-lg font-semibold">Failed to load upgrades!</p>
-					<CopyToClipboard text={JSON.stringify(error, null, 2)} class="text-sm">Copy Error</CopyToClipboard>
+					<CopyToClipboard
+						text={formatBoundaryError(error)}
+						class="text-sm"
+						onCopied={() => trackAnalytics('fortune.error_copied')}>Copy Error</CopyToClipboard
+					>
 					<p class="text-muted-foreground text-sm">
 						Please report the error in the <a href="/support" class="text-link underline"
 							>Support Discord Server</a
 						>!
 					</p>
-					<Button variant="outline" onclick={reset}>Retry</Button>
+					<Button
+						variant="outline"
+						onclick={() => {
+							trackAnalytics('fortune.upgrade_retry');
+							reset();
+						}}>Retry</Button
+					>
 				</div>
 			{/snippet}
 		</svelte:boundary>
 	</section>
+
+	<PetFortuneProgress
+		{player}
+		pets={$player.pets}
+		expandUpgrade={(u) =>
+			$player.expandUpgrade(u, {
+				stats: [Stat.FarmingFortune, Stat.Overbloom],
+			})}
+		costFn={getUpgradeCost}
+		items={itemsData}
+		referenceOnlyPrices={ctx.isNonClassicProfile}
+	/>
 </div>
 
 <Dialog.Root bind:open={$ratesData.settings}>

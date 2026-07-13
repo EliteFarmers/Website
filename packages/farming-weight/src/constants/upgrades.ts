@@ -1,15 +1,27 @@
+import type { EffectOp, Scope } from '../effects/types.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import type { UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { GearSlot } from '../items/armor.js';
 import type { FARMING_TOOLS } from '../items/tools.js';
 import type { JacobContestMedal } from '../util/jacob.js';
 import type { Crop } from './crops.js';
-import type { Stat } from './stats.js';
+import { Stat } from './stats.js';
 
 export enum UpgradeReason {
 	NextTier = 'next', // Standard upgrade
 	DeadEnd = 'dead', // Not worth using, no more upgrades
 	Situational = 'situational', // Worth using in some situations
+}
+
+export enum UpgradeRecommendationKind {
+	Progression = 'progression',
+	Situational = 'situational',
+}
+
+export interface UpgradeRecommendation {
+	kind: UpgradeRecommendationKind;
+	label: string;
+	description?: string;
 }
 
 // export interface UpgradeCost {
@@ -29,6 +41,7 @@ export interface FortuneSource {
 }
 
 export interface FortuneSourceProgress {
+	key?: string;
 	name: string;
 	/**
 	 * When present and true, this entry should be included in `getProgress()` output
@@ -51,6 +64,7 @@ export interface FortuneSourceProgress {
 			}
 		>
 	>;
+	effects?: EffectSummary[];
 	maxLevel?: number;
 	fortunePerLevel?: number;
 	max: number;
@@ -70,11 +84,24 @@ export interface FortuneSourceProgress {
 	};
 }
 
+export interface EffectSummary {
+	source: string;
+	op: EffectOp;
+	description?: string;
+	relatedStats?: readonly Stat[];
+	scope?: Scope;
+	value?: number;
+	valueDisplay?: 'stat' | 'percent' | 'factor';
+	valueStat?: Stat;
+}
+
 export interface UpgradeCost {
 	items?: Record<string, number>;
 	coins?: number;
 	copper?: number;
 	bits?: number;
+	kernels?: number;
+	sowdust?: number;
 	medals?: Partial<Record<Exclude<JacobContestMedal, 'platinum' | 'diamond'>, number>>;
 	applyCost?: Omit<UpgradeCost, 'applyCost'>;
 }
@@ -103,6 +130,12 @@ function addCost(left: UpgradeCost, right: UpgradeCost) {
 	}
 	if (right.bits) {
 		left.bits = (left.bits || 0) + (right.bits || 0);
+	}
+	if (right.kernels) {
+		left.kernels = (left.kernels || 0) + (right.kernels || 0);
+	}
+	if (right.sowdust) {
+		left.sowdust = (left.sowdust || 0) + (right.sowdust || 0);
 	}
 
 	if (right.medals) {
@@ -133,6 +166,7 @@ export enum UpgradeCategory {
 	Misc = 'misc',
 	Attribute = 'attribute',
 	Composter = 'composter',
+	Pet = 'pet',
 }
 
 export enum UpgradeAction {
@@ -153,6 +187,17 @@ export interface UpgradeInfoImprovement<T> {
 export interface FortuneUpgradeImprovement {
 	name: string;
 	fortune: number;
+}
+
+export interface UpgradeGroupDefinition {
+	id: string;
+	label: string;
+	strategy: 'available-pieces';
+	warning?: string;
+}
+
+export interface FortuneUpgradeGroupMeta extends UpgradeGroupDefinition {
+	memberCount: number;
 }
 
 export interface UpgradeInfo<T = number> {
@@ -177,6 +222,7 @@ export interface UpgradeInfo<T = number> {
 	wiki?: string;
 	conflictKey?: string;
 	improvements?: UpgradeInfoImprovement<T>[];
+	recommendation?: UpgradeRecommendation;
 }
 
 export interface UpgradeMeta {
@@ -193,8 +239,12 @@ export interface UpgradeMeta {
 		| 'attribute'
 		| 'crop_upgrade'
 		| 'chip'
+		| 'chip_rarity'
+		| 'pet_item'
+		| 'pet_level'
 		| 'setting'
 		| 'unlock'
+		| 'upgrade_group'
 		| 'buy_item';
 	key?: string; // For enchants/stats keys
 	value?: number | string; // New value/level
@@ -222,6 +272,7 @@ export interface FortuneUpgrade {
 	 * with the value from the `increase` field.
 	 */
 	stats?: Partial<Record<Stat, number>>;
+	effects?: EffectSummary[];
 	action: UpgradeAction;
 	purchase?: string;
 	category: UpgradeCategory;
@@ -232,9 +283,36 @@ export interface FortuneUpgrade {
 	cost?: UpgradeCost;
 	wiki?: string;
 	conflictKey?: string;
+	group?: FortuneUpgradeGroupMeta | UpgradeGroupDefinition;
+	groupedUpgrades?: FortuneUpgrade[];
 	improvements?: FortuneUpgradeImprovement[];
+	recommendation?: UpgradeRecommendation;
 	meta?: UpgradeMeta;
 	skillReq?: Partial<Record<string, number>> | undefined;
+}
+
+export const FORTUNE_SOURCE_TYPES = ['general', 'crop', 'armor', 'equipment', 'pet', 'farmingTool', 'vacuum'] as const;
+
+export type FortuneSourceType = (typeof FORTUNE_SOURCE_TYPES)[number];
+
+export interface StatQueryOptions {
+	stat?: Stat;
+	stats?: Stat[];
+	sourceTypes?: FortuneSourceType[];
+	includeUpgradeGroups?: boolean;
+}
+
+export function getQueryStats(options?: StatQueryOptions, fallback: Stat[] = [Stat.FarmingFortune]): Stat[] {
+	if (options?.stats && options.stats.length > 0) return [...options.stats];
+	if (options?.stat) return [options.stat];
+	return [...fallback];
+}
+
+export function includesFortuneSourceType(
+	options: StatQueryOptions | undefined,
+	sourceType: FortuneSourceType
+): boolean {
+	return !options?.sourceTypes?.length || options.sourceTypes.includes(sourceType);
 }
 
 export interface UpgradeTreeNode {
@@ -252,6 +330,8 @@ export interface Upgrade {
 	cost?: UpgradeCost;
 	why?: string;
 	preferred?: boolean;
+	group?: UpgradeGroupDefinition;
+	recommendation?: UpgradeRecommendation;
 }
 
 export interface InitialItems {

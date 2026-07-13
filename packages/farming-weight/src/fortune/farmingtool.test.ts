@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { ReforgeTarget } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { TOOL_EXP_LEVELS } from '../constants/toollevels.js';
 import { FarmingTool } from './farmingtool.js';
@@ -8,7 +9,7 @@ const netherwartHoe = {
 	count: 1,
 	skyblockId: 'THEORETICAL_HOE_WARTS_3',
 	uuid: '103d2e1f-0351-429f-b116-c85e81886597',
-	name: '§dBountiful Newton Nether Warts Hoe',
+	name: '§dBountiful Newton Nether Wart Cutter Hoe',
 	lore: [
 		'§7Speed: §a+13 §9(+13)',
 		'§7Farming Fortune: §a+128 §2(+5) §9(+10) §d(+18)',
@@ -281,7 +282,7 @@ const pumpkinDicer = {
 		'§9Dedication IV',
 		'§9Delicate V',
 		'§9Efficiency V',
-		'§9Sunder VI',
+		'§9Harvesting VI',
 		'§9Turbo-Pumpkin V',
 		'',
 		'§7§7Gain §3+10☯ Farming Wisdom §7while',
@@ -303,7 +304,7 @@ const pumpkinDicer = {
 		'§6§lLEGENDARY AXE',
 	],
 	enchantments: {
-		sunder: 6,
+		harvesting: 6,
 		delicate: 5,
 		dedication: 4,
 		efficiency: 5,
@@ -332,6 +333,7 @@ test('Pumpkin Dicer Test', () => {
 	const tool = new FarmingTool(pumpkinDicer, {
 		milestones: { PUMPKIN: 46 },
 	});
+	expect(tool.type).toBe(ReforgeTarget.FarmingTool);
 	expect(tool.cultivating).toBe(82128493);
 	expect(tool.recombobulated).toBe(true);
 	expect(tool.farmingForDummies).toBe(5);
@@ -339,8 +341,8 @@ test('Pumpkin Dicer Test', () => {
 	expect(tool.fortune).toBeGreaterThan(0);
 
 	const progress = tool.getProgress();
-	const axed = progress.find((p) => p.name === 'Axed Perk');
-	expect(axed).toBeDefined();
+	const harvesting = progress.find((p) => p.name === 'Harvesting');
+	expect(harvesting?.current).toBe(75);
 });
 
 test('FarmingTool getStats returns multiple stats', () => {

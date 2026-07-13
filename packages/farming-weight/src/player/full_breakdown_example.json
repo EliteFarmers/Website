@@ -19,7 +19,7 @@
 				"§9Dedication IV",
 				"§9Delicate V",
 				"§9Efficiency V",
-				"§9Sunder VI",
+				"§9Harvesting VI",
 				"§9Turbo-Melon V",
 				"",
 				"§7Level §a50 §6§l(MAX!)   §8(156.1k/200k)",
@@ -42,7 +42,7 @@
 				"§6§l§ka§r §6§lLEGENDARY AXE §6§l§ka"
 			],
 			"enchantments": {
-				"sunder": 6,
+				"harvesting": 6,
 				"delicate": 5,
 				"dedication": 4,
 				"efficiency": 5,
@@ -127,7 +127,7 @@
 			"damage": 0,
 			"skyblockId": "THEORETICAL_HOE_SUNFLOWER_1",
 			"uuid": "e7cb88d6-7f23-4a5c-aa61-2d6777e5868d",
-			"name": "§aEclipse Hoe Mk. I",
+			"name": "§aEclipse Sickle Mk. I",
 			"lore": [
 				"§7Farming Fortune: §6+62.5",
 				"§7Sunflower Fortune: §6+36",
@@ -223,7 +223,7 @@
 			"damage": 3,
 			"skyblockId": "LOTUS_NECKLACE",
 			"uuid": "9a89598c-e12e-4541-aca7-26d4c96d8f80",
-			"name": "§5Rooted Lotus Necklace",
+			"name": "§5Rooted Peony Necklace",
 			"lore": [
 				"§7Health: §c+21 §9(+11)",
 				"§7Farming Fortune: §6+33.05 §9(+15)",
@@ -257,7 +257,7 @@
 			"damage": 3,
 			"skyblockId": "LOTUS_CLOAK",
 			"uuid": "a652dfa5-4ccf-4e13-a6c7-8cda02eb6310",
-			"name": "§5Rooted Lotus Cloak",
+			"name": "§5Rooted Peony Cloak",
 			"lore": [
 				"§7Health: §c+21 §9(+11)",
 				"§7Farming Fortune: §6+33.05 §9(+15)",

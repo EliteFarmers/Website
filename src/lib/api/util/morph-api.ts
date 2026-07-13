@@ -6,7 +6,7 @@
 import path from 'path';
 import { Project, SyntaxKind, type ArrowFunction, type FunctionDeclaration, type MethodDeclaration } from 'ts-morph';
 
-async function removeReturnTypesFromFile(filePath: string) {
+async function removeReturnTypesFromFile(filePath: string, baseUrlEnvName = 'ELITE_API_URL') {
 	console.log(`Analyzing ${path.basename(filePath)}...`);
 
 	const project = new Project();
@@ -66,7 +66,7 @@ async function removeReturnTypesFromFile(filePath: string) {
 	});
 	sourceFile.insertText(
 		importDeclaration.getPos() + importDeclaration.getWidth() + 1,
-		`\nconst { ELITE_API_URL } = env;\n`
+		`\nconst { ${baseUrlEnvName} } = env;\n`
 	);
 
 	await sourceFile.save();
@@ -103,10 +103,10 @@ async function removeReturnTypesFromFile(filePath: string) {
 }
 
 const args = process.argv.slice(2);
-if (args.length !== 1) {
-	console.error('Usage: node remove-return-types.ts <path/to/your/file.ts>');
+if (args.length < 1 || args.length > 2) {
+	console.error('Usage: node remove-return-types.ts <path/to/your/file.ts> [BASE_URL_ENV_NAME]');
 	process.exit(1);
 }
 
 const filePath = path.resolve(args[0]);
-removeReturnTypesFromFile(filePath).catch(console.error);
+removeReturnTypesFromFile(filePath, args[1]).catch(console.error);

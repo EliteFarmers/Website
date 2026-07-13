@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
@@ -323,11 +323,11 @@
 			<h3 class="text-xl">Server Jacob Leaderboard Settings</h3>
 		</Dialog.Header>
 		<form
-			{...createJacobLeaderboardForm.enhance(async ({ form, submit }) => {
-				await submit();
+			{...createJacobLeaderboardForm.enhance(async (form) => {
+				await form.submit();
 				if (createJacobLeaderboardForm.result?.success) {
 					resetCreateFormFields();
-					form.reset();
+					form.element.reset();
 					clickOutsideModal = false;
 				}
 			})}

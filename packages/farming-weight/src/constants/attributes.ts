@@ -1,14 +1,20 @@
 import type { FarmingPlayer } from '../player/player.js';
 import type { DynamicFortuneSource } from '../upgrades/sources/dynamicfortunesources.js';
-import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
 import { Crop } from './crops.js';
 import { Rarity } from './reforges.js';
-import { MATCHING_SPECIAL_CROP } from './specialcrops.js';
 import { getStatValue, Stat, type StatsRecord } from './stats.js';
 
 type ShardId = keyof typeof FARMING_ATTRIBUTE_SHARDS;
 
 export type FarmingAttributes = Record<ShardId | string, number>;
+
+export interface FarmingAttributeShardContext {
+	attributes?: FarmingAttributes | Record<string, number>;
+	infestedPlotProbability?: number;
+	crop?: Crop;
+}
+
+export type FarmingAttributeShardSourceContext = FarmingPlayer | FarmingAttributeShardContext;
 
 export interface FarmingAttributeShard {
 	name: string;
@@ -16,10 +22,9 @@ export interface FarmingAttributeShard {
 	rarity: Rarity;
 	wiki: string;
 	effect: FarmingAttributeShardEffect;
-	stats?: StatsRecord<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>;
-	perLevelStats?: StatsRecord<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>;
-	active?: DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions>['active'];
-	ratesModifier?: (current: DetailedDropsResult, options: CalculateCropDetailedDropsOptions) => DetailedDropsResult;
+	stats?: StatsRecord<unknown, FarmingAttributeShardSourceContext>;
+	perLevelStats?: StatsRecord<unknown, FarmingAttributeShardSourceContext>;
+	active?: DynamicFortuneSource<FarmingAttributeShardSourceContext>['active'];
 }
 
 export type FarmingAttributeShardEffect = 'none' | 'rates' | 'fortune' | 'wisdom';
@@ -30,28 +35,14 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_WARTYBUG',
 		rarity: Rarity.Legendary,
 		effect: 'rates',
-		wiki: 'https://wiki.hypixel.net/Warty_Bug',
-		ratesModifier: (current, options) => {
-			if (options.crop !== Crop.NetherWart) return current;
-
-			const level = getShardLevel(Rarity.Legendary, getAttributeAmount(options.attributes, 'wart_eater'));
-			if (level <= 0) return current;
-
-			const wartyChance = 0.00005 * level;
-			const wartyDrops = current.blocksBroken * wartyChance;
-
-			current.pendingRngItems ??= {};
-			current.pendingRngItems['WARTY'] = (current.pendingRngItems['WARTY'] ?? 0) + wartyDrops;
-			current.rareItemBonusBreakdown['Warty Bug Shard (Base)'] = 0;
-			return current;
-		},
+		wiki: 'https://w.elitesb.gg/Wartybug_Shard',
 	},
 	garden_wisdom: {
 		name: 'Dragonfly Shard',
 		skyblockId: 'SHARD_DRAGONFLY',
 		rarity: Rarity.Epic,
 		effect: 'wisdom',
-		wiki: 'https://wiki.hypixel.net/Dragonfly',
+		wiki: 'https://w.elitesb.gg/Dragonfly_Shard',
 		perLevelStats: {
 			[Stat.FarmingWisdom]: {
 				value: 0.5,
@@ -63,7 +54,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_FIREFLY',
 		rarity: Rarity.Epic,
 		effect: 'fortune',
-		wiki: 'https://wiki.hypixel.net/Firefly',
+		wiki: 'https://w.elitesb.gg/Firefly_Shard',
 		active: (options) => {
 			const firefly = getAttributeAmount(options.attributes, 'solar_power');
 			const lunarMoth = getAttributeAmount(options.attributes, 'lunar_power');
@@ -109,7 +100,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_LUNAR_MOTH',
 		rarity: Rarity.Epic,
 		effect: 'fortune',
-		wiki: 'https://wiki.hypixel.net/Lunar_Moth',
+		wiki: 'https://w.elitesb.gg/Lunar_Moth_Shard',
 		active: (options) => {
 			const firefly = getAttributeAmount(options.attributes, 'solar_power');
 			const lunarMoth = getAttributeAmount(options.attributes, 'lunar_power');
@@ -156,25 +147,18 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_LADYBUG',
 		rarity: Rarity.Rare,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Ladybug',
+		wiki: 'https://w.elitesb.gg/Ladybug_Shard',
 	},
 	crop_bug: {
 		name: 'Cropeetle Shard',
 		skyblockId: 'SHARD_CROPEETLE',
 		rarity: Rarity.Rare,
 		effect: 'rates',
-		wiki: 'https://wiki.hypixel.net/Cropeetle',
-		ratesModifier: (current, options) => {
-			const level = getShardLevel(Rarity.Rare, getAttributeAmount(options.attributes, 'crop_bug'));
-			if (level <= 0) return current;
-
-			const specialCrop = MATCHING_SPECIAL_CROP[options.crop];
-			if (!specialCrop) return current;
-
-			const bonus = 0.02 * level;
-			current.specialCropBonus += bonus;
-			current.specialCropBonusBreakdown['Cropeetle Shard'] = bonus;
-			return current;
+		wiki: 'https://w.elitesb.gg/Cropeetle_Shard',
+		perLevelStats: {
+			[Stat.Overbloom]: {
+				value: 1,
+			},
 		},
 	},
 	fancy_visit: {
@@ -183,14 +167,14 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_INVISIBUG',
 		rarity: Rarity.Rare,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Invisibug',
+		wiki: 'https://w.elitesb.gg/Invisibug_Shard',
 	},
 	infiltration: {
 		name: 'Termite Shard',
 		skyblockId: 'SHARD_TERMITE',
 		rarity: Rarity.Uncommon,
 		effect: 'fortune',
-		wiki: 'https://wiki.hypixel.net/Termite',
+		wiki: 'https://w.elitesb.gg/Termite_Shard',
 		active: (options) => {
 			const opt = 'options' in options ? options.options : options;
 			if (!opt.infestedPlotProbability || opt.infestedPlotProbability <= 0) {
@@ -212,20 +196,24 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		},
 	},
 	insect_power: {
-		// 5% vacuum damage per level
+		// 10% vacuum damage per level
 		name: 'Praying Mantis Shard',
 		skyblockId: 'SHARD_PRAYING_MANTIS',
 		rarity: Rarity.Uncommon,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Praying_Mantis',
+		wiki: 'https://w.elitesb.gg/Praying_Mantis_Shard',
 	},
 	pest_luck: {
-		// 2% chance for rare pest drops per level
 		name: 'Pest Shard',
 		skyblockId: 'SHARD_PEST',
 		rarity: Rarity.Uncommon,
-		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Pest',
+		effect: 'rates',
+		wiki: 'https://w.elitesb.gg/Pest',
+		perLevelStats: {
+			[Stat.Overbloom]: {
+				value: 2,
+			},
+		},
 	},
 	visitor_bait: {
 		// Garden visitors 1% faster per level
@@ -233,7 +221,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_MUDWORM',
 		rarity: Rarity.Common,
 		effect: 'none',
-		wiki: 'https://wiki.hypixel.net/Mudworm',
+		wiki: 'https://w.elitesb.gg/Mudworm_Shard',
 	},
 	ultimate_dna: {
 		// 1 farming fortune per level
@@ -241,7 +229,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		skyblockId: 'SHARD_GALAXY_FISH',
 		rarity: Rarity.Legendary,
 		effect: 'fortune',
-		wiki: 'https://wiki.hypixel.net/Galaxy_Fish',
+		wiki: 'https://w.elitesb.gg/Galaxy_Fish_Shard',
 		perLevelStats: {
 			[Stat.FarmingFortune]: {
 				value: 1,
@@ -342,7 +330,7 @@ export function getShardsForNextLevel(rarity: Rarity, amount: number): number {
 
 export function getShardFortune(
 	shard: FarmingAttributeShard,
-	player: FarmingPlayer | CalculateCropDetailedDropsOptions,
+	player: FarmingAttributeShardSourceContext,
 	level?: number
 ): number {
 	return getShardStat(shard, player, Stat.FarmingFortune, level);
@@ -350,7 +338,7 @@ export function getShardFortune(
 
 export function getShardStat(
 	shard: FarmingAttributeShard,
-	player: FarmingPlayer | CalculateCropDetailedDropsOptions,
+	player: FarmingAttributeShardSourceContext,
 	stat: Stat,
 	level?: number
 ): number {
@@ -367,11 +355,8 @@ export function getShardStat(
 		return 0;
 	}
 
-	const stats = getStatValue<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>(shard.stats?.[stat], player);
-	const perLevel = getStatValue<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>(
-		shard.perLevelStats?.[stat],
-		player
-	);
+	const stats = getStatValue<unknown, FarmingAttributeShardSourceContext>(shard.stats?.[stat], player);
+	const perLevel = getStatValue<unknown, FarmingAttributeShardSourceContext>(shard.perLevelStats?.[stat], player);
 
 	return stats + level * perLevel;
 }

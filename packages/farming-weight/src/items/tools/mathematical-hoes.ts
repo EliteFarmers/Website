@@ -5,16 +5,16 @@ import { BaseItem } from '../base-item.js';
 import { FarmingToolType } from '../definitions.js';
 import { T1_TOOL_GEMS, T2_TOOL_GEMS, T3_TOOL_GEMS } from './gem-slots.js';
 
-// Gauss Carrot Hoe
+// Gauss Carrot Shovel
 export class GaussCarrotHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_CARROT_1';
 	}
 	get name() {
-		return 'Gauss Carrot Hoe Mk. I';
+		return 'Gauss Carrot Shovel Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Common_';
+		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -29,7 +29,7 @@ export class GaussCarrotHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_CARROT: 256,
+				ENCHANTED_GOLDEN_CARROT: 64,
 			},
 		},
 	};
@@ -40,10 +40,10 @@ export class GaussCarrotHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_CARROT_2';
 	}
 	get name() {
-		return 'Gauss Carrot Hoe Mk. II';
+		return 'Gauss Carrot Shovel Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -69,10 +69,10 @@ export class GaussCarrotHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_CARROT_3';
 	}
 	get name() {
-		return 'Gauss Carrot Hoe Mk. III';
+		return 'Gauss Carrot Shovel Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -83,16 +83,16 @@ export class GaussCarrotHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Newton Nether Warts Hoe
+// Newton Nether Wart Cutter Hoe
 export class NewtonNetherWartsHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_WARTS_1';
 	}
 	get name() {
-		return 'Newton Nether Warts Hoe Mk. I';
+		return 'Newton Nether Wart Cutter Hoe Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Common_';
+		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -107,7 +107,7 @@ export class NewtonNetherWartsHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_NETHER_STALK: 256,
+				MUTANT_NETHER_STALK: 60,
 			},
 		},
 	};
@@ -118,10 +118,10 @@ export class NewtonNetherWartsHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_WARTS_2';
 	}
 	get name() {
-		return 'Newton Nether Warts Hoe Mk. II';
+		return 'Newton Nether Wart Cutter Hoe Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -147,10 +147,10 @@ export class NewtonNetherWartsHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_WARTS_3';
 	}
 	get name() {
-		return 'Newton Nether Warts Hoe Mk. III';
+		return 'Newton Nether Wart Cutter Hoe Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -161,16 +161,16 @@ export class NewtonNetherWartsHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Pythagorean Potato Hoe
+// Pythagorean Potato Shovel
 export class PythagoreanPotatoHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_POTATO_1';
 	}
 	get name() {
-		return 'Pythagorean Potato Hoe Mk. I';
+		return 'Pythagorean Potato Shovel Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Common_';
+		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -185,7 +185,7 @@ export class PythagoreanPotatoHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_POTATO: 256,
+				ENCHANTED_BAKED_POTATO: 60,
 			},
 		},
 	};
@@ -196,10 +196,10 @@ export class PythagoreanPotatoHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_POTATO_2';
 	}
 	get name() {
-		return 'Pythagorean Potato Hoe Mk. II';
+		return 'Pythagorean Potato Shovel Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -225,10 +225,10 @@ export class PythagoreanPotatoHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_POTATO_3';
 	}
 	get name() {
-		return 'Pythagorean Potato Hoe Mk. III';
+		return 'Pythagorean Potato Shovel Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -239,16 +239,16 @@ export class PythagoreanPotatoHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Turing Sugar Cane Hoe
+// Turing Sugar Cane Cutter
 export class TuringSugarCaneHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_CANE_1';
 	}
 	get name() {
-		return 'Turing Sugar Cane Hoe Mk. I';
+		return 'Turing Sugar Cane Cutter Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Common_';
+		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -263,7 +263,7 @@ export class TuringSugarCaneHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_SUGAR: 256,
+				ENCHANTED_SUGAR_CANE: 40,
 			},
 		},
 	};
@@ -274,10 +274,10 @@ export class TuringSugarCaneHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_CANE_2';
 	}
 	get name() {
-		return 'Turing Sugar Cane Hoe Mk. II';
+		return 'Turing Sugar Cane Cutter Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -303,10 +303,10 @@ export class TuringSugarCaneHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_CANE_3';
 	}
 	get name() {
-		return 'Turing Sugar Cane Hoe Mk. III';
+		return 'Turing Sugar Cane Cutter Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -317,16 +317,16 @@ export class TuringSugarCaneHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Euclid's Wheat Hoe
+// Euclid's Wheat Sickle
 export class EuclidsWheatHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_WHEAT_1';
 	}
 	get name() {
-		return "Euclid's Wheat Hoe Mk. I";
+		return "Euclid's Wheat Sickle Mk. I";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Common_';
+		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -341,7 +341,7 @@ export class EuclidsWheatHoe1 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 64,
-				ENCHANTED_WHEAT: 256,
+				ENCHANTED_HAY_BALE: 20,
 			},
 		},
 	};
@@ -352,10 +352,10 @@ export class EuclidsWheatHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_WHEAT_2';
 	}
 	get name() {
-		return "Euclid's Wheat Hoe Mk. II";
+		return "Euclid's Wheat Sickle Mk. II";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -381,10 +381,10 @@ export class EuclidsWheatHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_WHEAT_3';
 	}
 	get name() {
-		return "Euclid's Wheat Hoe Mk. III";
+		return "Euclid's Wheat Sickle Mk. III";
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -395,16 +395,16 @@ export class EuclidsWheatHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Eclipse Hoe (Sunflower/Moonflower)
+// Eclipse Sickle (Sunflower/Moonflower)
 export class EclipseHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_SUNFLOWER_1';
 	}
 	get name() {
-		return 'Eclipse Hoe Mk. I';
+		return 'Eclipse Sickle Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Eclipse_Hoe#Common_';
+		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -431,10 +431,10 @@ export class EclipseHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_SUNFLOWER_2';
 	}
 	get name() {
-		return 'Eclipse Hoe Mk. II';
+		return 'Eclipse Sickle Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Eclipse_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -461,10 +461,10 @@ export class EclipseHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_SUNFLOWER_3';
 	}
 	get name() {
-		return 'Eclipse Hoe Mk. III';
+		return 'Eclipse Sickle Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Eclipse_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
@@ -475,16 +475,16 @@ export class EclipseHoe3 extends BaseItem {
 	override gemSlots = T3_TOOL_GEMS;
 }
 
-// Wild Rose Hoe
+// Wild Rose Cutter
 export class WildRoseHoe1 extends BaseItem {
 	get skyblockId() {
 		return 'THEORETICAL_HOE_WILD_ROSE_1';
 	}
 	get name() {
-		return 'Wild Rose Hoe Mk. I';
+		return 'Wild Rose Cutter Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Wild_Rose_Hoe#Common_';
+		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
@@ -510,10 +510,10 @@ export class WildRoseHoe2 extends BaseItem {
 		return 'THEORETICAL_HOE_WILD_ROSE_2';
 	}
 	get name() {
-		return 'Wild Rose Hoe Mk. II';
+		return 'Wild Rose Cutter Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Wild_Rose_Hoe#Uncommon_';
+		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
@@ -539,10 +539,10 @@ export class WildRoseHoe3 extends BaseItem {
 		return 'THEORETICAL_HOE_WILD_ROSE_3';
 	}
 	get name() {
-		return 'Wild Rose Hoe Mk. III';
+		return 'Wild Rose Cutter Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Wild_Rose_Hoe#Rare_';
+		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;

@@ -1,7 +1,14 @@
 import type { Crop } from '../constants/crops.js';
 import type { Rarity, RarityRecord, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges.js';
 import type { Stat, StatsRecord } from '../constants/stats.js';
-import type { FortuneSourceProgress, FortuneUpgrade, Upgrade, UpgradeCost } from '../constants/upgrades.js';
+import type {
+	FortuneSourceProgress,
+	FortuneUpgrade,
+	StatQueryOptions,
+	Upgrade,
+	UpgradeCost,
+	UpgradeRecommendation,
+} from '../constants/upgrades.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import type { EliteItemDto } from './item.js';
 
@@ -22,6 +29,7 @@ export interface UpgradeableInfo {
 	cost?: UpgradeCost;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 	skillReq?: Partial<Record<string, number>>;
+	recommendation?: UpgradeRecommendation;
 }
 
 export interface Upgradeable {
@@ -41,7 +49,7 @@ export interface Upgradeable {
 	getFortune(): number;
 	getStat(stat: Stat): number;
 	getStats(): Partial<Record<Stat, number>>;
-	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[];
+	getUpgrades(options?: StatQueryOptions): FortuneUpgrade[];
 	getItemUpgrade(): Upgrade | undefined;
 	getLastItemUpgrade(): { upgrade: Upgrade; info: UpgradeableInfo } | undefined;
 	getProgress(stats?: Stat[], zeroed?: boolean): FortuneSourceProgress[];

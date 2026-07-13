@@ -2,6 +2,7 @@ import { expect, test } from 'vitest';
 import { Stat } from '../constants/stats.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
+import { getUpgradeableInfo } from './upgrades.js';
 
 const maxHelmet = {
 	id: 397,
@@ -128,11 +129,21 @@ test('Maxed Helmet Upgrades Test', () => {
 	const item = new FarmingArmor(maxHelmet);
 	expect(item.fortune).toBe(92);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(20);
-	const upgrades = item.getUpgrades();
+	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(1);
-	expect(upgrades[0].title).toBe('Helianthus Helmet');
-	expect(upgrades[0].action).toBe('upgrade');
-	expect(upgrades[0].category).toBe('item');
+	expect(upgrades[0]?.title).toBe('Helianthus Helmet');
+	expect(upgrades[0]?.action).toBe('upgrade');
+	expect(upgrades[0]?.category).toBe('item');
+});
+
+test('Upgradeable info lookup preserves fake object compatibility', () => {
+	const { info, fake } = getUpgradeableInfo('HELIANTHUS_HELMET');
+
+	expect(info?.skyblockId).toBe('HELIANTHUS_HELMET');
+	expect(fake?.info.skyblockId).toBe('HELIANTHUS_HELMET');
+	expect(fake?.item.skyblockId).toBe('HELIANTHUS_HELMET');
+	expect(fake?.getStat(Stat.FarmingFortune)).toBe(35);
+	expect(fake?.getStats()[Stat.FarmingFortune]).toBe(35);
 });
 
 test('Almost Maxed Helmet Upgrades Test', () => {
@@ -140,7 +151,7 @@ test('Almost Maxed Helmet Upgrades Test', () => {
 	expect(item.fortune).toBe(72);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
 
-	const upgrades = item.getUpgrades();
+	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(5);
 
 	const recomb = upgrades.find((u) => u.action === 'recombobulate');
@@ -173,7 +184,7 @@ const lotusNecklace = {
 	count: 1,
 	skyblockId: 'LOTUS_NECKLACE',
 	uuid: '2c0af2b1-234d-4a7d-8560-10a2b0eb8da4',
-	name: '§5Rooted Lotus Necklace',
+	name: '§5Rooted Peony Necklace',
 	lore: ['§5§l§ka§r §5§l§5§lEPIC NECKLACE §5§l§ka'],
 	enchantments: { green_thumb: 4 },
 	attributes: {
@@ -247,7 +258,7 @@ test('Conflicting Reforges Test', () => {
 
 	expect(reforges.length).toBeGreaterThan(0);
 	for (const reforge of reforges) {
-		expect(reforge.conflictKey).toBe('reforge');
+		expect(reforge.conflictKey).toBe(`reforge:${item.item.uuid}`);
 	}
 
 	const rooted = reforges.find((u) => u.title === 'Reforge to Rooted');
@@ -281,7 +292,7 @@ test('Lotus to Blossom Necklace upgrade shows correct fortune delta', () => {
 		damage: 3,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
-		name: '§5Rooted Lotus Necklace',
+		name: '§5Rooted Peony Necklace',
 		lore: ['§5§l§ka§r §5§lEPIC NECKLACE §5§l§ka'],
 		enchantments: { green_thumb: 5 },
 		attributes: {
@@ -318,7 +329,7 @@ test('Lotus to Blossom Necklace upgrade includes piece bonus delta', () => {
 		damage: 3,
 		skyblockId: 'LOTUS_NECKLACE',
 		uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
-		name: '§5Rooted Lotus Necklace',
+		name: '§5Rooted Peony Necklace',
 		lore: [
 			'§7Farming Fortune: §a+40.5 §9(+15)',
 			'',

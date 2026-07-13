@@ -5,10 +5,10 @@ import { Stat } from '../../constants/stats.js';
 import type { FarmingArmor } from '../../fortune/farmingarmor.js';
 import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import { GemRarity } from '../../fortune/item.js';
-import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
+import { getMaxStatFromEnchant, getOptimisticStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
-import { getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
+import { getCurrentReforgeEffectSummaries, getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEquipment>[] = [
@@ -68,11 +68,12 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		currentStat: (gear, stat) => {
 			return gear.reforgeStats?.stats?.[stat] ?? 0;
 		},
+		effects: getCurrentReforgeEffectSummaries,
 		upgrades: getUpgradeableReforges,
 	},
 	{
 		name: 'Gemstone Slots',
-		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
+		wiki: () => 'https://w.elitesb.gg/Gemstone_Slot',
 		exists: (upgradeable) => {
 			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
 			const currentInfo = upgradeable.info;
@@ -160,18 +161,60 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 					name: enchant.name,
 					wiki: () => enchant.wiki,
 					exists: (gear) => enchant.appliesTo.includes(gear.type),
-					max: (gear) => getMaxStatFromEnchant(enchant, Stat.FarmingFortune, gear.options),
+					max: (gear) => {
+						const currentOverbloom = getOptimisticStatFromEnchant(
+							gear.item.enchantments?.[id] ?? 0,
+							enchant,
+							Stat.Overbloom,
+							gear.options,
+							gear.crop
+						);
+						return (
+							getMaxStatFromEnchant(enchant, Stat.FarmingFortune, gear.options) ||
+							(currentOverbloom > 0
+								? getMaxStatFromEnchant(enchant, Stat.Overbloom, gear.options, gear.crop)
+								: 0)
+						);
+					},
 					current: (gear) =>
 						getStatFromEnchant(
 							gear.item.enchantments?.[id] ?? 0,
 							enchant,
 							Stat.FarmingFortune,
 							gear.options
+						) ||
+						getOptimisticStatFromEnchant(
+							gear.item.enchantments?.[id] ?? 0,
+							enchant,
+							Stat.Overbloom,
+							gear.options,
+							gear.crop
 						),
-					maxStat: (gear, stat) => getMaxStatFromEnchant(enchant, stat, gear.options),
+					maxStat: (gear, stat) => getMaxStatFromEnchant(enchant, stat, gear.options, gear.crop),
 					currentStat: (gear, stat) =>
-						getStatFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, stat, gear.options),
-					upgrades: (gear, stats) => getUpgradeableEnchant(gear, id, stats?.[0] ?? Stat.FarmingFortune),
+						getOptimisticStatFromEnchant(
+							gear.item.enchantments?.[id] ?? 0,
+							enchant,
+							stat,
+							gear.options,
+							gear.crop
+						),
+					upgrades: (gear, stats) => {
+						const chains: Stat[] = [];
+						for (const s of stats ?? [Stat.FarmingFortune]) {
+							if (!chains.includes(s)) chains.push(s);
+						}
+						if (chains.length === 0) chains.push(Stat.FarmingFortune);
+
+						const upgrades = chains.flatMap((s) => getUpgradeableEnchant(gear, id, s));
+						const seen = new Set<string>();
+						return upgrades.filter((u) => {
+							const key = u.conflictKey ?? `${u.title}:${u.action}`;
+							if (seen.has(key)) return false;
+							seen.add(key);
+							return true;
+						});
+					},
 				}) as DynamicFortuneSource<FarmingArmor | FarmingEquipment>
 		),
 ];

@@ -12,14 +12,14 @@ export class CocoaChopper1 extends BaseItem {
 		return 'Cocoa Chopper Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cocoa_Chopper';
+		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
 	}
 
 	override crops = [Crop.CocoaBeans];
-	override type = ReforgeTarget.Axe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T1_TOOL_GEMS;
 	override upgrade = {
 		id: 'COCO_CHOPPER_2',
@@ -41,14 +41,14 @@ export class CocoaChopper2 extends BaseItem {
 		return 'Cocoa Chopper Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cocoa_Chopper';
+		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
 	}
 
 	override crops = [Crop.CocoaBeans];
-	override type = ReforgeTarget.Axe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T2_TOOL_GEMS;
 	override upgrade = {
 		id: 'COCO_CHOPPER_3',
@@ -70,13 +70,13 @@ export class CocoaChopper3 extends BaseItem {
 		return 'Cocoa Chopper Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Cocoa_Chopper';
+		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
 	}
 
 	override crops = [Crop.CocoaBeans];
-	override type = ReforgeTarget.Axe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T3_TOOL_GEMS;
 }

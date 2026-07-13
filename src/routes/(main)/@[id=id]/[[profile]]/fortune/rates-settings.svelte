@@ -14,7 +14,19 @@
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
-	import { TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
+	import {
+		compareRarity,
+		GARDEN_CHIP_RARITIES,
+		GARDEN_CHIPS,
+		getChipInputLevel,
+		getChipInputRarity,
+		getChipRarity,
+		Stat,
+		TEMPORARY_FORTUNE,
+		ZorroMode,
+		type GardenChipId,
+		type GardenChipRarity,
+	} from 'farming-weight';
 
 	const ratesData = getRatesData();
 	const gbl = getGlobalContext();
@@ -28,6 +40,45 @@
 	}
 
 	let { player }: Props = $props();
+
+	const gardenChipEntries = Object.entries(GARDEN_CHIPS) as [GardenChipId, (typeof GARDEN_CHIPS)[GardenChipId]][];
+
+	function getDetectedChipLevel(chipId: GardenChipId) {
+		const chips = (ctx.member.current?.memberData?.garden?.chips ?? {}) as Record<
+			string,
+			number | null | undefined
+		>;
+		return getChipInputLevel(chips, chipId);
+	}
+
+	function getSavedChipRarity(chipId: GardenChipId) {
+		return getChipInputRarity($ratesData.chipRarities, chipId);
+	}
+
+	function getChipRarityOptions(chipId: GardenChipId) {
+		const inferred = getChipRarity(getDetectedChipLevel(chipId));
+		return [
+			{
+				value: '',
+				label: `Inferred (${inferred})`,
+			},
+			...GARDEN_CHIP_RARITIES.filter((rarity) => compareRarity(rarity, inferred) >= 0).map((rarity) => ({
+				value: rarity,
+				label: rarity,
+			})),
+		];
+	}
+
+	function setSavedChipRarity(chipId: GardenChipId, rarity?: GardenChipRarity | string) {
+		const chip = GARDEN_CHIPS[chipId];
+		const next = { ...($ratesData.chipRarities ?? {}) };
+		delete next[chipId];
+		delete next[chip.skyblockId];
+		if (rarity) {
+			next[chip.skyblockId] = rarity;
+		}
+		$ratesData.chipRarities = next;
+	}
 </script>
 
 <div class="relative w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
@@ -36,7 +87,7 @@
 	<SettingListItem
 		title="Garden Fortune"
 		description="Community center farming fortune upgrade."
-		wiki="https://wiki.hypixel.net/Elizabeth#Garden_Farming_Fortune_"
+		wiki="https://w.elitesb.gg/Account_%26_Profile_Upgrades#Account_Upgrades"
 	>
 		{#snippet child()}
 			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
@@ -59,7 +110,7 @@
 	<SettingListItem
 		title="Strength"
 		description="Used for Mooshroom Cow ability."
-		wiki="https://wiki.hypixel.net/Strength"
+		wiki="https://w.elitesb.gg/Strength"
 	>
 		<NumberInput
 			class="my-1 h-10 max-w-32"
@@ -75,7 +126,7 @@
 	<SettingListItem
 		title="Filled Rosewater Flasks"
 		description="Amount of Filled Rosewater Flasks you've consumed."
-		wiki="https://wiki.hypixel.net/Rosewater_Flask"
+		wiki="https://w.elitesb.gg/Rosewater_Flask"
 	>
 		{#snippet child()}
 			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
@@ -193,6 +244,58 @@
 	</SettingListItem>
 	<SettingSeperator />
 
+	<SettingListItem title={TEMPORARY_FORTUNE.celestialMasonJar.name} wiki={TEMPORARY_FORTUNE.celestialMasonJar.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={15} enabled={$ratesData.temp.celestialMasonJar && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.celestialMasonJar !== undefined}
+				<Switch bind:checked={$ratesData.temp.celestialMasonJar} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.melonJuiceMixin.name} wiki={TEMPORARY_FORTUNE.melonJuiceMixin.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={15} enabled={$ratesData.temp.melonJuiceMixin && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.melonJuiceMixin !== undefined}
+				<Switch bind:checked={$ratesData.temp.melonJuiceMixin} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.finnsFocaccia.name} wiki={TEMPORARY_FORTUNE.finnsFocaccia.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown
+				breakdown={{ [TEMPORARY_FORTUNE.finnsFocaccia.name]: { value: 5, stat: Stat.Overbloom } }}
+				enabled={$ratesData.temp.finnsFocaccia && $ratesData.useTemp}
+			/>
+
+			{#if $ratesData.temp.finnsFocaccia !== undefined}
+				<Switch bind:checked={$ratesData.temp.finnsFocaccia} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.stinkyCheesePotion.name} wiki={TEMPORARY_FORTUNE.stinkyCheesePotion.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown
+				breakdown={{
+					[TEMPORARY_FORTUNE.stinkyCheesePotion.name]: { value: 20, stat: Stat.BonusPestChance },
+				}}
+				enabled={$ratesData.temp.stinkyCheesePotion && $ratesData.useTemp}
+			/>
+
+			{#if $ratesData.temp.stinkyCheesePotion !== undefined}
+				<Switch bind:checked={$ratesData.temp.stinkyCheesePotion} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
 	<SettingHeader class="mt-8 text-xl">Other Settings</SettingHeader>
 	<SettingBigSeperator />
 
@@ -267,19 +370,43 @@
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Garden Chips</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">Set the level of each garden chip you have!</p>
+	<p class="text-muted-foreground px-1 text-sm">Set the rarity of each garden chip you have.</p>
 	<SettingBigSeperator />
 
-	<p class="border-completed rounded-md border p-2 text-sm">
-		These settings have been removed! Garden chip levels are now automatically detected from your profile data!
-	</p>
+	{#each gardenChipEntries as [chipId, chip], index (chipId)}
+		{@const level = getDetectedChipLevel(chipId)}
+		{@const savedRarity = getSavedChipRarity(chipId)}
+		{@const effectiveRarity = getChipRarity(level, savedRarity)}
+		<SettingListItem
+			title={chip.name}
+			description={`Level ${level.toLocaleString()} - ${effectiveRarity}`}
+			wiki={chip.wiki}
+		>
+			{#snippet child()}
+				<div class="flex w-full max-w-56 flex-row items-center justify-end gap-2">
+					<span class="text-muted-foreground w-14 text-right text-sm">Lvl {level.toLocaleString()}</span>
+					<Select.Simple
+						size="sm"
+						value={savedRarity ?? ''}
+						change={(value) => {
+							setSavedChipRarity(chipId, value || undefined);
+						}}
+						options={getChipRarityOptions(chipId)}
+					/>
+				</div>
+			{/snippet}
+		</SettingListItem>
+		{#if index < gardenChipEntries.length - 1}
+			<SettingSeperator />
+		{/if}
+	{/each}
 
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
 	<span class="text-muted-foreground px-1 text-sm"
 		>Crop that you've brought items to <a
-			href="https://wiki.hypixel.net/Carrolyn"
+			href="https://w.elitesb.gg/Carrolyn"
 			target="_blank"
 			class="text-link underline">Carrolyn</a
 		> for.</span
@@ -325,6 +452,9 @@
 						<input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
 						<input type="hidden" name="flasks" value={$ratesData.rosewaterFlasks ?? 0} />
 						<input type="hidden" name="strength" value={$ratesData.strength ?? 0} />
+						{#each Object.entries($ratesData.chipRarities ?? {}) as [chipId, rarity] (chipId)}
+							<input type="hidden" name={`CHIP_RARITY_${chipId}`} value={rarity} />
+						{/each}
 						<Button type="submit" disabled={loading}>Save</Button>
 					</form>
 				</div>

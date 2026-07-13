@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ImageAttachmentDto } from '$lib/api';
+	import { buildImageSrcset, getLargestImageSourceUrl } from '$lib/guides/responsive-images';
 	import type { HTMLImgAttributes } from 'svelte/elements';
 
 	type Props = {
@@ -8,19 +9,30 @@
 		alt?: string;
 	} & HTMLImgAttributes;
 
-	let { image, loading = 'lazy', alt, ...rest }: Props = $props();
+	let {
+		image,
+		loading = 'lazy',
+		alt,
+		sizes = loading === 'lazy' ? 'auto, 100vw' : '100vw',
+		...rest
+	}: Props = $props();
 	let { width, height, url, sources } = $derived(image);
 
-	const srcset = $derived(
-		Object.values(sources)
-			.map((source) => `${source.url} ${source.width}w`)
-			.join(', ')
-	);
-
-	const sizes = '(max-width: 600px) 90vw, (max-width: 1024px) 50vw, 1920px';
+	const src = $derived(getLargestImageSourceUrl(sources) ?? url);
+	const srcset = $derived(buildImageSrcset(sources));
 </script>
 
-<img src={url} {srcset} {sizes} alt={alt ?? image.title ?? ''} {width} {height} {loading} {...rest} decoding="async" />
+<img
+	{src}
+	{srcset}
+	sizes={srcset ? sizes : undefined}
+	alt={alt ?? image.title ?? ''}
+	{width}
+	{height}
+	{loading}
+	{...rest}
+	decoding="async"
+/>
 
 <style>
 	img {

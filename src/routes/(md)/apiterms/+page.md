@@ -45,4 +45,4 @@ Feel free to report violations to us on the [contact page](/contact).
 
 If these restrictions are too much for you, you're free to host your own instance of the API!
 
-[GitHub Repository](htts://github.com/EliteFarmers/API)
+[GitHub Repository](https://github.com/EliteFarmers/API)

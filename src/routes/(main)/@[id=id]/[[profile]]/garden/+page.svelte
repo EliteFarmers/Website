@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/head.svelte';
+	import StatsHead from '$comp/seo/stats-head.svelte';
 	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
 	import GardenChips from '$comp/stats/garden/garden-chips.svelte';
@@ -50,15 +50,19 @@
 	);
 </script>
 
-<Head
-	title="{ctx.ignMeta} | Garden"
+<StatsHead
+	title="Garden"
 	description="See this player's garden stats in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/garden"
 />
 
 <div class="flex w-full flex-col items-center justify-center gap-8">
 	<section class="flex w-full flex-row items-center justify-center gap-4 px-2">
-		<Skillbar name="Garden" progress={getGardenLevel(garden.experience ?? 0, overflow)} rank={ranks.garden?.rank} />
+		<Skillbar
+			name="Garden"
+			progress={getGardenLevel(Number(garden.experience ?? 0), overflow)}
+			rank={ranks.garden?.rank}
+		/>
 	</section>
 
 	<section class="flex w-full justify-center align-middle">

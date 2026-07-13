@@ -50,7 +50,7 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 
 	if (request?.headers) {
 		for (const header of request.headers) {
-			if (header[0].startsWith('x-')) {
+			if (header[0].startsWith('x-') || header[0].startsWith('cf-')) {
 				requestHeaders.set(header[0], header[1]);
 			}
 		}

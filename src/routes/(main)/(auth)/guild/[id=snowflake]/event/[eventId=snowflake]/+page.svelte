@@ -2,9 +2,9 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import Head from '$comp/head.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
 	import RenderMd from '$comp/markdown/render-md.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { NumberInput } from '$comp/ui/number-input';
 	import type { CollectionEventData, MedalEventData, PestEventData, WeightEventData } from '$lib/api';
 	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';

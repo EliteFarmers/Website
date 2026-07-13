@@ -1,6 +1,6 @@
 <script lang="ts">
 	import GuildMembersTable from '$comp/guilds/guild-members-table.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import type { HypixelGuildDto } from '$lib/api';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import type { PageProps } from './$types';

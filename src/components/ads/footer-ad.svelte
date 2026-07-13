@@ -26,6 +26,7 @@
 		<NitroAdSlot
 			class="mt-8 block h-fit w-full"
 			slotId="footer-bottom"
+			showWhenAuthenticated={false}
 			onCreated={(element) => {
 				adCtx.footerBottom = element;
 			}}
@@ -53,6 +54,7 @@
 <NitroAdSlot
 	createDiv={false}
 	slotId="anchor-bottom"
+	showWhenAuthenticated={sidebar.isMobile}
 	onCreated={(element) => {
 		adCtx.bottomAnchor = element;
 		bottomAnchor = element;

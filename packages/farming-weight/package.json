@@ -1,14 +1,16 @@
 {
 	"name": "farming-weight",
-	"version": "0.14.0",
+	"version": "0.15.0",
 	"description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
 	"type": "module",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"module": "dist/index.js",
+	"sideEffects": false,
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc --watch",
+		"typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
 		"format": "pnpm biome check --write",
 		"lint": "pnpm biome check",
 		"test": "vitest run",

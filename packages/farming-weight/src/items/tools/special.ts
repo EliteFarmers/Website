@@ -9,11 +9,11 @@ export class HoeOfNoTilling extends BaseItem {
 		return 'Hoe of No Tilling';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Hoe_of_No_Tilling';
+		return 'https://w.elitesb.gg/Hoe_of_No_Tilling';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
 	}
 
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 }

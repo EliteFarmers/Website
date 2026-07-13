@@ -2,23 +2,21 @@ import { env as privateEnv } from '$env/dynamic/private';
 import { env } from '$env/dynamic/public';
 import { FetchUserSession } from '$lib/api/auth';
 import { cache, initCachedItems } from '$lib/servercache';
-import * as Sentry from '@sentry/sveltekit';
 import { redirect, type Handle, type ServerInit } from '@sveltejs/kit';
-import { sequence } from '@sveltejs/kit/hooks';
 const { PUBLIC_HOST_URL } = env;
 
 export const init: ServerInit = async () => {
 	initCachedItems();
 };
 
-export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, resolve }) => {
+export const handle: Handle = async ({ event, resolve }) => {
 	const { locals, cookies } = event;
 	locals.bot = event.request.headers.get('X-Known-Bot') === 'true';
 
 	locals.access_token = cookies.get('access_token');
 	locals.refresh_token = cookies.get('refresh_token');
 	locals.cache = cache;
-	locals.ads = !event.route.id?.includes('/(auth)');
+	locals.ads = !event.route.id?.includes('/(auth)') && !event.route.id?.includes('/shop');
 
 	if (locals.access_token) {
 		locals.persistSession = true;
@@ -55,7 +53,7 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, re
 	}
 
 	return response;
-});
+};
 
 async function ResolveWithSecurityHeaders(
 	resolve: Parameters<Handle>[0]['resolve'],
@@ -63,8 +61,10 @@ async function ResolveWithSecurityHeaders(
 ): Promise<ReturnType<Handle>> {
 	const response = await resolve(event, {
 		transformPageChunk: ({ html }) => {
-			const isAdFree = event.locals.session?.flags?.includes('AD_FREE');
-			const shouldShowAds = !isAdFree && !event.locals.bot;
+			html = html.replace('%elite.misc%', privateEnv.PUBLIC_MISC_HEAD_TAG || '');
+			const isAdFree =
+				event.locals.session?.flags?.includes('AD_FREE') || event.locals.session?.perms?.viewAdminPages;
+			const shouldShowAds = !isAdFree && !event.locals.bot && event.locals.ads;
 			if (shouldShowAds) {
 				return html.replace('%elite.adscript%', privateEnv.AD_SCRIPT || '');
 			}
@@ -111,4 +111,3 @@ function getLoginHeadResponse(redirectTo: string) {
 		}
 	);
 }
-export const handleError = Sentry.handleErrorWithSentry();

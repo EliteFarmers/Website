@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
+	import StatsHead from '$comp/seo/stats-head.svelte';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Skeleton } from '$ui/skeleton';
@@ -47,10 +47,11 @@
 	});
 </script>
 
-<Head
-	title="{ctx.ignMeta} | Farming Fortune"
+<StatsHead
+	title="Farming Fortune"
 	description="See missing fortune upgrades, overall progress, and your expected farming rates in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/fortune"
+	keywords="farming fortune, fortune upgrades, missing fortune upgrades, farming rates, skyblock farming fortune, hypixel skyblock, elite skyblock, elite farmers"
 />
 
 {#if ctx.ready}

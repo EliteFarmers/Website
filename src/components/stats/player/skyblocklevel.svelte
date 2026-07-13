@@ -15,7 +15,7 @@
 	triggerClass="relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md border px-3 py-1.5 text-lg md:py-2"
 >
 	{#snippet trigger()}
-		<div>
+		<div class="my-1 flex flex-row items-center gap-1 sm:my-0.5 md:my-0">
 			{#if rank !== -1}
 				<a
 					href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.current?.profileName ??
@@ -28,7 +28,7 @@
 				</a>
 			{/if}
 			{#if ctx.member.loading}
-				<Skeleton class="my-1 h-5 w-10 rounded-md sm:h-6 sm:w-12" />
+				<Skeleton class="my-1 inline-block h-5 w-10 rounded-md sm:h-6 sm:w-12" />
 			{:else}
 				<span class="px-1 font-mono text-xl font-bold md:text-2xl" style="color: {color};"
 					>{Math.floor(xp / 100)}</span

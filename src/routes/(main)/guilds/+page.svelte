@@ -1,7 +1,7 @@
 <script lang="ts">
 	import GuildSearch from '$comp/guilds/guild-search.svelte';
 	import GuildsList from '$comp/guilds/guilds-list.svelte';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();

@@ -18,7 +18,7 @@ export interface FarmingEnchantTier {
 	stats?: Partial<Record<Stat, number>>;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 	computed?: Partial<Record<Stat, (opt: PlayerOptions) => number>>;
-	cropComputed?: Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>;
+	cropComputed?: Partial<Record<Stat, (crop?: Crop, opt?: PlayerOptions) => number>>;
 	procurement?: EnchantTierProcurement;
 	cost?: UpgradeCost;
 }
@@ -39,9 +39,9 @@ export interface FarmingEnchant {
 }
 
 const createTurboEnchant = (stat: Stat) => ({
-	appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe] as const,
+	appliesTo: [ReforgeTarget.FarmingTool] as const,
 	minLevel: 1,
-	maxLevel: 5,
+	maxLevel: 7,
 	levels: {
 		1: {
 			stats: {
@@ -68,6 +68,28 @@ const createTurboEnchant = (stat: Stat) => ({
 				[stat]: 25,
 			},
 		},
+		6: {
+			stats: {
+				[stat]: 30,
+			},
+			procurement: EnchantTierProcurement.UpgradeItem,
+			cost: {
+				items: {
+					TURBO_GOURD: 1,
+				},
+			},
+		},
+		7: {
+			stats: {
+				[stat]: 35,
+			},
+			procurement: EnchantTierProcurement.UpgradeItem,
+			cost: {
+				items: {
+					ENCHANTED_TURBO_GOURD: 1,
+				},
+			},
+		},
 	},
 });
 
@@ -88,8 +110,8 @@ const dedicationEnchantmentComputedStats = (multiplier: number, options: PlayerO
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	harvesting: {
 		name: 'Harvesting',
-		appliesTo: [ReforgeTarget.Hoe],
-		wiki: 'https://wiki.hypixel.net/Harvesting_Enchantment',
+		appliesTo: [ReforgeTarget.FarmingTool],
+		wiki: 'https://w.elitesb.gg/Enchantments#Harvesting',
 		levelRequirement: 2,
 		minLevel: 1,
 		maxLevel: 6,
@@ -129,8 +151,8 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 	cultivating: {
 		name: 'Cultivating',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
-		wiki: 'https://wiki.hypixel.net/Cultivating_Enchantment',
+		appliesTo: [ReforgeTarget.FarmingTool],
+		wiki: 'https://w.elitesb.gg/Enchantments#Cultivating',
 		minLevel: 1,
 		maxLevel: 10,
 		levels: {
@@ -210,8 +232,8 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 	dedication: {
 		name: 'Dedication',
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
-		wiki: 'https://wiki.hypixel.net/Dedication_Enchantment',
+		appliesTo: [ReforgeTarget.FarmingTool],
+		wiki: 'https://w.elitesb.gg/Enchantments#Dedication',
 		minLevel: 1,
 		maxLevel: 4,
 		levels: {
@@ -248,53 +270,10 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			[Stat.WildRoseFortune]: 92,
 		},
 	},
-	sunder: {
-		name: 'Sunder',
-		appliesTo: [ReforgeTarget.Axe],
-		wiki: 'https://wiki.hypixel.net/Sunder_Enchantment',
-		minLevel: 1,
-		maxLevel: 6,
-		levels: {
-			1: {
-				stats: {
-					[Stat.FarmingFortune]: 12.5,
-				},
-				cost: {
-					copper: 10,
-				},
-			},
-			2: {
-				stats: {
-					[Stat.FarmingFortune]: 25,
-				},
-			},
-			3: {
-				stats: {
-					[Stat.FarmingFortune]: 37.5,
-				},
-			},
-			4: {
-				stats: {
-					[Stat.FarmingFortune]: 50,
-				},
-			},
-			5: {
-				stats: {
-					[Stat.FarmingFortune]: 62.5,
-				},
-			},
-			6: {
-				stats: {
-					[Stat.FarmingFortune]: 75,
-				},
-				procurement: EnchantTierProcurement.Loot,
-			},
-		},
-	},
 	pesterminator: {
 		name: 'Pesterminator',
 		appliesTo: [ReforgeTarget.Armor],
-		wiki: 'https://wiki.hypixel.net/Pesterminator_Enchantment',
+		wiki: 'https://w.elitesb.gg/Pesterminator',
 		levelRequirement: 10,
 		minLevel: 1,
 		maxLevel: 6,
@@ -343,10 +322,80 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
+	bug_blender: {
+		name: 'Bug Blender',
+		id: 'ENCHANTMENT_BUG_BLENDER',
+		appliesTo: [ReforgeTarget.Vacuum],
+		wiki: 'https://hypixelskyblock.minecraft.wiki/w/Bug_Blender',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				stats: {
+					[Stat.PestKillFortune]: 20,
+				},
+			},
+			2: {
+				stats: {
+					[Stat.PestKillFortune]: 40,
+				},
+			},
+			3: {
+				stats: {
+					[Stat.PestKillFortune]: 60,
+				},
+			},
+			4: {
+				stats: {
+					[Stat.PestKillFortune]: 80,
+				},
+			},
+			5: {
+				stats: {
+					[Stat.PestKillFortune]: 100,
+				},
+			},
+		},
+	},
+	ultimate_sunset: {
+		name: 'Sunset',
+		id: 'ENCHANTMENT_ULTIMATE_SUNSET',
+		appliesTo: [ReforgeTarget.Armor],
+		wiki: 'https://w.elitesb.gg/Sunset',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 1),
+				},
+			},
+			2: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 2),
+				},
+			},
+			3: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 3),
+				},
+			},
+			4: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 4),
+				},
+			},
+			5: {
+				cropComputed: {
+					[Stat.Overbloom]: (crop) => (crop === Crop.Moonflower ? 0 : 5),
+				},
+			},
+		},
+	},
 	green_thumb: {
 		name: 'Green Thumb',
 		appliesTo: [ReforgeTarget.Equipment],
-		wiki: 'https://wiki.hypixel.net/Green_Thumb_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Green_Thumb',
 		levelRequirement: 24,
 		minLevel: 1,
 		maxLevel: 5,
@@ -386,89 +435,124 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 	turbo_cactus: {
 		name: 'Turbo-Cacti',
-		wiki: 'https://wiki.hypixel.net/Turbo-Cacti_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Cactus,
 		...createTurboEnchant(Stat.CactusFortune),
 	},
 	turbo_cane: {
 		name: 'Turbo-Cane',
-		wiki: 'https://wiki.hypixel.net/Turbo-Cane_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.SugarCane,
 		...createTurboEnchant(Stat.SugarCaneFortune),
 	},
 	turbo_carrot: {
 		name: 'Turbo-Carrot',
-		wiki: 'https://wiki.hypixel.net/Turbo-Carrot_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Carrot,
 		...createTurboEnchant(Stat.CarrotFortune),
 	},
 	turbo_coco: {
 		name: 'Turbo-Cocoa',
 		id: 'ENCHANTMENT_TURBO_COCO',
-		wiki: 'https://wiki.hypixel.net/Turbo-Cocoa_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.CocoaBeans,
 		...createTurboEnchant(Stat.CocoaBeanFortune),
 	},
 	turbo_melon: {
 		name: 'Turbo-Melon',
-		wiki: 'https://wiki.hypixel.net/Turbo-Melon_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Melon,
 		...createTurboEnchant(Stat.MelonFortune),
 	},
 	turbo_mushrooms: {
 		name: 'Turbo-Mushrooms',
-		wiki: 'https://wiki.hypixel.net/Turbo-Mushrooms_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Mushroom,
 		...createTurboEnchant(Stat.MushroomFortune),
 	},
 	turbo_potato: {
 		name: 'Turbo-Potato',
-		wiki: 'https://wiki.hypixel.net/Turbo-Potato_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Potato,
 		...createTurboEnchant(Stat.PotatoFortune),
 	},
 	turbo_pumpkin: {
 		name: 'Turbo-Pumpkin',
-		wiki: 'https://wiki.hypixel.net/Turbo-Pumpkin_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Pumpkin,
 		...createTurboEnchant(Stat.PumpkinFortune),
 	},
 	turbo_warts: {
 		name: 'Turbo-Warts',
-		wiki: 'https://wiki.hypixel.net/Turbo-Warts_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.NetherWart,
 		...createTurboEnchant(Stat.NetherWartFortune),
 	},
 	turbo_wheat: {
 		name: 'Turbo-Wheat',
-		wiki: 'https://wiki.hypixel.net/Turbo-Wheat_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Wheat,
 		...createTurboEnchant(Stat.WheatFortune),
 	},
 	turbo_rose: {
 		name: 'Turbo-Rose',
-		wiki: 'https://wiki.hypixel.net/Turbo-Rose_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.WildRose,
 		...createTurboEnchant(Stat.WildRoseFortune),
 	},
 	turbo_moonflower: {
 		name: 'Turbo-Moonflower',
-		wiki: 'https://wiki.hypixel.net/Turbo-Moonflower_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Moonflower,
 		...createTurboEnchant(Stat.MoonflowerFortune),
 	},
 	turbo_sunflower: {
 		name: 'Turbo-Sunflower',
-		wiki: 'https://wiki.hypixel.net/Turbo-Sunflower_Enchantment',
+		wiki: 'https://w.elitesb.gg/Enchantments#Turbo-Crop',
 		cropSpecific: Crop.Sunflower,
 		...createTurboEnchant(Stat.SunflowerFortune),
+	},
+	feast: {
+		name: 'Feast',
+		id: 'ENCHANTMENT_FEAST',
+		appliesTo: [ReforgeTarget.FarmingTool],
+		wiki: 'https://w.elitesb.gg/Feast',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				stats: {
+					[Stat.Overbloom]: 2,
+				},
+			},
+			2: {
+				stats: {
+					[Stat.Overbloom]: 4,
+				},
+			},
+			3: {
+				stats: {
+					[Stat.Overbloom]: 6,
+				},
+			},
+			4: {
+				stats: {
+					[Stat.Overbloom]: 8,
+				},
+			},
+			5: {
+				stats: {
+					[Stat.Overbloom]: 10,
+				},
+			},
+		},
 	},
 	ultimate_crop_fever: {
 		name: 'Crop Fever',
 		id: 'ENCHANTMENT_ULTIMATE_CROP_FEVER',
 		alwaysInclude: true,
-		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
-		wiki: 'https://wiki.hypixel.net/Ultimate_Crop_Fever_Enchantment',
+		appliesTo: [ReforgeTarget.FarmingTool],
+		wiki: 'https://w.elitesb.gg/Crop_Fever',
 		minLevel: 1,
 		maxLevel: 5,
 		levels: {

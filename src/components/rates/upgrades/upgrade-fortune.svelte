@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import * as Popover from '$ui/popover';
-	import { STAT_ICONS, STAT_NAMES, Stat, type FortuneUpgrade } from 'farming-weight';
+	import { STAT_ICONS, STAT_NAMES, Stat, type EffectSummary, type FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
@@ -26,22 +26,58 @@
 		Stat.WildRoseFortune,
 	]);
 
-	// Primary display stat (FarmingFortune or the first crop fortune)
 	const primaryStat = $derived.by(() => {
 		if (!upgrade.stats) return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 		const ff = upgrade.stats[Stat.FarmingFortune];
-		if (ff !== undefined && ff !== 0) return { stat: Stat.FarmingFortune, value: ff };
-		// Check for crop fortune
+		// Prefer FarmingFortune only when it's a positive contributor; otherwise
+		// pick the stat that best represents what the upgrade actually gives.
+		if (ff !== undefined && ff > 0) return { stat: Stat.FarmingFortune, value: ff };
+
 		for (const [statKey, value] of Object.entries(upgrade.stats)) {
 			const stat = statKey as Stat;
-			if (CROP_FORTUNE_STATS.has(stat) && value !== 0) {
+			if (CROP_FORTUNE_STATS.has(stat) && (value as number) > 0) {
 				return { stat, value: value as number };
 			}
 		}
+
+		let bestPositive: { stat: Stat; value: number } | undefined;
+		for (const [statKey, value] of Object.entries(upgrade.stats)) {
+			const numeric = value as number;
+			if (!numeric || numeric <= 0) continue;
+			if (!bestPositive || numeric > bestPositive.value) {
+				bestPositive = { stat: statKey as Stat, value: numeric };
+			}
+		}
+		if (bestPositive) return bestPositive;
+
+		let best: { stat: Stat; value: number } | undefined;
+		for (const [statKey, value] of Object.entries(upgrade.stats)) {
+			if (!value) continue;
+			if (!best || Math.abs(value as number) > Math.abs(best.value)) {
+				best = { stat: statKey as Stat, value: value as number };
+			}
+		}
+		if (best) return best;
 		return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 	});
 
-	// Other stats (not primary)
+	const primaryEffect = $derived.by<EffectSummary | undefined>(() => upgrade.effects?.[0]);
+	const primaryEffectStat = $derived(primaryEffect?.relatedStats?.[0] ?? Stat.Overbloom);
+	const primaryEffectValue = $derived.by(() => {
+		if (!primaryEffect || primaryEffect.value === undefined) return '';
+		if (primaryEffect.op === 'mul-rare' || primaryEffect.op === 'mul-drop') {
+			const percent = (primaryEffect.value - 1) * 100;
+			return `${percent > 0 ? '+' : ''}${(+percent.toFixed(2)).toLocaleString()}%`;
+		}
+		if (primaryEffect.op === 'add-rare-pct') {
+			if (primaryEffect.relatedStats?.includes(Stat.Overbloom)) {
+				return (+primaryEffect.value.toFixed(2)).toLocaleString();
+			}
+			return `+${(+primaryEffect.value.toFixed(2)).toLocaleString()}%`;
+		}
+		return (+primaryEffect.value.toFixed(2)).toLocaleString();
+	});
+
 	const otherStats = $derived.by(() => {
 		if (!upgrade.stats) return [];
 		return Object.entries(upgrade.stats)
@@ -55,12 +91,16 @@
 			.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
 	});
 
-	// const hasContent = $derived(primaryStat.value !== 0 || otherStats.length > 0 || upgrade.max);
-	const headerValue = $derived(upgrade.increase ?? primaryStat.value);
+	const headerValue = $derived(
+		primaryStat.stat !== Stat.FarmingFortune && primaryStat.value !== 0
+			? primaryStat.value
+			: (upgrade.increase ?? primaryStat.value)
+	);
 
+	const hasEffects = $derived((upgrade.effects?.length ?? 0) > 0);
 	const isNegative = $derived(headerValue < 0);
-	const maxOnly = $derived(headerValue === 0 && upgrade.max && upgrade.max > 0);
-	const forCompletion = $derived(upgrade.stats === undefined && headerValue === 0);
+	const maxOnly = $derived(!hasEffects && headerValue === 0 && upgrade.max && upgrade.max > 0);
+	const forCompletion = $derived(upgrade.stats === undefined && !hasEffects && headerValue === 0);
 
 	const background = $derived(
 		maxOnly || forCompletion ? 'bg-progress/40' : isNegative ? 'bg-destructive/60' : 'bg-progress'
@@ -76,9 +116,13 @@
 				className
 			)}
 		>
-			<span>{STAT_ICONS[primaryStat.stat] ?? '☘'}</span>
+			<span>{STAT_ICONS[hasEffects ? primaryEffectStat : primaryStat.stat] ?? '?'}</span>
 			<span class="text-md relative z-10 pr-1 font-mono leading-none md:text-lg">
-				{headerValue !== 0 ? (+headerValue.toFixed(2)).toLocaleString() : '0'}
+				{#if hasEffects && primaryEffectValue}
+					{primaryEffectValue}
+				{:else}
+					{headerValue !== 0 ? (+headerValue.toFixed(2)).toLocaleString() : '0'}
+				{/if}
 			</span>
 		</div>
 	{/snippet}
@@ -91,7 +135,7 @@
 					class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
 				>
 					<p class="flex items-center gap-1">
-						<span>{STAT_ICONS[primaryStat.stat] ?? '☘'}</span>
+						<span>{STAT_ICONS[primaryStat.stat] ?? '?'}</span>
 						{STAT_NAMES[primaryStat.stat] ?? primaryStat.stat}
 					</p>
 					<p class={primaryStat.value < 0 ? 'text-destructive' : ''}>
@@ -119,7 +163,7 @@
 				This upgrade is suggested despite lower stats because it increases profit per hour.
 			</p>
 		{:else if forCompletion}
-			<p class="text-muted-foreground max-w-sm text-sm">This upgrade is shown for completion!</p>
+			<p class="text-muted-foreground max-w-sm text-sm">This upgrade is shown for completion.</p>
 		{:else if maxOnly}
 			<p class="text-muted-foreground max-w-sm text-sm">
 				This upgrade gives no fortune right away, but maxes out at {(upgrade.max ?? 0).toLocaleString()} fortune as

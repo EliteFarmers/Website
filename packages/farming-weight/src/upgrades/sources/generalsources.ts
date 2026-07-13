@@ -1,16 +1,25 @@
 import {
 	FARMING_ATTRIBUTE_SHARDS,
+	type FarmingAttributeShardSourceContext,
 	getShardFortune,
 	getShardLevel,
+	getShardStat,
 	getShardsForLevel,
 	getShardsForNextLevel,
 } from '../../constants/attributes.js';
 import {
 	GARDEN_CHIP_MAX_LEVEL,
+	GARDEN_CHIP_RARITY_MAX_LEVELS,
 	GARDEN_CHIPS,
 	type GardenChipInfo,
+	type GardenChipRarity,
+	getChipInputRarity,
 	getChipLevel,
+	getChipMaxLevelForRarity,
+	getChipNextLevelCost,
 	getChipRarity,
+	getChipRarityUpgradeCost,
+	getNextChipRarity,
 } from '../../constants/chips.js';
 import { CROP_INFO, type Crop } from '../../constants/crops.js';
 import {
@@ -28,17 +37,22 @@ import {
 	FILLED_ROSEWATER_FLASK_SOURCE,
 	PEST_BESTIARY_SOURCE,
 	REFINED_TRUFFLE_SOURCE,
+	SPRAYONATOR_SOURCE,
 	UNLOCKED_PLOTS,
 	WRIGGLING_LARVA_SOURCE,
 } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import { buildEffectEnvironment } from '../../effects/environment.js';
+import { effectsToSummaries } from '../../effects/summary.js';
+import type { Effect } from '../../effects/types.js';
 import { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../../items/accessories.js';
+import { FARMING_ATTRIBUTE_SHARD_CLASSES } from '../../items/sources/attributes.js';
+import { GARDEN_CHIP_CLASSES } from '../../items/sources/chips.js';
 import type { FarmingPlayer } from '../../player/player.js';
 import { getNextPlotCost } from '../../util/garden.js';
 import { fortuneFromPestBestiary, getGardenBestiaryProgress } from '../../util/pests.js';
-import type { CalculateCropDetailedDropsOptions } from '../../util/ratecalc.js';
 import { getFortune } from '../getfortune.js';
 import { getSourceProgress } from '../getsourceprogress.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
@@ -46,6 +60,89 @@ import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 export const GARDEN_CHIP_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = Object.entries(GARDEN_CHIPS).map(
 	([chipId, chip]) => mapChipSource(chipId as keyof typeof GARDEN_CHIPS, chip)
 );
+
+function hasPlayerOptions(source: unknown): source is FarmingPlayer {
+	return typeof source === 'object' && source !== null && 'options' in source;
+}
+
+function includesRequestedStat(stats: Stat[] | undefined, stat: Stat): boolean {
+	return stats?.includes(stat) === true;
+}
+
+function shardStat(
+	shard: (typeof FARMING_ATTRIBUTE_SHARDS)[keyof typeof FARMING_ATTRIBUTE_SHARDS],
+	player: FarmingAttributeShardSourceContext,
+	stat: Stat,
+	level?: number
+): number {
+	return getShardStat(shard, player, stat, level);
+}
+
+function attributeShardEffectSummaries(
+	player: FarmingAttributeShardSourceContext,
+	id: string,
+	stats?: Stat[],
+	amount?: number
+) {
+	if (!hasPlayerOptions(player)) return [];
+	const source = FARMING_ATTRIBUTE_SHARD_CLASSES[id as keyof typeof FARMING_ATTRIBUTE_SHARD_CLASSES];
+	if (!source) return [];
+
+	const effectPlayer =
+		amount === undefined
+			? player
+			: ({
+					...player,
+					options: {
+						...player.options,
+						attributes: {
+							...player.options.attributes,
+							[id]: amount,
+						},
+					},
+				} as FarmingPlayer);
+
+	const env = buildEffectEnvironment(effectPlayer);
+	return effectsToSummaries(source.getEffects(effectPlayer, env), stats);
+}
+
+function allAttributeShardEffectSummaries(player: FarmingPlayer, stats?: Stat[]) {
+	const env = buildEffectEnvironment(player);
+	return effectsToSummaries(
+		Object.values(FARMING_ATTRIBUTE_SHARD_CLASSES).flatMap((source) => source.getEffects(player, env)),
+		stats
+	);
+}
+
+function gardenChipEffectSummaries(
+	player: FarmingPlayer,
+	chipId: keyof typeof GARDEN_CHIPS,
+	stats?: Stat[],
+	level?: number,
+	rarity?: GardenChipRarity
+) {
+	const source = GARDEN_CHIP_CLASSES[chipId];
+	const effectPlayer =
+		level === undefined && rarity === undefined
+			? player
+			: ({
+					...player,
+					options: {
+						...player.options,
+						chips: {
+							...player.options.chips,
+							...(level === undefined ? {} : { [chipId]: level }),
+						},
+						chipRarities: {
+							...player.options.chipRarities,
+							...(rarity === undefined ? {} : { [chipId]: rarity }),
+						},
+					},
+				} as FarmingPlayer);
+
+	const env = buildEffectEnvironment(effectPlayer);
+	return effectsToSummaries(source.getEffects(effectPlayer, env), stats);
+}
 
 function getLevelDeltaStats(
 	currentLevel: number,
@@ -103,7 +200,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: 'Attribute Shards',
-		wiki: () => 'https://wiki.hypixel.net/Attributes',
+		wiki: () => 'https://w.elitesb.gg/Attributes',
 		exists: () => true,
 		max: () => {
 			return ATTRIBUTE_FORTUNE_SOURCES.filter(
@@ -117,13 +214,37 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				return acc + shard.current(player);
 			}, 0);
 		},
-		upgrades: (player) => {
-			return ATTRIBUTE_FORTUNE_SOURCES.filter((shard) => shard.active?.(player).active !== false)
-				.flatMap((shard) => shard.upgrades?.(player))
+		maxStat: (_player, stat) => {
+			if (stat === Stat.FarmingFortune) {
+				return ATTRIBUTE_FORTUNE_SOURCES.filter(
+					(shard) => !shard.active || shard.active(maxShardOptions).active
+				).reduce((acc, shard) => acc + shard.max(maxShardOptions), 0);
+			}
+			return Object.values(FARMING_ATTRIBUTE_SHARDS).reduce(
+				(acc, shard) => acc + shardStat(shard, maxShardOptions, stat, 10),
+				0
+			);
+		},
+		currentStat: (player, stat) => {
+			if (stat === Stat.FarmingFortune) {
+				return ATTRIBUTE_FORTUNE_SOURCES.reduce((acc, shard) => acc + shard.current(player), 0);
+			}
+			return Object.values(FARMING_ATTRIBUTE_SHARDS).reduce(
+				(acc, shard) => acc + shardStat(shard, player, stat),
+				0
+			);
+		},
+		effects: (player, stats) => allAttributeShardEffectSummaries(player, stats),
+		upgrades: (player, stats) => {
+			return ATTRIBUTE_SHARD_PROGRESS_SOURCES.filter((shard) => shard.active?.(player).active !== false)
+				.flatMap((shard) => shard.upgrades?.(player, stats))
 				.filter(Boolean) as FortuneUpgrade[];
 		},
 		progress: (player, stats) => {
-			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_FORTUNE_SOURCES, false, stats);
+			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_SHARD_PROGRESS_SOURCES, false, {
+				stats,
+				defaultSourceType: 'general',
+			});
 		},
 	},
 	{
@@ -146,7 +267,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			// Only return current fortune from chips with farming fortune increases
 			const totalCurrent = Object.entries(GARDEN_CHIPS).reduce((acc, [chipId, chip]) => {
 				const level = getChipLevel(player.options.chips?.[chipId as keyof typeof GARDEN_CHIPS]);
-				const fortunePerLevel = chip.statsPerRarity?.[Rarity.Legendary]?.[Stat.FarmingFortune] ?? 0;
+				const rarity = getChipRarity(
+					level,
+					getChipInputRarity(player.options.chipRarities, chipId as keyof typeof GARDEN_CHIPS)
+				);
+				const fortunePerLevel = chip.statsPerRarity?.[rarity]?.[Stat.FarmingFortune] ?? 0;
 				return acc + fortunePerLevel * level;
 			}, 0);
 			return totalCurrent;
@@ -160,13 +285,19 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		currentStat: (player, stat) => {
 			return Object.entries(GARDEN_CHIPS).reduce((acc, [chipId, chip]) => {
 				const level = getChipLevel(player.options.chips?.[chipId as keyof typeof GARDEN_CHIPS]);
-				const rarity = getChipRarity(level);
+				const rarity = getChipRarity(
+					level,
+					getChipInputRarity(player.options.chipRarities, chipId as keyof typeof GARDEN_CHIPS)
+				);
 				const per = chip.statsPerRarity?.[rarity]?.[stat] ?? 0;
 				return acc + per * level;
 			}, 0);
 		},
 		progress: (player, stats) => {
-			return getSourceProgress<FarmingPlayer>(player, GARDEN_CHIP_SOURCES, false, stats);
+			return getSourceProgress<FarmingPlayer>(player, GARDEN_CHIP_SOURCES, false, {
+				stats,
+				defaultSourceType: 'general',
+			});
 		},
 		upgrades: (player, stats) => {
 			return GARDEN_CHIP_SOURCES.flatMap((source) => source.upgrades?.(player, stats)).filter(
@@ -406,6 +537,188 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 	},
 	{
+		name: 'Freshly Baked Heirloom',
+		exists: () => true,
+		wiki: (player) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_HEIRLOOM?.family
+			);
+			return highest?.info.wiki ?? FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_TALISMAN?.wiki;
+		},
+		// Overbloom-only source; doesn't contribute to Farming Fortune.
+		max: () => 0,
+		current: () => 0,
+		maxStat: (player, stat) => {
+			if (stat !== Stat.Overbloom) return 0;
+			const accessory = FarmingAccessory.fakeItem(
+				FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_TALISMAN as FarmingAccessoryInfo
+			);
+			const last = accessory?.getLastItemUpgrade()?.info;
+			return last ? (FarmingAccessory.fakeItem(last, player.options)?.getStat(Stat.Overbloom) ?? 0) : 0;
+		},
+		currentStat: (player, stat) => {
+			if (stat !== Stat.Overbloom) return 0;
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_HEIRLOOM?.family
+			);
+			return highest?.getStat(Stat.Overbloom) ?? 0;
+		},
+		info: (player) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_HEIRLOOM?.family
+			);
+			const first = !highest ? FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_TALISMAN : undefined;
+			return {
+				item: highest?.item,
+				info: highest?.info,
+				nextInfo: first ?? highest?.getNextItemUpgrade()?.info,
+				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_HEIRLOOM,
+			};
+		},
+		upgrades: (player) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_HEIRLOOM?.family
+			);
+
+			if (!highest) {
+				const talisman = FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_TALISMAN;
+				if (!talisman) return [];
+
+				return [
+					{
+						title: talisman.name,
+						increase: 0,
+						stats: {
+							[Stat.Overbloom]:
+								FarmingAccessory.fakeItem(talisman, player.options)?.getStat(Stat.Overbloom) ?? 0,
+						},
+						action: UpgradeAction.Purchase,
+						item: 'FRESHLY_BAKED_TALISMAN',
+						category: UpgradeCategory.Item,
+						wiki: talisman.wiki,
+						cost: {
+							kernels: 25,
+						},
+						meta: {
+							type: 'buy_item',
+							id: 'FRESHLY_BAKED_TALISMAN',
+						},
+						conflictKey: 'accessory:FRESHLY_BAKED_TALISMAN',
+					},
+				];
+			}
+
+			return highest.getUpgrades({ stat: Stat.Overbloom });
+		},
+	},
+	{
+		name: 'Pesthunter Accessory',
+		exists: () => true,
+		wiki: (player) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+			return highest?.info.wiki ?? FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.wiki;
+		},
+		max: () => 0,
+		current: () => 0,
+		maxStat: (player, stat) => {
+			if (stat !== Stat.BonusPestChance) return 0;
+			const first = FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE;
+			const accessory = first
+				? FarmingAccessory.fakeItem(first, { ...player.options, pesthunterAccessoryEnabled: true })
+				: undefined;
+			const last = accessory?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.PESTHUNTER_RELIC;
+			return last
+				? (FarmingAccessory.fakeItem(last, { ...player.options, pesthunterAccessoryEnabled: true })?.getStat(
+						stat
+					) ?? 0)
+				: 0;
+		},
+		currentStat: (player, stat) => {
+			if (stat !== Stat.BonusPestChance) return 0;
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+			return highest?.getStat(stat) ?? 0;
+		},
+		active: (player) => {
+			if (player.options.pesthunterAccessoryEnabled !== false) return { active: true };
+			return {
+				active: false,
+				reason: 'Pesthunter accessory bonus is manually disabled.',
+			};
+		},
+		activeStat: (player, stat) => {
+			if (stat !== Stat.BonusPestChance) return { active: player.options.pesthunterAccessoryEnabled !== false };
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+			const enabledValue = highest
+				? FarmingAccessory.fakeItem(highest.info, {
+						...player.options,
+						pesthunterAccessoryEnabled: true,
+					})?.getStat(stat)
+				: undefined;
+			return {
+				active: player.options.pesthunterAccessoryEnabled !== false,
+				value: enabledValue,
+			};
+		},
+		info: (player) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+			const first = !highest ? FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE : undefined;
+			return {
+				item: highest?.item,
+				info: highest?.info,
+				nextInfo: first ?? highest?.getNextItemUpgrade()?.info,
+				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.PESTHUNTER_RELIC,
+			};
+		},
+		upgrades: (player, stats) => {
+			if (!includesRequestedStat(stats, Stat.BonusPestChance)) return [];
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE?.family
+			);
+
+			if (!highest) {
+				const badge = FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE;
+				if (!badge) return [];
+				const value =
+					FarmingAccessory.fakeItem(badge, { ...player.options, pesthunterAccessoryEnabled: true })?.getStat(
+						Stat.BonusPestChance
+					) ?? 0;
+				return [
+					{
+						title: badge.name,
+						increase: 0,
+						stats: {
+							[Stat.BonusPestChance]: value,
+						},
+						action: UpgradeAction.Purchase,
+						purchase: badge.skyblockId,
+						category: UpgradeCategory.Item,
+						wiki: badge.wiki,
+						cost: {
+							items: {
+								[badge.skyblockId]: 1,
+							},
+						},
+						meta: {
+							type: 'buy_item',
+							id: badge.skyblockId,
+						},
+						conflictKey: `accessory:${badge.skyblockId}`,
+					},
+				];
+			}
+
+			return highest.getUpgrades({ stat: Stat.BonusPestChance });
+		},
+	},
+	{
 		name: DNA_MILESTONE_SOURCE.name,
 		wiki: () => DNA_MILESTONE_SOURCE.wiki,
 		exists: () => true,
@@ -493,7 +806,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: 'Magic 8 Ball',
 		exists: () => true,
-		wiki: () => 'https://wiki.hypixel.net/Magic_8_Ball',
+		wiki: () => 'https://w.elitesb.gg/Magic_8_Ball',
 		max: () => 25,
 		active: () => {
 			return {
@@ -519,7 +832,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						action: UpgradeAction.Purchase,
 						purchase: 'MAGIC_8_BALL',
 						category: UpgradeCategory.Item,
-						wiki: 'https://wiki.hypixel.net/Magic_8_Ball',
+						wiki: 'https://w.elitesb.gg/Magic_8_Ball',
 						cost: {
 							items: {
 								MAGIC_8_BALL: 1,
@@ -539,7 +852,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: 'Atmospheric Filter',
 		exists: () => true,
-		wiki: () => 'https://wiki.hypixel.net/Atmospheric_Filter',
+		wiki: () => 'https://w.elitesb.gg/Atmospheric_Filter',
 		max: () => 25,
 		active: () => {
 			return {
@@ -565,7 +878,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					action: UpgradeAction.Purchase,
 					purchase: 'ATMOSPHERIC_FILTER',
 					category: UpgradeCategory.Item,
-					wiki: 'https://wiki.hypixel.net/Atmospheric_Filter',
+					wiki: 'https://w.elitesb.gg/Atmospheric_Filter',
 					cost: {
 						items: {
 							ATMOSPHERIC_FILTER: 1,
@@ -700,12 +1013,175 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			];
 		},
 	},
+	{
+		name: SPRAYONATOR_SOURCE.name,
+		api: false,
+		wiki: () => SPRAYONATOR_SOURCE.wiki,
+		exists: () => true,
+		max: () => 0,
+		current: () => 0,
+		maxStat: (_player, stat) => getFortune(SPRAYONATOR_SOURCE.maxLevel, SPRAYONATOR_SOURCE, stat),
+		currentStat: (player, stat) => (player.options.sprayedPlot ? getFortune(1, SPRAYONATOR_SOURCE, stat) : 0),
+		active: (player) => {
+			if (player.options.sprayedPlot) return { active: true };
+			return {
+				active: false,
+				reason: 'Enable Sprayed Plot when farming a manually sprayed plot.',
+			};
+		},
+		activeStat: (player, stat) => ({
+			active: player.options.sprayedPlot === true,
+			value: getFortune(1, SPRAYONATOR_SOURCE, stat),
+		}),
+	},
+	...createCarnivalHarvestFeastSources(),
 ];
 
-export const ATTRIBUTE_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions>[] =
-	Object.entries(FARMING_ATTRIBUTE_SHARDS)
-		.filter((a) => a[1].effect === 'fortune')
-		.map(([id, shard]) => mapShardSource(id, shard));
+interface CarnivalPerk {
+	key: string;
+	name: string;
+	wiki: string;
+	stat?: Stat;
+	maxLevel: number;
+	perLevel: number;
+	effect?: (level: number) => Effect | undefined;
+}
+
+function getCarnivalPerkLevel(player: FarmingPlayer, key: string): number {
+	const raw = player.options.harvestFeast?.perks?.[key] ?? player.options.perks?.[key];
+	if (raw === null || raw === undefined) return 0;
+	const level = typeof raw === 'number' ? raw : parseInt(raw, 10);
+	return Number.isFinite(level) ? level : 0;
+}
+
+function getCarnivalPerkFortune(player: FarmingPlayer, perk: CarnivalPerk): number {
+	return getCarnivalPerkLevel(player, perk.key) * perk.perLevel;
+}
+
+function getCarnivalPerkEffect(player: FarmingPlayer, perk: CarnivalPerk): Effect | undefined {
+	const level = getCarnivalPerkLevel(player, perk.key);
+	if (level <= 0) return undefined;
+	return perk.effect?.(level);
+}
+
+function isHarvestFeastActive(player: FarmingPlayer): boolean {
+	return player.options.harvestFeast?.active === true;
+}
+
+function createCarnivalHarvestFeastSources(): DynamicFortuneSource<FarmingPlayer>[] {
+	const perks: CarnivalPerk[] = [
+		{
+			key: 'natural_talent',
+			name: 'Natural Talent',
+			wiki: 'https://w.elitesb.gg/Doug',
+			maxLevel: 5,
+			perLevel: 1,
+			effect: (level) => ({
+				source: 'Natural Talent',
+				op: 'add-rare-pct',
+				value: level,
+				scope: { tags: ['seasoning'], requiresHarvestFeast: true },
+				meta: {
+					description: '+1% Seasoning chance per level during Harvest Feast',
+					valueDisplay: 'percent',
+				},
+			}),
+		},
+		{
+			key: 'fortunate_feasting',
+			name: 'Fortunate Feasting',
+			wiki: 'https://w.elitesb.gg/Doug',
+			stat: Stat.FarmingFortune,
+			maxLevel: 5,
+			perLevel: 5,
+		},
+		{
+			key: 'feast_crashers',
+			name: 'Feast Crashers',
+			wiki: 'https://w.elitesb.gg/Doug',
+			stat: Stat.BonusPestChance,
+			maxLevel: 3,
+			perLevel: 2,
+		},
+	];
+	return perks.map((perk) => ({
+		name: perk.name,
+		sourceType: 'general',
+		wiki: () => perk.wiki,
+		exists: () => true,
+		active: (player) => {
+			if (isHarvestFeastActive(player)) return { active: true };
+			return {
+				active: false,
+				reason: 'Only active during a Harvest Feast.',
+				fortune: perk.stat === Stat.FarmingFortune ? getCarnivalPerkFortune(player, perk) : 0,
+			};
+		},
+		max: () => (perk.stat === Stat.FarmingFortune ? perk.maxLevel * perk.perLevel : 0),
+		current: (player) => {
+			if (perk.stat !== Stat.FarmingFortune) return 0;
+			if (!isHarvestFeastActive(player)) return 0;
+			return getCarnivalPerkFortune(player, perk);
+		},
+		maxStat: (_player, stat) => (stat === perk.stat ? perk.maxLevel * perk.perLevel : 0),
+		currentStat: (player, stat) => {
+			if (stat !== perk.stat || !isHarvestFeastActive(player)) return 0;
+			return getCarnivalPerkFortune(player, perk);
+		},
+		activeStat: (player, stat) => {
+			if (stat !== perk.stat) return { active: isHarvestFeastActive(player) };
+			return {
+				active: isHarvestFeastActive(player),
+				value: getCarnivalPerkFortune(player, perk),
+			};
+		},
+		calculationEffects: (player) => {
+			const effect = getCarnivalPerkEffect(player, perk);
+			return effect ? [effect] : [];
+		},
+		effects: (player) => {
+			const effect = getCarnivalPerkEffect(player, perk);
+			return effect
+				? [
+						{
+							source: effect.source,
+							op: effect.op,
+							value: typeof effect.value === 'number' ? effect.value : undefined,
+							scope: effect.scope,
+							description: effect.meta?.description,
+							valueDisplay: effect.meta?.valueDisplay,
+							valueStat: effect.meta?.valueStat,
+						},
+					]
+				: [];
+		},
+		progress: (player) => {
+			const level = getCarnivalPerkLevel(player, perk.key);
+			if (level <= 0) return undefined;
+			return [
+				{
+					name: 'Level',
+					current: level,
+					max: perk.maxLevel,
+					maxLevel: perk.maxLevel,
+					fortunePerLevel: perk.perLevel,
+					ratio: Math.min(level / perk.maxLevel, 1),
+				},
+			];
+		},
+	}));
+}
+
+export const ATTRIBUTE_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAttributeShardSourceContext>[] = Object.entries(
+	FARMING_ATTRIBUTE_SHARDS
+)
+	.filter((a) => a[1].effect === 'fortune')
+	.map(([id, shard]) => mapShardSource(id, shard));
+
+// Includes all shards (fortune + non-fortune effects) so per-stat progress and upgrades
+// can surface shards like Cropeetle that contribute non-FarmingFortune stats.
+export const ATTRIBUTE_SHARD_PROGRESS_SOURCES: DynamicFortuneSource<FarmingAttributeShardSourceContext>[] =
+	Object.entries(FARMING_ATTRIBUTE_SHARDS).map(([id, shard]) => mapShardSource(id, shard));
 
 const maxShardOptions = {
 	attributes: Object.fromEntries(
@@ -724,9 +1200,10 @@ const maxShardOptions = {
 function mapShardSource(
 	id: string,
 	shard: (typeof FARMING_ATTRIBUTE_SHARDS)[keyof typeof FARMING_ATTRIBUTE_SHARDS]
-): DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions> {
+): DynamicFortuneSource<FarmingAttributeShardSourceContext> {
 	const result = {
 		name: shard.name,
+		sourceType: 'general',
 		wiki: () => shard.wiki,
 		exists: () => true,
 		active: shard.active,
@@ -743,7 +1220,33 @@ function mapShardSource(
 		current: (player) => {
 			return getShardFortune(shard, player);
 		},
-		upgrades: (player) => {
+		maxStat: (_player, stat) => {
+			if (stat === Stat.FarmingFortune) {
+				return getShardFortune(
+					shard,
+					{
+						...maxShardOptions,
+						attributes: { [id]: 1000 },
+					},
+					10
+				);
+			}
+			return shardStat(
+				shard,
+				{
+					...maxShardOptions,
+					attributes: { [id]: 1000 },
+				},
+				stat,
+				10
+			);
+		},
+		currentStat: (player, stat) => {
+			if (stat === Stat.FarmingFortune) return getShardFortune(shard, player);
+			return shardStat(shard, player, stat);
+		},
+		effects: (player, stats) => attributeShardEffectSummaries(player, id, stats),
+		upgrades: (player, stats) => {
 			const amount = player.attributes?.[id] ?? 0;
 			const nextCost = getShardsForNextLevel(shard.rarity, amount);
 			if (!nextCost) return [];
@@ -751,16 +1254,30 @@ function mapShardSource(
 			const currentLevel = getShardLevel(shard.rarity, amount);
 			const level = currentLevel + 1;
 
-			const currentFortune = getShardFortune(shard, player, currentLevel);
-			const nextFortune = getShardFortune(shard, player, level);
+			const deltaStats: Partial<Record<Stat, number>> = {};
+			for (const s of Object.values(Stat)) {
+				const before = shardStat(shard, player, s, currentLevel);
+				const after = shardStat(shard, player, s, level);
+				const diff = after - before;
+				if (diff !== 0) deltaStats[s] = diff;
+			}
+
+			const effects = attributeShardEffectSummaries(player, id, stats, getShardsForLevel(shard.rarity, level));
+
+			// If a specific stat is requested, only surface this shard when it affects it.
+			if (stats && stats.length > 0) {
+				const affects = stats.some((s) => (deltaStats[s] ?? 0) !== 0);
+				if (!affects && effects.length === 0) return [];
+			}
+
+			const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 
 			return [
 				{
 					title: shard.name.replace('Shard', level.toString()),
-					increase: nextFortune - currentFortune,
-					stats: {
-						[Stat.FarmingFortune]: nextFortune - currentFortune,
-					},
+					increase,
+					stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
+					effects: effects.length > 0 ? effects : undefined,
 					action: UpgradeAction.LevelUp,
 					category: UpgradeCategory.Attribute,
 					// wiki: shard.wiki, // Wiki page doesn't exist yet
@@ -777,7 +1294,7 @@ function mapShardSource(
 				},
 			];
 		},
-	} as DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions>;
+	} as DynamicFortuneSource<FarmingAttributeShardSourceContext>;
 
 	return result;
 }
@@ -785,6 +1302,7 @@ function mapShardSource(
 function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer> {
 	return {
 		name: chip.name,
+		sourceType: 'general',
 		alwaysInclude: true,
 		wiki: () => chip.wiki,
 		exists: () => true,
@@ -797,9 +1315,11 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 		},
 		currentStat: (player, stat) => {
 			const level = getChipLevel(player.options.chips?.[chipId]);
-			const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
+			const rarity = getChipRarity(level, getChipInputRarity(player.options.chipRarities, chipId));
+			const per = chip.statsPerRarity?.[rarity]?.[stat] ?? 0;
 			return per * level;
 		},
+		effects: (player, stats) => gardenChipEffectSummaries(player, chipId, stats),
 		active: (player) => {
 			if (chip.skyblockId !== 'OVERDRIVE_GARDEN_CHIP') return { active: true };
 			if (!player.options.jacobContest?.enabled) {
@@ -812,52 +1332,137 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 		},
 		progress: (player) => {
 			const level = getChipLevel(player.options.chips?.[chipId]);
-			return [
+			const rarity = getChipRarity(level, getChipInputRarity(player.options.chipRarities, chipId));
+			const maxLevel = getChipMaxLevelForRarity(rarity);
+			const progress = [
 				{
 					name: 'Level',
 					current: level,
-					max: GARDEN_CHIP_MAX_LEVEL,
-					ratio: Math.min(isNaN(level / GARDEN_CHIP_MAX_LEVEL) ? 0 : level / GARDEN_CHIP_MAX_LEVEL, 1),
+					max: maxLevel,
+					ratio: Math.min(isNaN(level / maxLevel) ? 0 : level / maxLevel, 1),
 				},
 			];
+
+			if (chip.statsPerRarity) {
+				progress.push({
+					name: 'Rarity',
+					current: GARDEN_CHIP_RARITY_MAX_LEVELS[rarity],
+					max: GARDEN_CHIP_MAX_LEVEL,
+					ratio: GARDEN_CHIP_RARITY_MAX_LEVELS[rarity] / GARDEN_CHIP_MAX_LEVEL,
+				});
+			}
+
+			return progress;
 		},
 		upgrades: (player, stats) => {
 			const currentLevel = getChipLevel(player.options.chips?.[chipId]);
-			if (currentLevel >= GARDEN_CHIP_MAX_LEVEL) return [];
+			const currentRarity = getChipRarity(currentLevel, getChipInputRarity(player.options.chipRarities, chipId));
+			const maxLevel = getChipMaxLevelForRarity(currentRarity);
+			const upgrades: FortuneUpgrade[] = [];
 
-			// If a specific stat is requested, only offer upgrades that affect it.
-			if (stats && stats.length > 0 && chip.statsPerRarity) {
-				const affectsRequested = stats.some((s) => (chip.statsPerRarity?.[Rarity.Legendary]?.[s] ?? 0) !== 0);
-				if (!affectsRequested) return [];
+			if (currentLevel <= 0) {
+				upgrades.push(createChipLevelUpgrade(player, chipId, chip, 0, Rarity.Rare, stats));
+			} else if (currentLevel < maxLevel) {
+				upgrades.push(createChipLevelUpgrade(player, chipId, chip, currentLevel, currentRarity, stats));
 			}
 
-			const nextLevel = currentLevel + 1;
-			const deltaStats: Partial<Record<Stat, number>> = {};
-			const nextRarity = getChipRarity(nextLevel);
-			for (const [k, v] of Object.entries(chip.statsPerRarity?.[nextRarity] ?? {})) {
-				const stat = k as Stat;
-				if (v && v !== 0) deltaStats[stat] = v;
+			const nextRarity = getNextChipRarity(currentRarity);
+			if (nextRarity && currentLevel >= GARDEN_CHIP_RARITY_MAX_LEVELS[currentRarity]) {
+				upgrades.push(
+					createChipRarityUpgrade(player, chipId, chip, currentLevel, currentRarity, nextRarity, stats)
+				);
 			}
 
-			return [
-				{
-					title: `${chip.name} ${nextLevel}`,
-					increase: deltaStats[Stat.FarmingFortune] ?? 0,
-					stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
-					action: UpgradeAction.LevelUp,
-					category: UpgradeCategory.Misc,
-					cost: {
-						items: {
-							[chip.skyblockId]: 1,
-						},
-					},
-					meta: {
-						type: 'chip',
-						id: chip.skyblockId,
-						value: nextLevel,
-					},
-				},
-			];
+			return upgrades.filter((upgrade) => isRelevantChipUpgrade(upgrade, stats));
 		},
 	};
+}
+
+function createChipLevelUpgrade(
+	player: FarmingPlayer,
+	chipId: keyof typeof GARDEN_CHIPS,
+	chip: GardenChipInfo,
+	currentLevel: number,
+	rarity: GardenChipRarity,
+	stats?: Stat[]
+): FortuneUpgrade {
+	const nextLevel = currentLevel + 1;
+	const effects = gardenChipEffectSummaries(player, chipId, stats, nextLevel, rarity);
+	const deltaStats = getChipDeltaStats(chip, currentLevel, nextLevel, rarity, rarity);
+
+	return {
+		title: currentLevel <= 0 ? chip.name : `${chip.name} ${nextLevel}`,
+		increase: deltaStats[Stat.FarmingFortune] ?? 0,
+		stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
+		effects: effects.length > 0 ? effects : undefined,
+		action: currentLevel <= 0 ? UpgradeAction.Unlock : UpgradeAction.LevelUp,
+		category: UpgradeCategory.Misc,
+		cost: currentLevel <= 0 ? { items: { [chip.skyblockId]: 1 } } : { sowdust: getChipNextLevelCost(currentLevel) },
+		meta: {
+			type: 'chip',
+			id: chip.skyblockId,
+			value: nextLevel,
+		},
+	};
+}
+
+function createChipRarityUpgrade(
+	player: FarmingPlayer,
+	chipId: keyof typeof GARDEN_CHIPS,
+	chip: GardenChipInfo,
+	currentLevel: number,
+	currentRarity: GardenChipRarity,
+	nextRarity: GardenChipRarity,
+	stats?: Stat[]
+): FortuneUpgrade {
+	const effects = gardenChipEffectSummaries(player, chipId, stats, currentLevel, nextRarity);
+	const deltaStats = getChipDeltaStats(chip, currentLevel, currentLevel, currentRarity, nextRarity);
+
+	return {
+		title: `${nextRarity} ${chip.name}`,
+		increase: deltaStats[Stat.FarmingFortune] ?? 0,
+		stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
+		effects: effects.length > 0 ? effects : undefined,
+		action: UpgradeAction.Upgrade,
+		category: UpgradeCategory.Misc,
+		cost: {
+			items: {
+				[chip.skyblockId]: getChipRarityUpgradeCost(currentRarity),
+			},
+		},
+		meta: {
+			type: 'chip_rarity',
+			id: chip.skyblockId,
+			value: nextRarity,
+		},
+	};
+}
+
+function getChipDeltaStats(
+	chip: GardenChipInfo,
+	currentLevel: number,
+	nextLevel: number,
+	currentRarity: GardenChipRarity,
+	nextRarity: GardenChipRarity
+): Partial<Record<Stat, number>> {
+	const result: Partial<Record<Stat, number>> = {};
+	const statKeys = new Set<Stat>([
+		...(Object.keys(chip.statsPerRarity?.[currentRarity] ?? {}) as Stat[]),
+		...(Object.keys(chip.statsPerRarity?.[nextRarity] ?? {}) as Stat[]),
+	]);
+
+	for (const stat of statKeys) {
+		const before = (chip.statsPerRarity?.[currentRarity]?.[stat] ?? 0) * currentLevel;
+		const after = (chip.statsPerRarity?.[nextRarity]?.[stat] ?? 0) * nextLevel;
+		const diff = after - before;
+		if (diff !== 0) result[stat] = diff;
+	}
+
+	return result;
+}
+
+function isRelevantChipUpgrade(upgrade: FortuneUpgrade, stats?: Stat[]): boolean {
+	if (!stats || stats.length === 0) return true;
+	if (!upgrade.stats && !upgrade.effects) return true;
+	return stats.some((stat) => (upgrade.stats?.[stat] ?? 0) !== 0) || (upgrade.effects?.length ?? 0) > 0;
 }

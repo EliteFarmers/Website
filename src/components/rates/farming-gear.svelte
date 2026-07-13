@@ -9,27 +9,39 @@
 	import * as Popover from '$ui/popover';
 	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import type { GearSlot } from 'farming-weight';
+	import { Stat, type FarmingArmor, type FarmingEquipment, type GearSlot } from 'farming-weight';
 
 	interface Props {
 		player: RatesPlayerStore;
+		mode?: 'crop' | 'pest';
 	}
 
-	let { player }: Props = $props();
+	let { player, mode = 'crop' }: Props = $props();
 
 	let set = $derived($player.armorSet);
 	let armor = $derived(set.pieces);
 	let equipment = $derived(set.equipmentPieces);
 	let pieces = $derived(set.slotOptions);
 
-	let slots = $state($player.armorSet.slots);
-	let fortune = $state((() => set.getFortuneBreakdown())());
+	let slots = $derived($player.armorSet.slots);
+	let fortune = $derived.by(() => set.getFortuneBreakdown());
 
 	function setPiece(slot: GearSlot, piece: (typeof slots)[GearSlot]) {
 		if (!piece) return;
 		set.setPiece(piece);
-		slots = { ...slots, [slot]: piece.item.uuid };
-		fortune = set.getFortuneBreakdown();
+	}
+
+	function getPieceScore(piece: FarmingArmor | FarmingEquipment): number {
+		if (mode === 'pest') {
+			return (
+				piece.getStat(Stat.BonusPestChance) * 1_000_000 +
+				piece.getStat(Stat.PestKillFortune) * 10_000 +
+				piece.getStat(Stat.PestCooldownReduction) * 1_000 +
+				piece.getStat(Stat.FarmingFortune)
+			);
+		}
+
+		return 'potential' in piece ? (piece.potential ?? 0) : piece.fortune;
 	}
 </script>
 
@@ -42,10 +54,8 @@
 	<div class="flex flex-col gap-3">
 		{#each Object.entries(slots) as [slot] (slot)}
 			{@const piece = set.getPiece(slot as GearSlot)}
-			{@const best = !set.slotOptions[slot as GearSlot].some((p) =>
-				'potential' in p
-					? p.potential > (!piece ? 0 : 'potential' in piece ? (piece.potential ?? 0) : 0)
-					: p.fortune > (piece?.fortune ?? 0)
+			{@const best = !set.slotOptions[slot as GearSlot].some(
+				(p) => getPieceScore(p) > (!piece ? 0 : getPieceScore(piece))
 			)}
 			{#if piece}
 				<div class="flex w-full items-center justify-between">

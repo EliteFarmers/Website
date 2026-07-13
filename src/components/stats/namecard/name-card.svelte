@@ -29,7 +29,7 @@
 	<canvas
 		{@attach (element) => {
 			if (element) {
-				drawBackgroundCanvas(element, style);
+				drawBackgroundCanvas(element, style, ctx.style?.imageRefs);
 			}
 		}}
 		class="z-0 w-full max-w-5xl bg-no-repeat @md:aspect-[4.8/1]"

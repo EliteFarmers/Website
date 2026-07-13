@@ -1,14 +1,17 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
+	import Head from '$comp/seo/head.svelte';
+	import { trackAnalytics } from '$lib/analytics';
+	import { ALL_GUIDE_TYPE_OPTIONS } from '$lib/guides/categories';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
-	import { ListGuides, ListTags } from '$lib/remote/guides.remote';
+	import { GetUserBookmarks, ListGuides, ListTags } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
 	import MultiSelect from '$ui/multi-select/multi-select.svelte';
 	import { SelectSimple } from '$ui/select';
 	import { Separator } from '$ui/separator';
+	import Bookmark from '@lucide/svelte/icons/bookmark';
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
 
 	const gbl = getGlobalContext();
@@ -33,14 +36,9 @@
 
 	const guides = $derived(ListGuides(listParams));
 	const tags = $derived(ListTags());
+	const bookmarks = $derived(gbl.authorized && gbl.session ? GetUserBookmarks(gbl.session.id) : null);
 
-	const guideTypes = [
-		{ label: 'All Types', value: '' },
-		{ label: 'General', value: '0' },
-		{ label: 'Farming', value: '1' },
-		{ label: 'Greenhouse', value: '2' },
-		{ label: 'Contest', value: '3' },
-	];
+	const guideTypes = ALL_GUIDE_TYPE_OPTIONS;
 
 	const sortOptions = [
 		{ label: 'Newest', value: 'newest' },
@@ -51,6 +49,13 @@
 	function handleSearch(value: string) {
 		searchQuery = value;
 		currentPage = 0;
+
+		trackAnalytics('guides.search', {
+			has_query: Boolean(searchQuery.trim()),
+			tag_count: selectedTagIds.length,
+			type: selectedType || null,
+			sort: sortBy,
+		});
 	}
 </script>
 
@@ -64,6 +69,9 @@
 			<a href="/guides/new">
 				<Button>Create Guide</Button>
 			</a>
+			<a href="/guides/rules">
+				<Button variant="outline">Rules</Button>
+			</a>
 			{#if gbl.authorized}
 				<a href="/profile/guides">
 					<Button variant="outline">My Guides</Button>
@@ -71,6 +79,79 @@
 			{/if}
 		</div>
 	</div>
+
+	{#if bookmarks}
+		<section class="mb-12 w-full max-w-96 px-4 @sm:max-w-lg @2xl:max-w-2xl @6xl:max-w-4xl">
+			{#await bookmarks}
+				<div class="space-y-3">
+					<div class="bg-muted h-5 w-40 animate-pulse rounded"></div>
+					<div class="grid gap-3 @2xl:grid-cols-2 @6xl:grid-cols-4">
+						{#each Array.from({ length: 4 }, (_, i) => i) as i (i)}
+							<div class="bg-muted h-28 animate-pulse rounded-lg"></div>
+						{/each}
+					</div>
+				</div>
+			{:then bookmarkList}
+				{#if bookmarkList?.length}
+					<div class="space-y-3">
+						<div class="flex items-center justify-between gap-3">
+							<div class="flex items-center gap-2">
+								<Bookmark class="text-muted-foreground size-4" />
+								<h2 class="text-lg font-semibold">Bookmarked Guides</h2>
+							</div>
+							<a href="/profile/bookmarks">
+								<Button variant="ghost" size="sm">View All</Button>
+							</a>
+						</div>
+
+						<div class="grid gap-3 @2xl:grid-cols-2 @6xl:grid-cols-4">
+							{#each bookmarkList.slice(0, 4) as guide (guide.id)}
+								<a href="/guides/{guide.slug}" class="group min-w-0">
+									<div
+										class="bg-card hover:border-link/50 flex h-full min-h-28 flex-col rounded-lg border p-3 transition-all hover:shadow-md"
+									>
+										<div class="min-w-0">
+											<h3
+												class="group-hover:text-primary line-clamp-2 text-sm font-semibold wrap-break-word"
+											>
+												{guide.title}
+											</h3>
+											{#if guide.description}
+												<p
+													class="text-muted-foreground mt-1 line-clamp-2 text-xs wrap-break-word"
+												>
+													{guide.description}
+												</p>
+											{/if}
+										</div>
+
+										<div
+											class="text-muted-foreground mt-auto flex items-center justify-between border-t pt-2 text-xs"
+										>
+											<span class="inline-flex items-center gap-1">
+												<ThumbsUp class="size-3.5" />
+												{(guide.score ?? 0).toLocaleString()}
+											</span>
+											<span>{(guide.viewCount ?? 0).toLocaleString()} views</span>
+										</div>
+									</div>
+								</a>
+							{/each}
+						</div>
+					</div>
+				{/if}
+			{:catch}
+				<div
+					class="text-muted-foreground flex items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm"
+				>
+					<span>Failed to load bookmarked guides.</span>
+					<a href="/profile/bookmarks">
+						<Button variant="outline" size="sm">Open Bookmarks</Button>
+					</a>
+				</div>
+			{/await}
+		</section>
+	{/if}
 
 	<Separator class="w-full" />
 

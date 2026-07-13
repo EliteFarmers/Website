@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
 	import type { RootNode } from '$comp/blocks/blocks';
-	import Head from '$comp/head.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import { env } from '$env/dynamic/public';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
@@ -106,7 +106,7 @@
 		{/if}
 
 		<svelte:boundary onerror={(e) => console.error(e)}>
-			<BlockRenderer content={article.content as RootNode} />
+			<BlockRenderer content={article.content as RootNode} renderTextAsHtml />
 		</svelte:boundary>
 	</article>
 </main>

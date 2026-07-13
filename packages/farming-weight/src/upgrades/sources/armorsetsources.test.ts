@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Stat } from '../../constants/stats.js';
+import { UpgradeRecommendationKind } from '../../constants/upgrades.js';
 import { FarmingArmor } from '../../fortune/farmingarmor.js';
 import type { EliteItemDto } from '../../fortune/item.js';
 import { FARMING_ARMOR_INFO } from '../../items/armor.js';
@@ -104,28 +105,61 @@ test('Armor set bonus', () => {
 		{
 			name: 'Necklace',
 			current: 0,
-			max: 81.75,
+			max: 82.5,
 			ratio: 0,
 		},
 		{
 			name: 'Cloak',
 			current: 0,
-			max: 81.75,
+			max: 82.5,
 			ratio: 0,
 		},
 		{
 			name: 'Belt',
 			current: 0,
-			max: 81.75,
+			max: 82.5,
 			ratio: 0,
 		},
 		{
 			name: 'Gloves',
 			current: 0,
-			max: 81.75,
+			max: 82.5,
 			ratio: 0,
 		},
 	]);
+});
+
+test('Armor slot progress keeps Overbloom out of Farming Fortune totals', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 397,
+				count: 1,
+				skyblockId: 'HELIANTHUS_CHESTPLATE',
+				uuid: 'helianthus-chestplate-with-sunset',
+				name: '§dMossy Helianthus Chestplate',
+				lore: ['§d§lMYTHIC CHESTPLATE'],
+				enchantments: { pesterminator: 6, ultimate_sunset: 2 },
+				attributes: {
+					modifier: 'mossy',
+					rarity: 'MYTHIC',
+				},
+				gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
+			},
+		],
+	});
+
+	const progress = player.armorSet.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
+	const chestplate = progress.find((piece) => piece.name === 'Chestplate');
+
+	expect(chestplate?.stats?.[Stat.FarmingFortune]).toMatchObject({
+		current: 102,
+		max: 102,
+	});
+	expect(chestplate?.stats?.[Stat.Overbloom]).toMatchObject({
+		current: 2,
+		max: 5,
+	});
 });
 
 const pesthunterCloak = {
@@ -157,6 +191,109 @@ const pesthunterGloves = {
 		rarity_upgrades: '1',
 	},
 };
+
+const rootedBlossomBelt: EliteItemDto = {
+	id: 397,
+	count: 1,
+	skyblockId: 'BLOSSOM_BELT',
+	uuid: 'rooted-blossom-belt',
+	name: '§6Rooted Blossom Belt',
+	lore: ['§6§lLEGENDARY BELT'],
+	enchantments: {},
+	attributes: {
+		modifier: 'rooted',
+		rarity: 'LEGENDARY',
+	},
+};
+
+const helianthusHelmet: EliteItemDto = {
+	id: 397,
+	count: 1,
+	skyblockId: 'HELIANTHUS_HELMET',
+	uuid: 'helianthus-helmet',
+	name: '§dMossy Helianthus Helmet',
+	lore: ['§d§lMYTHIC HELMET'],
+	enchantments: {},
+	attributes: {
+		modifier: 'mossy',
+		rarity: 'MYTHIC',
+	},
+	gems: {},
+};
+
+test('armor loadout progress reports armor sources only', () => {
+	const player = new FarmingPlayer({
+		armor: [helianthusHelmet],
+		equipment: [rootedBlossomBelt],
+	});
+
+	const names = player.armorSet.armorLoadout.getProgress([Stat.FarmingFortune]).map((progress) => progress.name);
+
+	expect(names).toStrictEqual(['Helmet', 'Chestplate', 'Leggings', 'Boots', 'Armor Set Bonus']);
+	expect(names).not.toContain('Belt');
+	expect(names).not.toContain('Equipment Set Bonus');
+});
+
+test('equipment loadout progress reports equipment sources only', () => {
+	const player = new FarmingPlayer({
+		armor: [helianthusHelmet],
+		equipment: [rootedBlossomBelt],
+	});
+
+	const names = player.armorSet.equipmentLoadout.getProgress([Stat.FarmingFortune]).map((progress) => progress.name);
+
+	expect(names).toStrictEqual(['Necklace', 'Cloak', 'Belt', 'Gloves']);
+	expect(names).not.toContain('Helmet');
+	expect(names).not.toContain('Armor Set Bonus');
+});
+
+test('armor set progress remains the combined armor and equipment facade', () => {
+	const player = new FarmingPlayer({
+		armor: [helianthusHelmet],
+		equipment: [rootedBlossomBelt],
+	});
+
+	const names = player.armorSet.getProgress([Stat.FarmingFortune]).map((progress) => progress.name);
+
+	expect(names).toStrictEqual([
+		'Helmet',
+		'Chestplate',
+		'Leggings',
+		'Boots',
+		'Armor Set Bonus',
+		'Necklace',
+		'Cloak',
+		'Belt',
+		'Gloves',
+	]);
+});
+
+test('pest-focused equipment upgrades prefer pest equipment and Squeaky while keeping farming fortune visible', () => {
+	const player = new FarmingPlayer({
+		equipment: [rootedBlossomBelt],
+	});
+	const stats = [Stat.BonusPestChance, Stat.PestKillFortune, Stat.PestCooldownReduction, Stat.FarmingFortune];
+
+	const progress = player.armorSet.getProgress(stats);
+	const belt = progress.find((piece) => piece.name === 'Belt');
+	const upgrades = player.armorSet.getUpgrades({ stats });
+	const squeaky = upgrades.find(
+		(upgrade) => upgrade.title === 'Reforge to Squeaky' && upgrade.onto?.skyblockId === 'BLOSSOM_BELT'
+	);
+	const pesthunterBeltUpgrade = upgrades.find((upgrade) => upgrade.title === "Pesthunter's Belt");
+
+	expect(belt?.stats?.[Stat.BonusPestChance]?.max).toBeGreaterThan(2);
+	expect(belt?.stats?.[Stat.FarmingFortune]?.current).toBeGreaterThan(0);
+	expect(upgrades.findIndex((upgrade) => upgrade.title === "Pesthunter's Belt")).toBeLessThan(
+		upgrades.findIndex((upgrade) => upgrade.title === 'Reforge to Squeaky')
+	);
+	expect(pesthunterBeltUpgrade?.group).toBeUndefined();
+	expect(pesthunterBeltUpgrade?.recommendation?.kind).toBe(UpgradeRecommendationKind.Progression);
+	expect(squeaky?.increase).toBe(2);
+	expect(squeaky?.stats?.[Stat.BonusPestChance]).toBe(2);
+	expect(squeaky?.stats?.[Stat.PestCooldownReduction]).toBe(2.5);
+	expect(squeaky?.stats?.[Stat.FarmingFortune]).toBe(-8);
+});
 
 test('Equipment set bonus', () => {
 	const player = new FarmingPlayer({
@@ -230,32 +367,32 @@ test('Equipment set bonus', () => {
 		{
 			name: 'Necklace',
 			current: 0,
-			max: 81.75,
+			max: 82.5,
 			ratio: 0,
 		},
 		{
 			name: 'Cloak',
 			current: 29,
-			max: 81.75,
-			ratio: 29 / 81.75,
+			max: 82.5,
+			ratio: 29 / 82.5,
 		},
 		{
 			name: 'Belt',
 			current: 0,
-			max: 81.75,
+			max: 82.5,
 			ratio: 0,
 		},
 		{
 			name: 'Gloves',
 			current: 29,
-			max: 81.75,
-			ratio: 29 / 81.75,
+			max: 82.5,
+			ratio: 29 / 82.5,
 		},
 	]);
 });
 
 test('Rancher boots preferred upgrade test', () => {
-	const boots = FarmingArmor.fakeItem(FARMING_ARMOR_INFO.RANCHERS_BOOTS);
+	const boots = FarmingArmor.fakeItem(FARMING_ARMOR_INFO.RANCHERS_BOOTS!);
 	if (!boots) throw new Error('No boots');
 
 	const player = new FarmingPlayer({
@@ -309,7 +446,7 @@ const bustlingLeggings = {
 
 test('Bustling Fermento Leggings Upgrades', () => {
 	const item = new FarmingArmor(bustlingLeggings);
-	const upgrades = item.getUpgrades();
+	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 
 	expect(upgrades).toHaveLength(7);
 });
@@ -328,15 +465,15 @@ test('Armor purchase upgrades have stats populated', () => {
 	if (helmetProgress?.upgrades && helmetProgress.upgrades.length > 0) {
 		const purchaseUpgrade = helmetProgress.upgrades[0];
 		expect(purchaseUpgrade).toBeDefined();
-		expect(purchaseUpgrade.stats).toBeDefined();
+		expect(purchaseUpgrade?.stats).toBeDefined();
 
 		// Purchase upgrades should have stats from the fake item's getStats()
 		// This verifies the stats field is populated, not hardcoded to just FarmingFortune
-		expect(typeof purchaseUpgrade.stats).toBe('object');
+		expect(typeof purchaseUpgrade?.stats).toBe('object');
 
 		// If there's an increase, FarmingFortune should be present
-		if (purchaseUpgrade.increase > 0) {
-			expect(purchaseUpgrade.stats?.['farming_fortune']).toBeDefined();
+		if (purchaseUpgrade!.increase > 0) {
+			expect(purchaseUpgrade!.stats?.['farming_fortune']).toBeDefined();
 		}
 	}
 });
@@ -419,4 +556,30 @@ test('Helianthus helmet upgrades', () => {
 	expect(helmetProgress!.item?.skyblockId).toBe('HELIANTHUS_HELMET');
 
 	expect(helmetProgress!.current).toBe(helmetProgress!.max);
+});
+
+test('ArmorSet.getUpgrades surfaces Sunset enchant for Overbloom', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 397,
+				count: 1,
+				skyblockId: 'FERMENTO_HELMET',
+				uuid: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+				name: '§dFermento Helmet',
+				lore: [],
+				enchantments: { ultimate_sunset: 2 },
+				attributes: { timestamp: '1705977799398' },
+			},
+		],
+	});
+
+	const overbloomUpgrades = player.armorSet.getUpgrades({ stat: Stat.Overbloom });
+	const sunset = overbloomUpgrades.find((u) => u.title === 'Sunset 3');
+	expect(sunset).toBeDefined();
+	expect(sunset?.stats?.[Stat.Overbloom]).toBe(1);
+
+	// Plain getUpgrades on the player should also expose it.
+	const playerOverbloom = player.getUpgrades({ stat: Stat.Overbloom });
+	expect(playerOverbloom.find((u) => u.title === 'Sunset 3')).toBeDefined();
 });

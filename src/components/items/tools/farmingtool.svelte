@@ -1,10 +1,11 @@
 <script lang="ts">
 	import ThinProgressBar from '$comp/thin-progress-bar.svelte';
+	import type { ItemDto } from '$lib/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { toReadable } from '$lib/format';
 	import { getCropDisplayName, type FarmingTool as FT } from 'farming-weight';
 	import FormattedText from '../formatted-text.svelte';
-	import ItemRender from '../item-render.svelte';
+	import InventorySlot from '../inventories/inventory-slot.svelte';
 	import Lorebtn from '../lorebtn.svelte';
 	import FortuneBreakdown from './fortune-breakdown.svelte';
 
@@ -21,18 +22,20 @@
 		const counter = tool.counter ?? 0;
 		return Math.max(cultivating, counter);
 	});
+
+	const item = $derived(tool.item as ItemDto);
 </script>
 
 <div class="bg-card flex max-h-30 w-full basis-20 flex-row justify-between gap-2 rounded-md p-1">
 	<div class="flex w-full flex-row items-center gap-2">
-		<ItemRender skyblockId={tool.item.skyblockId ?? 'DIAMOND_HOE'} class="pixelated h-16 w-16 md:m-2" />
+		<InventorySlot {item} class="size-12 border-none shadow-none md:m-2 md:size-16" />
 		<div class="flex w-full flex-col items-start">
-			<div class="text-md font-semibold md:text-lg">
+			<div class="text-md font-semibold">
 				<FormattedText text={tool.item.name ?? 'Unknown Tool'} />
 			</div>
 
 			{#if tool.supportsCultivating()}
-				<div class="flex w-full flex-col items-center gap-1 gap-x-4 sm:flex-row">
+				<div class="flex w-full flex-col gap-1 gap-x-4 sm:flex-row sm:items-center">
 					{#if tool.level !== undefined}
 						{@const p = tool.getCurrentLevelProgress()}
 						<ThinProgressBar

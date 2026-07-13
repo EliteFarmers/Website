@@ -1,21 +1,29 @@
 import type { RatesItemPriceData } from '$lib/api/elite';
 import { renderComponent } from '$ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
-import type { FortuneUpgrade, UpgradeTreeNode } from 'farming-weight';
+import type { FortuneUpgrade, UpgradeRateImpact, UpgradeTreeNode } from 'farming-weight';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 import UpgradeCompleteButton from './upgrade-complete-button.svelte';
 import UpgradeCostPer from './upgrade-cost-per.svelte';
 import UpgradeCost from './upgrade-cost.svelte';
 import UpgradeFortune from './upgrade-fortune.svelte';
+import UpgradeRateImpactCell from './upgrade-rate-impact.svelte';
 import UpgradeTitle from './upgrade-title.svelte';
+
+type AnyUpgradeRateImpact = UpgradeRateImpact<unknown, unknown>;
 
 export const getColumns = (
 	itemsLookup?: RatesItemPriceData,
 	costFn?: (upgrade: FortuneUpgrade, items?: RatesItemPriceData) => number,
 	applyUpgrade?: (upgrade: FortuneUpgrade) => void,
 	expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	_version?: number
+	canExpandUpgrade?: (upgrade: FortuneUpgrade) => boolean,
+	rateImpactFn?: (upgrade: FortuneUpgrade) => AnyUpgradeRateImpact | undefined,
+	rateImpactUnavailableLabel?: string,
+	_version?: number | string,
+	costPerValueFn?: (upgrade: FortuneUpgrade) => number,
+	costPerHeader = 'Cost Per Fortune',
+	referenceOnlyPrices = false
 ) =>
 	[
 		{
@@ -28,7 +36,7 @@ export const getColumns = (
 					items: itemsLookup,
 					expanded: row.getIsExpanded(),
 					toggleExpanded: row.toggleExpanded,
-					expandUpgrade,
+					canExpand: !!expandUpgrade && (canExpandUpgrade?.(row.original) ?? false),
 				});
 			},
 		},
@@ -45,12 +53,39 @@ export const getColumns = (
 				return renderComponent(UpgradeFortune, { upgrade: row.original });
 			},
 		},
+		...(rateImpactFn
+			? [
+					{
+						id: 'rateImpact',
+						header: ({ column }) =>
+							renderComponent(DataTableColumnHeader<FortuneUpgrade, unknown>, {
+								column,
+								title: 'Coins/hr',
+							}),
+						enableSorting: true,
+						accessorFn: (row) => getRateImpactCoinValue(rateImpactFn(row), itemsLookup),
+						cell: ({ row }) => {
+							const impact = rateImpactFn(row.original);
+							const coins = getRateImpactCoinValue(impact, itemsLookup);
+							return renderComponent(UpgradeRateImpactCell, {
+								impact,
+								coins,
+								totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
+								items: itemsLookup,
+								unavailableLabel: rateImpactUnavailableLabel,
+								referenceOnlyPrices,
+							});
+						},
+					} satisfies ColumnDef<FortuneUpgrade>,
+				]
+			: []),
 		{
 			accessorKey: 'costper',
 			accessorFn: (row) => {
 				if (costFn) {
-					const increase = row.increase || row.max || 0;
-					return increase > 0 ? Math.round(costFn(row, itemsLookup) / increase) : 0;
+					const value = costPerValueFn?.(row);
+					const increase = (value ?? row.increase) || row.max || 0;
+					return increase > 0 ? Math.round(costFn(row, itemsLookup) / increase) : Number.MAX_SAFE_INTEGER;
 				}
 				return 0;
 			},
@@ -58,13 +93,15 @@ export const getColumns = (
 				return renderComponent(UpgradeCostPer, {
 					upgrade: row.original,
 					totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
+					value: costPerValueFn?.(row.original),
+					referenceOnlyPrices,
 				});
 			},
 			enableSorting: true,
 			header: ({ column }) =>
 				renderComponent(DataTableColumnHeader<FortuneUpgrade, unknown>, {
 					column,
-					title: 'Cost Per Fortune',
+					title: costPerHeader,
 				}),
 		},
 		{
@@ -80,6 +117,7 @@ export const getColumns = (
 					upgrade: row.original,
 					items: itemsLookup,
 					totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
+					referenceOnlyPrices,
 				}),
 			enableSorting: true,
 			accessorFn: (row) => {
@@ -99,3 +137,31 @@ export const getColumns = (
 			enableHiding: false,
 		},
 	] as ColumnDef<FortuneUpgrade>[];
+
+function getRateImpactCoinValue(impact: AnyUpgradeRateImpact | undefined, itemsLookup?: RatesItemPriceData) {
+	if (!impact) return 0;
+	if (impact.valuationDelta?.coinsPerHour !== undefined) return impact.valuationDelta.coinsPerHour;
+
+	let total = impact.delta.npcCoins;
+	for (const [itemId, amount] of Object.entries(impact.delta.rngItems ?? {})) {
+		total += getItemSellValue(itemId, itemsLookup) * amount;
+	}
+
+	return total;
+}
+
+function getItemSellValue(itemId: string, itemsLookup?: RatesItemPriceData) {
+	const item = itemsLookup?.[itemId];
+	if (!item) return 0;
+
+	const npc = item.bazaar?.npc || item.item?.npc_sell_price || 0;
+	const bazaar = item.bazaar?.averageSellOrder || item.bazaar?.averageSell || 0;
+	const auctionPrices = item.auctions
+		?.map((auction) => (auction.lowest > 0 ? auction.lowest : auction.last))
+		.filter((price) => price > 0);
+	const auction = auctionPrices?.length ? Math.min(...auctionPrices) : 0;
+	const marketValues = [bazaar, auction].filter((value) => value > 0);
+	const market = marketValues.length ? Math.min(...marketValues) : 0;
+
+	return Math.max(npc, market);
+}

@@ -17,6 +17,8 @@
 		wrap?: boolean;
 		inventorySize?: number;
 		subSlot?: string;
+		slotClass?: string;
+		gridClass?: string;
 	}
 
 	let {
@@ -26,6 +28,8 @@
 		wrap = false,
 		inventorySize = 27,
 		subSlot = undefined,
+		slotClass = undefined,
+		gridClass = 'my-1 grid w-fit grid-cols-9 items-center justify-center gap-2',
 	}: Props = $props();
 
 	let items = $derived.by(() => {
@@ -47,14 +51,14 @@
 			skyblockId: selectedItem?.skyblockId ?? '',
 			slotId: selectedItem ? (subSlot ?? String(selectedItem.slot)) : '',
 			sub: selectedItem ? (subSlot ? String(selectedItem.slot) : undefined) : undefined,
-			packs: gbl.packs.filter((p) => p.on).sort((a, b) => a.order - b.order)[0]?.id,
+			packs: gbl.enabledPackIds.join(',') || undefined,
 		});
 	}
 </script>
 
 {#if wrap}
 	{#each { length: Math.ceil(items.length / inventorySize) }, rowIndex (rowIndex)}
-		<div class="my-1 grid w-fit grid-cols-9 items-center justify-center gap-2">
+		<div class={gridClass}>
 			{#each items.slice(rowIndex * inventorySize, (rowIndex + 1) * inventorySize) as [slot, item] (slot)}
 				{#if itemModifier}
 					{@const modified = itemModifier(inventory.id, +slot, item)}
@@ -64,9 +68,10 @@
 						{onSelect}
 						highlight={modified.highlight}
 						{subSlot}
+						class={slotClass}
 					/>
 				{:else}
-					<InventorySlot {item} inventoryId={inventory.id} {onSelect} {subSlot} />
+					<InventorySlot {item} inventoryId={inventory.id} {onSelect} {subSlot} class={slotClass} />
 				{/if}
 			{/each}
 		</div>
@@ -81,9 +86,10 @@
 				{onSelect}
 				highlight={modified.highlight}
 				{subSlot}
+				class={slotClass}
 			/>
 		{:else}
-			<InventorySlot {item} inventoryId={inventory.id} {onSelect} {subSlot} />
+			<InventorySlot {item} inventoryId={inventory.id} {onSelect} {subSlot} class={slotClass} />
 		{/if}
 	{/each}
 {/if}
@@ -99,6 +105,7 @@
 				}}
 				inventorySize={200}
 				subSlot={selectedItem.slot ?? undefined}
+				slotClass="size-8"
 			/>
 		{/if}
 	{/snippet}

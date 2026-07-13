@@ -8,7 +8,7 @@ import { GemRarity } from '../../fortune/item.js';
 import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
-import { getUpgradeableGems } from '../upgrades.js';
+import { getCurrentReforgeEffectSummaries, getReforgeEffectSummaries, getUpgradeableGems } from '../upgrades.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((c) => c.fortuneType));
@@ -57,13 +57,21 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		maxStat: (tool, stat) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			if (tool.reforge?.name === 'Bountiful')
-				return REFORGES.bountiful?.tiers[last.maxRarity]?.stats?.[stat] ?? 0;
-			return REFORGES.blessed?.tiers?.[last.maxRarity]?.stats?.[stat] ?? 0;
+			const current = tool.reforgeStats?.stats?.[stat] ?? 0;
+			let best = 0;
+			for (const reforge of Object.values(REFORGES)) {
+				if (!reforge || !tool.type || !reforge.appliesTo.includes(tool.type)) continue;
+				if (!reforge.stone?.id) continue;
+				const value = reforge.tiers[last.maxRarity]?.stats?.[stat] ?? 0;
+				if (value > best) best = value;
+			}
+			return Math.max(best, current);
 		},
 		currentStat: (tool, stat) => tool.reforgeStats?.stats?.[stat] ?? 0,
+		effects: getCurrentReforgeEffectSummaries,
 		upgrades: (tool, stats) => {
-			const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
+			const requestedStats = stats && stats.length > 0 ? stats : [Stat.FarmingFortune];
+			const primaryStat = requestedStats[0] ?? Stat.FarmingFortune;
 			const currentStats = tool.reforgeStats?.stats ?? {};
 			const currentPrimary = currentStats?.[primaryStat] ?? 0;
 			// Find if there's a priority reforge that applies to this tool
@@ -72,23 +80,38 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 			);
 			const result: FortuneUpgrade[] = [];
 
-			for (const reforge of Object.values(REFORGES)) {
+			for (const [reforgeId, reforge] of Object.entries(REFORGES)) {
 				// Skip if the reforge doesn't apply to the item or is currently applied
 				if (!reforge || !tool.type || !reforge.appliesTo.includes(tool.type) || reforge === tool.reforge) {
 					continue;
 				}
 
-				// Skip non-priority reforges if there's a priority reforge available for this tool
-				if (priorityReforge && reforge !== priorityReforge && !reforge.priority) continue;
+				// For Farming Fortune views, keep the existing priority reforge behavior.
+				// Other stat views can surface non-priority reforges that affect that stat.
+				if (
+					priorityReforge &&
+					reforge !== priorityReforge &&
+					!reforge.priority &&
+					primaryStat === Stat.FarmingFortune
+				)
+					continue;
 				// Only suggest reforges with an explicit reforge stone
 				if (!reforge.stone?.id) continue;
 
 				const tier = reforge.tiers[tool.rarity];
 				if (!tier || !tier.stats) continue;
 				const nextPrimary = tier.stats?.[primaryStat] ?? 0;
+				const effects = getReforgeEffectSummaries(tool, reforgeId, requestedStats);
 
 				// Allow priority reforges even if they have less fortune
-				if (!reforge.priority && nextPrimary <= currentPrimary) continue;
+				if (
+					!reforge.priority &&
+					nextPrimary <= currentPrimary &&
+					!requestedStats.some((stat) => (tier.stats?.[stat] ?? 0) > (currentStats?.[stat] ?? 0)) &&
+					effects.length === 0
+				) {
+					continue;
+				}
 
 				const deltaStats: Partial<Record<Stat, number>> = {};
 				for (const s of Object.values(Stat)) {
@@ -103,6 +126,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					title: 'Reforge to ' + reforge.name,
 					increase,
 					stats: deltaStats,
+					effects: effects.length > 0 ? effects : undefined,
 					action: UpgradeAction.Apply,
 					category: UpgradeCategory.Reforge,
 					conflictKey: 'reforge',
@@ -138,7 +162,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Gemstone Slots',
-		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
+		wiki: () => 'https://w.elitesb.gg/Gemstone_Slot',
 		exists: (upgradeable) => {
 			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
 			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;
@@ -165,7 +189,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Farming For Dummies',
-		wiki: () => 'https://wiki.hypixel.net/Farming_For_Dummies',
+		wiki: () => 'https://w.elitesb.gg/Farming_For_Dummies',
 		exists: (tool) => tool.type !== ReforgeTarget.Sword,
 		max: () => 5,
 		current: (tool) => {
@@ -189,7 +213,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					category: UpgradeCategory.Item,
 					conflictKey: 'farming_for_dummies',
 					repeatable: 5 - count,
-					wiki: 'https://wiki.hypixel.net/Farming_For_Dummies',
+					wiki: 'https://w.elitesb.gg/Farming_For_Dummies',
 					cost: {
 						items: {
 							FARMING_FOR_DUMMIES: 1,
@@ -204,67 +228,6 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 						type: 'item',
 						id: 'farming_for_dummies_count',
 						value: count + 1,
-					},
-				},
-			] as FortuneUpgrade[];
-		},
-	},
-	{
-		name: 'Axed Perk',
-		wiki: () => 'https://wiki.hypixel.net/Essence#Forest_Essence_',
-		exists: (tool) => tool.type === ReforgeTarget.Axe,
-		max: (tool) => {
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const maxFortune = otherSources.reduce((acc, source) => acc + source.max(tool), 0);
-			return Math.max(0, maxFortune * 0.02);
-		},
-		current: (tool) => {
-			if (!tool.hasAxedPerk()) return 0;
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const fortune = otherSources.reduce((acc, source) => acc + source.current(tool), 0);
-			return Math.max(0, fortune * 0.02);
-		},
-		maxStat: (tool, stat) => {
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const maxFortune = otherSources.reduce((acc, source) => acc + (source.maxStat?.(tool, stat) ?? 0), 0);
-			return Math.max(0, maxFortune * 0.02);
-		},
-		currentStat: (tool, stat) => {
-			if (!tool.hasAxedPerk()) return 0;
-			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const fortune = otherSources.reduce((acc, source) => acc + (source.currentStat?.(tool, stat) ?? 0), 0);
-			return Math.max(0, fortune * 0.02);
-		},
-		upgrades: (tool) => {
-			if (tool.hasAxedPerk()) return [];
-			const stats: Record<Stat, number> = {
-				[Stat.FarmingFortune]: tool.getStat(Stat.FarmingFortune) * 0.02,
-			} as Record<Stat, number>;
-
-			for (const crop of tool.crops) {
-				const cropStat = CROP_INFO[crop]?.fortuneType;
-				if (cropStat) {
-					stats[cropStat] = tool.getStat(cropStat) * 0.02;
-				}
-			}
-
-			return [
-				{
-					title: 'Axed Perk',
-					increase: tool.fortune * 0.02,
-					stats,
-					action: UpgradeAction.Unlock,
-					category: UpgradeCategory.Misc,
-					conflictKey: 'axed_perk',
-					wiki: 'https://wiki.hypixel.net/Essence#Forest_Essence_',
-					cost: {
-						items: {
-							ESSENCE_FOREST: 10_000,
-						},
-					},
-					onto: {
-						name: tool.item.name,
-						skyblockId: tool.item.skyblockId,
 					},
 				},
 			] as FortuneUpgrade[];
@@ -314,7 +277,17 @@ function enchantSourceBuilder(
 			enchant.appliesTo.includes(tool.type) &&
 			(!enchant.cropSpecific || tool.crops.includes(enchant.cropSpecific)),
 		max: (tool) => {
-			// For multi-crop tools (e.g., Eclipse Hoe), take the best single-crop value to avoid double counting
+			const currentOverbloom = getStatFromEnchant(
+				tool.item.enchantments?.[id] ?? 0,
+				enchant,
+				Stat.Overbloom,
+				tool.options,
+				tool.crops[0]
+			);
+			const maxOverbloom =
+				currentOverbloom > 0 ? getMaxStatFromEnchant(enchant, Stat.Overbloom, tool.options, tool.crops[0]) : 0;
+
+			// For multi-crop tools (e.g., Eclipse Sickle), take the best single-crop value to avoid double counting
 			if (tool.crops.length > 1) {
 				let best = 0;
 				for (const crop of tool.crops) {
@@ -323,16 +296,30 @@ function enchantSourceBuilder(
 						getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop)
 					);
 				}
-				return best || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
+				return (
+					best ||
+					getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]) ||
+					maxOverbloom
+				);
 			}
 
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop);
 			}
-			return sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
+			return (
+				sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]) || maxOverbloom
+			);
 		},
 		current: (tool) => {
+			const currentOverbloom = getStatFromEnchant(
+				tool.item.enchantments?.[id] ?? 0,
+				enchant,
+				Stat.Overbloom,
+				tool.options,
+				tool.crops[0]
+			);
+
 			if (tool.crops.length > 1) {
 				let best = 0;
 				for (const crop of tool.crops) {
@@ -355,7 +342,8 @@ function enchantSourceBuilder(
 						Stat.FarmingFortune,
 						tool.options,
 						tool.crops[0]
-					)
+					) ||
+					currentOverbloom
 				);
 			}
 
@@ -377,7 +365,8 @@ function enchantSourceBuilder(
 					Stat.FarmingFortune,
 					tool.options,
 					tool.crops[0]
-				)
+				) ||
+				currentOverbloom
 			);
 		},
 		maxStat: (tool, stat) => {
@@ -396,6 +385,12 @@ function enchantSourceBuilder(
 					best = Math.max(best, getMaxStatFromEnchant(enchant, stat, tool.options, crop));
 				}
 				return best || getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
+			}
+
+			// Non-crop-fortune stats (e.g. Overbloom from Feast) are flat per enchant level,
+			// not per crop. Resolve once with one of the tool's crops.
+			if (stat !== Stat.FarmingFortune) {
+				return getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
 			}
 
 			let sum = 0;
@@ -434,6 +429,17 @@ function enchantSourceBuilder(
 				);
 			}
 
+			// Non-crop-fortune stats (e.g. Overbloom from Feast) are flat per enchant level.
+			if (stat !== Stat.FarmingFortune) {
+				return getStatFromEnchant(
+					tool.item.enchantments?.[id] ?? 0,
+					enchant,
+					stat,
+					tool.options,
+					tool.crops[0]
+				);
+			}
+
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, crop);
@@ -444,14 +450,18 @@ function enchantSourceBuilder(
 		},
 		upgrades: (tool, stats) => {
 			const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
-			if (!CROP_FORTUNE_STATS.has(primaryStat)) {
-				return getUpgradeableEnchant(tool, id, primaryStat);
+			const chains: Stat[] = [primaryStat];
+			if (CROP_FORTUNE_STATS.has(primaryStat) && !chains.includes(Stat.FarmingFortune)) {
+				chains.push(Stat.FarmingFortune);
+			}
+			for (const s of stats ?? []) {
+				if (!chains.includes(s)) chains.push(s);
 			}
 
-			const upgrades = [
-				...getUpgradeableEnchant(tool, id, primaryStat),
-				...getUpgradeableEnchant(tool, id, Stat.FarmingFortune),
-			];
+			const upgrades: FortuneUpgrade[] = [];
+			for (const s of chains) {
+				upgrades.push(...getUpgradeableEnchant(tool, id, s));
+			}
 
 			const seen = new Set<string>();
 			return upgrades.filter((u) => {

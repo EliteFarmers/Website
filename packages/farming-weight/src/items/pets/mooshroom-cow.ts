@@ -15,7 +15,7 @@ export class MooshroomCowPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Mooshroom_Cow_Pet';
+		return 'https://w.elitesb.gg/Mooshroom_Cow_Pet';
 	}
 
 	override stats = {

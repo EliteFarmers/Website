@@ -13,14 +13,14 @@ export class FungiCutter1 extends BaseItem {
 		return 'Fungi Cutter Mk. I';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fungi_Cutter';
+		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
 	get maxRarity() {
 		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Mushroom];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T1_TOOL_GEMS;
 	override upgrade = {
 		id: 'FUNGI_CUTTER_2',
@@ -43,14 +43,14 @@ export class FungiCutter2 extends BaseItem {
 		return 'Fungi Cutter Mk. II';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fungi_Cutter';
+		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
 	get maxRarity() {
 		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Mushroom];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T2_TOOL_GEMS;
 	override upgrade = {
 		id: 'FUNGI_CUTTER_3',
@@ -73,13 +73,13 @@ export class FungiCutter3 extends BaseItem {
 		return 'Fungi Cutter Mk. III';
 	}
 	get wiki() {
-		return 'https://wiki.hypixel.net/Fungi_Cutter';
+		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
 	get maxRarity() {
 		return Rarity.Legendary;
 	}
 
 	override crops = [Crop.Mushroom];
-	override type = ReforgeTarget.Hoe;
+	override type = ReforgeTarget.FarmingTool;
 	override gemSlots = T3_TOOL_GEMS;
 }

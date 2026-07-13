@@ -12,7 +12,7 @@ export class ElephantPet extends FarmingPetDefinition {
 	}
 
 	get wiki() {
-		return 'https://wiki.hypixel.net/Elephant_Pet';
+		return 'https://w.elitesb.gg/Elephant_Pet';
 	}
 
 	override perLevelStats = {

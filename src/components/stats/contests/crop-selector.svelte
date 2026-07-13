@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { trackAnalytics } from '$lib/analytics';
 	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { ScrollArea } from '$ui/scroll-area';
 	const selectedCrops = getSelectedCrops();
@@ -8,9 +9,10 @@
 		radio?: boolean;
 		href?: string;
 		id?: string;
+		analyticsEvent?: string;
 	}
 
-	let { radio = false, href = '', id = '' }: Props = $props();
+	let { radio = false, href = '', id = '', analyticsEvent }: Props = $props();
 
 	let scrollContainer = $state<HTMLElement | null>(null);
 
@@ -24,6 +26,14 @@
 			selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [crop]: true });
 		} else {
 			selectedCrops.update((crops) => ({ ...crops, [crop]: !crops[crop] }));
+		}
+
+		if (analyticsEvent) {
+			trackAnalytics(analyticsEvent, {
+				crop,
+				selected: $selectedCrops[crop] ?? false,
+				mode: radio ? 'single' : 'multi',
+			});
 		}
 	}
 

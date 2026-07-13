@@ -2,20 +2,25 @@
 	import {
 		generateBlockKey,
 		mergeComponents,
+		type BlockNode,
 		type BlockComponents,
 		type BlocksRendererProps,
 		type ModifierComponents,
 	} from './blocks';
 
+	import HoistedCommentCallout from '$comp/comments/hoisted-comment-callout.svelte';
+	import type { CommentWithGuideAuthor } from '$lib/guides/types';
 	import Link from './elements/a.svelte';
 	import AccordionComponent from './elements/accordion.svelte';
 	import BlockGridComponent from './elements/block-grid.svelte';
 	import Quote from './elements/blockquote.svelte';
 	import CalloutComponent from './elements/callout.svelte';
+	import CreditsComponent from './elements/credits.svelte';
 	import Heading from './elements/heading.svelte';
 	import Image from './elements/img.svelte';
 	import ItemListComponent from './elements/item-list.svelte';
 	import ItemPriceComponent from './elements/item-price.svelte';
+	import LitematicComponent from './elements/litematic.svelte';
 	import ListItem from './elements/li.svelte';
 	import List from './elements/list.svelte';
 	import Paragraph from './elements/p.svelte';
@@ -32,7 +37,13 @@
 	import Strikethrough from './inline/strikethrough.svelte';
 	import Underline from './inline/underline.svelte';
 
-	const { content, blocks = {}, modifiers = {} }: BlocksRendererProps = $props();
+	const {
+		content,
+		blocks = {},
+		modifiers = {},
+		hoistedComments = {},
+		renderTextAsHtml = false,
+	}: BlocksRendererProps & { hoistedComments?: Record<string, CommentWithGuideAuthor[]> } = $props();
 
 	const defaultBlocks: BlockComponents = {
 		paragraph: Paragraph,
@@ -40,6 +51,7 @@
 		quote: Quote,
 		code: Code,
 		image: Image,
+		litematic: LitematicComponent,
 		list: List,
 		'list-item': ListItem,
 		'skyblock-item': SkyblockItem,
@@ -50,6 +62,7 @@
 		accordion: AccordionComponent,
 		recipe: RecipeComponent,
 		'item-list': ItemListComponent,
+		credits: CreditsComponent,
 		table: TableComponent,
 		'block-grid': BlockGridComponent,
 	};
@@ -65,13 +78,32 @@
 
 	let resolvedBlocks = $derived(mergeComponents(defaultBlocks, blocks));
 	let resolvedModifiers = $derived(mergeComponents(defaultModifiers, modifiers));
+
+	function getHoistedComments(node: BlockNode) {
+		if (node.type === 'list-item') return [];
+		return node.id ? (hoistedComments[node.id] ?? []) : [];
+	}
+
+	function getWrapperId(node: BlockNode) {
+		return node.type === 'list-item' ? undefined : node.id;
+	}
 </script>
 
 {#if Array.isArray(content)}
 	{#each content as node, index (generateBlockKey(node, index))}
 		{#if resolvedBlocks[node.type]}
 			{@const Block = resolvedBlocks[node.type] as unknown as import('svelte').Component}
-			<Block {node} {index} modifiers={resolvedModifiers} />
+			{@const comments = getHoistedComments(node)}
+			<div id={getWrapperId(node)} class="scroll-mt-24">
+				<Block {node} {index} modifiers={resolvedModifiers} {hoistedComments} {renderTextAsHtml} />
+				{#if comments.length}
+					<div class="not-prose">
+						{#each comments as comment (comment.id)}
+							<HoistedCommentCallout {comment} />
+						{/each}
+					</div>
+				{/if}
+			</div>
 		{:else}
 			<div class="blocks-renderer-unknown">
 				Unknown block type: <code>{node.type}</code>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import * as Sidebar from '$ui/sidebar';
 	import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON } from '$ui/sidebar/constants';
@@ -9,11 +10,8 @@
 	const adCtx = getAdCtx();
 	let ref = $state<HTMLDivElement | null>(null);
 
-	watch([() => sidebar.open, () => sidebar.isMobile, () => adCtx.floatingVideoLeftMargin], () => {
-		updatePosition();
-	});
-
 	function updatePosition() {
+		if (!browser) return;
 		ref ??= document.getElementById('floating-video') as HTMLDivElement;
 		if (!ref) return;
 
@@ -36,14 +34,23 @@
 			: `calc(${SIDEBAR_WIDTH_ICON} + ${adCtx.floatingVideoLeftMargin}rem)`;
 	}
 
-	watch([() => adCtx.bottomAnchorSize.height, () => sidebar.open, () => sidebar.isMobile], () => {
-		updatePosition();
-	});
+	watch(
+		[
+			() => adCtx.bottomAnchorSize.height,
+			() => sidebar.open,
+			() => sidebar.isMobile,
+			() => adCtx.floatingVideoLeftMargin,
+		],
+		() => {
+			updatePosition();
+		}
+	);
 </script>
 
 <NitroAdSlot
 	slotId="floating-video"
 	createDiv={false}
+	showWhenAuthenticated={false}
 	onCreated={(el) => {
 		ref = el;
 		updatePosition();

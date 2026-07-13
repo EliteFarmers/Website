@@ -15,6 +15,16 @@ export enum Pest {
 	Dragonfly = 'dragonfly',
 	Firefly = 'firefly',
 	Mantis = 'mantis',
+	LunarMoth = 'lunar_moth',
+}
+
+export enum Spray {
+	Compost = 'compost',
+	PlantMatter = 'plant_matter',
+	Dung = 'dung',
+	HoneyJar = 'honey_jar',
+	TastyCheese = 'tasty_cheese',
+	Jelly = 'jelly',
 }
 
 export const FORTUNE_PER_PEST_BRACKET = 0.4;
@@ -83,6 +93,7 @@ export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
 	[Pest.Dragonfly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Firefly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Mantis]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.LunarMoth]: FIELD_MOUSE_BESTIARY_PEST_BRACKET,
 };
 
 export const PEST_EXCHANGE_RATES = {
@@ -144,6 +155,7 @@ export const PEST_IDS: Pest[] = [
 	Pest.Dragonfly,
 	Pest.Firefly,
 	Pest.Mantis,
+	Pest.LunarMoth,
 ];
 
 export const PEST_BESTIARY_IDS: Record<string, Pest | null> = {
@@ -161,6 +173,7 @@ export const PEST_BESTIARY_IDS: Record<string, Pest | null> = {
 	[`pest_${Pest.Dragonfly}_1`]: Pest.Dragonfly,
 	[`pest_${Pest.Firefly}_1`]: Pest.Firefly,
 	pest_praying_mantis_1: Pest.Mantis, // oops
+	[`pest_${Pest.LunarMoth}_1`]: Pest.LunarMoth,
 	zombuddy_1: null,
 	timestalk_clone_100: null,
 };
@@ -180,9 +193,18 @@ export const GARDEN_BESTIARY_NAMES: Record<string, string> = {
 	[`pest_${Pest.Dragonfly}_1`]: 'Dragonfly',
 	[`pest_${Pest.Firefly}_1`]: 'Firefly',
 	pest_praying_mantis_1: 'Mantis',
+	[`pest_${Pest.LunarMoth}_1`]: 'Lunar Moth',
 	zombuddy_1: 'Zombuddy',
 	timestalk_clone_100: 'Timestalk Clone',
 };
+
+export const PEST_BESTIARY_ID_BY_PEST = Object.fromEntries(
+	Object.entries(PEST_BESTIARY_IDS).flatMap(([bestiaryId, pestId]) => (pestId ? [[pestId, bestiaryId]] : []))
+) as Record<Pest, string>;
+
+export function getPestName(pestId: Pest): string {
+	return GARDEN_BESTIARY_NAMES[PEST_BESTIARY_ID_BY_PEST[pestId]] ?? pestId;
+}
 
 export const GARDEN_BESTIARY_BRACKETS: Record<string, Record<number, number>> = {
 	zombuddy_1: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
@@ -222,10 +244,28 @@ export const CROP_TO_PEST: Record<Crop, Pest> = {
 	[Crop.WildRose]: Pest.Mantis,
 };
 
+export const SPRAY_TO_PESTS: Record<Spray, Pest[]> = {
+	[Spray.Compost]: [Pest.Worm, Pest.Mosquito],
+	[Spray.PlantMatter]: [Pest.Locust, Pest.Slug],
+	[Spray.Dung]: [Pest.Beetle, Pest.Fly],
+	[Spray.HoneyJar]: [Pest.Moth, Pest.Cricket],
+	[Spray.TastyCheese]: [Pest.Rat, Pest.Mite],
+	[Spray.Jelly]: [Pest.Mantis, Pest.Dragonfly, Pest.Firefly],
+};
+
+export const SPRAY_NAMES: Record<string, string> = {
+	[`spray_${Spray.Compost}_1`]: 'Compost',
+	[`spray_${Spray.PlantMatter}_1`]: 'Plant Matter',
+	[`spray_${Spray.Dung}_1`]: 'Dung',
+	[`spray_${Spray.HoneyJar}_1`]: 'Honey Jar',
+	[`spray_${Spray.TastyCheese}_1`]: 'Tasty Cheese',
+	[`spray_${Spray.Jelly}_1`]: 'Jelly',
+};
+
 export const PEST_COLLECTION_BRACKETS = [0, 50, 100, 250, 500, 750, 1000];
 
-// Taken from https://api.elitebot.dev/weights/all
-export const PEST_COLLECTION_ADJUSTMENTS: Omit<Record<Pest, Record<number, number>>, Pest.Mouse> = {
+// Taken from https://api.eliteskyblock.com/weights/all
+export const PEST_COLLECTION_ADJUSTMENTS: Omit<Record<Pest, Record<number, number>>, Pest.Mouse | Pest.LunarMoth> = {
 	mite: {
 		'0': 0,
 		'50': 392.81451,

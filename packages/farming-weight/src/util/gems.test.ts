@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { FarmingArmor } from '../fortune/farmingarmor';
-import { getPeridotFortune } from './gems';
+import { FarmingArmor } from '../fortune/farmingarmor.js';
+import { getPeridotFortune } from './gems.js';
 
 const almostMaxHelmet = {
 	id: 397,

@@ -1,14 +1,18 @@
 <script lang="ts">
+	import { trackAnalytics } from '$lib/analytics';
 	import type { CommentDto } from '$lib/api';
 	import {
+		clearHoistedCommentCommand,
 		createCommentCommand,
 		deleteCommentCommand,
 		editCommentCommand,
 		GetGuideComments,
+		hoistCommentCommand,
 		voteCommentCommand,
 	} from '$lib/remote/comments.remote';
 	import { useDebounce } from 'runed';
 	import CommentSection from './comment-section.svelte';
+	import type { HoistTarget } from './hoist-comment-dialog.svelte';
 
 	type Session =
 		| {
@@ -24,6 +28,8 @@
 		session: Session;
 		notifyError?: (message: string) => void;
 		notifySuccess?: (message: string) => void;
+		canHoist?: boolean;
+		hoistTargets?: HoistTarget[];
 	};
 
 	let {
@@ -32,11 +38,18 @@
 		session,
 		notifyError = (message: string) => console.error(message),
 		notifySuccess = (message: string) => console.info(message),
+		canHoist = false,
+		hoistTargets = [],
 	}: Props = $props();
 
 	let isLoadingComment = $state(false);
 	let commentVotes = $state<Record<number, 1 | -1 | 0>>({});
 	let pendingCommentVoteRequests = $state<Record<number, 1 | -1 | 0>>({});
+
+	function getCommentList(): CommentDto[] {
+		const current = commentsPromise.current;
+		return Array.isArray(current) ? current : [];
+	}
 
 	function applyOptimisticCommentVotes(comments: CommentDto[]) {
 		return comments.map((c) => {
@@ -92,16 +105,18 @@
 		const trimmedContent = content.trim();
 
 		try {
-			const result = await createCommentCommand({ guideId, content: trimmedContent, parentId }).updates(
-				commentsPromise
-			);
+			const result = await createCommentCommand({ guideId, content: trimmedContent, parentId });
 
 			if (result.error) {
 				notifyError(result.error);
 				return;
 			}
 
+			await commentsPromise.refresh();
 			notifySuccess('Comment posted!');
+			trackAnalytics('comments.created', {
+				reply: Boolean(parentId),
+			});
 		} catch (err) {
 			notifyError('Failed to post comment');
 			console.error(err);
@@ -128,14 +143,16 @@
 	}
 
 	async function handleDeleteComment(commentId: number) {
-		const result = await deleteCommentCommand(commentId).updates(commentsPromise);
+		const result = await deleteCommentCommand(commentId);
 
 		if (result.error) {
 			notifyError(result.error);
 			return;
 		}
 
+		await commentsPromise.refresh();
 		notifySuccess('Comment deleted');
+		trackAnalytics('comments.deleted');
 	}
 
 	function handleVoteComment(commentId: number, value: 1 | -1) {
@@ -144,39 +161,79 @@
 			return;
 		}
 
-		const baseList = (commentsPromise.current ?? []) as Array<{ id: number; userVote?: number | null }>;
+		const baseList = getCommentList();
 		const baseVote = baseList.find((c) => c.id === commentId)?.userVote ?? 0;
 		const oldVote: 1 | -1 | 0 = commentVotes[commentId] ?? (baseVote === 1 ? 1 : baseVote === -1 ? -1 : 0);
 		const nextVote: 1 | -1 | 0 = oldVote === value ? 0 : value;
 
 		commentVotes = { ...commentVotes, [commentId]: nextVote };
 		pendingCommentVoteRequests = { ...pendingCommentVoteRequests, [commentId]: nextVote };
+		trackAnalytics('comments.vote', {
+			value: nextVote,
+		});
 		flushCommentVotes();
 	}
 
+	async function handleHoistComment(commentId: number, liftedElementId: string) {
+		const result = await hoistCommentCommand({ guideId, commentId, liftedElementId });
+		if (result.error) {
+			notifyError(result.error);
+			return;
+		}
+
+		await commentsPromise.refresh();
+		notifySuccess('Comment hoisted');
+	}
+
+	async function handleClearHoist(commentId: number) {
+		const result = await clearHoistedCommentCommand({ guideId, commentId });
+		if (result.error) {
+			notifyError(result.error);
+			return;
+		}
+
+		await commentsPromise.refresh();
+		notifySuccess('Comment hoist cleared');
+	}
+
 	let isModerator = $derived(session?.perms?.moderator ?? false);
-	let baseComments = $derived(commentsPromise.current ?? []);
+	let baseComments = $derived.by(getCommentList);
 	let displayComments = $derived(applyOptimisticCommentVotes(baseComments));
 </script>
 
-<CommentSection
-	comments={displayComments}
-	userId={session?.ign}
-	{isModerator}
-	isLoading={isLoadingComment}
-	onSubmit={async (parentId, content) => {
-		await handlePostComment(content, parentId ?? undefined);
-	}}
-	onEdit={async (commentId, content) => {
-		await handleEditComment(commentId, content);
-	}}
-	onDelete={async (commentId) => {
-		await handleDeleteComment(commentId);
-	}}
-	onVoteUp={(commentId) => {
-		handleVoteComment(commentId, 1);
-	}}
-	onVoteDown={(commentId) => {
-		handleVoteComment(commentId, -1);
-	}}
-/>
+<svelte:boundary>
+	<CommentSection
+		comments={displayComments}
+		userId={session?.ign}
+		{isModerator}
+		isLoading={isLoadingComment}
+		onSubmit={async (parentId, content) => {
+			await handlePostComment(content, parentId ?? undefined);
+		}}
+		onEdit={async (commentId, content) => {
+			await handleEditComment(commentId, content);
+		}}
+		onDelete={async (commentId) => {
+			await handleDeleteComment(commentId);
+		}}
+		onVoteUp={(commentId) => {
+			handleVoteComment(commentId, 1);
+		}}
+		onVoteDown={(commentId) => {
+			handleVoteComment(commentId, -1);
+		}}
+		{canHoist}
+		{hoistTargets}
+		onHoist={(commentId, targetId) => handleHoistComment(commentId, targetId)}
+		onClearHoist={(commentId) => handleClearHoist(commentId)}
+	/>
+	{#snippet failed(error, reset)}
+		<div class="border-destructive/30 bg-destructive/5 rounded-md border p-3 text-sm">
+			<p class="font-medium">Failed to load comments</p>
+			{#if typeof error === 'object' && error && 'message' in error}
+				<p class="text-muted-foreground mt-1">{error.message}</p>
+			{/if}
+			<button class="mt-2 rounded-md border px-3 py-1" onclick={reset}>Try again</button>
+		</div>
+	{/snippet}
+</svelte:boundary>

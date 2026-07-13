@@ -3,12 +3,14 @@
 </script>
 
 <script lang="ts">
+	import { page } from '$app/state';
 	import NavMain from '$comp/sidebar/nav-main.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { cn } from '$lib/utils';
 	import { ScrollArea } from '$ui/scroll-area';
 	import * as Sidebar from '$ui/sidebar';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import type { Snippet } from 'svelte';
 	import NavDynamic from './nav-dynamic.svelte';
@@ -18,6 +20,17 @@
 
 	const pageCtx = getPageCtx();
 	const gbl = getGlobalContext();
+	const sidebar = Sidebar.useSidebar();
+	const sectionReturnLabel = $derived(pageCtx.sidebarSection ? `Back to ${pageCtx.sidebarSection.title}` : '');
+
+	let wasMobileOpen = false;
+	$effect(() => {
+		const isOpen = sidebar.openMobile;
+		if (sidebar.isMobile && isOpen && !wasMobileOpen && pageCtx.sidebarSection) {
+			pageCtx.showSectionSidebar();
+		}
+		wasMobileOpen = isOpen;
+	});
 </script>
 
 <Sidebar.Header class="mt-2">
@@ -25,7 +38,7 @@
 		<Sidebar.MenuItem>
 			<Sidebar.MenuButton size="lg">
 				{#snippet tooltipContent()}
-					Elite Farmers
+					Elite Skyblock
 				{/snippet}
 				{#snippet child({ props })}
 					<a
@@ -37,7 +50,7 @@
 						)}
 					>
 						<img src="/favicon.webp" class="aspect-square max-w-8" alt="Elite Logo" />
-						<span class="px-1 leading-none font-semibold sm:text-lg md:text-xl">Elite Farmers</span>
+						<span class="px-0.5 font-semibold tracking-tight sm:text-lg md:text-xl">Elite Skyblock</span>
 					</a>
 				{/snippet}
 			</Sidebar.MenuButton>
@@ -53,7 +66,7 @@
 						{...props}
 						class={cn(
 							props.class ?? '',
-							'bg-card text-primary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative mx-0 border shadow-sm transition-all duration-300 group-data-[state=collapsed]:px-1.5! group-data-[state=expanded]:px-2'
+							`bg-card text-primary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${page.data.newProducts ? 'group-data-[state=collapsed]:border-destructive/50' : ''} relative mx-0 border shadow-sm transition-all duration-300 group-data-[state=collapsed]:px-1.5! group-data-[state=expanded]:px-2`
 						)}
 					>
 						{#if gbl.user?.settings.features?.hideShopPromotions !== true}
@@ -64,6 +77,12 @@
 						{/if}
 						<ShoppingCart class="text-primary m-0 size-5 p-0" />
 						<span class="text-primary font-semibold">Shop</span>
+						{#if page.data.newProducts}
+							<span
+								class="bg-destructive text-destructive-foreground absolute right-2 rounded-full px-1 text-[10px] font-bold group-data-[state=collapsed]:hidden"
+								>NEW</span
+							>
+						{/if}
 					</a>
 				{/snippet}
 			</Sidebar.MenuButton>
@@ -73,12 +92,28 @@
 <div class="flex h-full flex-col overflow-hidden">
 	<ScrollArea class="h-full" orientation="vertical">
 		<Sidebar.Content class="gap-0">
-			{#if pageCtx.sidebar.length && pageCtx.above}
-				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
-			{/if}
-			<NavMain items={SIDEBAR_NAV} title="Main" />
-			{#if pageCtx.sidebar.length && !pageCtx.above}
-				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
+			{#if pageCtx.showingSectionSidebar && pageCtx.sidebarSection}
+				<NavDynamic section={pageCtx.sidebarSection} onBack={() => pageCtx.showMainSidebar()} />
+			{:else}
+				{#if pageCtx.sidebarSection}
+					<Sidebar.Group data-sveltekit-preload-data="tap">
+						<Sidebar.Menu>
+							<Sidebar.MenuItem>
+								<Sidebar.MenuButton
+									class="text-sidebar-foreground/70"
+									onclick={() => pageCtx.showSectionSidebar()}
+								>
+									{#snippet tooltipContent()}
+										{sectionReturnLabel}
+									{/snippet}
+									<ArrowRight class="size-4" />
+									<span>{sectionReturnLabel}</span>
+								</Sidebar.MenuButton>
+							</Sidebar.MenuItem>
+						</Sidebar.Menu>
+					</Sidebar.Group>
+				{/if}
+				<NavMain items={SIDEBAR_NAV} title="Main" />
 			{/if}
 			{@render children?.()}
 		</Sidebar.Content>

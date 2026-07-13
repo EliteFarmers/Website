@@ -4,6 +4,7 @@
 	import * as Sidebar from '$ui/sidebar';
 	import { untrack, type Component } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
+	import { isSidebarHrefActive } from '../../lib/sidebar-active';
 
 	interface Props extends HTMLAnchorAttributes {
 		item: {
@@ -13,25 +14,31 @@
 			new?: number;
 		};
 		icon?: string;
+		active?: boolean;
 	}
 
-	let { item, icon }: Props = $props();
+	let { item, icon, active = false }: Props = $props();
 
-	let active = $derived(item.href === page.url.pathname);
+	let isActive = $derived(active || isSidebarHrefActive(item.href, page.url.pathname));
 
 	const gbl = getGlobalContext();
+	const newExpiresAtMs = $derived((item.new ?? 0) * 1000);
+	const showNew = $derived(
+		item.new !== undefined && Date.now() < newExpiresAtMs && !gbl.seenSidebarItem(item.href, item.new)
+	);
 
 	$effect.pre(() => {
-		if (active && item.new) {
+		if (isActive && item.new !== undefined) {
+			const newExpiresAt = item.new;
 			untrack(() => {
-				gbl.markSidebarItemSeen(item.href, item.new ?? 0);
+				gbl.markSidebarItemSeen(item.href, newExpiresAt);
 			});
 		}
 	});
 </script>
 
 <Sidebar.MenuItem>
-	<Sidebar.MenuButton data-active={active}>
+	<Sidebar.MenuButton data-active={isActive}>
 		{#snippet tooltipContent()}
 			{item.title}
 		{/snippet}
@@ -44,7 +51,7 @@
 					<item.icon />
 				{/if}
 				<span>{item.title}</span>
-				{#if item.new && !gbl.seenSidebarItem(item.href, item.new)}
+				{#if showNew}
 					<span class="bg-destructive/50 text-primary ml-auto rounded-sm px-2 py-0.5 text-xs font-medium"
 						>New</span
 					>

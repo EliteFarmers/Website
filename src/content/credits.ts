@@ -31,8 +31,8 @@ export const CREDITS: Credit[] = [
 		role: 'Custom art for the website (crop icons, medals, etc)',
 		links: [
 			{
-				name: 'Ko-Fi',
-				url: 'https://ko-fi.com/shoppelumini',
+				name: 'Twitch',
+				url: 'https://www.twitch.tv/lu_mini',
 			},
 		],
 	},

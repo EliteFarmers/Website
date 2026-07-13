@@ -1,8 +1,8 @@
 <script lang="ts">
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import Countdown from '$comp/countdown.svelte';
-	import Head from '$comp/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { type Crumb, getPageCtx } from '$lib/hooks/page.svelte';
 	import { getItemValue } from '$lib/remote/items.remote';

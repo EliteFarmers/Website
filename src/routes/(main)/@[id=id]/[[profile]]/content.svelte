@@ -8,7 +8,7 @@
 	import NameCard from '$comp/stats/namecard/name-card.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
-	import type { LeaderboardRanksResponse, ProfileMemberDto } from '$lib/api';
+	import type { FarmingInventoryDto, LeaderboardRanksResponse, ProfileMemberDto } from '$lib/api';
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import { watch } from 'runed';
@@ -17,15 +17,20 @@
 	import type { LayoutData } from './$types';
 	import NavCrumbs from './nav-crumbs.svelte';
 
+	type ResolvedProfileData = Awaited<LayoutData['profileData']>;
+	type ValidProfileData = Exclude<ResolvedProfileData, { code: number; error: string } | { noProfiles: true }>;
+
 	let {
 		data,
 		ssrMemberData,
 		ssrRanksData,
+		ssrFarmingInventoryData,
 		children,
 	}: {
-		data: Exclude<Awaited<LayoutData['profileData']>, { code: number; error: string }>;
+		data: ValidProfileData;
 		ssrMemberData?: ProfileMemberDto | undefined;
 		ssrRanksData?: LeaderboardRanksResponse | undefined;
+		ssrFarmingInventoryData?: FarmingInventoryDto | undefined;
 		children: Snippet;
 	} = $props();
 
@@ -37,6 +42,7 @@
 			style: data.style,
 			initialMember: ssrMemberData ?? undefined,
 			initialRanks: ssrRanksData ?? undefined,
+			initialFarmingInventory: ssrFarmingInventoryData ?? undefined,
 			bot: page.data.bot ?? false,
 		}))()
 	);
@@ -53,6 +59,7 @@
 				style: data.style,
 				initialMember: ssrMemberData ?? undefined,
 				initialRanks: ssrRanksData ?? undefined,
+				initialFarmingInventory: ssrFarmingInventoryData ?? undefined,
 				bot: page.data.bot ?? false,
 			});
 
@@ -178,11 +185,17 @@
 			<Button
 				variant="ghost"
 				size="sm"
+				href="{path}/pest-farming"
+				class="{route === 'pest-farming' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Pest Farming</Button
+			>
+			<Button
+				variant="ghost"
+				size="sm"
 				href="{path}/ranks"
 				class="{route === 'ranks' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Ranks</Button
 			>
 			{#if page.data.session?.perms.support}
-				<Button variant="ghost" size="sm" href="{path}/graphs" class="w-1/3 cursor-pointer sm:w-auto"
+				<Button variant="ghost" size="sm" href="/admin{path}" class="w-1/3 cursor-pointer sm:w-auto"
 					>Admin</Button
 				>
 			{/if}

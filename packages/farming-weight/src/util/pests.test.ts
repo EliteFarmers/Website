@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
-import { PEST_COLLECTION_ADJUSTMENTS, Pest } from '../constants/pests.js';
+import { getPestName, PEST_COLLECTION_ADJUSTMENTS, Pest } from '../constants/pests.js';
 import { PEST_BESTIARY_SOURCE } from '../constants/specific.js';
 import { fortuneFromPestBestiary, uncountedCropsFromPests, unlockedPestBestiaryTiers } from './pests.js';
 
@@ -12,6 +12,11 @@ test('Pest bestiary fortune', () => {
 	};
 
 	expect(fortuneFromPestBestiary(bestiaryKills)).toBeCloseTo(1.2);
+});
+
+test('Pest names use bestiary ids for display names', () => {
+	expect(getPestName(Pest.Mantis)).toBe('Mantis');
+	expect(getPestName(Pest.Worm)).toBe('Earthworm');
 });
 
 test('Uncounted crops from pests', () => {

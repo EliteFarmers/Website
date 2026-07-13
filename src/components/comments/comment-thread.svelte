@@ -3,6 +3,7 @@
 	import CommentEditor from './comment-editor.svelte';
 	import CommentItem from './comment-item.svelte';
 	import CommentThread from './comment-thread.svelte';
+	import type { HoistTarget } from './hoist-comment-dialog.svelte';
 
 	interface Props {
 		comments: CommentDto[];
@@ -14,6 +15,10 @@
 		onDelete?: (commentId: number) => void;
 		onVoteUp?: (commentId: number) => void;
 		onVoteDown?: (commentId: number) => void;
+		canHoist?: boolean;
+		hoistTargets?: HoistTarget[];
+		onHoist?: (commentId: number, targetId: string) => void;
+		onClearHoist?: (commentId: number) => void;
 	}
 
 	let {
@@ -26,6 +31,10 @@
 		onDelete,
 		onVoteUp,
 		onVoteDown,
+		canHoist = false,
+		hoistTargets = [],
+		onHoist,
+		onClearHoist,
 	}: Props = $props();
 
 	// Track expanded state per comment
@@ -51,9 +60,9 @@
 	});
 </script>
 
-<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
 	{#each threadComments as comment (comment.id)}
-		<div class="flex flex-col gap-5">
+		<div class="flex flex-col gap-2">
 			<CommentItem
 				{comment}
 				childCount={childCountMap[comment.id] ?? 0}
@@ -64,6 +73,10 @@
 				onVoteUp={() => onVoteUp?.(comment.id)}
 				onVoteDown={() => onVoteDown?.(comment.id)}
 				onToggleCollapse={() => toggleCollapse(comment.id)}
+				{canHoist}
+				{hoistTargets}
+				onHoist={(targetId) => onHoist?.(comment.id, targetId)}
+				onClearHoist={() => onClearHoist?.(comment.id)}
 			/>
 
 			<!-- Reply composer -->
@@ -93,6 +106,10 @@
 						{onDelete}
 						{onVoteUp}
 						{onVoteDown}
+						{canHoist}
+						{hoistTargets}
+						{onHoist}
+						{onClearHoist}
 					/>
 				</div>
 			{/if}

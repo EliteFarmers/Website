@@ -1,7 +1,6 @@
 import { updateFortuneSettings } from '$lib/api';
 import { MissingRatesDataSchema } from '$lib/stores/ratesData';
 import { fail } from '@sveltejs/kit';
-import { normalizeChipId } from 'farming-weight';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ url }) => {
@@ -43,17 +42,15 @@ export const actions: Actions = {
 		const rosewaterFlasks = +(data.get('flasks') ?? 0);
 
 		const shards = {} as Record<string, number>;
-		const chips = {} as Record<string, number>;
+		const chipRarities = {} as Record<string, string>;
 
 		for (const [key, value] of data.entries()) {
 			if (key.startsWith('SHARD_')) {
 				shards[key] = +(value as string);
 			}
-			if (key.endsWith('_GARDEN_CHIP')) {
-				const normalized = normalizeChipId(key);
-				if (normalized) {
-					chips[normalized] = +(value as string);
-				}
+			if (key.startsWith('CHIP_RARITY_') && value) {
+				const chipId = key.slice('CHIP_RARITY_'.length);
+				chipRarities[chipId] = String(value);
 			}
 		}
 
@@ -61,7 +58,7 @@ export const actions: Actions = {
 			strength: strength,
 			communityCenter: communityCenter,
 			attributes: shards,
-			chips: chips,
+			chipRarities,
 			rosewaterFlasks: rosewaterFlasks,
 		});
 

@@ -2,14 +2,18 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
-	import type { BlockNode, InlineNode } from '$comp/blocks/blocks';
+	import type { BlockNode, RootNode } from '$comp/blocks/blocks';
 	import { CommentSectionContainer } from '$comp/comments';
 	import UserIcon from '$comp/discord/user-icon.svelte';
-	import Head from '$comp/head.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
+	import ContentReportDialog from '$comp/reports/content-report-dialog.svelte';
+	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
-	import type { FullGuideDto, GuideDto } from '$lib/api/schemas';
+	import { trackAnalytics } from '$lib/analytics';
+	import type { FullGuideDto } from '$lib/api/schemas';
+	import { collectGuideHoistTargets, ensureGuideBlockIds, getTextFromInlineNodes } from '$lib/guides/block-ids';
+	import type { CommentWithGuideAuthor, FullGuideWithAuthors, GuideAuthorDto } from '$lib/guides/types';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { GetGuideComments } from '$lib/remote/comments.remote';
@@ -21,7 +25,6 @@
 		unpublishGuideCommand,
 		voteGuideCommand,
 	} from '$lib/remote/guides.remote';
-	import { getHtmlFromMarkdown } from '$lib/remote/md.remote';
 	import {
 		AlertDialog,
 		AlertDialogAction,
@@ -37,11 +40,13 @@
 	import { Separator } from '$ui/separator';
 	import Ellipsis from '@lucide/svelte/icons/ellipsis';
 	import Eye from '@lucide/svelte/icons/eye';
+	import Flag from '@lucide/svelte/icons/flag';
 	import Link from '@lucide/svelte/icons/link';
 	import Star from '@lucide/svelte/icons/star';
 	import ThumbsDown from '@lucide/svelte/icons/thumbs-down';
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
 	import { useDebounce } from 'runed';
+	import { untrack } from 'svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -57,14 +62,38 @@
 	const slug = page.params.slug as string;
 	const draft = page.url.searchParams.get('draft') === 'true';
 
-	// Load guide and comments
-	const guidePromise = GetGuide({ slug, draft });
-	const commentsPromise = GetGuideComments(slug);
+	// Load comments. Guide data is already fetched and rendered by +page.server.ts.
+	const commentsPromise = $derived(GetGuideComments(slug));
 
-	const guideData = $derived(guidePromise?.current ?? data.guide);
+	let guideData = $state(untrack(() => data.guide) as FullGuideWithAuthors | undefined);
+	const COMMENTS_SECTION_ID = 'comments';
+	type TocItem = { level: number; text: string; id: string; isFooter?: boolean };
 
 	const gbl = getGlobalContext();
-	let isOwner = $derived(guideData?.author?.id === gbl.session?.id);
+	let authors = $derived.by((): GuideAuthorDto[] => {
+		if (!guideData) return [];
+		return guideData.authors?.length
+			? guideData.authors
+			: [{ author: guideData.author, isOwner: true, role: 'Owner' }];
+	});
+	let isOwner = $derived(authors.some((author) => author.isOwner && author.author.id === gbl.session?.id));
+	let isGuideAuthor = $derived(authors.some((author) => author.author.id === gbl.session?.id));
+	let canEditGuide = $derived(Boolean(gbl.session?.perms.admin || isGuideAuthor));
+	let canManageGuide = $derived(Boolean(gbl.session?.perms.admin || isOwner));
+	let parsedBlocks = $derived.by(() => parseGuideBlocks(guideData?.content));
+	let renderedBlocks = $derived((guideData?.renderedBlocks ?? null) as RootNode | null);
+	let renderedHtml = $derived(guideData?.renderedHtml ?? '');
+	let commentsData = $derived((commentsPromise?.current ?? []) as CommentWithGuideAuthor[]);
+	let hoistedComments = $derived.by(() => {
+		const map: Record<string, CommentWithGuideAuthor[]> = {};
+		for (const comment of commentsData) {
+			if (!comment.liftedElementId || comment.isDeleted) continue;
+			map[comment.liftedElementId] ??= [];
+			map[comment.liftedElementId].push(comment);
+		}
+		return map;
+	});
+	let hoistTargets = $derived.by(() => (parsedBlocks ? collectGuideHoistTargets(parsedBlocks) : []));
 
 	// Component state
 	let userVote = $state<number | null>(null);
@@ -73,6 +102,7 @@
 	let pendingGuideVoteGuideId: number | null = null;
 	let showDeleteDialog = $state(false);
 	let showUnpublishDialog = $state(false);
+	let showReportDialog = $state(false);
 	let isLoadingDelete = $state(false);
 	let isLoadingUnpublish = $state(false);
 
@@ -87,7 +117,7 @@
 		const result = await voteGuideCommand({ guideId, value });
 		if (result.error) {
 			notifyError(result.error);
-			guidePromise.refresh();
+			void refreshGuide();
 		}
 	}, 400);
 
@@ -98,17 +128,30 @@
 		isBookmarked = !!guide.isBookmarked;
 	});
 
-	function buildTableOfContents(html: string): Array<{ level: number; text: string; id: string }> {
+	function parseGuideBlocks(content: string | undefined): RootNode | null {
+		if (!content || (!content.trim().startsWith('[') && !content.trim().startsWith('{'))) {
+			return null;
+		}
+
+		try {
+			const parsed = JSON.parse(content);
+			return Array.isArray(parsed) ? ensureGuideBlockIds(parsed as RootNode) : null;
+		} catch {
+			return null;
+		}
+	}
+
+	function buildTableOfContents(html: string): TocItem[] {
 		if (!html) return [];
 		const parser = new DOMParser();
 		const doc = parser.parseFromString(html, 'text/html');
 		const headings = doc.querySelectorAll('h1, h2, h3');
-		const toc: Array<{ level: number; text: string; id: string }> = [];
+		const toc: TocItem[] = [];
 
 		headings.forEach((heading, index) => {
 			const level = parseInt(heading.tagName[1]);
 			const text = heading.textContent || '';
-			const id = `heading-${index}`;
+			const id = `md-section-${index}`;
 			heading.id = id;
 			toc.push({ level, text, id });
 		});
@@ -116,29 +159,33 @@
 		return toc;
 	}
 
-	function getTextFromInlineNodes(nodes: InlineNode[]): string {
-		return nodes
-			.map((node) => {
-				if (node.type === 'text') return node.text;
-				if (node.type === 'link') return getTextFromInlineNodes(node.children);
-				return '';
-			})
-			.join('');
-	}
-
-	function buildTableOfContentsFromBlocks(blocks: BlockNode[]): Array<{ level: number; text: string; id: string }> {
-		const toc: Array<{ level: number; text: string; id: string }> = [];
-		blocks.forEach((block, index) => {
+	function buildTableOfContentsFromBlocks(blocks: BlockNode[]): TocItem[] {
+		const toc: TocItem[] = [];
+		blocks.forEach((block) => {
 			if (block.type === 'heading') {
 				const text = getTextFromInlineNodes(block.children);
 				toc.push({
 					level: block.level,
 					text,
-					id: `heading-${index}`,
+					id: block.id ?? '',
 				});
 			}
 		});
 		return toc;
+	}
+
+	function appendCommentsTocItem(toc: TocItem[]): TocItem[] {
+		return [...toc, { level: 1, text: 'Comments', id: COMMENTS_SECTION_ID, isFooter: true }];
+	}
+
+	async function refreshGuide() {
+		try {
+			guideData = (await GetGuide({ slug, draft })) as FullGuideWithAuthors;
+			return guideData;
+		} catch (err) {
+			console.error('Failed to refresh guide:', err);
+			return null;
+		}
 	}
 
 	async function handleVote(guideId: number, value: 1 | -1) {
@@ -152,17 +199,19 @@
 		const delta = nextVote - oldVote;
 		userVote = nextVote;
 
-		guidePromise.withOverride((current) => {
-			if (!current || current.id !== guideId) return current;
-			return {
-				...current,
-				score: current.score + delta,
+		if (guideData?.id === guideId) {
+			guideData = {
+				...guideData,
+				score: guideData.score + delta,
 				userVote: nextVote,
 			};
-		});
+		}
 
 		pendingGuideVote = nextVote;
 		pendingGuideVoteGuideId = guideId;
+		trackAnalytics('guides.vote', {
+			value: nextVote,
+		});
 		flushGuideVote();
 	}
 
@@ -174,23 +223,40 @@
 
 		const oldBookmarked = isBookmarked;
 		const nextBookmarked = !oldBookmarked;
+		const previousGuide = guideData;
 		isBookmarked = nextBookmarked;
-
-		const cmd = nextBookmarked ? bookmarkGuideCommand : unbookmarkGuideCommand;
-		const result = await cmd(guideId).updates(
-			guidePromise.withOverride((current) => {
-				if (!current) return current;
-				return { ...current, isBookmarked: nextBookmarked };
-			})
-		);
-
-		if (result.error) {
-			isBookmarked = oldBookmarked;
-			notifyError(result.error);
-			return;
+		if (guideData) {
+			guideData = { ...guideData, isBookmarked: nextBookmarked };
 		}
 
-		notifySuccess(nextBookmarked ? 'Guide bookmarked' : 'Bookmark removed');
+		const cmd = nextBookmarked ? bookmarkGuideCommand : unbookmarkGuideCommand;
+
+		try {
+			const result = await cmd(guideId);
+
+			if (result.error) {
+				isBookmarked = oldBookmarked;
+				guideData = previousGuide;
+				notifyError(result.error);
+				return;
+			}
+
+			await refreshGuide();
+			notifySuccess(nextBookmarked ? 'Guide bookmarked' : 'Bookmark removed');
+			trackAnalytics('guides.bookmark', {
+				bookmarked: nextBookmarked,
+			});
+		} catch (err) {
+			isBookmarked = oldBookmarked;
+			guideData = previousGuide;
+			notifyError('Failed to update bookmark');
+			console.error(err);
+		}
+	}
+
+	function handleShareGuide() {
+		navigator.clipboard.writeText(window.location.href);
+		trackAnalytics('guides.share');
 	}
 
 	async function handleDeleteGuide(guideId: number) {
@@ -235,13 +301,6 @@
 		}
 	}
 
-	let ign = $derived.by(() => {
-		const guide = guideData as GuideDto | undefined;
-		if (!guide) return '';
-		const split = guide.author.name.split(' ');
-		return split.length === 1 ? split[0] : split.sort((a, b) => b.length - a.length)[0];
-	});
-
 	const pageCtx = getPageCtx();
 
 	$effect.pre(() => {
@@ -257,6 +316,28 @@
 		]);
 	});
 </script>
+
+{#snippet tableOfContents(toc: TocItem[], stickyOffset: string)}
+	{@const items = appendCommentsTocItem(toc)}
+	<div class="sticky {stickyOffset}">
+		<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
+		<nav class="flex flex-col gap-1 text-sm">
+			{#each items as item (item.id)}
+				<a
+					href="#{item.id}"
+					class="text-muted-foreground hover:text-foreground transition-colors"
+					class:mt-2={item.isFooter}
+					class:border-t={item.isFooter}
+					class:pt-2={item.isFooter}
+					class:font-medium={item.isFooter}
+					style="padding-left: {item.isFooter ? 0 : (item.level - 1) * 1}rem"
+				>
+					{item.text}
+				</a>
+			{/each}
+		</nav>
+	</div>
+{/snippet}
 
 {#if !guideData}
 	<div class="flex flex-col items-center justify-center gap-4 py-16">
@@ -295,7 +376,7 @@
 			<div class="bg-muted/50 border-border my-4 rounded-lg border p-4">
 				<p class="font-semibold">You are viewing a draft version</p>
 				<p class="text-muted-foreground mt-1 text-sm">This guide is not visible to the public.</p>
-				{#if page.data.session?.perms.admin}
+				{#if canEditGuide}
 					<div class="mt-3 flex gap-2">
 						<a href="/guides/{guideData.slug}/edit">
 							<Button size="sm" variant="outline">Edit</Button>
@@ -315,16 +396,28 @@
 
 			<div class="flex flex-col items-center gap-4">
 				<div class="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-					<div class="text-foreground flex items-center gap-2 font-medium">
-						{#if guideData.author.avatar}
-							<UserIcon
-								user={{ id: guideData.author.id.toString(), avatar: guideData.author.avatar }}
-								class="size-6 rounded-full"
-							/>
-						{:else}
-							<PlayerHead uuid={ign} class="size-6" />
-						{/if}
-						<span>{guideData.author.name}</span>
+					<div class="text-foreground flex flex-wrap items-center justify-center gap-2 font-medium">
+						{#each authors as guideAuthor (guideAuthor.author.id)}
+							<div class="flex items-center gap-1.5">
+								{#if guideAuthor.author.avatar}
+									<UserIcon
+										user={{
+											id: guideAuthor.author.id.toString(),
+											avatar: guideAuthor.author.avatar,
+										}}
+										class="size-6 rounded-full"
+									/>
+								{:else}
+									{@const nameParts = guideAuthor.author.name.split(' ')}
+									{@const headName =
+										nameParts.length === 1
+											? nameParts[0]
+											: nameParts.sort((a, b) => b.length - a.length)[0]}
+									<PlayerHead uuid={headName} class="size-6" />
+								{/if}
+								<span>{guideAuthor.author.name}</span>
+							</div>
+						{/each}
 					</div>
 					<DateDisplay timestamp={new Date(guideData.createdAt).getTime()} />
 					<span class="flex items-center gap-1">
@@ -340,7 +433,7 @@
 				</div>
 
 				<div class="mt-2 flex flex-wrap items-center justify-center gap-2">
-					{@render guideActions()}
+					{@render guideActions(guideData)}
 				</div>
 			</div>
 		</div>
@@ -349,122 +442,50 @@
 
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
 			<div class="lg:col-span-3">
-				{#if guideData.content.trim().startsWith('[') || guideData.content.trim().startsWith('{')}
+				{#if renderedBlocks}
 					{#key guideData.content}
-						{@const parsed = (() => {
-							try {
-								const p = JSON.parse(guideData.content);
-								return Array.isArray(p) ? p : null;
-							} catch {
-								return null;
-							}
-						})()}
-						{#if parsed}
-							<div class="prose dark:prose-invert mb-8 max-w-none">
-								<BlockRenderer content={parsed} />
-							</div>
-						{:else}
-							<div class="prose dark:prose-invert mb-8 max-w-none">
-								{#await getHtmlFromMarkdown(guideData.content) then html}
-									<RenderHtml content={html} />
-								{/await}
-							</div>
-						{/if}
+						<div class="prose dark:prose-invert mb-8 max-w-none">
+							<BlockRenderer content={renderedBlocks} {hoistedComments} renderTextAsHtml />
+						</div>
+					{/key}
+				{:else if parsedBlocks}
+					{#key guideData.content}
+						<div class="prose dark:prose-invert mb-8 max-w-none">
+							<BlockRenderer content={parsedBlocks} {hoistedComments} />
+						</div>
 					{/key}
 				{:else}
 					<div class="prose dark:prose-invert mb-8 max-w-none">
-						{#await getHtmlFromMarkdown(guideData.content) then html}
-							<RenderHtml content={html} />
-						{/await}
+						<RenderHtml content={renderedHtml} />
 					</div>
 				{/if}
 
 				<Separator class="my-8" />
 
 				<div class="mt-2 mb-4 flex flex-wrap items-center justify-start gap-2">
-					{@render guideActions()}
+					{@render guideActions(guideData)}
 				</div>
 
-				<CommentSectionContainer
-					guideId={guideData.id}
-					{commentsPromise}
-					session={page.data.session}
-					{notifyError}
-					{notifySuccess}
-				/>
+				<div id={COMMENTS_SECTION_ID} class="scroll-mt-20">
+					<CommentSectionContainer
+						guideId={guideData.id}
+						{commentsPromise}
+						session={page.data.session}
+						{notifyError}
+						{notifySuccess}
+						canHoist={canEditGuide}
+						{hoistTargets}
+					/>
+				</div>
 			</div>
 
 			<div class="hidden lg:block">
-				{#if guideData.content.trim().startsWith('[') || guideData.content.trim().startsWith('{')}
-					{#key guideData.content}
-						{@const parsed = (() => {
-							try {
-								const p = JSON.parse(guideData.content);
-								return Array.isArray(p) ? p : null;
-							} catch {
-								return null;
-							}
-						})()}
-						{#if parsed}
-							{@const toc = buildTableOfContentsFromBlocks(parsed)}
-							{#if toc.length > 0}
-								<div class="sticky top-20">
-									<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
-									<nav class="flex flex-col gap-1 text-sm">
-										{#each toc as item (item.id)}
-											<a
-												href="#{item.id}"
-												class="text-muted-foreground hover:text-foreground transition-colors"
-												style="padding-left: {(item.level - 1) * 1}rem"
-											>
-												{item.text}
-											</a>
-										{/each}
-									</nav>
-								</div>
-							{/if}
-						{:else}
-							{#await getHtmlFromMarkdown(guideData.content) then html}
-								{@const toc = buildTableOfContents(html)}
-								{#if toc.length > 0}
-									<div class="sticky top-4">
-										<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
-										<nav class="flex flex-col gap-1 text-sm">
-											{#each toc as item (item.id)}
-												<a
-													href="#{item.id}"
-													class="text-muted-foreground hover:text-foreground transition-colors"
-													style="padding-left: {(item.level - 1) * 1}rem"
-												>
-													{item.text}
-												</a>
-											{/each}
-										</nav>
-									</div>
-								{/if}
-							{/await}
-						{/if}
-					{/key}
+				{#if parsedBlocks}
+					{@const toc = buildTableOfContentsFromBlocks(parsedBlocks)}
+					{@render tableOfContents(toc, 'top-20')}
 				{:else}
-					{#await getHtmlFromMarkdown(guideData.content) then html}
-						{@const toc = buildTableOfContents(html)}
-						{#if toc.length > 0}
-							<div class="sticky top-4">
-								<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
-								<nav class="flex flex-col gap-1 text-sm">
-									{#each toc as item (item.id)}
-										<a
-											href="#{item.id}"
-											class="text-muted-foreground hover:text-foreground transition-colors"
-											style="padding-left: {(item.level - 1) * 1}rem"
-										>
-											{item.text}
-										</a>
-									{/each}
-								</nav>
-							</div>
-						{/if}
-					{/await}
+					{@const toc = buildTableOfContents(renderedHtml)}
+					{@render tableOfContents(toc, 'top-4')}
 				{/if}
 			</div>
 		</div>
@@ -481,7 +502,7 @@
 			<div class="flex justify-end gap-3">
 				<AlertDialogCancel>Cancel</AlertDialogCancel>
 				<AlertDialogAction
-					onclick={() => handleDeleteGuide(guideData.id)}
+					onclick={() => handleDeleteGuide(guideData!.id)}
 					disabled={isLoadingDelete}
 					class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 				>
@@ -506,7 +527,7 @@
 			<div class="flex justify-end gap-3">
 				<AlertDialogCancel>Cancel</AlertDialogCancel>
 				<AlertDialogAction
-					onclick={() => handleUnpublishGuide(guideData.id)}
+					onclick={() => handleUnpublishGuide(guideData!.id)}
 					disabled={isLoadingUnpublish}
 					class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 				>
@@ -520,55 +541,74 @@
 		</AlertDialogContent>
 	</AlertDialog>
 
-	{#snippet guideActions()}
+	{#snippet guideActions(guide: FullGuideWithAuthors)}
 		<div class="bg-card flex items-center rounded-lg border">
 			<Button
 				variant={userVote === 1 ? 'default' : 'ghost'}
 				size="sm"
-				onclick={() => handleVote(guideData.id, 1)}
+				onclick={() => handleVote(guide.id, 1)}
 				class="rounded-none rounded-l-md border-r px-3"
 			>
 				<ThumbsUp class="mr-2 h-4 w-4" />
 				Like
 			</Button>
-			<span class="min-w-8 px-3 py-1 text-center text-sm font-semibold">{guideData.score.toLocaleString()}</span>
+			<span class="min-w-8 px-3 py-1 text-center text-sm font-semibold">{guide.score.toLocaleString()}</span>
 			<Button
 				variant={userVote === -1 ? 'default' : 'ghost'}
 				size="sm"
-				onclick={() => handleVote(guideData.id, -1)}
+				onclick={() => handleVote(guide.id, -1)}
 				class="rounded-none rounded-r-md border-l px-3"
 			>
 				<ThumbsDown class="h-4 w-4" />
 			</Button>
 		</div>
 
-		<Button variant={isBookmarked ? 'default' : 'outline'} size="sm" onclick={() => handleBookmark(guideData.id)}>
+		<Button variant={isBookmarked ? 'default' : 'outline'} size="sm" onclick={() => handleBookmark(guide.id)}>
 			<Star class="mr-2 h-4 w-4" />
 			Bookmark
 		</Button>
 
-		<Button variant="outline" size="sm" onclick={() => navigator.clipboard.writeText(window.location.href)}>
+		<Button variant="outline" size="sm" onclick={handleShareGuide}>
 			<Link class="mr-2 h-4 w-4" />
 			Share
 		</Button>
 
-		{#if gbl.session?.perms.admin || isOwner}
+		{#if gbl.authorized}
+			<Button variant="outline" size="sm" onclick={() => (showReportDialog = true)}>
+				<Flag class="h-4 w-4" />
+			</Button>
+		{/if}
+
+		{#if canEditGuide || canManageGuide}
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
-					<Button variant="outline" size="sm" aria-label="Open menu">
-						<Ellipsis class="h-4 w-4" />
-					</Button>
+					{#snippet child({ props })}
+						<Button {...props} variant="outline" size="sm" aria-label="Open menu">
+							<Ellipsis class="h-4 w-4" />
+						</Button>
+					{/snippet}
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end">
-					{#if gbl.session?.perms.admin}
-						<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)}>Unpublish</DropdownMenu.Item>
+					{#if canEditGuide}
+						<DropdownMenu.Item onclick={() => goto(`/guides/${guide.slug}/edit`)}>Edit</DropdownMenu.Item>
 					{/if}
-					<DropdownMenu.Item onclick={() => goto(`/guides/${guideData.slug}/edit`)}>Edit</DropdownMenu.Item>
-					<DropdownMenu.Item onclick={() => (showDeleteDialog = true)} class="text-destructive">
-						Delete
-					</DropdownMenu.Item>
+					{#if canManageGuide}
+						<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)} class="text-destructive"
+							>Unpublish</DropdownMenu.Item
+						>
+						<DropdownMenu.Item onclick={() => (showDeleteDialog = true)} class="text-destructive">
+							Delete
+						</DropdownMenu.Item>
+					{/if}
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		{/if}
 	{/snippet}
+
+	<ContentReportDialog
+		open={showReportDialog}
+		targetType="guide"
+		targetId={guideData.id}
+		onOpenChange={(open) => (showReportDialog = open)}
+	/>
 {/if}

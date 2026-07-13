@@ -11,6 +11,7 @@ import type {
 export type AuthorizedUser = AuthorizedAccountDto;
 export type LeaderboardEntry = LeaderboardEntryDto & {
 	style?: WeightStyleWithDataDto['leaderboard'];
+	imageRefs?: WeightStyleWithDataDto['imageRefs'];
 };
 
 export type GuildMembersLeaderboard = GuildMembersLeaderboardDto & {

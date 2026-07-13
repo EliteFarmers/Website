@@ -12,7 +12,7 @@
 	}
 </script>
 
-<div class="border-muted text-foreground w-full space-y-4 rounded-lg border p-5 select-none">
+<div class="border-muted text-foreground bg-background w-full space-y-4 rounded-lg border p-5 select-none">
 	<h3 class="text-xl font-bold">You qualify for Elite Farmer!</h3>
 	<p>
 		Join the <a href={PUBLIC_COMMUNITY_INVITE} target="_blank" class="text-link">Discord</a> and make a ticket to

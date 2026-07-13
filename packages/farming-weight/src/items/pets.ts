@@ -12,10 +12,16 @@ import { PigPet } from './pets/pig.js';
 import { RabbitPet } from './pets/rabbit.js';
 import { RoseDragonPet } from './pets/rose-dragon.js';
 import { SlugPet } from './pets/slug.js';
-import type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType } from './types/pets.js';
+import type {
+	FarmingPetAbility,
+	FarmingPetInfo,
+	FarmingPetItemInfo,
+	FarmingPetItemStatModifier,
+	FarmingPetType,
+} from './types/pets.js';
 
-export { FarmingPets, FarmingPetStatType };
-export type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType };
+export { FarmingPetStatType, FarmingPets };
+export type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetItemStatModifier, FarmingPetType };
 
 export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 	[FarmingPets.Elephant]: new ElephantPet(),
@@ -33,7 +39,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 	YELLOW_BANDANA: {
 		name: 'Yellow Bandana',
-		wiki: 'https://wiki.hypixel.net/Yellow_Bandana',
+		wiki: 'https://w.elitesb.gg/Yellow_Bandana',
 		stats: {
 			[Stat.FarmingFortune]: {
 				name: 'Bandana Fortune',
@@ -43,7 +49,7 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 	},
 	GREEN_BANDANA: {
 		name: 'Green Bandana',
-		wiki: 'https://wiki.hypixel.net/Green_Bandana',
+		wiki: 'https://w.elitesb.gg/Green_Bandana',
 		stats: {
 			[Stat.FarmingFortune]: {
 				name: 'Bandana Fortune',
@@ -53,11 +59,47 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 	},
 	BROWN_BANDANA: {
 		name: 'Brown Bandana',
-		wiki: 'https://wiki.hypixel.net/Brown_Bandana',
+		wiki: 'https://w.elitesb.gg/Brown_Bandana',
 		stats: {
 			[Stat.BonusPestChance]: {
 				name: 'Bandana Pest Chance',
 				calculated: (player) => 0.2 * unlockedPestBestiaryTiers(player.bestiaryKills ?? {}),
+			},
+		},
+	},
+	MINOS_RELIC: {
+		name: 'Minos Relic',
+		wiki: 'https://w.elitesb.gg/Minos_Relic',
+		modifiers: [
+			{
+				kind: 'multiply-pet-stats',
+				statTypes: [FarmingPetStatType.Base],
+				multiplier: 4 / 3,
+			},
+		],
+	},
+	HEPHAESTUS_RELIC: {
+		name: 'Hephaestus Relic',
+		wiki: 'https://w.elitesb.gg/Hephaestus_Relic',
+		modifiers: [
+			{
+				kind: 'multiply-pet-stats',
+				statTypes: [FarmingPetStatType.Base],
+				multiplier: 1.5,
+			},
+		],
+	},
+	FLYING_PIG: {
+		name: 'Flying Pig',
+		wiki: 'https://w.elitesb.gg/Flying_Pig',
+		stats: {
+			[Stat.PotatoFortune]: {
+				name: 'Flying Pig Potato Fortune',
+				value: 40,
+			},
+			[Stat.Speed]: {
+				name: 'Flying Pig Speed',
+				value: 20,
 			},
 		},
 	},
