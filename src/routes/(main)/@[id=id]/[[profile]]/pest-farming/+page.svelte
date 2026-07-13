@@ -39,8 +39,19 @@
 		trackAnalytics('pest_farming.settings_opened');
 	}
 
+<<<<<<< HEAD
 	function formatNumber(value: number, maximumFractionDigits = 0) {
 		return value.toLocaleString(undefined, { maximumFractionDigits });
+=======
+	const _formatters = new Map<number, Intl.NumberFormat>();
+	function formatNumber(value: number, maximumFractionDigits = 0) {
+		let fmt = _formatters.get(maximumFractionDigits);
+		if (!fmt) {
+			fmt = new Intl.NumberFormat(undefined, { maximumFractionDigits });
+			_formatters.set(maximumFractionDigits, fmt);
+		}
+		return fmt.format(value);
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 	}
 
 	function formatRate(value: number) {
@@ -256,9 +267,13 @@
 												onValueChange={(value) =>
 													value && pest.selectPhasePet(pest.activePhase, value)}
 											>
+<<<<<<< HEAD
 												{#each pest.pets
 													.filter((pet) => !!pet.pet.uuid)
 													.sort((a, b) => pest.getPetRateImpact(b, pest.activePhase) - pest.getPetRateImpact(a, pest.activePhase)) as pet, i (pet.pet.uuid ?? i)}
+=======
+												{#each pest.sortedPets as pet, i (pet.pet.uuid ?? i)}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 													{@const petRateDelta = pest.getPetRateImpact(pet, pest.activePhase)}
 													<DropdownMenu.RadioItem value={pet.pet.uuid ?? ''}>
 														<div class="flex flex-row items-center gap-2">
@@ -446,4 +461,8 @@
 		<Skeleton class="h-72 w-full" />
 		<Skeleton class="h-96 w-full" />
 	</div>
+<<<<<<< HEAD
 {/if}
+=======
+{/if}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556

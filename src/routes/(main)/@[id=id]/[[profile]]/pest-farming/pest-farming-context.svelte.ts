@@ -137,6 +137,7 @@ function getItemSellValue(itemId: string, item: RatesItemPriceEntry | undefined)
 	}
 
 	const bazaar = item.bazaar?.averageSellOrder || item.bazaar?.averageSell || 0;
+<<<<<<< HEAD
 	const auctionPrices = item.auctions
 		?.map((auction) => (auction.lowest > 0 ? auction.lowest : auction.last))
 		.filter((price) => price > 0);
@@ -146,6 +147,20 @@ function getItemSellValue(itemId: string, item: RatesItemPriceEntry | undefined)
 		{ coins: auction, source: 'auction' },
 	].filter((price): price is PestRateItemPrice => price.coins > 0);
 	const market = marketValues.length ? marketValues.sort((a, b) => a.coins - b.coins)[0] : undefined;
+=======
+	const auction = item.auctions?.reduce<number>((min, a) => {
+		const price = a.lowest > 0 ? a.lowest : a.last;
+		return price > 0 && price < min ? price : min;
+	}, Infinity) ?? Infinity;
+	const auctionPrice = isFinite(auction) ? auction : 0;
+
+	const market: PestRateItemPrice | undefined =
+		bazaar > 0 && (auctionPrice <= 0 || bazaar <= auctionPrice)
+			? { coins: bazaar, source: 'bazaar' }
+			: auctionPrice > 0
+				? { coins: auctionPrice, source: 'auction' }
+				: undefined;
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 
 	if (npc > 0 && npc >= (market?.coins ?? 0)) {
 		return { coins: npc, source: 'npc' };
@@ -181,8 +196,21 @@ export class PestFarmingPageContext {
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	#petRateImpactMemo = new Map<string, number>();
 	#lastItemRequestKey = '';
+<<<<<<< HEAD
 
 	pets = $derived.by(() => (this.ctx.ready ? FarmingPet.fromArray(this.ctx.pets) : []));
+=======
+	#lastRateStateKey = '';
+	#lastGearRateStateKey = '';
+	#lastPetRateStateKey = '';
+
+	pets = $derived.by(() => (this.ctx.ready ? FarmingPet.fromArray(this.ctx.pets) : []));
+	sortedPets = $derived.by(() =>
+		this.pets
+			.filter((pet) => !!pet.pet.uuid)
+			.sort((a, b) => this.getPetRateImpact(b, this.activePhase) - this.getPetRateImpact(a, this.activePhase))
+	);
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 	tools = $derived.by(() => (this.ctx.ready ? FarmingTool.fromArray(this.ctx.tools as EliteItemDto[]) : []));
 	vacuums = $derived.by(() => (this.ctx.ready ? Vacuum.fromArray(this.ctx.tools as EliteItemDto[]) : []));
 	armor = $derived.by(() => (this.ctx.ready ? FarmingArmor.fromArray(this.ctx.armor as EliteItemDto[]) : []));
@@ -218,18 +246,35 @@ export class PestFarmingPageContext {
 		...this.rates.pestFarming.rateSettings,
 		sprayedPlot: this.rates.pestFarming.sprayedPlot,
 	}));
+<<<<<<< HEAD
 	pestRatePriceBook = $derived.by<PestRatePriceBook>(() => {
 		void this.itemsVersion;
+=======
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	#itemPriceCache = new Map<string, PestRateItemPrice>();
+	pestRatePriceBook = $derived.by<PestRatePriceBook>(() => {
+		void this.itemsVersion;
+		for (const [itemId, item] of Object.entries(this.itemsData)) {
+			if (!this.#itemPriceCache.has(itemId)) {
+				const price = getItemSellValue(itemId, item);
+				if (price !== undefined) this.#itemPriceCache.set(itemId, price);
+			}
+		}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		return {
 			version: String(this.itemsVersion),
 			missingItemMode: 'exclude',
 			items: {
 				...STATIC_NPC_ITEM_PRICES,
+<<<<<<< HEAD
 				...Object.fromEntries(
 					Object.entries(this.itemsData)
 						.map(([itemId, item]) => [itemId, getItemSellValue(itemId, item)] as const)
 						.filter((entry): entry is readonly [string, PestRateItemPrice] => entry[1] !== undefined)
 				),
+=======
+				...Object.fromEntries(this.#itemPriceCache),
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 			},
 		};
 	});
@@ -416,12 +461,24 @@ export class PestFarmingPageContext {
 	rateImpactItems = $derived.by(() => {
 		void this.itemsVersion;
 		this.trackPestVersion();
+<<<<<<< HEAD
 		const calculator = this.#createRateCalculator();
 		const result = calculator.calculate();
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const items = new Set<string>();
 		for (const upgrade of this.neededItemUpgrades) {
 			const impact = this.#calculatePestRateImpact(calculator, result, this.activePhase, upgrade);
+=======
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const items = new Set<string>();
+		for (const upgrade of this.neededItemUpgrades) {
+			const impact = this.#calculatePestRateImpact(
+				this.pestRateCalculator,
+				this.pestRateResult,
+				this.activePhase,
+				upgrade
+			);
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 			for (const itemId of impact.valuationDelta.missingItemIds) {
 				if (!this.itemsData[itemId]) items.add(itemId);
 			}
@@ -429,6 +486,7 @@ export class PestFarmingPageContext {
 		return [...items];
 	});
 
+<<<<<<< HEAD
 	neededItems = $derived([
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		...new Set([
@@ -437,6 +495,16 @@ export class PestFarmingPageContext {
 			...this.rateImpactItems,
 		]),
 	]);
+=======
+	neededItems = $derived.by(() => {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const seen = new Set<string>();
+		for (const id of getItemsFromUpgrades(this.neededItemUpgrades)) seen.add(id);
+		for (const id of this.rateOutputItems) seen.add(id);
+		for (const id of this.rateImpactItems) seen.add(id);
+		return [...seen];
+	});
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 	debouncedItems = new Debounced(() => this.neededItems, 1000);
 
 	constructor() {
@@ -618,6 +686,13 @@ export class PestFarmingPageContext {
 		if (!slot || !uuid) return 0;
 		if (this.pestPlayer.getArmorSetLoadout(armorSetId)?.pieces[slot] === uuid) return 0;
 
+<<<<<<< HEAD
+=======
+		if (this.#lastGearRateStateKey !== this.pestRateStateKey) {
+			this.#gearRateImpactMemo.clear();
+			this.#lastGearRateStateKey = this.pestRateStateKey;
+		}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		const key = `${this.pestRateStateKey}:armor:${armorSetId}:${slot}:${uuid}`;
 		const cached = this.#gearRateImpactMemo.get(key);
 		if (cached !== undefined) return cached;
@@ -625,6 +700,7 @@ export class PestFarmingPageContext {
 		const armorSets = this.getStoredArmorSets().map((set) =>
 			set.id === armorSetId
 				? {
+<<<<<<< HEAD
 						...set,
 						pieces: {
 							...set.pieces,
@@ -635,6 +711,17 @@ export class PestFarmingPageContext {
 		);
 		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ armorSets }));
 		if (this.#gearRateImpactMemo.size > 1000) this.#gearRateImpactMemo.clear();
+=======
+					...set,
+					pieces: {
+						...set.pieces,
+						[slot]: uuid,
+					},
+				}
+				: set
+		);
+		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ armorSets }));
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		this.#gearRateImpactMemo.set(key, delta);
 		return delta;
 	}
@@ -645,6 +732,13 @@ export class PestFarmingPageContext {
 		if (!slot || !uuid) return 0;
 		if (this.sharedEquipment[slot] === uuid) return 0;
 
+<<<<<<< HEAD
+=======
+		if (this.#lastGearRateStateKey !== this.pestRateStateKey) {
+			this.#gearRateImpactMemo.clear();
+			this.#lastGearRateStateKey = this.pestRateStateKey;
+		}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		const key = `${this.pestRateStateKey}:equipment:${slot}:${uuid}`;
 		const cached = this.#gearRateImpactMemo.get(key);
 		if (cached !== undefined) return cached;
@@ -654,7 +748,10 @@ export class PestFarmingPageContext {
 			[slot]: uuid,
 		};
 		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ sharedEquipment }));
+<<<<<<< HEAD
 		if (this.#gearRateImpactMemo.size > 1000) this.#gearRateImpactMemo.clear();
+=======
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		this.#gearRateImpactMemo.set(key, delta);
 		return delta;
 	}
@@ -677,6 +774,13 @@ export class PestFarmingPageContext {
 		if (!uuid) return 0;
 		if (this.phaseLoadouts[phase]?.petId === uuid) return 0;
 
+<<<<<<< HEAD
+=======
+		if (this.#lastPetRateStateKey !== this.pestRateStateKey) {
+			this.#petRateImpactMemo.clear();
+			this.#lastPetRateStateKey = this.pestRateStateKey;
+		}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		const key = `${this.pestRateStateKey}:pet:${phase}:${uuid}`;
 		const cached = this.#petRateImpactMemo.get(key);
 		if (cached !== undefined) return cached;
@@ -689,7 +793,10 @@ export class PestFarmingPageContext {
 			},
 		};
 		const delta = this.#getRateDeltaForPlayer(this.#createEvaluationPlayer({ phaseLoadouts }));
+<<<<<<< HEAD
 		if (this.#petRateImpactMemo.size > 1000) this.#petRateImpactMemo.clear();
+=======
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		this.#petRateImpactMemo.set(key, delta);
 		return delta;
 	}
@@ -773,12 +880,21 @@ export class PestFarmingPageContext {
 		const next = armorSets.map((set) =>
 			set.id === armorSetId
 				? {
+<<<<<<< HEAD
 						...set,
 						pieces: {
 							...set.pieces,
 							[slot]: uuid,
 						},
 					}
+=======
+					...set,
+					pieces: {
+						...set.pieces,
+						[slot]: uuid,
+					},
+				}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 				: set
 		);
 		this.updateArmorSets(next);
@@ -850,9 +966,18 @@ export class PestFarmingPageContext {
 	}
 
 	getPestRateImpact(upgrade: FortuneUpgrade): PestFarmingUpgradeRateImpact | undefined {
+<<<<<<< HEAD
 		const calculator = this.#createRateCalculator();
 		const result = calculator.calculate();
 		return this.#calculatePestRateImpact(calculator, result, this.activePhase, upgrade);
+=======
+		return this.#calculatePestRateImpact(
+			this.pestRateCalculator,
+			this.pestRateResult,
+			this.activePhase,
+			upgrade
+		);
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 	}
 
 	#calculatePestRateImpact(
@@ -861,6 +986,13 @@ export class PestFarmingPageContext {
 		phase: PestFarmingPhase,
 		upgrade: FortuneUpgrade
 	): PestFarmingUpgradeRateImpact {
+<<<<<<< HEAD
+=======
+		if (this.#lastRateStateKey !== result.stateKey) {
+			this.#rateImpactMemo.clear();
+			this.#lastRateStateKey = result.stateKey;
+		}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		const key = `${result.stateKey}:${phase}:${getUpgradeIdentity(upgrade)}`;
 		const cached = this.#rateImpactMemo.get(key);
 		if (cached) return cached;
@@ -870,7 +1002,10 @@ export class PestFarmingPageContext {
 			upgrade,
 			before: result,
 		});
+<<<<<<< HEAD
 		if (this.#rateImpactMemo.size > 500) this.#rateImpactMemo.clear();
+=======
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 		this.#rateImpactMemo.set(key, impact);
 		return impact;
 	}
@@ -1035,9 +1170,15 @@ export class PestFarmingPageContext {
 			temporaryFortune: rates.useTemp ? rates.temp : undefined,
 			zorro: rates.zorroMode
 				? {
+<<<<<<< HEAD
 						enabled: this.ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
 						mode: rates.zorroMode,
 					}
+=======
+					enabled: this.ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
+					mode: rates.zorroMode,
+				}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
 				: undefined,
 		} as PestFarmingPlayerOptions;
 	}
@@ -1110,4 +1251,8 @@ export class PestFarmingPageContext {
 		this.#skipNextRatesDataRefresh = true;
 		this.#ratesData.update(updater);
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 437551d2784e838ca661d955d0d3ac2ddc389556
