@@ -31,15 +31,15 @@
 {#each groupSizes as groupSize, groupIndex (groupIndex)}
 	<div class={gridClass}>
 		{#if slotsPerColumn > 1}
-			{#each { length: Math.ceil(groupSize / slotsPerColumn) } as _, columnIndex (columnIndex)}
+			{#each { length: Math.ceil(groupSize / slotsPerColumn) }, columnIndex (columnIndex)}
 				<div class={columnClass}>
-					{#each { length: Math.min(slotsPerColumn, groupSize - columnIndex * slotsPerColumn) } as _, slotIndex (slotIndex)}
+					{#each { length: Math.min(slotsPerColumn, groupSize - columnIndex * slotsPerColumn) }, slotIndex (slotIndex)}
 						<Skeleton class={slotClass} />
 					{/each}
 				</div>
 			{/each}
 		{:else}
-			{#each { length: groupSize } as _, slotIndex (slotIndex)}
+			{#each { length: groupSize }, slotIndex (slotIndex)}
 				<Skeleton class={slotClass} />
 			{/each}
 		{/if}
