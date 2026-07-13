@@ -2,6 +2,8 @@
 	const inventoryOptions = [
 		{ value: 'inventory', label: 'Inventory' },
 		{ value: 'wardrobe', label: 'Wardrobe' },
+		{ value: 'equipment_wardrobe', label: 'Equipment' },
+		{ value: 'loadouts', label: 'Loadouts' },
 		{ value: 'talisman_bag', label: 'Accessories Bag' },
 		{ value: 'ender_chest', label: 'Ender Chest' },
 		{ value: 'backpacks', label: 'Backpacks' },
@@ -18,7 +20,9 @@
 	import * as Tabs from '$ui/tabs';
 	import Inventory from './inventory.svelte';
 	import PlayerBackpacks from './player-backpacks.svelte';
+	import PlayerEquipmentWardrobe from './player-equipment-wardrobe.svelte';
 	import PlayerInventory from './player-inventory.svelte';
+	import PlayerLoadouts from './player-loadouts.svelte';
 	import PlayerWardrobe from './player-wardrobe.svelte';
 
 	const ctx = getStatsContext();
@@ -35,6 +39,10 @@
 
 			if (option.value === 'backpacks') {
 				return memberInventories.some((inv) => inv.name.startsWith('backpack_'));
+			}
+
+			if (option.value === 'loadouts') {
+				return (ctx.member.current?.memberData.loadouts?.length ?? 0) > 0;
 			}
 
 			return memberInventories.some((inv) => inv.name === option.value);
@@ -79,6 +87,10 @@
 			<PlayerBackpacks />
 		{:else if selectedInventoryId === 'wardrobe'}
 			<PlayerWardrobe />
+		{:else if selectedInventoryId === 'equipment_wardrobe'}
+			<PlayerEquipmentWardrobe />
+		{:else if selectedInventoryId === 'loadouts'}
+			<PlayerLoadouts />
 		{:else if selectedInventory?.name === 'talisman_bag'}
 			<div class="flex w-full flex-wrap items-start justify-center gap-4 overflow-x-auto px-2">
 				<Inventory inventory={selectedInventory} inventorySize={45} slotClass={inventorySlotClass} />
