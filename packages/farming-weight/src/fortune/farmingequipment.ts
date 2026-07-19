@@ -273,7 +273,7 @@ export class FarmingEquipment extends UpgradeableBase {
 	 */
 	getPieceBonus(): number {
 		if (!this.item.lore) return 0;
-		const regex = /Piece Bonus: §6\+(\d+.?\d*)☘/g;
+		const regex = /Piece Bonus: §6\+(\d+.?\d*)/g;
 		let found = 0;
 
 		for (let i = (this.item.lore ?? []).length - 1; i >= 0; i--) {

@@ -1,3 +1,82 @@
+<script module lang="ts">
+	type OverflowEntry = {
+		node: HTMLElement;
+		track: HTMLElement | null;
+		visible: boolean;
+		lastOverflow?: boolean;
+		lastDistance?: number;
+		lastDuration?: number;
+	};
+
+	const targetOwners = new WeakMap<Element, OverflowEntry>();
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const pending = new Set<OverflowEntry>();
+	let resizeObserver: ResizeObserver | undefined;
+	let intersectionObserver: IntersectionObserver | undefined;
+	let frame = 0;
+
+	function ensureObservers() {
+		if (!resizeObserver && typeof ResizeObserver !== 'undefined') {
+			resizeObserver = new ResizeObserver((entries) => {
+				for (const { target } of entries) {
+					const owner = targetOwners.get(target);
+					if (owner?.visible) queueMeasurement(owner);
+				}
+			});
+		}
+		if (!intersectionObserver && typeof IntersectionObserver !== 'undefined') {
+			intersectionObserver = new IntersectionObserver(
+				(entries) => {
+					for (const { target, isIntersecting } of entries) {
+						const owner = targetOwners.get(target);
+						if (!owner) continue;
+						owner.visible = isIntersecting;
+						if (isIntersecting) queueMeasurement(owner);
+					}
+				},
+				{ rootMargin: '200px' }
+			);
+		}
+	}
+
+	function queueMeasurement(entry: OverflowEntry) {
+		pending.add(entry);
+		if (!frame) frame = requestAnimationFrame(flushMeasurements);
+	}
+
+	function flushMeasurements() {
+		frame = 0;
+		const measurements = [...pending]
+			.filter((entry) => entry.visible && entry.node.isConnected)
+			.map((entry) => {
+				const contentWidth = entry.track?.scrollWidth ?? entry.node.scrollWidth;
+				const overflow = contentWidth - entry.node.clientWidth;
+				return {
+					entry,
+					overflowing: overflow > 1,
+					distance: Math.min(0, -overflow),
+					duration: Math.min(1.4, Math.max(0.75, overflow / 120)),
+				};
+			});
+		pending.clear();
+
+		for (const { entry, overflowing, distance, duration } of measurements) {
+			if (entry.lastOverflow !== overflowing) {
+				entry.node.classList.toggle('scrolling-name--overflowing', overflowing);
+				entry.lastOverflow = overflowing;
+			}
+			if (entry.lastDistance !== distance) {
+				entry.node.style.setProperty('--scrolling-name-scroll-distance', `${distance}px`);
+				entry.lastDistance = distance;
+			}
+			if (entry.lastDuration !== duration) {
+				entry.node.style.setProperty('--scrolling-name-scroll-duration', `${duration}s`);
+				entry.lastDuration = duration;
+			}
+		}
+	}
+</script>
+
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
@@ -12,28 +91,23 @@
 
 	function trackOverflow(node: HTMLElement) {
 		const track = node.firstElementChild as HTMLElement | null;
-		const update = () => {
-			const contentWidth = track?.scrollWidth ?? node.scrollWidth;
-			const overflow = contentWidth - node.clientWidth;
-			const duration = Math.min(1.4, Math.max(0.75, overflow / 120));
-
-			node.classList.toggle('scrolling-name--overflowing', overflow > 1);
-			node.style.setProperty('--scrolling-name-scroll-distance', `${Math.min(0, -overflow)}px`);
-			node.style.setProperty('--scrolling-name-scroll-duration', `${duration}s`);
-		};
-
-		const resizeObserver = new ResizeObserver(update);
-		resizeObserver.observe(node);
-
+		const entry: OverflowEntry = { node, track, visible: !('IntersectionObserver' in globalThis) };
+		ensureObservers();
+		targetOwners.set(node, entry);
+		resizeObserver?.observe(node);
+		intersectionObserver?.observe(node);
 		if (track) {
-			resizeObserver.observe(track);
+			targetOwners.set(track, entry);
+			resizeObserver?.observe(track);
 		}
-
-		requestAnimationFrame(update);
+		if (entry.visible) queueMeasurement(entry);
 
 		return {
 			destroy() {
-				resizeObserver.disconnect();
+				pending.delete(entry);
+				resizeObserver?.unobserve(node);
+				intersectionObserver?.unobserve(node);
+				if (track) resizeObserver?.unobserve(track);
 			},
 		};
 	}
@@ -58,7 +132,6 @@
 		display: inline-block;
 		min-width: max-content;
 		white-space: nowrap;
-		will-change: transform;
 	}
 
 	.scrolling-name--overflowing {
@@ -68,6 +141,7 @@
 
 	.scrolling-name--overflowing:hover .scrolling-name__track,
 	.scrolling-name--overflowing:focus-within .scrolling-name__track {
+		will-change: transform;
 		animation: scrolling-name-scroll var(--scrolling-name-scroll-duration, 1.25s) ease-in-out infinite alternate;
 	}
 

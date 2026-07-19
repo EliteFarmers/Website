@@ -89,7 +89,7 @@
 				{openSettings}
 			/>
 
-			<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
+			<section class="pest-deferred-section bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
 				<header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 					<div class="flex flex-col gap-1">
 						<h2 class="text-xl leading-tight font-semibold">{pest.selectedCropName} Fortune</h2>
@@ -152,7 +152,7 @@
 				/>
 			</VacuumSelector>
 
-			<section class="flex flex-col gap-5">
+			<section class="pest-deferred-section pest-deferred-section--large flex flex-col gap-5">
 				<header
 					class="bg-background/95 supports-backdrop-filter:bg-background/80 sticky top-16 z-20 -mx-2 flex flex-col gap-2 border-b px-2 py-3 backdrop-blur"
 				>
@@ -258,7 +258,7 @@
 											>
 												{#each pest.pets
 													.filter((pet) => !!pet.pet.uuid)
-													.sort((a, b) => pest.getPetRateImpact(b, pest.activePhase) - pest.getPetRateImpact(a, pest.activePhase)) as pet, i (pet.pet.uuid ?? i)}
+													.sort((a, b) => (pest.getPetRateImpact(b, pest.activePhase) ?? Number.NEGATIVE_INFINITY) - (pest.getPetRateImpact(a, pest.activePhase) ?? Number.NEGATIVE_INFINITY)) as pet, i (pet.pet.uuid ?? i)}
 													{@const petRateDelta = pest.getPetRateImpact(pet, pest.activePhase)}
 													<DropdownMenu.RadioItem value={pet.pet.uuid ?? ''}>
 														<div class="flex flex-row items-center gap-2">
@@ -268,7 +268,7 @@
 																class="size-6"
 															/>
 															<FormattedText text={pet.getFormattedName()} />
-															{#if petRateDelta !== 0}
+															{#if petRateDelta !== undefined && petRateDelta !== 0}
 																<span
 																	class="{petRateDelta > 0
 																		? 'dark:text-completed'
@@ -423,6 +423,7 @@
 						initialSorting={ctx.isNonClassicProfile ? [{ id: 'rateImpact', desc: true }] : undefined}
 						referenceOnlyPrices={ctx.isNonClassicProfile}
 						version={pest.pestRateVersion}
+						pathVersion={pest.pestRatePathVersion}
 					/>
 				</section>
 			</section>
@@ -447,3 +448,14 @@
 		<Skeleton class="h-96 w-full" />
 	</div>
 {/if}
+
+<style>
+	.pest-deferred-section {
+		content-visibility: auto;
+		contain-intrinsic-size: auto 32rem;
+	}
+
+	.pest-deferred-section--large {
+		contain-intrinsic-size: auto 100rem;
+	}
+</style>

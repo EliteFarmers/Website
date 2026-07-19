@@ -193,6 +193,7 @@ export interface PestRateValuationResult {
 
 export interface PestFarmingRateResult {
 	options: PestFarmingRateOptions;
+	mechanicsKey: string;
 	stateKey: string;
 	debug: PestCycleDebug;
 	phaseStats: PestRatePhaseStats;

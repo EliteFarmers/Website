@@ -666,7 +666,7 @@ test('getUpgradeRateImpact keeps Lotus to Blossom salesperson piece bonus positi
 					'',
 					'§6Piece Bonus: Salesperson',
 					'',
-					'§7Piece Bonus: §6+15☘',
+					'§7Piece Bonus: §6+15',
 					'',
 					'§5§l§ka§r §5§lEPIC NECKLACE §5§l§ka',
 				],

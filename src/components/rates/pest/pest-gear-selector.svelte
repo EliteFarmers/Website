@@ -30,7 +30,7 @@
 		selectPiece: (slot: GearSlot, uuid: string) => void;
 		clearPiece?: (slot: GearSlot) => void;
 		getPieceBreakdown: (piece: FarmingArmor | FarmingEquipment) => StatBreakdown;
-		getPieceRateImpact: (piece: FarmingArmor | FarmingEquipment) => number;
+		getPieceRateImpact: (piece: FarmingArmor | FarmingEquipment) => number | undefined;
 		overallBreakdown?: Record<string, { value: number; stat: Stat }>;
 		slots?: readonly GearSlot[];
 		blockedUuids?: Record<string, string>;
@@ -93,8 +93,12 @@
 			{@const eligible = options.filter(
 				(o) => !o.item.uuid || !blockedUuids[o.item.uuid] || o.item.uuid === piece?.item.uuid
 			)}
-			{@const sortedOptions = [...options].sort((a, b) => getPieceRateImpact(b) - getPieceRateImpact(a))}
-			{@const bestRateDelta = eligible.reduce((max, p) => Math.max(max, getPieceRateImpact(p)), 0)}
+			{@const sortedOptions = [...options].sort(
+				(a, b) =>
+					(getPieceRateImpact(b) ?? Number.NEGATIVE_INFINITY) -
+					(getPieceRateImpact(a) ?? Number.NEGATIVE_INFINITY)
+			)}
+			{@const bestRateDelta = eligible.reduce((max, p) => Math.max(max, getPieceRateImpact(p) ?? 0), 0)}
 			{@const hasBetterRateOption = piece && bestRateDelta > 0}
 
 			<div
@@ -139,7 +143,7 @@
 															>(on {blockedBy})</span
 														>
 													{/if}
-													{#if rateDelta !== 0}
+													{#if rateDelta !== undefined && rateDelta !== 0}
 														<span
 															class="{rateDelta > 0
 																? 'dark:text-completed'
