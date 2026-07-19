@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import { formatLeaderboardAmount } from '$lib/format';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -33,9 +34,12 @@
 				<span class="text-sm">{formatLeaderboardAmount(lb, rank.amount)}</span>
 			{/if}
 		</div>
-		<a
+		<LeaderboardRankLink
 			class="group relative flex h-full flex-1 flex-row items-center justify-end gap-2 pr-2 sm:pr-8"
-			href="/leaderboard/{rank.id}/{ctx.ign}-{ctx.selectedProfile?.profileName ?? ''}?fallback={rank.rank}"
+			category={rank.id}
+			player={ctx.ign}
+			profile={ctx.selectedProfile?.profileName}
+			rank={rank.rank}
 		>
 			<span>
 				<span class="text-muted-foreground mr-0.5">#</span><span class="font-mono text-2xl">{rank.rank}</span>
@@ -45,6 +49,6 @@
 			>
 				<ArrowRight size={18} />
 			</div>
-		</a>
+		</LeaderboardRankLink>
 	</div>
 </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import { SKYBLOCK_LEVEL_COLORS } from '$lib/constants/levels';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
@@ -17,15 +18,17 @@
 	{#snippet trigger()}
 		<div class="my-1 flex flex-row items-center gap-1 sm:my-0.5 md:my-0">
 			{#if rank !== -1}
-				<a
-					href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.current?.profileName ??
-						ctx.selectedProfile?.profileName}?fallback={rank}"
+				<LeaderboardRankLink
+					category="skyblockxp"
+					player={ctx.ign}
+					profile={ctx.member.current?.profileName ?? ctx.selectedProfile?.profileName}
+					{rank}
 					class="bg-card hover:bg-muted rounded-md px-1.5"
 				>
 					<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 						>{rank}</span
 					>
-				</a>
+				</LeaderboardRankLink>
 			{/if}
 			{#if ctx.member.loading}
 				<Skeleton class="my-1 inline-block h-5 w-10 rounded-md sm:h-6 sm:w-12" />

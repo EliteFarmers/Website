@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	const ctx = getStatsContext();
@@ -27,9 +28,11 @@
 		{#each earnedMedals.slice(0, 2) as [medal, count] (medal)}
 			<div class="flex-1 basis-48">
 				{#if ranks[medal + 'medals']?.rank > -1}
-					<a
-						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile
-							?.profileName}?fallback={ranks[medal + 'medals']?.rank}"
+					<LeaderboardRankLink
+						category="{medal}medals"
+						player={page.params.id}
+						profile={ctx.selectedProfile?.profileName}
+						rank={ranks[medal + 'medals']?.rank ?? -1}
 						class="xs:justify-center bg-card hover:bg-muted flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
@@ -41,7 +44,7 @@
 								>{ranks[medal + 'medals']?.rank}</span
 							>
 						</span>
-					</a>
+					</LeaderboardRankLink>
 				{:else}
 					<div
 						class="xs:justify-center bg-card flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
@@ -60,9 +63,11 @@
 		{#each earnedMedals.slice(2) as [medal, count] (medal)}
 			<div class="flex-1 basis-48">
 				{#if ranks[medal + 'medals']?.rank > -1}
-					<a
-						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile
-							?.profileName}?fallback={ranks[medal + 'medals']?.rank}"
+					<LeaderboardRankLink
+						category="{medal}medals"
+						player={page.params.id}
+						profile={ctx.selectedProfile?.profileName}
+						rank={ranks[medal + 'medals']?.rank ?? -1}
 						class="xs:justify-center bg-card hover:bg-muted flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
@@ -77,7 +82,7 @@
 								>{ranks[medal + 'medals']?.rank}</span
 							>
 						</span>
-					</a>
+					</LeaderboardRankLink>
 				{:else}
 					<div
 						class="xs:justify-center bg-card flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"

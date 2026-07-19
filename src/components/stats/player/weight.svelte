@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import Profiles from './profiles.svelte';
 
@@ -13,14 +14,17 @@
 <div class="block">
 	<div class="z-10 flex items-center gap-2">
 		{#if rank !== -1}
-			<a
+			<LeaderboardRankLink
 				class="bg-card hover:bg-muted max-w-fit rounded-md p-1 lg:p-1"
-				href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}?fallback={rank}"
+				category="farmingweight"
+				player={ctx.ign}
+				profile={ctx.selectedProfile?.profileName}
+				{rank}
 			>
 				<span class="text-completed mx-1 font-mono text-2xl font-semibold">
 					<span class="mr-0.5 text-lg">#</span>{rank}
 				</span>
-			</a>
+			</LeaderboardRankLink>
 		{:else}
 			<div class="bg-card max-w-fit rounded-md p-1 lg:p-2">
 				<span class="text-md mx-1 font-semibold md:text-lg">

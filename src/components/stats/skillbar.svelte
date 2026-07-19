@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import { toReadable } from '$lib/format';
 	import { Skeleton } from '$ui/skeleton';
 
@@ -40,14 +41,17 @@
 <div class="flex w-full max-w-2xl flex-1 flex-col items-start justify-center gap-1">
 	<div class="flex flex-row items-center gap-2">
 		{#if rank >= 0}
-			<a
-				href="/leaderboard/{name.toLowerCase()}/{page.params.id}-{page.params.profile}?fallback={rank}"
+			<LeaderboardRankLink
+				category={name.toLowerCase()}
+				player={page.params.id}
+				profile={page.params.profile}
+				{rank}
 				class="bg-card text-completed hover:bg-muted rounded-md px-1.5 py-0.5 font-semibold"
 			>
 				<span class="xs:text-md text-sm leading-none sm:text-lg">#</span><span
 					class="text-md xs:text-lg leading-none sm:text-xl">{rank}</span
 				>
-			</a>
+			</LeaderboardRankLink>
 		{/if}
 		<div class="text-md xs:text-lg sm:text-xl">
 			<span>{name}</span>
