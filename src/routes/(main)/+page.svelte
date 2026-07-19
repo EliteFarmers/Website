@@ -229,7 +229,6 @@
 						<div class="flex justify-center">
 							<Button href="/info/badges" class="w-fit font-semibold" variant="secondary">
 								View Badges
-								<ExternalLink class="ml-2" size={20} />
 							</Button>
 						</div>
 					</Card.Content>
