@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { Crop } from '../constants/crops.js';
 import { Pest, Spray } from '../constants/pests.js';
 import { FarmingPets } from '../constants/pets.js';
@@ -301,6 +301,21 @@ test('best spawn phase armor set uses rate calculation to select the generated s
 	expect(calculator.getBestSpawnPhaseArmorSetId(['main', 'spawn'])).toBe('spawn');
 });
 
+test('best spawn phase armor selection reuses one working clone for every candidate', () => {
+	const player = pestPlayerWithArmorSets({
+		main: ['CROPIE_HELMET', 'CROPIE_CHESTPLATE', 'CROPIE_LEGGINGS', 'CROPIE_BOOTS'],
+		spawn: ['HELIANTHUS_HELMET', 'HELIANTHUS_CHESTPLATE', 'HELIANTHUS_LEGGINGS', 'HELIANTHUS_BOOTS'],
+	});
+	const clone = vi.spyOn(player, 'clone');
+	const calculator = new PestFarmingRateCalculator({
+		player,
+		options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+	});
+
+	expect(calculator.getBestSpawnPhaseArmorSetId(['main', 'spawn'])).toBe('spawn');
+	expect(clone).toHaveBeenCalledTimes(1);
+});
+
 test('best spawn phase armor set uses rate calculation to reuse main armor when the spawn set is worse', () => {
 	const player = pestPlayerWithArmorSets({
 		main: ['HELIANTHUS_HELMET', 'HELIANTHUS_CHESTPLATE', 'HELIANTHUS_LEGGINGS', 'HELIANTHUS_BOOTS'],
@@ -368,6 +383,73 @@ test('pest rate calculation derives Mantid recent pest kills from expected spawn
 	expect(result.phaseStats.spawnBonusPestChance).toBeGreaterThan(baseBonusPestChance);
 	expect(result.phaseStats.spawnBonusPestChance).toBeCloseTo(expectedResolvedBonusPestChance, 6);
 	expect(result.breakdown.pestSpawning.expectedPestsPerSpawn).toBeCloseTo(expectedPestsPerSpawn, 6);
+});
+
+test('Mantid resolution is independent of configured kills and does not clone the player', () => {
+	const armor = [mantidArmor('HELIANTHUS_HELMET', 'mantid-helmet')];
+	const createResult = (mantidPestKills?: number) => {
+		const player = new PestFarmingPlayer({ armor, mantidPestKills });
+		const clone = vi.spyOn(player, 'clone');
+		const result = new PestFarmingRateCalculator({
+			player,
+			options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+		}).calculate();
+		return { result, clone };
+	};
+
+	const unconfigured = createResult();
+	const capped = createResult(20);
+	expect(capped.result.phaseStats.spawnBonusPestChance).toBeCloseTo(
+		unconfigured.result.phaseStats.spawnBonusPestChance,
+		8
+	);
+	expect(unconfigured.clone).not.toHaveBeenCalled();
+	expect(capped.clone).not.toHaveBeenCalled();
+});
+
+test.each([1, 4])('Mantid scalar resolution honors the recent-kill cap with %i active pieces', (pieceCount) => {
+	const armor = [
+		mantidArmor('HELIANTHUS_HELMET', 'mantid-helmet'),
+		mantidArmor('HELIANTHUS_CHESTPLATE', 'mantid-chestplate'),
+		mantidArmor('HELIANTHUS_LEGGINGS', 'mantid-leggings'),
+		mantidArmor('HELIANTHUS_BOOTS', 'mantid-boots'),
+	].slice(0, pieceCount);
+	const configuredKills = 7;
+	const baseBonusPestChance = 2_500;
+	const player = new PestFarmingPlayer({ armor, mantidPestKills: configuredKills });
+	const originalGetPhaseStat = player.getPhaseStat.bind(player);
+	vi.spyOn(player, 'getPhaseStat').mockImplementation((phase, stat, crop) => {
+		if (phase === PestFarmingPhase.Spawn && stat === Stat.BonusPestChance) {
+			return baseBonusPestChance + configuredKills * pieceCount * 0.25;
+		}
+		return originalGetPhaseStat(phase, stat, crop);
+	});
+	const clone = vi.spyOn(player, 'clone');
+
+	const result = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: { ...DEFAULT_PEST_CYCLE_SETTINGS, maxActivePests: 100 },
+		},
+	}).calculate();
+
+	expect(result.phaseStats.spawnBonusPestChance).toBe(baseBonusPestChance + 20 * pieceCount * 0.25);
+	expect(clone).not.toHaveBeenCalled();
+});
+
+test('PestFarmingPlayer clones keep loadouts and item data deeply independent', () => {
+	const player = pestPlayerWithArmorSets({
+		main: ['CROPIE_HELMET', 'CROPIE_CHESTPLATE', 'CROPIE_LEGGINGS', 'CROPIE_BOOTS'],
+		spawn: ['HELIANTHUS_HELMET', 'HELIANTHUS_CHESTPLATE', 'HELIANTHUS_LEGGINGS', 'HELIANTHUS_BOOTS'],
+	});
+	const cloned = player.clone();
+	cloned.setPhaseArmorSet(PestFarmingPhase.Spawn, 'main');
+	cloned.crop.armor[0]!.item.attributes!.modifier = 'mantid';
+
+	expect(player.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId).toBe('spawn');
+	expect(cloned.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId).toBe('main');
+	expect(player.crop.armor[0]!.item.attributes?.modifier).toBeUndefined();
 });
 
 test('spawn phase bonus pest chance upgrades report positive pest rate impact', () => {
@@ -447,6 +529,53 @@ test('upgrade impact completeness is based on missing delta prices', () => {
 	expect(noDeltaImpact.valuationDelta.missingItemIds).toEqual([]);
 	expect(cropDeltaImpact.valuationDelta.complete).toBe(false);
 	expect(cropDeltaImpact.valuationDelta.missingItemIds).toContain(Crop.Wheat);
+});
+
+test('price-only revaluation preserves mechanics and matches a fresh calculation', () => {
+	const player = new PestFarmingPlayer({ selectedCrop: Crop.Wheat, wrigglingLarva: 0 });
+	const emptyPriceBook: PestRatePriceBook = {
+		version: 'empty',
+		items: {},
+		missingItemMode: 'exclude',
+	};
+	const pricedBook: PestRatePriceBook = {
+		version: 'priced',
+		items: { [Crop.Wheat]: { coins: 12, source: 'manual' } },
+		missingItemMode: 'exclude',
+	};
+	const calculator = new PestFarmingRateCalculator({
+		player,
+		options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+		priceBook: emptyPriceBook,
+	});
+	const result = calculator.calculate();
+	const revalued = calculator.revalueResult(result, pricedBook);
+	const fresh = calculator.withPriceBook(pricedBook).calculate();
+
+	expect(revalued.mechanicsKey).toBe(result.mechanicsKey);
+	expect(revalued.stateKey).not.toBe(result.stateKey);
+	expect(revalued.stateKey).toBe(fresh.stateKey);
+	expect(revalued.valuation).toEqual(fresh.valuation);
+
+	const upgrade = player
+		.getPhaseUpgrades(PestFarmingPhase.Spawn, { stat: Stat.BonusPestChance })
+		.find((entry) => entry.title === 'Wriggling Larva');
+	expect(upgrade).toBeDefined();
+	const impact = calculator.calculateUpgradeImpact({
+		phase: PestFarmingPhase.Spawn,
+		upgrade: upgrade!,
+		before: result,
+	});
+	const revaluedImpact = calculator.revalueUpgradeImpact(impact, pricedBook);
+	const freshCalculator = calculator.withPriceBook(pricedBook);
+	const freshImpact = freshCalculator.calculateUpgradeImpact({
+		phase: PestFarmingPhase.Spawn,
+		upgrade: upgrade!,
+		before: fresh,
+	});
+
+	expect(revaluedImpact.delta).toEqual(freshImpact.delta);
+	expect(revaluedImpact.valuationDelta).toEqual(freshImpact.valuationDelta);
 });
 
 test('crop breaking does not double count crop item NPC valuation', () => {

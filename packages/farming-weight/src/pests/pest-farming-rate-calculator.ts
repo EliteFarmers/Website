@@ -43,6 +43,7 @@ const ATMOSPHERIC_FILTER_SPAWN_MULTIPLIER = 1.15;
 const DEFAULT_PEST_MAX_ACTIVE = 8;
 const PEST_RARE_DROP_FORTUNE_SCALING = 600;
 const MANTID_RECENT_KILL_CAP = 20;
+const MANTID_RECENT_KILL_BONUS_PER_PIECE = 0.25;
 const MANTID_RESOLUTION_ITERATIONS = 8;
 const MANTID_RESOLUTION_EPSILON = 1e-6;
 
@@ -96,7 +97,8 @@ export class PestFarmingRateCalculator {
 	calculate(): PestFarmingRateResult {
 		const phaseStats = this.getPhaseStats();
 		const player = this.getCalculationPlayer();
-		const stateKey = this.getStateKey(phaseStats);
+		const mechanicsKey = this.getMechanicsKey(phaseStats);
+		const stateKey = getValuationStateKey(mechanicsKey, this.priceBook);
 		const spawnDistribution = this.getSpawnDistribution(phaseStats.spawnBonusPestChance);
 		const debug = this.getCycleDebug(phaseStats, spawnDistribution.expectedPestsPerSpawn);
 		const farmCrop = player.crop.getRates(this.options.crop, debug.farmBlocks);
@@ -127,6 +129,7 @@ export class PestFarmingRateCalculator {
 
 		return {
 			options: this.options,
+			mechanicsKey,
 			stateKey,
 			debug,
 			phaseStats,
@@ -180,7 +183,59 @@ export class PestFarmingRateCalculator {
 		};
 	}
 
-	getStateKey(phaseStats = this.getPhaseStats()): string {
+	revalueResult(result: PestFarmingRateResult, priceBook = this.priceBook): PestFarmingRateResult {
+		const calculator = new PestFarmingRateCalculator({
+			player: this.player,
+			options: result.options,
+			priceBook,
+			armorSelection: this.armorSelection,
+		});
+		const intervalSeconds = result.options.intervalSeconds ?? DEFAULT_INTERVAL_SECONDS;
+		const intervalScale = intervalSeconds / result.debug.cycleSeconds;
+		const valuation = calculator.valueQuantities(
+			result.perCycle,
+			result.perInterval,
+			{
+				cropBreaking: result.breakdown.cropBreaking.total,
+				pestDrops: result.breakdown.pestDrops.total,
+				...result.breakdown.economy,
+			},
+			intervalScale
+		);
+
+		return {
+			...result,
+			stateKey: getValuationStateKey(result.mechanicsKey, priceBook),
+			valuation,
+		};
+	}
+
+	revalueUpgradeImpact(
+		impact: PestFarmingUpgradeRateImpact,
+		priceBook = this.priceBook,
+		upgradeCostCoins?: number
+	): PestFarmingUpgradeRateImpact {
+		const calculator = this.withPriceBook(priceBook);
+		const before = calculator.revalueResult(impact.before, priceBook);
+		const after = calculator.revalueResult(impact.after, priceBook);
+		const delta = diffPestRateResults(before, after);
+
+		return {
+			...impact,
+			before,
+			after,
+			delta,
+			valuationDelta: diffValuation(
+				before.valuation,
+				after.valuation,
+				calculator.getMissingDeltaItemIds(delta),
+				calculator.getMissingDeltaCurrencyIds(delta),
+				upgradeCostCoins
+			),
+		};
+	}
+
+	getMechanicsKey(phaseStats = this.getPhaseStats()): string {
 		const player = this.getCalculationPlayer();
 		return stableValueKey({
 			options: this.options,
@@ -192,11 +247,11 @@ export class PestFarmingRateCalculator {
 			selectedVacuum: this.player.selectedVacuum?.item,
 			armorSelection: this.armorSelection,
 			resolvedMantidPestKills: this.resolvedMantidPestKills,
-			priceBook: {
-				version: this.priceBook.version,
-				missingItemMode: this.priceBook.missingItemMode,
-			},
 		});
+	}
+
+	getStateKey(phaseStats = this.getPhaseStats()): string {
+		return getValuationStateKey(this.getMechanicsKey(phaseStats), this.priceBook);
 	}
 
 	getRequiredPriceItems(result = this.calculate()): string[] {
@@ -240,106 +295,48 @@ export class PestFarmingRateCalculator {
 	getBestSpawnPhaseArmorSetId(armorSetIds: readonly string[]): string | undefined {
 		const candidates = uniqueValidArmorSetIds(this.player, armorSetIds);
 		if (candidates.length === 0) return undefined;
-
-		let bestId = candidates[0]!;
-		let bestRate = this.calculateSpawnArmorSetRate(bestId);
-		for (const armorSetId of candidates.slice(1)) {
-			const rate = this.calculateSpawnArmorSetRate(armorSetId);
-			if (rate > bestRate) {
-				bestId = armorSetId;
-				bestRate = rate;
-			}
-		}
-		return bestId;
-	}
-
-	private calculateSpawnArmorSetRate(armorSetId: string): number {
-		const player = this.player.clone();
-		player.setPhaseArmorSet(PestFarmingPhase.Spawn, armorSetId);
-		const rate = new PestFarmingRateCalculator({
-			player,
-			options: this.options,
-			priceBook: this.priceBook,
-		}).calculate().valuation.coinsPerHour;
-		return Number.isFinite(rate) ? rate : Number.NEGATIVE_INFINITY;
+		return this.evaluateSpawnArmorCandidates(this.player, candidates).bestId;
 	}
 
 	private getCalculationPlayer(): PestFarmingPlayer {
 		if (this.calculationPlayer) return this.calculationPlayer;
-		this.calculationPlayer = this.resolveMantidPlayer(this.resolveSpawnArmorSelectionPlayer(this.player));
+		this.calculationPlayer = this.resolveSpawnArmorSelectionPlayer(this.player);
 		return this.calculationPlayer;
 	}
 
 	private resolveSpawnArmorSelectionPlayer(player: PestFarmingPlayer): PestFarmingPlayer {
 		const candidates = uniqueValidArmorSetIds(player, this.armorSelection?.spawnArmorSetIds ?? []);
 		if (candidates.length === 0) return player;
-
-		let bestId = candidates[0]!;
-		let bestRate = this.calculateSpawnArmorSetRateForPlayer(player, bestId);
-		for (const armorSetId of candidates.slice(1)) {
-			const rate = this.calculateSpawnArmorSetRateForPlayer(player, armorSetId);
-			if (rate > bestRate) {
-				bestId = armorSetId;
-				bestRate = rate;
-			}
-		}
+		const { bestId, working } = this.evaluateSpawnArmorCandidates(player, candidates);
 
 		if (player.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId === bestId) return player;
-
-		const selected = player.clone();
-		selected.setPhaseArmorSet(PestFarmingPhase.Spawn, bestId);
-		return selected;
+		working.setPhaseArmorSet(PestFarmingPhase.Spawn, bestId);
+		return working;
 	}
 
-	private calculateSpawnArmorSetRateForPlayer(player: PestFarmingPlayer, armorSetId: string): number {
-		const selected = player.clone();
-		selected.setPhaseArmorSet(PestFarmingPhase.Spawn, armorSetId);
-		const rate = new PestFarmingRateCalculator({
-			player: selected,
-			options: this.options,
-			priceBook: this.priceBook,
-		}).calculate().valuation.coinsPerHour;
-		return Number.isFinite(rate) ? rate : Number.NEGATIVE_INFINITY;
-	}
+	private evaluateSpawnArmorCandidates(
+		player: PestFarmingPlayer,
+		candidates: readonly string[]
+	): { bestId: string; working: PestFarmingPlayer } {
+		const working = player.clone();
+		let bestId = candidates[0]!;
+		let bestRate = Number.NEGATIVE_INFINITY;
 
-	private resolveMantidPlayer(player: PestFarmingPlayer): PestFarmingPlayer {
-		this.resolvedMantidPestKills = normalizeMantidRecentPestKills(player.options?.mantidPestKills ?? 0);
-		if (!this.hasMantidSpawnArmor(player) || typeof player.clone !== 'function') return player;
-
-		let recentKills = 0;
-		let resolved = this.clonePlayerWithMantidPestKills(player, recentKills);
-		for (let iteration = 0; iteration < MANTID_RESOLUTION_ITERATIONS; iteration++) {
-			const spawnBonusPestChance = resolved.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance);
-			const nextRecentKills = normalizeMantidRecentPestKills(
-				this.getSpawnDistribution(spawnBonusPestChance).expectedPestsPerSpawn
-			);
-			if (Math.abs(nextRecentKills - recentKills) < MANTID_RESOLUTION_EPSILON) {
-				this.resolvedMantidPestKills = recentKills;
-				return resolved;
+		for (const armorSetId of candidates) {
+			working.setPhaseArmorSet(PestFarmingPhase.Spawn, armorSetId);
+			const rate = new PestFarmingRateCalculator({
+				player: working,
+				options: this.options,
+				priceBook: this.priceBook,
+			}).calculate().valuation.coinsPerHour;
+			const normalizedRate = Number.isFinite(rate) ? rate : Number.NEGATIVE_INFINITY;
+			if (normalizedRate > bestRate) {
+				bestId = armorSetId;
+				bestRate = normalizedRate;
 			}
-
-			recentKills = nextRecentKills;
-			resolved = this.clonePlayerWithMantidPestKills(player, recentKills);
 		}
 
-		this.resolvedMantidPestKills = recentKills;
-		return resolved;
-	}
-
-	private hasMantidSpawnArmor(player: PestFarmingPlayer): boolean {
-		if (typeof player.getPhaseArmorSet !== 'function') return false;
-		return player
-			.getPhaseArmorSet(PestFarmingPhase.Spawn)
-			.armor.some((piece) => piece?.item.attributes?.modifier === 'mantid');
-	}
-
-	private clonePlayerWithMantidPestKills(player: PestFarmingPlayer, kills: number): PestFarmingPlayer {
-		const resolved = player.clone();
-		resolved.setOptions({
-			...resolved.options,
-			mantidPestKills: kills,
-		});
-		return resolved;
+		return { bestId, working };
 	}
 
 	private getMissingDeltaItemIds(delta: PestFarmingRateDelta): string[] {
@@ -368,9 +365,11 @@ export class PestFarmingRateCalculator {
 			Object.values(Crop).map((crop) => [crop, getAssociatedCropFortune(player.kill, crop)])
 		) as Partial<Record<Crop, number>>;
 
+		const rawSpawnBonusPestChance = player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance);
+		const spawnBonusPestChance = this.resolveMantidSpawnBonusPestChance(player, rawSpawnBonusPestChance);
 		this.phaseStats = {
 			farmPestCooldownReduction: player.getPhaseStat(PestFarmingPhase.Farm, Stat.PestCooldownReduction),
-			spawnBonusPestChance: player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance),
+			spawnBonusPestChance,
 			killFarmingFortune: player.getPhaseStat(PestFarmingPhase.Kill, Stat.FarmingFortune),
 			killPestKillFortune: player.getPhaseStat(PestFarmingPhase.Kill, Stat.PestKillFortune),
 			killOverbloom: player.getPhaseStat(PestFarmingPhase.Kill, Stat.Overbloom),
@@ -378,6 +377,36 @@ export class PestFarmingRateCalculator {
 			associatedCropFortune,
 		};
 		return this.phaseStats;
+	}
+
+	private resolveMantidSpawnBonusPestChance(player: PestFarmingPlayer, rawBonusPestChance: number): number {
+		const configuredKills = normalizeMantidRecentPestKills(player.options?.mantidPestKills ?? 0);
+		if (typeof player.getPhaseArmorSet !== 'function') {
+			this.resolvedMantidPestKills = configuredKills;
+			return rawBonusPestChance;
+		}
+		const mantidPieces = player
+			.getPhaseArmorSet(PestFarmingPhase.Spawn)
+			.armor.filter((piece) => piece?.item.attributes?.modifier === 'mantid').length;
+		if (mantidPieces === 0) {
+			this.resolvedMantidPestKills = configuredKills;
+			return rawBonusPestChance;
+		}
+
+		const bonusPerKill = mantidPieces * MANTID_RECENT_KILL_BONUS_PER_PIECE;
+		const baseBonusPestChance = rawBonusPestChance - configuredKills * bonusPerKill;
+		let recentKills = 0;
+		for (let iteration = 0; iteration < MANTID_RESOLUTION_ITERATIONS; iteration++) {
+			const resolvedBonusPestChance = baseBonusPestChance + recentKills * bonusPerKill;
+			const nextRecentKills = normalizeMantidRecentPestKills(
+				this.getSpawnDistribution(resolvedBonusPestChance).expectedPestsPerSpawn
+			);
+			if (Math.abs(nextRecentKills - recentKills) < MANTID_RESOLUTION_EPSILON) break;
+			recentKills = nextRecentKills;
+		}
+
+		this.resolvedMantidPestKills = recentKills;
+		return baseBonusPestChance + recentKills * bonusPerKill;
 	}
 
 	private getCycleDebug(phaseStats: PestRatePhaseStats, expectedPestsPerSpawn: number): PestCycleDebug {
@@ -959,6 +988,16 @@ function getUpgradeIdentity(upgrade: FortuneUpgrade): string {
 		upgrade.conflictKey ??
 		`${upgrade.title}:${upgrade.action}:${upgrade.meta?.type ?? ''}:${upgrade.meta?.id ?? ''}`
 	);
+}
+
+function getValuationStateKey(mechanicsKey: string, priceBook: PestRatePriceBook): string {
+	return stableValueKey({
+		mechanicsKey,
+		priceBook: {
+			version: priceBook.version,
+			missingItemMode: priceBook.missingItemMode,
+		},
+	});
 }
 
 function stableValueKey(value: unknown): string {

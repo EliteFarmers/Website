@@ -13,6 +13,7 @@
 		upgrades: FortuneUpgrade[];
 		items?: RatesItemPriceData;
 		version?: number | string;
+		pathVersion?: number | string;
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
 		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
@@ -29,6 +30,7 @@
 		upgrades,
 		items,
 		version,
+		pathVersion = version,
 		costFn,
 		applyUpgrade,
 		expandUpgrade,
@@ -45,7 +47,7 @@
 
 	$effect(() => {
 		void upgrades;
-		void version;
+		void pathVersion;
 		hasPathCache = {};
 	});
 
@@ -60,7 +62,7 @@
 		if (!expandUpgrade) return false;
 		if (!hasUpgradePath) return false;
 
-		const key = `${version ?? 0}::${getUpgradeKey(upgrade)}`;
+		const key = `${pathVersion ?? 0}::${getUpgradeKey(upgrade)}`;
 		const cached = hasPathCache[key];
 		if (cached !== undefined) return cached;
 

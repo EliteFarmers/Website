@@ -70,7 +70,7 @@
 		);
 	});
 
-	// Force hard navigation if the websites was updated
+	// Force hard navigation if the website was updated
 	beforeNavigate(({ to, willUnload }) => {
 		if (updated.current && !willUnload && to?.url) {
 			location.href = to.url.href;

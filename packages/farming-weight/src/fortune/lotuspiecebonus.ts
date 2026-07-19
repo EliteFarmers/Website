@@ -19,8 +19,8 @@ export function getLotusToBlossomPieceBonus(
 
 export function setLotusPieceBonusLore(item: EliteItemDto, pieceBonus: number): void {
 	item.lore = [
-		...(item.lore ?? []).filter((line) => !/Piece Bonus: §6\+\d+.?\d*☘/.test(line)),
-		`§7Piece Bonus: §6+${formatLotusPieceBonus(pieceBonus)}☘`,
+		...(item.lore ?? []).filter((line) => !/Piece Bonus: §6\+\d+.?\d*/.test(line)),
+		`§7Piece Bonus: §6+${formatLotusPieceBonus(pieceBonus)}`,
 	];
 }
 
