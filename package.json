@@ -52,7 +52,7 @@
 		"@internationalized/date": "^3.12.1",
 		"@lucide/svelte": "^1.14.0",
 		"@number-flow/svelte": "^0.4.0",
-		"@orval/zod": "^7.16.0",
+		"@orval/zod": "^8.0.0",
 		"@popperjs/core": "^2.11.8",
 		"@quantco/pnpm-licenses": "^2.2.1",
 		"@sinclair/typebox": "^0.34.41",
