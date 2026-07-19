@@ -9096,12 +9096,30 @@ export type refreshGuildMembershipsResponse401 = {
 	status: 401;
 };
 
+export type refreshGuildMembershipsResponse409 = {
+	data: ErrorResponse;
+	status: 409;
+};
+
+export type refreshGuildMembershipsResponse429 = {
+	data: ErrorResponse;
+	status: 429;
+};
+
+export type refreshGuildMembershipsResponse503 = {
+	data: ErrorResponse;
+	status: 503;
+};
+
 export type refreshGuildMembershipsResponseSuccess = refreshGuildMembershipsResponse204 & {
 	headers: Headers;
 };
-export type refreshGuildMembershipsResponseError = refreshGuildMembershipsResponse401 & {
-	headers: Headers;
-};
+export type refreshGuildMembershipsResponseError = (
+	| refreshGuildMembershipsResponse401
+	| refreshGuildMembershipsResponse409
+	| refreshGuildMembershipsResponse429
+	| refreshGuildMembershipsResponse503
+) & { headers: Headers };
 
 export type refreshGuildMembershipsResponse =
 	| refreshGuildMembershipsResponseSuccess

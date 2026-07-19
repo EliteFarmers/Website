@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import * as Popover from '$comp/ui/popover';
 	import * as Sidebar from '$ui/sidebar';
 	import { getCropFromName } from 'farming-weight';
@@ -68,14 +69,17 @@
 			<div class="flex flex-col items-start">
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
-						<a
-							href="/leaderboard/{key}/{page.params.id}-{page.params.profile}?fallback={rank}"
+						<LeaderboardRankLink
+							category={key}
+							player={page.params.id}
+							profile={page.params.profile}
+							{rank}
 							class="bg-card hover:bg-muted rounded-md px-1.5"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{rank}</span
 							>
-						</a>
+						</LeaderboardRankLink>
 					{/if}
 					<p class="text-md font-semibold whitespace-nowrap sm:text-lg">{name}</p>
 				</div>
@@ -85,14 +89,17 @@
 			</div>
 			<div class="flex flex-row items-center gap-2">
 				{#if pestRank > 0}
-					<a
-						href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}?fallback={pestRank}"
+					<LeaderboardRankLink
+						category={pest}
+						player={page.params.id}
+						profile={page.params.profile}
+						rank={pestRank}
 						class="bg-card hover:bg-muted rounded-md px-1"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{pestRank}</span
 						>
-					</a>
+					</LeaderboardRankLink>
 				{/if}
 				<Popover.Mobile>
 					{#snippet trigger()}
@@ -136,14 +143,17 @@
 					<div class="flex flex-row items-center gap-1">
 						{@render cropIcon('flex sm:hidden')}
 						{#if rank > 0}
-							<a
-								href="/leaderboard/{key}/{page.params.id}-{page.params.profile}?fallback={rank}"
+							<LeaderboardRankLink
+								category={key}
+								player={page.params.id}
+								profile={page.params.profile}
+								{rank}
 								class="bg-card hover:bg-muted rounded-md px-1.5"
 							>
 								<span class="xs:text-md text-sm sm:text-lg">#</span><span
 									class="text-md xs:text-lg sm:text-xl">{rank}</span
 								>
-							</a>
+							</LeaderboardRankLink>
 						{/if}
 						<p class="text-md font-semibold whitespace-nowrap sm:text-lg">{name}</p>
 					</div>
@@ -161,14 +171,17 @@
 					</p>
 					<div class="flex flex-row items-center gap-2">
 						{#if pestRank > 0}
-							<a
-								href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}?fallback={pestRank}"
+							<LeaderboardRankLink
+								category={pest}
+								player={page.params.id}
+								profile={page.params.profile}
+								rank={pestRank}
 								class="bg-card hover:bg-muted rounded-md px-1"
 							>
 								<span class="xs:text-md text-sm sm:text-lg">#</span><span
 									class="text-md xs:text-lg sm:text-xl">{pestRank}</span
 								>
-							</a>
+							</LeaderboardRankLink>
 						{/if}
 						<Popover.Mobile>
 							{#snippet trigger()}

@@ -157,19 +157,21 @@ export const actions: Actions = {
 	updateServer: async ({ params, locals }) => {
 		const guildId = params.id;
 		const { session, access_token: token } = locals;
-		if (!session?.perms.admin || !token || !guildId) {
+		if (!session || !token || !guildId) {
 			throw error(401, 'Unauthorized');
 		}
 
 		const { response, error: e } = await requestGuildRefresh(guildId, {});
 
 		if (!response.ok || e) {
-			const msg = e || 'Failed to update server!';
-			return fail(response.status as NumericRange<400, 499>, { error: msg });
+			const msg = e?.message ?? 'Failed to update server!';
+			const status = response.status >= 400 && response.status <= 599 ? response.status : 500;
+			return fail(status as NumericRange<400, 599>, { error: msg, action: 'updateServer' });
 		}
 
 		return {
 			success: true,
+			action: 'updateServer',
 		};
 	},
 };

@@ -30,6 +30,7 @@
 	let currentEventCount = $derived(features?.eventSettings?.maxMonthlyEvents ?? 0);
 	let leaderboardCount = $state(3);
 	let eventCount = $state(1);
+	let refreshingServer = $state(false);
 
 	let roles = $derived(data.guild?.roles ?? []);
 
@@ -73,6 +74,8 @@
 
 	{#if form?.error}
 		<p class="text-destructive">{form.error}</p>
+	{:else if form?.success && form?.action === 'updateServer'}
+		<p class="text-emerald-600">Server data refreshed.</p>
 	{/if}
 
 	<section class="grid grid-cols-1 gap-4 @[37.5rem]:grid-cols-2">
@@ -184,8 +187,22 @@
 					>Something out of date? You can get your guild data refreshed here.</span
 				>
 			{/snippet}
-			<form action="?/updateServer" method="POST" class="flex flex-row gap-4" use:enhance>
-				<Button type="submit" class="px-8"><RotateCw size={16} />Refresh</Button>
+			<form
+				action="?/updateServer"
+				method="POST"
+				class="flex flex-row gap-4"
+				use:enhance={() => {
+					refreshingServer = true;
+					return async ({ update }) => {
+						await update();
+						refreshingServer = false;
+					};
+				}}
+			>
+				<Button type="submit" class="px-8" disabled={refreshingServer}>
+					<RotateCw size={16} class={refreshingServer ? 'animate-spin' : undefined} />
+					{refreshingServer ? 'Refreshing…' : 'Refresh'}
+				</Button>
 			</form>
 		</SettingListItem>
 	</section>

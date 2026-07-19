@@ -15,6 +15,7 @@ export interface GuildMemberDto {
 	/** @nullable */
 	icon?: GuildMemberDtoIcon;
 	hasBot: boolean;
+	owner: boolean;
 	permissions: string;
 	roles: string[];
 	/** @nullable */

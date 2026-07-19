@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	const ctx = getStatsContext();
@@ -47,14 +48,17 @@
 		>
 			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if firstPlacesRank !== -1}
-					<a
-						href="/leaderboard/firstplace/{page.params.id}-{page.params.profile}?fallback={firstPlacesRank}"
+					<LeaderboardRankLink
+						category="firstplace"
+						player={page.params.id}
+						profile={page.params.profile}
+						rank={firstPlacesRank}
 						class="pd-0.5 bg-card hover:bg-muted rounded-md px-1.5"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{firstPlacesRank}</span
 						>
-					</a>
+					</LeaderboardRankLink>
 				{/if}
 				<p class="mt-0 text-2xl">{firstPlaces.toLocaleString() ?? 0}</p>
 			</div>
@@ -65,15 +69,17 @@
 		>
 			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if participationsRank !== -1}
-					<a
-						href="/leaderboard/participations/{page.params.id}-{page.params
-							.profile}?fallback={participationsRank}"
+					<LeaderboardRankLink
+						category="participations"
+						player={page.params.id}
+						profile={page.params.profile}
+						rank={participationsRank}
 						class="pd-0.5 bg-card hover:bg-muted rounded-md px-1.5"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{participationsRank}</span
 						>
-					</a>
+					</LeaderboardRankLink>
 				{/if}
 				<p class="mt-0 text-2xl">{jacob?.participations?.toLocaleString() ?? 0}</p>
 			</div>

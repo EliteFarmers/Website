@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import { toReadable } from '$lib/format';
 	import { Crop, getCropDisplayName, getCropFromName, type LevelingStats } from 'farming-weight';
 	import ProgressBar from '../progress-bar.svelte';
@@ -48,14 +49,17 @@
 			<div class="flex flex-row items-end justify-between gap-2">
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
-						<a
-							href="/leaderboard/{key}-milestone/{page.params.id}-{page.params.profile}?fallback={rank}"
+						<LeaderboardRankLink
+							category="{key}-milestone"
+							player={page.params.id}
+							profile={page.params.profile}
+							{rank}
 							class="bg-card hover:bg-muted rounded-md px-1.5"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{rank}</span
 							>
-						</a>
+						</LeaderboardRankLink>
 					{/if}
 					<p class="text-md font-semibold whitespace-nowrap sm:text-lg">{displayName}</p>
 				</div>

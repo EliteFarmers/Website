@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
@@ -119,15 +120,17 @@
 						</div>
 						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 							{#if ranks['visitors-accepted']?.rank > 0}
-								<a
-									href="/leaderboard/visitors-accepted/{page.params.id}-{page.params
-										.profile}?fallback={ranks['visitors-accepted']?.rank}"
+								<LeaderboardRankLink
+									category="visitors-accepted"
+									player={page.params.id}
+									profile={page.params.profile}
+									rank={ranks['visitors-accepted']?.rank ?? -1}
 									class="bg-card hover:bg-muted rounded-md px-1.5"
 								>
 									<span class="text-sm">#</span><span class="text-md"
 										>{ranks['visitors-accepted']?.rank}</span
 									>
-								</a> •
+								</LeaderboardRankLink> •
 							{/if}
 							Accepted • <span class="font-semibold">{accepted.toLocaleString()}</span>
 						</div>

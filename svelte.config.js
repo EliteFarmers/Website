@@ -33,6 +33,9 @@ const config = {
         },
         csp: {
             mode: 'hash',
+            directives: {
+                'frame-ancestors': ["'self'", 'https://as.eliteskyblock.com'],
+            },
         },
         csrf: {
             trustedOrigins: ['https://eliteskyblock.com'],

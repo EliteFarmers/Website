@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
@@ -102,9 +103,12 @@
 </StatElements>
 
 {#snippet rankLink(small = false)}
-	<a
+	<LeaderboardRankLink
 		class="hover:bg-muted flex h-full max-w-fit flex-col items-center justify-center rounded-md p-0.5 lg:p-1"
-		href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}?fallback={rank}"
+		category="farmingweight"
+		player={ctx.ign}
+		profile={ctx.selectedProfile?.profileName}
+		{rank}
 		style="background-color: {small
 			? 'inherit'
 			: bg}; border-color: transparent; background-opacity: 0.8; color: {(!small
@@ -115,5 +119,5 @@
 		<span class="mx-1 px-2 font-mono text-3xl">
 			<span class="mr-0.5 text-xl">#</span>{rank}
 		</span>
-	</a>
+	</LeaderboardRankLink>
 {/snippet}
