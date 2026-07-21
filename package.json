@@ -100,7 +100,7 @@
 		"eslint-plugin-svelte": "^3.16.0",
 		"formsnap": "2.0.1",
 		"globals": "^17.6.0",
-		"joi": "^17.13.3",
+		"joi": "^18.0.0",
 		"layerchart": "2.0.1",
 		"marked": "^18.0.3",
 		"mdsx": "^0.0.7",
