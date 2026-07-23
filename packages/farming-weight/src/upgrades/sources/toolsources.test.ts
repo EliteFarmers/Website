@@ -708,5 +708,5 @@ test('Player.getUpgrades surfaces tool Overbloom upgrades (Feast)', () => {
 	// Tool upgrades should NOT leak into FarmingFortune list (they would already be
 	// included via getCropUpgrades for FF, not here).
 	const ffUpgrades = player.getUpgrades({ stat: Stat.FarmingFortune });
-	expect(ffUpgrades.find((u) => u.title?.startsWith('Feast'))).toBeUndefined();
+	expect(ffUpgrades.find((u) => /^Feast \d+$/.test(u.title ?? ''))).toBeUndefined();
 });

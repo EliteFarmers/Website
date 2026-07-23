@@ -100,12 +100,17 @@ test('Hypercharge chip temp fortune scaling test', () => {
 			hypercharge: 20,
 		},
 		temporaryFortune: {
+			anitaContest: true,
 			centuryCake: true,
+			harvestPotion: true,
+			melonJuiceMixin: true,
 		},
 	});
 
-	// Doubled
 	expect(player.tempFortuneBreakdown['Century Cake']?.value).toBe(10);
+	expect(player.tempFortuneBreakdown['Anita Boosted Contest']?.value).toBe(25);
+	expect(player.tempFortuneBreakdown['Harvest Harbinger Potion']?.value).toBe(50);
+	expect(player.tempFortuneBreakdown['Melon Juice Mixin']?.value).toBe(15);
 });
 
 test('Hypercharge chip temp fortune uses saved rarity assumptions', () => {
@@ -227,7 +232,11 @@ test('multi-stat upgrade queries keep Bountiful as the preferred farming tool re
 test('Overdrive chip contest crop fortune test', () => {
 	const player = new FarmingPlayer({
 		chips: {
+			hypercharge: 20,
 			overdrive: 20,
+		},
+		temporaryFortune: {
+			anitaContest: true,
 		},
 		jacobContest: {
 			enabled: true,
@@ -237,9 +246,31 @@ test('Overdrive chip contest crop fortune test', () => {
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
 	expect(cropFortune.breakdown['Overdrive Chip']?.value).toBe(140);
+	expect(cropFortune.breakdown['Anita Boosted Contest']?.value).toBe(25);
 
 	const other = player.getCropFortune(Crop.Carrot);
 	expect(other.breakdown['Overdrive Chip']).toBeUndefined();
+});
+
+test.each([
+	{ level: 10, rarity: Rarity.Rare, expected: 50 },
+	{ level: 15, rarity: Rarity.Epic, expected: 90 },
+	{ level: 20, rarity: Rarity.Legendary, expected: 140 },
+])('Overdrive chip caps at $expected crop fortune for $rarity', ({ level, rarity, expected }) => {
+	const player = new FarmingPlayer({
+		chips: {
+			overdrive: level,
+		},
+		chipRarities: {
+			overdrive: rarity,
+		},
+		jacobContest: {
+			enabled: true,
+			crop: Crop.Wheat,
+		},
+	});
+
+	expect(player.getCropFortune(Crop.Wheat).breakdown['Overdrive Chip']?.value).toBe(expected);
 });
 
 test('Overdrive chip contest crop fortune uses saved rarity assumptions', () => {
@@ -601,12 +632,12 @@ test('getUpgradeRateImpact applies starting crop tool purchases', () => {
 	expect(impact.delta.totalItems).toBeGreaterThan(0);
 });
 
-test('getUpgradeRateImpact applies starting farm armor purchases', () => {
+test('getUpgradeRateImpact applies starting Farmhand armor purchases', () => {
 	const player = new FarmingPlayer({
 		farmingLevel: 20,
 	});
 
-	const upgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Farm Armor Helmet');
+	const upgrade = player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Farmhand Helmet');
 
 	expect(upgrade).toBeDefined();
 	expect(upgrade?.increase).toBeGreaterThan(0);
@@ -615,8 +646,8 @@ test('getUpgradeRateImpact applies starting farm armor purchases', () => {
 	const cloned = player.clone();
 	cloned.applyUpgrade(upgrade!);
 
-	expect(cloned.armor.some((piece) => piece.info.skyblockId === 'FARM_ARMOR_HELMET')).toBe(true);
-	expect(cloned.armorSet.getPiece('Helmet' as GearSlot)?.info.skyblockId).toBe('FARM_ARMOR_HELMET');
+	expect(cloned.armor.some((piece) => piece.info.skyblockId === 'FARM_SUIT_HELMET')).toBe(true);
+	expect(cloned.armorSet.getPiece('Helmet' as GearSlot)?.info.skyblockId).toBe('FARM_SUIT_HELMET');
 
 	const impact = player.getUpgradeRateImpact(upgrade!, {
 		crop: Crop.Wheat,
@@ -1093,8 +1124,8 @@ test('getUpgradeRateImpact reports normal Overbloom RNG gains', () => {
 	});
 
 	expect(impact.delta.collection).toBe(0);
-	expect(impact.delta.rngItems.WARTY).toBeCloseTo(30, 2);
-	expect(impact.delta.totalItems).toBeCloseTo(30, 2);
+	expect(impact.delta.rngItems.WARTY).toBeCloseTo(25, 2);
+	expect(impact.delta.totalItems).toBeCloseTo(25, 2);
 });
 
 test('getUpgradeRateImpact reports Seasoning gains as currency-only output', () => {
@@ -1418,10 +1449,10 @@ test('Rarefinder chip grants Overbloom for player rate calculations', () => {
 		},
 	});
 
-	expect(player.getStat(Stat.Overbloom)).toBe(60);
+	expect(player.getStat(Stat.Overbloom)).toBe(50);
 
 	const rates = player.getRates(Crop.NetherWart, 100_000);
-	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.6, 2);
+	expect(rates.rngItems?.['WARTY']).toBeCloseTo(50 * 1.5, 2);
 });
 
 test('Rose Dragon grants Overbloom for player rate calculations', () => {

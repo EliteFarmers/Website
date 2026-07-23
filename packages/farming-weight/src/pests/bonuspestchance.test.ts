@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { SprayonatorTier } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
@@ -77,7 +78,17 @@ test('Sprayonator and Stinky Cheese temporary effect contribute Bonus Pest Chanc
 	const sprayed = new FarmingPlayer({
 		sprayedPlot: true,
 	});
-	expect(sprayed.getStatBreakdown(Stat.BonusPestChance)['Sprayonator']?.value).toBe(50);
+	expect(sprayed.getStatBreakdown(Stat.BonusPestChance)['Sprayonator']?.value).toBe(25);
+	expect(
+		new FarmingPlayer({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Juicy }).getStatBreakdown(
+			Stat.BonusPestChance
+		)['Sprayonator']?.value
+	).toBe(50);
+	expect(
+		new FarmingPlayer({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Salty }).getStatBreakdown(
+			Stat.BonusPestChance
+		)['Sprayonator']?.value
+	).toBe(75);
 
 	const unsprayed = new FarmingPlayer({
 		sprayedPlot: false,

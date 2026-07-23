@@ -34,7 +34,9 @@ import {
 	COMMUNITY_CENTER_UPGRADE,
 	DNA_MILESTONE_SOURCE,
 	FARMING_LEVEL,
+	FEAST_BURGER_SOURCE,
 	FILLED_ROSEWATER_FLASK_SOURCE,
+	getSprayonatorTierInfo,
 	PEST_BESTIARY_SOURCE,
 	REFINED_TRUFFLE_SOURCE,
 	SPRAYONATOR_SOURCE,
@@ -933,6 +935,43 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 	},
 	{
+		name: FEAST_BURGER_SOURCE.name,
+		wiki: () => FEAST_BURGER_SOURCE.wiki,
+		exists: () => true,
+		max: () => 0,
+		current: () => 0,
+		maxStat: (_player, stat) => getFortune(FEAST_BURGER_SOURCE.maxLevel, FEAST_BURGER_SOURCE, stat),
+		currentStat: (player, stat) => getFortune(player.options.feastBurgers ?? 0, FEAST_BURGER_SOURCE, stat),
+		upgrades: (player) => {
+			const consumed = player.options.feastBurgers ?? 0;
+			if (consumed >= FEAST_BURGER_SOURCE.maxLevel) return [];
+
+			return [
+				{
+					title: FEAST_BURGER_SOURCE.name,
+					increase: 0,
+					stats: {
+						[Stat.Overbloom]: FEAST_BURGER_SOURCE.statsPerLevel?.[Stat.Overbloom] ?? 0,
+					},
+					action: UpgradeAction.Consume,
+					repeatable: FEAST_BURGER_SOURCE.maxLevel - consumed,
+					wiki: FEAST_BURGER_SOURCE.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							FEAST_BURGER: 1,
+						},
+					},
+					meta: {
+						type: 'setting',
+						key: 'feastBurgers',
+						value: consumed + 1,
+					},
+				},
+			];
+		},
+	},
+	{
 		name: FILLED_ROSEWATER_FLASK_SOURCE.name,
 		api: false,
 		wiki: () => FILLED_ROSEWATER_FLASK_SOURCE.wiki,
@@ -1020,8 +1059,12 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		exists: () => true,
 		max: () => 0,
 		current: () => 0,
-		maxStat: (_player, stat) => getFortune(SPRAYONATOR_SOURCE.maxLevel, SPRAYONATOR_SOURCE, stat),
-		currentStat: (player, stat) => (player.options.sprayedPlot ? getFortune(1, SPRAYONATOR_SOURCE, stat) : 0),
+		maxStat: (_player, stat) => 3 * (SPRAYONATOR_SOURCE.statsPerLevel?.[stat] ?? 0),
+		currentStat: (player, stat) =>
+			player.options.sprayedPlot
+				? getSprayonatorTierInfo(player.options.sprayonatorTier).effectMultiplier *
+					(SPRAYONATOR_SOURCE.statsPerLevel?.[stat] ?? 0)
+				: 0,
 		active: (player) => {
 			if (player.options.sprayedPlot) return { active: true };
 			return {
@@ -1031,7 +1074,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 		activeStat: (player, stat) => ({
 			active: player.options.sprayedPlot === true,
-			value: getFortune(1, SPRAYONATOR_SOURCE, stat),
+			value:
+				getSprayonatorTierInfo(player.options.sprayonatorTier).effectMultiplier *
+				(SPRAYONATOR_SOURCE.statsPerLevel?.[stat] ?? 0),
 		}),
 	},
 	...createCarnivalHarvestFeastSources(),
@@ -1343,7 +1388,7 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 				},
 			];
 
-			if (chip.statsPerRarity) {
+			if (chip.statsPerRarity || chip.cropFortunePerRarity) {
 				progress.push({
 					name: 'Rarity',
 					current: GARDEN_CHIP_RARITY_MAX_LEVELS[rarity],

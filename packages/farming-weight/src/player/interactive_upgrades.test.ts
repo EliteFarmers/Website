@@ -624,23 +624,24 @@ test('Upgrade Tree: Tier Upgrades Show Skill Requirements', () => {
 	const purchaseUpgrade = helmetProgress!.upgrades!.find((u) => u.conflictKey === 'item_purchase:Helmet')!;
 
 	expect(purchaseUpgrade).toBeDefined();
-	expect(purchaseUpgrade?.title).toBe('Farm Armor Helmet');
+	expect(purchaseUpgrade?.title).toBe('Farmhand Helmet');
 	expect(purchaseUpgrade?.skillReq).toBeDefined();
-	expect(purchaseUpgrade?.skillReq?.[Skill.Farming]).toBe(10);
+	expect(purchaseUpgrade?.skillReq?.[Skill.Farming]).toBe(3);
 
 	const tree = player.expandUpgrade(purchaseUpgrade, {
 		maxDepth: 5,
 		stats: [Stat.FarmingFortune],
 	});
 
-	const melonUpgrade = tree.children.find((c) => c.upgrade.meta?.id === 'MELON_HELMET');
-	expect(melonUpgrade).toBeDefined();
-	expect(melonUpgrade!.upgrade?.skillReq?.[Skill.Farming]).toBe(25);
+	const flattenTree = (node: typeof tree): (typeof tree)[] => [node, ...node.children.flatMap(flattenTree)];
+	const descendants = flattenTree(tree);
+	const haymakerUpgrade = descendants.find((c) => c.upgrade.meta?.id === 'FARM_ARMOR_HELMET');
+	expect(haymakerUpgrade).toBeDefined();
+	expect(haymakerUpgrade!.upgrade?.skillReq?.[Skill.Farming]).toBe(10);
 
-	const cropieUpgrade = melonUpgrade?.children.find((c) => c.upgrade.meta?.id === 'CROPIE_HELMET');
-	expect(cropieUpgrade).toBeDefined();
-
-	expect(cropieUpgrade!.upgrade?.skillReq?.[Skill.Farming]).toBe(30);
+	const sproutUpgrade = descendants.find((c) => c.upgrade.meta?.id === 'PUMPKIN_HELMET');
+	expect(sproutUpgrade).toBeDefined();
+	expect(sproutUpgrade!.upgrade?.skillReq?.[Skill.Farming]).toBe(15);
 });
 
 test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {

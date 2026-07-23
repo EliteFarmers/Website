@@ -2,6 +2,7 @@ import { Crop } from '../constants/crops.js';
 import { Pest, SPRAY_TO_PESTS } from '../constants/pests.js';
 import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
+import { getSprayonatorTierInfo } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
 import type { FortuneUpgrade } from '../constants/upgrades.js';
 import { resolveDropEffects } from '../effects/resolver.js';
@@ -925,8 +926,9 @@ function getPestTypeWeights(
 	const pests = attraction?.includeSpecialPests ? [...NATURAL_PESTS, Pest.Mouse, Pest.LunarMoth] : NATURAL_PESTS;
 	const weights: Partial<Record<Pest, number>> = Object.fromEntries(pests.map((pest) => [pest, 1]));
 	if (attraction?.sprayonatorMaterial && SPRAY_TO_PESTS[attraction.sprayonatorMaterial] !== undefined) {
+		const attractionWeight = getSprayonatorTierInfo(attraction.sprayonatorTier).pestAttractionMultiplier;
 		for (const spray_pest of SPRAY_TO_PESTS[attraction.sprayonatorMaterial] ?? []) {
-			if (weights[spray_pest] !== undefined) weights[spray_pest] = weights[spray_pest] * 12;
+			if (weights[spray_pest] !== undefined) weights[spray_pest] = weights[spray_pest] * attractionWeight;
 		}
 	}
 	if (attraction?.hooveriusVinylTarget && weights[attraction.hooveriusVinylTarget] !== undefined) {

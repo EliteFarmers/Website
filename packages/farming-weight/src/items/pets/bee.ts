@@ -3,6 +3,7 @@ import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { FarmingPetDefinition } from '../base-pet.js';
 import type { FarmingPetAbility } from '../pets.js';
+import { petDropEffects } from './drop-effects.js';
 
 export class BeePet extends FarmingPetDefinition {
 	get id() {
@@ -57,6 +58,12 @@ export class BeePet extends FarmingPetDefinition {
 	};
 
 	override abilities = [
+		{
+			name: 'Honey Harvester',
+			exists: (_, pet) => pet.rarity === Rarity.Legendary || pet.rarity === Rarity.Mythic,
+			computed: () => ({}),
+			effects: (_, pet) => petDropEffects('Honey Harvester', ['HONEY_JAR'], 0.0002, pet),
+		},
 		{
 			name: 'Powered by Pollen',
 			exists: (_, pet) => pet.rarity === Rarity.Mythic,

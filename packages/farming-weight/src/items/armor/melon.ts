@@ -7,17 +7,17 @@ import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
 import { armorTierGroup } from './groups.js';
 
-const MELON_TO_CROPIE_GROUP = armorTierGroup('MELON', 'CROPIE');
+const TATER_TO_CROPIE_GROUP = armorTierGroup('TATER', 'CROPIE');
 
 export class MelonHelmet extends BaseItem {
 	get skyblockId() {
 		return 'MELON_HELMET';
 	}
 	get name() {
-		return 'Melon Helmet';
+		return 'Tater Helmet';
 	}
 	get wiki() {
-		return 'https://w.elitesb.gg/Melon_Armor';
+		return 'https://w.elitesb.gg/Tater_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -30,7 +30,7 @@ export class MelonHelmet extends BaseItem {
 	override upgrade = {
 		id: 'CROPIE_HELMET',
 		reason: UpgradeReason.NextTier,
-		group: MELON_TO_CROPIE_GROUP,
+		group: TATER_TO_CROPIE_GROUP,
 		cost: {
 			items: {
 				ENCHANTED_HAY_BALE: 8,
@@ -41,12 +41,15 @@ export class MelonHelmet extends BaseItem {
 	};
 
 	override baseStats = {
+		[Stat.Health]: 100,
+		[Stat.Defense]: 25,
+		[Stat.Speed]: 2,
 		[Stat.FarmingFortune]: 15,
 		[Stat.BonusPestChance]: 10,
 	};
 
 	override skillReq = {
-		[Skill.Farming]: 25,
+		[Skill.Farming]: 20,
 	};
 }
 
@@ -55,10 +58,10 @@ export class MelonChestplate extends BaseItem {
 		return 'MELON_CHESTPLATE';
 	}
 	get name() {
-		return 'Melon Chestplate';
+		return 'Tater Chestplate';
 	}
 	get wiki() {
-		return 'https://w.elitesb.gg/Melon_Armor';
+		return 'https://w.elitesb.gg/Tater_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -71,7 +74,7 @@ export class MelonChestplate extends BaseItem {
 	override upgrade = {
 		id: 'CROPIE_CHESTPLATE',
 		reason: UpgradeReason.NextTier,
-		group: MELON_TO_CROPIE_GROUP,
+		group: TATER_TO_CROPIE_GROUP,
 		cost: {
 			items: {
 				ENCHANTED_HAY_BALE: 8,
@@ -83,12 +86,15 @@ export class MelonChestplate extends BaseItem {
 	};
 
 	override baseStats = {
+		[Stat.Health]: 150,
+		[Stat.Defense]: 25,
+		[Stat.Speed]: 3,
 		[Stat.FarmingFortune]: 20,
 		[Stat.BonusPestChance]: 10,
 	};
 
 	override skillReq = {
-		[Skill.Farming]: 25,
+		[Skill.Farming]: 20,
 	};
 }
 
@@ -97,10 +103,10 @@ export class MelonLeggings extends BaseItem {
 		return 'MELON_LEGGINGS';
 	}
 	get name() {
-		return 'Melon Leggings';
+		return 'Tater Leggings';
 	}
 	get wiki() {
-		return 'https://w.elitesb.gg/Melon_Armor';
+		return 'https://w.elitesb.gg/Tater_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -113,7 +119,7 @@ export class MelonLeggings extends BaseItem {
 	override upgrade = {
 		id: 'CROPIE_LEGGINGS',
 		reason: UpgradeReason.NextTier,
-		group: MELON_TO_CROPIE_GROUP,
+		group: TATER_TO_CROPIE_GROUP,
 		cost: {
 			items: {
 				ENCHANTED_HAY_BALE: 8,
@@ -125,12 +131,15 @@ export class MelonLeggings extends BaseItem {
 	};
 
 	override baseStats = {
+		[Stat.Health]: 150,
+		[Stat.Defense]: 25,
+		[Stat.Speed]: 3,
 		[Stat.FarmingFortune]: 20,
 		[Stat.BonusPestChance]: 10,
 	};
 
 	override skillReq = {
-		[Skill.Farming]: 25,
+		[Skill.Farming]: 20,
 	};
 }
 
@@ -139,10 +148,10 @@ export class MelonBoots extends BaseItem {
 		return 'MELON_BOOTS';
 	}
 	get name() {
-		return 'Melon Boots';
+		return 'Tater Boots';
 	}
 	get wiki() {
-		return 'https://w.elitesb.gg/Melon_Armor';
+		return 'https://w.elitesb.gg/Tater_Armor';
 	}
 	get maxRarity() {
 		return Rarity.Uncommon;
@@ -155,7 +164,7 @@ export class MelonBoots extends BaseItem {
 	override upgrade = {
 		id: 'CROPIE_BOOTS',
 		reason: UpgradeReason.NextTier,
-		group: MELON_TO_CROPIE_GROUP,
+		group: TATER_TO_CROPIE_GROUP,
 		cost: {
 			items: {
 				ENCHANTED_HAY_BALE: 16,
@@ -165,11 +174,14 @@ export class MelonBoots extends BaseItem {
 	};
 
 	override baseStats = {
+		[Stat.Health]: 100,
+		[Stat.Defense]: 25,
+		[Stat.Speed]: 2,
 		[Stat.FarmingFortune]: 15,
 		[Stat.BonusPestChance]: 10,
 	};
 
 	override skillReq = {
-		[Skill.Farming]: 25,
+		[Skill.Farming]: 20,
 	};
 }

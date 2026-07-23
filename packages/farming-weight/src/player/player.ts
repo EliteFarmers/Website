@@ -202,6 +202,11 @@ export class FarmingPlayer {
 			this.armor = FarmingArmor.fromArray(this.options.armor as EliteItemDto[], this.options);
 			this.armorSet = new ArmorSet(this.armor);
 		}
+
+		this.options.armorThornsLevel = this.armorSet.armor.reduce(
+			(total, piece) => total + Number(piece?.item.enchantments?.thorns ?? 0),
+			0
+		);
 	}
 
 	populateEquipment() {
@@ -609,8 +614,10 @@ export class FarmingPlayer {
 			const fortune = source.fortune(this.options.temporaryFortune);
 			if (fortune) {
 				const stat = source.stat ?? Stat.FarmingFortune;
-				// Hypercharge chip only boosts farming fortune sources, not Overbloom or other stats.
-				const boosted = stat === Stat.FarmingFortune ? fortune * hyperchargeMultiplier : fortune;
+				const boosted =
+					stat === Stat.FarmingFortune && source.hyperchargeEligible !== false
+						? fortune * hyperchargeMultiplier
+						: fortune;
 				breakdown[source.name] = { value: boosted, stat };
 				if (stat === Stat.FarmingFortune) sum += boosted;
 			}
@@ -1025,6 +1032,8 @@ export class FarmingPlayer {
 				this.options.dnaMilestone = Number(value);
 			} else if (key === 'refinedTruffles') {
 				this.options.refinedTruffles = Number(value);
+			} else if (key === 'feastBurgers') {
+				this.options.feastBurgers = Number(value);
 			} else if (key === 'wrigglingLarva') {
 				this.options.wrigglingLarva = Number(value);
 			} else if (key === 'filledRosewaterFlask' || key === 'filledRosewaterFlasks') {

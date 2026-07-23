@@ -96,6 +96,22 @@ test('Farming Tool Test', () => {
 	expect(tool.logCounter).toBe(0);
 });
 
+test('non-levelable gardening tools use their fixed base Farming Fortune', () => {
+	const tool = new FarmingTool({
+		skyblockId: 'ADVANCED_GARDENING_HOE',
+		uuid: 'advanced-gardening-hoe',
+		name: 'Advanced Gardening Hoe',
+		lore: [],
+		enchantments: {},
+		attributes: { levelable_lvl: '50' },
+		gems: {},
+	});
+
+	expect(tool.info.levelable).toBe(false);
+	expect(tool.getStat(Stat.FarmingFortune)).toBe(15);
+	expect(tool.getProgress().find((progress) => progress.name === 'Tool Level')).toBeUndefined();
+});
+
 test('Farming tool current level progress', () => {
 	const tool = new FarmingTool({
 		...netherwartHoe,

@@ -9,12 +9,18 @@
 	import * as Select from '$ui/select';
 	import { Switch } from '$ui/switch';
 	import {
+		CROP_INFO,
+		GARDEN_CHIPS,
+		getChipInputLevel,
+		getChipInputRarity,
+		getChipRarity,
 		getPestName,
 		NATURAL_PESTS,
 		Pest,
 		Spray,
 		SPRAY_NAMES,
 		SPRAY_TO_PESTS,
+		SprayonatorTier,
 		Stat,
 		TEMPORARY_FORTUNE,
 		type TemporaryFarmingFortune,
@@ -47,22 +53,53 @@
 			label: targetedPests ? `${sprayName(sprayId)} (${targetedPests})` : sprayName(sprayId),
 		};
 	});
+	const sprayonatorTierOptions = [
+		{ value: SprayonatorTier.Regular, label: 'Sprayonator' },
+		{ value: SprayonatorTier.Juicy, label: 'Juicy Sprayonator' },
+		{ value: SprayonatorTier.Salty, label: 'Salty Sprayonator' },
+	];
+	const sprayonatorBonus = $derived(
+		25 *
+			(pest.rates.pestFarming.sprayonatorTier === SprayonatorTier.Salty
+				? 3
+				: pest.rates.pestFarming.sprayonatorTier === SprayonatorTier.Juicy
+					? 2
+					: 1)
+	);
 	type TemporaryFortuneToggleKey = Exclude<keyof TemporaryFarmingFortune, 'pestTurnIn'>;
 	const pestTurnInTitle = `${TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)`;
 	const temporaryFortuneSources = [
 		{ key: 'harvestPotion', total: 50 },
 		{ key: 'magic8Ball', total: 25 },
 		{ key: 'springFilter', total: 25 },
-		{ key: 'anitaContest', total: 25 },
+		{
+			key: 'anitaContest',
+			total: 25,
+			description: "Applies Anita's Artifact boosted-contest fortune.",
+		},
 		{ key: 'chocolateTruffle', total: 30 },
 		{ key: 'celestialMasonJar', total: 15 },
 		{ key: 'melonJuiceMixin', total: 15 },
 		{ key: 'finnsFocaccia', total: 5, stat: Stat.Overbloom },
-	] satisfies { key: TemporaryFortuneToggleKey; total: number; stat?: Stat }[];
+	] satisfies { key: TemporaryFortuneToggleKey; total: number; stat?: Stat; description?: string }[];
 
 	function isTemporaryFortuneEnabled(key: TemporaryFortuneToggleKey) {
 		return pest.rates.useTemp && Boolean(pest.rates.temp[key]);
 	}
+
+	const overdriveLevel = $derived(
+		getChipInputLevel(
+			(pest.ctx.member.current?.memberData?.garden?.chips ?? {}) as Record<string, number | null | undefined>,
+			'overdrive'
+		)
+	);
+	const overdriveRarity = $derived(
+		getChipRarity(overdriveLevel, getChipInputRarity(pest.rates.chipRarities, 'overdrive'))
+	);
+	const overdriveFortune = $derived(
+		(GARDEN_CHIPS.overdrive.cropFortunePerRarity?.[overdriveRarity] ?? 0) * overdriveLevel
+	);
+	const overdriveStat = $derived(CROP_INFO[pest.selectedCropKey]?.fortuneType ?? Stat.FarmingFortune);
 </script>
 
 <div class="relative w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
@@ -77,7 +114,7 @@
 	>
 		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
 			<FortuneBreakdown
-				breakdown={{ Sprayonator: { value: 50, stat: Stat.BonusPestChance } }}
+				breakdown={{ Sprayonator: { value: sprayonatorBonus, stat: Stat.BonusPestChance } }}
 				enabled={pest.rates.pestFarming.sprayedPlot}
 			/>
 			<Switch
@@ -85,6 +122,16 @@
 				onCheckedChange={(checked) => pest.setSprayedPlot(checked)}
 			/>
 		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title="Sprayer Tier" description="Juicy and Salty multiply the selected material's base effect.">
+		<Select.Simple
+			class="my-1 h-10 min-w-40"
+			value={pest.rates.pestFarming.sprayonatorTier}
+			change={(value) => pest.setSprayonatorTier(value ?? SprayonatorTier.Regular)}
+			options={sprayonatorTierOptions}
+		/>
 	</SettingListItem>
 	<SettingBigSeperator />
 
@@ -126,7 +173,11 @@
 	<SettingSeperator />
 
 	{#each temporaryFortuneSources as source (source.key)}
-		<SettingListItem title={TEMPORARY_FORTUNE[source.key].name} wiki={TEMPORARY_FORTUNE[source.key].wiki}>
+		<SettingListItem
+			title={TEMPORARY_FORTUNE[source.key].name}
+			description={source.description}
+			wiki={TEMPORARY_FORTUNE[source.key].wiki}
+		>
 			<div
 				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
 			>
@@ -162,6 +213,30 @@
 				checked={pest.rates.temp.stinkyCheesePotion}
 				onCheckedChange={(checked) => pest.setTemporaryFortune('stinkyCheesePotion', checked)}
 				disabled={!pest.rates.useTemp}
+			/>
+		</div>
+	</SettingListItem>
+	<SettingBigSeperator />
+
+	<SettingHeader class="mt-8 text-xl">Contest Bonuses</SettingHeader>
+	<p class="text-muted-foreground px-1 text-sm">Bonuses that only apply during Jacob's Farming Contest.</p>
+	<SettingBigSeperator />
+
+	<SettingListItem
+		title={GARDEN_CHIPS.overdrive.name}
+		description="Applies the chip's Crop Fortune to the selected contest crop."
+		wiki={GARDEN_CHIPS.overdrive.wiki}
+	>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown
+				breakdown={{
+					[GARDEN_CHIPS.overdrive.name]: { value: overdriveFortune, stat: overdriveStat },
+				}}
+				enabled={pest.rates.overdriveActive}
+			/>
+			<Switch
+				checked={pest.rates.overdriveActive}
+				onCheckedChange={(checked) => pest.setOverdriveActive(checked)}
 			/>
 		</div>
 	</SettingListItem>

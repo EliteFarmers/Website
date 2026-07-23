@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
+import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
 import { FarmingPlayer } from '../player/player.js';
 import { FarmingPet } from './farmingpet.js';
 
@@ -33,6 +34,25 @@ test('Elephant fortune test', () => {
 	});
 });
 
+test('Mythic Elephant gains the new base Farming Fortune', () => {
+	const pet = new FarmingPet({
+		type: 'ELEPHANT',
+		exp: 30_000_000_000,
+		tier: 'MYTHIC',
+		heldItem: null,
+	});
+
+	expect(pet.level).toBe(100);
+	expect(pet.fortune).toBe(200);
+	expect(pet.breakdown['Mythic Base Farming Fortune']).toBe(50);
+	expect(pet.getEffects(buildEffectEnvironmentFromOptions({}))).toContainEqual({
+		source: 'Abundant Harvest',
+		op: 'mul-drop',
+		value: 1.2,
+		scope: { tags: ['sowdust'] },
+	});
+});
+
 test('Mooshroom Cow fortune test', () => {
 	const mooshroom = {
 		uuid: 'ec3f021c-d92d-4b56-95fe-0a18653d2238',
@@ -46,28 +66,76 @@ test('Mooshroom Cow fortune test', () => {
 	};
 
 	const pet = new FarmingPet(mooshroom);
-	expect(pet.fortune).toBe(110);
+	expect(pet.fortune).toBe(100);
 
 	expect(pet.breakdown).toStrictEqual({
-		'Base Farming Fortune': 110,
+		'Base Farming Fortune': 100,
 	});
 
 	const petWithLevel = new FarmingPet(mooshroom, { gardenLevel: 15 });
-	expect(petWithLevel.fortune).toBe(170);
+	expect(petWithLevel.fortune).toBe(160);
 
 	expect(petWithLevel.breakdown).toStrictEqual({
-		'Base Farming Fortune': 110,
+		'Base Farming Fortune': 100,
 		'Green Bandana': 60,
 	});
 
 	const petWithStrength = new FarmingPet(mooshroom, { gardenLevel: 15, strength: 1500 });
-	expect(petWithStrength.fortune).toBe(222);
+	expect(petWithStrength.fortune).toBe(212);
 
 	expect(petWithStrength.breakdown).toStrictEqual({
-		'Base Farming Fortune': 110,
+		'Base Farming Fortune': 100,
 		'Green Bandana': 60,
 		'Farming Strength Fortune': 52,
 	});
+});
+
+test('new farming pet drops and Orchid Mantis bonuses are exposed as effects', () => {
+	const env = buildEffectEnvironmentFromOptions({});
+	const bee = new FarmingPet({ type: 'BEE', exp: 30_000_000_000, tier: 'LEGENDARY', heldItem: null });
+	const mooshroom = new FarmingPet({
+		type: 'MOOSHROOM_COW',
+		exp: 30_000_000_000,
+		tier: 'LEGENDARY',
+		heldItem: null,
+	});
+	const mantis = new FarmingPet(
+		{ type: 'ORCHID_MANTIS', exp: 30_000_000_000, tier: 'LEGENDARY', heldItem: null },
+		{ speed: 400 }
+	);
+	const rareMantis = new FarmingPet(
+		{ type: 'ORCHID_MANTIS', exp: 30_000_000_000, tier: 'RARE', heldItem: null },
+		{ speed: 400 }
+	);
+	const slowMantis = new FarmingPet(
+		{ type: 'ORCHID_MANTIS', exp: 30_000_000_000, tier: 'LEGENDARY', heldItem: null },
+		{ speed: 100 }
+	);
+
+	expect(bee.getEffects(env)).toContainEqual(
+		expect.objectContaining({
+			op: 'add-drop',
+			drop: expect.objectContaining({ itemId: 'HONEY_JAR', chance: 0.0002 }),
+		})
+	);
+	expect(mooshroom.getEffects(env)).toEqual(
+		expect.arrayContaining([
+			expect.objectContaining({ drop: expect.objectContaining({ itemId: 'CHEESE_FUEL', chance: 0.0001 }) }),
+			expect.objectContaining({ drop: expect.objectContaining({ itemId: 'DUNG', chance: 0.0001 }) }),
+		])
+	);
+	expect(mantis.getFortune(Stat.Speed)).toBe(30);
+	expect(mantis.getFortune(Stat.Overbloom)).toBe(15);
+	expect(mantis.getFortune(Stat.FarmingFortune)).toBe(100);
+	expect(rareMantis.getFortune(Stat.FarmingFortune)).toBe(50);
+	expect(slowMantis.getFortune(Stat.FarmingFortune)).toBe(0);
+	expect(mantis.getToolExperienceMultiplier()).toBe(1.2);
+	expect(mantis.getEffects(env)).toEqual(
+		expect.arrayContaining([
+			expect.objectContaining({ drop: expect.objectContaining({ itemId: 'JELLY', chance: 0.0001 }) }),
+			expect.objectContaining({ drop: expect.objectContaining({ itemId: 'PLANT_MATTER', chance: 0.0001 }) }),
+		])
+	);
 });
 
 test('Slug Repugnant Aroma with Hypercharge chip', () => {

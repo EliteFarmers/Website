@@ -203,7 +203,7 @@ export class FarmingPet {
 	 * contribution this pet makes (base, per-level, per-rarity-level, abilities,
 	 * pet item)
 	 */
-	getEffects(_env: EffectEnvironment, player?: FarmingPlayer): Effect[] {
+	getEffects(env: EffectEnvironment, player?: FarmingPlayer): Effect[] {
 		const sourceName = this.info.name ?? this.type;
 		const stats: Partial<Record<Stat, number>> = {};
 		const abilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
@@ -213,7 +213,19 @@ export class FarmingPet {
 			if (fortune) stats[stat] = fortune;
 		}
 
-		return statsToEffects(stats, sourceName);
+		const effects = statsToEffects(stats, sourceName);
+		const abilityContext = { player, options: this.options ?? {} };
+		for (const ability of this.info.abilities ?? []) {
+			if (!ability.effects) continue;
+			if (ability.exists && !ability.exists(abilityContext, this)) continue;
+			effects.push(...ability.effects(abilityContext, this, env));
+		}
+
+		return effects;
+	}
+
+	getToolExperienceMultiplier(): number {
+		return Math.max(0, this.info.toolExperienceMultiplier?.(this) ?? 1);
 	}
 
 	getFullBreakdown(player?: FarmingPlayer): StatBreakdown {

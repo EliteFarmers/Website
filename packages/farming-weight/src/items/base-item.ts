@@ -25,6 +25,7 @@ export abstract class BaseItem implements ItemDefinition {
 	type?: FarmingToolType | ReforgeTarget;
 	crop?: Crop;
 	crops?: Crop[];
+	levelable?: boolean;
 	slot?: GearSlot;
 	special?: SpecialCrop[];
 	family?: string;

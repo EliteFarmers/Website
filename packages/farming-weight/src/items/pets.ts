@@ -8,6 +8,7 @@ import { ElephantPet } from './pets/elephant.js';
 import { HedgehogPet } from './pets/hedgehog.js';
 import { MooshroomCowPet } from './pets/mooshroom-cow.js';
 import { MosquitoPet } from './pets/mosquito.js';
+import { OrchidMantisPet } from './pets/orchid-mantis.js';
 import { PigPet } from './pets/pig.js';
 import { RabbitPet } from './pets/rabbit.js';
 import { RoseDragonPet } from './pets/rose-dragon.js';
@@ -34,6 +35,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 	[FarmingPets.Mosquito]: new MosquitoPet(),
 	[FarmingPets.RoseDragon]: new RoseDragonPet(),
 	[FarmingPets.Pig]: new PigPet(),
+	[FarmingPets.OrchidMantis]: new OrchidMantisPet(),
 };
 
 export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
@@ -100,6 +102,26 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 			[Stat.Speed]: {
 				name: 'Flying Pig Speed',
 				value: 20,
+			},
+		},
+	},
+	PET_ITEM_LUCKY_CLOVER: {
+		name: 'Lucky Clover',
+		wiki: 'https://w.elitesb.gg/Lucky_Clover',
+		stats: {
+			[Stat.Overbloom]: {
+				name: 'Lucky Clover Overbloom',
+				value: 7,
+			},
+		},
+	},
+	POIGNANT_LUCKY_CLOVER: {
+		name: 'Poignant Lucky Clover',
+		wiki: 'https://w.elitesb.gg/Poignant_Lucky_Clover',
+		stats: {
+			[Stat.Overbloom]: {
+				name: 'Poignant Lucky Clover Overbloom',
+				value: 13,
 			},
 		},
 	},

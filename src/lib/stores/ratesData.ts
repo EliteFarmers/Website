@@ -7,6 +7,7 @@ import {
 	type PestAttractionSettings,
 	PestFarmingPhase,
 	Spray,
+	SprayonatorTier,
 	ZorroMode,
 	type FarmingTool,
 	type PestCycleSettings,
@@ -23,6 +24,7 @@ export interface PestFarmingData {
 	selectedCrop?: string;
 	phaseLoadouts: Partial<Record<PestFarmingPhase, { armorSetId: string }>>;
 	sprayedPlot: boolean;
+	sprayonatorTier: SprayonatorTier;
 	pesthunterAccessoryEnabled: boolean;
 	timeOfDay: PestFarmingTimeOfDay;
 	attraction: PestAttractionSettings;
@@ -37,9 +39,12 @@ export interface RatesData {
 	communityCenter: number;
 	selectedPet?: string;
 	strength: number;
+	speed: number;
 	useTemp: boolean;
 	temp: Required<TemporaryFarmingFortune>;
+	overdriveActive: boolean;
 	sprayedPlot: boolean;
+	sprayonatorTier: SprayonatorTier;
 	infestedPlotProbability?: number;
 	zorroMode: ZorroMode;
 	bzMode: 'order' | 'insta';
@@ -66,6 +71,7 @@ const defaultData = {
 	chipRarities: {},
 	communityCenter: 0,
 	strength: 0,
+	speed: 400,
 	bzMode: 'order',
 	useTemp: true,
 	rosewaterFlasks: 0,
@@ -83,12 +89,15 @@ const defaultData = {
 		finnsFocaccia: false,
 		stinkyCheesePotion: false,
 	},
+	overdriveActive: false,
 	sprayedPlot: true,
+	sprayonatorTier: SprayonatorTier.Regular,
 	infestedPlotProbability: 0.2,
 	zorroMode: ZorroMode.Normal,
 	pestFarming: {
 		phaseLoadouts: {},
 		sprayedPlot: true,
+		sprayonatorTier: SprayonatorTier.Regular,
 		pesthunterAccessoryEnabled: true,
 		timeOfDay: 'day',
 		attraction: {
@@ -151,6 +160,7 @@ function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingD
 		selectedCrop: data?.selectedCrop,
 		phaseLoadouts,
 		sprayedPlot: data?.sprayedPlot ?? defaultData.pestFarming.sprayedPlot,
+		sprayonatorTier: data?.sprayonatorTier ?? defaultData.pestFarming.sprayonatorTier,
 		pesthunterAccessoryEnabled: true,
 		timeOfDay: data?.timeOfDay ?? defaultData.pestFarming.timeOfDay,
 		attraction: normalizePestAttractionSettings(data?.attraction),

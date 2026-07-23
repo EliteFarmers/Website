@@ -3,6 +3,14 @@ export { CactusKnife1, CactusKnife2, CactusKnife3 } from './cactus-knife.js';
 export { CocoaChopper1, CocoaChopper2, CocoaChopper3 } from './cocoa-chopper.js';
 export { MelonDicer1, MelonDicer2, MelonDicer3, PumpkinDicer1, PumpkinDicer2, PumpkinDicer3 } from './dicers.js';
 export { FungiCutter1, FungiCutter2, FungiCutter3 } from './fungi-cutter.js';
+export {
+	AdvancedGardeningAxe,
+	AdvancedGardeningHoe,
+	BasicGardeningAxe,
+	BasicGardeningHoe,
+	RookieFarmingAxe,
+	RookieHoe,
+} from './gardening.js';
 export { T1_TOOL_GEMS, T2_TOOL_GEMS, T3_TOOL_GEMS, type ToolGemSlot } from './gem-slots.js';
 export {
 	EclipseHoe1,

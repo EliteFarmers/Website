@@ -21,6 +21,14 @@ export const ITEM_IDS = {
 	MutantNetherWart: 'MUTANT_NETHER_STALK',
 
 	JacobsTicket: 'JACOBS_TICKET',
+	FeastBurger: 'FEAST_BURGER',
+	BloomingThorns: 'BLOOMING_THORNS',
+	JuicyNozzle: 'JUICY_NOZZLE',
+	JuicySprayonator: 'JUICY_SPRAYONATOR',
+	SaltyNozzle: 'SALTY_NOZZLE',
+	SaltySprayonator: 'SALTY_SPRAYONATOR',
+	LuckyClover: 'PET_ITEM_LUCKY_CLOVER',
+	PoignantLuckyClover: 'POIGNANT_LUCKY_CLOVER',
 
 	// Garden Chips
 	CropshotChip: 'CROPSHOT_GARDEN_CHIP',

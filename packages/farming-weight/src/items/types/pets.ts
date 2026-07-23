@@ -3,6 +3,7 @@ import type { FarmingPetStatType } from '../../constants/pets.js';
 import type { Rarity, RarityRecord } from '../../constants/reforges.js';
 import type { Skill } from '../../constants/skills.js';
 import type { StatsRecord } from '../../constants/stats.js';
+import type { Effect, EffectEnvironment } from '../../effects/types.js';
 import type { FarmingPet } from '../../fortune/farmingpet.js';
 import type { FarmingPlayer } from '../../player/player.js';
 import type { PlayerOptions } from '../../player/playeroptions.js';
@@ -26,6 +27,12 @@ export interface FarmingPetAbility {
 		player: { player?: FarmingPlayer; options: PlayerOptions },
 		pet: FarmingPet
 	) => StatsRecord<FarmingPetStatType>;
+	/** Non-stat effects such as pet-exclusive crop drops. */
+	effects?: (
+		player: { player?: FarmingPlayer; options: PlayerOptions },
+		pet: FarmingPet,
+		env: EffectEnvironment
+	) => Effect[];
 	/**
 	 * Late-phase calculation that runs after all base stats are computed.
 	 * Use this for abilities that depend on total fortune (e.g., Pig Pet's Trample).
@@ -45,6 +52,8 @@ export interface FarmingPetInfo {
 	perRarityLevelStats?: RarityRecord<StatsRecord<FarmingPetStatType, FarmingPet>>;
 	perStatStats?: StatsRecord<FarmingPetStatType>;
 	abilities?: FarmingPetAbility[];
+	/** Multiplicative Farming Tool XP contribution; 1 is the neutral multiplier. */
+	toolExperienceMultiplier?: (pet: FarmingPet) => number;
 }
 
 export interface FarmingPetItemStatModifier {

@@ -22,6 +22,7 @@ test('all reforge definitions are class-backed sources', () => {
 		'robust',
 		'rooted',
 		'squeaky',
+		'thorny',
 	]);
 	expect(REFORGES).toBe(REFORGE_SOURCES);
 	for (const reforge of Object.values(REFORGE_SOURCES)) {
@@ -39,6 +40,22 @@ test('overpriced maps Overbloom stat tiers through generic reforge effects', () 
 			relatedStats: [Stat.Overbloom],
 		})
 	);
+});
+
+test('thorny uses the live Farming Fortune, Overbloom, and application costs', () => {
+	const thorny = REFORGE_SOURCES.thorny!;
+	expect(
+		[Rarity.Common, Rarity.Uncommon, Rarity.Rare, Rarity.Epic, Rarity.Legendary, Rarity.Mythic].map((rarity) =>
+			thorny.getTier(rarity)
+		)
+	).toEqual([
+		{ stats: { [Stat.FarmingFortune]: 2, [Stat.Overbloom]: 0.25 }, cost: 20_000 },
+		{ stats: { [Stat.FarmingFortune]: 4, [Stat.Overbloom]: 0.5 }, cost: 40_000 },
+		{ stats: { [Stat.FarmingFortune]: 6, [Stat.Overbloom]: 0.75 }, cost: 80_000 },
+		{ stats: { [Stat.FarmingFortune]: 8, [Stat.Overbloom]: 1 }, cost: 150_000 },
+		{ stats: { [Stat.FarmingFortune]: 10, [Stat.Overbloom]: 1.25 }, cost: 300_000 },
+		{ stats: { [Stat.FarmingFortune]: 12, [Stat.Overbloom]: 1.5 }, cost: 600_000 },
+	]);
 });
 
 test('deep fried owns its Seasoning multiplier on the class', () => {

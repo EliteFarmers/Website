@@ -14,6 +14,7 @@ import { OverpricedReforge } from './overpriced.js';
 import { RobustReforge } from './robust.js';
 import { RootedReforge } from './rooted.js';
 import { SqueakyReforge } from './squeaky.js';
+import { ThornyReforge } from './thorny.js';
 
 export * from './base.js';
 export * from './beady.js';
@@ -31,6 +32,7 @@ export * from './overpriced.js';
 export * from './robust.js';
 export * from './rooted.js';
 export * from './squeaky.js';
+export * from './thorny.js';
 
 export const REFORGE_SOURCES: Record<string, BaseReforge> = {
 	bountiful: new BountifulReforge(),
@@ -48,4 +50,5 @@ export const REFORGE_SOURCES: Record<string, BaseReforge> = {
 	mantid: new MantidReforge(),
 	deep_fried: new DeepFriedReforge(),
 	overpriced: new OverpricedReforge(),
+	thorny: new ThornyReforge(),
 };

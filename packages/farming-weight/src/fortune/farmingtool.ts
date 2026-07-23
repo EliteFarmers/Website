@@ -96,6 +96,16 @@ export class FarmingTool extends UpgradeableBase {
 	 * When a tool is capped it can show >= 100% progress but not advance.
 	 */
 	getCurrentLevelProgress(): ToolCurrentLevelProgress {
+		if (this.info.levelable === false) {
+			return {
+				level: 1,
+				total: 0,
+				progress: 0,
+				ratio: 0,
+				maxed: false,
+			};
+		}
+
 		const currentLevel = Math.max(1, Math.floor(this.level || 1));
 		const rawXp = this.xp || 0;
 
@@ -258,9 +268,10 @@ export class FarmingTool extends UpgradeableBase {
 	getStat(stat: Stat, selectedCrop?: Crop): number {
 		let sum = 0;
 		const crops = selectedCrop && this.crops.includes(selectedCrop) ? [selectedCrop] : this.crops;
+		sum += this.info.baseStats?.[stat] ?? 0;
 
 		// Tool level gives 4 crop-specific fortune per level
-		for (const crop of crops) {
+		for (const crop of this.info.levelable === false ? [] : crops) {
 			if (stat === CROP_INFO[crop]?.fortuneType) {
 				sum += this.level * 4;
 				break;
@@ -313,9 +324,10 @@ export class FarmingTool extends UpgradeableBase {
 	getEffects(env: EffectEnvironment): Effect[] {
 		const sourceName = this.item.name ?? this.info.name;
 		const effects: Effect[] = [];
+		effects.push(...statsToEffects(this.info.baseStats, sourceName));
 
 		const levelStats: Partial<Record<Stat, number>> = {};
-		for (const crop of this.crops) {
+		for (const crop of this.info.levelable === false ? [] : this.crops) {
 			const cropStat = CROP_INFO[crop]?.fortuneType;
 			if (!cropStat) continue;
 			levelStats[cropStat] = (levelStats[cropStat] ?? 0) + this.level * 4;
@@ -359,11 +371,18 @@ export class FarmingTool extends UpgradeableBase {
 	getFortune(): number {
 		this.fortuneBreakdown = {};
 		let sum = 0;
+		const base = this.info.baseStats?.[Stat.FarmingFortune] ?? 0;
+		if (base > 0) {
+			this.fortuneBreakdown['Base Stats'] = base;
+			sum += base;
+		}
 
 		// Tool level (4 Farming Fortune per tool level)
-		const levelFortune = this.level * 4;
-		this.fortuneBreakdown['Tool Level'] = levelFortune;
-		sum += levelFortune;
+		if (this.info.levelable !== false) {
+			const levelFortune = this.level * 4;
+			this.fortuneBreakdown['Tool Level'] = levelFortune;
+			sum += levelFortune;
+		}
 
 		// Reforge stats
 		const reforge = this.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;

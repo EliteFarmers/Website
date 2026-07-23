@@ -9,6 +9,7 @@ export enum FarmingPets {
 	Pig = 'PIG',
 	Mosquito = 'MOSQUITO',
 	RoseDragon = 'ROSE_DRAGON',
+	OrchidMantis = 'ORCHID_MANTIS',
 }
 
 export enum FarmingPetStatType {
