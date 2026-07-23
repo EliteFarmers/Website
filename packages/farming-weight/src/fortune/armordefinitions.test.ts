@@ -19,27 +19,60 @@ describe('Armor Definitions Integrity', () => {
 		expect(armorCount).toBeGreaterThan(30);
 	});
 
-	test('Farm Armor set has correct properties', () => {
+	test('Farmhand Armor set has correct properties', () => {
+		const pieces = ['FARM_SUIT_HELMET', 'FARM_SUIT_CHESTPLATE', 'FARM_SUIT_LEGGINGS', 'FARM_SUIT_BOOTS'];
+		for (const piece of pieces) {
+			const armor = getArmorInfo(piece);
+			expect(armor.name).toContain('Farmhand');
+			expect(armor.family).toBe('FARM_SUIT');
+			expect(armor.maxRarity).toBe(Rarity.Common);
+			expect(armor.baseStats?.[Stat.FarmingFortune]).toBe(5);
+			expect(armor.skillReq?.[Skill.Farming]).toBe(3);
+		}
+	});
+
+	test('Haymaker Armor set has correct properties', () => {
 		const pieces = ['FARM_ARMOR_HELMET', 'FARM_ARMOR_CHESTPLATE', 'FARM_ARMOR_LEGGINGS', 'FARM_ARMOR_BOOTS'];
 		for (const piece of pieces) {
 			const armor = getArmorInfo(piece);
-			expect(armor.name).toContain('Farm Armor');
+			expect(armor.name).toContain('Haymaker');
 			expect(armor.family).toBe('FARM_ARMOR');
-			expect(armor.maxRarity).toBe(Rarity.Epic);
+			expect(armor.maxRarity).toBe(Rarity.Common);
 			expect(armor.baseStats?.[Stat.FarmingFortune]).toBe(10);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(10);
 		}
 	});
 
-	test('Melon Armor set has correct properties', () => {
+	test('Sprout Armor set has correct properties', () => {
+		const pieces = ['PUMPKIN_HELMET', 'PUMPKIN_CHESTPLATE', 'PUMPKIN_LEGGINGS', 'PUMPKIN_BOOTS'];
+		for (const piece of pieces) {
+			const armor = getArmorInfo(piece);
+			expect(armor.name).toContain('Sprout');
+			expect(armor.family).toBe('PUMPKIN');
+			expect(armor.maxRarity).toBe(Rarity.Uncommon);
+			expect(armor.baseStats?.[Stat.FarmingFortune]).toBe(15);
+			expect(armor.skillReq?.[Skill.Farming]).toBe(15);
+		}
+	});
+
+	test('Tater Armor set has correct properties', () => {
 		const pieces = ['MELON_HELMET', 'MELON_CHESTPLATE', 'MELON_LEGGINGS', 'MELON_BOOTS'];
 		for (const piece of pieces) {
 			const armor = getArmorInfo(piece);
-			expect(armor.name).toContain('Melon');
+			expect(armor.name).toContain('Tater');
 			expect(armor.family).toBe('MELON');
 			expect(armor.maxRarity).toBe(Rarity.Uncommon);
 			expect(armor.special).toContain(SpecialCrop.Cropie);
-			expect(armor.skillReq?.[Skill.Farming]).toBe(25);
+			expect(armor.skillReq?.[Skill.Farming]).toBe(20);
+		}
+	});
+
+	test('Rabbit Armor no longer grants Farming Fortune', () => {
+		const pieces = ['RABBIT_HELMET', 'RABBIT_CHESTPLATE', 'RABBIT_LEGGINGS', 'RABBIT_BOOTS'];
+		for (const piece of pieces) {
+			const armor = getArmorInfo(piece);
+			expect(armor.baseStats?.[Stat.FarmingFortune]).toBeUndefined();
+			expect(armor.gemSlots).toBeUndefined();
 		}
 	});
 
@@ -127,8 +160,19 @@ describe('Armor Definitions Integrity', () => {
 		}
 	});
 
-	test('Upgrade chain from Melon to Helianthus', () => {
-		// Melon -> Cropie -> Squash -> Fermento -> Helianthus
+	test('Upgrade chain from Farmhand to Helianthus', () => {
+		const farmhandHelmet = getArmorInfo('FARM_SUIT_HELMET');
+		expect(farmhandHelmet.upgrade?.id).toBe('FARM_ARMOR_HELMET');
+		expect(farmhandHelmet.upgrade?.reason).toBe(UpgradeReason.NextTier);
+
+		const haymakerHelmet = getArmorInfo('FARM_ARMOR_HELMET');
+		expect(haymakerHelmet.upgrade?.id).toBe('PUMPKIN_HELMET');
+		expect(haymakerHelmet.upgrade?.reason).toBe(UpgradeReason.NextTier);
+
+		const sproutHelmet = getArmorInfo('PUMPKIN_HELMET');
+		expect(sproutHelmet.upgrade?.id).toBe('MELON_HELMET');
+		expect(sproutHelmet.upgrade?.reason).toBe(UpgradeReason.NextTier);
+
 		const melonHelmet = getArmorInfo('MELON_HELMET');
 		expect(melonHelmet.upgrade?.id).toBe('CROPIE_HELMET');
 		expect(melonHelmet.upgrade?.reason).toBe(UpgradeReason.NextTier);
@@ -149,10 +193,35 @@ describe('Armor Definitions Integrity', () => {
 		expect(helianthusHelmet.upgrade).toBeUndefined();
 	});
 
-	test('Tiered farming armor upgrades declare group metadata', () => {
+	test('Early farming armor tier upgrades include their recipes', () => {
 		const transitions = [
 			{
-				from: 'MELON',
+				pieces: ['FARM_SUIT_HELMET', 'FARM_SUIT_CHESTPLATE', 'FARM_SUIT_LEGGINGS', 'FARM_SUIT_BOOTS'],
+				items: { ENCHANTED_WHEAT: 8 },
+			},
+			{
+				pieces: ['FARM_ARMOR_HELMET', 'FARM_ARMOR_CHESTPLATE', 'FARM_ARMOR_LEGGINGS', 'FARM_ARMOR_BOOTS'],
+				items: { ENCHANTED_CARROT: 64 },
+			},
+			{
+				pieces: ['PUMPKIN_HELMET', 'PUMPKIN_CHESTPLATE', 'PUMPKIN_LEGGINGS', 'PUMPKIN_BOOTS'],
+				items: { ENCHANTED_POTATO: 256 },
+			},
+		];
+
+		for (const transition of transitions) {
+			for (const piece of transition.pieces) {
+				const upgrade = getArmorInfo(piece).upgrade;
+				expect(upgrade?.cost?.items, piece).toEqual(transition.items);
+				expect(upgrade?.group, piece).toBeUndefined();
+			}
+		}
+	});
+
+	test('Set-bonus farming armor upgrades declare group metadata', () => {
+		const transitions = [
+			{
+				from: 'TATER',
 				to: 'CROPIE',
 				pieces: ['MELON_HELMET', 'MELON_CHESTPLATE', 'MELON_LEGGINGS', 'MELON_BOOTS'],
 			},
@@ -175,13 +244,15 @@ describe('Armor Definitions Integrity', () => {
 
 		for (const transition of transitions) {
 			for (const piece of transition.pieces) {
-				const group = getArmorInfo(piece).upgrade?.group;
+				const upgrade = getArmorInfo(piece).upgrade;
+				const group = upgrade?.group;
 				expect(group?.id, piece).toBe(`armor-tier:${transition.from}:${transition.to}`);
 				const fromLabel = `${transition.from.charAt(0)}${transition.from.slice(1).toLowerCase()}`;
 				const toLabel = `${transition.to.charAt(0)}${transition.to.slice(1).toLowerCase()}`;
 				expect(group?.label, piece).toBe(`Upgrade ${fromLabel} Armor to ${toLabel} Armor`);
 				expect(group?.strategy, piece).toBe('available-pieces');
 				expect(group?.warning, piece).toBe('Partial upgrades can reduce the active armor set tier.');
+				expect(Object.keys(upgrade?.cost?.items ?? {}), piece).not.toHaveLength(0);
 			}
 		}
 	});

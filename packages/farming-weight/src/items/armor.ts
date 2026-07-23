@@ -14,6 +14,10 @@ import {
 	FarmArmorHelmet,
 	FarmArmorLeggings,
 	FarmerBoots,
+	FarmhandBoots,
+	FarmhandChestplate,
+	FarmhandHelmet,
+	FarmhandLeggings,
 	FermentoBoots,
 	FermentoChestplate,
 	FermentoHelmet,
@@ -36,6 +40,10 @@ import {
 	RabbitHelmet,
 	RabbitLeggings,
 	RanchersBoots,
+	SproutBoots,
+	SproutChestplate,
+	SproutHelmet,
+	SproutLeggings,
 	SquashBoots,
 	SquashChestplate,
 	SquashHelmet,
@@ -51,10 +59,18 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARMER_BOOTS: new FarmerBoots(),
 	RANCHERS_BOOTS: new RanchersBoots(),
 	ENCHANTED_JACK_O_LANTERN: new LanternHelmet(),
+	FARM_SUIT_HELMET: new FarmhandHelmet(),
+	FARM_SUIT_CHESTPLATE: new FarmhandChestplate(),
+	FARM_SUIT_LEGGINGS: new FarmhandLeggings(),
+	FARM_SUIT_BOOTS: new FarmhandBoots(),
 	FARM_ARMOR_HELMET: new FarmArmorHelmet(),
 	FARM_ARMOR_CHESTPLATE: new FarmArmorChestplate(),
 	FARM_ARMOR_LEGGINGS: new FarmArmorLeggings(),
 	FARM_ARMOR_BOOTS: new FarmArmorBoots(),
+	PUMPKIN_HELMET: new SproutHelmet(),
+	PUMPKIN_CHESTPLATE: new SproutChestplate(),
+	PUMPKIN_LEGGINGS: new SproutLeggings(),
+	PUMPKIN_BOOTS: new SproutBoots(),
 	RABBIT_HELMET: new RabbitHelmet(),
 	RABBIT_CHESTPLATE: new RabbitChestplate(),
 	RABBIT_LEGGINGS: new RabbitLeggings(),
@@ -99,14 +115,6 @@ export interface ArmorSetBonus {
 }
 
 export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
-	RABBIT: {
-		name: 'Bonus Farming Fortune',
-		stats: {
-			4: {
-				[Stat.FarmingFortune]: 10,
-			},
-		},
-	},
 	MELON: {
 		name: 'Cropier Crops',
 		piecePotential: {

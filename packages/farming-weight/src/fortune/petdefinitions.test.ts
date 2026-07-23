@@ -39,7 +39,7 @@ const MAX_LEVEL_EXP = 30000000000;
 describe('Pet Definitions Integrity', () => {
 	test('All farming pets are defined and have required fields', () => {
 		const petIds = Object.values(FarmingPets);
-		expect(petIds.length).toBe(10);
+		expect(petIds.length).toBe(11);
 
 		for (const petId of petIds) {
 			const info = getPetInfo(petId);
@@ -51,18 +51,33 @@ describe('Pet Definitions Integrity', () => {
 	test('Elephant pet has correct per-level stats', () => {
 		const elephant = getPetInfo(FarmingPets.Elephant);
 		expect(elephant.name).toBe('Elephant');
+		expectStatValue(elephant.perRarityLevelStats?.[Rarity.Mythic]?.[Stat.FarmingFortune], 0.5);
+		expect(elephant.perRarityLevelStats?.[Rarity.Mythic]?.[Stat.FarmingFortune]?.type).toBe(
+			FarmingPetStatType.Base
+		);
 		expectStatValue(elephant.perLevelStats?.[Stat.FarmingFortune], 1.5);
 		expect(elephant.perLevelStats?.[Stat.FarmingFortune]?.type).toBe(FarmingPetStatType.Ability);
+		expect(elephant.abilities?.[0]?.name).toBe('Abundant Harvest');
 	});
 
 	test('Mooshroom Cow pet has correct base stats and abilities', () => {
 		const mooshroom = getPetInfo(FarmingPets.MooshroomCow);
 		const ability = mooshroom.abilities?.[0];
 		expect(mooshroom.name).toBe('Mooshroom Cow');
-		expect(mooshroom.stats?.[Stat.FarmingFortune]?.type).toBe(FarmingPetStatType.Base);
-		expectCalculatedStat(mooshroom.stats?.[Stat.FarmingFortune]);
-		expect(mooshroom.abilities).toHaveLength(1);
+		expectStatValue(mooshroom.perLevelStats?.[Stat.FarmingFortune], 1);
+		expect(mooshroom.perLevelStats?.[Stat.FarmingFortune]?.type).toBe(FarmingPetStatType.Base);
+		expect(mooshroom.abilities).toHaveLength(2);
 		expect(ability?.name).toBe('Farming Strength');
+		expect(mooshroom.abilities?.[1]?.name).toBe('Bovine Blessing');
+	});
+
+	test('Orchid Mantis has base stats and level-scaled abilities', () => {
+		const mantis = getPetInfo(FarmingPets.OrchidMantis);
+		expect(mantis.name).toBe('Orchid Mantis');
+		expect(mantis.maxRarity).toBe(Rarity.Legendary);
+		expectStatValue(mantis.perLevelStats?.[Stat.Speed], 0.3);
+		expectStatValue(mantis.perLevelStats?.[Stat.Overbloom], 0.15);
+		expect(mantis.abilities?.map((ability) => ability.name)).toEqual(['Swift Sickles', 'Orchid Nectar']);
 	});
 
 	test('Bee pet has correct per-rarity stats', () => {
@@ -166,6 +181,11 @@ describe('Pet Items Integrity', () => {
 		const item = getPetItemInfo('BROWN_BANDANA');
 		expect(item.name).toBe('Brown Bandana');
 		expectCalculatedStat(item.stats?.[Stat.BonusPestChance]);
+	});
+
+	test('Lucky Clover pet items grant their updated Overbloom', () => {
+		expectStatValue(getPetItemInfo('PET_ITEM_LUCKY_CLOVER').stats?.[Stat.Overbloom], 7);
+		expectStatValue(getPetItemInfo('POIGNANT_LUCKY_CLOVER').stats?.[Stat.Overbloom], 13);
 	});
 
 	test('pet stat relics have explicit stat modifiers', () => {

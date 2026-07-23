@@ -326,7 +326,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		name: 'Bug Blender',
 		id: 'ENCHANTMENT_BUG_BLENDER',
 		appliesTo: [ReforgeTarget.Vacuum],
-		wiki: 'https://hypixelskyblock.minecraft.wiki/w/Bug_Blender',
+		wiki: 'https://w.elitesb.gg/Bug_Blender',
 		minLevel: 1,
 		maxLevel: 5,
 		levels: {

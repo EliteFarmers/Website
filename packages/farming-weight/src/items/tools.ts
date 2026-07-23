@@ -1,6 +1,10 @@
 import { Crop } from '../constants/crops.js';
 import { FarmingToolType, type ItemDefinition } from './definitions.js';
 import {
+	AdvancedGardeningAxe,
+	AdvancedGardeningHoe,
+	BasicGardeningAxe,
+	BasicGardeningHoe,
 	CactusKnife1,
 	CactusKnife2,
 	CactusKnife3,
@@ -32,6 +36,8 @@ import {
 	PythagoreanPotatoHoe1,
 	PythagoreanPotatoHoe2,
 	PythagoreanPotatoHoe3,
+	RookieFarmingAxe,
+	RookieHoe,
 	TuringSugarCaneHoe1,
 	TuringSugarCaneHoe2,
 	TuringSugarCaneHoe3,
@@ -45,6 +51,12 @@ export { FarmingToolType, type ItemDefinition as FarmingToolInfo };
 type FarmingToolInfo = ItemDefinition;
 
 export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
+	ROOKIE_HOE: new RookieHoe(),
+	ROOKIE_FARMING_AXE: new RookieFarmingAxe(),
+	BASIC_GARDENING_HOE: new BasicGardeningHoe(),
+	BASIC_GARDENING_AXE: new BasicGardeningAxe(),
+	ADVANCED_GARDENING_HOE: new AdvancedGardeningHoe(),
+	ADVANCED_GARDENING_AXE: new AdvancedGardeningAxe(),
 	CACTUS_KNIFE: new CactusKnife1(),
 	CACTUS_KNIFE_2: new CactusKnife2(),
 	CACTUS_KNIFE_3: new CactusKnife3(),

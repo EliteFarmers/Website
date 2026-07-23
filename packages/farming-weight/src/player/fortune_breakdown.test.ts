@@ -338,6 +338,6 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 
 		const totalFortune = player.getCropFortune(Crop.Melon).fortune;
 
-		expect(totalFortune).toBeCloseTo(1746.9, 1);
+		expect(totalFortune).toBeCloseTo(1736.9, 1);
 	});
 });

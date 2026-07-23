@@ -1,5 +1,6 @@
 import type { Crop } from '../constants/crops.js';
 import type { Rarity } from '../constants/reforges.js';
+import type { SprayonatorTier } from '../constants/specific.js';
 import type { TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import type { Upgrade } from '../constants/upgrades.js';
 import type { FarmingAccessory } from '../fortune/farmingaccessory.js';
@@ -34,11 +35,13 @@ export interface FortuneMissingFromAPI {
 	milestones?: Partial<Record<Crop, number>>;
 	exportableCrops?: Partial<Record<Crop, boolean>>;
 	refinedTruffles?: number;
+	feastBurgers?: number;
 	wrigglingLarva?: number;
 	cocoaFortuneUpgrade?: number;
 	filledRosewaterFlask?: number;
 
 	sprayedPlot?: boolean;
+	sprayonatorTier?: SprayonatorTier | `${SprayonatorTier}`;
 	pesthunterAccessoryEnabled?: boolean;
 	mantidPestKills?: number;
 	infestedPlotProbability?: number;
@@ -96,6 +99,10 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	farmingXp?: number;
 	farmingLevel?: number;
 	strength?: number;
+	/** Current total Speed used by Orchid Mantis' Swift Sickles ability. */
+	speed?: number;
+	/** Total Thorns enchant tiers on the active four-piece armor loadout. */
+	armorThornsLevel?: number;
 
 	tools?: EliteItemDto[] | FarmingTool[];
 	armor?: EliteItemDto[] | FarmingArmor[] | ArmorSet;

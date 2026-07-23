@@ -117,6 +117,13 @@ test('General fortune sources', () => {
 			ratio: 0,
 		},
 		{
+			api: false,
+			name: 'Feast Burger with a Side of Deepfries',
+			current: 0,
+			max: 0,
+			ratio: 0,
+		},
+		{
 			name: 'Filled Rosewater Flask',
 			api: false,
 			current: 0,
@@ -130,6 +137,21 @@ test('General fortune sources', () => {
 			ratio: 0,
 		},
 	]);
+});
+
+test('Feast Burgers grant Overbloom and only price the defined burger item', () => {
+	const player = new FarmingPlayer({ feastBurgers: 2 });
+
+	expect(player.getStat(Stat.Overbloom)).toBe(2);
+	const upgrade = player
+		.getUpgrades({ stat: Stat.Overbloom })
+		.find((entry) => entry.title === 'Feast Burger with a Side of Deepfries');
+	expect(upgrade?.repeatable).toBe(3);
+	expect(upgrade?.cost).toStrictEqual({ items: { FEAST_BURGER: 1 } });
+
+	player.applyUpgrade(upgrade!);
+	expect(player.options.feastBurgers).toBe(3);
+	expect(player.getStat(Stat.Overbloom)).toBe(3);
 });
 
 test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Shards', () => {

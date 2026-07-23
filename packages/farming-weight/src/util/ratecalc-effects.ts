@@ -250,6 +250,7 @@ export function calculateDetailedDropsFromEffects(
 				multiplier = 1 + level * perLevel;
 			}
 		}
+		multiplier *= calcOptions.pet?.getToolExperienceMultiplier() ?? 1;
 		const toolXpFactor = cropInfo.toolXpFactor ?? 1;
 		const capsules = Math.floor(
 			((result.collection + (result.otherCollection['Seeds'] ?? 0)) * multiplier) / toolXpFactor / 200_000

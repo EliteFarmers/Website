@@ -180,6 +180,7 @@
 		selectedTool: (() => selectedTool)(),
 
 		refinedTruffles: ctx.member.current?.chocolateFactory?.refinedTrufflesConsumed ?? 0,
+		feastBurgers: Number(ctx.member.current?.unparsed?.consumed?.feast_burger ?? $ratesData.feastBurgers),
 		personalBestsUnlocked: ctx.member.current?.jacob?.perks?.personalBests ?? false,
 		personalBests: (ctx.member.current?.jacob?.stats?.personalBests ?? {}) as unknown as Record<string, number>,
 		anitaBonus: ctx.member.current?.jacob?.perks?.doubleDrops ?? 0,
@@ -212,12 +213,18 @@
 		communityCenter: $ratesData.communityCenter,
 		filledRosewaterFlask: $ratesData.rosewaterFlasks,
 		strength: $ratesData.strength,
+		speed: $ratesData.speed,
 
 		sprayedPlot: $ratesData.sprayedPlot,
+		sprayonatorTier: $ratesData.sprayonatorTier,
 		infestedPlotProbability: $ratesData.infestedPlotProbability,
 
 		cocoaFortuneUpgrade: ctx.member.current?.chocolateFactory?.cocoaFortuneUpgrades,
 		temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
+		jacobContest: {
+			enabled: $ratesData.overdriveActive,
+			crop: selectedCropKey,
+		},
 
 		zorro: $ratesData.zorroMode
 			? {
@@ -443,8 +450,15 @@
 			communityCenter: $ratesData.communityCenter,
 			filledRosewaterFlask: $ratesData.rosewaterFlasks,
 			strength: $ratesData.strength,
+			speed: $ratesData.speed,
+			feastBurgers: Number(ctx.member.current?.unparsed?.consumed?.feast_burger ?? $ratesData.feastBurgers),
 			temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
+			jacobContest: {
+				enabled: $ratesData.overdriveActive,
+				crop: selectedCropKey,
+			},
 			sprayedPlot: $ratesData.sprayedPlot,
+			sprayonatorTier: $ratesData.sprayonatorTier,
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
 			zorro: {
 				enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,

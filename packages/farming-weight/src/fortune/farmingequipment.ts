@@ -8,6 +8,7 @@ import { resolveOverbloomBreakdown, resolveStatBreakdown } from '../effects/reso
 import type { Effect, EffectEnvironment } from '../effects/types.js';
 import type { FarmingArmorInfo } from '../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
+import { THORNY_OVERBLOOM_PER_THORNS_LEVEL } from '../items/reforges/thorny.js';
 import { statsToEffects } from '../items/sources/effects-util.js';
 import { enchantEffects } from '../items/sources/enchants.js';
 import { gemEffects } from '../items/sources/gems.js';
@@ -63,6 +64,11 @@ export class FarmingEquipment extends UpgradeableBase {
 		this.getFortune();
 	}
 
+	private getThornyBonus(): number {
+		if (this.item.attributes?.modifier !== 'thorny') return 0;
+		return (this.options?.armorThornsLevel ?? 0) * THORNY_OVERBLOOM_PER_THORNS_LEVEL;
+	}
+
 	getStat(stat: Stat, crop?: Crop): number {
 		if (stat === Stat.FarmingFortune) {
 			return this.getFortune();
@@ -75,6 +81,7 @@ export class FarmingEquipment extends UpgradeableBase {
 
 		// Reforge
 		sum += this.reforgeStats?.stats?.[stat] ?? 0;
+		if (stat === Stat.Overbloom) sum += this.getThornyBonus();
 
 		// Gems
 		sum += getGemStat(this.item, stat, this.rarity);
@@ -138,6 +145,11 @@ export class FarmingEquipment extends UpgradeableBase {
 			effects.push(
 				...reforgeEffects(this.item.attributes.modifier, this.rarity, `${sourceName} (${this.reforge.name})`)
 			);
+		}
+
+		const thornyBonus = this.getThornyBonus();
+		if (thornyBonus) {
+			effects.push(...statsToEffects({ [Stat.Overbloom]: thornyBonus }, `${sourceName} (Thorny Bonus)`));
 		}
 
 		effects.push(...gemEffects(this.item, this.rarity, `${sourceName} (Gems)`));

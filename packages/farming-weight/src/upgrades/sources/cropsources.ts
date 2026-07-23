@@ -1,4 +1,4 @@
-import { getChipInputRarity, getChipLevel, getChipRarity } from '../../constants/chips.js';
+import { GARDEN_CHIPS, getChipInputRarity, getChipLevel, getChipRarity } from '../../constants/chips.js';
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
 import { Rarity } from '../../constants/reforges.js';
@@ -12,12 +12,6 @@ import type { FarmingPlayer } from '../../player/player.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../../util/names.js';
 import { getFakeItem, ITEM_REGISTRY } from '../itemregistry.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
-
-const OVERDRIVE_FORTUNE_PER_LEVEL = {
-	[Rarity.Rare]: 5,
-	[Rarity.Epic]: 6,
-	[Rarity.Legendary]: 7,
-} as const;
 
 export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	player: FarmingPlayer;
@@ -390,7 +384,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 			return !!(player.options.jacobContest?.enabled && player.options.jacobContest.crop === crop);
 		},
 		wiki: () => 'https://w.elitesb.gg/Overdrive_Chip',
-		max: () => OVERDRIVE_FORTUNE_PER_LEVEL[Rarity.Legendary] * 20,
+		max: () => (GARDEN_CHIPS.overdrive.cropFortunePerRarity?.[Rarity.Legendary] ?? 0) * 20,
 		current: ({ player, crop }) => {
 			if (!player.options.jacobContest?.enabled || player.options.jacobContest.crop !== crop) return 0;
 			return getOverdriveFortune(player);
@@ -409,5 +403,5 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 function getOverdriveFortune(player: FarmingPlayer): number {
 	const level = getChipLevel(player.options.chips?.overdrive);
 	const rarity = getChipRarity(level, getChipInputRarity(player.options.chipRarities, 'overdrive'));
-	return (OVERDRIVE_FORTUNE_PER_LEVEL[rarity] ?? 0) * level;
+	return (GARDEN_CHIPS.overdrive.cropFortunePerRarity?.[rarity] ?? 0) * level;
 }

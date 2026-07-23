@@ -21,6 +21,7 @@
 		getChipInputLevel,
 		getChipInputRarity,
 		getChipRarity,
+		SprayonatorTier,
 		Stat,
 		TEMPORARY_FORTUNE,
 		ZorroMode,
@@ -42,6 +43,11 @@
 	let { player }: Props = $props();
 
 	const gardenChipEntries = Object.entries(GARDEN_CHIPS) as [GardenChipId, (typeof GARDEN_CHIPS)[GardenChipId]][];
+	const sprayonatorTierOptions = [
+		{ value: SprayonatorTier.Regular, label: 'Sprayonator' },
+		{ value: SprayonatorTier.Juicy, label: 'Juicy Sprayonator' },
+		{ value: SprayonatorTier.Salty, label: 'Salty Sprayonator' },
+	];
 
 	function getDetectedChipLevel(chipId: GardenChipId) {
 		const chips = (ctx.member.current?.memberData?.garden?.chips ?? {}) as Record<
@@ -121,6 +127,37 @@
 			min={0}
 			max={2500}
 		/>
+	</SettingListItem>
+	<SettingSeperator />
+	<SettingListItem
+		title="Speed"
+		description="Current total Speed used by the Orchid Mantis' Swift Sickles ability."
+		wiki="https://w.elitesb.gg/Orchid_Mantis_Pet"
+	>
+		<NumberInput
+			class="my-1 h-10 max-w-32"
+			type="text"
+			inputmode="numeric"
+			placeholder="400"
+			bind:value={$ratesData.speed}
+			min={0}
+			max={1000}
+		/>
+	</SettingListItem>
+	<SettingSeperator />
+	<SettingListItem
+		title="Feast Burgers"
+		description="Amount of Feast Burgers with a Side of Deepfries you've consumed."
+		wiki="https://w.elitesb.gg/Feast_Burger_with_a_Side_of_Deepfries"
+	>
+		{#snippet child()}
+			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<div class="flex flex-1 flex-row items-center gap-1">
+					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.feastBurgers}</p>
+					<SliderSimple class="h-12 flex-1" min={0} max={5} bind:value={$ratesData.feastBurgers} step={1} />
+				</div>
+			</div>
+		{/snippet}
 	</SettingListItem>
 	<SettingSeperator />
 	<SettingListItem
@@ -222,7 +259,11 @@
 	</SettingListItem>
 	<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.anitaContest.name} wiki={TEMPORARY_FORTUNE.anitaContest.wiki}>
+	<SettingListItem
+		title={TEMPORARY_FORTUNE.anitaContest.name}
+		description="Applies Anita's Artifact boosted-contest fortune."
+		wiki={TEMPORARY_FORTUNE.anitaContest.wiki}
+	>
 		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
 			<FortuneBreakdown total={25} enabled={$ratesData.temp.anitaContest && $ratesData.useTemp} />
 
@@ -299,10 +340,22 @@
 	<SettingHeader class="mt-8 text-xl">Other Settings</SettingHeader>
 	<SettingBigSeperator />
 
-	<SettingListItem title="Sprayed Plot" description="If you're farming in a sprayed plot. Used for Slug pet ability.">
-		{#if $ratesData.sprayedPlot !== undefined}
-			<Switch bind:checked={$ratesData.sprayedPlot} />
-		{/if}
+	<SettingListItem
+		title="Sprayed Plot"
+		description="Sprayer tier controls the material effect and Bonus Pest Chance."
+		wiki="https://w.elitesb.gg/Sprayonator"
+	>
+		<div class="flex items-center gap-2">
+			<Select.Simple
+				class="my-1 h-10 min-w-40"
+				value={$ratesData.sprayonatorTier}
+				change={(value) => ($ratesData.sprayonatorTier = value ?? SprayonatorTier.Regular)}
+				options={sprayonatorTierOptions}
+			/>
+			{#if $ratesData.sprayedPlot !== undefined}
+				<Switch bind:checked={$ratesData.sprayedPlot} />
+			{/if}
+		</div>
 	</SettingListItem>
 	<SettingSeperator />
 
@@ -383,7 +436,11 @@
 			wiki={chip.wiki}
 		>
 			{#snippet child()}
-				<div class="flex w-full max-w-56 flex-row items-center justify-end gap-2">
+				<div class="flex w-full max-w-80 flex-row items-center justify-end gap-2">
+					{#if chipId === 'overdrive'}
+						<span class="text-muted-foreground text-sm">Contest active</span>
+						<Switch bind:checked={$ratesData.overdriveActive} />
+					{/if}
 					<span class="text-muted-foreground w-14 text-right text-sm">Lvl {level.toLocaleString()}</span>
 					<Select.Simple
 						size="sm"

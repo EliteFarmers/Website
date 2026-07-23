@@ -38,6 +38,7 @@ import {
 	PEST_SPAWN_ARMOR_SET_ID,
 	PestFarmingPhase,
 	PestFarmingRateCalculator,
+	SprayonatorTier,
 	Stat,
 	STAT_NAMES,
 	Vacuum,
@@ -207,6 +208,7 @@ export class PestFarmingPageContext {
 		return {
 			...settings,
 			sprayonatorMaterial: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorMaterial : undefined,
+			sprayonatorTier: this.rates.pestFarming.sprayonatorTier,
 			hooveriusVinylTarget: isHooverius ? settings.hooveriusVinylTarget : undefined,
 			excludedPests: [...excludedPests],
 		};
@@ -956,6 +958,21 @@ export class PestFarmingPageContext {
 		this.refreshPestPlayerWith({ sprayedPlot: checked });
 	}
 
+	setSprayonatorTier(tier: SprayonatorTier): void {
+		this.#updatePestFarmingData({ sprayonatorTier: tier });
+		this.refreshPestPlayerWith({ sprayonatorTier: tier });
+	}
+
+	setFeastBurgers(feastBurgers: number): void {
+		this.#updateRatesData((rates) => ({
+			...rates,
+			feastBurgers,
+		}));
+		this.refreshPestPlayerWith({
+			feastBurgers: Number(this.ctx.member.current?.unparsed?.consumed?.feast_burger ?? feastBurgers),
+		});
+	}
+
 	setUseTemporaryFortune(checked: boolean): void {
 		this.#updateRatesData((rates) => ({
 			...rates,
@@ -980,6 +997,19 @@ export class PestFarmingPageContext {
 
 	setStinkyCheesePotion(checked: boolean): void {
 		this.setTemporaryFortune('stinkyCheesePotion', checked);
+	}
+
+	setOverdriveActive(checked: boolean): void {
+		this.#updateRatesData((rates) => ({
+			...rates,
+			overdriveActive: checked,
+		}));
+		this.refreshPestPlayerWith({
+			jacobContest: {
+				enabled: checked,
+				crop: this.selectedCropKey,
+			},
+		});
 	}
 
 	#buildOptions(previous: Partial<PestFarmingPlayerOptions> = {}): PestFarmingPlayerOptions {
@@ -1039,12 +1069,19 @@ export class PestFarmingPageContext {
 			communityCenter: rates.communityCenter,
 			filledRosewaterFlask: rates.rosewaterFlasks,
 			strength: rates.strength,
+			speed: rates.speed,
 			wrigglingLarva: Number(this.ctx.member.current?.unparsed?.consumed?.wriggling_larva ?? 0),
+			feastBurgers: Number(this.ctx.member.current?.unparsed?.consumed?.feast_burger ?? rates.feastBurgers),
 			sprayedPlot: rates.pestFarming.sprayedPlot,
+			sprayonatorTier: rates.pestFarming.sprayonatorTier,
 			pesthunterAccessoryEnabled: true,
 			infestedPlotProbability: rates.infestedPlotProbability,
 			cocoaFortuneUpgrade: this.ctx.member.current?.chocolateFactory?.cocoaFortuneUpgrades,
 			temporaryFortune: rates.useTemp ? rates.temp : undefined,
+			jacobContest: {
+				enabled: rates.overdriveActive,
+				crop: this.selectedCropKey,
+			},
 			zorro: rates.zorroMode
 				? {
 						enabled: this.ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,

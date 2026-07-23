@@ -74,7 +74,7 @@ describe('garden chip source effects', () => {
 			{
 				source: 'Rarefinder Chip',
 				op: 'add-rare-pct',
-				value: 48,
+				value: 40,
 				scope: { tags: ['overbloom'] },
 				relatedStats: [Stat.Overbloom],
 				meta: {

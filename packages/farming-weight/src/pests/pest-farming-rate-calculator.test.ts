@@ -3,6 +3,7 @@ import { Crop } from '../constants/crops.js';
 import { Pest, Spray } from '../constants/pests.js';
 import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
+import { SprayonatorTier } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FARMING_ARMOR_INFO } from '../items/armor.js';
@@ -279,10 +280,26 @@ test('sprayonator boosts both material pests while Hooverius vinyl boosts only i
 	}).calculate();
 
 	const probabilities = result.breakdown.pestSpawning.distribution.pestTypeProbabilities;
-	expect(probabilities[Pest.Slug]).toBeCloseTo(24 / 46, 8);
-	expect(probabilities[Pest.Locust]).toBeCloseTo(12 / 46, 8);
-	expect(probabilities[Pest.Mosquito]).toBeCloseTo(1 / 46, 8);
+	expect(probabilities[Pest.Slug]).toBeCloseTo(3 / 14.5, 8);
+	expect(probabilities[Pest.Locust]).toBeCloseTo(1.5 / 14.5, 8);
+	expect(probabilities[Pest.Mosquito]).toBeCloseTo(1 / 14.5, 8);
 	expect(probabilities[Pest.Firefly]).toBeUndefined();
+});
+
+test('Juicy and Salty Sprayonators scale material attraction', () => {
+	const weightsFor = (sprayonatorTier: SprayonatorTier) =>
+		new PestFarmingRateCalculator({
+			player: new PestFarmingPlayer({}),
+			options: {
+				crop: Crop.Wheat,
+				cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+				attraction: { sprayonatorMaterial: Spray.PlantMatter, sprayonatorTier },
+			},
+		}).calculate().breakdown.pestSpawning.distribution.pestTypeWeights;
+
+	expect(weightsFor(SprayonatorTier.Regular)[Pest.Slug]).toBe(1.5);
+	expect(weightsFor(SprayonatorTier.Juicy)[Pest.Slug]).toBe(2);
+	expect(weightsFor(SprayonatorTier.Salty)[Pest.Slug]).toBe(3);
 });
 
 test('best spawn phase armor set uses rate calculation to select the generated spawn set when it improves rates', () => {
@@ -508,7 +525,7 @@ test('upgrade impact completeness is based on missing delta prices', () => {
 		.find((entry) => entry.title === 'Atmospheric Filter');
 	const cropDeltaUpgrade = player
 		.getPhaseUpgrades(PestFarmingPhase.Farm, { includeUpgradeGroups: true })
-		.find((entry) => entry.title === 'Farm Armor Helmet');
+		.find((entry) => entry.title === 'Farmhand Helmet');
 
 	expect(before.valuation.complete).toBe(false);
 	expect(noDeltaUpgrade).toBeDefined();
@@ -715,14 +732,14 @@ const SHEET_CROP_BLOCKS_PER_INTERVAL =
 const SHEET_CROP_ITEM_ID = 'SHEET_DEFAULT_FARMING_CROP';
 
 const SHEET_BUCKETS = {
-	pestDrops: 21_197_872.07,
+	pestDrops: 18_176_028.66,
 	cropBreaking: 26_930_389.64,
 	pestExchanges: 832_681.5646,
 	pestShards: 480_064.2704,
 	sprayonatorCost: -25_168.4,
 	stinkyCheeseCost: 0,
 	feastRareCrops: 0,
-	total: 49_415_839.14,
+	total: 46_393_995.73,
 };
 
 const SHEET_PEST_AVG_COINS: Partial<Record<Pest, number>> = {
@@ -820,8 +837,8 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 	expect(result.debug.spawnBlocks).toBeCloseTo(SHEET_SPAWN_BLOCKS_PER_CYCLE, 8);
 	expect(result.breakdown.pestSpawning.expectedPestsPerSpawn).toBeCloseTo(6.005, 8);
 	expect(result.breakdown.pestSpawning.pestsPerInterval).toBeCloseTo(SHEET_PESTS_PER_INTERVAL, 6);
-	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Locust]).toBeCloseTo(12 / 58, 8);
-	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Slug]).toBeCloseTo(36 / 58, 8);
+	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Locust]).toBeCloseTo(1.5 / 16, 8);
+	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Slug]).toBeCloseTo(4.5 / 16, 8);
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities).not.property(Pest.Firefly);
 	expect(result.breakdown.economy.pestExchanges.items.PESTHUNTER_RELIC).toBeGreaterThan(0);
 	expect(result.breakdown.economy.pestShards.rngItems.SHARD_PEST).toBeGreaterThan(0);

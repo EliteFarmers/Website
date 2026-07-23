@@ -16,7 +16,7 @@ const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((c) => c.fortune
 export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
 		name: 'Tool Level',
-		exists: () => true,
+		exists: (tool) => tool.info.levelable !== false,
 		max: () => 50 * 4,
 		current: (tool) => tool.level * 4,
 		maxStat: (tool, stat) => {

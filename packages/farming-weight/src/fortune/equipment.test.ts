@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Stat } from '../constants/stats.js';
+import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { ZorroMode } from '../player/playeroptions.js';
 import { ArmorSet } from './farmingarmor.js';
 import { FarmingEquipment } from './farmingequipment.js';
@@ -73,6 +74,15 @@ test("Normal Zorro's Cloak Test", () => {
 	expect(cape.fortuneBreakdown['Reforge']).toBeCloseTo(21);
 
 	expect(cape.getFortune()).toBeCloseTo(52);
+});
+
+test('Thorny equipment gains Overbloom from armor Thorns levels', () => {
+	const item = FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO.BLOSSOM_BELT!)!.item;
+	item.attributes = { modifier: 'thorny' };
+	const equipment = new FarmingEquipment(item, { armorThornsLevel: 12 });
+
+	expect(equipment.getStat(Stat.Overbloom)).toBeCloseTo(1.45, 8);
+	expect(equipment.getStatBreakdown(Stat.Overbloom)['Blossom Belt (Thorny Bonus)']?.value).toBeCloseTo(1.2, 8);
 });
 
 const lotusNecklace = {

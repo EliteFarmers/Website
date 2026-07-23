@@ -26,22 +26,22 @@ export const GEAR_SLOTS: Record<GearSlot, GearSlotInfo> = {
 	[GearSlot.Helmet]: {
 		name: 'Helmet',
 		target: ReforgeTarget.Armor,
-		startingItem: 'FARM_ARMOR_HELMET',
+		startingItem: 'FARM_SUIT_HELMET',
 	},
 	[GearSlot.Chestplate]: {
 		name: 'Chestplate',
 		target: ReforgeTarget.Armor,
-		startingItem: 'FARM_ARMOR_CHESTPLATE',
+		startingItem: 'FARM_SUIT_CHESTPLATE',
 	},
 	[GearSlot.Leggings]: {
 		name: 'Leggings',
 		target: ReforgeTarget.Armor,
-		startingItem: 'FARM_ARMOR_LEGGINGS',
+		startingItem: 'FARM_SUIT_LEGGINGS',
 	},
 	[GearSlot.Boots]: {
 		name: 'Boots',
 		target: ReforgeTarget.Armor,
-		startingItem: 'FARM_ARMOR_BOOTS',
+		startingItem: 'FARM_SUIT_BOOTS',
 	},
 	[GearSlot.Necklace]: {
 		name: 'Necklace',
@@ -77,6 +77,8 @@ export interface ItemDefinition extends UpgradeableInfo {
 	type?: FarmingToolType | ReforgeTarget;
 	crop?: Crop;
 	crops?: Crop[];
+	/** Whether the item gains the package's normal farming-tool XP level bonuses. Defaults to true. */
+	levelable?: boolean;
 
 	// Armor
 	slot?: GearSlot;

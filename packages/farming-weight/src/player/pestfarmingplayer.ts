@@ -744,6 +744,8 @@ export class PestFarmingPlayer {
 		} else if (type === 'setting') {
 			if (key === 'wrigglingLarva') {
 				this.options.wrigglingLarva = Number(value);
+			} else if (key === 'feastBurgers') {
+				this.options.feastBurgers = Number(value);
 			} else if (key === 'filledRosewaterFlask' || key === 'filledRosewaterFlasks') {
 				this.options.filledRosewaterFlask = Number(value);
 			} else {

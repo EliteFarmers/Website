@@ -20,6 +20,7 @@ export interface TemporaryFortuneSource {
 	wiki: string;
 	fortune: (settings: TemporaryFarmingFortune) => number | undefined;
 	stat?: Stat;
+	hyperchargeEligible?: boolean;
 }
 
 export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryFortuneSource> = {
@@ -31,6 +32,7 @@ export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryF
 	harvestPotion: {
 		name: 'Harvest Harbinger Potion',
 		wiki: 'https://w.elitesb.gg/Harvest_Harbinger_Potion',
+		hyperchargeEligible: false,
 		fortune: (settings) => {
 			if (!settings.harvestPotion) return;
 			return 50;
@@ -71,6 +73,7 @@ export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryF
 	anitaContest: {
 		name: 'Anita Boosted Contest',
 		wiki: 'https://w.elitesb.gg/Anita%27s_Artifact#Usage',
+		hyperchargeEligible: false,
 		fortune: (settings) => {
 			if (!settings.anitaContest) return;
 			return 25;
@@ -87,6 +90,7 @@ export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryF
 	melonJuiceMixin: {
 		name: 'Melon Juice Mixin',
 		wiki: 'https://w.elitesb.gg/Melon_Juice_Mixin',
+		hyperchargeEligible: false,
 		fortune: (settings) => {
 			if (!settings.melonJuiceMixin) return;
 			return 15;

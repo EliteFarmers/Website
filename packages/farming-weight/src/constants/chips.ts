@@ -67,6 +67,11 @@ export interface GardenChipInfo {
 	 * Used by Hypercharge Chip.
 	 */
 	tempMultiplierPerLevel?: RarityRecord<number>;
+	/**
+	 * Per-level fortune for the active crop.
+	 * Used by contest-dependent chips such as Overdrive.
+	 */
+	cropFortunePerRarity?: RarityRecord<number>;
 }
 
 export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
@@ -147,6 +152,11 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 		skyblockId: 'OVERDRIVE_GARDEN_CHIP',
 		name: 'Overdrive Chip',
 		wiki: GARDEN_CHIP_WIKI,
+		cropFortunePerRarity: {
+			[Rarity.Rare]: 5,
+			[Rarity.Epic]: 6,
+			[Rarity.Legendary]: 7,
+		},
 	},
 	quickdraw: {
 		skyblockId: 'QUICKDRAW_GARDEN_CHIP',
@@ -159,13 +169,13 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 		wiki: GARDEN_CHIP_WIKI,
 		statsPerRarity: {
 			[Rarity.Rare]: {
-				[Stat.Overbloom]: 2,
+				[Stat.Overbloom]: 1.5,
 			},
 			[Rarity.Epic]: {
-				[Stat.Overbloom]: 2.5,
+				[Stat.Overbloom]: 2,
 			},
 			[Rarity.Legendary]: {
-				[Stat.Overbloom]: 3,
+				[Stat.Overbloom]: 2.5,
 			},
 		},
 	},

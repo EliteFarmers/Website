@@ -1,9 +1,9 @@
 import { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
-import type { FarmingPet } from '../../fortune/farmingpet.js';
 import { FarmingPetDefinition } from '../base-pet.js';
 import type { FarmingPetAbility } from '../types/pets.js';
+import { petDropEffects } from './drop-effects.js';
 
 export class MooshroomCowPet extends FarmingPetDefinition {
 	get id() {
@@ -18,10 +18,10 @@ export class MooshroomCowPet extends FarmingPetDefinition {
 		return 'https://w.elitesb.gg/Mooshroom_Cow_Pet';
 	}
 
-	override stats = {
+	override perLevelStats = {
 		[Stat.FarmingFortune]: {
 			name: 'Base Farming Fortune',
-			calculated: (pet: FarmingPet) => 10 + pet.level,
+			value: 1,
 			type: FarmingPetStatType.Base,
 		},
 	};
@@ -42,6 +42,12 @@ export class MooshroomCowPet extends FarmingPetDefinition {
 					},
 				};
 			},
+		},
+		{
+			name: 'Bovine Blessing',
+			exists: (_, pet) => pet.rarity === Rarity.Legendary,
+			computed: () => ({}),
+			effects: (_, pet) => petDropEffects('Bovine Blessing', ['CHEESE_FUEL', 'DUNG'], 0.0002, pet),
 		},
 	];
 }

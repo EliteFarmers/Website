@@ -5,96 +5,96 @@ import { UpgradeReason } from '../../constants/upgrades.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
 
-abstract class HaymakerArmorPiece extends BaseItem {
-	override family = 'FARM_ARMOR';
+abstract class SproutArmorPiece extends BaseItem {
+	override family = 'PUMPKIN';
 	override baseStats = {
-		[Stat.Defense]: 15,
-		[Stat.FarmingFortune]: 10,
+		[Stat.Defense]: 20,
+		[Stat.FarmingFortune]: 15,
 	};
 	override skillReq = {
-		[Skill.Farming]: 10,
+		[Skill.Farming]: 15,
 	};
 
 	get wiki() {
-		return 'https://w.elitesb.gg/Haymaker_Armor';
+		return 'https://w.elitesb.gg/Sprout_Armor';
 	}
 
 	get maxRarity() {
-		return Rarity.Common;
+		return Rarity.Uncommon;
 	}
 }
 
-export class FarmArmorHelmet extends HaymakerArmorPiece {
+export class SproutHelmet extends SproutArmorPiece {
 	get skyblockId() {
-		return 'FARM_ARMOR_HELMET';
+		return 'PUMPKIN_HELMET';
 	}
 	get name() {
-		return 'Haymaker Helmet';
+		return 'Sprout Helmet';
 	}
 	override slot = GearSlot.Helmet;
 	override upgrade = {
-		id: 'PUMPKIN_HELMET',
+		id: 'MELON_HELMET',
 		reason: UpgradeReason.NextTier,
 		cost: {
 			items: {
-				ENCHANTED_CARROT: 64,
+				ENCHANTED_POTATO: 256,
 			},
 		},
 	};
 }
 
-export class FarmArmorChestplate extends HaymakerArmorPiece {
+export class SproutChestplate extends SproutArmorPiece {
 	get skyblockId() {
-		return 'FARM_ARMOR_CHESTPLATE';
+		return 'PUMPKIN_CHESTPLATE';
 	}
 	get name() {
-		return 'Haymaker Chestplate';
+		return 'Sprout Chestplate';
 	}
 	override slot = GearSlot.Chestplate;
 	override upgrade = {
-		id: 'PUMPKIN_CHESTPLATE',
+		id: 'MELON_CHESTPLATE',
 		reason: UpgradeReason.NextTier,
 		cost: {
 			items: {
-				ENCHANTED_CARROT: 64,
+				ENCHANTED_POTATO: 256,
 			},
 		},
 	};
 }
 
-export class FarmArmorLeggings extends HaymakerArmorPiece {
+export class SproutLeggings extends SproutArmorPiece {
 	get skyblockId() {
-		return 'FARM_ARMOR_LEGGINGS';
+		return 'PUMPKIN_LEGGINGS';
 	}
 	get name() {
-		return 'Haymaker Leggings';
+		return 'Sprout Leggings';
 	}
 	override slot = GearSlot.Leggings;
 	override upgrade = {
-		id: 'PUMPKIN_LEGGINGS',
+		id: 'MELON_LEGGINGS',
 		reason: UpgradeReason.NextTier,
 		cost: {
 			items: {
-				ENCHANTED_CARROT: 64,
+				ENCHANTED_POTATO: 256,
 			},
 		},
 	};
 }
 
-export class FarmArmorBoots extends HaymakerArmorPiece {
+export class SproutBoots extends SproutArmorPiece {
 	get skyblockId() {
-		return 'FARM_ARMOR_BOOTS';
+		return 'PUMPKIN_BOOTS';
 	}
 	get name() {
-		return 'Haymaker Boots';
+		return 'Sprout Boots';
 	}
 	override slot = GearSlot.Boots;
 	override upgrade = {
-		id: 'PUMPKIN_BOOTS',
+		id: 'MELON_BOOTS',
 		reason: UpgradeReason.NextTier,
 		cost: {
 			items: {
-				ENCHANTED_CARROT: 64,
+				ENCHANTED_POTATO: 256,
 			},
 		},
 	};

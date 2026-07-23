@@ -282,6 +282,16 @@ export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
 	wiki: 'https://w.elitesb.gg/Refined_Dark_Cacao_Truffle',
 };
 
+export const FEAST_BURGER_SOURCE: FortuneSource = {
+	name: 'Feast Burger with a Side of Deepfries',
+	fortunePerLevel: 0,
+	statsPerLevel: {
+		[Stat.Overbloom]: 1,
+	},
+	maxLevel: 5,
+	wiki: 'https://w.elitesb.gg/Feast_Burger_with_a_Side_of_Deepfries',
+};
+
 export const FILLED_ROSEWATER_FLASK_SOURCE: FortuneSource = {
 	name: 'Filled Rosewater Flask',
 	fortunePerLevel: 1,
@@ -310,11 +320,48 @@ export const SPRAYONATOR_SOURCE: FortuneSource = {
 	name: 'Sprayonator',
 	fortunePerLevel: 0,
 	statsPerLevel: {
-		[Stat.BonusPestChance]: 50,
+		[Stat.BonusPestChance]: 25,
 	},
 	maxLevel: 1,
 	wiki: 'https://w.elitesb.gg/Sprayonator',
 };
+
+export enum SprayonatorTier {
+	Regular = 'regular',
+	Juicy = 'juicy',
+	Salty = 'salty',
+}
+
+export const SPRAYONATOR_TIER_INFO = {
+	[SprayonatorTier.Regular]: {
+		name: 'Sprayonator',
+		itemId: 'SPRAYONATOR',
+		materialAmount: 1,
+		durationSeconds: 30 * 60,
+		effectMultiplier: 1,
+		pestAttractionMultiplier: 1.5,
+	},
+	[SprayonatorTier.Juicy]: {
+		name: 'Juicy Sprayonator',
+		itemId: 'JUICY_SPRAYONATOR',
+		materialAmount: 3,
+		durationSeconds: 45 * 60,
+		effectMultiplier: 2,
+		pestAttractionMultiplier: 2,
+	},
+	[SprayonatorTier.Salty]: {
+		name: 'Salty Sprayonator',
+		itemId: 'SALTY_SPRAYONATOR',
+		materialAmount: 5,
+		durationSeconds: 60 * 60,
+		effectMultiplier: 3,
+		pestAttractionMultiplier: 3,
+	},
+} as const;
+
+export function getSprayonatorTierInfo(tier?: SprayonatorTier | `${SprayonatorTier}`) {
+	return SPRAYONATOR_TIER_INFO[tier as SprayonatorTier] ?? SPRAYONATOR_TIER_INFO[SprayonatorTier.Regular];
+}
 
 export const COCOA_FORTUNE_UPGRADE: FortuneSource = {
 	name: 'Cocoa Fortune Upgrade',
