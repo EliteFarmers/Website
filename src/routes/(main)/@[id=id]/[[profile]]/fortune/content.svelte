@@ -180,7 +180,7 @@
 		selectedTool: (() => selectedTool)(),
 
 		refinedTruffles: ctx.member.current?.chocolateFactory?.refinedTrufflesConsumed ?? 0,
-		feastBurgers: Number(ctx.member.current?.unparsed?.consumed?.feast_burger ?? 0),
+		feastBurgers: Number(ctx.member.current?.unparsed?.consumed?.feast_burger ?? $ratesData.feastBurgers),
 		personalBestsUnlocked: ctx.member.current?.jacob?.perks?.personalBests ?? false,
 		personalBests: (ctx.member.current?.jacob?.stats?.personalBests ?? {}) as unknown as Record<string, number>,
 		anitaBonus: ctx.member.current?.jacob?.perks?.doubleDrops ?? 0,
@@ -451,6 +451,7 @@
 			filledRosewaterFlask: $ratesData.rosewaterFlasks,
 			strength: $ratesData.strength,
 			speed: $ratesData.speed,
+			feastBurgers: Number(ctx.member.current?.unparsed?.consumed?.feast_burger ?? $ratesData.feastBurgers),
 			temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
 			jacobContest: {
 				enabled: $ratesData.overdriveActive,

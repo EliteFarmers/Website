@@ -108,6 +108,22 @@
 	<SettingBigSeperator />
 
 	<SettingListItem
+		title="Feast Burgers"
+		description="Amount of Feast Burgers with a Side of Deepfries you've consumed."
+		wiki="https://w.elitesb.gg/Feast_Burger_with_a_Side_of_Deepfries"
+	>
+		<NumberInput
+			class="my-1 h-10 max-w-32"
+			value={pest.rates.feastBurgers}
+			min={0}
+			max={5}
+			step={1}
+			onValueChange={(value) => pest.setFeastBurgers(value ?? 0)}
+		/>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem
 		title="Sprayed Plot"
 		description="If you're farming in a sprayed plot. Provides bonus pest chance."
 		wiki="https://w.elitesb.gg/Sprayonator"

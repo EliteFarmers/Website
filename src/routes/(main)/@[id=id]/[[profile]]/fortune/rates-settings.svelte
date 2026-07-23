@@ -146,6 +146,21 @@
 	</SettingListItem>
 	<SettingSeperator />
 	<SettingListItem
+		title="Feast Burgers"
+		description="Amount of Feast Burgers with a Side of Deepfries you've consumed."
+		wiki="https://w.elitesb.gg/Feast_Burger_with_a_Side_of_Deepfries"
+	>
+		{#snippet child()}
+			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<div class="flex flex-1 flex-row items-center gap-1">
+					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.feastBurgers}</p>
+					<SliderSimple class="h-12 flex-1" min={0} max={5} bind:value={$ratesData.feastBurgers} step={1} />
+				</div>
+			</div>
+		{/snippet}
+	</SettingListItem>
+	<SettingSeperator />
+	<SettingListItem
 		title="Filled Rosewater Flasks"
 		description="Amount of Filled Rosewater Flasks you've consumed."
 		wiki="https://w.elitesb.gg/Rosewater_Flask"

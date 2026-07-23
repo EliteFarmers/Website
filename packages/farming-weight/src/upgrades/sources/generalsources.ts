@@ -936,6 +936,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: FEAST_BURGER_SOURCE.name,
+		api: false,
 		wiki: () => FEAST_BURGER_SOURCE.wiki,
 		exists: () => true,
 		max: () => 0,
@@ -953,6 +954,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					stats: {
 						[Stat.Overbloom]: FEAST_BURGER_SOURCE.statsPerLevel?.[Stat.Overbloom] ?? 0,
 					},
+					api: false,
 					action: UpgradeAction.Consume,
 					repeatable: FEAST_BURGER_SOURCE.maxLevel - consumed,
 					wiki: FEAST_BURGER_SOURCE.wiki,

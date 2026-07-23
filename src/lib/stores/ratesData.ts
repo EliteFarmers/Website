@@ -40,6 +40,7 @@ export interface RatesData {
 	selectedPet?: string;
 	strength: number;
 	speed: number;
+	feastBurgers: number;
 	useTemp: boolean;
 	temp: Required<TemporaryFarmingFortune>;
 	overdriveActive: boolean;
@@ -72,6 +73,7 @@ const defaultData = {
 	communityCenter: 0,
 	strength: 0,
 	speed: 400,
+	feastBurgers: 0,
 	bzMode: 'order',
 	useTemp: true,
 	rosewaterFlasks: 0,

@@ -963,6 +963,16 @@ export class PestFarmingPageContext {
 		this.refreshPestPlayerWith({ sprayonatorTier: tier });
 	}
 
+	setFeastBurgers(feastBurgers: number): void {
+		this.#updateRatesData((rates) => ({
+			...rates,
+			feastBurgers,
+		}));
+		this.refreshPestPlayerWith({
+			feastBurgers: Number(this.ctx.member.current?.unparsed?.consumed?.feast_burger ?? feastBurgers),
+		});
+	}
+
 	setUseTemporaryFortune(checked: boolean): void {
 		this.#updateRatesData((rates) => ({
 			...rates,
@@ -1061,7 +1071,7 @@ export class PestFarmingPageContext {
 			strength: rates.strength,
 			speed: rates.speed,
 			wrigglingLarva: Number(this.ctx.member.current?.unparsed?.consumed?.wriggling_larva ?? 0),
-			feastBurgers: Number(this.ctx.member.current?.unparsed?.consumed?.feast_burger ?? 0),
+			feastBurgers: Number(this.ctx.member.current?.unparsed?.consumed?.feast_burger ?? rates.feastBurgers),
 			sprayedPlot: rates.pestFarming.sprayedPlot,
 			sprayonatorTier: rates.pestFarming.sprayonatorTier,
 			pesthunterAccessoryEnabled: true,
