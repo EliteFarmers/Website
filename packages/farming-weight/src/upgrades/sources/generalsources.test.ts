@@ -117,6 +117,7 @@ test('General fortune sources', () => {
 			ratio: 0,
 		},
 		{
+			api: false,
 			name: 'Feast Burger with a Side of Deepfries',
 			current: 0,
 			max: 0,
