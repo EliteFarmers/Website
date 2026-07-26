@@ -158,7 +158,7 @@
 	});
 	const harvestFeastOptions = $derived.by<PlayerOptions['harvestFeast']>(() => {
 		const current = harvestFeast.current;
-		const inSeasonCrops = (current?.current ?? [])
+		const inSeasonCrops = (current?.current?.crops ?? [])
 			.map((crop) => harvestFeastCropKey(crop))
 			.filter((crop) => crop !== undefined);
 

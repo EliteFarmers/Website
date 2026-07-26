@@ -9,7 +9,7 @@ import {
 	getBadges,
 	getBazaarProducts,
 	getCategories,
-	getCurrentHarvestFeast,
+	getHarvestFeastRotations,
 	getHypixelGuilds,
 	getLeaderboard,
 	getLeaderboards,
@@ -31,7 +31,7 @@ import {
 	type GetBazaarProductsResponse,
 	type GetSkyblockItemsResponse,
 	type GuildDetailsDto,
-	type HarvestFeastCurrentDto,
+	type HarvestFeastRotationsDto,
 	type HypixelGuildDetailsDto,
 	type LeaderboardDto,
 	type ProductDto,
@@ -214,16 +214,15 @@ const cacheEntries = {
 		},
 	},
 	harvestfeast: {
-		data: {} as HarvestFeastCurrentDto,
+		data: {} as HarvestFeastRotationsDto,
 		update: async () => {
-			const { data } = await getCurrentHarvestFeast();
+			const { data } = await getHarvestFeastRotations();
 			return (
 				data ?? {
 					year: SkyBlockTime.now.year,
-					month: SkyBlockTime.now.month,
 					complete: false,
-					current: [],
-					next: {},
+					current: null,
+					rotations: {},
 					isGrandFeast: false,
 				}
 			);
