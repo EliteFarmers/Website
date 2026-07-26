@@ -259,7 +259,7 @@ export class PestFarmingPageContext {
 
 	harvestFeastOptions = $derived.by<PestFarmingPlayerOptions['harvestFeast']>(() => {
 		const current = this.#harvestFeast.current;
-		const inSeasonCrops = (current?.current ?? [])
+		const inSeasonCrops = (current?.current?.crops ?? [])
 			.map((crop) => cropKey(crop))
 			.filter((crop) => crop !== undefined);
 

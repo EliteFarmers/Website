@@ -2857,6 +2857,14 @@ export const zodUpdateGuildPurchasesParams = zod.object({
 });
 
 /**
+ * Uses crowd-sourced data, which may not be accurate.
+ * @summary Get Harvest Feast rotations for a SkyBlock year
+ */
+export const zodGetHarvestFeastRotationsInYearParams = zod.object({
+	year: zod.number().describe('SkyBlock year'),
+});
+
+/**
  * Crowd-sourced current Harvest Feast data.
  * @summary Upload current Harvest Feast crops
  */

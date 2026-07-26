@@ -177,6 +177,8 @@ import type {
 	GuildMembersLeaderboardDto,
 	HarvestFeastCurrentDto,
 	HarvestFeastCurrentRequest,
+	HarvestFeastRotationsDto,
+	HarvestFeastYearRotationsDto,
 	HoistCommentRequest,
 	HypixelInventoryDto,
 	IncomingAccountDto,
@@ -9317,6 +9319,56 @@ export const getGetCurrentHarvestFeastUrl = () => {
 
 export const getCurrentHarvestFeast = async (options?: RequestInit) => {
 	return customFetch<getCurrentHarvestFeastResponse>(getGetCurrentHarvestFeastUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Uses crowd-sourced data, which may not be accurate.
+ * @summary Get Harvest Feast rotations for the current SkyBlock year
+ */
+export type getHarvestFeastRotationsResponse200 = {
+	data: HarvestFeastRotationsDto;
+	status: 200;
+};
+
+export type getHarvestFeastRotationsResponseSuccess = getHarvestFeastRotationsResponse200 & {
+	headers: Headers;
+};
+export type getHarvestFeastRotationsResponse = getHarvestFeastRotationsResponseSuccess;
+
+export const getGetHarvestFeastRotationsUrl = () => {
+	return `${ELITE_API_URL}/harvest-feast/rotations`;
+};
+
+export const getHarvestFeastRotations = async (options?: RequestInit) => {
+	return customFetch<getHarvestFeastRotationsResponse>(getGetHarvestFeastRotationsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Uses crowd-sourced data, which may not be accurate.
+ * @summary Get Harvest Feast rotations for a SkyBlock year
+ */
+export type getHarvestFeastRotationsInYearResponse200 = {
+	data: HarvestFeastYearRotationsDto;
+	status: 200;
+};
+
+export type getHarvestFeastRotationsInYearResponseSuccess = getHarvestFeastRotationsInYearResponse200 & {
+	headers: Headers;
+};
+export type getHarvestFeastRotationsInYearResponse = getHarvestFeastRotationsInYearResponseSuccess;
+
+export const getGetHarvestFeastRotationsInYearUrl = (year: string | number) => {
+	return `${ELITE_API_URL}/harvest-feast/rotations/${year}`;
+};
+
+export const getHarvestFeastRotationsInYear = async (year: string | number, options?: RequestInit) => {
+	return customFetch<getHarvestFeastRotationsInYearResponse>(getGetHarvestFeastRotationsInYearUrl(year), {
 		...options,
 		method: 'GET',
 	});

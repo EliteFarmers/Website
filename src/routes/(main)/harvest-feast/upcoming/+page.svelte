@@ -1,58 +1,36 @@
 <script lang="ts">
+	import Countdown from '$comp/countdown.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
-	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP } from '$lib/constants/crops';
+	import type { HarvestFeastRotationDto } from '$lib/api';
+	import { selectHarvestFeastRotations } from '$lib/harvest-feast-rotations';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
-	import { DEFAULT_SELECTED_CROPS, getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
-	import { SkyBlockTime } from 'farming-weight';
+	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { getCropDisplayName, getCropFromName, SkyBlockTime } from 'farming-weight';
 	import { onMount } from 'svelte';
-	import { SvelteMap } from 'svelte/reactivity';
 	import FeastEntry from './feast-entry.svelte';
 
-	type FeastCropEntry = {
-		crop: string;
-		timestamp: number | null;
+	type FeastWaveEntry = {
+		start: number;
+		end: number;
 	};
 
-	type FeastWaveEntry = {
-		timestamp: number;
+	type DisplayRotation = {
+		start: number;
+		end: number;
+		crops: string[];
 	};
 
 	const harvestFeast = getHarvestFeast();
-	const displayCrops = Object.keys(DEFAULT_SELECTED_CROPS);
-	const cropAliases = new SvelteMap<string, string>();
 	const HARVEST_FEAST_WAVE_MONTHS = [7, 8, 9] as const;
-
-	for (const crop of displayCrops) {
-		const apiCrop = PROPER_CROP_TO_API_CROP[crop];
-		const compact = crop.replaceAll(' ', '');
-
-		for (const key of [crop, crop.toLowerCase(), compact, compact.toLowerCase(), apiCrop, apiCrop?.toLowerCase()]) {
-			if (key) cropAliases.set(key, crop);
-		}
-	}
-
-	cropAliases.set('INK_SACK', 'Cocoa Beans');
-	cropAliases.set('ink_sack', 'Cocoa Beans');
 
 	let seconds = $state(Math.floor(Date.now() / 1000));
 	let selected = getSelectedCrops();
 	let anySelected = getAnyCropSelected();
 
-	function normalizeCrop(crop: string): string {
-		return (
-			cropAliases.get(crop) ??
-			cropAliases.get(crop.replaceAll(/[_:\s-]/g, '').toLowerCase()) ??
-			PROPER_CROP_NAME[crop] ??
-			crop
-		);
-	}
-
 	function uniqueSortedCrops(crops: string[]): string[] {
-		return [...new Set(crops.map(normalizeCrop).filter((crop) => crop in DEFAULT_SELECTED_CROPS))].sort((a, b) =>
-			a.localeCompare(b)
-		);
+		return [...new Set(crops.map(getCropFromName))].map(getCropDisplayName).sort((a, b) => a.localeCompare(b));
 	}
 
 	function cropVisible(crop: string): boolean {
@@ -67,44 +45,48 @@
 	function getFallbackWaveStarts(currentSeconds: number): FeastWaveEntry[] {
 		const year = getFallbackFeastYear(currentSeconds);
 		return HARVEST_FEAST_WAVE_MONTHS.map((month) => ({
-			timestamp: SkyBlockTime.from(year, month, 1).unixSeconds,
-		}));
+			start: SkyBlockTime.from(year, month, 1).unixSeconds,
+			end: SkyBlockTime.from(year, month + 1, 1).unixSeconds,
+		})).filter((rotation) => rotation.end > currentSeconds);
+	}
+
+	function getFeastWindow(currentSeconds: number): FeastWaveEntry {
+		const rotations = Object.values(feast?.rotations ?? {});
+		if (feast?.isGrandFeast && rotations.length > 0) {
+			return {
+				start: Math.min(...rotations.map((rotation) => Number(rotation.start))),
+				end: Math.max(...rotations.map((rotation) => Number(rotation.end))),
+			};
+		}
+
+		const year = feast?.year ?? getFallbackFeastYear(currentSeconds);
+		return {
+			start: SkyBlockTime.from(year, HARVEST_FEAST_WAVE_MONTHS[0], 1).unixSeconds,
+			end: SkyBlockTime.from(year, HARVEST_FEAST_WAVE_MONTHS.at(-1)! + 1, 1).unixSeconds,
+		};
+	}
+
+	function toDisplayRotation(rotation: HarvestFeastRotationDto): DisplayRotation {
+		return {
+			start: Number(rotation.start),
+			end: Number(rotation.end),
+			crops: uniqueSortedCrops(rotation.crops).filter(cropVisible),
+		};
 	}
 
 	const feast = $derived(harvestFeast.current);
+	const feastWindow = $derived(getFeastWindow(seconds));
 	const fallbackWaveStarts = $derived(getFallbackWaveStarts(seconds));
-	const nextEntries = $derived.by<FeastCropEntry[]>(() => {
-		const next = feast?.next ?? {};
-		return Object.entries(next)
-			.map(([crop, timestamp]) => ({
-				crop: normalizeCrop(crop),
-				timestamp: timestamp === null || timestamp === undefined ? null : Number(timestamp),
-			}))
-			.filter((entry) => entry.crop in DEFAULT_SELECTED_CROPS);
+	const rotationSelection = $derived(selectHarvestFeastRotations(feast, seconds));
+	const currentRotation = $derived.by(() => {
+		if (!rotationSelection.current) return null;
+		return toDisplayRotation(rotationSelection.current);
 	});
-	const currentCrops = $derived(uniqueSortedCrops(feast?.current ?? []).filter(cropVisible));
-	const upcomingGroups = $derived.by(() => {
-		const groups = new SvelteMap<number, string[]>();
-
-		for (const entry of nextEntries) {
-			if (entry.timestamp === null || entry.timestamp <= seconds || !cropVisible(entry.crop)) continue;
-
-			const crops = groups.get(entry.timestamp) ?? [];
-			crops.push(entry.crop);
-			groups.set(entry.timestamp, crops);
-		}
-
-		return [...groups.entries()]
-			.map(([timestamp, crops]) => ({ timestamp, crops: uniqueSortedCrops(crops) }))
-			.sort((a, b) => a.timestamp - b.timestamp);
-	});
-	const unknownCrops = $derived(
-		uniqueSortedCrops(nextEntries.filter((entry) => entry.timestamp === null).map((entry) => entry.crop)).filter(
-			cropVisible
-		)
+	const upcomingRotations = $derived.by(() =>
+		rotationSelection.upcoming.map(toDisplayRotation).filter((rotation) => rotation.crops.length > 0)
 	);
-	const hasData = $derived((feast?.current?.length ?? 0) > 0 || Object.keys(feast?.next ?? {}).length > 0);
-	const hasVisibleData = $derived(currentCrops.length > 0 || upcomingGroups.length > 0 || unknownCrops.length > 0);
+	const hasData = $derived((feast?.current ?? null) !== null || Object.keys(feast?.rotations ?? {}).length > 0);
+	const hasVisibleData = $derived((currentRotation?.crops.length ?? 0) > 0 || upcomingRotations.length > 0);
 
 	onMount(() => {
 		const interval = setInterval(() => {
@@ -126,7 +108,29 @@
 <Head title="Harvest Feast Upcoming Crops" description="Upcoming Harvest Feast crop seasons for Hypixel SkyBlock." />
 
 <div class="flex flex-col items-center justify-center px-4">
-	<h1 class="my-16 text-center text-4xl">Harvest Feast Upcoming Crops</h1>
+	<div class="my-16 flex flex-col items-center gap-4">
+		<h1 class="text-center text-4xl">Harvest Feast Upcoming Crops</h1>
+		{#if feastWindow.end > seconds}
+			<div class="flex h-8 flex-row items-center gap-2">
+				<Countdown
+					start={feastWindow.start * 1000}
+					end={feastWindow.end * 1000}
+					class="gap-2 text-sm md:text-base"
+				>
+					{#snippet starting()}
+						<p class="text-muted-foreground mb-0.5 text-sm leading-none whitespace-nowrap md:text-base">
+							Feast starts in
+						</p>
+					{/snippet}
+					{#snippet ending()}
+						<p class="text-muted-foreground mb-0.5 text-sm leading-none whitespace-nowrap md:text-base">
+							Feast ends in
+						</p>
+					{/snippet}
+				</Countdown>
+			</div>
+		{/if}
+	</div>
 
 	{#if !hasData}
 		<div class="flex max-w-2xl flex-col gap-3 pb-8 text-center">
@@ -135,8 +139,8 @@
 			</p>
 		</div>
 		<div class="mx-8 flex w-full flex-col items-center justify-center gap-4 md:w-[70%]">
-			{#each fallbackWaveStarts as wave (wave.timestamp)}
-				<FeastEntry timestamp={wave.timestamp} crops={[]} cropsUnknown={true} currentSeconds={seconds} />
+			{#each fallbackWaveStarts as wave (wave.start)}
+				<FeastEntry start={wave.start} end={wave.end} crops={[]} cropsUnknown={true} currentSeconds={seconds} />
 			{/each}
 		</div>
 	{:else}
@@ -148,17 +152,24 @@
 			<p class="text-muted-foreground text-center">No crops match the current filter.</p>
 		{:else}
 			<div class="mx-8 flex w-full flex-col items-center justify-center gap-4 md:w-[70%]">
-				{#if currentCrops.length > 0}
-					<FeastEntry current={true} crops={currentCrops} currentSeconds={seconds} />
+				{#if currentRotation && currentRotation.crops.length > 0}
+					<FeastEntry
+						current={true}
+						start={currentRotation.start}
+						end={currentRotation.end}
+						crops={currentRotation.crops}
+						currentSeconds={seconds}
+					/>
 				{/if}
 
-				{#each upcomingGroups as group (group.timestamp)}
-					<FeastEntry timestamp={group.timestamp} crops={group.crops} currentSeconds={seconds} />
+				{#each upcomingRotations as rotation (rotation.start)}
+					<FeastEntry
+						start={rotation.start}
+						end={rotation.end}
+						crops={rotation.crops}
+						currentSeconds={seconds}
+					/>
 				{/each}
-
-				{#if unknownCrops.length > 0}
-					<FeastEntry unknown={true} crops={unknownCrops} currentSeconds={seconds} />
-				{/if}
 			</div>
 		{/if}
 	{/if}
