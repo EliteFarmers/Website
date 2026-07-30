@@ -1,14 +1,14 @@
-import { CROP_INFO, type Crop } from '../constants/crops.js';
+import { type Crop, CROP_INFO } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
-import { type Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
+import { type Rarity, type Reforge, REFORGES, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { TOOL_EXP_LEVELS } from '../constants/toollevels.js';
 import {
-	type FortuneSourceProgress,
-	type FortuneUpgrade,
-	getQueryStats,
-	includesFortuneSourceType,
-	type StatQueryOptions,
+    type FortuneSourceProgress,
+    type FortuneUpgrade,
+    getQueryStats,
+    includesFortuneSourceType,
+    type StatQueryOptions,
 } from '../constants/upgrades.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
 import { statsToEffects } from '../items/sources/effects-util.js';
@@ -404,13 +404,13 @@ export class FarmingTool extends UpgradeableBase {
 			sum += peridot;
 		}
 
-		// Enchantments
+		// Enchantments 
 		const enchantments = Object.entries(this.item.enchantments ?? {});
 		for (const [enchant, level] of enchantments) {
 			if (!level) continue;
 
 			const enchantment = FARMING_ENCHANTS[enchant];
-			if (!enchantment || !level) continue;
+			if (!enchantment) continue;
 			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
 			for (const crop of this.crops) {
@@ -422,7 +422,7 @@ export class FarmingTool extends UpgradeableBase {
 				}
 
 				if (fortune > 0) {
-					this.fortuneBreakdown[enchantment.name] = fortune;
+					this.fortuneBreakdown[enchantment.name] = (this.fortuneBreakdown[enchantment.name] ?? 0) + fortune;
 					sum += fortune;
 				}
 			}
