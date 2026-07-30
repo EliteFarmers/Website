@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Crop } from '../constants/crops.js';
 import { ReforgeTarget } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { TOOL_EXP_LEVELS } from '../constants/toollevels.js';
@@ -385,4 +386,85 @@ test('FarmingTool getStats returns multiple stats', () => {
 	expect(dicerStats[Stat.FarmingFortune]).toBeDefined();
 	expect(dicerStats[Stat.Speed]).toBeDefined();
 	expect(dicerStats[Stat.FarmingWisdom]).toBeDefined();
+});
+
+
+const eclipseSickle = {
+	id: 293,
+	count: 1,
+	skyblockId: 'THEORETICAL_HOE_SUNFLOWER_3',
+	uuid: '7c1de0a4-9f52-4a3b-8d16-2ec4b0f9a731',
+	name: '§dEclipse Sickle Mk. III',
+	lore: [],
+	enchantments: {
+		harvesting: 6,
+	},
+	attributes: {
+		levelable_lvl: '1',
+		levelable_overclocks: '0',
+		levelable_exp: '0',
+	},
+	gems: {},
+};
+
+test('Harvesting enchant should be counted once on multiple crop tools', () => {
+	const tool = new FarmingTool(eclipseSickle);
+
+	// ensure eclipse has 2 specific crops
+	expect(tool.crops).toHaveLength(2);
+
+	// harvesting 6 is generic, should only be applied once no matter the number of crops
+	expect(tool.fortuneBreakdown.Harvesting).toBe(75);
+	expect(tool.getStat(Stat.FarmingFortune)).toBe(75);
+
+	// breakdown should match total sum
+	const breakdownTotal = Object.values(tool.fortuneBreakdown).reduce((a, b) => a + b, 0);
+	expect(tool.fortune).toBe(breakdownTotal);
+});
+
+test('Only enchants tied to the selected crop should apply on multiple crop tools', () => {
+	const withTurbo = {
+		...eclipseSickle,
+		enchantments: { harvesting: 6, turbo_sunflower: 5 },
+	};
+
+	// turbo sunflower is tied to sunflower, shouldn't apply when moonflower is selected
+	const farmingMoonflower = new FarmingTool(withTurbo, { selectedCrop: Crop.Moonflower });
+	expect(farmingMoonflower.fortuneBreakdown['Turbo-Sunflower']).toBeUndefined();
+	expect(farmingMoonflower.fortune).toBe(79);
+
+	// turbo sunflower should apply when sunflower is selected
+	const farmingSunflower = new FarmingTool(withTurbo, { selectedCrop: Crop.Sunflower });
+	expect(farmingSunflower.fortuneBreakdown['Turbo-Sunflower']).toBe(25);
+	expect(farmingSunflower.fortune).toBe(104);
+});
+
+const advancedGardeningHoe = {
+	id: 293,
+	count: 1,
+	skyblockId: 'ADVANCED_GARDENING_HOE',
+	uuid: 'f3b7c210-5d84-4e69-9a0c-1b8e7d4a6f52',
+	name: '§9Advanced Gardening Hoe',
+	lore: [],
+	enchantments: {
+		harvesting: 6,
+	},
+	attributes: {},
+	gems: {},
+};
+
+test('Harvesting enchant should be counted once on multiple crop tools', () => {
+	const tool = new FarmingTool(advancedGardeningHoe);
+
+	// ensure advanced gardening hoe has 9 specific crops (universal tool)
+	expect(tool.crops).toHaveLength(9);
+
+    // harvesting 6 is generic, should only be applied once no matter the number of crops
+	expect(tool.fortuneBreakdown['Base Stats']).toBe(15);
+	expect(tool.fortuneBreakdown.Harvesting).toBe(75);
+	expect(tool.fortune).toBe(90);
+	expect(tool.getStat(Stat.FarmingFortune)).toBe(90);
+
+	const breakdownTotal = Object.values(tool.fortuneBreakdown).reduce((a, b) => a + b, 0);
+	expect(tool.fortune).toBe(breakdownTotal);
 });
