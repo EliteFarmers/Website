@@ -388,7 +388,6 @@ test('FarmingTool getStats returns multiple stats', () => {
 	expect(dicerStats[Stat.FarmingWisdom]).toBeDefined();
 });
 
-
 const eclipseSickle = {
 	id: 293,
 	count: 1,
@@ -459,7 +458,7 @@ test('Harvesting enchant should be counted once on multiple crop tools', () => {
 	// ensure advanced gardening hoe has 9 specific crops (universal tool)
 	expect(tool.crops).toHaveLength(9);
 
-    // harvesting 6 is generic, should only be applied once no matter the number of crops
+	// harvesting 6 is generic, should only be applied once no matter the number of crops
 	expect(tool.fortuneBreakdown['Base Stats']).toBe(15);
 	expect(tool.fortuneBreakdown.Harvesting).toBe(75);
 	expect(tool.fortune).toBe(90);

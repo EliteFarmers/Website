@@ -1,14 +1,14 @@
-import { type Crop, CROP_INFO } from '../constants/crops.js';
+import { CROP_INFO, type Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
-import { type Rarity, type Reforge, REFORGES, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
+import { type Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { TOOL_EXP_LEVELS } from '../constants/toollevels.js';
 import {
-    type FortuneSourceProgress,
-    type FortuneUpgrade,
-    getQueryStats,
-    includesFortuneSourceType,
-    type StatQueryOptions,
+	type FortuneSourceProgress,
+	type FortuneUpgrade,
+	getQueryStats,
+	includesFortuneSourceType,
+	type StatQueryOptions,
 } from '../constants/upgrades.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
 import { statsToEffects } from '../items/sources/effects-util.js';
