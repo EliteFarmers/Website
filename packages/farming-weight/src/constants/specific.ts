@@ -277,7 +277,10 @@ export const PEST_BESTIARY_SOURCE: FortuneSource = {
 
 export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
 	name: 'Refined Dark Cacao Truffle',
-	fortunePerLevel: 1,
+	fortunePerLevel: 0,
+	statsPerLevel: {
+		[Stat.CocoaBeanFortune]: 1,
+	},
 	maxLevel: 5,
 	wiki: 'https://w.elitesb.gg/Refined_Dark_Cacao_Truffle',
 };

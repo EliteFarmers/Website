@@ -211,7 +211,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
 		wiki: 'https://w.elitesb.gg/Pest',
 		perLevelStats: {
 			[Stat.Overbloom]: {
-				value: 2,
+				value: 0.5,
 			},
 		},
 	},

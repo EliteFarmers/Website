@@ -452,7 +452,7 @@ export class FarmingPlayer {
 	 * the resolver's job - so the returned list includes every effect the
 	 * player could plausibly emit, with their declarative scopes intact.
 	 */
-	collectEffects(env: EffectEnvironment): Effect[] {
+	collectEffects(env: EffectEnvironment, heldTool?: FarmingTool): Effect[] {
 		const effects: Effect[] = [];
 
 		effects.push(...collectGeneralFortuneSourceEffects(this));
@@ -463,7 +463,7 @@ export class FarmingPlayer {
 
 		// Tool: for crop-scoped calculations, use the selected/best tool for
 		// that crop. For crop-agnostic stat queries, use the selected tool.
-		const tool = env.crop ? this.getSelectedCropTool(env.crop) : this.selectedTool;
+		const tool = heldTool ?? (env.crop ? this.getSelectedCropTool(env.crop) : this.selectedTool);
 		if (tool) {
 			effects.push(...tool.getEffects(env));
 		}
@@ -498,12 +498,12 @@ export class FarmingPlayer {
 		return effects;
 	}
 
-	getStat(stat: Stat, targetCrop?: Crop) {
-		const breakdown = this.getStatBreakdown(stat, targetCrop);
+	getStat(stat: Stat, targetCrop?: Crop, heldTool?: FarmingTool) {
+		const breakdown = this.getStatBreakdown(stat, targetCrop, heldTool);
 		return Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 	}
 
-	getStatBreakdown(stat: Stat, targetCrop?: Crop): StatBreakdown {
+	getStatBreakdown(stat: Stat, targetCrop?: Crop, heldTool?: FarmingTool): StatBreakdown {
 		const breakdown: StatBreakdown = {};
 
 		const add = (name: string, value: number, stat: Stat) => {
@@ -517,7 +517,7 @@ export class FarmingPlayer {
 
 		const contributingStats = getContributoryStats(stat);
 		const env = this.buildEnvironment(targetCrop);
-		const effects = this.collectEffects(env);
+		const effects = this.collectEffects(env, heldTool);
 		const statContext = { env, crop: targetCrop };
 
 		for (const targetStat of contributingStats) {
@@ -534,7 +534,7 @@ export class FarmingPlayer {
 		// Temporary Fortune
 		if (this.tempFortuneBreakdown) {
 			for (const [name, entry] of Object.entries(this.tempFortuneBreakdown)) {
-				// Temporary fortune is always FarmingFortune
+				// Temporary fortune may target global or stat-specific fortune.
 				if (contributingStats.includes(entry.stat)) {
 					add(name, entry.value, entry.stat);
 				}
@@ -637,7 +637,7 @@ export class FarmingPlayer {
 	getCropFortune(crop?: Crop, tool = this.selectedTool): { fortune: number; breakdown: StatBreakdown } {
 		// If no crop, we return general farming fortune
 		const fortuneType = crop ? CROP_INFO[crop].fortuneType : Stat.FarmingFortune;
-		const breakdown = this.getStatBreakdown(fortuneType, crop);
+		const breakdown = this.getStatBreakdown(fortuneType, crop, tool);
 		const fortune = Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 
 		return {

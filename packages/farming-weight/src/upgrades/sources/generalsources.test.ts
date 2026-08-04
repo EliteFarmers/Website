@@ -111,12 +111,6 @@ test('General fortune sources', () => {
 			ratio: 0,
 		},
 		{
-			name: 'Refined Dark Cacao Truffle',
-			current: 0,
-			max: 5,
-			ratio: 0,
-		},
-		{
 			api: false,
 			name: 'Feast Burger with a Side of Deepfries',
 			current: 0,
@@ -167,8 +161,8 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 
 	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
 		current: 5,
-		max: 30,
-		ratio: 5 / 30,
+		max: 15,
+		ratio: 5 / 15,
 	});
 	expect(attributeShards?.effects).toContainEqual(
 		expect.objectContaining({
@@ -240,20 +234,20 @@ test('Pest shard surfaces pest-specific flat Overbloom progress under Attribute 
 	const pestShard = attributeShards?.progress?.find((p) => p.name === 'Pest Shard');
 
 	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
-		current: 10,
-		max: 30,
-		ratio: 10 / 30,
+		current: 2.5,
+		max: 15,
+		ratio: 2.5 / 15,
 	});
 	expect(pestShard?.stats?.[Stat.Overbloom]).toMatchObject({
-		current: 10,
-		max: 20,
+		current: 2.5,
+		max: 5,
 		ratio: 0.5,
 	});
 	expect(pestShard?.effects).toContainEqual(
 		expect.objectContaining({
 			source: 'Pest Shard',
 			op: 'add-rare-pct',
-			value: 10,
+			value: 2.5,
 			scope: { tags: ['pest'] },
 			description: 'Pest Overbloom',
 			relatedStats: [Stat.Overbloom],

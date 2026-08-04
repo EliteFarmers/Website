@@ -241,7 +241,7 @@ describe('PestShard', () => {
 		expect(effects).toHaveLength(1);
 		expect(effects[0]).toMatchObject({
 			op: 'add-rare-pct',
-			value: 2,
+			value: 0.5,
 			scope: { tags: ['pest'] },
 			relatedStats: [Stat.Overbloom],
 			meta: {
@@ -252,7 +252,7 @@ describe('PestShard', () => {
 		});
 	});
 
-	test('only buffs pest drops and reaches +20 flat Overbloom at max level', () => {
+	test('only buffs pest drops and reaches +5 flat Overbloom at max level', () => {
 		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { pest_luck: 999 } });
 		const env = buildEffectEnvironment(player);
 		const effects = new PestShard().getEffects(player, env);
@@ -269,8 +269,8 @@ describe('PestShard', () => {
 			tags: new Set(['overbloom', 'rare-crop', 'special-crop']),
 		});
 
-		expect(effects[0]?.value).toBe(20);
-		expect(resolveDropEffects(effects, pest).addRarePct).toBe(20);
+		expect(effects[0]?.value).toBe(5);
+		expect(resolveDropEffects(effects, pest).addRarePct).toBe(5);
 		expect(resolveDropEffects(effects, cropie).addRarePct).toBe(0);
 	});
 });

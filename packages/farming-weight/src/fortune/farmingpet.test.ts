@@ -53,6 +53,28 @@ test('Mythic Elephant gains the new base Farming Fortune', () => {
 	});
 });
 
+test('post-100 pet levels use the updated XP plateau from level 101 onward', () => {
+	const createRoseDragon = (exp: number) =>
+		new FarmingPet({
+			type: 'ROSE_DRAGON',
+			exp,
+			tier: 'LEGENDARY',
+			heldItem: null,
+		});
+	const roseDragon = createRoseDragon(0);
+
+	const xpFor100 = roseDragon.getXpForLevel(100);
+	const xpFor101 = roseDragon.getXpForLevel(101);
+	const xpFor102 = roseDragon.getXpForLevel(102);
+	const xpFor103 = roseDragon.getXpForLevel(103);
+
+	expect(xpFor101 - xpFor100).toBe(1_886_700);
+	expect(xpFor102 - xpFor101).toBe(1_886_700);
+	expect(xpFor103 - xpFor102).toBe(1_886_700);
+	expect(createRoseDragon(xpFor101 - 1).level).toBe(100);
+	expect(createRoseDragon(xpFor101).level).toBe(101);
+});
+
 test('Mooshroom Cow fortune test', () => {
 	const mooshroom = {
 		uuid: 'ec3f021c-d92d-4b56-95fe-0a18653d2238',

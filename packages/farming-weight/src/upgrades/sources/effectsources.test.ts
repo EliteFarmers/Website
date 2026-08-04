@@ -27,6 +27,21 @@ describe('source-layer effect collection', () => {
 		expect(effects.some((effect) => effect.source === 'Cropshot Chip')).toBe(false);
 	});
 
+	test('refined cacao truffles emit Cocoa Bean Fortune without global Farming Fortune', () => {
+		const player = new FarmingPlayer({ refinedTruffles: 5 });
+		const env = player.buildEnvironment(Crop.CocoaBeans);
+		const effects = collectGeneralFortuneSourceEffects(player);
+
+		expect(resolveStatTotal(effects, Stat.CocoaBeanFortune, { env, crop: Crop.CocoaBeans })).toBe(5);
+		expect(resolveStatTotal(effects, Stat.FarmingFortune, { env, crop: Crop.CocoaBeans })).toBe(0);
+		expect(effects).toContainEqual({
+			source: 'Refined Dark Cacao Truffle',
+			op: 'add-stat',
+			stat: Stat.CocoaBeanFortune,
+			value: 5,
+		});
+	});
+
 	test('general sources do not double count active accessory-backed sources', () => {
 		const player = new FarmingPlayer({
 			accessories: [

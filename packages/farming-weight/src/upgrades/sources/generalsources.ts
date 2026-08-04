@@ -905,16 +905,17 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 		maxStat: (_player, stat) => getFortune(REFINED_TRUFFLE_SOURCE.maxLevel, REFINED_TRUFFLE_SOURCE, stat),
 		currentStat: (player, stat) => getFortune(player.options.refinedTruffles ?? 0, REFINED_TRUFFLE_SOURCE, stat),
-		upgrades: (player) => {
+		upgrades: (player, stats) => {
+			if (!includesRequestedStat(stats, Stat.CocoaBeanFortune)) return [];
 			const consumed = player.options.refinedTruffles ?? 0;
 			if (consumed >= 5) return [];
 
 			return [
 				{
 					title: 'Refined Dark Cacao Truffle',
-					increase: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+					increase: REFINED_TRUFFLE_SOURCE.statsPerLevel?.[Stat.CocoaBeanFortune] ?? 0,
 					stats: {
-						[Stat.FarmingFortune]: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+						[Stat.CocoaBeanFortune]: REFINED_TRUFFLE_SOURCE.statsPerLevel?.[Stat.CocoaBeanFortune] ?? 0,
 					},
 					action: UpgradeAction.Consume,
 					repeatable: 5 - consumed,

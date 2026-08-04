@@ -270,7 +270,7 @@ export class PestShard extends FortuneSource {
 			{
 				source: this.name,
 				op: 'add-rare-pct',
-				value: level * 2,
+				value: level * 0.5,
 				scope: { tags: ['pest'] },
 				relatedStats: [Stat.Overbloom],
 				meta: {
