@@ -299,15 +299,11 @@ export class FarmingTool extends UpgradeableBase {
 			if (!level) continue;
 
 			const enchantment = FARMING_ENCHANTS[enchant];
-			if (!enchantment || !level) continue;
-			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
+			if (!enchantment) continue;
+			if (enchantment.cropSpecific && !crops.includes(enchantment.cropSpecific)) continue;
 
-			const enchantCrops = crops.length > 0 ? crops : [undefined];
-			for (const crop of enchantCrops) {
-				const val = getStatFromEnchant(level, enchantment, stat, this.options, crop);
-
-				sum += val;
-			}
+			const crop = enchantment.cropSpecific ?? crops[0];
+			sum += getStatFromEnchant(level, enchantment, stat, this.options, crop);
 		}
 
 		return sum;
@@ -405,26 +401,31 @@ export class FarmingTool extends UpgradeableBase {
 		}
 
 		// Enchantments
+		// Only the crop actually selected is taken into account (tools with multiples crops)
+		const selected = this.options?.selectedCrop;
+		const activeCrops = selected && this.crops.includes(selected) ? [selected] : this.crops;
+
 		const enchantments = Object.entries(this.item.enchantments ?? {});
 		for (const [enchant, level] of enchantments) {
 			if (!level) continue;
 
 			const enchantment = FARMING_ENCHANTS[enchant];
-			if (!enchantment || !level) continue;
-			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
+			if (!enchantment) continue;
+			if (enchantment.cropSpecific && !activeCrops.includes(enchantment.cropSpecific)) continue;
 
-			for (const crop of this.crops) {
-				let fortune = getFortuneFromEnchant(level, enchantment, this.options, crop);
-				const cropStat = CROP_INFO[crop]?.fortuneType;
+			// Evaluate once : general enchant has single flat value, crop-specific already linked to his own crop
+			const crop = enchantment.cropSpecific ?? activeCrops[0];
 
-				if (cropStat) {
-					fortune += getStatFromEnchant(level, enchantment, cropStat, this.options, crop);
-				}
+			let fortune = getFortuneFromEnchant(level, enchantment, this.options, crop);
 
-				if (fortune > 0) {
-					this.fortuneBreakdown[enchantment.name] = fortune;
-					sum += fortune;
-				}
+			const cropStat = crop ? CROP_INFO[crop]?.fortuneType : undefined;
+			if (cropStat) {
+				fortune += getStatFromEnchant(level, enchantment, cropStat, this.options, crop);
+			}
+
+			if (fortune > 0) {
+				this.fortuneBreakdown[enchantment.name] = (this.fortuneBreakdown[enchantment.name] ?? 0) + fortune;
+				sum += fortune;
 			}
 		}
 
