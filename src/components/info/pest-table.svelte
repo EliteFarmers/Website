@@ -10,7 +10,7 @@
 	let brackets = $derived(Object.entries(stats?.brackets ?? {}));
 </script>
 
-<div class="scrollbar-none flex w-full overflow-x-auto">
+<div class="flex w-full scrollbar-none overflow-x-auto">
 	<table class="w-full max-w-4xl min-w-3xl flex-grow-1">
 		<thead>
 			<tr class="bg-muted-variant">

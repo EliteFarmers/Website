@@ -1,6 +1,6 @@
 import { Crop } from '../constants/crops.js';
 import { FarmingMechanic } from '../constants/mechanics.js';
-import { Pest, Spray, SPRAY_TO_PESTS } from '../constants/pests.js';
+import { Pest, SPRAY_TO_PESTS, Spray } from '../constants/pests.js';
 import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
 import { getSprayonatorTierInfo } from '../constants/specific.js';
@@ -11,31 +11,31 @@ import type { DropTag } from '../effects/types.js';
 import { PestFarmingPhase, type PestFarmingPlayer } from '../player/pestfarmingplayer.js';
 import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 import {
-    calculatePestCropDropAmount,
-    getAssociatedCropFortune,
-    NATURAL_PESTS,
-    PEST_DROP_DEFINITIONS,
-    type PestDropDefinition,
+	calculatePestCropDropAmount,
+	getAssociatedCropFortune,
+	NATURAL_PESTS,
+	PEST_DROP_DEFINITIONS,
+	type PestDropDefinition,
 } from './pest-drops.js';
 import type {
-    DetailedPestDropsResult,
-    PestAttractionSettings,
-    PestCycleDebug,
-    PestCycleSettings,
-    PestEconomySettings,
-    PestFarmingRateArmorSelection,
-    PestFarmingRateCalculatorInput,
-    PestFarmingRateDelta,
-    PestFarmingRateOptions,
-    PestFarmingRateResult,
-    PestFarmingUpgradeImpactRequest,
-    PestFarmingUpgradeRateImpact,
-    PestRatePhaseStats,
-    PestRatePriceBook,
-    PestRateQuantities,
-    PestRateValuationDelta,
-    PestRateValuationResult,
-    PestSpawnDistribution,
+	DetailedPestDropsResult,
+	PestAttractionSettings,
+	PestCycleDebug,
+	PestCycleSettings,
+	PestEconomySettings,
+	PestFarmingRateArmorSelection,
+	PestFarmingRateCalculatorInput,
+	PestFarmingRateDelta,
+	PestFarmingRateOptions,
+	PestFarmingRateResult,
+	PestFarmingUpgradeImpactRequest,
+	PestFarmingUpgradeRateImpact,
+	PestRatePhaseStats,
+	PestRatePriceBook,
+	PestRateQuantities,
+	PestRateValuationDelta,
+	PestRateValuationResult,
+	PestSpawnDistribution,
 } from './pest-rate-types.js';
 
 const DEFAULT_INTERVAL_SECONDS = 3600;
