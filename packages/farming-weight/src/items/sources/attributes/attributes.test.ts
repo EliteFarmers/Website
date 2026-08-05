@@ -1,22 +1,90 @@
 import { describe, expect, test } from 'vitest';
-import { Crop } from '../../constants/crops.js';
-import { SpecialCrop } from '../../constants/specialcrops.js';
-import { Stat } from '../../constants/stats.js';
-import { buildEffectEnvironment } from '../../effects/environment.js';
-import { produceAddedDrops, resolveDropEffects } from '../../effects/resolver.js';
-import type { DropContext } from '../../effects/types.js';
-import { createFarmingPlayer } from '../../player/player.js';
+import { Crop } from '../../../constants/crops.js';
+import { FarmingMechanic } from '../../../constants/mechanics.js';
+import { SpecialCrop } from '../../../constants/specialcrops.js';
+import { Stat } from '../../../constants/stats.js';
+import { buildEffectEnvironment } from '../../../effects/environment.js';
+import { produceAddedDrops, resolveDropEffects } from '../../../effects/resolver.js';
+import type { DropContext } from '../../../effects/types.js';
+import { createFarmingPlayer } from '../../../player/player.js';
 import {
+	CricketShard,
 	CropeetleShard,
 	DragonflyShard,
-	FARMING_ATTRIBUTE_SHARD_CLASSES,
+	FARMING_ATTRIBUTE_SHARDS,
 	FireflyShard,
+	FlyShard,
 	GalaxyFishShard,
+	KeeledSlugShard,
+	LocustShard,
 	LunarMothShard,
+	MiteShard,
+	MosquitoShard,
+	MothShard,
 	PestShard,
+	RatShard,
 	TermiteShard,
 	WartyBugShard,
-} from './attributes.js';
+} from './index.js';
+
+describe('new pest attribute shards', () => {
+	test.each([
+		['Fly', FlyShard, 'fortunate_farmer', Stat.FarmingFortune, 2.5, 25],
+		['Cricket', CricketShard, 'pest_fortune', Stat.PestKillFortune, 5, 50],
+		['Keeled Slug', KeeledSlugShard, 'bonus_pest_chance', Stat.BonusPestChance, 1, 10],
+	] as const)('%s Shard grants its level 1 and max stats', (_name, Shard, attribute, stat, first, max) => {
+		const levelOne = createFarmingPlayer({ attributes: { [attribute]: 1 } });
+		const maxed = createFarmingPlayer({ attributes: { [attribute]: 999 } });
+
+		expect(new Shard().getEffects(levelOne, buildEffectEnvironment(levelOne))[0]).toMatchObject({
+			op: 'add-stat',
+			stat,
+			value: first,
+		});
+		expect(new Shard().getEffects(maxed, buildEffectEnvironment(maxed))[0]?.value).toBe(max);
+	});
+
+	test.each([
+		['Locust', LocustShard, 'crop_speed', FarmingMechanic.CropGrowth, 1, 10],
+		['Rat', RatShard, 'sprayonator_serendipity', FarmingMechanic.SprayonatorMaterialChance, 1, 10],
+		['Mite', MiteShard, 'filter_upgrade', FarmingMechanic.AtmosphericFilterEffect, 2, 20],
+		['Moth', MothShard, 'pest_cooldown', FarmingMechanic.PestCooldownReductionSeconds, 0.5, 5],
+	] as const)('%s Shard grants its level 1 and max mechanic', (_name, Shard, attribute, mechanic, first, max) => {
+		const levelOne = createFarmingPlayer({ attributes: { [attribute]: 1 } });
+		const maxed = createFarmingPlayer({ attributes: { [attribute]: 999 } });
+
+		expect(new Shard().getEffects(levelOne, buildEffectEnvironment(levelOne))[0]).toMatchObject({
+			op: 'add-mechanic',
+			mechanic,
+			value: first,
+		});
+		expect(new Shard().getEffects(maxed, buildEffectEnvironment(maxed))[0]?.value).toBe(max);
+	});
+
+	test('Mosquito Shard adds the matching enchanted crop drop while farming', () => {
+		const player = createFarmingPlayer({ attributes: { enchanted_farmer: 1 } });
+		const effects = new MosquitoShard().getEffects(player, buildEffectEnvironment(player, Crop.Wheat));
+
+		expect(effects).toContainEqual(
+			expect.objectContaining({
+				op: 'add-mechanic',
+				mechanic: FarmingMechanic.EnchantedCropChance,
+				value: 0.001,
+			})
+		);
+		expect(effects).toContainEqual(
+			expect.objectContaining({
+				op: 'add-drop',
+				drop: expect.objectContaining({ itemId: 'ENCHANTED_WHEAT', chance: 0.00001 }),
+			})
+		);
+	});
+
+	test('renamed shards expose their new names while retaining their attribute classes', () => {
+		expect(new TermiteShard().name).toBe('Earthworm Shard');
+		expect(new PestShard().name).toBe('Field Mouse Shard');
+	});
+});
 
 function dropCtx(overrides: Partial<DropContext>): DropContext {
 	return {
@@ -275,9 +343,17 @@ describe('PestShard', () => {
 	});
 });
 
-describe('FARMING_ATTRIBUTE_SHARD_CLASSES registry', () => {
-	test('every legacy shard key has a class instance', () => {
+describe('FARMING_ATTRIBUTE_SHARDS registry', () => {
+	test('every farming shard key has a class instance', () => {
 		const expectedKeys = [
+			'fortunate_farmer',
+			'pest_fortune',
+			'crop_speed',
+			'sprayonator_serendipity',
+			'enchanted_farmer',
+			'filter_upgrade',
+			'pest_cooldown',
+			'bonus_pest_chance',
 			'wart_eater',
 			'garden_wisdom',
 			'solar_power',
@@ -292,7 +368,13 @@ describe('FARMING_ATTRIBUTE_SHARD_CLASSES registry', () => {
 			'ultimate_dna',
 		];
 		for (const key of expectedKeys) {
-			expect(FARMING_ATTRIBUTE_SHARD_CLASSES[key as keyof typeof FARMING_ATTRIBUTE_SHARD_CLASSES]).toBeDefined();
+			const shard = FARMING_ATTRIBUTE_SHARDS[key as keyof typeof FARMING_ATTRIBUTE_SHARDS];
+			expect(shard).toBeDefined();
+			expect(shard.attributeId).toBe(key);
+			expect(shard.name).toMatch(/Shard$/);
+			expect(shard.skyblockId).toMatch(/^SHARD_/);
+			expect(shard.rarity).toBeDefined();
+			expect(shard.wiki).toMatch(/^https:\/\/w\.elitesb\.gg\//);
 		}
 	});
 
@@ -308,7 +390,7 @@ describe('FARMING_ATTRIBUTE_SHARD_CLASSES registry', () => {
 		});
 		const env = buildEffectEnvironment(player);
 		for (const key of ['pretty_clothes', 'fancy_visit', 'insect_power', 'visitor_bait'] as const) {
-			expect(FARMING_ATTRIBUTE_SHARD_CLASSES[key].getEffects(player, env)).toEqual([]);
+			expect(FARMING_ATTRIBUTE_SHARDS[key].getEffects(player, env)).toEqual([]);
 		}
 	});
 });

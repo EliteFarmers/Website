@@ -24,6 +24,13 @@ function upgradeHasRelatedEffect(upgrade: FortuneUpgrade, stats: readonly Stat[]
 	return upgrade.effects?.some((effect) => effect.relatedStats?.some((related) => stats.includes(related))) ?? false;
 }
 
+function upgradeHasRelatedMechanic(
+	upgrade: FortuneUpgrade,
+	mechanics = [] as NonNullable<StatQueryOptions['mechanics']>
+): boolean {
+	return upgrade.effects?.some((effect) => effect.mechanic && mechanics.includes(effect.mechanic)) ?? false;
+}
+
 function getUpgradeScore(upgrade: FortuneUpgrade, stats: readonly Stat[]): number {
 	return stats.reduce((sum, stat) => sum + getUpgradeDelta(upgrade, stat), 0);
 }
@@ -41,6 +48,7 @@ export function filterAndSortUpgrades(upgrades: FortuneUpgrade[], options?: Stat
 	const filtered = upgrades.filter((u) => {
 		if (stats.some((stat) => getUpgradeDelta(u, stat) !== 0)) return true;
 		if (upgradeHasRelatedEffect(u, stats)) return true;
+		if (upgradeHasRelatedMechanic(u, options?.mechanics)) return true;
 		const upgradeStats = u.stats;
 		if (upgradeStats && stats.some((stat) => Object.hasOwn(upgradeStats, stat))) return true;
 		// For crop-fortune views, keep 0-delta FarmingFortune upgrades so the UI can

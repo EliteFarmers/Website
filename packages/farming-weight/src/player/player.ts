@@ -10,6 +10,7 @@ import {
 } from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
+import type { FarmingMechanic } from '../constants/mechanics.js';
 import { compareRarity, type Rarity } from '../constants/reforge-types.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
@@ -35,7 +36,7 @@ import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPets } from '../items/pets.js';
-import { FARMING_ATTRIBUTE_SHARD_CLASSES } from '../items/sources/attributes.js';
+import { FARMING_ATTRIBUTE_SHARDS } from '../items/sources/attributes/index.js';
 import { GARDEN_CHIP_CLASSES } from '../items/sources/chips.js';
 import { FARMING_TOOLS } from '../items/tools.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
@@ -59,6 +60,7 @@ export function createFarmingPlayer(options: PlayerOptions) {
 
 export interface PlayerStatQuery {
 	stats: Stat[];
+	mechanics?: FarmingMechanic[];
 	crop?: Crop;
 	sourceTypes?: StatQueryOptions['sourceTypes'];
 }
@@ -315,6 +317,7 @@ export class FarmingPlayer {
 		const stats = hasExplicitStats ? getQueryStats(options) : undefined;
 		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, {
 			stats,
+			mechanics: options?.mechanics,
 			sourceTypes: options?.sourceTypes,
 			defaultSourceType: 'general',
 		}).flatMap((source) => source.upgrades ?? []);
@@ -353,8 +356,8 @@ export class FarmingPlayer {
 		}
 
 		const env = this.buildEnvironment(query.crop);
-		const effects = effectsToSummaries(this.collectEffects(env), stats);
-		const upgrades = this.getUpgrades({ stats, sourceTypes: query.sourceTypes });
+		const effects = effectsToSummaries(this.collectEffects(env), stats, query.mechanics);
+		const upgrades = this.getUpgrades({ stats, mechanics: query.mechanics, sourceTypes: query.sourceTypes });
 
 		return {
 			totals,
@@ -480,7 +483,7 @@ export class FarmingPlayer {
 		}
 
 		// Attribute shards.
-		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARD_CLASSES)) {
+		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARDS)) {
 			const active = shard.getActive?.(this, env);
 			if (active && active.active === false) continue;
 			effects.push(...shard.getEffects(this, env));

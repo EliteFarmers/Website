@@ -15,10 +15,10 @@ const vacuumIds = [
 
 const vacuumStats = {
 	SKYMART_VACUUM: { rarity: Rarity.Common, fortune: 5, damage: 100 },
-	SKYMART_TURBO_VACUUM: { rarity: Rarity.Uncommon, fortune: 10, damage: 120 },
-	SKYMART_HYPER_VACUUM: { rarity: Rarity.Rare, fortune: 15, damage: 150 },
-	INFINI_VACUUM: { rarity: Rarity.Epic, fortune: 20, damage: 200 },
-	INFINI_VACUUM_HOOVERIUS: { rarity: Rarity.Legendary, fortune: 25, damage: 250 },
+	SKYMART_TURBO_VACUUM: { rarity: Rarity.Uncommon, fortune: 10, damage: 150 },
+	SKYMART_HYPER_VACUUM: { rarity: Rarity.Rare, fortune: 15, damage: 200 },
+	INFINI_VACUUM: { rarity: Rarity.Epic, fortune: 20, damage: 300 },
+	INFINI_VACUUM_HOOVERIUS: { rarity: Rarity.Legendary, fortune: 25, damage: 400 },
 } satisfies Record<(typeof vacuumIds)[number], { rarity: Rarity; fortune: number; damage: number }>;
 
 function vacuum(id: (typeof vacuumIds)[number], overrides: Partial<EliteItemDto> = {}): EliteItemDto {
@@ -60,7 +60,7 @@ test('vacuum reforges are vacuum-only and expose pest stats', () => {
 		})
 	);
 
-	expect(beady.getStat(Stat.Damage)).toBe(275);
+	expect(beady.getStat(Stat.Damage)).toBe(425);
 	expect(beady.getStat(Stat.Intelligence)).toBe(50);
 	expect(beady.getStat(Stat.PestKillFortune)).toBe(100);
 	expect(beady.getStat(Stat.FarmingFortune)).toBe(25);
@@ -72,7 +72,7 @@ test('vacuum reforges are vacuum-only and expose pest stats', () => {
 	);
 
 	expect(buzzing.getStat(Stat.FarmingFortune)).toBe(34);
-	expect(buzzing.getStat(Stat.Damage)).toBe(540);
+	expect(buzzing.getStat(Stat.Damage)).toBe(880);
 
 	const cropTool = new FarmingTool({
 		name: '§9Euclid Wheat Hoe',
@@ -86,7 +86,7 @@ test('vacuum reforges are vacuum-only and expose pest stats', () => {
 	expect(cropTool.reforgeStats).toBeUndefined();
 });
 
-test('Praying Mantis Shard scales vacuum damage by 10 percent per level', () => {
+test('Praying Mantis Shard scales vacuum damage by 3 percent per level', () => {
 	const levelOne = new Vacuum(vacuum('INFINI_VACUUM_HOOVERIUS'), {
 		attributes: { insect_power: 1 },
 	});
@@ -101,10 +101,10 @@ test('Praying Mantis Shard scales vacuum damage by 10 percent per level', () => 
 	);
 
 	expect(levelOne.getInsectPowerDamageLevel()).toBe(1);
-	expect(levelOne.getStat(Stat.Damage)).toBe(275);
+	expect(levelOne.getStat(Stat.Damage)).toBe(412);
 	expect(maxed.getInsectPowerDamageLevel()).toBe(10);
-	expect(maxed.getStat(Stat.Damage)).toBe(500);
-	expect(buzzing.getStat(Stat.Damage)).toBe(1080);
+	expect(maxed.getStat(Stat.Damage)).toBe(520);
+	expect(buzzing.getStat(Stat.Damage)).toBe(1144);
 });
 
 test('Praying Mantis Shard appears in vacuum damage breakdown and progress', () => {
@@ -114,21 +114,21 @@ test('Praying Mantis Shard appears in vacuum damage breakdown and progress', () 
 
 	const breakdown = tool.getStatBreakdown(Stat.Damage);
 	expect(breakdown['Praying Mantis Shard']).toMatchObject({
-		value: 25,
+		value: 12,
 		stat: Stat.Damage,
 	});
-	expect(Object.values(breakdown).reduce((sum, entry) => sum + entry.value, 0)).toBe(275);
+	expect(Object.values(breakdown).reduce((sum, entry) => sum + entry.value, 0)).toBe(412);
 
 	const progress = tool.getProgress([Stat.Damage]);
 	const shardProgress = progress.find((entry) => entry.name === 'Praying Mantis Shard');
 	expect(shardProgress?.stats?.[Stat.Damage]).toMatchObject({
-		current: 25,
-		max: 250,
+		current: 12,
+		max: 120,
 		ratio: 0.1,
 	});
 
 	const upgrade = tool.getUpgrades({ stat: Stat.Damage }).find((entry) => entry.title === 'Praying Mantis 2');
-	expect(upgrade?.stats?.[Stat.Damage]).toBe(25);
+	expect(upgrade?.stats?.[Stat.Damage]).toBe(12);
 	expect(upgrade?.cost?.items?.SHARD_PRAYING_MANTIS).toBe(2);
 	expect(upgrade?.meta).toMatchObject({
 		type: 'attribute',
@@ -182,10 +182,10 @@ test("Bookworm's Favorite Book is a repeatable vacuum damage upgrade", () => {
 		})
 	);
 
-	expect(tool.getStat(Stat.Damage)).toBe(270);
+	expect(tool.getStat(Stat.Damage)).toBe(440);
 
 	const bookworm = tool.getUpgrades({ stat: Stat.Damage }).find((u) => u.title === "Bookworm's Favorite Book");
-	expect(bookworm?.stats?.[Stat.Damage]).toBe(10);
+	expect(bookworm?.stats?.[Stat.Damage]).toBe(20);
 	expect(bookworm?.repeatable).toBe(3);
 	expect(bookworm?.meta?.id).toBe('bookworm_books');
 });
@@ -225,6 +225,6 @@ test('vacuum tier upgrades preserve existing upgrade state when applied', () => 
 	expect(current.item.skyblockId).toBe('SKYMART_TURBO_VACUUM');
 	expect(current.item.attributes?.bookworm_books).toBe('2');
 	expect(current.item.enchantments?.bug_blender).toBe(2);
-	expect(current.getStat(Stat.Damage)).toBe(140);
+	expect(current.getStat(Stat.Damage)).toBe(190);
 	expect(current.getStat(Stat.PestKillFortune)).toBe(40);
 });

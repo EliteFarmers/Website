@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import * as Popover from '$ui/popover';
-	import { STAT_ICONS, STAT_NAMES, Stat, type EffectSummary, type FortuneUpgrade } from 'farming-weight';
+	import {
+		FARMING_MECHANIC_INFO,
+		STAT_ICONS,
+		STAT_NAMES,
+		Stat,
+		type EffectSummary,
+		type FortuneUpgrade,
+	} from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
@@ -62,7 +69,16 @@
 	});
 
 	const primaryEffect = $derived.by<EffectSummary | undefined>(() => upgrade.effects?.[0]);
-	const primaryEffectStat = $derived(primaryEffect?.relatedStats?.[0] ?? Stat.Overbloom);
+	const primaryEffectIcon = $derived.by(() => {
+		const stat = primaryEffect?.relatedStats?.[0];
+		if (stat) return STAT_ICONS[stat] ?? '?';
+		return primaryEffect?.mechanic ? FARMING_MECHANIC_INFO[primaryEffect.mechanic].icon : '?';
+	});
+	const primaryEffectName = $derived.by(() => {
+		const stat = primaryEffect?.relatedStats?.[0];
+		if (stat) return STAT_NAMES[stat] ?? stat;
+		return primaryEffect?.mechanic ? FARMING_MECHANIC_INFO[primaryEffect.mechanic].name : 'Effect';
+	});
 	const primaryEffectValue = $derived.by(() => {
 		if (!primaryEffect || primaryEffect.value === undefined) return '';
 		if (primaryEffect.op === 'mul-rare' || primaryEffect.op === 'mul-drop') {
@@ -74,6 +90,12 @@
 				return (+primaryEffect.value.toFixed(2)).toLocaleString();
 			}
 			return `+${(+primaryEffect.value.toFixed(2)).toLocaleString()}%`;
+		}
+		if (primaryEffect.valueDisplay === 'percent') {
+			return `${primaryEffect.value > 0 ? '+' : ''}${(+primaryEffect.value.toFixed(2)).toLocaleString()}%`;
+		}
+		if (primaryEffect.valueDisplay === 'stat') {
+			return `${primaryEffect.value > 0 ? '+' : ''}${(+primaryEffect.value.toFixed(2)).toLocaleString()}`;
 		}
 		return (+primaryEffect.value.toFixed(2)).toLocaleString();
 	});
@@ -116,7 +138,7 @@
 				className
 			)}
 		>
-			<span>{STAT_ICONS[hasEffects ? primaryEffectStat : primaryStat.stat] ?? '?'}</span>
+			<span>{hasEffects ? primaryEffectIcon : (STAT_ICONS[primaryStat.stat] ?? '?')}</span>
 			<span class="text-md relative z-10 pr-1 font-mono leading-none md:text-lg">
 				{#if hasEffects && primaryEffectValue}
 					{primaryEffectValue}
@@ -130,6 +152,17 @@
 		<p class="font-semibold">Upgrade Stats</p>
 
 		<div class="flex flex-col gap-1">
+			{#if primaryEffect}
+				<div
+					class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
+				>
+					<p class="flex items-center gap-1">
+						<span>{primaryEffectIcon}</span>
+						{primaryEffectName}
+					</p>
+					<p>{primaryEffectValue}</p>
+				</div>
+			{/if}
 			{#if primaryStat.value !== 0}
 				<div
 					class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
@@ -157,6 +190,10 @@
 				</div>
 			{/each}
 		</div>
+
+		{#if primaryEffect?.description}
+			<p class="text-muted-foreground max-w-sm text-sm">{primaryEffect.description}</p>
+		{/if}
 
 		{#if isNegative}
 			<p class="text-muted-foreground max-w-sm text-sm">

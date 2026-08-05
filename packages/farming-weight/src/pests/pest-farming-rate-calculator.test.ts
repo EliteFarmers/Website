@@ -145,6 +145,7 @@ test('pest rate calculation uses each pest drop crop fortune even when farming a
 			if (phase === PestFarmingPhase.Kill && stat === Stat.PestKillFortune) return 300;
 			return 0;
 		},
+		getPhaseMechanic: () => 0,
 	} as unknown as PestFarmingPlayer;
 	const miteDrop = PEST_DROP_DEFINITIONS[Pest.Mite].guaranteedDrops[0]!;
 
@@ -223,6 +224,7 @@ test('mosquito smooth jazz uses rarity breakpoints for vinyl attraction', () => 
 				collectEffects: () => [],
 			},
 			getPhaseStat: () => 0,
+			getPhaseMechanic: () => 0,
 			phaseLoadouts: {},
 			armorSetLoadouts: [],
 			sharedEquipment: {},
@@ -624,6 +626,7 @@ test('crop breaking does not double count crop item NPC valuation', () => {
 			collectEffects: () => [],
 		},
 		getPhaseStat: () => 0,
+		getPhaseMechanic: () => 0,
 	} as unknown as PestFarmingPlayer;
 
 	const createCalculator = (intervalSeconds?: number) =>
@@ -899,6 +902,7 @@ function createSheetFixturePlayer(): PestFarmingPlayer {
 			if (phase === PestFarmingPhase.Spawn && stat === Stat.BonusPestChance) return 500.5;
 			return 0;
 		},
+		getPhaseMechanic: () => 0,
 		phaseLoadouts: {},
 		armorSetLoadouts: [],
 		sharedEquipment: {},

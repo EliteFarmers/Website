@@ -3,7 +3,7 @@
 	import { getStatColor } from '$lib/format';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import Info from '@lucide/svelte/icons/info';
-	import { STAT_ICONS, type EffectSummary } from 'farming-weight';
+	import { FARMING_MECHANIC_INFO, STAT_ICONS, type EffectSummary } from 'farming-weight';
 
 	interface Props {
 		effects?: readonly EffectSummary[];
@@ -21,6 +21,9 @@
 		if (effect.valueDisplay === 'stat') {
 			return `${effect.value > 0 ? '+' : ''}${(+effect.value.toFixed(2)).toLocaleString()}`;
 		}
+		if (effect.valueDisplay === 'percent') {
+			return `${effect.value > 0 ? '+' : ''}${(+effect.value.toFixed(2)).toLocaleString()}%`;
+		}
 		if (effect.op === 'add-rare-pct') {
 			return `+${(+effect.value.toFixed(2)).toLocaleString()}%`;
 		}
@@ -29,15 +32,22 @@
 
 	function formatReadable(effect: EffectSummary): string {
 		const stat = effect.relatedStats?.[0];
-		const icon = stat ? (STAT_ICONS[stat] ?? '') : '';
+		const icon = stat
+			? (STAT_ICONS[stat] ?? '')
+			: effect.mechanic
+				? FARMING_MECHANIC_INFO[effect.mechanic].icon
+				: '';
 		return `${formatValue(effect)} ${icon}`.trim();
 	}
 
 	function formatExpanded(effect: EffectSummary): string {
 		const value = formatValue(effect);
-		return value
-			? `${value} ${effect.relatedStats?.map((stat) => (STAT_ICONS[stat] ?? '') + ' ' + stat).join(' ')}`.trim()
-			: (effect.description ?? '');
+		const label =
+			effect.relatedStats?.map((stat) => (STAT_ICONS[stat] ?? '') + ' ' + stat).join(' ') ??
+			(effect.mechanic
+				? `${FARMING_MECHANIC_INFO[effect.mechanic].icon} ${FARMING_MECHANIC_INFO[effect.mechanic].name}`
+				: '');
+		return value ? `${value} ${label}`.trim() : (effect.description ?? '');
 	}
 
 	function formatNote(effect: EffectSummary): string {
@@ -54,7 +64,7 @@
 	}
 
 	function effectKey(effect: EffectSummary, index: number): string {
-		return `${effect.source}|${effect.op}|${effect.value ?? ''}|${index}`;
+		return `${effect.source}|${effect.op}|${effect.mechanic ?? ''}|${effect.value ?? ''}|${index}`;
 	}
 </script>
 

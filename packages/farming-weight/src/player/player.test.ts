@@ -396,7 +396,7 @@ test('Max attribute shard fortune test', () => {
 	const fortune = player.breakdown;
 
 	expect(fortune).toStrictEqual({
-		'Attribute Shards': { value: 90, stat: Stat.FarmingFortune },
+		'Attribute Shards': { value: 115, stat: Stat.FarmingFortune },
 	});
 });
 

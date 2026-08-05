@@ -122,9 +122,12 @@ export interface PestSpawnDistribution {
 
 export interface PestRatePhaseStats {
 	farmPestCooldownReduction: number;
+	farmPestCooldownReductionSeconds: number;
 	spawnBonusPestChance: number;
+	spawnAtmosphericFilterEffect: number;
 	killFarmingFortune: number;
 	killPestKillFortune: number;
+	killSprayonatorMaterialChance: number;
 	killOverbloom: number;
 	killDamage: number;
 	associatedCropFortune: Partial<Record<Crop, number>>;

@@ -32,6 +32,7 @@ import {
 	Pest,
 	PEST_ARMOR_SLOTS,
 	PEST_EQUIPMENT_SLOTS,
+	PEST_FARMING_PHASE_MECHANICS,
 	PEST_FARMING_PHASE_STATS,
 	PEST_FARMING_STATS,
 	PEST_MAIN_ARMOR_SET_ID,
@@ -366,12 +367,14 @@ export class PestFarmingPageContext {
 	activePhaseGeneralProgress = $derived.by(() => {
 		this.trackPestVersion();
 		const stats = this.getPhaseStats(this.activePhase);
-		const progress = this.pestPlayer.getPhaseProgress(this.activePhase, stats);
+		const mechanics = PEST_FARMING_PHASE_MECHANICS[this.activePhase];
+		const progress = this.pestPlayer.getPhaseProgress(this.activePhase, stats, mechanics);
 		const hasRelevantStat = (p: FortuneSourceProgress) =>
-			!!p.stats &&
-			Object.entries(p.stats).some(
-				([stat, sp]) => stats.includes(stat as Stat) && (sp.current > 0 || sp.max > 0)
-			);
+			(!!p.stats &&
+				Object.entries(p.stats).some(
+					([stat, sp]) => stats.includes(stat as Stat) && (sp.current > 0 || sp.max > 0)
+				)) ||
+			p.effects?.some((effect) => effect.mechanic && mechanics.includes(effect.mechanic));
 		return progress.filter((p) => hasRelevantStat(p) || p.progress?.some(hasRelevantStat));
 	});
 
@@ -384,6 +387,7 @@ export class PestFarmingPageContext {
 		this.trackPestVersion();
 		return this.pestPlayer.getPhaseUpgrades(this.activePhase, {
 			stats: this.getPhaseStats(this.activePhase),
+			mechanics: PEST_FARMING_PHASE_MECHANICS[this.activePhase],
 			includeUpgradeGroups: true,
 		});
 	});

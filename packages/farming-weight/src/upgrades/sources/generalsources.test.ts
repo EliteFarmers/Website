@@ -39,7 +39,7 @@ test('General fortune sources', () => {
 		{
 			name: 'Attribute Shards',
 			current: 0,
-			max: 90,
+			max: 115,
 			ratio: 0,
 		},
 		{
@@ -107,7 +107,7 @@ test('General fortune sources', () => {
 		{
 			name: 'Atmospheric Filter',
 			current: 0,
-			max: 25,
+			max: 30,
 			ratio: 0,
 		},
 		{
@@ -224,14 +224,14 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 	expect(ffUpgrades.find((u) => u.title === 'Cropeetle 6')).toBeUndefined();
 });
 
-test('Pest shard surfaces pest-specific flat Overbloom progress under Attribute Shards', () => {
+test('Field Mouse shard surfaces pest-specific flat Overbloom progress under Attribute Shards', () => {
 	const player = new FarmingPlayer({
 		attributes: { pest_luck: 15 },
 	});
 
 	const progress = player.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
 	const attributeShards = progress.find((p) => p.name === 'Attribute Shards');
-	const pestShard = attributeShards?.progress?.find((p) => p.name === 'Pest Shard');
+	const pestShard = attributeShards?.progress?.find((p) => p.name === 'Field Mouse Shard');
 
 	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
 		current: 2.5,
@@ -245,7 +245,7 @@ test('Pest shard surfaces pest-specific flat Overbloom progress under Attribute 
 	});
 	expect(pestShard?.effects).toContainEqual(
 		expect.objectContaining({
-			source: 'Pest Shard',
+			source: 'Field Mouse Shard',
 			op: 'add-rare-pct',
 			value: 2.5,
 			scope: { tags: ['pest'] },

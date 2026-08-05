@@ -1,6 +1,12 @@
 import { expect, test } from 'vitest';
 import { createFarmingPlayer } from '../player/player.js';
-import { getShardLevel, getShardsForLevel, getShardsForNextLevel } from './attributes.js';
+import {
+	getAttributeAmount,
+	getShardLevel,
+	getShardsForLevel,
+	getShardsForNextLevel,
+	normalizeAttributeId,
+} from './attributes.js';
 import { Crop } from './crops.js';
 import { Rarity } from './reforges.js';
 
@@ -15,6 +21,11 @@ test('Attribute shards 0 test', () => {
 	const amount = 0;
 	expect(getShardLevel(Rarity.Legendary, amount)).toBe(0);
 	expect(getShardsForNextLevel(Rarity.Legendary, amount)).toBe(1);
+});
+
+test('Attribute IDs are normalized from class metadata', () => {
+	expect(normalizeAttributeId('SHARD_TERMITE')).toBe('infiltration');
+	expect(getAttributeAmount({ SHARD_TERMITE: 3 }, 'infiltration')).toBe(3);
 });
 
 test('Wartybug shard adds Warty to rate calc results', () => {

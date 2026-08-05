@@ -67,7 +67,7 @@ export class SkyMartVacuum extends VacuumItem {
 
 export class SkyMartTurboVacuum extends VacuumItem {
 	constructor() {
-		super('SKYMART_TURBO_VACUUM', 'SkyMart Turbo Vacuum', Rarity.Uncommon, 120, 10);
+		super('SKYMART_TURBO_VACUUM', 'SkyMart Turbo Vacuum', Rarity.Uncommon, 150, 10);
 	}
 
 	override upgrade = {
@@ -79,7 +79,7 @@ export class SkyMartTurboVacuum extends VacuumItem {
 
 export class SkyMartHyperVacuum extends VacuumItem {
 	constructor() {
-		super('SKYMART_HYPER_VACUUM', 'SkyMart Hyper Vacuum', Rarity.Rare, 150, 15);
+		super('SKYMART_HYPER_VACUUM', 'SkyMart Hyper Vacuum', Rarity.Rare, 200, 15);
 	}
 
 	override upgrade = {
@@ -91,7 +91,7 @@ export class SkyMartHyperVacuum extends VacuumItem {
 
 export class InfiniVacuum extends VacuumItem {
 	constructor() {
-		super('INFINI_VACUUM', 'InfiniVacuum™', Rarity.Epic, 200, 20);
+		super('INFINI_VACUUM', 'InfiniVacuum™', Rarity.Epic, 300, 20);
 	}
 
 	override gemSlots = [UNLOCKED_VACUUM_PERIDOT_SLOT];
@@ -109,7 +109,7 @@ export class InfiniVacuum extends VacuumItem {
 
 export class InfiniVacuumHooverius extends VacuumItem {
 	constructor() {
-		super('INFINI_VACUUM_HOOVERIUS', 'InfiniVacuum™ Hooverius', Rarity.Legendary, 250, 25);
+		super('INFINI_VACUUM_HOOVERIUS', 'InfiniVacuum™ Hooverius', Rarity.Legendary, 400, 25);
 	}
 
 	override gemSlots = [UNLOCKED_VACUUM_PERIDOT_SLOT, PAID_VACUUM_PERIDOT_SLOT];

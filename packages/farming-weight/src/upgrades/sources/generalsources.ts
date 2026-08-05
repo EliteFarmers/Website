@@ -1,6 +1,9 @@
 import {
 	FARMING_ATTRIBUTE_SHARDS,
+	type FarmingAttributeShard,
 	type FarmingAttributeShardSourceContext,
+	getAttributeAmount,
+	getShardActive,
 	getShardFortune,
 	getShardLevel,
 	getShardStat,
@@ -22,6 +25,7 @@ import {
 	getNextChipRarity,
 } from '../../constants/chips.js';
 import { CROP_INFO, type Crop } from '../../constants/crops.js';
+import type { FarmingMechanic } from '../../constants/mechanics.js';
 import {
 	BESTIARY_PEST_BRACKETS,
 	DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
@@ -50,7 +54,6 @@ import { effectsToSummaries } from '../../effects/summary.js';
 import type { Effect } from '../../effects/types.js';
 import { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../../items/accessories.js';
-import { FARMING_ATTRIBUTE_SHARD_CLASSES } from '../../items/sources/attributes.js';
 import { GARDEN_CHIP_CLASSES } from '../../items/sources/chips.js';
 import type { FarmingPlayer } from '../../player/player.js';
 import { getNextPlotCost } from '../../util/garden.js';
@@ -72,7 +75,7 @@ function includesRequestedStat(stats: Stat[] | undefined, stat: Stat): boolean {
 }
 
 function shardStat(
-	shard: (typeof FARMING_ATTRIBUTE_SHARDS)[keyof typeof FARMING_ATTRIBUTE_SHARDS],
+	shard: FarmingAttributeShard,
 	player: FarmingAttributeShardSourceContext,
 	stat: Stat,
 	level?: number
@@ -84,10 +87,11 @@ function attributeShardEffectSummaries(
 	player: FarmingAttributeShardSourceContext,
 	id: string,
 	stats?: Stat[],
+	mechanics?: FarmingMechanic[],
 	amount?: number
 ) {
 	if (!hasPlayerOptions(player)) return [];
-	const source = FARMING_ATTRIBUTE_SHARD_CLASSES[id as keyof typeof FARMING_ATTRIBUTE_SHARD_CLASSES];
+	const source = FARMING_ATTRIBUTE_SHARDS[id as keyof typeof FARMING_ATTRIBUTE_SHARDS];
 	if (!source) return [];
 
 	const effectPlayer =
@@ -105,14 +109,15 @@ function attributeShardEffectSummaries(
 				} as FarmingPlayer);
 
 	const env = buildEffectEnvironment(effectPlayer);
-	return effectsToSummaries(source.getEffects(effectPlayer, env), stats);
+	return effectsToSummaries(source.getEffects(effectPlayer, env), stats, mechanics);
 }
 
-function allAttributeShardEffectSummaries(player: FarmingPlayer, stats?: Stat[]) {
+function allAttributeShardEffectSummaries(player: FarmingPlayer, stats?: Stat[], mechanics?: FarmingMechanic[]) {
 	const env = buildEffectEnvironment(player);
 	return effectsToSummaries(
-		Object.values(FARMING_ATTRIBUTE_SHARD_CLASSES).flatMap((source) => source.getEffects(player, env)),
-		stats
+		Object.values(FARMING_ATTRIBUTE_SHARDS).flatMap((source) => source.getEffects(player, env)),
+		stats,
+		mechanics
 	);
 }
 
@@ -236,15 +241,16 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				0
 			);
 		},
-		effects: (player, stats) => allAttributeShardEffectSummaries(player, stats),
-		upgrades: (player, stats) => {
+		effects: (player, stats, mechanics) => allAttributeShardEffectSummaries(player, stats, mechanics),
+		upgrades: (player, stats, mechanics) => {
 			return ATTRIBUTE_SHARD_PROGRESS_SOURCES.filter((shard) => shard.active?.(player).active !== false)
-				.flatMap((shard) => shard.upgrades?.(player, stats))
+				.flatMap((shard) => shard.upgrades?.(player, stats, mechanics))
 				.filter(Boolean) as FortuneUpgrade[];
 		},
-		progress: (player, stats) => {
+		progress: (player, stats, mechanics) => {
 			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_SHARD_PROGRESS_SOURCES, false, {
 				stats,
+				mechanics,
 				defaultSourceType: 'general',
 			});
 		},
@@ -855,7 +861,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		name: 'Atmospheric Filter',
 		exists: () => true,
 		wiki: () => 'https://w.elitesb.gg/Atmospheric_Filter',
-		max: () => 25,
+		max: () => 30,
 		active: () => {
 			return {
 				active: true,
@@ -864,7 +870,21 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 		current: (player) => {
 			const accessory = player.accessories.find((a) => a.info.skyblockId === 'ATMOSPHERIC_FILTER');
-			return accessory ? 25 : 0;
+			const level = getShardLevel(
+				Rarity.Uncommon,
+				getAttributeAmount(player.options.attributes, 'filter_upgrade')
+			);
+			return accessory ? 25 * (1 + level * 0.02) : 0;
+		},
+		maxStat: (_player, stat) => (stat === Stat.FarmingFortune ? 30 : 0),
+		currentStat: (player, stat) => {
+			if (stat !== Stat.FarmingFortune) return 0;
+			const accessory = player.accessories.find((a) => a.info.skyblockId === 'ATMOSPHERIC_FILTER');
+			const level = getShardLevel(
+				Rarity.Uncommon,
+				getAttributeAmount(player.options.attributes, 'filter_upgrade')
+			);
+			return accessory ? 25 * (1 + level * 0.02) : 0;
 		},
 		upgrades: (player) => {
 			const accessory = player.accessories.find((a) => a.info.skyblockId === 'ATMOSPHERIC_FILTER');
@@ -1223,18 +1243,18 @@ function createCarnivalHarvestFeastSources(): DynamicFortuneSource<FarmingPlayer
 export const ATTRIBUTE_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAttributeShardSourceContext>[] = Object.entries(
 	FARMING_ATTRIBUTE_SHARDS
 )
-	.filter((a) => a[1].effect === 'fortune')
-	.map(([id, shard]) => mapShardSource(id, shard));
+	.filter(([, shard]) => ((shard as FarmingAttributeShard).statsPerLevel[Stat.FarmingFortune] ?? 0) !== 0)
+	.map(([, shard]) => mapShardSource(shard));
 
 // Includes all shards (fortune + non-fortune effects) so per-stat progress and upgrades
 // can surface shards like Cropeetle that contribute non-FarmingFortune stats.
 export const ATTRIBUTE_SHARD_PROGRESS_SOURCES: DynamicFortuneSource<FarmingAttributeShardSourceContext>[] =
-	Object.entries(FARMING_ATTRIBUTE_SHARDS).map(([id, shard]) => mapShardSource(id, shard));
+	Object.values(FARMING_ATTRIBUTE_SHARDS).map((shard) => mapShardSource(shard));
 
 const maxShardOptions = {
 	attributes: Object.fromEntries(
-		Object.keys(FARMING_ATTRIBUTE_SHARDS).map((id) => [
-			id,
+		Object.values(FARMING_ATTRIBUTE_SHARDS).map((shard) => [
+			shard.attributeId,
 			1000, // Max level for all shards
 		])
 	),
@@ -1245,16 +1265,14 @@ const maxShardOptions = {
 	infestedPlotProbability: 1,
 };
 
-function mapShardSource(
-	id: string,
-	shard: (typeof FARMING_ATTRIBUTE_SHARDS)[keyof typeof FARMING_ATTRIBUTE_SHARDS]
-): DynamicFortuneSource<FarmingAttributeShardSourceContext> {
+function mapShardSource(shard: FarmingAttributeShard): DynamicFortuneSource<FarmingAttributeShardSourceContext> {
+	const id = shard.attributeId;
 	const result = {
 		name: shard.name,
 		sourceType: 'general',
 		wiki: () => shard.wiki,
 		exists: () => true,
-		active: shard.active,
+		active: shard.getActive ? (player) => getShardActive(shard, player) : undefined,
 		max: () => {
 			return getShardFortune(
 				shard,
@@ -1293,8 +1311,8 @@ function mapShardSource(
 			if (stat === Stat.FarmingFortune) return getShardFortune(shard, player);
 			return shardStat(shard, player, stat);
 		},
-		effects: (player, stats) => attributeShardEffectSummaries(player, id, stats),
-		upgrades: (player, stats) => {
+		effects: (player, stats, mechanics) => attributeShardEffectSummaries(player, id, stats, mechanics),
+		upgrades: (player, stats, mechanics) => {
 			const amount = player.attributes?.[id] ?? 0;
 			const nextCost = getShardsForNextLevel(shard.rarity, amount);
 			if (!nextCost) return [];
@@ -1310,7 +1328,13 @@ function mapShardSource(
 				if (diff !== 0) deltaStats[s] = diff;
 			}
 
-			const effects = attributeShardEffectSummaries(player, id, stats, getShardsForLevel(shard.rarity, level));
+			const effects = attributeShardEffectSummaries(
+				player,
+				id,
+				stats,
+				mechanics,
+				getShardsForLevel(shard.rarity, level)
+			);
 
 			// If a specific stat is requested, only surface this shard when it affects it.
 			if (stats && stats.length > 0) {
