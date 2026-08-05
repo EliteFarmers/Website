@@ -7,6 +7,7 @@ import type { DetailedDropsFromEffectsDelta, UpgradeRateImpact } from '../player
 import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 
 export type PestRepellentMode = 'none' | 'normal' | 'max';
+export type PestSpawnTime = 'day' | 'night';
 
 export interface PestCycleSettings {
 	blocksPerSecond: number;
@@ -31,6 +32,7 @@ export interface PestAttractionSettings {
 	sprayonatorMaterial?: Spray;
 	sprayonatorTier?: SprayonatorTier | `${SprayonatorTier}`;
 	hooveriusVinylTarget?: Pest;
+	timeOfDay?: PestSpawnTime;
 	includeSpecialPests?: boolean;
 	excludedPests?: Pest[];
 }

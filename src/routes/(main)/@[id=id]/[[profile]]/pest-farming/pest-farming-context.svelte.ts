@@ -129,10 +129,6 @@ function getLockedPestTimeOfDay(crop: Crop): PestFarmingTimeOfDay | undefined {
 	return undefined;
 }
 
-function getExcludedPestForTime(timeOfDay: PestFarmingTimeOfDay): Pest {
-	return timeOfDay === 'day' ? Pest.Firefly : Pest.Dragonfly;
-}
-
 function getItemSellValue(itemId: string, item: RatesItemPriceEntry | undefined): PestRateItemPrice | undefined {
 	if (!item) return undefined;
 
@@ -201,9 +197,6 @@ export class PestFarmingPageContext {
 	pestTimeOfDay = $derived(this.lockedPestTimeOfDay ?? this.rates.pestFarming.timeOfDay);
 	pestAttraction = $derived.by<PestAttractionSettings>(() => {
 		const settings = this.rates.pestFarming.attraction;
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		const excludedPests = new Set(settings.excludedPests ?? []);
-		excludedPests.add(getExcludedPestForTime(this.pestTimeOfDay));
 		const isHooverius = this.selectedVacuum?.item.skyblockId === 'INFINI_VACUUM_HOOVERIUS';
 
 		return {
@@ -211,7 +204,7 @@ export class PestFarmingPageContext {
 			sprayonatorMaterial: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorMaterial : undefined,
 			sprayonatorTier: this.rates.pestFarming.sprayonatorTier,
 			hooveriusVinylTarget: isHooverius ? settings.hooveriusVinylTarget : undefined,
-			excludedPests: [...excludedPests],
+			timeOfDay: this.pestTimeOfDay,
 		};
 	});
 	pestRateSettings = $derived.by<PestCycleSettings>(() => ({
