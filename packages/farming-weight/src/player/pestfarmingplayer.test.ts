@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
+import { FarmingMechanic } from '../constants/mechanics.js';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
@@ -282,6 +283,43 @@ test('farm phase includes pest cooldown reduction as a relevant phase stat', () 
 	expect(view.totals[Stat.PestCooldownReduction]).toBe(10);
 	expect(view.upgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
 	expect(farmCooldownUpgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
+});
+
+test('new pest shards keep visible stats and internal mechanics separate', () => {
+	const player = new PestFarmingPlayer({
+		attributes: {
+			pest_fortune: 999,
+			crop_speed: 999,
+			sprayonator_serendipity: 999,
+			enchanted_farmer: 999,
+			filter_upgrade: 999,
+			pest_cooldown: 999,
+			bonus_pest_chance: 999,
+		},
+	});
+
+	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.CropGrowth)).toBe(10);
+	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.EnchantedCropChance)).toBe(0.01);
+	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.PestCooldownReductionSeconds)).toBe(5);
+	expect(player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance)).toBe(10);
+	expect(player.getPhaseMechanic(PestFarmingPhase.Spawn, FarmingMechanic.AtmosphericFilterEffect)).toBe(20);
+	expect(player.getPhaseStat(PestFarmingPhase.Kill, Stat.PestKillFortune)).toBe(50);
+	expect(player.getPhaseMechanic(PestFarmingPhase.Kill, FarmingMechanic.SprayonatorMaterialChance)).toBe(10);
+	expect(
+		player
+			.getPhaseProgress(PestFarmingPhase.Farm)
+			.some((source) => source.effects?.some((effect) => effect.mechanic === FarmingMechanic.CropGrowth))
+	).toBe(true);
+	expect(
+		new PestFarmingPlayer({ attributes: { sprayonator_serendipity: 1 } })
+			.getPhaseUpgrades(PestFarmingPhase.Kill)
+			.some((upgrade) =>
+				upgrade.effects?.some((effect) => effect.mechanic === FarmingMechanic.SprayonatorMaterialChance)
+			)
+	).toBe(true);
+	for (const internalName of Object.keys(FarmingMechanic)) {
+		expect(Stat).not.toHaveProperty(internalName);
+	}
 });
 
 test('kill phase excludes farming tool upgrades while farm phase still includes them', () => {
@@ -628,7 +666,7 @@ test('vacuum stats and upgrades are scoped to the kill phase', () => {
 	expect(player.getPhaseStat(PestFarmingPhase.Spawn, Stat.PestKillFortune)).toBe(0);
 
 	const progress = player.getVacuumProgress([Stat.PestKillFortune, Stat.Damage]);
-	expect(progress.find((entry) => entry.name === 'Base Stats')?.stats?.[Stat.Damage]?.current).toBe(250);
+	expect(progress.find((entry) => entry.name === 'Base Stats')?.stats?.[Stat.Damage]?.current).toBe(400);
 	expect(progress.find((entry) => entry.name === 'Bug Blender')?.stats?.[Stat.PestKillFortune]?.current).toBe(60);
 
 	expect(
@@ -657,13 +695,13 @@ test('Praying Mantis Shard affects kill-phase vacuum damage', () => {
 		attributes: { insect_power: 64 },
 	});
 
-	expect(player.selectedVacuum?.getStat(Stat.Damage)).toBe(500);
-	expect(player.getPhaseStat(PestFarmingPhase.Kill, Stat.Damage)).toBe(500);
+	expect(player.selectedVacuum?.getStat(Stat.Damage)).toBe(520);
+	expect(player.getPhaseStat(PestFarmingPhase.Kill, Stat.Damage)).toBe(520);
 	expect(player.getPhaseStat(PestFarmingPhase.Farm, Stat.Damage)).toBe(0);
 	expect(
 		player.getPhaseStatBreakdown(PestFarmingPhase.Kill, Stat.Damage)['Vacuum: Praying Mantis Shard']
 	).toMatchObject({
-		value: 250,
+		value: 120,
 		stat: Stat.Damage,
 	});
 });
@@ -678,14 +716,14 @@ test('Praying Mantis Shard vacuum upgrades update shared pest farming attributes
 		.getPhaseUpgrades(PestFarmingPhase.Kill, { stat: Stat.Damage })
 		.find((entry) => entry.title === 'Praying Mantis 1');
 
-	expect(upgrade?.stats?.[Stat.Damage]).toBe(25);
+	expect(upgrade?.stats?.[Stat.Damage]).toBe(12);
 	expect(upgrade?.onto).toBeUndefined();
 	expect(upgrade?.meta?.itemUuid).toBeUndefined();
 	player.applyPhaseUpgrade(PestFarmingPhase.Kill, upgrade!);
 
 	expect(player.options.attributes?.insect_power).toBe(1);
 	expect(player.selectedVacuum?.getInsectPowerDamageLevel()).toBe(1);
-	expect(player.getPhaseStat(PestFarmingPhase.Kill, Stat.Damage)).toBe(275);
+	expect(player.getPhaseStat(PestFarmingPhase.Kill, Stat.Damage)).toBe(412);
 });
 
 test('Rose Dragon Symbiosis is available from pest phase pet breakdowns', () => {

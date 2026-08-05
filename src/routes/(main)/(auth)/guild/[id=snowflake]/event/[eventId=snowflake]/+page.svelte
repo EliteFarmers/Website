@@ -449,7 +449,7 @@
 							</Button>
 						</div>
 					{:else}
-						<p class="text-sm leading-relaxed text-muted-foreground">No collections have been added yet.</p>
+						<p class="text-muted-foreground text-sm leading-relaxed">No collections have been added yet.</p>
 					{/each}
 				</div>
 

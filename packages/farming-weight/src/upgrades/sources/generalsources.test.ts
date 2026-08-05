@@ -39,7 +39,7 @@ test('General fortune sources', () => {
 		{
 			name: 'Attribute Shards',
 			current: 0,
-			max: 90,
+			max: 115,
 			ratio: 0,
 		},
 		{
@@ -107,13 +107,7 @@ test('General fortune sources', () => {
 		{
 			name: 'Atmospheric Filter',
 			current: 0,
-			max: 25,
-			ratio: 0,
-		},
-		{
-			name: 'Refined Dark Cacao Truffle',
-			current: 0,
-			max: 5,
+			max: 30,
 			ratio: 0,
 		},
 		{
@@ -167,8 +161,8 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 
 	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
 		current: 5,
-		max: 30,
-		ratio: 5 / 30,
+		max: 15,
+		ratio: 5 / 15,
 	});
 	expect(attributeShards?.effects).toContainEqual(
 		expect.objectContaining({
@@ -230,30 +224,30 @@ test('Cropeetle shard surfaces Overbloom progress and upgrade under Attribute Sh
 	expect(ffUpgrades.find((u) => u.title === 'Cropeetle 6')).toBeUndefined();
 });
 
-test('Pest shard surfaces pest-specific flat Overbloom progress under Attribute Shards', () => {
+test('Field Mouse shard surfaces pest-specific flat Overbloom progress under Attribute Shards', () => {
 	const player = new FarmingPlayer({
 		attributes: { pest_luck: 15 },
 	});
 
 	const progress = player.getProgress([Stat.FarmingFortune, Stat.Overbloom]);
 	const attributeShards = progress.find((p) => p.name === 'Attribute Shards');
-	const pestShard = attributeShards?.progress?.find((p) => p.name === 'Pest Shard');
+	const pestShard = attributeShards?.progress?.find((p) => p.name === 'Field Mouse Shard');
 
 	expect(attributeShards?.stats?.[Stat.Overbloom]).toMatchObject({
-		current: 10,
-		max: 30,
-		ratio: 10 / 30,
+		current: 2.5,
+		max: 15,
+		ratio: 2.5 / 15,
 	});
 	expect(pestShard?.stats?.[Stat.Overbloom]).toMatchObject({
-		current: 10,
-		max: 20,
+		current: 2.5,
+		max: 5,
 		ratio: 0.5,
 	});
 	expect(pestShard?.effects).toContainEqual(
 		expect.objectContaining({
-			source: 'Pest Shard',
+			source: 'Field Mouse Shard',
 			op: 'add-rare-pct',
-			value: 10,
+			value: 2.5,
 			scope: { tags: ['pest'] },
 			description: 'Pest Overbloom',
 			relatedStats: [Stat.Overbloom],

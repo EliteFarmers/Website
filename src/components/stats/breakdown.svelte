@@ -36,7 +36,7 @@
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{:else}
-					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
+					<div class="even:bg-card flex flex-row items-center rounded-sm p-1">
 						<div class="grow">No crops found!</div>
 						<div class="flex-none">0</div>
 					</div>
@@ -52,7 +52,7 @@
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{:else}
-					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
+					<div class="even:bg-card flex flex-row items-center rounded-sm p-1">
 						<div class="grow">No bonuses unlocked yet!</div>
 						<div class="flex-none">0</div>
 					</div>

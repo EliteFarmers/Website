@@ -197,10 +197,10 @@ export const VACUUM_FORTUNE_SOURCES: DynamicFortuneSource<Vacuum>[] = [
 		name: "Bookworm's Favorite Book",
 		wiki: () => 'https://w.elitesb.gg/Bookworm%27s_Favorite_Book',
 		exists: () => true,
-		max: () => 50,
-		current: (vacuum) => vacuum.bookwormBooks * 10,
-		maxStat: (_vacuum, stat) => (stat === Stat.Damage ? 50 : 0),
-		currentStat: (vacuum, stat) => (stat === Stat.Damage ? vacuum.bookwormBooks * 10 : 0),
+		max: () => 100,
+		current: (vacuum) => vacuum.bookwormBooks * 20,
+		maxStat: (_vacuum, stat) => (stat === Stat.Damage ? 100 : 0),
+		currentStat: (vacuum, stat) => (stat === Stat.Damage ? vacuum.bookwormBooks * 20 : 0),
 		upgrades: (vacuum, stats) => {
 			if (stats && stats.length > 0 && !stats.includes(Stat.Damage)) return [];
 			const count = vacuum.bookwormBooks;
@@ -211,7 +211,7 @@ export const VACUUM_FORTUNE_SOURCES: DynamicFortuneSource<Vacuum>[] = [
 					title: "Bookworm's Favorite Book",
 					increase: 0,
 					stats: {
-						[Stat.Damage]: 10,
+						[Stat.Damage]: 20,
 					},
 					action: UpgradeAction.Apply,
 					category: UpgradeCategory.Item,
@@ -249,10 +249,10 @@ export const VACUUM_FORTUNE_SOURCES: DynamicFortuneSource<Vacuum>[] = [
 			if (stats && stats.length > 0 && !stats.includes(Stat.Damage)) return [];
 
 			const amount = getAttributeAmount(vacuum.options?.attributes, INSECT_POWER_ATTRIBUTE);
-			const nextCost = getShardsForNextLevel(Rarity.Uncommon, amount);
+			const nextCost = getShardsForNextLevel(INSECT_POWER_SHARD.rarity, amount);
 			if (!nextCost) return [];
 
-			const currentLevel = getShardLevel(Rarity.Uncommon, amount);
+			const currentLevel = getShardLevel(INSECT_POWER_SHARD.rarity, amount);
 			const nextLevel = currentLevel + 1;
 			const damage = vacuum.getDamageWithInsectPowerLevel(nextLevel) - vacuum.getStat(Stat.Damage);
 

@@ -1,6 +1,6 @@
 import { FARMING_ATTRIBUTE_SHARDS, getAttributeAmount, getShardLevel } from '../constants/attributes.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
-import { Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
+import { type Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat, type StatBreakdown } from '../constants/stats.js';
 import {
 	type FortuneSourceProgress,
@@ -32,7 +32,7 @@ import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
 
 const DEFAULT_VACUUM_STATS = [Stat.PestKillFortune, Stat.Damage, Stat.FarmingFortune];
-const INSECT_POWER_DAMAGE_PER_LEVEL = 0.1;
+const INSECT_POWER_DAMAGE_PER_LEVEL = 0.03;
 
 export class Vacuum extends UpgradeableBase {
 	public declare item: EliteItemDto;
@@ -190,7 +190,7 @@ export class Vacuum extends UpgradeableBase {
 				source: `${sourceName} (Bookworm's Favorite Book)`,
 				op: 'add-stat',
 				stat: Stat.Damage,
-				value: this.bookwormBooks * 10,
+				value: this.bookwormBooks * 20,
 			});
 		}
 
@@ -216,7 +216,7 @@ export class Vacuum extends UpgradeableBase {
 				stat: Stat.Damage,
 				value: insectPowerBonus,
 				meta: {
-					description: `+${level * 10}% vacuum damage`,
+					description: `+${level * 3}% vacuum damage`,
 				},
 			});
 		}
@@ -448,7 +448,8 @@ export class Vacuum extends UpgradeableBase {
 	}
 
 	getInsectPowerDamageLevel(): number {
-		return getShardLevel(Rarity.Uncommon, getAttributeAmount(this.options?.attributes, 'insect_power'));
+		const shard = FARMING_ATTRIBUTE_SHARDS.insect_power;
+		return getShardLevel(shard.rarity, getAttributeAmount(this.options?.attributes, shard.attributeId));
 	}
 
 	getInsectPowerDamageMultiplier(level = this.getInsectPowerDamageLevel()): number {
@@ -466,7 +467,7 @@ export class Vacuum extends UpgradeableBase {
 	}
 
 	private getInsectPowerAdditiveDamageBonus(level = this.getInsectPowerDamageLevel()): number {
-		return (this.getDamageBeforeInsectPower() * Math.max(0, level)) / 10;
+		return this.getDamageBeforeInsectPower() * Math.max(0, level) * INSECT_POWER_DAMAGE_PER_LEVEL;
 	}
 
 	private getDamageBeforeBuzzing(): number {
@@ -477,7 +478,7 @@ export class Vacuum extends UpgradeableBase {
 		let sum = 0;
 
 		sum += this.info.baseStats?.[Stat.Damage] ?? 0;
-		sum += this.bookwormBooks * 10;
+		sum += this.bookwormBooks * 20;
 		sum += getGemStat(this.item, Stat.Damage, this.rarity);
 		sum += this.reforgeStats?.stats?.[Stat.Damage] ?? 0;
 

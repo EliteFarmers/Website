@@ -277,7 +277,10 @@ export const PEST_BESTIARY_SOURCE: FortuneSource = {
 
 export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
 	name: 'Refined Dark Cacao Truffle',
-	fortunePerLevel: 1,
+	fortunePerLevel: 0,
+	statsPerLevel: {
+		[Stat.CocoaBeanFortune]: 1,
+	},
 	maxLevel: 5,
 	wiki: 'https://w.elitesb.gg/Refined_Dark_Cacao_Truffle',
 };
@@ -339,7 +342,7 @@ export const SPRAYONATOR_TIER_INFO = {
 		materialAmount: 1,
 		durationSeconds: 30 * 60,
 		effectMultiplier: 1,
-		pestAttractionMultiplier: 1.5,
+		spawnChanceMultiplier: 1.5,
 	},
 	[SprayonatorTier.Juicy]: {
 		name: 'Juicy Sprayonator',
@@ -347,7 +350,7 @@ export const SPRAYONATOR_TIER_INFO = {
 		materialAmount: 3,
 		durationSeconds: 45 * 60,
 		effectMultiplier: 2,
-		pestAttractionMultiplier: 2,
+		spawnChanceMultiplier: 2,
 	},
 	[SprayonatorTier.Salty]: {
 		name: 'Salty Sprayonator',
@@ -355,7 +358,7 @@ export const SPRAYONATOR_TIER_INFO = {
 		materialAmount: 5,
 		durationSeconds: 60 * 60,
 		effectMultiplier: 3,
-		pestAttractionMultiplier: 3,
+		spawnChanceMultiplier: 3,
 	},
 } as const;
 

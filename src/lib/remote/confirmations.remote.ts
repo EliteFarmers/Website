@@ -8,7 +8,11 @@ import {
 } from '$lib/api';
 import { error } from '@sveltejs/kit';
 
-export const createConfirmationForm = form(zodCreateConfirmationBody, async (data) => {
+const createConfirmationFormSchema = zodCreateConfirmationBody.extend({
+	isActive: zodCreateConfirmationBody.shape.isActive.optional().default(false),
+});
+
+export const createConfirmationForm = form(createConfirmationFormSchema, async (data) => {
 	const event = getRequestEvent();
 	if (!event.locals.access_token) {
 		error(401, 'Unauthorized');

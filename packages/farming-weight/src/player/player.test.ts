@@ -86,12 +86,14 @@ test('Temp fortune test', () => {
 
 	expect(player.tempFortuneBreakdown).toStrictEqual({
 		'Century Cake': { value: 5, stat: Stat.FarmingFortune },
-		'Refined Dark Cacao Truffle': { value: 30, stat: Stat.FarmingFortune },
+		'Refined Dark Cacao Truffle': { value: 30, stat: Stat.CocoaBeanFortune },
 		'Pest Turn-In': { value: 200, stat: Stat.FarmingFortune },
 		'Harvest Harbinger Potion': { value: 50, stat: Stat.FarmingFortune },
 		'Magic 8 Ball': { value: 25, stat: Stat.FarmingFortune },
 		'Spring Filter': { value: 25, stat: Stat.FarmingFortune },
 	});
+
+	expect(player.getCropFortune(Crop.CocoaBeans).fortune - player.getCropFortune(Crop.Wheat).fortune).toBe(30);
 });
 
 test('Hypercharge chip temp fortune scaling test', () => {
@@ -229,6 +231,43 @@ test('multi-stat upgrade queries keep Bountiful as the preferred farming tool re
 	expect(reforges.find((upgrade) => upgrade.title === 'Reforge to Blessed')).toBeUndefined();
 });
 
+test('explicit held tool does not switch to another crop tool for a multi-crop harvest', () => {
+	const tools: EliteItemDto[] = [
+		{
+			id: 291,
+			count: 1,
+			skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+			uuid: 'wheat-hoe',
+			name: "Euclid's Wheat Sickle",
+			lore: [],
+			enchantments: {},
+			attributes: {},
+			gems: {},
+		},
+		{
+			id: 291,
+			count: 1,
+			skyblockId: 'THEORETICAL_HOE_CARROT_3',
+			uuid: 'carrot-hoe',
+			name: 'Gauss Carrot Counter',
+			lore: [],
+			enchantments: {},
+			attributes: { harvested_crops: '100000000' },
+			gems: {},
+		},
+	];
+	const player = new FarmingPlayer({
+		tools,
+	});
+	const wheatHoe = player.tools.find((tool) => tool.item.uuid === 'wheat-hoe')!;
+	const carrotHoe = player.tools.find((tool) => tool.item.uuid === 'carrot-hoe')!;
+
+	const matchingCarrotFortune = player.getCropFortune(Crop.Carrot, carrotHoe).fortune;
+	const forcedWheatHoeCarrotFortune = player.getCropFortune(Crop.Carrot, wheatHoe).fortune;
+
+	expect(forcedWheatHoeCarrotFortune).toBeLessThan(matchingCarrotFortune);
+});
+
 test('Overdrive chip contest crop fortune test', () => {
 	const player = new FarmingPlayer({
 		chips: {
@@ -357,7 +396,7 @@ test('Max attribute shard fortune test', () => {
 	const fortune = player.breakdown;
 
 	expect(fortune).toStrictEqual({
-		'Attribute Shards': { value: 90, stat: Stat.FarmingFortune },
+		'Attribute Shards': { value: 115, stat: Stat.FarmingFortune },
 	});
 });
 
@@ -517,7 +556,7 @@ test('getUpgradeRateImpact applies exportable crop unlocks', () => {
 	expect(impact.delta.totalItems).toBe(21_600);
 });
 
-test('getUpgradeRateImpact applies setting-backed flat fortune upgrades', () => {
+test('getUpgradeRateImpact applies setting-backed stat-specific fortune upgrades', () => {
 	const player = new FarmingPlayer({
 		farmingLevel: 20,
 		dnaMilestone: 4,
@@ -528,23 +567,31 @@ test('getUpgradeRateImpact applies setting-backed flat fortune upgrades', () => 
 		.getUpgrades({ stat: Stat.FarmingFortune })
 		.find((u) => u.title === 'DNA Analysis Milestone 5');
 	const truffleUpgrade = player
-		.getUpgrades({ stat: Stat.FarmingFortune })
+		.getUpgrades({ stat: Stat.CocoaBeanFortune })
 		.find((u) => u.title === 'Refined Dark Cacao Truffle');
 
 	expect(dnaUpgrade).toBeDefined();
 	expect(truffleUpgrade).toBeDefined();
+	expect(
+		player.getUpgrades({ stat: Stat.FarmingFortune }).find((u) => u.title === 'Refined Dark Cacao Truffle')
+	).toBeUndefined();
 
 	const dnaImpact = player.getUpgradeRateImpact(dnaUpgrade!, {
 		crop: Crop.NetherWart,
 		blocksBroken: 72_000,
 	});
 	const truffleImpact = player.getUpgradeRateImpact(truffleUpgrade!, {
+		crop: Crop.CocoaBeans,
+		blocksBroken: 72_000,
+	});
+	const unrelatedCropImpact = player.getUpgradeRateImpact(truffleUpgrade!, {
 		crop: Crop.NetherWart,
 		blocksBroken: 72_000,
 	});
 
 	expect(dnaImpact.delta.totalItems).toBeGreaterThan(0);
 	expect(truffleImpact.delta.totalItems).toBeGreaterThan(0);
+	expect(unrelatedCropImpact.delta.totalItems).toBe(0);
 });
 
 test('getUpgradeRateImpact refreshes newly purchased accessory effects', () => {

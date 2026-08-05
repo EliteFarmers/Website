@@ -10,6 +10,7 @@ import {
 } from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
+import type { FarmingMechanic } from '../constants/mechanics.js';
 import { compareRarity, type Rarity } from '../constants/reforge-types.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
@@ -35,7 +36,7 @@ import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPets } from '../items/pets.js';
-import { FARMING_ATTRIBUTE_SHARD_CLASSES } from '../items/sources/attributes.js';
+import { FARMING_ATTRIBUTE_SHARDS } from '../items/sources/attributes/index.js';
 import { GARDEN_CHIP_CLASSES } from '../items/sources/chips.js';
 import { FARMING_TOOLS } from '../items/tools.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
@@ -59,6 +60,7 @@ export function createFarmingPlayer(options: PlayerOptions) {
 
 export interface PlayerStatQuery {
 	stats: Stat[];
+	mechanics?: FarmingMechanic[];
 	crop?: Crop;
 	sourceTypes?: StatQueryOptions['sourceTypes'];
 }
@@ -315,6 +317,7 @@ export class FarmingPlayer {
 		const stats = hasExplicitStats ? getQueryStats(options) : undefined;
 		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, {
 			stats,
+			mechanics: options?.mechanics,
 			sourceTypes: options?.sourceTypes,
 			defaultSourceType: 'general',
 		}).flatMap((source) => source.upgrades ?? []);
@@ -353,8 +356,8 @@ export class FarmingPlayer {
 		}
 
 		const env = this.buildEnvironment(query.crop);
-		const effects = effectsToSummaries(this.collectEffects(env), stats);
-		const upgrades = this.getUpgrades({ stats, sourceTypes: query.sourceTypes });
+		const effects = effectsToSummaries(this.collectEffects(env), stats, query.mechanics);
+		const upgrades = this.getUpgrades({ stats, mechanics: query.mechanics, sourceTypes: query.sourceTypes });
 
 		return {
 			totals,
@@ -452,7 +455,7 @@ export class FarmingPlayer {
 	 * the resolver's job - so the returned list includes every effect the
 	 * player could plausibly emit, with their declarative scopes intact.
 	 */
-	collectEffects(env: EffectEnvironment): Effect[] {
+	collectEffects(env: EffectEnvironment, heldTool?: FarmingTool): Effect[] {
 		const effects: Effect[] = [];
 
 		effects.push(...collectGeneralFortuneSourceEffects(this));
@@ -463,7 +466,7 @@ export class FarmingPlayer {
 
 		// Tool: for crop-scoped calculations, use the selected/best tool for
 		// that crop. For crop-agnostic stat queries, use the selected tool.
-		const tool = env.crop ? this.getSelectedCropTool(env.crop) : this.selectedTool;
+		const tool = heldTool ?? (env.crop ? this.getSelectedCropTool(env.crop) : this.selectedTool);
 		if (tool) {
 			effects.push(...tool.getEffects(env));
 		}
@@ -480,7 +483,7 @@ export class FarmingPlayer {
 		}
 
 		// Attribute shards.
-		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARD_CLASSES)) {
+		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARDS)) {
 			const active = shard.getActive?.(this, env);
 			if (active && active.active === false) continue;
 			effects.push(...shard.getEffects(this, env));
@@ -498,12 +501,12 @@ export class FarmingPlayer {
 		return effects;
 	}
 
-	getStat(stat: Stat, targetCrop?: Crop) {
-		const breakdown = this.getStatBreakdown(stat, targetCrop);
+	getStat(stat: Stat, targetCrop?: Crop, heldTool?: FarmingTool) {
+		const breakdown = this.getStatBreakdown(stat, targetCrop, heldTool);
 		return Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 	}
 
-	getStatBreakdown(stat: Stat, targetCrop?: Crop): StatBreakdown {
+	getStatBreakdown(stat: Stat, targetCrop?: Crop, heldTool?: FarmingTool): StatBreakdown {
 		const breakdown: StatBreakdown = {};
 
 		const add = (name: string, value: number, stat: Stat) => {
@@ -517,7 +520,7 @@ export class FarmingPlayer {
 
 		const contributingStats = getContributoryStats(stat);
 		const env = this.buildEnvironment(targetCrop);
-		const effects = this.collectEffects(env);
+		const effects = this.collectEffects(env, heldTool);
 		const statContext = { env, crop: targetCrop };
 
 		for (const targetStat of contributingStats) {
@@ -534,7 +537,7 @@ export class FarmingPlayer {
 		// Temporary Fortune
 		if (this.tempFortuneBreakdown) {
 			for (const [name, entry] of Object.entries(this.tempFortuneBreakdown)) {
-				// Temporary fortune is always FarmingFortune
+				// Temporary fortune may target global or stat-specific fortune.
 				if (contributingStats.includes(entry.stat)) {
 					add(name, entry.value, entry.stat);
 				}
@@ -637,7 +640,7 @@ export class FarmingPlayer {
 	getCropFortune(crop?: Crop, tool = this.selectedTool): { fortune: number; breakdown: StatBreakdown } {
 		// If no crop, we return general farming fortune
 		const fortuneType = crop ? CROP_INFO[crop].fortuneType : Stat.FarmingFortune;
-		const breakdown = this.getStatBreakdown(fortuneType, crop);
+		const breakdown = this.getStatBreakdown(fortuneType, crop, tool);
 		const fortune = Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 
 		return {

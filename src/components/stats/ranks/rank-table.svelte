@@ -153,7 +153,7 @@
 				</div>
 			{/if}
 		{:else}
-			<div class="flex w-full flex-col items-center justify-center border-2 rounded-md p-4 h-24">
+			<div class="flex h-24 w-full flex-col items-center justify-center rounded-md border-2 p-4">
 				<div class="text-center">No leaderboard ranks found!</div>
 			</div>
 		{/each}

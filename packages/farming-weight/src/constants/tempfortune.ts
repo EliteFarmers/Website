@@ -41,6 +41,7 @@ export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryF
 	chocolateTruffle: {
 		name: 'Refined Dark Cacao Truffle',
 		wiki: 'https://w.elitesb.gg/Refined_Dark_Cacao_Truffle',
+		stat: Stat.CocoaBeanFortune,
 		fortune: (settings) => {
 			if (!settings.chocolateTruffle) return;
 			return 30;

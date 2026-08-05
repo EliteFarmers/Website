@@ -1,4 +1,5 @@
 import type { Crop } from '../../constants/crops.js';
+import type { FarmingMechanic } from '../../constants/mechanics.js';
 import type { Stat } from '../../constants/stats.js';
 import type {
 	EffectSummary,
@@ -26,16 +27,16 @@ export interface DynamicFortuneSource<T> {
 	current: (source: T) => number;
 	maxStat?: (source: T, stat: Stat) => number;
 	currentStat?: (source: T, stat: Stat) => number;
-	effects?: (source: T, stats?: Stat[]) => EffectSummary[];
+	effects?: (source: T, stats?: Stat[], mechanics?: FarmingMechanic[]) => EffectSummary[];
 	calculationEffects?: (source: T) => Effect[];
-	progress?: (source: T, stats?: Stat[]) => FortuneSourceProgress[] | undefined;
+	progress?: (source: T, stats?: Stat[], mechanics?: FarmingMechanic[]) => FortuneSourceProgress[] | undefined;
 	info?: (source: T) => {
 		item?: EliteItemDto;
 		info?: UpgradeableInfo;
 		nextInfo?: UpgradeableInfo;
 		maxInfo?: UpgradeableInfo;
 	};
-	upgrades?: (source: T, stats?: Stat[]) => FortuneUpgrade[];
+	upgrades?: (source: T, stats?: Stat[], mechanics?: FarmingMechanic[]) => FortuneUpgrade[];
 }
 
 export interface DynamicUpgradeSource<T, Output = unknown> {

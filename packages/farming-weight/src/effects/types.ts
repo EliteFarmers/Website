@@ -1,4 +1,5 @@
 import type { Crop } from '../constants/crops.js';
+import type { FarmingMechanic } from '../constants/mechanics.js';
 import type { SpecialCrop } from '../constants/specialcrops.js';
 import type { Stat } from '../constants/stats.js';
 
@@ -92,13 +93,14 @@ export interface Scope {
 	match?: (ctx: DropContext) => boolean;
 }
 
-export type EffectOp = 'add-stat' | 'add-rare-pct' | 'mul-rare' | 'add-drop' | 'mul-drop';
+export type EffectOp = 'add-stat' | 'add-mechanic' | 'add-rare-pct' | 'mul-rare' | 'add-drop' | 'mul-drop';
 
 export type EffectPhase = 'scalar' | 'produce-drops' | 'add-rare' | 'mul-rare' | 'mul-drop';
 
 /** Default phase for each op. Effects rarely override. */
 export const DEFAULT_PHASE_FOR_OP: Record<EffectOp, EffectPhase> = {
 	'add-stat': 'scalar',
+	'add-mechanic': 'scalar',
 	'add-rare-pct': 'add-rare',
 	'mul-rare': 'mul-rare',
 	'add-drop': 'produce-drops',
@@ -123,6 +125,7 @@ export interface EffectAddDropPayload {
 /**
  * Numeric semantics by op (no mixing of factor vs delta within an op):
  *  - `add-stat`:     additive scalar contribution to `stat` (e.g. 5 = +5 Fortune).
+ *  - `add-mechanic`: additive scalar contribution to `mechanic` (units are mechanic-specific).
  *  - `add-rare-pct`: additive percentage points (e.g. 50 = +50% on rare drops).
  *  - `mul-rare`:     multiplicative factor (e.g. 1.2 = x1.2). Must be >= 0.
  *  - `mul-drop`:     multiplicative factor (e.g. 1.25 = x1.25). Must be >= 0.
@@ -134,6 +137,7 @@ export interface Effect {
 	phase?: EffectPhase;
 	scope?: Scope;
 	stat?: Stat;
+	mechanic?: FarmingMechanic;
 	value?: number | ((ctx: DropContext | StatContext) => number);
 	drop?: EffectAddDropPayload;
 	relatedStats?: readonly Stat[];

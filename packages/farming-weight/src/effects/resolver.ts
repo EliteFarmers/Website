@@ -1,3 +1,4 @@
+import type { FarmingMechanic } from '../constants/mechanics.js';
 import type { Stat } from '../constants/stats.js';
 import { isGlobalOverbloomScope, matchesScopeForDrop, matchesScopeForStat } from './matcher.js';
 import {
@@ -41,9 +42,23 @@ export function assertValidEffect(effect: Effect): void {
 	if (effect.op === 'add-stat' && !effect.stat) {
 		throw new Error(`Invalid add-stat effect from "${effect.source}": missing 'stat' field.`);
 	}
+	if (effect.op === 'add-mechanic' && !effect.mechanic) {
+		throw new Error(`Invalid add-mechanic effect from "${effect.source}": missing 'mechanic' field.`);
+	}
 	if (effect.op === 'add-drop' && !effect.drop) {
 		throw new Error(`Invalid add-drop effect from "${effect.source}": missing 'drop' field.`);
 	}
+}
+
+/** Sum additive calculator mechanics. */
+export function resolveMechanicTotal(effects: readonly Effect[], mechanic: FarmingMechanic, ctx: StatContext): number {
+	let total = 0;
+	for (const effect of effects) {
+		if (effect.op !== 'add-mechanic' || effect.mechanic !== mechanic) continue;
+		if (!matchesScopeForStat(effect.scope, ctx)) continue;
+		total += resolveValue(effect, ctx);
+	}
+	return total;
 }
 
 /**

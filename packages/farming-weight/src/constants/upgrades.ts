@@ -5,6 +5,7 @@ import type { GearSlot } from '../items/armor.js';
 import type { FARMING_TOOLS } from '../items/tools.js';
 import type { JacobContestMedal } from '../util/jacob.js';
 import type { Crop } from './crops.js';
+import type { FarmingMechanic } from './mechanics.js';
 import { Stat } from './stats.js';
 
 export enum UpgradeReason {
@@ -89,6 +90,7 @@ export interface EffectSummary {
 	op: EffectOp;
 	description?: string;
 	relatedStats?: readonly Stat[];
+	mechanic?: FarmingMechanic;
 	scope?: Scope;
 	value?: number;
 	valueDisplay?: 'stat' | 'percent' | 'factor';
@@ -298,6 +300,7 @@ export type FortuneSourceType = (typeof FORTUNE_SOURCE_TYPES)[number];
 export interface StatQueryOptions {
 	stat?: Stat;
 	stats?: Stat[];
+	mechanics?: FarmingMechanic[];
 	sourceTypes?: FortuneSourceType[];
 	includeUpgradeGroups?: boolean;
 }

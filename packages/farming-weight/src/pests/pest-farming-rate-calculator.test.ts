@@ -145,6 +145,7 @@ test('pest rate calculation uses each pest drop crop fortune even when farming a
 			if (phase === PestFarmingPhase.Kill && stat === Stat.PestKillFortune) return 300;
 			return 0;
 		},
+		getPhaseMechanic: () => 0,
 	} as unknown as PestFarmingPlayer;
 	const miteDrop = PEST_DROP_DEFINITIONS[Pest.Mite].guaranteedDrops[0]!;
 
@@ -197,6 +198,27 @@ test('bonus pest chance controls expected pests per spawn', () => {
 	expect(result.perInterval.npcCoins).toBeGreaterThan(0);
 });
 
+test('Sprayonator tiers multiply the spawn chance roll without changing pest weights', () => {
+	const player = new PestFarmingPlayer({});
+	const calculate = (sprayedPlot: boolean, sprayonatorTier: SprayonatorTier) =>
+		new PestFarmingRateCalculator({
+			player,
+			options: {
+				crop: Crop.Wheat,
+				cycle: { ...DEFAULT_PEST_CYCLE_SETTINGS, sprayedPlot },
+				attraction: { sprayonatorMaterial: Spray.PlantMatter, sprayonatorTier },
+			},
+		}).calculate();
+
+	expect(calculate(false, SprayonatorTier.Salty).debug.spawnChancePerBreak).toBe(0.002);
+	expect(calculate(true, SprayonatorTier.Regular).debug.spawnChancePerBreak).toBe(0.003);
+	expect(calculate(true, SprayonatorTier.Juicy).debug.spawnChancePerBreak).toBe(0.004);
+	expect(calculate(true, SprayonatorTier.Salty).debug.spawnChancePerBreak).toBe(0.006);
+	expect(calculate(true, SprayonatorTier.Regular).breakdown.pestSpawning.distribution.pestTypeWeights).toEqual(
+		calculate(true, SprayonatorTier.Salty).breakdown.pestSpawning.distribution.pestTypeWeights
+	);
+});
+
 test('selected crop does not bias pest type spawn weights', () => {
 	const player = new PestFarmingPlayer({});
 	const getProbabilities = (crop: Crop) =>
@@ -211,7 +233,31 @@ test('selected crop does not bias pest type spawn weights', () => {
 	expect(getProbabilities(Crop.Wheat)).toEqual(getProbabilities(Crop.Potato));
 });
 
-test('mosquito smooth jazz uses rarity breakpoints for vinyl attraction', () => {
+test('normal spawn pools contain twelve base-weight pests and swap the daylight pest', () => {
+	const player = new PestFarmingPlayer({});
+	const weightsFor = (timeOfDay: 'day' | 'night') =>
+		new PestFarmingRateCalculator({
+			player,
+			options: {
+				crop: Crop.Wheat,
+				cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+				attraction: { timeOfDay },
+			},
+		}).calculate().breakdown.pestSpawning.distribution.pestTypeWeights;
+	const dayWeights = weightsFor('day');
+	const nightWeights = weightsFor('night');
+
+	expect(Object.keys(dayWeights)).toHaveLength(12);
+	expect(Object.values(dayWeights)).toEqual(new Array(12).fill(100));
+	expect(dayWeights[Pest.Dragonfly]).toBe(100);
+	expect(dayWeights[Pest.Firefly]).toBeUndefined();
+	expect(dayWeights[Pest.Mouse]).toBeUndefined();
+	expect(dayWeights[Pest.LunarMoth]).toBeUndefined();
+	expect(nightWeights[Pest.Dragonfly]).toBeUndefined();
+	expect(nightWeights[Pest.Firefly]).toBe(100);
+});
+
+test('mosquito smooth jazz scales the additive vinyl attraction bonus using rarity breakpoints', () => {
 	const getVinylTargetWeight = (selectedPet?: { type: FarmingPets; rarity?: Rarity; level?: number }) => {
 		const getRates = (_crop: Crop, blocks: number) => emptyCropRates(blocks);
 		const player = {
@@ -223,6 +269,7 @@ test('mosquito smooth jazz uses rarity breakpoints for vinyl attraction', () => 
 				collectEffects: () => [],
 			},
 			getPhaseStat: () => 0,
+			getPhaseMechanic: () => 0,
 			phaseLoadouts: {},
 			armorSetLoadouts: [],
 			sharedEquipment: {},
@@ -249,22 +296,22 @@ test('mosquito smooth jazz uses rarity breakpoints for vinyl attraction', () => 
 			level: 100,
 		});
 
-	expect(getVinylTargetWeight()).toBeCloseTo(2, 8);
+	expect(getVinylTargetWeight()).toBe(1_100);
 	expect(
 		getVinylTargetWeight({
 			type: FarmingPets.Slug,
 			rarity: Rarity.Legendary,
 			level: 100,
 		})
-	).toBeCloseTo(2, 8);
-	expect(getMosquitoWeight(Rarity.Common)).toBeCloseTo(2.5, 8);
-	expect(getMosquitoWeight(Rarity.Uncommon)).toBeCloseTo(2.5, 8);
-	expect(getMosquitoWeight(Rarity.Rare)).toBeCloseTo(2.7, 8);
-	expect(getMosquitoWeight(Rarity.Epic)).toBeCloseTo(3, 8);
-	expect(getMosquitoWeight(Rarity.Legendary)).toBeCloseTo(3, 8);
+	).toBe(1_100);
+	expect(getMosquitoWeight(Rarity.Common)).toBe(1_350);
+	expect(getMosquitoWeight(Rarity.Uncommon)).toBe(1_350);
+	expect(getMosquitoWeight(Rarity.Rare)).toBe(1_450);
+	expect(getMosquitoWeight(Rarity.Epic)).toBe(1_600);
+	expect(getMosquitoWeight(Rarity.Legendary)).toBe(1_600);
 });
 
-test('sprayonator boosts both material pests while Hooverius vinyl boosts only its selected pest', () => {
+test('official pest weights add Sprayonator and vinyl bonuses to the base weights', () => {
 	const player = new PestFarmingPlayer({});
 	const result = new PestFarmingRateCalculator({
 		player,
@@ -274,19 +321,19 @@ test('sprayonator boosts both material pests while Hooverius vinyl boosts only i
 			attraction: {
 				sprayonatorMaterial: Spray.PlantMatter,
 				hooveriusVinylTarget: Pest.Slug,
-				excludedPests: [Pest.Firefly],
+				timeOfDay: 'day',
 			},
 		},
 	}).calculate();
 
 	const probabilities = result.breakdown.pestSpawning.distribution.pestTypeProbabilities;
-	expect(probabilities[Pest.Slug]).toBeCloseTo(3 / 14.5, 8);
-	expect(probabilities[Pest.Locust]).toBeCloseTo(1.5 / 14.5, 8);
-	expect(probabilities[Pest.Mosquito]).toBeCloseTo(1 / 14.5, 8);
+	expect(probabilities[Pest.Slug]).toBeCloseTo(2_100 / 4_200, 8);
+	expect(probabilities[Pest.Locust]).toBeCloseTo(1_100 / 4_200, 8);
+	expect(probabilities[Pest.Mosquito]).toBeCloseTo(100 / 4_200, 8);
 	expect(probabilities[Pest.Firefly]).toBeUndefined();
 });
 
-test('Juicy and Salty Sprayonators scale material attraction', () => {
+test('Sprayonator tiers use the same official material attraction weight', () => {
 	const weightsFor = (sprayonatorTier: SprayonatorTier) =>
 		new PestFarmingRateCalculator({
 			player: new PestFarmingPlayer({}),
@@ -297,9 +344,48 @@ test('Juicy and Salty Sprayonators scale material attraction', () => {
 			},
 		}).calculate().breakdown.pestSpawning.distribution.pestTypeWeights;
 
-	expect(weightsFor(SprayonatorTier.Regular)[Pest.Slug]).toBe(1.5);
-	expect(weightsFor(SprayonatorTier.Juicy)[Pest.Slug]).toBe(2);
-	expect(weightsFor(SprayonatorTier.Salty)[Pest.Slug]).toBe(3);
+	expect(weightsFor(SprayonatorTier.Regular)[Pest.Slug]).toBe(1_100);
+	expect(weightsFor(SprayonatorTier.Juicy)[Pest.Slug]).toBe(1_100);
+	expect(weightsFor(SprayonatorTier.Salty)[Pest.Slug]).toBe(1_100);
+});
+
+test('max Mosquito raises the vinyl bonus from 1000 to 1500 weight', () => {
+	const getRates = (_crop: Crop, blocks: number) => emptyCropRates(blocks);
+	const player = {
+		crop: { getRates },
+		spawn: {
+			getRates,
+			selectedPet: { type: FarmingPets.Mosquito, rarity: Rarity.Legendary, level: 100 },
+		},
+		kill: {
+			getStatBreakdown: () => ({}),
+			buildEnvironment: () => ({}),
+			collectEffects: () => [],
+		},
+		getPhaseStat: () => 0,
+		getPhaseMechanic: () => 0,
+		phaseLoadouts: {},
+		armorSetLoadouts: [],
+		sharedEquipment: {},
+		selectedVacuum: undefined,
+	} as unknown as PestFarmingPlayer;
+	const distribution = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+			attraction: {
+				sprayonatorMaterial: Spray.PlantMatter,
+				hooveriusVinylTarget: Pest.Slug,
+				timeOfDay: 'day',
+			},
+		},
+	}).calculate().breakdown.pestSpawning.distribution;
+
+	expect(distribution.pestTypeWeights[Pest.Slug]).toBe(2_600);
+	expect(distribution.pestTypeProbabilities[Pest.Slug]).toBeCloseTo(2_600 / 4_700, 8);
+	expect(distribution.pestTypeProbabilities[Pest.Locust]).toBeCloseTo(1_100 / 4_700, 8);
+	expect(distribution.pestTypeProbabilities[Pest.Mosquito]).toBeCloseTo(100 / 4_700, 8);
 });
 
 test('best spawn phase armor set uses rate calculation to select the generated spawn set when it improves rates', () => {
@@ -624,6 +710,7 @@ test('crop breaking does not double count crop item NPC valuation', () => {
 			collectEffects: () => [],
 		},
 		getPhaseStat: () => 0,
+		getPhaseMechanic: () => 0,
 	} as unknown as PestFarmingPlayer;
 
 	const createCalculator = (intervalSeconds?: number) =>
@@ -732,14 +819,14 @@ const SHEET_CROP_BLOCKS_PER_INTERVAL =
 const SHEET_CROP_ITEM_ID = 'SHEET_DEFAULT_FARMING_CROP';
 
 const SHEET_BUCKETS = {
-	pestDrops: 18_176_028.66,
+	pestDrops: 20_642_203.05,
 	cropBreaking: 26_930_389.64,
 	pestExchanges: 832_681.5646,
 	pestShards: 480_064.2704,
 	sprayonatorCost: -25_168.4,
 	stinkyCheeseCost: 0,
 	feastRareCrops: 0,
-	total: 46_393_995.73,
+	total: 48_860_170.12,
 };
 
 const SHEET_PEST_AVG_COINS: Partial<Record<Pest, number>> = {
@@ -792,7 +879,7 @@ const sheetCycleSettings: PestCycleSettings = {
 	finneganActive: false,
 };
 
-test('matches the Skyblock Things Pest Farming default timing and cached top-level buckets', () => {
+test('matches the reference fixture with official pest spawn weights', () => {
 	const calculator = new PestFarmingRateCalculator({
 		player: createSheetFixturePlayer(),
 		options: {
@@ -800,8 +887,9 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 			cycle: sheetCycleSettings,
 			attraction: {
 				sprayonatorMaterial: Spray.PlantMatter,
+				sprayonatorTier: SprayonatorTier.Juicy,
 				hooveriusVinylTarget: Pest.Slug,
-				excludedPests: [Pest.Firefly],
+				timeOfDay: 'day',
 			},
 			economy: {
 				pestExchange: {
@@ -837,8 +925,8 @@ test('matches the Skyblock Things Pest Farming default timing and cached top-lev
 	expect(result.debug.spawnBlocks).toBeCloseTo(SHEET_SPAWN_BLOCKS_PER_CYCLE, 8);
 	expect(result.breakdown.pestSpawning.expectedPestsPerSpawn).toBeCloseTo(6.005, 8);
 	expect(result.breakdown.pestSpawning.pestsPerInterval).toBeCloseTo(SHEET_PESTS_PER_INTERVAL, 6);
-	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Locust]).toBeCloseTo(1.5 / 16, 8);
-	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Slug]).toBeCloseTo(4.5 / 16, 8);
+	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Locust]).toBeCloseTo(1_100 / 4_700, 8);
+	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities[Pest.Slug]).toBeCloseTo(2_600 / 4_700, 8);
 	expect(result.breakdown.pestSpawning.distribution.pestTypeProbabilities).not.property(Pest.Firefly);
 	expect(result.breakdown.economy.pestExchanges.items.PESTHUNTER_RELIC).toBeGreaterThan(0);
 	expect(result.breakdown.economy.pestShards.rngItems.SHARD_PEST).toBeGreaterThan(0);
@@ -899,6 +987,7 @@ function createSheetFixturePlayer(): PestFarmingPlayer {
 			if (phase === PestFarmingPhase.Spawn && stat === Stat.BonusPestChance) return 500.5;
 			return 0;
 		},
+		getPhaseMechanic: () => 0,
 		phaseLoadouts: {},
 		armorSetLoadouts: [],
 		sharedEquipment: {},

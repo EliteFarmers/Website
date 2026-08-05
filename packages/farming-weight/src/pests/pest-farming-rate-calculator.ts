@@ -1,5 +1,6 @@
 import { Crop } from '../constants/crops.js';
-import { Pest, SPRAY_TO_PESTS } from '../constants/pests.js';
+import { FarmingMechanic } from '../constants/mechanics.js';
+import { Pest, SPRAY_TO_PESTS, Spray } from '../constants/pests.js';
 import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
 import { getSprayonatorTierInfo } from '../constants/specific.js';
@@ -39,7 +40,6 @@ import type {
 
 const DEFAULT_INTERVAL_SECONDS = 3600;
 const BASE_SPAWN_CHANCE_PER_BREAK = 0.002;
-const SPRAYED_PLOT_SPAWN_MULTIPLIER = 2;
 const ATMOSPHERIC_FILTER_SPAWN_MULTIPLIER = 1.15;
 const DEFAULT_PEST_MAX_ACTIVE = 8;
 const PEST_RARE_DROP_FORTUNE_SCALING = 600;
@@ -47,10 +47,28 @@ const MANTID_RECENT_KILL_CAP = 20;
 const MANTID_RECENT_KILL_BONUS_PER_PIECE = 0.25;
 const MANTID_RESOLUTION_ITERATIONS = 8;
 const MANTID_RESOLUTION_EPSILON = 1e-6;
+const BASE_PEST_SPAWN_WEIGHT = 100;
+const SPRAYONATOR_PEST_WEIGHT_BONUS = 1_000;
+const HOOVERIUS_VINYL_WEIGHT_BONUS = 1_000;
+
+const SPRAYONATOR_MATERIAL_ITEM_IDS: Record<Spray, string> = {
+	[Spray.Compost]: 'COMPOST',
+	[Spray.PlantMatter]: 'PLANT_MATTER',
+	[Spray.Dung]: 'DUNG',
+	[Spray.HoneyJar]: 'HONEY_JAR',
+	[Spray.TastyCheese]: 'CHEESE_FUEL',
+	[Spray.Jelly]: 'JELLY',
+};
+
+function getSprayonatorMaterialForPest(pest: Pest): string | undefined {
+	const spray = (Object.entries(SPRAY_TO_PESTS) as [Spray, Pest[]][]).find(([, pests]) => pests.includes(pest))?.[0];
+	return spray ? SPRAYONATOR_MATERIAL_ITEM_IDS[spray] : undefined;
+}
 
 type PestDropCalculationContext = {
 	farmingFortune: number;
 	pestKillFortune: number;
+	sprayonatorMaterialChance: number;
 	petLuck: number;
 	associatedCropFortune: Partial<Record<Crop, number>>;
 	env: ReturnType<PestFarmingPlayer['kill']['buildEnvironment']>;
@@ -370,9 +388,21 @@ export class PestFarmingRateCalculator {
 		const spawnBonusPestChance = this.resolveMantidSpawnBonusPestChance(player, rawSpawnBonusPestChance);
 		this.phaseStats = {
 			farmPestCooldownReduction: player.getPhaseStat(PestFarmingPhase.Farm, Stat.PestCooldownReduction),
+			farmPestCooldownReductionSeconds: player.getPhaseMechanic(
+				PestFarmingPhase.Farm,
+				FarmingMechanic.PestCooldownReductionSeconds
+			),
 			spawnBonusPestChance,
+			spawnAtmosphericFilterEffect: player.getPhaseMechanic(
+				PestFarmingPhase.Spawn,
+				FarmingMechanic.AtmosphericFilterEffect
+			),
 			killFarmingFortune: player.getPhaseStat(PestFarmingPhase.Kill, Stat.FarmingFortune),
 			killPestKillFortune: player.getPhaseStat(PestFarmingPhase.Kill, Stat.PestKillFortune),
+			killSprayonatorMaterialChance: player.getPhaseMechanic(
+				PestFarmingPhase.Kill,
+				FarmingMechanic.SprayonatorMaterialChance
+			),
 			killOverbloom: player.getPhaseStat(PestFarmingPhase.Kill, Stat.Overbloom),
 			killDamage: player.getPhaseStat(PestFarmingPhase.Kill, Stat.Damage),
 			associatedCropFortune,
@@ -415,14 +445,19 @@ export class PestFarmingRateCalculator {
 		const repellentMultiplier = cycle.pestRepellent === 'max' ? 4 : cycle.pestRepellent === 'normal' ? 2 : 1;
 		const finneganReduction = cycle.finneganActive ? 20 : 0;
 		const cooldownReduction = Math.max(0, Math.min(100, phaseStats.farmPestCooldownReduction + finneganReduction));
-		const rawCooldown = 300 * repellentMultiplier * (1 - cooldownReduction / 100);
+		const rawCooldown =
+			300 * repellentMultiplier * (1 - cooldownReduction / 100) - phaseStats.farmPestCooldownReductionSeconds;
 		const minCooldown = cycle.finneganActive ? 75 : 135;
 		const cooldownSeconds = Math.min(1200, Math.max(minCooldown, rawCooldown));
 		const spawnBlocksPerSecond = cycle.spawnBlocksPerSecond ?? cycle.blocksPerSecond;
 		const spawnChancePerBreak =
 			BASE_SPAWN_CHANCE_PER_BREAK *
-			(cycle.sprayedPlot ? SPRAYED_PLOT_SPAWN_MULTIPLIER : 1) *
-			(cycle.atmosphericFilterAutumn ? ATMOSPHERIC_FILTER_SPAWN_MULTIPLIER : 1) *
+			(cycle.sprayedPlot
+				? getSprayonatorTierInfo(this.options.attraction?.sprayonatorTier).spawnChanceMultiplier
+				: 1) *
+			(cycle.atmosphericFilterAutumn
+				? 1 + (ATMOSPHERIC_FILTER_SPAWN_MULTIPLIER - 1) * (1 + phaseStats.spawnAtmosphericFilterEffect / 100)
+				: 1) *
 			(cycle.spawnChanceMultiplier ?? 1);
 		const expectedSpawnWaitSeconds =
 			spawnBlocksPerSecond > 0 && spawnChancePerBreak > 0 ? 1 / (spawnBlocksPerSecond * spawnChancePerBreak) : 0;
@@ -546,6 +581,7 @@ export class PestFarmingRateCalculator {
 		return {
 			farmingFortune: phaseStats.killFarmingFortune,
 			pestKillFortune: phaseStats.killPestKillFortune,
+			sprayonatorMaterialChance: phaseStats.killSprayonatorMaterialChance,
 			petLuck: player.getPhaseStat(PestFarmingPhase.Kill, Stat.PetLuck),
 			associatedCropFortune: phaseStats.associatedCropFortune,
 			env,
@@ -606,6 +642,11 @@ export class PestFarmingRateCalculator {
 			const effectMultiplier = (1 + resolved.addRarePct / 100) * resolved.mulRare * resolved.mulDrop;
 			const amount = expectedPests * drop.amount * drop.chance * fortuneMultiplier * effectMultiplier;
 			if (amount > 0) addRecord(result.rngItems, drop.itemId, amount);
+		}
+
+		const sprayMaterial = getSprayonatorMaterialForPest(definition.pest);
+		if (sprayMaterial && context.sprayonatorMaterialChance > 0) {
+			addRecord(result.rngItems, sprayMaterial, expectedPests * (context.sprayonatorMaterialChance / 100));
 		}
 
 		return result;
@@ -924,16 +965,19 @@ function getPestTypeWeights(
 	smoothJazzMultiplier?: number
 ): Partial<Record<Pest, number>> {
 	const pests = attraction?.includeSpecialPests ? [...NATURAL_PESTS, Pest.Mouse, Pest.LunarMoth] : NATURAL_PESTS;
-	const weights: Partial<Record<Pest, number>> = Object.fromEntries(pests.map((pest) => [pest, 1]));
+	const weights: Partial<Record<Pest, number>> = Object.fromEntries(
+		pests.map((pest) => [pest, BASE_PEST_SPAWN_WEIGHT])
+	);
+	delete weights[attraction?.timeOfDay === 'night' ? Pest.Dragonfly : Pest.Firefly];
 	if (attraction?.sprayonatorMaterial && SPRAY_TO_PESTS[attraction.sprayonatorMaterial] !== undefined) {
-		const attractionWeight = getSprayonatorTierInfo(attraction.sprayonatorTier).pestAttractionMultiplier;
 		for (const spray_pest of SPRAY_TO_PESTS[attraction.sprayonatorMaterial] ?? []) {
-			if (weights[spray_pest] !== undefined) weights[spray_pest] = weights[spray_pest] * attractionWeight;
+			if (weights[spray_pest] !== undefined) weights[spray_pest] += SPRAYONATOR_PEST_WEIGHT_BONUS;
 		}
 	}
 	if (attraction?.hooveriusVinylTarget && weights[attraction.hooveriusVinylTarget] !== undefined) {
 		weights[attraction.hooveriusVinylTarget] =
-			(weights[attraction.hooveriusVinylTarget] ?? 1) * 2 * (smoothJazzMultiplier ?? 1);
+			(weights[attraction.hooveriusVinylTarget] ?? BASE_PEST_SPAWN_WEIGHT) +
+			HOOVERIUS_VINYL_WEIGHT_BONUS * (smoothJazzMultiplier ?? 1);
 	}
 	for (const pest of attraction?.excludedPests ?? []) {
 		delete weights[pest];

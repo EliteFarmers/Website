@@ -276,7 +276,11 @@
 
 	<SettingListItem title={TEMPORARY_FORTUNE.chocolateTruffle.name} wiki={TEMPORARY_FORTUNE.chocolateTruffle.wiki}>
 		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={30} enabled={$ratesData.temp.chocolateTruffle && $ratesData.useTemp} />
+			<FortuneBreakdown
+				stat={Stat.CocoaBeanFortune}
+				total={30}
+				enabled={$ratesData.temp.chocolateTruffle && $ratesData.useTemp}
+			/>
 
 			{#if $ratesData.temp.chocolateTruffle !== undefined}
 				<Switch bind:checked={$ratesData.temp.chocolateTruffle} disabled={!$ratesData.useTemp} />

@@ -29,9 +29,9 @@ import {
 	getCropMilestoneLevels,
 	getCropUpgrades,
 	getGardenLevel,
-	Pest,
 	PEST_ARMOR_SLOTS,
 	PEST_EQUIPMENT_SLOTS,
+	PEST_FARMING_PHASE_MECHANICS,
 	PEST_FARMING_PHASE_STATS,
 	PEST_FARMING_STATS,
 	PEST_MAIN_ARMOR_SET_ID,
@@ -128,10 +128,6 @@ function getLockedPestTimeOfDay(crop: Crop): PestFarmingTimeOfDay | undefined {
 	return undefined;
 }
 
-function getExcludedPestForTime(timeOfDay: PestFarmingTimeOfDay): Pest {
-	return timeOfDay === 'day' ? Pest.Firefly : Pest.Dragonfly;
-}
-
 function getItemSellValue(itemId: string, item: RatesItemPriceEntry | undefined): PestRateItemPrice | undefined {
 	if (!item) return undefined;
 
@@ -200,9 +196,6 @@ export class PestFarmingPageContext {
 	pestTimeOfDay = $derived(this.lockedPestTimeOfDay ?? this.rates.pestFarming.timeOfDay);
 	pestAttraction = $derived.by<PestAttractionSettings>(() => {
 		const settings = this.rates.pestFarming.attraction;
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		const excludedPests = new Set(settings.excludedPests ?? []);
-		excludedPests.add(getExcludedPestForTime(this.pestTimeOfDay));
 		const isHooverius = this.selectedVacuum?.item.skyblockId === 'INFINI_VACUUM_HOOVERIUS';
 
 		return {
@@ -210,7 +203,7 @@ export class PestFarmingPageContext {
 			sprayonatorMaterial: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorMaterial : undefined,
 			sprayonatorTier: this.rates.pestFarming.sprayonatorTier,
 			hooveriusVinylTarget: isHooverius ? settings.hooveriusVinylTarget : undefined,
-			excludedPests: [...excludedPests],
+			timeOfDay: this.pestTimeOfDay,
 		};
 	});
 	pestRateSettings = $derived.by<PestCycleSettings>(() => ({
@@ -366,12 +359,14 @@ export class PestFarmingPageContext {
 	activePhaseGeneralProgress = $derived.by(() => {
 		this.trackPestVersion();
 		const stats = this.getPhaseStats(this.activePhase);
-		const progress = this.pestPlayer.getPhaseProgress(this.activePhase, stats);
+		const mechanics = PEST_FARMING_PHASE_MECHANICS[this.activePhase];
+		const progress = this.pestPlayer.getPhaseProgress(this.activePhase, stats, mechanics);
 		const hasRelevantStat = (p: FortuneSourceProgress) =>
-			!!p.stats &&
-			Object.entries(p.stats).some(
-				([stat, sp]) => stats.includes(stat as Stat) && (sp.current > 0 || sp.max > 0)
-			);
+			(!!p.stats &&
+				Object.entries(p.stats).some(
+					([stat, sp]) => stats.includes(stat as Stat) && (sp.current > 0 || sp.max > 0)
+				)) ||
+			p.effects?.some((effect) => effect.mechanic && mechanics.includes(effect.mechanic));
 		return progress.filter((p) => hasRelevantStat(p) || p.progress?.some(hasRelevantStat));
 	});
 
@@ -384,6 +379,7 @@ export class PestFarmingPageContext {
 		this.trackPestVersion();
 		return this.pestPlayer.getPhaseUpgrades(this.activePhase, {
 			stats: this.getPhaseStats(this.activePhase),
+			mechanics: PEST_FARMING_PHASE_MECHANICS[this.activePhase],
 			includeUpgradeGroups: true,
 		});
 	});

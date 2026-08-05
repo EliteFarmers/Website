@@ -77,7 +77,7 @@
 			total: 25,
 			description: "Applies Anita's Artifact boosted-contest fortune.",
 		},
-		{ key: 'chocolateTruffle', total: 30 },
+		{ key: 'chocolateTruffle', total: 30, stat: Stat.CocoaBeanFortune },
 		{ key: 'celestialMasonJar', total: 15 },
 		{ key: 'melonJuiceMixin', total: 15 },
 		{ key: 'finnsFocaccia', total: 5, stat: Stat.Overbloom },

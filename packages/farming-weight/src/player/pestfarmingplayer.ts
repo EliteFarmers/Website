@@ -1,4 +1,5 @@
 import { CROP_INFO, Crop } from '../constants/crops.js';
+import { FarmingMechanic } from '../constants/mechanics.js';
 import { CROP_FARMING_STATS, PEST_FARMING_STATS, Stat, type StatBreakdown, VACUUM_STATS } from '../constants/stats.js';
 import type {
 	EffectSummary,
@@ -8,6 +9,7 @@ import type {
 	StatQueryOptions,
 	UpgradeTreeNode,
 } from '../constants/upgrades.js';
+import { resolveMechanicTotal } from '../effects/resolver.js';
 import {
 	ArmorLoadout,
 	type ArmorSet,
@@ -42,6 +44,16 @@ export const PEST_FARMING_PHASE_STATS: Record<PestFarmingPhase, Stat[]> = {
 	[PestFarmingPhase.Farm]: [...CROP_FARMING_STATS, Stat.PestCooldownReduction],
 	[PestFarmingPhase.Spawn]: [Stat.BonusPestChance, Stat.PestCooldownReduction],
 	[PestFarmingPhase.Kill]: PEST_KILL_PHASE_STATS,
+};
+
+export const PEST_FARMING_PHASE_MECHANICS: Record<PestFarmingPhase, FarmingMechanic[]> = {
+	[PestFarmingPhase.Farm]: [
+		FarmingMechanic.CropGrowth,
+		FarmingMechanic.EnchantedCropChance,
+		FarmingMechanic.PestCooldownReductionSeconds,
+	],
+	[PestFarmingPhase.Spawn]: [FarmingMechanic.AtmosphericFilterEffect, FarmingMechanic.PestCooldownReductionSeconds],
+	[PestFarmingPhase.Kill]: [FarmingMechanic.SprayonatorMaterialChance],
 };
 
 const PEST_KILL_PLAYER_SOURCE_TYPES: FortuneSourceType[] = ['general', 'crop', 'armor', 'equipment', 'pet'];
@@ -140,10 +152,16 @@ function getPhaseSourceTypes(phase: PestFarmingPhase, options?: StatQueryOptions
 	return options?.sourceTypes ?? (phase === PestFarmingPhase.Kill ? PEST_KILL_PLAYER_SOURCE_TYPES : undefined);
 }
 
-function getPhaseQueryOptions(phase: PestFarmingPhase, stats: Stat[], options?: StatQueryOptions): StatQueryOptions {
+function getPhaseQueryOptions(
+	phase: PestFarmingPhase,
+	stats: Stat[],
+	options?: StatQueryOptions,
+	mechanics: FarmingMechanic[] = options?.mechanics ?? (options ? [] : PEST_FARMING_PHASE_MECHANICS[phase])
+): StatQueryOptions {
 	return {
 		...options,
 		stats,
+		mechanics,
 		sourceTypes: getPhaseSourceTypes(phase, options),
 	};
 }
@@ -537,11 +555,12 @@ export class PestFarmingPlayer {
 
 	getPhaseProgress(
 		phase: PestFarmingPhase,
-		stats: Stat[] = PEST_FARMING_PHASE_STATS[phase]
+		stats: Stat[] = PEST_FARMING_PHASE_STATS[phase],
+		mechanics: FarmingMechanic[] = PEST_FARMING_PHASE_MECHANICS[phase]
 	): FortuneSourceProgress[] {
 		const queryStats =
 			phase === PestFarmingPhase.Kill ? getSelectedCropKillStats(stats, this.options.selectedCrop) : stats;
-		const options = getPhaseQueryOptions(phase, queryStats);
+		const options = getPhaseQueryOptions(phase, queryStats, undefined, mechanics);
 		const progress = [...this.phases[phase].getProgress(options)];
 		if (phase === PestFarmingPhase.Kill && this.options.selectedCrop) {
 			const crop = this.options.selectedCrop;
@@ -583,6 +602,13 @@ export class PestFarmingPlayer {
 		);
 	}
 
+	getPhaseMechanic(phase: PestFarmingPhase, mechanic: FarmingMechanic, crop?: Crop): number {
+		const player = this.phases[phase];
+		const queryCrop = crop ?? this.options.selectedCrop;
+		const env = player.buildEnvironment(queryCrop);
+		return resolveMechanicTotal(player.collectEffects(env), mechanic, { env, crop: queryCrop });
+	}
+
 	getPhaseStatBreakdown(phase: PestFarmingPhase, stat: Stat, crop?: Crop): StatBreakdown {
 		const playerBreakdown = this.phases[phase].getStatBreakdown(stat, crop);
 		if (phase !== PestFarmingPhase.Kill || !this.selectedVacuum || !VACUUM_STATS.includes(stat)) {
@@ -601,6 +627,7 @@ export class PestFarmingPlayer {
 		const phaseOptions = getPhaseQueryOptions(phase, queryStats);
 		const playerView = this.phases[phase].getStatView({
 			stats: queryStats,
+			mechanics: phaseOptions.mechanics,
 			crop: queryCrop,
 			sourceTypes: phaseOptions.sourceTypes,
 		});

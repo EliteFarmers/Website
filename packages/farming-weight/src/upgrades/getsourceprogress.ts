@@ -6,7 +6,7 @@ import type {
 	UpgradeSourceProgress,
 } from './sources/dynamicfortunesources.js';
 
-export interface SourceProgressOptions extends Pick<StatQueryOptions, 'stat' | 'stats' | 'sourceTypes'> {
+export interface SourceProgressOptions extends Pick<StatQueryOptions, 'stat' | 'stats' | 'mechanics' | 'sourceTypes'> {
 	defaultSourceType?: FortuneSourceType;
 }
 
@@ -30,6 +30,7 @@ export function getSourceProgress<T extends object>(
 	const result = [] as FortuneSourceProgress[];
 	const query = resolveSourceProgressOptions(options);
 	const stats = query.stats && query.stats.length > 0 ? query.stats : query.stat ? [query.stat] : undefined;
+	const mechanics = query.mechanics;
 
 	// Ensure the item fortune is up to date
 	if ('getFortune' in upgradeable && typeof upgradeable.getFortune === 'function') {
@@ -84,14 +85,14 @@ export function getSourceProgress<T extends object>(
 		}
 
 		if (source.effects) {
-			const effects = source.effects(upgradeable, stats);
+			const effects = source.effects(upgradeable, stats, mechanics);
 			if (effects.length > 0) {
 				progress.effects = effects;
 			}
 		}
 
 		if (source.progress) {
-			const p = source.progress(upgradeable, stats);
+			const p = source.progress(upgradeable, stats, mechanics);
 			if (p) {
 				progress.progress = p;
 			}
@@ -130,7 +131,7 @@ export function getSourceProgress<T extends object>(
 		}
 
 		if (source.upgrades) {
-			const upgrades = source.upgrades(upgradeable, stats);
+			const upgrades = source.upgrades(upgradeable, stats, mechanics);
 			for (const upgrade of upgrades) {
 				upgrade.max = upgrade.max ?? max;
 				upgrade.wiki = upgrade.wiki ?? progress.wiki;
