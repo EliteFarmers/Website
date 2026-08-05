@@ -29,7 +29,6 @@ import {
 	getCropMilestoneLevels,
 	getCropUpgrades,
 	getGardenLevel,
-	Pest,
 	PEST_ARMOR_SLOTS,
 	PEST_EQUIPMENT_SLOTS,
 	PEST_FARMING_PHASE_MECHANICS,
