@@ -221,7 +221,7 @@ async function getProfileDocuments(hostname: string): Promise<Map<string, Uint8A
 	const seenCursors = new Set<string>();
 
 	while (true) {
-		const result = await getWebsiteSitemapProfiles({ cursor, pageSize: PROFILE_PAGE_SIZE });
+		const result = await getWebsiteSitemapProfiles({ cursor: cursor ?? undefined, pageSize: PROFILE_PAGE_SIZE });
 		if (!result.ok) {
 			throw new Error(`Failed to fetch sitemap profiles: ${result.response.status}`);
 		}

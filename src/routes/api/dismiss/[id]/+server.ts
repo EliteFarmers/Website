@@ -12,10 +12,10 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 		error(403, 'You must be logged in to dismiss an announcement.');
 	}
 
-	const { response, error: e } = await dismissAnnouncement(id);
+	const { error: e } = await dismissAnnouncement(id);
 	if (e) {
 		error(500, 'Failed to dismiss announcement.');
 	}
 
-	return response;
+	return new Response(null, { status: 204 });
 };
