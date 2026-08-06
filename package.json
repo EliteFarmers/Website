@@ -42,7 +42,8 @@
 		"@napi-rs/canvas": "^1.0.0",
 		"@tebexio/tebex.js": "^1.11.0",
 		"farming-weight": "workspace:*",
-		"isomorphic-dompurify": "^3.12.0"
+		"isomorphic-dompurify": "^3.12.0",
+		"sitemap": "^9.0.1"
 	},
 	"devDependencies": {
 		"@date-fns/utc": "^2.1.1",

@@ -2,3 +2,5 @@
 # Not sure why you're here but hi
 User-agent: *
 Disallow:
+
+Sitemap: https://eliteskyblock.com/sitemap.xml
