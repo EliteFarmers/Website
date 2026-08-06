@@ -163,6 +163,7 @@ import type {
 	GetSpecifiedSkyblockItemsResponse,
 	GetUpcomingEventsParams,
 	GetUserOrdersParams,
+	GetWebsiteSitemapProfilesParams,
 	GetWeightForProfileParams,
 	GetWeightForProfilesParams,
 	GetWeightForSelectedParams,
@@ -292,6 +293,8 @@ import type {
 	VoteCommentRequest,
 	VoteGuideRequest,
 	WebsiteCacheReloadSignalDto,
+	WebsiteSitemapContentResponse,
+	WebsiteSitemapProfilesResponse,
 	WeightStyleListDto,
 	WeightStyleWithDataDto,
 	WeightsDto,
@@ -15022,6 +15025,77 @@ export const requestWebsiteCacheReload = async (options?: RequestInit) => {
 	return customFetch<requestWebsiteCacheReloadResponse>(getRequestWebsiteCacheReloadUrl(), {
 		...options,
 		method: 'POST',
+	});
+};
+
+/**
+ * @summary Get content for Website sitemaps
+ */
+export type getWebsiteSitemapContentResponse200 = {
+	data: WebsiteSitemapContentResponse;
+	status: 200;
+};
+
+export type getWebsiteSitemapContentResponseSuccess = getWebsiteSitemapContentResponse200 & {
+	headers: Headers;
+};
+export type getWebsiteSitemapContentResponse = getWebsiteSitemapContentResponseSuccess;
+
+export const getGetWebsiteSitemapContentUrl = () => {
+	return `${ELITE_API_URL}/website/sitemap/content`;
+};
+
+export const getWebsiteSitemapContent = async (options?: RequestInit) => {
+	return customFetch<getWebsiteSitemapContentResponse>(getGetWebsiteSitemapContentUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get eligible player profiles for Website sitemaps
+ */
+export type getWebsiteSitemapProfilesResponse200 = {
+	data: WebsiteSitemapProfilesResponse;
+	status: 200;
+};
+
+export type getWebsiteSitemapProfilesResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getWebsiteSitemapProfilesResponseSuccess = getWebsiteSitemapProfilesResponse200 & {
+	headers: Headers;
+};
+export type getWebsiteSitemapProfilesResponseError = getWebsiteSitemapProfilesResponse400 & {
+	headers: Headers;
+};
+
+export type getWebsiteSitemapProfilesResponse =
+	| getWebsiteSitemapProfilesResponseSuccess
+	| getWebsiteSitemapProfilesResponseError;
+
+export const getGetWebsiteSitemapProfilesUrl = (params: GetWebsiteSitemapProfilesParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/website/sitemap/profiles?${stringifiedParams}`
+		: `${ELITE_API_URL}/website/sitemap/profiles`;
+};
+
+export const getWebsiteSitemapProfiles = async (params: GetWebsiteSitemapProfilesParams, options?: RequestInit) => {
+	return customFetch<getWebsiteSitemapProfilesResponse>(getGetWebsiteSitemapProfilesUrl(params), {
+		...options,
+		method: 'GET',
 	});
 };
 

@@ -5396,6 +5396,14 @@ export const zodUpdateToolSettingBody = zod.object({
 });
 
 /**
+ * @summary Get eligible player profiles for Website sitemaps
+ */
+export const zodGetWebsiteSitemapProfilesQueryParams = zod.object({
+	cursor: zod.string().nullish(),
+	pageSize: zod.number(),
+});
+
+/**
  * @summary Get farming weight for a profile member
  */
 export const zodGetWeightForProfileParams = zod.object({
