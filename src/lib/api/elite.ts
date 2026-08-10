@@ -12,6 +12,8 @@ export type AuthorizedUser = AuthorizedAccountDto;
 export type LeaderboardEntry = LeaderboardEntryDto & {
 	style?: WeightStyleWithDataDto['leaderboard'];
 	imageRefs?: WeightStyleWithDataDto['imageRefs'];
+	frame?: NonNullable<WeightStyleWithDataDto['frame']>['leaderboard'];
+	frameImageRefs?: WeightStyleWithDataDto['imageRefs'];
 };
 
 export type GuildMembersLeaderboard = GuildMembersLeaderboardDto & {

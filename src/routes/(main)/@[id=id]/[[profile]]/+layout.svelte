@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import { type Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -24,10 +25,10 @@
 </script>
 
 {#if data.ssrProfileData}
-	{#if isNoProfiles(data.ssrProfileData)}
-		<NoProfiles account={data.ssrProfileData.account} />
-	{:else if isError(data.ssrProfileData)}
+	{#if isError(data.ssrProfileData)}
 		{@render profileError(data.ssrProfileData)}
+	{:else if isNoProfiles(data.ssrProfileData)}
+		<NoProfiles account={data.ssrProfileData.account} />
 	{:else}
 		<Content
 			data={data.ssrProfileData as Exclude<typeof data.ssrProfileData, { code: number; error: string }>}
@@ -48,10 +49,10 @@
 			<p class="font-semibold">Loading data...</p>
 		</div>
 	{:then profile}
-		{#if isNoProfiles(profile)}
-			<NoProfiles account={profile.account} />
-		{:else if isError(profile)}
+		{#if isError(profile)}
 			{@render profileError(profile)}
+		{:else if isNoProfiles(profile)}
+			<NoProfiles account={profile.account} />
 		{:else}
 			<Content data={profile as Exclude<typeof profile, { code: number; error: string }>}>
 				{@render children?.()}
@@ -64,7 +65,7 @@
 	<h1 class="m-16 p-16 text-center font-mono text-6xl font-bold">{profile.code}</h1>
 	<h4 class="font-lighter text-center text-2xl">{profile.error}</h4>
 	<div class="item m-12 mb-32 flex flex-row justify-center gap-4 text-center">
-		<a href="/" class="shadow-gray 0 bg-muted hover:bg-card rounded-md p-4 shadow-md">Return Home</a>
+		<a href={resolve('/')} class="shadow-gray 0 bg-muted hover:bg-card rounded-md p-4 shadow-md">Return Home</a>
 		<button onclick={() => location.reload()} class="shadow-gray bg-muted hover:bg-card rounded-md p-4 shadow-md"
 			>Reload</button
 		>

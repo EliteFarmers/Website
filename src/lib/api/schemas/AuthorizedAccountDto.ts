@@ -10,6 +10,7 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
 import type { UserSettingsDto } from './UserSettingsDto';
 import type { EntitlementDto } from './EntitlementDto';
 import type { MinecraftAccountDetailsDto } from './MinecraftAccountDetailsDto';
+import type { WeightStyleLinkedDto } from './WeightStyleLinkedDto';
 
 export interface AuthorizedAccountDto {
 	/** Discord user ID */
@@ -41,6 +42,8 @@ export interface AuthorizedAccountDto {
 	settings: UserSettingsDto;
 	/** Purchased entitlements from the Discord store */
 	entitlements: EntitlementDto[];
+	/** Cosmetics granted directly to this account */
+	cosmetics: WeightStyleLinkedDto[];
 	/** Linked Minecraft accounts */
 	minecraftAccounts: MinecraftAccountDetailsDto[];
 	/** Dismissed announcements by the user */

@@ -12,6 +12,8 @@ export interface MemberLeaderboardCosmeticsDto {
 	/** @nullable */
 	styleId?: number | null;
 	/** @nullable */
+	frameId?: number | null;
+	/** @nullable */
 	backgroundColor?: string | null;
 	/** @nullable */
 	borderColor?: string | null;

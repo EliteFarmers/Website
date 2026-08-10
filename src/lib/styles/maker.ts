@@ -43,9 +43,15 @@ export async function drawBackgroundCanvas(
 	const backgroundImgUrl =
 		imageRefs?.[backgroundStyle.imageUrl ?? '']?.sources?.['full']?.url || backgroundStyle.imageUrl;
 
-	const image = backgroundImgUrl ? await loadImage(backgroundImgUrl).catch(() => null) : null;
+	const decalImgUrl = imageRefs?.[data?.decal?.imageUrl ?? '']?.sources?.['full']?.url || data?.decal?.imageUrl;
+	const [image, decal] = await Promise.all([
+		backgroundImgUrl ? loadImage(backgroundImgUrl).catch(() => null) : null,
+		decalImgUrl ? loadImage(decalImgUrl).catch(() => null) : null,
+	]);
 
 	drawBackground(ctx, backgroundStyle, image);
+	drawDecal(ctx, decal, data?.decal);
+	for (const gradient of data?.elements.gradients ?? []) drawGradient(ctx, gradient);
 
 	ctx.restore();
 }
@@ -272,7 +278,9 @@ function drawText(
 	ctx.globalAlpha = 1;
 	ctx.fillStyle = element.fill ?? '#FFFFFF';
 
-	if (element.outline) {
+	if (element.glass) {
+		return drawGlassText(ctx, text, element, flippedAnchor);
+	} else if (element.outline) {
 		return drawStrokedText(ctx, text, element);
 	} else {
 		let { x, y } = getPosition(ctx.canvas, element);
@@ -299,6 +307,70 @@ function drawText(
 				(element.background?.padding ?? 0) * 2,
 		};
 	}
+}
+
+function colorWithOpacity(color: string, opacity: number) {
+	const alpha = Math.min(1, Math.max(0, opacity));
+	const hex = color.match(/^#([\da-f]{6})$/i)?.[1];
+	if (!hex) return color;
+	return `rgba(${Number.parseInt(hex.slice(0, 2), 16)}, ${Number.parseInt(hex.slice(2, 4), 16)}, ${Number.parseInt(hex.slice(4, 6), 16)}, ${alpha})`;
+}
+
+function drawGlassText(
+	ctx: CanvasRenderingContext2D,
+	text: string,
+	element: ElementPosition,
+	flippedAnchor: boolean
+): FinalSize {
+	const glass = element.glass!;
+	let { x, y } = getPosition(ctx.canvas, element);
+	const measured = ctx.measureText(text);
+	const padding = element.background?.padding ?? 0;
+	const height = measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent;
+
+	if (flippedAnchor) {
+		x -= measured.width + padding;
+		y += height + padding;
+	}
+
+	const angle = ((glass.highlightAngle ?? -20) * Math.PI) / 180;
+	const directionX = Math.sin(angle);
+	const directionY = -Math.cos(angle);
+	const centerX = x + measured.width / 2;
+	const centerY = y + (measured.actualBoundingBoxDescent - measured.actualBoundingBoxAscent) / 2;
+	const reach = (Math.abs(measured.width * directionX) + Math.abs(height * directionY)) / 2;
+	const gradient = ctx.createLinearGradient(
+		centerX - directionX * reach,
+		centerY - directionY * reach,
+		centerX + directionX * reach,
+		centerY + directionY * reach
+	);
+	const tint = colorWithOpacity(glass.tintColor ?? '#ffffff', glass.tintOpacity ?? 0.2);
+	const highlight = colorWithOpacity(glass.highlightColor ?? '#ffffff', glass.highlightOpacity ?? 0.8);
+	const highlightStart = Math.min(1, Math.max(0, glass.highlightPosition ?? 0.25));
+	const highlightEnd = Math.min(1, highlightStart + Math.max(0, glass.highlightSize ?? 0.35));
+	gradient.addColorStop(0, tint);
+	gradient.addColorStop(highlightStart, tint);
+	gradient.addColorStop(highlightEnd, highlight);
+	gradient.addColorStop(1, tint);
+
+	const fontSize = Number.parseFloat(ctx.font) || element.fontSize || 100;
+	ctx.save();
+	if ((glass.rimWidth ?? 0.04) > 0) {
+		ctx.strokeStyle = colorWithOpacity(glass.rimColor ?? '#ffffff', glass.rimOpacity ?? 0.55);
+		ctx.lineWidth = (glass.rimWidth ?? 0.04) * fontSize;
+		ctx.lineJoin = 'round';
+		ctx.strokeText(text, x, y);
+	}
+	ctx.fillStyle = gradient;
+	ctx.shadowColor = colorWithOpacity(glass.shadowColor ?? '#000000', glass.shadowOpacity ?? 0.35);
+	ctx.shadowBlur = (glass.shadowBlur ?? 0.12) * fontSize;
+	ctx.shadowOffsetX = (glass.shadowOffsetX ?? 0) * fontSize;
+	ctx.shadowOffsetY = (glass.shadowOffsetY ?? 0.06) * fontSize;
+	ctx.fillText(text, x, y);
+	ctx.restore();
+
+	return { x, y, width: measured.width + padding * 2, height: height + padding * 2 };
 }
 
 function drawBackgroundText(

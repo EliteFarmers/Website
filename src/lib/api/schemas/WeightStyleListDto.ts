@@ -11,9 +11,13 @@ import type { WeightStyleListDtoAuthor } from './WeightStyleListDtoAuthor';
 import type { WeightStyleListDtoData } from './WeightStyleListDtoData';
 import type { WeightStyleListDtoLeaderboard } from './WeightStyleListDtoLeaderboard';
 import type { WeightStyleListDtoImageRefs } from './WeightStyleListDtoImageRefs';
+import type { CosmeticCapabilitiesDto, FrameStyleDataDto, PageStyleDataDto } from './CosmeticPayloads';
+import type { NameCardStyleDataDto } from './NameCardStyleDataDto';
 
 export interface WeightStyleListDto {
 	id: number;
+	type?: 0 | 1;
+	capabilities?: CosmeticCapabilitiesDto;
 	/**
 	 * @maxLength 64
 	 * @nullable
@@ -35,5 +39,8 @@ export interface WeightStyleListDto {
 	data?: WeightStyleListDtoData;
 	/** @nullable */
 	leaderboard?: WeightStyleListDtoLeaderboard;
+	nameCard?: NameCardStyleDataDto | null;
+	page?: PageStyleDataDto | null;
+	frame?: FrameStyleDataDto | null;
 	imageRefs: WeightStyleListDtoImageRefs;
 }

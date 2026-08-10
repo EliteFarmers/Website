@@ -9,11 +9,13 @@
 		uuid: string;
 		styleId?: number;
 		style?: WeightStyleWithDataDto['leaderboard'] | LeaderboardStyle;
+		frame?: NonNullable<WeightStyleWithDataDto['frame']>['leaderboard'];
 		showLeaderboardName?: boolean;
 		imageRefs?: WeightStyleWithDataDto['imageRefs'];
+		frameImageRefs?: WeightStyleWithDataDto['imageRefs'];
 	}
 
-	let { ign, uuid, style, showLeaderboardName, styleId, imageRefs }: Props = $props();
+	let { ign, uuid, style, frame, showLeaderboardName, styleId, imageRefs, frameImageRefs }: Props = $props();
 
 	const entry = $derived({
 		profile: 'Raspberry',
@@ -22,8 +24,10 @@
 		initialAmount: 0,
 		ign,
 		uuid,
-		style,
+		style: style as WeightStyleWithDataDto['leaderboard'],
 		imageRefs,
+		frame,
+		frameImageRefs,
 		meta: {
 			leaderboard: {
 				styleId: styleId ?? undefined,

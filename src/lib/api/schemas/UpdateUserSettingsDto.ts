@@ -8,6 +8,7 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
  * OpenAPI spec version: admin-v1
  */
 import type { UpdateUserSettingsDtoFeatures } from './UpdateUserSettingsDtoFeatures';
+import type { LeaderboardAppearanceOverrideDto } from './CosmeticPayloads';
 
 export interface UpdateUserSettingsDto {
 	/**
@@ -40,6 +41,10 @@ export interface UpdateUserSettingsDto {
 	 * @nullable
 	 */
 	nameStyleId?: number | null;
+	pageStyleId?: number | null;
+	leaderboardFrameId?: number | null;
+	nameCardFrameId?: number | null;
+	leaderboardOverrides?: Record<string, LeaderboardAppearanceOverrideDto>;
 	/**
 	 * If the user should be hidden from browser search indexing.
 	 * @nullable

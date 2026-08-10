@@ -29,17 +29,22 @@ export const getLeaderboardSlice = query(
 		return {
 			...leaderboard,
 			entries: leaderboard.entries.map((entry) => {
-				if (entry.meta?.leaderboard?.styleId === undefined || entry.meta.leaderboard.styleId === null)
-					return entry;
-				const style = cache.styleLookup[entry.meta?.leaderboard?.styleId];
+				const styleId = entry.meta?.leaderboard?.styleId;
+				const frameId = entry.meta?.leaderboard?.frameId;
+				const style = styleId == null ? undefined : cache.styleLookup[styleId];
+				const frame = frameId == null ? undefined : cache.styleLookup[frameId];
 				return {
 					...entry,
 					style: style?.leaderboard ?? undefined,
 					imageRefs: style?.imageRefs ?? undefined,
+					frame: frame?.frame?.leaderboard ?? undefined,
+					frameImageRefs: frame?.imageRefs ?? undefined,
 				};
 			}) as (LeaderboardEntryDto & {
 				style?: WeightStyleWithDataDto['leaderboard'];
 				imageRefs?: WeightStyleWithDataDto['imageRefs'];
+				frame?: NonNullable<WeightStyleWithDataDto['frame']>['leaderboard'];
+				frameImageRefs?: WeightStyleWithDataDto['imageRefs'];
 			})[],
 		};
 	}

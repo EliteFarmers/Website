@@ -38,6 +38,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 		user: discord,
 		weight: weight?.farmingWeight ?? null,
 		styles: locals.cache?.styleLookup ?? ({} as Record<string, WeightStyleWithDataDto>),
+		leaderboards: locals.cache?.leaderboards.leaderboards ?? {},
 	};
 };
 
@@ -94,13 +95,17 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 
-		const body = {
+		const features: ConfiguredProductFeaturesDto = {};
+		const body: UpdateUserSettingsDto = {
 			suffix: data.get('emoji')?.toString() ?? '',
-			features: {} as ConfiguredProductFeaturesDto,
+			features,
 			weightStyleId: undefined as number | undefined,
 			nameStyleId: undefined as number | undefined,
 			leaderboardStyleId: undefined as number | undefined,
-		} satisfies UpdateUserSettingsDto;
+			pageStyleId: undefined as number | undefined,
+			leaderboardFrameId: undefined as number | undefined,
+			nameCardFrameId: undefined as number | undefined,
+		};
 
 		const style = data.get('style')?.toString() ?? undefined;
 		if (style !== undefined && isFinite(+style)) {
@@ -117,24 +122,42 @@ export const actions: Actions = {
 			body.leaderboardStyleId = +leaderboardStyle;
 		}
 
+		for (const [field, property] of [
+			['pageStyle', 'pageStyleId'],
+			['leaderboardFrame', 'leaderboardFrameId'],
+			['nameCardFrame', 'nameCardFrameId'],
+		] as const) {
+			const value = data.get(field)?.toString();
+			if (value !== undefined && isFinite(+value)) body[property] = +value;
+		}
+
+		const overrides = data.get('leaderboardOverrides')?.toString();
+		if (overrides) {
+			try {
+				body.leaderboardOverrides = JSON.parse(overrides);
+			} catch {
+				return fail(400, { error: 'Invalid leaderboard overrides.' });
+			}
+		}
+
 		const embed = data.get('embed')?.toString() ?? undefined;
 		if (embed !== undefined) {
-			body.features.embedColor = embed;
+			features.embedColor = embed;
 		}
 
 		const promotions = data.get('promotions') ?? undefined;
 		if (promotions) {
-			body.features.hideShopPromotions = promotions === 'true';
+			features.hideShopPromotions = promotions === 'true';
 		}
 
 		const override = data.get('override') ?? undefined;
 		if (override) {
-			body.features.weightStyleOverride = override === 'true';
+			features.weightStyleOverride = override === 'true';
 		}
 
 		const info = data.get('info') ?? undefined;
 		if (info) {
-			body.features.moreInfoDefault = info === 'true';
+			features.moreInfoDefault = info === 'true';
 		}
 
 		const { response, error: e } = await updateAccount(body);
