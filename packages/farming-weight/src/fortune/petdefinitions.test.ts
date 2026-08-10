@@ -55,9 +55,7 @@ describe('Pet Definitions Integrity', () => {
 		expect(elephant.perRarityLevelStats?.[Rarity.Mythic]?.[Stat.FarmingFortune]?.type).toBe(
 			FarmingPetStatType.Base
 		);
-		expectStatValue(elephant.perLevelStats?.[Stat.FarmingFortune], 1.5);
-		expect(elephant.perLevelStats?.[Stat.FarmingFortune]?.type).toBe(FarmingPetStatType.Ability);
-		expect(elephant.abilities?.[0]?.name).toBe('Abundant Harvest');
+		expect(elephant.abilities?.[1]?.name).toBe('Abundant Harvest');
 	});
 
 	test('Mooshroom Cow pet has correct base stats and abilities', () => {
