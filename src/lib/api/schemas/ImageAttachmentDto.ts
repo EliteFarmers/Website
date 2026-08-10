@@ -33,6 +33,11 @@ export interface ImageAttachmentDto {
 	height: number;
 	/** A dictionary of available image sources, keyed by a logical name (e.g., "small", "medium"). */
 	sources: ImageAttachmentDtoSources;
+	isAnimated?: boolean;
+	frameCount?: number;
+	durationMs?: number;
+	posterSources?: ImageAttachmentDtoSources;
+	posterUrl?: string | null;
 	/** Lowest quality image URL */
 	url: string;
 }

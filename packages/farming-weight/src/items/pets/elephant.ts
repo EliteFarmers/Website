@@ -17,14 +17,6 @@ export class ElephantPet extends FarmingPetDefinition {
 		return 'https://w.elitesb.gg/Elephant_Pet';
 	}
 
-	override perLevelStats = {
-		[Stat.FarmingFortune]: {
-			name: 'Farming Fortune',
-			value: 1.5,
-			type: FarmingPetStatType.Ability,
-		},
-	};
-
 	override perRarityLevelStats = {
 		[Rarity.Mythic]: {
 			[Stat.FarmingFortune]: {
@@ -36,6 +28,17 @@ export class ElephantPet extends FarmingPetDefinition {
 	};
 
 	override abilities: FarmingPetAbility[] = [
+		{
+			name: 'Trunk Efficiency',
+			exists: (_, pet) => pet.rarity === Rarity.Legendary || pet.rarity === Rarity.Mythic,
+			computed: (_, pet) => ({
+				[Stat.FarmingFortune]: {
+					name: 'Farming Fortune',
+					value: 1.5 * pet.level,
+					type: FarmingPetStatType.Ability,
+				},
+			}),
+		},
 		{
 			name: 'Abundant Harvest',
 			exists: (_, pet) => pet.rarity === Rarity.Mythic,

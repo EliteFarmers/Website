@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import EmojiDialog from '$comp/emoji/emoji-dialog.svelte';
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
@@ -23,29 +24,37 @@
 	import Sun from '@lucide/svelte/icons/sun';
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 	import { useDebounce } from 'runed';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import BadgeConfig from './badge-config.svelte';
+	import LeaderboardOverrides from './leaderboard-overrides.svelte';
 
-	let api = $state<CarouselAPI>();
+	let api: CarouselAPI | undefined;
 
 	const themeContext = getThemeContext();
 	const wheelGestures = WheelGesturesPlugin();
 
-	let current = $state(0);
-	let themeName = $state('');
-	let themeClass = $state('');
+	let current = $state(1);
+	let selectedTheme = $derived(themes[current - 1] ?? themes[0]);
+	let themeName = $derived(selectedTheme.name);
+	let themeClass = $derived(selectedTheme.class);
 
-	$effect(() => {
-		if (api) {
-			current = api.selectedScrollSnap() + 1;
-			api.on('select', () => {
-				current = api!.selectedScrollSnap() + 1;
-			});
-			themeName = themes[current - 1].name;
-			themeClass = themes[current - 1].class;
+	function syncCarouselSelection() {
+		if (api) current = api.selectedScrollSnap() + 1;
+	}
+
+	function setCarouselApi(nextApi: CarouselAPI | undefined) {
+		api?.off('select', syncCarouselSelection);
+		if (!nextApi) {
+			api = undefined;
+			return;
 		}
-	});
+		api = nextApi;
+		syncCarouselSelection();
+		api.on('select', syncCarouselSelection);
+	}
+
+	onDestroy(() => api?.off('select', syncCarouselSelection));
 
 	interface Props {
 		data: PageData;
@@ -64,26 +73,32 @@
 			}));
 	}
 
+	// This form intentionally starts from a non-reactive copy and preserves edits across failed submissions.
+	// svelte-ignore state_referenced_locally
+	const initialData = $state.snapshot(data);
 	let changedSettings = $state({
-		// svelte-ignore state_referenced_locally
-		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
-		// svelte-ignore state_referenced_locally
-		leaderboardStyle: (data.user.settings?.leaderboardStyle?.id ?? '-1') as string | undefined,
-		// svelte-ignore state_referenced_locally
-		nameStyle: (data.user.settings?.nameStyle?.id ?? '-1') as string | undefined,
-		// svelte-ignore state_referenced_locally
-		embedColor: data.user.settings?.features?.embedColor ?? '',
-		// svelte-ignore state_referenced_locally
-		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
-		// svelte-ignore state_referenced_locally
-		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
-		// svelte-ignore state_referenced_locally
-		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
-		// svelte-ignore state_referenced_locally
-		emoji: data.user.settings?.suffix ?? '',
+		weightStyle: (initialData.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
+		leaderboardStyle: (initialData.user.settings?.leaderboardStyle?.id ?? '-1') as string | undefined,
+		nameStyle: (initialData.user.settings?.nameStyle?.id ?? '-1') as string | undefined,
+		pageStyle: (initialData.user.settings?.pageStyle?.id ?? '-1') as string | undefined,
+		leaderboardFrame: (initialData.user.settings?.leaderboardFrame?.id ?? '-1') as string | undefined,
+		nameCardFrame: (initialData.user.settings?.nameCardFrame?.id ?? '-1') as string | undefined,
+		leaderboardOverrides: structuredClone(initialData.user.settings?.leaderboardOverrides ?? {}),
+		embedColor: initialData.user.settings?.features?.embedColor ?? '',
+		shopPromotions: initialData.user.settings?.features?.hideShopPromotions ?? false,
+		styleOverride: initialData.user.settings?.features?.weightStyleOverride ?? false,
+		moreInfo: initialData.user.settings?.features?.moreInfoDefault ?? false,
+		emoji: initialData.user.settings?.suffix ?? '',
 	});
 
 	let updateForm: HTMLFormElement | undefined = $state(undefined);
+
+	function captureUpdateForm(element: HTMLFormElement) {
+		updateForm = element;
+		return () => {
+			if (updateForm === element) updateForm = undefined;
+		};
+	}
 
 	const updateSettings = useDebounce(() => {
 		const settings = data.user.settings;
@@ -92,6 +107,11 @@
 			changedSettings.weightStyle !== settings.weightStyle?.id?.toString() ||
 			changedSettings.leaderboardStyle !== settings.leaderboardStyle?.id?.toString() ||
 			changedSettings.nameStyle !== settings.nameStyle?.id?.toString() ||
+			changedSettings.pageStyle !== settings.pageStyle?.id?.toString() ||
+			changedSettings.leaderboardFrame !== settings.leaderboardFrame?.id?.toString() ||
+			changedSettings.nameCardFrame !== settings.nameCardFrame?.id?.toString() ||
+			JSON.stringify(changedSettings.leaderboardOverrides) !==
+				JSON.stringify(settings.leaderboardOverrides ?? {}) ||
 			changedSettings.embedColor !== settings.features?.embedColor ||
 			changedSettings.shopPromotions !== settings.features?.hideShopPromotions ||
 			changedSettings.styleOverride !== settings.features?.weightStyleOverride ||
@@ -103,11 +123,12 @@
 	}, 1000);
 
 	let user = $derived(data.user || undefined);
-	// svelte-ignore state_referenced_locally
-	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
+	let badges = $state(mapBadges(initialData.user?.minecraftAccounts ?? []));
 
 	let unlockedSettings = $derived({
-		styles: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
+		styles:
+			(data.user.cosmetics?.length ?? 0) > 0 ||
+			(data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false),
 		embedColor: data.user.entitlements?.some((e) => (e.product.features?.embedColors?.length ?? 0) > 0) ?? false,
 		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
 		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
@@ -130,24 +151,41 @@
 	// );
 
 	let unlockedStyles = $derived(
-		(data.user.entitlements ?? [])
-			.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
-			.map((e) => e.product?.weightStyles ?? [])
-			.flat()
-			.reduce(
-				(acc, e) => {
-					if (!e.id || !e.name) return acc;
-					const style = data.styles[e.id];
-					acc[e.id] = {
-						value: e.id.toString(),
-						label: e.name,
-						lb: (style.leaderboard && Object.keys(style.leaderboard).length > 0) == true,
-						data: style.styleFormatter === 'data',
-					};
-					return acc;
-				},
-				{} as Record<string, { label: string; value: string; lb: boolean; data: boolean }>
-			)
+		[
+			...(data.user.entitlements ?? [])
+				.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
+				.flatMap((e) => e.product?.weightStyles ?? []),
+			...(data.user.cosmetics ?? []),
+		].reduce(
+			(acc, e) => {
+				if (!e.id || !e.name) return acc;
+				const style = data.styles[e.id];
+				acc[e.id] = {
+					value: e.id.toString(),
+					label: e.name,
+					lb: !!style?.leaderboard && Object.keys(style.leaderboard).length > 0,
+					data: style?.capabilities?.weight ?? style?.styleFormatter === 'data',
+					nameCard: style?.capabilities?.nameCard ?? !!style?.nameCard,
+					page: style?.capabilities?.page ?? !!style?.page,
+					leaderboardFrame: !!style?.frame?.leaderboard,
+					nameCardFrame: !!style?.frame?.nameCard,
+				};
+				return acc;
+			},
+			{} as Record<
+				string,
+				{
+					label: string;
+					value: string;
+					lb: boolean;
+					data: boolean;
+					nameCard: boolean;
+					page: boolean;
+					leaderboardFrame: boolean;
+					nameCardFrame: boolean;
+				}
+			>
+		)
 	);
 
 	let styleOptions = $derived([{ label: 'Default', value: '-1' }, ...Object.values(unlockedStyles)]);
@@ -157,8 +195,30 @@
 	]);
 	let nameStyleOptions = $derived([
 		{ label: 'Default', value: '-1' },
-		...Object.values(unlockedStyles).filter((s) => s.data),
+		...Object.values(unlockedStyles).filter((s) => s.nameCard || s.data),
 	]);
+	let pageStyleOptions = $derived([
+		{ label: 'Default', value: '-1' },
+		...Object.values(unlockedStyles).filter((s) => s.page),
+	]);
+	let leaderboardFrameOptions = $derived([
+		{ label: 'None', value: '-1' },
+		...Object.values(unlockedStyles).filter((s) => s.leaderboardFrame),
+	]);
+	let nameCardFrameOptions = $derived([
+		{ label: 'None', value: '-1' },
+		...Object.values(unlockedStyles).filter((s) => s.nameCardFrame),
+	]);
+	let hasPageStyles = $derived(Object.values(unlockedStyles).some((style) => style.page));
+	let hasLeaderboardFrames = $derived(Object.values(unlockedStyles).some((style) => style.leaderboardFrame));
+	let hasNameCardFrames = $derived(Object.values(unlockedStyles).some((style) => style.nameCardFrame));
+	let overrideLeaderboardStyleOptions = $derived(lbStyleOptions.filter((option) => option.value !== '-1'));
+	let overrideLeaderboardFrameOptions = $derived(leaderboardFrameOptions.filter((option) => option.value !== '-1'));
+
+	function updateLeaderboardOverrides(overrides: typeof changedSettings.leaderboardOverrides) {
+		changedSettings.leaderboardOverrides = overrides;
+		updateSettings();
+	}
 
 	let unlockedEmbedColors = $derived([
 		...new Set(
@@ -190,7 +250,7 @@
 				action="?/updateSettings"
 				method="post"
 				class="flex max-w-4xl flex-col gap-4"
-				bind:this={updateForm}
+				{@attach captureUpdateForm}
 				use:enhance={() => {
 					loading = true;
 					return async ({ result }) => {
@@ -315,6 +375,58 @@
 					</p>
 					<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
 				</div>
+				{#if hasPageStyles}
+					<SettingSeperator />
+					<SettingListItem
+						title="Profile Page Style"
+						description="Select a purchased theme for your profile page."
+					>
+						<ComboBox
+							disabled={loading || !unlockedSettings.styles}
+							options={pageStyleOptions}
+							bind:value={changedSettings.pageStyle}
+							placeholder="Select page style"
+						/>
+					</SettingListItem>
+				{/if}
+				<input type="hidden" name="pageStyle" bind:value={changedSettings.pageStyle} />
+				{#if hasLeaderboardFrames}
+					<SettingSeperator />
+					<SettingListItem
+						title="Leaderboard Frame"
+						description="Applied over your default leaderboard style."
+					>
+						<ComboBox
+							disabled={loading || !unlockedSettings.styles}
+							options={leaderboardFrameOptions}
+							bind:value={changedSettings.leaderboardFrame}
+							placeholder="Select frame"
+						/>
+					</SettingListItem>
+				{/if}
+				<input type="hidden" name="leaderboardFrame" bind:value={changedSettings.leaderboardFrame} />
+				{#if hasNameCardFrames}
+					<SettingSeperator />
+					<SettingListItem title="Name Card Frame" description="Applied over your profile name card.">
+						<ComboBox
+							disabled={loading || !unlockedSettings.styles}
+							options={nameCardFrameOptions}
+							bind:value={changedSettings.nameCardFrame}
+							placeholder="Select frame"
+						/>
+					</SettingListItem>
+				{/if}
+				<input type="hidden" name="nameCardFrame" bind:value={changedSettings.nameCardFrame} />
+				<SettingSeperator />
+				<LeaderboardOverrides
+					leaderboards={data.leaderboards}
+					overrides={changedSettings.leaderboardOverrides}
+					styleOptions={overrideLeaderboardStyleOptions}
+					frameOptions={overrideLeaderboardFrameOptions}
+					showFrameOptions={hasLeaderboardFrames}
+					disabled={loading || !unlockedSettings.styles}
+					onchange={updateLeaderboardOverrides}
+				/>
 				<SettingSeperator />
 				<SettingListItem
 					title="Bot Embed Color"
@@ -337,8 +449,9 @@
 						{#if !unlockedSettings.emoji}
 							<br />
 							<span class="text-destructive/80 text-sm"
-								>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
-									>Elite Premium</a
+								>Not unlocked! Purchase this as part of <a
+									href={resolve('/premium')}
+									class="text-link underline">Elite Premium</a
 								>!</span
 							>
 						{/if}
@@ -373,8 +486,9 @@
 						{#if !unlockedSettings.shopPromotions}
 							<br />
 							<span class="text-destructive/80 text-sm"
-								>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
-									>Elite Premium</a
+								>Not unlocked! Purchase this as part of <a
+									href={resolve('/premium')}
+									class="text-link underline">Elite Premium</a
 								>!</span
 							>
 						{/if}
@@ -397,8 +511,9 @@
 						{#if !unlockedSettings.styleOverride}
 							<br />
 							<span class="text-destructive/80 text-sm"
-								>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
-									>Elite Premium</a
+								>Not unlocked! Purchase this as part of <a
+									href={resolve('/premium')}
+									class="text-link underline">Elite Premium</a
 								>!</span
 							>
 						{/if}
@@ -421,8 +536,9 @@
 						{#if !unlockedSettings.moreInfo}
 							<br />
 							<span class="text-destructive/80 text-sm"
-								>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
-									>Elite Premium</a
+								>Not unlocked! Purchase this as part of <a
+									href={resolve('/premium')}
+									class="text-link underline">Elite Premium</a
 								>!</span
 							>
 						{/if}
@@ -477,7 +593,7 @@
 			<div class="rounded-lg border-2 pt-4">
 				<div class="mx-0 flex flex-col items-center justify-center md:mx-16">
 					<Carousel.Root
-						setApi={(emblaApi) => (api = emblaApi)}
+						setApi={setCarouselApi}
 						class="w-full max-w-2xl"
 						opts={{
 							loop: true,

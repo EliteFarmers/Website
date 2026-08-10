@@ -93,10 +93,15 @@ export const getGuildMembersLeaderboard = query(
 			...data,
 			entries: data.entries.map((entry) => {
 				const styleId = entry.meta?.leaderboard?.styleId;
-				const style = styleId ? cache.styleLookup[styleId]?.leaderboard : undefined;
+				const frameId = entry.meta?.leaderboard?.frameId;
+				const cosmetic = styleId ? cache.styleLookup[styleId] : undefined;
+				const frameCosmetic = frameId ? cache.styleLookup[frameId] : undefined;
 				return {
 					...entry,
-					style,
+					style: cosmetic?.leaderboard,
+					imageRefs: cosmetic?.imageRefs,
+					frame: frameCosmetic?.frame?.leaderboard,
+					frameImageRefs: frameCosmetic?.imageRefs,
 				};
 			}),
 		};

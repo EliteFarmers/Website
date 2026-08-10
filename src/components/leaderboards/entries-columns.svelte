@@ -51,12 +51,12 @@
 	{#if loading}
 		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
 			{#each { length: 10 }, index (index)}
-				<Skeleton class="h-14 w-full rounded-lg opacity-50 sm:h-16" />
+				<Skeleton class="aspect-[8/1] w-full rounded-lg opacity-50" />
 			{/each}
 		</div>
 		<div class="flex w-full flex-col items-center gap-2 lg:items-start">
 			{#each { length: 10 }, index (index)}
-				<Skeleton class="h-14 w-full rounded-lg opacity-50 sm:h-16" />
+				<Skeleton class="aspect-[8/1] w-full rounded-lg opacity-50" />
 			{/each}
 		</div>
 	{:else}

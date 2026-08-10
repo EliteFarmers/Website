@@ -11,7 +11,12 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 	if (locals.bot) {
 		const profileData = await profileDataPromise;
 
-		if (profileData.account?.id && profileData.profile?.profileId) {
+		if (
+			'account' in profileData &&
+			'profile' in profileData &&
+			profileData.account?.id &&
+			profileData.profile?.profileId
+		) {
 			const [memberData, ranksData, farmingInventoryData] = await Promise.all([
 				getProfileMember({
 					playerUuid: profileData.account.id,

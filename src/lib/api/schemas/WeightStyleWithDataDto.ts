@@ -14,9 +14,13 @@ import type { ParentProductDto } from './ParentProductDto';
 import type { WeightStyleWithDataDtoData } from './WeightStyleWithDataDtoData';
 import type { WeightStyleWithDataDtoLeaderboard } from './WeightStyleWithDataDtoLeaderboard';
 import type { WeightStyleWithDataDtoImageRefs } from './WeightStyleWithDataDtoImageRefs';
+import type { CosmeticCapabilitiesDto, FrameStyleDataDto, PageStyleDataDto } from './CosmeticPayloads';
+import type { NameCardStyleDataDto } from './NameCardStyleDataDto';
 
 export interface WeightStyleWithDataDto {
 	id: number;
+	type?: 0 | 1;
+	capabilities?: CosmeticCapabilitiesDto;
 	/**
 	 * @maxLength 64
 	 * @nullable
@@ -47,5 +51,8 @@ export interface WeightStyleWithDataDto {
 	data?: WeightStyleWithDataDtoData;
 	/** @nullable */
 	leaderboard?: WeightStyleWithDataDtoLeaderboard;
+	nameCard?: NameCardStyleDataDto | null;
+	page?: PageStyleDataDto | null;
+	frame?: FrameStyleDataDto | null;
 	imageRefs: WeightStyleWithDataDtoImageRefs;
 }

@@ -63,7 +63,7 @@
 							{#snippet icon()}
 								<Image size={16} />
 							{/snippet}
-							<p class="font-semibold">Unlocks weight styles:</p>
+							<p class="font-semibold">Unlocks cosmetics:</p>
 							{#each styles as style (style.id)}
 								<p class="text-sm font-semibold">"{style.name}"</p>
 							{/each}

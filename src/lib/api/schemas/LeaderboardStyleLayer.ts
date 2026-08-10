@@ -23,4 +23,10 @@ export interface LeaderboardStyleLayer {
 	borderOpacity?: number | null;
 	/** @nullable */
 	align?: string | null;
+	/** @nullable */
+	positionX?: number | null;
+	/** @nullable */
+	positionY?: number | null;
+	/** @nullable */
+	imageFit?: string | null;
 }

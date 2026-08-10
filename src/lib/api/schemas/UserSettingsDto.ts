@@ -13,6 +13,8 @@ import type { UserSettingsDtoLeaderboardStyle } from './UserSettingsDtoLeaderboa
 import type { UserSettingsDtoNameStyle } from './UserSettingsDtoNameStyle';
 import type { UserSettingsDtoFortune } from './UserSettingsDtoFortune';
 import type { UserSettingsDtoMisc } from './UserSettingsDtoMisc';
+import type { WeightStyleLinkedDto } from './WeightStyleLinkedDto';
+import type { LeaderboardAppearanceOverrideDto } from './CosmeticPayloads';
 
 export interface UserSettingsDto {
 	/**
@@ -45,6 +47,10 @@ export interface UserSettingsDto {
 	 * @nullable
 	 */
 	nameStyle?: UserSettingsDtoNameStyle;
+	pageStyle?: WeightStyleLinkedDto | null;
+	leaderboardFrame?: WeightStyleLinkedDto | null;
+	nameCardFrame?: WeightStyleLinkedDto | null;
+	leaderboardOverrides?: Record<string, LeaderboardAppearanceOverrideDto>;
 	/**
 	 * Fortune settings for the user
 	 * @nullable

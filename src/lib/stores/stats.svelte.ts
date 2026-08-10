@@ -35,6 +35,7 @@ export class PlayerStats {
 		this.#account.settings?.fortune?.accounts?.[this.uuid]?.[this.selectedProfile?.profileId ?? ''] ?? null
 	);
 	#style = $state.raw<WeightStyleWithDataDto | WeightStyleListDto | undefined>(undefined);
+	#nameCardFrame = $state.raw<WeightStyleWithDataDto | WeightStyleListDto | undefined>(undefined);
 	#ready = $state(false);
 	#hideFromIndex = $derived(this.#account.settings?.misc?.hideFromSearchIndex ?? false);
 	#isNonClassicProfile = $derived.by(() => {
@@ -56,6 +57,7 @@ export class PlayerStats {
 		selectedProfile: ProfileDetailsDto;
 		profiles: ProfileDetails[];
 		style?: WeightStyleWithDataDto | WeightStyleListDto;
+		nameCardFrame?: WeightStyleWithDataDto | WeightStyleListDto;
 		initialMember?: ProfileMemberDto;
 		initialRanks?: LeaderboardRanksResponse;
 		initialFarmingInventory?: FarmingInventoryDto;
@@ -69,6 +71,7 @@ export class PlayerStats {
 		selectedProfile,
 		profiles,
 		style,
+		nameCardFrame,
 		initialMember,
 		initialRanks,
 		initialFarmingInventory,
@@ -78,6 +81,7 @@ export class PlayerStats {
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;
 		this.#style = style;
+		this.#nameCardFrame = nameCardFrame;
 		this.#farmingInventoryRequestKey =
 			initialFarmingInventory || bot ? `${account.id}:${selectedProfile?.profileId ?? ''}` : null;
 
@@ -165,6 +169,10 @@ export class PlayerStats {
 
 	get style() {
 		return this.#style;
+	}
+
+	get nameCardFrame() {
+		return this.#nameCardFrame;
 	}
 
 	get uuid() {

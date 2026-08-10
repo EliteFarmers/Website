@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
-	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import ArtistCredit from '$comp/shop/artist-credit.svelte';
+	import CosmeticStylePreview from '$comp/shop/cosmetic-style-preview.svelte';
 	import Badge from '$comp/stats/badge.svelte';
 	import { env } from '$env/dynamic/public';
-	import type { FarmingWeightDto } from '$lib/api';
+	import type { FarmingWeightDto, WeightStyleWithDataDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { type Crumb, getPageCtx } from '$lib/hooks/page.svelte';
 	import { buildShopProductLdJson, shopKeywords } from '$lib/shop/seo';
@@ -26,6 +27,7 @@
 	import ScrollText from '@lucide/svelte/icons/scroll-text';
 	import Tag from '@lucide/svelte/icons/tag';
 	import TicketX from '@lucide/svelte/icons/ticket-x';
+	import { watch } from 'runed';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -79,18 +81,42 @@
 		);
 	});
 	const ldJson = $derived(buildShopProductLdJson(baseUrl, product, productCategories, seoDescription));
+	const productStyles = $derived.by(() =>
+		(product.weightStyles ?? [])
+			.map(({ id }) => data.styles.find((style) => style.id === id))
+			.filter((style): style is WeightStyleWithDataDto => Boolean(style))
+	);
+	const cosmeticSurfaces = $derived.by(() => {
+		const surfaces: string[] = [];
+		const addSurface = (surface: string) => {
+			if (!surfaces.includes(surface)) surfaces.push(surface);
+		};
+		for (const style of productStyles) {
+			if (style.data) addSurface('weight commands');
+			if (style.leaderboard) addSurface('leaderboards');
+			if (style.nameCard) addSurface('name cards');
+			if (style.page) addSurface('profile pages');
+			if (style.frame?.leaderboard) addSurface('leaderboard frames');
+			if (style.frame?.nameCard) addSurface('name-card frames');
+		}
+		return surfaces;
+	});
+	const cosmeticSurfaceSummary = $derived(
+		cosmeticSurfaces.length
+			? new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(cosmeticSurfaces)
+			: 'your Elite profile'
+	);
 
 	const crumbs = $derived<Crumb[]>([{ name: 'Shop', href: '/shop' }, { name: product.name }]);
 
 	const breadcrumb = getPageCtx();
-	$effect.pre(() => {
-		breadcrumb.setBreadcrumbs(crumbs);
-	});
+	watch.pre(
+		() => crumbs,
+		(value) => breadcrumb.setBreadcrumbs(value)
+	);
 
 	const leadPreviewStyle = $derived.by(() => {
-		if (!product.weightStyles?.length) return null;
-		const style = data.styles.find((s) => s.id === product.weightStyles[0].id);
-		return style?.styleFormatter === 'data' ? style : null;
+		return productStyles[0] ?? null;
 	});
 
 	let claimModalOpen = $state(false);
@@ -99,7 +125,7 @@
 		const checkoutUrl = inCurrentCheckout
 			? '/shop/checkout?gift=1'
 			: `/shop/checkout?gift=1&giftProduct=${encodeURIComponent(product.id)}`;
-		await goto(checkoutUrl);
+		await goto(resolve(checkoutUrl as '/shop/checkout'));
 	}
 </script>
 
@@ -117,7 +143,7 @@
 	<div class="flex flex-wrap items-center gap-3">
 		<a
 			class="text-muted-foreground hover:text-primary inline-flex items-center gap-2 text-sm font-medium transition-colors"
-			href="/shop"
+			href={resolve('/shop')}
 			data-sveltekit-preload-data="tap"
 		>
 			<ArrowLeft size={16} />
@@ -126,7 +152,7 @@
 		{#if primaryCategory}
 			<a
 				class="border-border/60 bg-background hover:bg-card inline-flex rounded-full border px-4 py-2 text-sm font-medium transition-colors"
-				href="/shop/category/{primaryCategory.slug}"
+				href={resolve(`/shop/category/${primaryCategory.slug}` as '/shop/category/[slug]')}
 				data-sveltekit-preload-data="tap"
 			>
 				View {primaryCategory.title}
@@ -143,38 +169,64 @@
 						<Carousel.Content>
 							{#if leadPreviewStyle}
 								<Carousel.Item>
-									<div class="bg-background flex aspect-video w-full flex-col justify-center p-4">
-										<div class="border-border/50 origin-left rounded-md border p-2 py-3">
-											<div class="flex items-center gap-3 opacity-50 grayscale">
-												<div class="bg-card-foreground/30 h-6 w-16 shrink-0 rounded"></div>
-												<div class="flex flex-col gap-1">
-													<div class="bg-card-foreground/30 h-5 w-24 rounded"></div>
-													<div class="bg-card-foreground/30 h-3 w-16 rounded"></div>
+									<div class="bg-background flex aspect-video w-full items-center p-4">
+										{#if leadPreviewStyle.leaderboard || leadPreviewStyle.frame?.leaderboard}
+											<div class="flex w-full flex-col justify-center">
+												<div class="border-border/50 origin-left rounded-md border p-2 py-3">
+													<div class="flex items-center gap-3 opacity-50 grayscale">
+														<div
+															class="bg-card-foreground/30 h-6 w-16 shrink-0 rounded"
+														></div>
+														<div class="flex flex-col gap-1">
+															<div class="bg-card-foreground/30 h-5 w-24 rounded"></div>
+															<div class="bg-card-foreground/30 h-3 w-16 rounded"></div>
+														</div>
+														<div
+															class="bg-card-foreground/30 ml-auto h-6 w-24 rounded"
+														></div>
+													</div>
 												</div>
-												<div class="bg-card-foreground/30 ml-auto h-6 w-24 rounded"></div>
-											</div>
-										</div>
 
-										<div class="my-2 origin-left">
-											<EntryPreview
-												style={leadPreviewStyle.leaderboard ?? {}}
-												ign={data.ign ?? 'Player'}
-												uuid={data.uuid ?? ''}
-												styleId={+(leadPreviewStyle.id ?? 0)}
-												imageRefs={leadPreviewStyle.imageRefs}
-											/>
-										</div>
-
-										<div class="border-border/50 origin-left rounded-md border p-2 py-3">
-											<div class="flex items-center gap-3 opacity-50 grayscale">
-												<div class="bg-card-foreground/30 h-6 w-16 shrink-0 rounded"></div>
-												<div class="flex flex-col gap-1">
-													<div class="bg-card-foreground/30 h-5 w-24 rounded"></div>
-													<div class="bg-card-foreground/30 h-3 w-16 rounded"></div>
+												<div class="my-2 origin-left">
+													<EntryPreview
+														style={leadPreviewStyle.leaderboard}
+														frame={leadPreviewStyle.frame?.leaderboard}
+														ign={data.ign ?? 'Player'}
+														uuid={data.uuid ?? ''}
+														styleId={leadPreviewStyle.leaderboard
+															? leadPreviewStyle.id
+															: undefined}
+														imageRefs={leadPreviewStyle.imageRefs}
+														frameImageRefs={leadPreviewStyle.imageRefs}
+													/>
 												</div>
-												<div class="bg-card-foreground/30 ml-auto h-6 w-24 rounded"></div>
+
+												<div class="border-border/50 origin-left rounded-md border p-2 py-3">
+													<div class="flex items-center gap-3 opacity-50 grayscale">
+														<div
+															class="bg-card-foreground/30 h-6 w-16 shrink-0 rounded"
+														></div>
+														<div class="flex flex-col gap-1">
+															<div class="bg-card-foreground/30 h-5 w-24 rounded"></div>
+															<div class="bg-card-foreground/30 h-3 w-16 rounded"></div>
+														</div>
+														<div
+															class="bg-card-foreground/30 ml-auto h-6 w-24 rounded"
+														></div>
+													</div>
+												</div>
 											</div>
-										</div>
+										{:else}
+											<div class="w-full">
+												<CosmeticStylePreview
+													style={leadPreviewStyle}
+													ign={data.ign ?? 'Player'}
+													uuid={data.uuid ?? ''}
+													weight={data.weight ?? ({ totalWeight: 10000 } as FarmingWeightDto)}
+													compact
+												/>
+											</div>
+										{/if}
 									</div>
 								</Carousel.Item>
 							{/if}
@@ -246,7 +298,7 @@
 					<div class="mt-3 flex flex-wrap gap-2">
 						{#each productCategories as category (category.id)}
 							<a
-								href="/shop/category/{category.slug}"
+								href={resolve(`/shop/category/${category.slug}` as '/shop/category/[slug]')}
 								class="border-border/60 bg-background inline-flex rounded-full border px-3 py-1 text-sm font-medium"
 								data-sveltekit-preload-data="tap"
 							>
@@ -281,7 +333,12 @@
 						{addButtonLabel}
 					</Button>
 					{#if shouldPromptGiftCheckout}
-						<Button href="/shop" size="lg" variant="secondary" class="w-full text-lg font-semibold">
+						<Button
+							href={resolve('/shop')}
+							size="lg"
+							variant="secondary"
+							class="w-full text-lg font-semibold"
+						>
 							Continue Shopping
 						</Button>
 					{/if}
@@ -316,11 +373,11 @@
 
 				<div class="border-border/60 bg-card/70 rounded-xl border p-4 text-sm">
 					<p class="text-muted-foreground leading-relaxed">
-						Manage your items in <a href="/profile/purchases" class="text-link hover:underline"
+						Manage your items in <a href={resolve('/profile/purchases')} class="text-link hover:underline"
 							>purchase history</a
 						>
 						or equip cosmetics from
-						<a href="/profile/settings" class="text-link hover:underline">profile settings</a>.
+						<a href={resolve('/profile/settings')} class="text-link hover:underline">profile settings</a>.
 					</p>
 				</div>
 			</div>
@@ -349,10 +406,12 @@
 								<Image size={20} />
 							</div>
 							<div>
-								<p class="mb-0.5 leading-none font-medium">Cosmetic Styles</p>
+								<p class="mb-0.5 leading-none font-medium">Cosmetics</p>
 								<p class="text-muted-foreground text-sm">
-									Adds {product.weightStyles.length} style{product.weightStyles.length > 1 ? 's' : ''}
-									you can use across Elite.
+									Includes {product.weightStyles.length} cosmetic{product.weightStyles.length > 1
+										? 's'
+										: ''}
+									for {cosmeticSurfaceSummary}.
 								</p>
 							</div>
 						</div>
@@ -426,7 +485,7 @@
 
 					<p class="text-muted-foreground text-sm">
 						Most cosmetics can be equipped any time from <a
-							href="/profile/settings"
+							href={resolve('/profile/settings')}
 							class="text-link hover:underline">profile settings</a
 						>.
 					</p>
@@ -435,7 +494,7 @@
 		</div>
 	</div>
 
-	{#if product.weightStyles?.length}
+	{#if productStyles.length}
 		<section id="styles" class="mt-24 scroll-mt-24">
 			<div class="mb-8 flex items-center gap-4">
 				<div class="bg-border h-px flex-1"></div>
@@ -444,68 +503,26 @@
 			</div>
 
 			<div class="grid gap-8">
-				{#each [...product.weightStyles].sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0) as { id } (id)}
-					{@const style = data.styles.find((s) => s.id === id)}
-					{#if style}
-						<div class="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
-							<div class="bg-muted/30 border-b px-6 py-4">
-								<div class="flex items-center justify-between">
-									<div class="flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:items-center">
-										<h3 class="text-xl font-bold">{style.name}</h3>
-										{#if style.author}
-											<ArtistCredit artist={style.author} />
-										{/if}
-									</div>
-									{#if style.styleFormatter !== 'data'}
-										<span class="text-muted-foreground text-sm italic">Preview unavailable</span>
-									{/if}
-								</div>
-							</div>
-
-							<div class="p-6">
-								{#if style?.styleFormatter === 'data'}
-									<div class="flex flex-col gap-8 lg:flex-row">
-										<div class="flex-1">
-											<h4
-												class="text-muted-foreground mb-4 text-sm font-semibold tracking-wider uppercase"
-											>
-												Command Preview
-											</h4>
-											<div class="origin-center scale-[0.8] sm:scale-100">
-												<WeightStyle
-													{style}
-													ign={data.ign ?? 'Player'}
-													uuid={data.uuid ?? ''}
-													weight={data.weight ?? ({ totalWeight: 10000 } as FarmingWeightDto)}
-												/>
-											</div>
-										</div>
-
-										{#if style?.leaderboard && Object.keys(style.leaderboard).length > 0}
-											<div class="flex-1">
-												<h4
-													class="text-muted-foreground mb-4 text-sm font-semibold tracking-wider uppercase"
-												>
-													Leaderboard Preview
-												</h4>
-												<div class="origin-center scale-[0.8] sm:scale-100">
-													<EntryPreview
-														style={style.leaderboard}
-														ign={data.ign ?? 'Player'}
-														uuid={data.uuid ?? ''}
-														styleId={style.id}
-														imageRefs={style.imageRefs}
-													/>
-												</div>
-											</div>
-										{/if}
-									</div>
-								{:else}
-									<p class="text-muted-foreground">{style.description}</p>
+				{#each [...productStyles].sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0) as style (style.id)}
+					<div class="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
+						<div class="bg-muted/30 border-b px-6 py-4">
+							<div class="flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:items-center">
+								<h3 class="text-xl font-bold">{style.name}</h3>
+								{#if style.author}
+									<ArtistCredit artist={style.author} />
 								{/if}
 							</div>
 						</div>
-					{/if}
+
+						<div class="p-6">
+							<CosmeticStylePreview
+								{style}
+								ign={data.ign ?? 'Player'}
+								uuid={data.uuid ?? ''}
+								weight={data.weight ?? ({ totalWeight: 10000 } as FarmingWeightDto)}
+							/>
+						</div>
+					</div>
 				{/each}
 			</div>
 		</section>

@@ -10,6 +10,7 @@ Use of this API requires following the [Elite API TOS](https://eliteskyblock.com
 import type { WeightStylePositionDto } from './WeightStylePositionDto';
 import type { WeightStyleElementDtoOutline } from './WeightStyleElementDtoOutline';
 import type { WeightStyleElementDtoBackground } from './WeightStyleElementDtoBackground';
+import type { WeightStyleElementDtoGlass } from './WeightStyleElementDtoGlass';
 
 export interface WeightStyleElementDto {
 	/** @nullable */
@@ -27,4 +28,6 @@ export interface WeightStyleElementDto {
 	outline?: WeightStyleElementDtoOutline;
 	/** @nullable */
 	background?: WeightStyleElementDtoBackground;
+	/** @nullable */
+	glass?: WeightStyleElementDtoGlass;
 }

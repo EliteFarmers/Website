@@ -93,6 +93,17 @@ export const getProfilesAccount = query(
 		const style = account.settings?.nameStyle?.id
 			? event.locals.cache?.styleLookup?.[account.settings.nameStyle.id]
 			: undefined;
+		const pageStyle = account.settings?.pageStyle?.id
+			? event.locals.cache?.styleLookup?.[account.settings.pageStyle.id]
+			: undefined;
+		const nameCardFrame = account.settings?.nameCardFrame?.id
+			? event.locals.cache?.styleLookup?.[account.settings.nameCardFrame.id]
+			: undefined;
+		const cosmetics = {
+			style: style ?? undefined,
+			pageStyle: pageStyle ?? undefined,
+			nameCardFrame: nameCardFrame ?? undefined,
+		};
 
 		const profiles = account.profiles?.filter((p) => p.members?.some((m) => m.uuid === account.id && m.active));
 
@@ -100,7 +111,7 @@ export const getProfilesAccount = query(
 			return {
 				account,
 				noProfiles: true as const,
-				style: style ?? undefined,
+				...cosmetics,
 			};
 		}
 
@@ -139,19 +150,11 @@ export const getProfilesAccount = query(
 			return { code: 404, error: 'Player not found' };
 		}
 
-		if (style) {
-			return {
-				account,
-				profile: selectedProfile,
-				profiles: profileIds,
-				style: style ?? undefined,
-			};
-		}
-
 		return {
 			account,
 			profile: selectedProfile,
 			profiles: profileIds,
+			...cosmetics,
 		};
 	}
 );
