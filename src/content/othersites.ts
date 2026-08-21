@@ -14,7 +14,7 @@ export const OTHER_SITES = [
 		url: ({ ign }) => {
 			return `https://plancke.io/hypixel/player/stats/${ign}${utmQuery}`;
 		},
-		rel: 'noopener noreferrer nofollow',
+		rel: 'noopener',
 	},
 	{
 		name: 'nadeshiko',
@@ -22,7 +22,7 @@ export const OTHER_SITES = [
 		url: ({ ign, uuid }) => {
 			return `https://nadeshiko.io/player/${uuid ?? ign}${utmQuery}`;
 		},
-		rel: 'noopener noreferrer nofollow',
+		rel: 'noopener',
 	},
 ] as OtherSite[];
 
