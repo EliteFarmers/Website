@@ -1,9 +1,10 @@
+const utmQuery = `?utm_source=eliteskyblock.com&utm_medium=referral&utm_campaign=profile`;
 export const OTHER_SITES = [
 	{
 		name: 'SkyCrypt',
 		label: 'View more profile stats at SkyCrypt',
 		url: ({ uuid, ign, profile }) => {
-			return `https://sky.shiiyu.moe/stats/${uuid ?? ign}/${profile ?? ''}`;
+			return `https://sky.shiiyu.moe/stats/${uuid ?? ign}/${profile ?? ''}${utmQuery}`;
 		},
 		rel: 'noopener',
 	},
@@ -11,7 +12,7 @@ export const OTHER_SITES = [
 		name: 'Plancke',
 		label: 'General Hypixel player information at Plancke',
 		url: ({ ign }) => {
-			return `https://plancke.io/hypixel/player/stats/${ign}`;
+			return `https://plancke.io/hypixel/player/stats/${ign}${utmQuery}`;
 		},
 		rel: 'noopener noreferrer nofollow',
 	},
@@ -19,7 +20,7 @@ export const OTHER_SITES = [
 		name: 'nadeshiko',
 		label: 'View more Hypixel stats at nadeshiko',
 		url: ({ ign, uuid }) => {
-			return `https://nadeshiko.io/player/${uuid ?? ign}`;
+			return `https://nadeshiko.io/player/${uuid ?? ign}${utmQuery}`;
 		},
 		rel: 'noopener noreferrer nofollow',
 	},
