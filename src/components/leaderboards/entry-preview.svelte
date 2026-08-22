@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { LeaderboardScoreDataType, LeaderboardType, WeightStyleWithDataDto } from '$lib/api';
+	import type { WeightStyleWithDataDto } from '$lib/api';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { LeaderboardStyle } from '$lib/styles/style';
 	import Entry from './entry.svelte';
