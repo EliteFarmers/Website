@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { WeightStyleWithDataDto } from '$lib/api';
+	import { LeaderboardScoreDataType, LeaderboardType, type WeightStyleWithDataDto } from '$lib/api';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { LeaderboardStyle } from '$lib/styles/style';
 	import Entry from './entry.svelte';
@@ -42,12 +42,12 @@
 	leaderboard={{
 		title: 'Farming Weight',
 		id: 'farmingweight',
-		scoreDataType: 'Decimal',
+		scoreDataType: LeaderboardScoreDataType.Decimal,
 		category: 'General',
 		profile: false,
 		minimumScore: 1000,
 		cachedRankAmount: 50000,
-		intervalType: 'Current',
+		intervalType: LeaderboardType.Current,
 		suffix: '',
 	}}
 	{showLeaderboardName}

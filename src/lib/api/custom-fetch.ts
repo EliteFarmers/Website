@@ -2,7 +2,7 @@ import { getRequestEvent } from '$app/server';
 import { env } from '$env/dynamic/private';
 const ELITE_API_TOKEN = env.ELITE_API_TOKEN;
 
-type SuccessStatus = 200 | 201 | 204;
+type SuccessStatus = 200 | 201 | 202 | 204;
 type ExtractSuccess<T extends { status: number }> = Extract<T, { status: SuccessStatus }>;
 type ExtractError<T extends { status: number }> = Exclude<T, { status: SuccessStatus }>;
 

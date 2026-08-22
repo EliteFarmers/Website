@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { createContentReportCommand, type ContentReportTargetType } from '$lib/remote/reports.remote';
+	import { ContentReportTargetType } from '$lib/api/schemas';
+	import { createContentReportCommand } from '$lib/remote/reports.remote';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import { Label } from '$ui/label';
@@ -7,7 +8,7 @@
 
 	interface Props {
 		open: boolean;
-		targetType: ContentReportTargetType;
+		targetType: typeof ContentReportTargetType.guide | typeof ContentReportTargetType.comment;
 		targetId: number;
 		onOpenChange: (open: boolean) => void;
 		onSubmitted?: () => void;

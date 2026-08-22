@@ -1,4 +1,4 @@
-import type { FarmingWeightDto, MinecraftAccountDto, WeightStyleWithDataDtoImageRefs } from '$lib/api';
+import type { DictionaryOfStringAndImageAttachmentDto, FarmingWeightDto, MinecraftAccountDto } from '$lib/api';
 import {
 	BackgroundGradient,
 	BackgroundStyle,
@@ -16,14 +16,14 @@ export interface CustomFormatterOptions {
 	badgeUrl?: string;
 	weightRank?: number;
 	data?: WeightStyle;
-	imageRefs?: WeightStyleWithDataDtoImageRefs;
+	imageRefs?: DictionaryOfStringAndImageAttachmentDto;
 	head?: HTMLImageElement;
 }
 
 export async function drawBackgroundCanvas(
 	canvas: HTMLCanvasElement,
 	data?: WeightStyle | undefined,
-	imageRefs?: WeightStyleWithDataDtoImageRefs
+	imageRefs?: DictionaryOfStringAndImageAttachmentDto
 ) {
 	const ctx = canvas.getContext('2d');
 	if (!ctx) {

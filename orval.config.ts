@@ -4,7 +4,7 @@ import { defineConfig } from 'orval';
 export default defineConfig({
 	elite: {
 		input: {
-			target: process.env.ELITE_API_URL + '/openapi/admin-v1.json',
+			target: process.env.ELITE_API_URL + '/openapi/website-v1.json',
 		},
 		output: {
 			baseUrl: '${ELITE_API_URL}',
@@ -13,6 +13,7 @@ export default defineConfig({
 			schemas: './src/lib/api/schemas',
 			namingConvention: 'PascalCase',
 			override: {
+				namingConvention: { enum: 'camelCase' },
 				useBigInt: true,
 				transformer: './src/lib/api/util/fetch-transformer.ts',
 				mutator: {
@@ -39,6 +40,7 @@ export default defineConfig({
 			schemas: './src/lib/stream-api/schemas',
 			namingConvention: 'PascalCase',
 			override: {
+				namingConvention: { enum: 'camelCase' },
 				useBigInt: true,
 				transformer: './src/lib/api/util/fetch-transformer.ts',
 				mutator: {
@@ -56,7 +58,7 @@ export default defineConfig({
 	},
 	zod: {
 		input: {
-			target: process.env.ELITE_API_URL + '/openapi/admin-v1.json',
+			target: process.env.ELITE_API_URL + '/openapi/website-v1.json',
 		},
 		output: {
 			client: 'zod',

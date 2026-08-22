@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { WeightStyleElementDto } from '$lib/api';
+	import type { WeightStyleElement } from '$lib/api';
 	import type { ElementPosition } from '$lib/styles/style';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		element: WeightStyleElementDto | ElementPosition | null | undefined;
+		element: WeightStyleElement | ElementPosition | null | undefined;
 		color?: string;
 		children?: Snippet;
 		class?: string;

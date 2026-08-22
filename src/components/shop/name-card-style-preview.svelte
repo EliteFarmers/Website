@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ImageAttachmentDto, WeightStyleElementDto, WeightStyleWithDataDto } from '$lib/api';
+	import type { ImageAttachmentDto, WeightStyleElement, WeightStyleWithDataDto } from '$lib/api';
 	import { drawBackgroundCanvas } from '$lib/styles/maker';
 
 	interface Props {
@@ -42,12 +42,12 @@
 			.join(', ');
 	}
 
-	function positionStyle(element: WeightStyleElementDto | null | undefined) {
+	function positionStyle(element: WeightStyleElement | null | undefined) {
 		if (!element) return 'display:none';
 		return `left:${(coordinate(element.position.x, 1920) / 19.2).toFixed(4)}cqw;top:${(coordinate(element.position.y, 400) / 19.2).toFixed(4)}cqw;`;
 	}
 
-	function boxStyle(element: WeightStyleElementDto | null | undefined, positioned = true) {
+	function boxStyle(element: WeightStyleElement | null | undefined, positioned = true) {
 		if (!element) return 'display:none';
 		let result = positioned ? positionStyle(element) : '';
 		result += `font-size:${((element.fontSize ?? 48) / 19.2).toFixed(4)}cqw;font-family:${element.font ?? 'inherit'};color:${element.fill ?? 'inherit'};`;
