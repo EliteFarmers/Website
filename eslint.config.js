@@ -1,16 +1,12 @@
 import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
 import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import ts from 'typescript-eslint';
-import svelteConfig from './svelte.config.js';
 
 export default ts.config(
 	js.configs.recommended,
 	...ts.configs.recommended,
 	...svelte.configs.recommended,
-	prettier,
-	...svelte.configs.prettier,
 	{
 		languageOptions: {
 			globals: {
@@ -20,13 +16,12 @@ export default ts.config(
 		},
 	},
 	{
-		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
+		files: ['**/*.svelte'],
 		languageOptions: {
 			parserOptions: {
 				projectService: true,
 				extraFileExtensions: ['.svelte'],
 				parser: ts.parser,
-				svelteConfig,
 			},
 		},
 		rules: {
@@ -48,7 +43,7 @@ export default ts.config(
 		],
 	},
 	{
-		files: ['**/*.ts', '**/*.svelte'],
+		files: ['**/*.svelte'],
 		rules: {
 			'no-undef': 'off', // TypeScript checks for this already
 			'no-restricted-imports': [

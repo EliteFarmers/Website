@@ -1,54 +1,55 @@
 {
-	"name": "farming-weight",
-	"version": "0.16.1",
-	"description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
-	"type": "module",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"module": "dist/index.js",
-	"sideEffects": false,
-	"scripts": {
-		"build": "tsc",
-		"build:watch": "tsc --watch",
-		"typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
-		"format": "pnpm biome check --write",
-		"lint": "pnpm biome check",
-		"test": "vitest run",
-		"test:watch": "vitest",
-		"debug": "vitest --test-timeout=0 --no-file-parallelism"
-	},
-	"keywords": [
-		"farming",
-		"weight",
-		"farming-weight",
-		"skyblock",
-		"hypixel",
-		"hypixel-skyblock",
-		"fortune"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/EliteFarmers/Website.git"
-	},
-	"files": [
-		"dist/**/*"
-	],
-	"bugs": {
-		"url": "https://github.com/EliteFarmers/Website/issues"
-	},
-	"publishConfig": {
-		"registry": "https://registry.npmjs.org/",
-		"access": "public"
-	},
-	"homepage": "https://github.com/EliteFarmers/Website#readme",
-	"author": "Kaeso",
-	"license": "MIT",
-	"devDependencies": {
-		"@biomejs/biome": "2.0.6",
-		"@types/madge": "^5.0.3",
-		"madge": "^8.0.0",
-		"typescript": "^5.8.3",
-		"vitest": "^4.0.16"
-	},
-	"packageManager": "pnpm@10.15.0"
+  "name": "farming-weight",
+  "version": "0.16.1",
+  "description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
+    "format": "pnpm oxfmt .",
+    "lint": "pnpm oxlint --deny-warnings --tsconfig ./tsconfig.json src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "debug": "vitest --test-timeout=0 --no-file-parallelism"
+  },
+  "keywords": [
+    "farming",
+    "weight",
+    "farming-weight",
+    "skyblock",
+    "hypixel",
+    "hypixel-skyblock",
+    "fortune"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EliteFarmers/Website.git"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "bugs": {
+    "url": "https://github.com/EliteFarmers/Website/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "homepage": "https://github.com/EliteFarmers/Website#readme",
+  "author": "Kaeso",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/madge": "^5.0.3",
+    "madge": "^8.0.0",
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.16",
+    "oxfmt": "^0.64.0",
+    "oxlint": "^1.79.0"
+  },
+  "packageManager": "pnpm@11.22.0+sha512.1ff870c4c6133dfd88fb2afc46dd13d47f09c9794b438c6fdb47ca98caf3bc16381ee0be93a091b8e3824cf01f889f46d7d9e20910fb0be1ab0fb5baa80dd621"
 }

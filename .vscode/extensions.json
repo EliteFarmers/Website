@@ -2,8 +2,8 @@
 	"recommendations": [
 		"bradlc.vscode-tailwindcss",
 		"svelte.svelte-vscode",
-		"esbenp.prettier-vscode",
 		"dbaeumer.vscode-eslint",
-		"usernamehw.errorlens"
+		"usernamehw.errorlens",
+		"oxc.oxc-vscode"
 	]
 }

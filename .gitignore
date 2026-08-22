@@ -14,6 +14,7 @@ static/oss.txt
 .idea
 .velite
 /cache
+.eslintcache
 
 # Admin routes
 src/routes/(auth)/**/graphs/+l*

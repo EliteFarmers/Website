@@ -1,0 +1,40 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"categories": {
+		"correctness": "error"
+	},
+	"plugins": ["eslint", "typescript", "unicorn"],
+	"env": {
+		"browser": true,
+		"node": true
+	},
+	"ignorePatterns": [
+		"**/*.js",
+		"**/*.cjs",
+		"**/*.mjs",
+		"**/*.d.ts",
+		"**/*.svelte",
+		"build/**",
+		"dist/**",
+		".svelte-kit/**",
+		".velite/**",
+		"packages/farming-weight/dist/**",
+		"packages/farming-weight/node_modules/**",
+		"static/**",
+		"src/lib/api/client/**",
+		"src/lib/api/schemas/**",
+		"src/lib/stream-api/client/**",
+		"src/lib/stream-api/schemas/**"
+	],
+	"rules": {
+		"no-restricted-imports": [
+			"error",
+			{
+				"patterns": ["farming-weight/dist/*"]
+			}
+		],
+		"no-useless-assignment": "off",
+		"unicorn/no-useless-fallback-in-spread": "off",
+		"unicorn/no-empty-file": "off"
+	}
+}
