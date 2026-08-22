@@ -77,7 +77,7 @@
 
 <div class="@container relative aspect-[4.8/1] w-full overflow-visible">
 	<div
-		class="bg-background absolute inset-0 overflow-clip rounded-xl border-2 bg-no-repeat {nameCard
+		class="absolute inset-0 overflow-clip rounded-xl border-2 bg-background bg-no-repeat {nameCard
 			? 'dark text-primary'
 			: ''}"
 	>
@@ -156,7 +156,7 @@
 						<span class="font-mono text-[3.25cqw]">{rankText}</span>
 					</div>
 					<div class="mt-[1cqw] text-[4cqw] leading-none font-semibold">{weightText}</div>
-					<div class="text-muted-foreground mt-[0.5cqw] text-[2cqw]">Farming Weight</div>
+					<div class="mt-[0.5cqw] text-[2cqw] text-muted-foreground">Farming Weight</div>
 				</div>
 			</div>
 		{/if}

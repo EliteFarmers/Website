@@ -26,8 +26,8 @@ import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
 
 export class FarmingEquipment extends UpgradeableBase {
-	public declare item: EliteItemDto;
-	public declare info: FarmingArmorInfo;
+	declare public item: EliteItemDto;
+	declare public info: FarmingArmorInfo;
 
 	public get type() {
 		return ReforgeTarget.Equipment;
@@ -37,14 +37,14 @@ export class FarmingEquipment extends UpgradeableBase {
 		return this.info.slot;
 	}
 
-	public declare rarity: Rarity;
-	public declare reforge: Reforge | undefined;
-	public declare reforgeStats: ReforgeTier | undefined;
-	public declare recombobulated: boolean;
+	declare public rarity: Rarity;
+	declare public reforge: Reforge | undefined;
+	declare public reforgeStats: ReforgeTier | undefined;
+	declare public recombobulated: boolean;
 
-	public declare fortune: number;
-	public declare fortuneBreakdown: Record<string, number>;
-	public declare options?: PlayerOptions;
+	declare public fortune: number;
+	declare public fortuneBreakdown: Record<string, number>;
+	declare public options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		super({ item, options, items: FARMING_EQUIPMENT_INFO });

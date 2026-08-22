@@ -28,7 +28,7 @@
 				<button
 					{...props}
 					class={cn(
-						'border-border/60 bg-background/80 hover:bg-card inline-flex h-10 items-center gap-2 rounded-full border px-2 text-sm font-medium shadow-sm transition-colors',
+						'inline-flex h-10 items-center gap-2 rounded-full border border-border/60 bg-background/80 px-2 text-sm font-medium shadow-sm transition-colors hover:bg-card',
 						className
 					)}
 					aria-label="Open account menu"
@@ -61,7 +61,7 @@
 {:else}
 	<a
 		class={cn(
-			'border-border/60 bg-background/80 hover:bg-card inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium shadow-sm transition-colors',
+			'inline-flex h-10 items-center gap-2 rounded-full border border-border/60 bg-background/80 px-4 text-sm font-medium shadow-sm transition-colors hover:bg-card',
 			className
 		)}
 		data-sveltekit-preload-data="off"

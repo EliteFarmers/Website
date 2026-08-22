@@ -228,10 +228,10 @@
 		onClearHoist={(commentId) => handleClearHoist(commentId)}
 	/>
 	{#snippet failed(error, reset)}
-		<div class="border-destructive/30 bg-destructive/5 rounded-md border p-3 text-sm">
+		<div class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
 			<p class="font-medium">Failed to load comments</p>
 			{#if typeof error === 'object' && error && 'message' in error}
-				<p class="text-muted-foreground mt-1">{error.message}</p>
+				<p class="mt-1 text-muted-foreground">{error.message}</p>
 			{/if}
 			<button class="mt-2 rounded-md border px-3 py-1" onclick={reset}>Try again</button>
 		</div>

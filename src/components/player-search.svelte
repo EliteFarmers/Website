@@ -72,8 +72,8 @@
 		{...rest}
 	>
 		<Search />
-		<span class="text-muted-foreground hidden lg:inline-flex">Search For Player...</span>
-		<span class="text-muted-foreground inline-flex lg:hidden">Search...</span>
+		<span class="hidden text-muted-foreground lg:inline-flex">Search For Player...</span>
+		<span class="inline-flex text-muted-foreground lg:hidden">Search...</span>
 	</Button>
 {/if}
 
@@ -107,7 +107,7 @@
 						</Command.Item>
 					{:else}
 						{#if searchStr == ''}
-							<p class="text-muted-foreground text-center text-sm">No players found.</p>
+							<p class="text-center text-sm text-muted-foreground">No players found.</p>
 						{/if}
 					{/each}
 				</Command.Group>

@@ -13,7 +13,7 @@
 
 <div class="min-w-32 text-right">
 	<p class="font-semibold">{formatOrderCurrency(order.totalPrice, order.currency)}</p>
-	<p class="text-muted-foreground text-xs">
+	<p class="text-xs text-muted-foreground">
 		{summary.itemCount.toLocaleString()} line item{summary.itemCount === 1 ? '' : 's'}
 	</p>
 </div>

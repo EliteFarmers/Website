@@ -1,14 +1,20 @@
-<script lang="ts" generics="TData, TValue">
-	import { createSvelteTable, FlexRender } from '$ui/data-table/index.js';
+<script lang="ts" generics="TData extends RowData">
+	import {
+		createTable,
+		dataTableFeatures,
+		FlexRender,
+		type AnyColumnDef,
+		type PaginationState,
+		type RowData,
+	} from '$ui/data-table/index.js';
 	import * as Table from '$ui/table/index.js';
-	import { type ColumnDef, type PaginationState, getCoreRowModel } from '@tanstack/table-core';
 	import PaymentsTablePagination from './payments-table-pagination.svelte';
 
 	type PaginationChangeHandler = (pagination: PaginationState) => void;
 	type RowClickHandler = (row: TData) => void;
 
-	type DataTableProps<TData, TValue> = {
-		columns: ColumnDef<TData, TValue>[];
+	type DataTableProps<TData> = {
+		columns: AnyColumnDef<TData>[];
 		data: TData[];
 		pageIndex: number;
 		pageSize: number;
@@ -31,11 +37,12 @@
 		onRowClick,
 		loading = false,
 		emptyMessage = 'No purchases found.',
-	}: DataTableProps<TData, TValue> = $props();
+	}: DataTableProps<TData> = $props();
 
 	const pagination = $derived.by(() => ({ pageIndex, pageSize }));
 
-	const table = createSvelteTable({
+	const table = createTable({
+		features: dataTableFeatures,
 		get data() {
 			return data;
 		},
@@ -44,7 +51,9 @@
 				return pagination;
 			},
 		},
-		columns: (() => columns)(),
+		get columns() {
+			return columns;
+		},
 		manualPagination: true,
 		get pageCount() {
 			return pageCount;
@@ -53,7 +62,6 @@
 			const next = typeof updater === 'function' ? updater(pagination) : updater;
 			onPaginationChangeProp?.(next);
 		},
-		getCoreRowModel: getCoreRowModel(),
 	});
 </script>
 
@@ -65,13 +73,10 @@
 					<Table.Row>
 						{#each headerGroup.headers as header (header.id)}
 							<Table.Head
-								class="bg-card border-t border-b first:rounded-l-md first:border-l last:rounded-r-md last:border-r"
+								class="border-t border-b bg-card first:rounded-l-md first:border-l last:rounded-r-md last:border-r"
 							>
 								{#if !header.isPlaceholder}
-									<FlexRender
-										content={header.column.columnDef.header}
-										context={header.getContext()}
-									/>
+									<FlexRender {header} />
 								{/if}
 							</Table.Head>
 						{/each}
@@ -98,13 +103,13 @@
 										: 'bg-card',
 								]}
 							>
-								<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
+								<FlexRender {cell} />
 							</Table.Cell>
 						{/each}
 					</Table.Row>
 				{:else}
 					<Table.Row>
-						<Table.Cell colspan={columns.length} class="bg-card h-28 rounded-md border text-center">
+						<Table.Cell colspan={columns.length} class="h-28 rounded-md border bg-card text-center">
 							{emptyMessage}
 						</Table.Cell>
 					</Table.Row>

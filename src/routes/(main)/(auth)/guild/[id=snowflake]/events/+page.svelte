@@ -89,7 +89,7 @@
 					? `background-image: url(${data.guild.banner.url}); color: white;`
 					: ''}
 			<div
-				class="bg-card relative flex w-full flex-1 flex-row items-center justify-start gap-8 rounded-lg bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
+				class="relative flex w-full flex-1 flex-row items-center justify-start gap-8 rounded-lg bg-card bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
 				style={background || ''}
 			>
 				{#if data.guild?.banner}
@@ -104,7 +104,7 @@
 							{#if !event.approved}
 								<Popover.Mobile>
 									{#snippet trigger()}
-										<TriangleAlert class="text-destructive mt-1.5 size-5" />
+										<TriangleAlert class="mt-1.5 size-5 text-destructive" />
 									{/snippet}
 									<div>
 										<p class="font-semibold">Pending approval!</p>

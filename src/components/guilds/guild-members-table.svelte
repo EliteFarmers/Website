@@ -78,7 +78,7 @@
 								<div class="flex flex-col gap-1">
 									<a
 										href="/@{encodeURIComponent(member.name)}"
-										class="text-foreground font-semibold hover:underline"
+										class="font-semibold text-foreground hover:underline"
 									>
 										{member.formattedName}
 									</a>
@@ -110,7 +110,7 @@
 				{/each}
 			{:else}
 				<Table.Row>
-					<Table.Cell colspan={5} class="bg-card text-muted-foreground px-4 py-10 text-center text-sm">
+					<Table.Cell colspan={5} class="bg-card px-4 py-10 text-center text-sm text-muted-foreground">
 						No members found.
 					</Table.Cell>
 				</Table.Row>

@@ -77,7 +77,7 @@
 			{#each crops as [crop, src] (crop)}
 				<button
 					data-crop={crop}
-					class="hover:bg-muted flex aspect-square w-16 flex-row items-center justify-center gap-2 rounded-md p-2 {$selectedCrops[
+					class="flex aspect-square w-16 flex-row items-center justify-center gap-2 rounded-md p-2 hover:bg-muted {$selectedCrops[
 						crop
 					]
 						? 'bg-primary/15'

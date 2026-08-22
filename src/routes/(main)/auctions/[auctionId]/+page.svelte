@@ -22,25 +22,25 @@
 		{/if}
 		<div>
 			<h1 class="text-3xl font-semibold">{itemName}</h1>
-			<p class="text-muted-foreground text-sm">Auction {auction.auctionId}</p>
+			<p class="text-sm text-muted-foreground">Auction {auction.auctionId}</p>
 		</div>
 	</div>
 
 	<div class="grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
 		<div>
-			<div class="text-muted-foreground text-sm">Sold price</div>
+			<div class="text-sm text-muted-foreground">Sold price</div>
 			<div class="text-xl font-semibold">{Number(auction.price).toLocaleString()} coins</div>
 		</div>
 		<div>
-			<div class="text-muted-foreground text-sm">Sold at</div>
+			<div class="text-sm text-muted-foreground">Sold at</div>
 			<div class="text-xl font-semibold">{soldAt ?? 'Unknown'}</div>
 		</div>
 		<div>
-			<div class="text-muted-foreground text-sm">Seller UUID</div>
+			<div class="text-sm text-muted-foreground">Seller UUID</div>
 			<div class="text-sm break-all">{auction.sellerUuid}</div>
 		</div>
 		<div>
-			<div class="text-muted-foreground text-sm">Buyer UUID</div>
+			<div class="text-sm text-muted-foreground">Buyer UUID</div>
 			<div class="text-sm break-all">{auction.buyerUuid ?? 'Unknown'}</div>
 		</div>
 	</div>

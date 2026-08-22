@@ -6,13 +6,13 @@
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
 	import X from '@lucide/svelte/icons/x';
-	import type { Table } from '@tanstack/table-core';
+	import type { Table } from '$ui/data-table';
 	import { categories, types } from './columns.js';
 	import DataTableFacetedFilter from './data-table-faceted-filter.svelte';
 
 	let { table }: { table: Table<TData> } = $props();
 
-	const isFiltered = $derived(table.getState().columnFilters.length > 0);
+	const isFiltered = $derived(table.atoms.columnFilters.get().length > 0);
 	const filterCol = $derived(table.getColumn('interval'));
 	const categoryCol = $derived(table.getColumn('category'));
 </script>

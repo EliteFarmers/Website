@@ -47,7 +47,7 @@
 	<DropdownMenu.Trigger>
 		{#snippet child({ props })}
 			<Sidebar.MenuButton
-				class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[state=collapsed]:rounded-full"
+				class="group-data-[state=collapsed]:rounded-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 				{...props}
 			>
 				<Bell
@@ -56,7 +56,7 @@
 				<span>Alerts</span>
 				{#if unreadCount > 0}
 					<div
-						class="bg-destructive ml-auto flex size-5 items-center justify-center rounded-full pb-0.5 text-sm leading-0 font-semibold text-white"
+						class="ml-auto flex size-5 items-center justify-center rounded-full bg-destructive pb-0.5 text-sm leading-0 font-semibold text-white"
 					>
 						{unreadCount}
 					</div>
@@ -84,10 +84,10 @@
 					>
 						<div class="flex w-full flex-col gap-1">
 							<span class="text-sm font-semibold">
-								<AnnouncementIcon {announcement} class="text-primary mr-1 mb-0.5 inline size-4" />
+								<AnnouncementIcon {announcement} class="mr-1 mb-0.5 inline size-4 text-primary" />
 								{announcement.title}
 							</span>
-							<span class="text-muted-foreground text-xs">
+							<span class="text-xs text-muted-foreground">
 								<RenderHtml content={announcement.content} />
 							</span>
 							<div class="flex flex-row justify-between">
@@ -112,7 +112,7 @@
 									>
 										{announcement.targetLabel ?? 'Read More'}
 										<ArrowRight
-											class="text-primary group-hover:animate-bounce-horizontal ml-1 hidden size-4 md:inline"
+											class="ml-1 hidden size-4 text-primary group-hover:animate-bounce-horizontal md:inline"
 										/>
 									</Button>
 								{/if}
@@ -128,11 +128,11 @@
 					>
 						<div class="flex w-full flex-col gap-1">
 							<span class="flex items-center gap-1 text-sm font-semibold">
-								<Info class="text-primary inline size-4" />
+								<Info class="inline size-4 text-primary" />
 								{notification.title}
 							</span>
 							{#if notification.message}
-								<div class="text-muted-foreground text-xs">
+								<div class="text-xs text-muted-foreground">
 									<RenderHtml content={notification.message} />
 								</div>
 							{/if}
@@ -151,7 +151,7 @@
 										Mark as Read
 									</Button>
 								{:else}
-									<span class="text-muted-foreground text-xs italic">Read</span>
+									<span class="text-xs text-muted-foreground italic">Read</span>
 								{/if}
 								{#if notification.link}
 									<Button
@@ -162,7 +162,7 @@
 									>
 										View
 										<ArrowRight
-											class="text-primary group-hover:animate-bounce-horizontal ml-1 hidden size-4 md:inline"
+											class="ml-1 hidden size-4 text-primary group-hover:animate-bounce-horizontal md:inline"
 										/>
 									</Button>
 								{/if}

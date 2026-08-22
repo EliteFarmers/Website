@@ -55,14 +55,14 @@
 							href={progress.nextInfo.wiki}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-link mt-0.5"
+							class="mt-0.5 text-link"
 						>
 							<Info size={16} />
 						</a>
 					{/if}
 				</div>
 				{#if progress.info?.upgrade?.why}
-					<p class="text-muted-foreground text-sm">{progress.info.upgrade.why}</p>
+					<p class="text-sm text-muted-foreground">{progress.info.upgrade.why}</p>
 				{/if}
 			</div>
 		{/if}
@@ -79,7 +79,7 @@
 							href={progress.maxInfo.wiki}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-link mt-0.5"
+							class="mt-0.5 text-link"
 						>
 							<Info size={16} />
 						</a>

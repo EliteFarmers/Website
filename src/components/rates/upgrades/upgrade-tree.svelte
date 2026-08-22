@@ -91,7 +91,7 @@
 
 <Collapsible.Root
 	bind:open={isOpen}
-	class="upgrade-tree-root bg-card/20 w-full rounded-lg border"
+	class="upgrade-tree-root w-full rounded-lg border bg-card/20"
 	data-expanded={isOpen}
 >
 	<div
@@ -108,7 +108,7 @@
 		{/if}
 
 		<div class="flex min-w-0 flex-row items-center gap-2">
-			<div class="bg-muted/20 flex h-8 w-8 shrink-0 items-center justify-center rounded border">
+			<div class="flex h-8 w-8 shrink-0 items-center justify-center rounded border bg-muted/20">
 				{#if upgrade.purchase}
 					<ItemRender skyblockId={upgrade.purchase} class="size-6" />
 				{:else if upgrade.onto?.newSkyblockId}
@@ -116,7 +116,7 @@
 				{:else if upgrade.cost?.items && Object.keys(upgrade.cost.items).length > 0}
 					<ItemRender skyblockId={Object.keys(upgrade.cost.items)[0]} class="size-6" />
 				{:else}
-					<span class="text-muted-foreground text-xs font-bold">+</span>
+					<span class="text-xs font-bold text-muted-foreground">+</span>
 				{/if}
 			</div>
 
@@ -127,7 +127,7 @@
 			</div>
 
 			{#if upgrade.wiki}
-				<a href={upgrade.wiki} target="_blank" rel="noopener noreferrer" class="text-link p-1">
+				<a href={upgrade.wiki} target="_blank" rel="noopener noreferrer" class="p-1 text-link">
 					<Info size={14} />
 				</a>
 			{/if}
@@ -176,36 +176,36 @@
 			{#if displayPerFF > 0}
 				<div>
 					<span class="{coinValueClass} font-semibold">{formatCompact(displayPerFF)}</span>
-					<span class="text-muted-foreground text-sm">{displayUnit} per</span>
+					<span class="text-sm text-muted-foreground">{displayUnit} per</span>
 				</div>
 			{:else}
-				<div class="text-muted-foreground text-sm">N/A</div>
+				<div class="text-sm text-muted-foreground">N/A</div>
 			{/if}
 			{#if displayTotal > 0}
 				<div>
 					<span class="{coinValueClass} font-semibold">{formatCompact(displayTotal)}</span>
-					<span class="text-muted-foreground text-sm">{displayUnit}</span>
+					<span class="text-sm text-muted-foreground">{displayUnit}</span>
 				</div>
 			{:else}
-				<div class="text-muted-foreground text-sm">N/A</div>
+				<div class="text-sm text-muted-foreground">N/A</div>
 			{/if}
 		</div>
 
 		<div class="hidden text-right tabular-nums sm:block">
 			{#if displayPerFF > 0}
 				<span class="{coinValueClass} font-semibold">{formatCompact(displayPerFF)}</span>
-				<span class="text-muted-foreground text-sm">{displayUnit} per</span>
+				<span class="text-sm text-muted-foreground">{displayUnit} per</span>
 			{:else}
-				<span class="text-muted-foreground text-sm">N/A</span>
+				<span class="text-sm text-muted-foreground">N/A</span>
 			{/if}
 		</div>
 
 		<div class="hidden text-right tabular-nums sm:block">
 			{#if displayTotal > 0}
 				<span class="{coinValueClass} font-semibold">{formatCompact(displayTotal)}</span>
-				<span class="text-muted-foreground text-sm">{displayUnit}</span>
+				<span class="text-sm text-muted-foreground">{displayUnit}</span>
 			{:else}
-				<span class="text-muted-foreground text-sm">N/A</span>
+				<span class="text-sm text-muted-foreground">N/A</span>
 			{/if}
 		</div>
 	</div>

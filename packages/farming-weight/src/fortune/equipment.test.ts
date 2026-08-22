@@ -34,7 +34,11 @@ const zorrosCape = {
 		'§d§l§ka§r §d§l§d§lMYTHIC CLOAK §d§l§ka',
 	],
 	enchantments: { green_thumb: 5 },
-	attributes: { modifier: 'rooted', timestamp: '1717854193084', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'rooted',
+		timestamp: '1717854193084',
+		rarity_upgrades: '1',
+	},
 };
 
 test("Doubled Zorro's Cloak Test", () => {
@@ -116,7 +120,11 @@ const lotusNecklace = {
 		'§5§l§ka§r §5§l§5§lEPIC NECKLACE §5§l§ka',
 	],
 	enchantments: { quantum: 5, green_thumb: 5 },
-	attributes: { modifier: 'rooted', timestamp: '1676441040000', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'rooted',
+		timestamp: '1676441040000',
+		rarity_upgrades: '1',
+	},
 };
 
 test('Peony Necklace Test', () => {
@@ -170,7 +178,12 @@ const pestVest = {
 		'§6§l§ka§r §6§l§6§lLEGENDARY CLOAK §6§l§ka',
 	],
 	enchantments: { green_thumb: 5 },
-	attributes: { modifier: 'rooted', timestamp: '1723853114556', donated_museum: 'True', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'rooted',
+		timestamp: '1723853114556',
+		donated_museum: 'True',
+		rarity_upgrades: '1',
+	},
 };
 
 test('Pest Vest Test', () => {
@@ -203,7 +216,11 @@ const pesthunterCloak = {
 	name: "§dSqueaky Pesthunter's Cloak",
 	lore: ['§d§l§ka§r §d§l§d§lEPIC CLOAK §d§l§ka'],
 	enchantments: { green_thumb: 5 },
-	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'squeaky',
+		timestamp: '1717854193084',
+		rarity_upgrades: '1',
+	},
 };
 
 const pesthunterGloves = {
@@ -214,7 +231,11 @@ const pesthunterGloves = {
 	name: "§dSqueaky Pesthunter's Gloves",
 	lore: ['§d§l§ka§r §d§l§d§lEPIC GLOVES §d§l§ka'],
 	enchantments: { green_thumb: 5 },
-	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'squeaky',
+		timestamp: '1717854193084',
+		rarity_upgrades: '1',
+	},
 };
 
 test('Pesthunter Cloak Test', () => {

@@ -21,14 +21,14 @@
 	{#await bookmarks}
 		<div class="grid gap-4">
 			{#each Array.from({ length: 5 }, (_, i) => i) as i (i)}
-				<div class="bg-muted h-32 animate-pulse rounded-lg"></div>
+				<div class="h-32 animate-pulse rounded-lg bg-muted"></div>
 			{/each}
 		</div>
 	{:then bookmarkList}
 		{#if !bookmarkList || bookmarkList.length === 0}
 			<Card>
 				<CardContent class="pt-6 text-center">
-					<p class="text-muted-foreground mb-4">You haven't bookmarked any guides yet</p>
+					<p class="mb-4 text-muted-foreground">You haven't bookmarked any guides yet</p>
 					<a href="/guides">
 						<Button>Browse Guides</Button>
 					</a>
@@ -48,7 +48,7 @@
 								</div>
 							</CardHeader>
 							<CardContent class="flex flex-col gap-3">
-								<div class="text-muted-foreground flex items-center justify-between text-sm">
+								<div class="flex items-center justify-between text-sm text-muted-foreground">
 									<span class="inline-flex items-center gap-1">
 										<ThumbsUp class="h-4 w-4" />
 										{guide.score}

@@ -247,15 +247,15 @@
 		</div>
 	</div>
 
-	<p class="text-muted-foreground font-emoji text-sm">Every available fortune upgrade for {ctx.ignMeta}!</p>
+	<p class="font-emoji text-sm text-muted-foreground">Every available fortune upgrade for {ctx.ignMeta}!</p>
 	{#if !crop || crop.length === 0}
 		<div class="flex flex-row items-center gap-2 text-sm">
-			<TriangleAlert size={20} class="text-completed -mb-1" />
+			<TriangleAlert size={20} class="-mb-1 text-completed" />
 			<p>No crop selected! Select a crop to add crop specific upgrades to this list!</p>
 		</div>
 	{/if}
 	{#if isLoadingItems}
-		<p class="text-muted-foreground text-sm">Loading item prices...</p>
+		<p class="text-sm text-muted-foreground">Loading item prices...</p>
 	{:else if itemLoadError}
 		<p class="text-sm text-red-500">
 			Error fetching item prices: {itemLoadError instanceof Error ? itemLoadError.message : String(itemLoadError)}
@@ -281,8 +281,8 @@
 			{hasUpgradePath}
 		/>
 	{/if}
-	<div class="text-muted-foreground flex flex-col items-center justify-center gap-2 p-4 text-sm">
-		<p class="text-primary max-w-xl text-center">
+	<div class="flex flex-col items-center justify-center gap-2 p-4 text-sm text-muted-foreground">
+		<p class="max-w-xl text-center text-primary">
 			Upgrades such as strength for Mooshroom Cow and unlocking visitors for Green Thumb aren't shown here as
 			those aren't things you can easily purchase. Be sure to check the above farming fortune categories for
 			further upgrades!

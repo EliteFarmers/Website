@@ -570,7 +570,12 @@ const maxedBountifulFarmingTool = {
 		rarity_upgrades: '1',
 		farming_for_dummies_count: '5',
 	},
-	gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT', PERIDOT_2: 'PERFECT', PERIDOT_3: 'PERFECT' },
+	gems: {
+		PERIDOT_0: 'PERFECT',
+		PERIDOT_1: 'PERFECT',
+		PERIDOT_2: 'PERFECT',
+		PERIDOT_3: 'PERFECT',
+	},
 };
 
 test('Maxed Bountiful farming tool should not suggest Earthy reforge', () => {

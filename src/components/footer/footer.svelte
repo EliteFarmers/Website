@@ -12,7 +12,7 @@
 </script>
 
 <footer
-	class="border-border/40 bg-background/95 supports-backdrop-filter:bg-background/60 bottom-0 mt-4 flex w-full flex-col pb-4 backdrop-blur"
+	class="bottom-0 mt-4 flex w-full flex-col border-border/40 bg-background/95 pb-4 backdrop-blur supports-backdrop-filter:bg-background/60"
 	style={adCtx.bottomAnchorSize.height ? `margin-bottom: ${adCtx.bottomAnchorSize.height}px;` : ''}
 >
 	<div class="container flex flex-wrap items-start justify-between">
@@ -70,21 +70,21 @@
 
 		<div class="flex w-full flex-wrap items-start justify-center gap-x-4 gap-y-2 md:gap-x-8">
 			{#if version !== ''}
-				<p class="text-muted-foreground flex-1 text-xs">
+				<p class="flex-1 text-xs text-muted-foreground">
 					Running version <a
 						href="https://github.com/EliteFarmers/Website/commit/{version}"
 						target="_blank"
-						class="bg-card text-muted-foreground rounded-sm border p-0.5 hover:underline">{version}</a
+						class="rounded-sm border bg-card p-0.5 text-muted-foreground hover:underline">{version}</a
 					>
 				</p>
 			{/if}
-			<p class="text-muted-foreground text-xs">Not affiliated with Hypixel, Inc.</p>
-			<p class="text-muted-foreground text-xs">
+			<p class="text-xs text-muted-foreground">Not affiliated with Hypixel, Inc.</p>
+			<p class="text-xs text-muted-foreground">
 				NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.
 			</p>
 		</div>
 		<div
-			class="text-muted-foreground [&_a]:text-foreground flex w-full flex-col items-center justify-start text-xs md:items-start [&_a]:underline-offset-2 [&_a]:hover:underline"
+			class="flex w-full flex-col items-center justify-start text-xs text-muted-foreground md:items-start [&_a]:text-foreground [&_a]:underline-offset-2 [&_a]:hover:underline"
 		>
 			<div class="w-fit">
 				<RenderHtml content={page.data.cache.footer} />

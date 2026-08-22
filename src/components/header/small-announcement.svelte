@@ -23,7 +23,7 @@
 
 {#if !inViewport.current && targetNode}
 	<a
-		class="bg-sidebar text-secondary-foreground group flex flex-row items-center justify-between border-b py-0.5"
+		class="group flex flex-row items-center justify-between border-b bg-sidebar py-0.5 text-secondary-foreground"
 		href="#announcement-{announcement.id}"
 	>
 		<span class="mx-2 truncate">

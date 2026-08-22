@@ -3,7 +3,7 @@ import { renderComponent } from '$ui/data-table';
 import Calendar from '@lucide/svelte/icons/calendar';
 import Hourglass from '@lucide/svelte/icons/hourglass';
 import SquareActivity from '@lucide/svelte/icons/square-activity';
-import type { ColumnDef } from '@tanstack/table-core';
+import type { ColumnDef } from '$ui/data-table';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 
 export type LbRanking = LeaderboardRanksResponse['ranks'][number] & {

@@ -151,14 +151,14 @@
 	<Dialog.Content class="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
 		{#if loading}
 			<div class="flex items-center justify-center py-12">
-				<Loader class="text-muted-foreground size-6 animate-spin" />
+				<Loader class="size-6 animate-spin text-muted-foreground" />
 			</div>
 		{:else if error}
 			<Dialog.Header>
 				<Dialog.Title>Order Details</Dialog.Title>
 			</Dialog.Header>
 			<div class="flex flex-col items-center gap-3 py-8">
-				<p class="text-muted-foreground text-sm">{error}</p>
+				<p class="text-sm text-muted-foreground">{error}</p>
 				<Button variant="outline" size="sm" onclick={() => loadOrderDetails(orderId)}>Retry</Button>
 			</div>
 		{:else if order}
@@ -211,7 +211,7 @@
 				{#if order.recipientSnapshot}
 					{@const snap = order.recipientSnapshot}
 					<div>
-						<p class="text-muted-foreground mb-1 text-xs font-medium uppercase">Recipient</p>
+						<p class="mb-1 text-xs font-medium text-muted-foreground uppercase">Recipient</p>
 						<div class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
 							{#if snap.minecraftIgn}
 								<p class="text-muted-foreground">Minecraft</p>
@@ -228,8 +228,8 @@
 				<!-- Gift Message -->
 				{#if order.giftMetadata?.message}
 					<div>
-						<p class="text-muted-foreground mb-1 text-xs font-medium uppercase">Gift Message</p>
-						<p class="bg-muted/50 rounded-md px-3 py-2 text-sm italic">"{order.giftMetadata.message}"</p>
+						<p class="mb-1 text-xs font-medium text-muted-foreground uppercase">Gift Message</p>
+						<p class="rounded-md bg-muted/50 px-3 py-2 text-sm italic">"{order.giftMetadata.message}"</p>
 					</div>
 				{/if}
 
@@ -237,22 +237,22 @@
 
 				<!-- Items -->
 				<div>
-					<p class="text-muted-foreground mb-2 text-xs font-medium uppercase">
+					<p class="mb-2 text-xs font-medium text-muted-foreground uppercase">
 						Items ({order.items.length})
 					</p>
 					<div class="flex flex-col gap-2">
 						{#each order.items as item (item.orderItemId)}
 							<div
 								class={item.gift?.isReassignable
-									? 'border-destructive/40 bg-destructive/5 rounded-md border px-3 py-2'
-									: 'bg-muted/30 rounded-md px-3 py-2'}
+									? 'rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2'
+									: 'rounded-md bg-muted/30 px-3 py-2'}
 							>
 								<div class="flex items-start justify-between gap-2">
 									<div class="flex items-start gap-2">
 										{#if item.gift?.isReassignable}
-											<AlertTriangle class="text-destructive mt-0.5 size-4 shrink-0" />
+											<AlertTriangle class="mt-0.5 size-4 shrink-0 text-destructive" />
 										{:else}
-											<Package class="text-muted-foreground mt-0.5 size-4 shrink-0" />
+											<Package class="mt-0.5 size-4 shrink-0 text-muted-foreground" />
 										{/if}
 										<div>
 											<p class="text-sm font-medium">
@@ -289,7 +289,7 @@
 													{/if}
 												</div>
 												{#if gift.recipientSnapshot?.minecraftIgn}
-													<p class="text-muted-foreground mt-1 text-xs">
+													<p class="mt-1 text-xs text-muted-foreground">
 														Recipient: {gift.recipientSnapshot.minecraftIgn}
 													</p>
 												{/if}
@@ -341,11 +341,11 @@
 
 		<div class="flex flex-col gap-4">
 			<div class="rounded-md border p-3">
-				<p class="text-muted-foreground text-xs font-medium uppercase">Recipient</p>
+				<p class="text-xs font-medium text-muted-foreground uppercase">Recipient</p>
 				{#if reassignRecipient}
 					<p class="mt-1 text-sm font-medium">{reassignRecipient}</p>
 				{:else}
-					<p class="text-muted-foreground mt-1 text-sm">No recipient selected yet.</p>
+					<p class="mt-1 text-sm text-muted-foreground">No recipient selected yet.</p>
 				{/if}
 			</div>
 

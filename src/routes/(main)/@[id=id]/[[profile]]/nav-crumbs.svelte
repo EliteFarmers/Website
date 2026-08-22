@@ -219,7 +219,7 @@
 
 {#snippet pestFarmingCrumb(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
 	<span class="max-w-28 truncate first-letter:capitalize">{crumb?.name}</span>
-	<span class="border-destructive bg-destructive/40 rounded-md border px-1 text-xs leading-snug uppercase">
+	<span class="rounded-md border border-destructive bg-destructive/40 px-1 text-xs leading-snug uppercase">
 		Beta
 	</span>
 {/snippet}

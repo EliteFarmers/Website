@@ -30,7 +30,11 @@ test('Crop Milestones', () => {
 	};
 
 	expect(getCropMilestoneLevels(fromElite)).toEqual(expected);
-	expect(getCropMilestoneLevels(fromElite, true)).toEqual({ ...expected, [Crop.Wheat]: 53, [Crop.NetherWart]: 57 });
+	expect(getCropMilestoneLevels(fromElite, true)).toEqual({
+		...expected,
+		[Crop.Wheat]: 53,
+		[Crop.NetherWart]: 57,
+	});
 });
 
 test('Overflow Crop Milestones', () => {

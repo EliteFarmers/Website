@@ -268,10 +268,10 @@ export const COMMUNITY_CENTER_UPGRADE: FortuneSource = {
 export const PEST_BESTIARY_SOURCE: FortuneSource = {
 	name: 'Garden Bestiary',
 	fortunePerLevel: 0.4,
-	maxLevel: Object.values({ ...BESTIARY_PEST_BRACKETS, ...GARDEN_BESTIARY_BRACKETS }).reduce(
-		(acc, bracket) => acc + Object.keys(bracket).length,
-		0
-	),
+	maxLevel: Object.values({
+		...BESTIARY_PEST_BRACKETS,
+		...GARDEN_BESTIARY_BRACKETS,
+	}).reduce((acc, bracket) => acc + Object.keys(bracket).length, 0),
 	wiki: 'https://w.elitesb.gg/Bestiary#Garden',
 };
 

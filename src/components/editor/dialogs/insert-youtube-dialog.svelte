@@ -69,9 +69,9 @@
 				/>
 			</div>
 			{#if errorMessage}
-				<p class="text-destructive col-span-4 text-sm">{errorMessage}</p>
+				<p class="col-span-4 text-sm text-destructive">{errorMessage}</p>
 			{/if}
-			<p class="text-muted-foreground col-span-4 text-xs">
+			<p class="col-span-4 text-xs text-muted-foreground">
 				Supports youtube.com/watch?v=..., youtu.be/..., or just the 11-character video ID.
 			</p>
 		</div>

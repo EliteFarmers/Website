@@ -14,7 +14,7 @@
 	let { href, text = undefined, icon = true, children, class: className = '', ...rest }: Props = $props();
 </script>
 
-<a {href} class={cn('text-link decoration-link inline-block', className)} {...rest}>
+<a {href} class={cn('inline-block text-link decoration-link', className)} {...rest}>
 	<span>
 		{#if text}
 			<span>{text}</span>

@@ -98,10 +98,10 @@
 				</div>
 
 				<div class="flex flex-wrap gap-2 text-lg">
-					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+					<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
 						Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
 					</div>
-					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+					<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
 						DNA Analysis Milestone • <span class="font-semibold"
 							>{ctx.member.current?.unparsed?.dnaMilestone ?? 0} / 6</span
 						>
@@ -111,21 +111,21 @@
 				<div class="flex w-full flex-col gap-2">
 					<h3 class="text-xl leading-none font-semibold">Visitors</h3>
 					<div class="flex max-w-lg flex-wrap gap-2 text-lg sm:flex-row">
-						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
 							Unique • <span class="font-semibold">{(garden.uniqueVisitors ?? 0).toLocaleString()}</span
 							>/{maxVisitors}
 						</div>
-						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
 							Total Visits • <span class="font-semibold">{totalVisits.toLocaleString()}</span>
 						</div>
-						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
 							{#if ranks['visitors-accepted']?.rank > 0}
 								<LeaderboardRankLink
 									category="visitors-accepted"
 									player={page.params.id}
 									profile={page.params.profile}
 									rank={ranks['visitors-accepted']?.rank ?? -1}
-									class="bg-card hover:bg-muted rounded-md px-1.5"
+									class="rounded-md bg-card px-1.5 hover:bg-muted"
 								>
 									<span class="text-sm">#</span><span class="text-md"
 										>{ranks['visitors-accepted']?.rank}</span
@@ -134,10 +134,10 @@
 							{/if}
 							Accepted • <span class="font-semibold">{accepted.toLocaleString()}</span>
 						</div>
-						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
 							Rejected • <span class="font-semibold">{rejected.toLocaleString()}</span>
 						</div>
-						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
 							Acceptance Rate • <span class="font-semibold">{rate}%</span>
 						</div>
 					</div>

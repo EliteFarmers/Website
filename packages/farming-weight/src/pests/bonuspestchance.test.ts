@@ -80,14 +80,16 @@ test('Sprayonator and Stinky Cheese temporary effect contribute Bonus Pest Chanc
 	});
 	expect(sprayed.getStatBreakdown(Stat.BonusPestChance)['Sprayonator']?.value).toBe(25);
 	expect(
-		new FarmingPlayer({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Juicy }).getStatBreakdown(
-			Stat.BonusPestChance
-		)['Sprayonator']?.value
+		new FarmingPlayer({
+			sprayedPlot: true,
+			sprayonatorTier: SprayonatorTier.Juicy,
+		}).getStatBreakdown(Stat.BonusPestChance)['Sprayonator']?.value
 	).toBe(50);
 	expect(
-		new FarmingPlayer({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Salty }).getStatBreakdown(
-			Stat.BonusPestChance
-		)['Sprayonator']?.value
+		new FarmingPlayer({
+			sprayedPlot: true,
+			sprayonatorTier: SprayonatorTier.Salty,
+		}).getStatBreakdown(Stat.BonusPestChance)['Sprayonator']?.value
 	).toBe(75);
 
 	const unsprayed = new FarmingPlayer({

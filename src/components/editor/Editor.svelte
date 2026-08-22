@@ -296,13 +296,13 @@
 </script>
 
 <div
-	class={`bg-background flex flex-col rounded-md border ${className || ''}`}
+	class={`flex flex-col rounded-md border bg-background ${className || ''}`}
 	onkeydown={(e) => e.stopPropagation()}
 	tabindex={0}
 	role="textbox"
 >
 	{#if editor}
-		<div class="bg-muted/50 sticky top-16 z-10 flex flex-wrap gap-1 border-b p-2 backdrop-blur-sm">
+		<div class="sticky top-16 z-10 flex flex-wrap gap-1 border-b bg-muted/50 p-2 backdrop-blur-sm">
 			<Button
 				variant="ghost"
 				size="icon"
@@ -340,7 +340,7 @@
 				<Code class="h-4 w-4" />
 			</Button>
 
-			<div class="bg-border mx-1 w-px"></div>
+			<div class="mx-1 w-px bg-border"></div>
 
 			<Button
 				variant="ghost"
@@ -370,7 +370,7 @@
 				<Heading3 class="h-4 w-4" />
 			</Button>
 
-			<div class="bg-border mx-1 w-px"></div>
+			<div class="mx-1 w-px bg-border"></div>
 
 			<Button
 				variant="ghost"
@@ -400,7 +400,7 @@
 				<Quote class="h-4 w-4" />
 			</Button>
 
-			<div class="bg-border mx-1 w-px"></div>
+			<div class="mx-1 w-px bg-border"></div>
 
 			<Button
 				variant="ghost"
@@ -455,7 +455,7 @@
 					onclick={() => editor?.chain().focus().setTwoColumn().run()}
 					title="Insert Two Column (Plain)"
 				>
-					<Columns class="stroke-muted-foreground h-4 w-4" />
+					<Columns class="h-4 w-4 stroke-muted-foreground" />
 				</Button>
 				<Button
 					variant="ghost"
@@ -669,7 +669,7 @@
 				</DropdownMenu.Root>
 			</div>
 
-			<div class="bg-border mx-1 w-px"></div>
+			<div class="mx-1 w-px bg-border"></div>
 
 			<Button
 				variant="ghost"

@@ -24,27 +24,27 @@
 	}
 </script>
 
-<section class="border-border/60 bg-card/70 rounded-4xl border p-6 shadow-sm sm:p-8">
+<section class="rounded-4xl border border-border/60 bg-card/70 p-6 shadow-sm sm:p-8">
 	<h2 class="text-2xl font-black tracking-tight">Who should receive this order?</h2>
 
 	<div class="mt-6 grid gap-3 sm:grid-cols-2">
 		<button
 			type="button"
 			class={checkout.giftIntent === 'self'
-				? 'border-primary bg-primary/5 hover:bg-primary/10 rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60'
-				: `${checkout.selfCheckoutUnavailable ? 'border-destructive/50 bg-destructive/10' : 'border-border bg-background'}  hover:bg-card rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60`}
+				? 'rounded-3xl border border-primary bg-primary/5 p-4 text-left transition-colors hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-60'
+				: `${checkout.selfCheckoutUnavailable ? 'border-destructive/50 bg-destructive/10' : 'border-border bg-background'}  rounded-3xl border p-4 text-left transition-colors hover:bg-card disabled:cursor-not-allowed disabled:opacity-60`}
 			onclick={() => checkout.chooseSelf()}
 			disabled={checkout.selfCheckoutUnavailable}
 		>
 			<div class="flex items-center gap-3">
 				<div
-					class="bg-primary/10 text-primary flex aspect-square size-10 items-center justify-center rounded-2xl"
+					class="flex aspect-square size-10 items-center justify-center rounded-2xl bg-primary/10 text-primary"
 				>
 					<UserRound class="size-5" />
 				</div>
 				<div>
 					<p class="font-semibold">For my account</p>
-					<p class="text-muted-foreground text-sm">
+					<p class="text-sm text-muted-foreground">
 						{#if checkout.selfCheckoutUnavailable}
 							Unavailable because this basket includes something you already own.
 						{:else}
@@ -58,29 +58,29 @@
 		<button
 			type="button"
 			class={checkout.giftIntent === 'gift'
-				? 'border-primary bg-primary/5 hover:bg-primary/10 rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60'
-				: 'border-border bg-background hover:bg-card rounded-3xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60'}
+				? 'rounded-3xl border border-primary bg-primary/5 p-4 text-left transition-colors hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-60'
+				: 'rounded-3xl border border-border bg-background p-4 text-left transition-colors hover:bg-card disabled:cursor-not-allowed disabled:opacity-60'}
 			onclick={() => checkout.chooseGift()}
 			disabled={checkout.hasNonGiftableItemsForGift}
 		>
 			<div class="flex items-center gap-3">
 				<div
-					class="bg-primary/10 text-primary flex aspect-square size-10 items-center justify-center rounded-2xl"
+					class="flex aspect-square size-10 items-center justify-center rounded-2xl bg-primary/10 text-primary"
 				>
 					<Gift class="size-5" />
 				</div>
 				<div>
 					<p class="font-semibold">Send as a gift</p>
-					<p class="text-muted-foreground text-sm">Choose another player before checkout.</p>
+					<p class="text-sm text-muted-foreground">Choose another player before checkout.</p>
 				</div>
 			</div>
 		</button>
 	</div>
 
 	{#if checkout.hasNonGiftableItemsForGift}
-		<div class="border-destructive/20 bg-destructive/10 mt-5 rounded-3xl border p-4">
+		<div class="mt-5 rounded-3xl border border-destructive/20 bg-destructive/10 p-4">
 			<p class="text-sm font-semibold">This checkout includes items that cannot be gifted.</p>
-			<p class="text-muted-foreground mt-1 text-sm leading-relaxed">
+			<p class="mt-1 text-sm leading-relaxed text-muted-foreground">
 				Remove the non-giftable item or keep this checkout on your own account.
 			</p>
 		</div>
@@ -89,12 +89,12 @@
 	<div class="mt-5 rounded-3xl border border-dashed p-4">
 		{#if checkout.giftIntent === 'self'}
 			<div class="flex items-center gap-3">
-				<div class="bg-muted flex size-11 items-center justify-center rounded-2xl">
-					<UserRound class="text-muted-foreground size-5" />
+				<div class="flex size-11 items-center justify-center rounded-2xl bg-muted">
+					<UserRound class="size-5 text-muted-foreground" />
 				</div>
 				<div>
 					<p class="font-semibold">Buying for yourself</p>
-					<p class="text-muted-foreground text-sm">These items will be tied to your own Elite account.</p>
+					<p class="text-sm text-muted-foreground">These items will be tied to your own Elite account.</p>
 				</div>
 			</div>
 		{:else if checkout.effectiveRecipientIgn}
@@ -104,7 +104,7 @@
 						<PlayerHead uuid={checkout.effectiveRecipientIgn} class="size-11 rounded-md" />
 						<div>
 							<p class="font-semibold">Gift recipient: {checkout.effectiveRecipientIgn}</p>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Make sure this is the right player before continuing. If you gift items to the wrong
 								account, <a href="/contact" class="underline">contact support</a> with your order details
 								and we'll see if we can help.
@@ -139,7 +139,7 @@
 						<div class="flex items-center justify-between gap-3">
 							<div>
 								<p class="font-semibold">Choose a different player</p>
-								<p class="text-muted-foreground text-sm">
+								<p class="text-sm text-muted-foreground">
 									Updating the recipient will keep this order as a gift.
 								</p>
 							</div>
@@ -163,7 +163,7 @@
 			<div class="space-y-3">
 				<div>
 					<p class="font-semibold">Pick a player for this gift</p>
-					<p class="text-muted-foreground text-sm">
+					<p class="text-sm text-muted-foreground">
 						Search by player name so the order goes to the right account.
 					</p>
 				</div>

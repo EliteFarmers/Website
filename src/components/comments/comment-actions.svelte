@@ -52,7 +52,7 @@
 						{...props}
 						variant="ghost"
 						size="sm"
-						class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
+						class="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
 					>
 						<EllipsisVertical size={16} />
 					</Button>

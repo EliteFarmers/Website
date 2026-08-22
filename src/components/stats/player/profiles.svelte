@@ -21,7 +21,7 @@
 					</div>
 				</button>
 				<Gamemode
-					class="text-muted-foreground mt-1 mr-4 text-2xl font-semibold first-letter:capitalize"
+					class="mt-1 mr-4 text-2xl font-semibold text-muted-foreground first-letter:capitalize"
 					gameMode={selected?.gameMode ?? 'classic'}
 				/>
 			</div>
@@ -31,7 +31,7 @@
 				{#each profiles ?? [] as pId (pId.id)}
 					<a
 						href="/@{ctx.ign}/{pId.name}"
-						class="hover:bg-muted flex flex-row justify-between gap-4 rounded-sm p-2 text-lg font-semibold md:text-xl"
+						class="flex flex-row justify-between gap-4 rounded-sm p-2 text-lg font-semibold hover:bg-muted md:text-xl"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<span>{pId.name}</span>

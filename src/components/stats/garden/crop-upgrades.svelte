@@ -43,7 +43,7 @@
 										: 'bg-progress'}"
 							></div>
 						{/each}
-						<span class="text-foreground -my-1 pr-2 pl-1 leading-none font-semibold md:text-lg">
+						<span class="-my-1 pr-2 pl-1 leading-none font-semibold text-foreground md:text-lg">
 							{level}
 						</span>
 					</div>

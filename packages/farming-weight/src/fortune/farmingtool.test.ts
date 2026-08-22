@@ -428,12 +428,16 @@ test('Only enchants tied to the selected crop should apply on multiple crop tool
 	};
 
 	// turbo sunflower is tied to sunflower, shouldn't apply when moonflower is selected
-	const farmingMoonflower = new FarmingTool(withTurbo, { selectedCrop: Crop.Moonflower });
+	const farmingMoonflower = new FarmingTool(withTurbo, {
+		selectedCrop: Crop.Moonflower,
+	});
 	expect(farmingMoonflower.fortuneBreakdown['Turbo-Sunflower']).toBeUndefined();
 	expect(farmingMoonflower.fortune).toBe(79);
 
 	// turbo sunflower should apply when sunflower is selected
-	const farmingSunflower = new FarmingTool(withTurbo, { selectedCrop: Crop.Sunflower });
+	const farmingSunflower = new FarmingTool(withTurbo, {
+		selectedCrop: Crop.Sunflower,
+	});
 	expect(farmingSunflower.fortuneBreakdown['Turbo-Sunflower']).toBe(25);
 	expect(farmingSunflower.fortune).toBe(104);
 });

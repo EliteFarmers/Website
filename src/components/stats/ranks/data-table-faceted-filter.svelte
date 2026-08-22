@@ -12,7 +12,7 @@
 	import Check from '@lucide/svelte/icons/check';
 	import CircleMinus from '@lucide/svelte/icons/circle-minus';
 	import Funnel from '@lucide/svelte/icons/funnel';
-	import type { Column } from '@tanstack/table-core';
+	import type { Column } from '$ui/data-table';
 	import { SvelteSet } from 'svelte/reactivity';
 
 	type Props<TData, TValue> = {
@@ -99,7 +99,7 @@
 						>
 							<div
 								class={cn(
-									'border-primary mr-2 flex size-4 items-center justify-center border',
+									'mr-2 flex size-4 items-center justify-center border border-primary',
 									isSelected ? 'bg-primary text-primary-foreground' : 'opacity-50 [&_svg]:invisible',
 									radio ? 'rounded-full' : 'rounded-sm'
 								)}

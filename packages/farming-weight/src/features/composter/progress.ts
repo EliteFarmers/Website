@@ -31,8 +31,8 @@ export function getComposterStats(upgradeLevels: Partial<Record<ComposterUpgrade
 	};
 }
 
-export const COMPOSTER_UPGRADE_SOURCES: DynamicUpgradeSource<Input, number>[] = [
-	...Object.entries(COMPOSTER_UPGRADES).map(([k, upgrade]) => {
+export const COMPOSTER_UPGRADE_SOURCES: DynamicUpgradeSource<Input, number>[] = Object.entries(COMPOSTER_UPGRADES).map(
+	([k, upgrade]) => {
 		const key = k as ComposterUpgrade;
 		const result: DynamicUpgradeSource<Input, number> = {
 			name: upgrade.name,
@@ -73,5 +73,5 @@ export const COMPOSTER_UPGRADE_SOURCES: DynamicUpgradeSource<Input, number>[] = 
 		};
 
 		return result;
-	}),
-];
+	}
+);

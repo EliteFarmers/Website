@@ -18,7 +18,11 @@ const vacuumStats = {
 	SKYMART_TURBO_VACUUM: { rarity: Rarity.Uncommon, fortune: 10, damage: 150 },
 	SKYMART_HYPER_VACUUM: { rarity: Rarity.Rare, fortune: 15, damage: 200 },
 	INFINI_VACUUM: { rarity: Rarity.Epic, fortune: 20, damage: 300 },
-	INFINI_VACUUM_HOOVERIUS: { rarity: Rarity.Legendary, fortune: 25, damage: 400 },
+	INFINI_VACUUM_HOOVERIUS: {
+		rarity: Rarity.Legendary,
+		fortune: 25,
+		damage: 400,
+	},
 } satisfies Record<(typeof vacuumIds)[number], { rarity: Rarity; fortune: number; damage: number }>;
 
 function vacuum(id: (typeof vacuumIds)[number], overrides: Partial<EliteItemDto> = {}): EliteItemDto {
@@ -67,7 +71,11 @@ test('vacuum reforges are vacuum-only and expose pest stats', () => {
 
 	const buzzing = new Vacuum(
 		vacuum('INFINI_VACUUM_HOOVERIUS', {
-			attributes: { rarity: Rarity.Legendary, modifier: 'buzzing', bookworm_books: '2' },
+			attributes: {
+				rarity: Rarity.Legendary,
+				modifier: 'buzzing',
+				bookworm_books: '2',
+			},
 		})
 	);
 
@@ -95,7 +103,11 @@ test('Praying Mantis Shard scales vacuum damage by 3 percent per level', () => {
 	});
 	const buzzing = new Vacuum(
 		vacuum('INFINI_VACUUM_HOOVERIUS', {
-			attributes: { rarity: Rarity.Legendary, modifier: 'buzzing', bookworm_books: '2' },
+			attributes: {
+				rarity: Rarity.Legendary,
+				modifier: 'buzzing',
+				bookworm_books: '2',
+			},
 		}),
 		{ attributes: { insect_power: 64 } }
 	);
@@ -139,7 +151,9 @@ test('Praying Mantis Shard appears in vacuum damage breakdown and progress', () 
 
 test('vacuum reforge upgrades prefer Beady pest kill fortune over Buzzing farming fortune', () => {
 	const tool = new Vacuum(vacuum('INFINI_VACUUM_HOOVERIUS'));
-	const reforges = tool.getUpgrades({ stats: [Stat.PestKillFortune, Stat.Damage, Stat.FarmingFortune] });
+	const reforges = tool.getUpgrades({
+		stats: [Stat.PestKillFortune, Stat.Damage, Stat.FarmingFortune],
+	});
 
 	expect(reforges[0]?.title).toBe('Reforge to Beady');
 	expect(reforges[0]?.stats?.[Stat.PestKillFortune]).toBe(100);
@@ -154,7 +168,9 @@ test('pest-focused Beady vacuum progress does not show or suggest normal fortune
 
 	const progress = tool.getProgress([Stat.PestKillFortune, Stat.Damage]);
 	const reforgeProgress = progress.find((p) => p.name === 'Reforge Stats');
-	const upgrades = tool.getUpgrades({ stats: [Stat.PestKillFortune, Stat.Damage] });
+	const upgrades = tool.getUpgrades({
+		stats: [Stat.PestKillFortune, Stat.Damage],
+	});
 
 	expect(reforgeProgress?.stats?.[Stat.FarmingFortune]).toBeUndefined();
 	expect(reforgeProgress?.stats?.[Stat.PestKillFortune]?.current).toBe(100);

@@ -26,7 +26,7 @@
 	const item = $derived(tool.item as ItemDto);
 </script>
 
-<div class="bg-card flex max-h-30 w-full basis-20 flex-row justify-between gap-2 rounded-md p-1">
+<div class="flex max-h-30 w-full basis-20 flex-row justify-between gap-2 rounded-md bg-card p-1">
 	<div class="flex w-full flex-row items-center gap-2">
 		<InventorySlot {item} class="size-12 border-none shadow-none md:m-2 md:size-16" />
 		<div class="flex w-full flex-col items-start">
@@ -49,7 +49,7 @@
 									: undefined}
 						>
 							<div
-								class="text-foreground pointer-events-none absolute inset-0 flex items-center justify-center align-middle font-mono text-sm leading-none font-extrabold"
+								class="pointer-events-none absolute inset-0 flex items-center justify-center align-middle font-mono text-sm leading-none font-extrabold text-foreground"
 								style="-webkit-text-stroke: 0.02rem var(--border);"
 							>
 								Lvl {p.level}
@@ -64,7 +64,7 @@
 								{displayedFarmCount.toLocaleString()}
 							</div>
 						{:else}
-							<div class="md:text-md text-muted-foreground text-sm">No Cultivating!</div>
+							<div class="md:text-md text-sm text-muted-foreground">No Cultivating!</div>
 						{/if}
 					</div>
 				</div>

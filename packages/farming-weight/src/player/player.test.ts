@@ -198,7 +198,9 @@ test('multi-stat upgrade queries surface Farming Fortune and Overbloom upgrades 
 		},
 	});
 
-	const view = player.getStatView({ stats: [Stat.FarmingFortune, Stat.Overbloom] });
+	const view = player.getStatView({
+		stats: [Stat.FarmingFortune, Stat.Overbloom],
+	});
 
 	expect(view.upgrades.find((u) => u.title === 'Farming Level 51')).toBeDefined();
 	expect(view.upgrades.find((u) => u.title === 'Cropeetle 6')).toBeDefined();
@@ -223,7 +225,9 @@ test('multi-stat upgrade queries keep Bountiful as the preferred farming tool re
 		],
 	});
 
-	const upgrades = player.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom] });
+	const upgrades = player.getUpgrades({
+		stats: [Stat.FarmingFortune, Stat.Overbloom],
+	});
 	const reforges = upgrades.filter((upgrade) => upgrade.meta?.type === 'reforge');
 
 	expect(reforges.find((upgrade) => upgrade.title === 'Reforge to Bountiful')).toBeDefined();
@@ -1009,7 +1013,10 @@ test('sequential Fermento to Helianthus rate impacts follow active same-family s
 
 test('getUpgrades can replace grouped armor tier rows with a single set upgrade', () => {
 	const player = fermentoToHelianthusPlayer();
-	const upgrades = player.getUpgrades({ stat: Stat.FarmingFortune, includeUpgradeGroups: true });
+	const upgrades = player.getUpgrades({
+		stat: Stat.FarmingFortune,
+		includeUpgradeGroups: true,
+	});
 	const group = upgrades.find((u) => u.meta?.type === 'upgrade_group');
 	const groupMeta = group?.group as FortuneUpgradeGroupMeta | undefined;
 
@@ -1034,7 +1041,10 @@ test('single eligible armor tier upgrades do not create grouped rows', () => {
 		armor: [fermentoArmorItem('FERMENTO_HELMET', 'fermento-helmet', 'Mossy Fermento Helmet', 'LEGENDARY')],
 	});
 
-	const upgrades = player.getUpgrades({ stat: Stat.FarmingFortune, includeUpgradeGroups: true });
+	const upgrades = player.getUpgrades({
+		stat: Stat.FarmingFortune,
+		includeUpgradeGroups: true,
+	});
 
 	expect(upgrades.find((u) => u.meta?.type === 'upgrade_group')).toBeUndefined();
 	expect(upgrades.find((u) => u.title === 'Helianthus Helmet')).toBeDefined();

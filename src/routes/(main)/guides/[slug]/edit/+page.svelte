@@ -59,7 +59,7 @@
 					/>
 				</div>
 
-				<p class="text-muted-foreground mt-1 text-xs">The Skyblock item ID to display as the guide icon</p>
+				<p class="mt-1 text-xs text-muted-foreground">The Skyblock item ID to display as the guide icon</p>
 			</div>
 
 			<div class="flex flex-col gap-1">

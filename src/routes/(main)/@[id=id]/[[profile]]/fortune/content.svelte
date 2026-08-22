@@ -524,7 +524,7 @@
 	<Cropselector radio={true} analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 p-4 md:py-4">
+		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-4 md:py-4">
 			<div class="flex w-full flex-row items-center justify-between">
 				<div class="hidden flex-1 sm:block"></div>
 				<div class="my-2 flex flex-3 flex-row items-center gap-2">
@@ -606,7 +606,7 @@
 				>
 					<div>
 						<p class="text-lg font-semibold">Pest Farming</p>
-						<p class="text-muted-foreground text-sm">
+						<p class="text-sm text-muted-foreground">
 							Vacuum stats and pest upgrades now have their own page.
 						</p>
 					</div>
@@ -619,7 +619,7 @@
 				</div>
 			{/if}
 		</section>
-		<section class="bg-card w-full flex-1 rounded-md border-2 p-4">
+		<section class="w-full flex-1 rounded-md border-2 bg-card p-4">
 			<div class="flex h-full w-full max-w-lg flex-col gap-2 p-2">
 				{#if selected}
 					{@const [cropId, info] = selected}
@@ -676,7 +676,7 @@
 					<h3 class="mt-2 mb-2 text-xl font-semibold">Results</h3>
 					<div class="flex flex-col gap-3">
 						<Accordion.Root type="single" class="w-full" value="npc">
-							<Accordion.Item value="npc" class="outline-border w-full rounded-md px-2 outline">
+							<Accordion.Item value="npc" class="w-full rounded-md px-2 outline outline-border">
 								<Accordion.Trigger class="py-2 hover:no-underline">
 									<div class="flex w-full items-center justify-between gap-2 pr-2">
 										<span class="text-xl font-semibold">NPC Profit</span>
@@ -706,7 +706,7 @@
 							referenceOnlyPrices={ctx.isNonClassicProfile}
 						/>
 						<Accordion.Root type="single" class="w-full">
-							<Accordion.Item value="collection" class="outline-border w-full rounded-md px-2 outline">
+							<Accordion.Item value="collection" class="w-full rounded-md px-2 outline outline-border">
 								<Accordion.Trigger class="py-2 hover:no-underline">
 									<div class="flex w-full items-center justify-between gap-2 pr-2">
 										<span class="text-xl font-semibold">Collection Gain</span>
@@ -726,7 +726,7 @@
 							</Accordion.Item>
 						</Accordion.Root>
 						<div
-							class="outline-border flex w-full items-center justify-between rounded-md px-2 py-2 outline"
+							class="flex w-full items-center justify-between rounded-md px-2 py-2 outline outline-border"
 						>
 							<span class="text-xl font-semibold">Farming Weight Gain</span>
 							<span class="text-xl font-semibold">{weightGain.toLocaleString()}</span>
@@ -735,12 +735,12 @@
 							<Accordion.Root type="single" class="w-full">
 								<Accordion.Item
 									value="drop-effects"
-									class="outline-border w-full rounded-md px-2 outline"
+									class="w-full rounded-md px-2 outline outline-border"
 								>
 									<Accordion.Trigger class="py-2 hover:no-underline">
 										<div class="flex w-full items-center justify-between gap-2 pr-2">
 											<span class="text-lg font-semibold">Drop Effects</span>
-											<span class="text-completed text-lg font-semibold">
+											<span class="text-lg font-semibold text-completed">
 												{dropEffectRows.length.toLocaleString()}
 												{dropEffectRows.length === 1 ? 'effect' : 'effects'}
 											</span>
@@ -753,12 +753,12 @@
 													<div class="flex min-w-0 flex-col">
 														<span class="text-sm font-medium">{effect.source}</span>
 														{#if effect.detail}
-															<span class="text-muted-foreground text-sm"
+															<span class="text-sm text-muted-foreground"
 																>{effect.detail}</span
 															>
 														{/if}
 													</div>
-													<span class="text-muted-foreground shrink-0 text-sm font-medium">
+													<span class="shrink-0 text-sm font-medium text-muted-foreground">
 														{effect.value}
 														{#if effect.valueIcon}
 															<span class="font-mono">{effect.valueIcon}</span>
@@ -776,7 +776,7 @@
 					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
 						<div class="flex-1"></div>
 						<div class="mt-2 flex flex-row items-center justify-center gap-2">
-							<TriangleAlert size={20} class="text-completed -mb-1" />
+							<TriangleAlert size={20} class="-mb-1 text-completed" />
 							<p class="text-sm">
 								Temporary Fortune is enabled! Some sources might not last the whole time.
 							</p>
@@ -792,7 +792,7 @@
 	<Cropselector radio={true} href="#fortune" id="fortune" analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 p-4">
+		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
 			<div class="flex w-full flex-row items-center justify-center gap-1">
 				<div class="flex flex-1 flex-row justify-end">
 					<JumpLink id="fortune" self={false} />
@@ -800,7 +800,7 @@
 				<h2 class="mb-1 text-2xl">Farming Fortune</h2>
 				<div class="flex-1">
 					<div class="flex flex-1 flex-wrap items-center justify-start gap-2">
-						<Button variant="ghost" class="text-muted-foreground mx-2" size="sm" onclick={toggleSettings}>
+						<Button variant="ghost" class="mx-2 text-muted-foreground" size="sm" onclick={toggleSettings}>
 							<Settings size={20} />
 						</Button>
 					</div>
@@ -867,7 +867,7 @@
 
 	<Cropselector radio={true} href="#upgrades" id="upgrades" analyticsEvent="fortune.crop_selected" />
 
-	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
+	<section class="flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
 		<svelte:boundary>
 			<CheapestUpgrades {player} crop={selectedCropKey} {blocksPerHour} />
 			{#snippet failed(error, reset)}
@@ -878,7 +878,7 @@
 						class="text-sm"
 						onCopied={() => trackAnalytics('fortune.error_copied')}>Copy Error</CopyToClipboard
 					>
-					<p class="text-muted-foreground text-sm">
+					<p class="text-sm text-muted-foreground">
 						Please report the error in the <a href="/support" class="text-link underline"
 							>Support Discord Server</a
 						>!

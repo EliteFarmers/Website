@@ -19,10 +19,10 @@
 	const selectableVacuums = $derived(vacuums.filter((vacuum) => !!vacuum.item.uuid));
 </script>
 
-<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
+<section class="flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
 	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 		<div class="flex items-center gap-3">
-			<div class="bg-muted text-foreground flex size-10 items-center justify-center rounded-md">
+			<div class="flex size-10 items-center justify-center rounded-md bg-muted text-foreground">
 				<SprayCan class="size-5" />
 			</div>
 			<div>
@@ -56,7 +56,7 @@
 	</header>
 
 	{#if selected}
-		<div class="bg-muted/30 flex flex-col gap-3 rounded-md p-3 sm:flex-row sm:items-center sm:justify-between">
+		<div class="flex flex-col gap-3 rounded-md bg-muted/30 p-3 sm:flex-row sm:items-center sm:justify-between">
 			<div class="flex min-w-0 items-center gap-3">
 				<ItemRender skyblockId={selected.item.skyblockId ?? ''} class="size-12" />
 				<div class="min-w-0 truncate text-lg font-semibold">
@@ -85,7 +85,7 @@
 		{@render children?.()}
 	{:else if vacuums.length === 0}
 		<div
-			class="border-muted-foreground/30 text-muted-foreground rounded-md border border-dashed p-6 text-center text-sm"
+			class="rounded-md border border-dashed border-muted-foreground/30 p-6 text-center text-sm text-muted-foreground"
 		>
 			No vacuum found on this profile.
 		</div>

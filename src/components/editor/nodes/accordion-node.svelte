@@ -17,14 +17,14 @@
 	}
 </script>
 
-<div class={`bg-card my-4 rounded-lg border shadow-sm ${selected ? 'ring-primary ring-2' : ''}`} data-type="accordion">
-	<div class="bg-muted/50 flex items-center gap-2 rounded-t-lg border-b px-4 py-3">
-		<ChevronDown class="text-muted-foreground size-4 shrink-0" />
+<div class={`my-4 rounded-lg border bg-card shadow-sm ${selected ? 'ring-2 ring-primary' : ''}`} data-type="accordion">
+	<div class="flex items-center gap-2 rounded-t-lg border-b bg-muted/50 px-4 py-3">
+		<ChevronDown class="size-4 shrink-0 text-muted-foreground" />
 		<span class="flex-1 text-sm font-medium">{title}</span>
 		<button
 			type="button"
 			onclick={handleEditClick}
-			class="hover:bg-muted text-muted-foreground hover:text-foreground rounded p-1"
+			class="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
 			title="Edit title"
 		>
 			<Pencil class="size-3" />

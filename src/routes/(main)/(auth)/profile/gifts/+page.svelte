@@ -168,7 +168,7 @@
 <div class="my-16 flex w-full flex-col gap-6">
 	<div class="flex flex-col gap-2">
 		<h1 class="text-3xl font-bold">Gifts</h1>
-		<p class="text-muted-foreground max-w-3xl">
+		<p class="max-w-3xl text-muted-foreground">
 			View and claim gifts that other players have sent you through the Elite store. You can claim individual
 			items or all items at once.
 		</p>
@@ -177,10 +177,10 @@
 	{#if gifts.length === 0}
 		<Card.Root class="border-dashed">
 			<Card.Content class="flex flex-col items-center justify-center gap-4 py-12">
-				<Gift class="text-muted-foreground size-12" />
+				<Gift class="size-12 text-muted-foreground" />
 				<div class="text-center">
 					<p class="text-lg font-medium">No pending gifts</p>
-					<p class="text-muted-foreground text-sm">
+					<p class="text-sm text-muted-foreground">
 						When someone sends you a gift, it will appear here for you to claim.
 					</p>
 				</div>
@@ -215,7 +215,7 @@
 							</Card.Description>
 						{/if}
 						{#if gift.buyerName}
-							<p class="text-muted-foreground flex items-center gap-1.5 text-xs">
+							<p class="flex items-center gap-1.5 text-xs text-muted-foreground">
 								<PlayerHead uuid={gift.buyerName} size="sm" />
 								From: {gift.buyerName}
 							</p>
@@ -229,14 +229,14 @@
 								<label
 									class="flex items-center gap-2 rounded-md p-1.5 text-sm transition-colors {expired
 										? 'opacity-50'
-										: 'hover:bg-accent/50 cursor-pointer'}"
+										: 'cursor-pointer hover:bg-accent/50'}"
 								>
 									<Checkbox
 										checked={isItemSelected(gift.orderId, item.orderItemId)}
 										onCheckedChange={() => toggleItem(gift.orderId, item.orderItemId)}
 										disabled={expired || claiming || declining}
 									/>
-									<Package class="text-muted-foreground size-4 shrink-0" />
+									<Package class="size-4 shrink-0 text-muted-foreground" />
 									<span class="flex-1">
 										{item.productName ?? `Product #${item.productId}`}
 										{#if item.quantity > 1}
@@ -244,20 +244,20 @@
 										{/if}
 									</span>
 									{#if itemExpiry && itemExpiry !== expiryText}
-										<span class="text-muted-foreground text-xs">{itemExpiry}</span>
+										<span class="text-xs text-muted-foreground">{itemExpiry}</span>
 									{/if}
 								</label>
 							{/each}
 						</div>
 						<div class="mt-3 flex items-center justify-between">
 							{#if gift.orderDate}
-								<p class="text-muted-foreground text-xs">
+								<p class="text-xs text-muted-foreground">
 									Sent {new Date(gift.orderDate).toLocaleDateString()}
 								</p>
 							{/if}
 							{#if gift.items.length > 1}
 								<button
-									class="text-muted-foreground hover:text-foreground text-xs underline"
+									class="text-xs text-muted-foreground underline hover:text-foreground"
 									onclick={() =>
 										allSelected ? deselectAllItems(gift.orderId) : selectAllItems(gift)}
 									disabled={claiming || declining}
@@ -291,7 +291,7 @@
 								? `Deny ${selectedCount} selected ${selectedCount === 1 ? 'item' : 'items'}`
 								: 'Deny this gift'}
 						>
-							<Trash2 class="text-destructive size-4" />
+							<Trash2 class="size-4 text-destructive" />
 						</Button>
 					</Card.Footer>
 				</Card.Root>

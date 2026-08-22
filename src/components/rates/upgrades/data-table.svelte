@@ -1,28 +1,24 @@
-<script lang="ts" generics="TData, TValue">
-	import { createSvelteTable, FlexRender } from '$ui/data-table/index.js';
-	import * as Table from '$ui/table/index.js';
+<script lang="ts" generics="TData extends RowData">
 	import {
-		getCoreRowModel,
-		getExpandedRowModel,
-		getFacetedRowModel,
-		getFacetedUniqueValues,
-		getFilteredRowModel,
-		getPaginationRowModel,
-		getSortedRowModel,
-		type ColumnDef,
+		createTable,
+		dataTableFeatures,
+		FlexRender,
+		type AnyColumnDef,
 		type ColumnFiltersState,
 		type ExpandedState,
 		type PaginationState,
 		type Row,
+		type RowData,
 		type RowSelectionState,
 		type SortingState,
 		type VisibilityState,
-	} from '@tanstack/table-core';
+	} from '$ui/data-table/index.js';
+	import * as Table from '$ui/table/index.js';
 	import type { Snippet } from 'svelte';
 	import DataTablePagination from './data-table-pagination.svelte';
 
-	type DataTableProps<TData, TValue> = {
-		columns: ColumnDef<TData, TValue>[];
+	type DataTableProps<TData> = {
+		columns: AnyColumnDef<TData>[];
 		data: TData[];
 		initialSorting?: SortingState;
 		initialFilters?: ColumnFiltersState;
@@ -39,7 +35,7 @@
 		initialVisibility = {},
 		renderSubComponent,
 		expanded = $bindable({}),
-	}: DataTableProps<TData, TValue> = $props();
+	}: DataTableProps<TData> = $props();
 
 	let rowSelection = $state<RowSelectionState>({});
 	let columnVisibility = $derived<VisibilityState>(initialVisibility);
@@ -47,7 +43,8 @@
 	let sorting = $derived<SortingState>(initialSorting);
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 20 });
 
-	const table = createSvelteTable({
+	const table = createTable({
+		features: dataTableFeatures,
 		get data() {
 			return data;
 		},
@@ -118,13 +115,6 @@
 				expanded = updater;
 			}
 		},
-		getCoreRowModel: getCoreRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getFacetedRowModel: getFacetedRowModel(),
-		getFacetedUniqueValues: getFacetedUniqueValues(),
-		getExpandedRowModel: getExpandedRowModel(),
 	});
 </script>
 
@@ -137,10 +127,7 @@
 						{#each headerGroup.headers as header (header.id)}
 							<Table.Head>
 								{#if !header.isPlaceholder}
-									<FlexRender
-										content={header.column.columnDef.header}
-										context={header.getContext()}
-									/>
+									<FlexRender {header} />
 								{/if}
 							</Table.Head>
 						{/each}
@@ -152,7 +139,7 @@
 					<Table.Row data-state={row.getIsSelected() && 'selected'}>
 						{#each row.getVisibleCells() as cell (cell.id)}
 							<Table.Cell>
-								<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
+								<FlexRender {cell} />
 							</Table.Cell>
 						{/each}
 					</Table.Row>

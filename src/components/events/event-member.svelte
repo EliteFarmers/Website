@@ -77,7 +77,7 @@
 					<Tooltip.Simple>
 						{#snippet trigger()}
 							<div class="flex flex-row items-end">
-								<Crown size={16} class="text-completed w-4" />
+								<Crown size={16} class="w-4 text-completed" />
 							</div>
 						{/snippet}
 						<p>Team Owner</p>
@@ -88,10 +88,10 @@
 						{#snippet trigger()}
 							<div class="flex size-4 flex-col items-center justify-center">
 								{#if member.status === 0}
-									<div class="bg-muted size-2 rounded-full"></div>
+									<div class="size-2 rounded-full bg-muted"></div>
 								{/if}
 								{#if +member.status === 1}
-									<div class="bg-progress size-2 rounded-full"></div>
+									<div class="size-2 rounded-full bg-progress"></div>
 								{/if}
 							</div>
 						{/snippet}
@@ -132,7 +132,7 @@
 			<div class="flex w-full flex-col gap-1">
 				{#each earnedMedals() as [medal, count] (medal)}
 					<div
-						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
+						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<img
@@ -150,7 +150,7 @@
 			<div class="flex w-full flex-col gap-1">
 				{#each pestWeights() as { name, weight } (name)}
 					<div
-						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
+						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<img
@@ -168,7 +168,7 @@
 			<div class="flex w-full flex-col gap-1">
 				{#each collectionWeights() as { name, weight } (name)}
 					<div
-						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
+						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<p class="font-semibold whitespace-nowrap">{name}</p>

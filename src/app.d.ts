@@ -7,7 +7,7 @@ import type { AuthorizedAccountDto } from '$lib/api';
 import type { AuthSession } from '$lib/api/auth';
 
 declare global {
-	declare namespace App {
+	namespace App {
 		interface Locals {
 			access_token?: string;
 			refresh_token?: string;
@@ -30,7 +30,7 @@ declare global {
 		// interface Stuff {}
 	}
 
-	declare interface Window {
+	interface Window {
 		umami?: {
 			track: (eventName?: string, data?: Record<string, string | number | boolean | null>) => void;
 		};

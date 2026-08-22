@@ -34,7 +34,7 @@
 </script>
 
 {#if items.length <= 0}
-	<div class="bg-completed/60 relative flex h-full min-h-6 max-w-fit flex-row items-center gap-1.5 rounded-md px-0.5">
+	<div class="relative flex h-full min-h-6 max-w-fit flex-row items-center gap-1.5 rounded-md bg-completed/60 px-0.5">
 		<CircleDollarSign class="size-5" />
 		<span class="relative {small ? 'md:text-md text-sm' : 'text-md md:text-lg'} z-10 pr-1 font-mono leading-none">
 			{readable}
@@ -45,7 +45,7 @@
 		{#snippet trigger()}
 			<div
 				class={cn(
-					'bg-completed/60 relative flex h-full min-h-6 flex-row items-center gap-1.5 rounded-md px-0.5',
+					'relative flex h-full min-h-6 flex-row items-center gap-1.5 rounded-md bg-completed/60 px-0.5',
 					className
 				)}
 			>
@@ -68,7 +68,7 @@
 			<div class="flex flex-col gap-1">
 				{#each items as [key, value] (key)}
 					<div
-						class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
+						class="flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none even:bg-card"
 					>
 						<p>
 							{#if value.count}
@@ -89,7 +89,7 @@
 				{/each}
 			</div>
 
-			<div class="text-primary flex flex-row justify-between p-1 text-base font-semibold">
+			<div class="flex flex-row justify-between p-1 text-base font-semibold text-primary">
 				<p>Total</p>
 				<p>{Math.round(coins).toLocaleString()}</p>
 			</div>

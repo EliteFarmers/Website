@@ -417,17 +417,17 @@
 	<SettingSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Attribute Shards</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">Set the amount of each attribute shard you have!</p>
+	<p class="px-1 text-sm text-muted-foreground">Set the amount of each attribute shard you have!</p>
 	<SettingBigSeperator />
 
-	<p class="border-completed rounded-md border p-2 text-sm">
+	<p class="rounded-md border border-completed p-2 text-sm">
 		These settings have been removed! Attribute shards are now automatically detected from your profile data!
 	</p>
 
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Garden Chips</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">Set the rarity of each garden chip you have.</p>
+	<p class="px-1 text-sm text-muted-foreground">Set the rarity of each garden chip you have.</p>
 	<SettingBigSeperator />
 
 	{#each gardenChipEntries as [chipId, chip], index (chipId)}
@@ -442,10 +442,10 @@
 			{#snippet child()}
 				<div class="flex w-full max-w-80 flex-row items-center justify-end gap-2">
 					{#if chipId === 'overdrive'}
-						<span class="text-muted-foreground text-sm">Contest active</span>
+						<span class="text-sm text-muted-foreground">Contest active</span>
 						<Switch bind:checked={$ratesData.overdriveActive} />
 					{/if}
-					<span class="text-muted-foreground w-14 text-right text-sm">Lvl {level.toLocaleString()}</span>
+					<span class="w-14 text-right text-sm text-muted-foreground">Lvl {level.toLocaleString()}</span>
 					<Select.Simple
 						size="sm"
 						value={savedRarity ?? ''}
@@ -465,7 +465,7 @@
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
-	<span class="text-muted-foreground px-1 text-sm"
+	<span class="px-1 text-sm text-muted-foreground"
 		>Crop that you've brought items to <a
 			href="https://w.elitesb.gg/Carrolyn"
 			target="_blank"
@@ -474,7 +474,7 @@
 	>
 	<SettingBigSeperator />
 
-	<p class="border-completed rounded-md border p-2 text-sm">
+	<p class="rounded-md border border-completed p-2 text-sm">
 		These toggles have been removed! Exported crops are now automatically detected from your profile data!
 	</p>
 
@@ -483,10 +483,10 @@
 	{#if owned || ctx.fortuneSettings}
 		<div class="h-16"></div>
 		<div
-			class="bg-background fixed right-0 bottom-0 left-0 z-50 flex w-full max-w-2xl flex-col items-center justify-center gap-2 border-t p-4"
+			class="fixed right-0 bottom-0 left-0 z-50 flex w-full max-w-2xl flex-col items-center justify-center gap-2 border-t bg-background p-4"
 		>
 			{#if ctx.fortuneSettings && !owned}
-				<p class="text-muted-foreground px-1 text-sm">
+				<p class="px-1 text-sm text-muted-foreground">
 					Loaded saved settings from {ctx.ignMeta}!
 				</p>
 			{/if}
@@ -505,7 +505,7 @@
 							};
 						}}
 					>
-						<p class="text-muted-foreground max-w-sm text-sm">
+						<p class="max-w-sm text-sm text-muted-foreground">
 							Strength, flasks, and garden fortune can be saved to your profile!
 						</p>
 						<input type="hidden" name="player" value={ctx.uuid} />

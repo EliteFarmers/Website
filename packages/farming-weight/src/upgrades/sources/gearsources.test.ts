@@ -53,7 +53,12 @@ const almostMaxHelmet = {
 		'',
 		'§d§l§ka§r §d§l§d§lLEGENDARY HELMET §d§l§ka',
 	],
-	enchantments: { rejuvenate: 5, respiration: 3, aqua_affinity: 1, pesterminator: 3 },
+	enchantments: {
+		rejuvenate: 5,
+		respiration: 3,
+		aqua_affinity: 1,
+		pesterminator: 3,
+	},
 	attributes: {
 		skin: 'FERMENTO_ULTIMATE',
 		modifier: 'mossy',
@@ -225,7 +230,11 @@ const lotusNecklace = {
 		'§5§l§ka§r §5§l§5§lEPIC NECKLACE §5§l§ka',
 	],
 	enchantments: { green_thumb: 5 },
-	attributes: { modifier: 'rooted', timestamp: '1676577900000', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'rooted',
+		timestamp: '1676577900000',
+		rarity_upgrades: '1',
+	},
 };
 
 test('Lotus necklace fortune sources', () => {
@@ -301,7 +310,12 @@ const maxLotusBracelet = {
 		'§5§l§ka§r §5§lEPIC BRACELET §5§l§ka',
 	],
 	enchantments: { green_thumb: 5 },
-	attributes: { modifier: 'rooted', timestamp: '1688158680000', donated_museum: 'True', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'rooted',
+		timestamp: '1688158680000',
+		donated_museum: 'True',
+		rarity_upgrades: '1',
+	},
 };
 
 test('Maxed lotus bracelet fortune sources', () => {

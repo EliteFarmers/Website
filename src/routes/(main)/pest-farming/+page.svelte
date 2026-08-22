@@ -28,19 +28,19 @@
 	<div class="mb-16 flex flex-col items-center gap-12 pt-8">
 		<div class="flex flex-col items-center gap-4">
 			<h1 class="mt-16 text-center text-4xl">Pest Farming</h1>
-			<p class="text-muted-foreground max-w-2xl text-center text-lg">
+			<p class="max-w-2xl text-center text-lg text-muted-foreground">
 				Check pest stats, vacuum progress, crop context, and cheapest pest farming upgrades.
 			</p>
 		</div>
 
 		<Button
 			onclick={openSearch}
-			class="bg-card mx-auto flex w-full max-w-lg flex-row gap-2 rounded-lg border-[3px] p-4 lg:flex-1"
+			class="mx-auto flex w-full max-w-lg flex-row gap-2 rounded-lg border-[3px] bg-card p-4 lg:flex-1"
 			variant="outline"
 			size="lg"
 		>
 			<Search class="-ml-0.5" />
-			<span class="text-muted-foreground flex-1">Search for pest farming...</span>
+			<span class="flex-1 text-muted-foreground">Search for pest farming...</span>
 		</Button>
 		<PlayerSearch
 			bind:open
@@ -56,10 +56,10 @@
 
 					<div class="flex flex-col">
 						<div class="font-medium">My Pest Farming</div>
-						<div class="text-muted-foreground text-sm">{gbl.session.fIgn}</div>
+						<div class="text-sm text-muted-foreground">{gbl.session.fIgn}</div>
 					</div>
 				</div>
-				<ArrowRight class="group-hover:animate-bounce-horizontal mr-2 size-6" />
+				<ArrowRight class="mr-2 size-6 group-hover:animate-bounce-horizontal" />
 			</a>
 		{/if}
 	</div>
@@ -96,11 +96,11 @@
 
 	<Button
 		onclick={openSearch}
-		class="bg-card mx-auto flex max-h-14 w-full max-w-lg flex-row gap-2 rounded-lg border-[3px] p-4 lg:flex-1"
+		class="mx-auto flex max-h-14 w-full max-w-lg flex-row gap-2 rounded-lg border-[3px] bg-card p-4 lg:flex-1"
 		variant="outline"
 		size="lg"
 	>
 		<Search class="-ml-0.5" />
-		<span class="text-muted-foreground flex-1">Search for pest farming...</span>
+		<span class="flex-1 text-muted-foreground">Search for pest farming...</span>
 	</Button>
 </div>

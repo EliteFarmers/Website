@@ -1,0 +1,35 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"useTabs": true,
+	"tabWidth": 4,
+	"printWidth": 120,
+	"singleQuote": true,
+	"trailingComma": "es5",
+	"semi": true,
+	"bracketSpacing": true,
+	"arrowParens": "always",
+	"endOfLine": "lf",
+	"svelte": true,
+	"sortTailwindcss": {
+		"attributes": ["btnClass", "triggerClass", "popoverClass", "itemsClass", "iconClass", "parentClass"],
+		"functions": ["clsx", "cn"],
+		"stylesheet": "./src/app.css"
+	},
+	"ignorePatterns": [
+		"package.json",
+		"pnpm-lock.yaml",
+		"renovate.json",
+		"*.cjs",
+		"svelte.config.js",
+		"vite.config.js",
+		"build/**",
+		".github/workflows/**",
+		".svelte-kit/**",
+		"src/lib/api/swagger.json",
+		"src/lib/api/api.d.ts",
+		"static/**",
+		".velite/**",
+		"packages/farming-weight/dist/**",
+		"packages/farming-weight/node_modules/**"
+	]
+}

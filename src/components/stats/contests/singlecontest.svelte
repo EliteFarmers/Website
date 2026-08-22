@@ -35,7 +35,7 @@
 	}
 </script>
 
-<div class="bg-card h-full w-full max-w-108 items-center justify-between rounded-md border-2 shadow-md">
+<div class="h-full w-full max-w-108 items-center justify-between rounded-md border-2 bg-card shadow-md">
 	<div class="flex flex-col items-center justify-start space-y-2 px-2 py-4 pb-2">
 		<div class="flex flex-row gap-2">
 			<img src={cropUrl} alt={crop} class="pixelated h-10 w-10" />
@@ -55,7 +55,7 @@
 		</ScrollArea>
 	</div>
 	<div class="flex flex-col items-center justify-center gap-2 pb-2 md:flex-row">
-		<div class="bg-card flex flex-col rounded-md text-center font-mono text-sm leading-tight font-light">
+		<div class="flex flex-col rounded-md bg-card text-center font-mono text-sm leading-tight font-light">
 			<span class="rounded-md p-1 px-2 whitespace-nowrap">
 				{new Date(timestamp * 1000).toLocaleString(undefined, {
 					timeStyle: 'short',

@@ -14,7 +14,7 @@
 
 <div class="flex items-center gap-2 {className ?? ''}" {...rest}>
 	<Paintbrush class="text-muted-foreground" size={14} />
-	<span class="text-muted-foreground text-sm">{prefix}</span>
+	<span class="text-sm text-muted-foreground">{prefix}</span>
 	<a class="group flex items-center gap-2" href="/@{artist.id || artist.uuid}">
 		{#if artist.avatar}
 			<img src={artist.avatar} alt="{artist.name}'s avatar" class="size-5 rounded-full object-cover" />

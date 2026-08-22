@@ -58,7 +58,7 @@
 	}
 </script>
 
-<section class="bg-card flex w-full max-w-6xl flex-col gap-4 rounded-lg border-2 p-4">
+<section class="flex w-full max-w-6xl flex-col gap-4 rounded-lg border-2 bg-card p-4">
 	<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 		<div class="flex flex-col gap-2 sm:flex-row sm:items-center">
 			<h2 class="text-xl">Pet Fortune</h2>
@@ -100,14 +100,14 @@
 	{#if selectedPet && selectedProgress}
 		<div class="flex flex-col gap-4">
 			<div class="flex min-w-0 items-center gap-3">
-				<div class="bg-background rounded-md border p-1.5">
+				<div class="rounded-md border bg-background p-1.5">
 					<ItemRender skyblockId={selectedPet.type} pet class="size-10" />
 				</div>
 				<div class="min-w-0">
 					<p class="text-lg font-semibold wrap-break-word">
 						<FormattedText text={selectedPet.getFormattedName()} />
 					</p>
-					<p class="text-muted-foreground text-sm capitalize">
+					<p class="text-sm text-muted-foreground capitalize">
 						Level {selectedPet.level}
 						{selectedPet.rarity}
 					</p>
@@ -125,23 +125,23 @@
 			{:else if selectedProgress.stats || selectedProgress.effects?.length}
 				<FortuneProgress progress={selectedProgress} barBg="bg-card" useItemName={false} />
 			{:else}
-				<p class="text-muted-foreground text-sm">
+				<p class="text-sm text-muted-foreground">
 					This pet does not currently add the selected fortune stats, but upgrades may still make it useful.
 				</p>
 			{/if}
 
 			{#if sortedUpgrades.length > 0}
 				<div class="flex flex-col gap-2">
-					<h3 class="text-muted-foreground text-sm font-bold tracking-wider uppercase">Available Upgrades</h3>
+					<h3 class="text-sm font-bold tracking-wider text-muted-foreground uppercase">Available Upgrades</h3>
 					{#each sortedUpgrades as upgrade, i (getUpgradeKey(upgrade, i))}
 						<LazyUpgradeTree {upgrade} {items} {costFn} {expandUpgrade} {referenceOnlyPrices} />
 					{/each}
 				</div>
 			{:else}
-				<p class="text-muted-foreground text-sm">No pet upgrades found for the selected stats.</p>
+				<p class="text-sm text-muted-foreground">No pet upgrades found for the selected stats.</p>
 			{/if}
 		</div>
 	{:else}
-		<p class="text-muted-foreground text-sm">No farming pets found.</p>
+		<p class="text-sm text-muted-foreground">No farming pets found.</p>
 	{/if}
 </section>

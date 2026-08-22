@@ -10,7 +10,7 @@
 	import ArrowDown from '@lucide/svelte/icons/arrow-down';
 	import ArrowUp from '@lucide/svelte/icons/arrow-up';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-	import type { Column } from '@tanstack/table-core';
+	import type { Column } from '$ui/data-table';
 	import type { WithoutChildren } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 
@@ -31,7 +31,7 @@
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
 				{#snippet child({ props })}
-					<Button {...props} variant="ghost" size="sm" class="data-[state=open]:bg-accent -ml-3 h-8">
+					<Button {...props} variant="ghost" size="sm" class="-ml-3 h-8 data-[state=open]:bg-accent">
 						<span>
 							{title}
 						</span>
@@ -47,11 +47,11 @@
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content align="start">
 				<DropdownMenu.Item onclick={() => column.toggleSorting(false)}>
-					<ArrowUp class="text-muted-foreground/70 mr-2 size-3.5" />
+					<ArrowUp class="mr-2 size-3.5 text-muted-foreground/70" />
 					Asc
 				</DropdownMenu.Item>
 				<DropdownMenu.Item onclick={() => column.toggleSorting(true)}>
-					<ArrowDown class="text-muted-foreground/70 mr-2 size-3.5" />
+					<ArrowDown class="mr-2 size-3.5 text-muted-foreground/70" />
 					Desc
 				</DropdownMenu.Item>
 				<!-- <DropdownMenu.Separator />

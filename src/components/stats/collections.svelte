@@ -23,7 +23,7 @@
 </script>
 
 <div class="-mt-5 flex max-w-4xl flex-1 flex-col gap-2">
-	<button class="bg-card hover:bg-muted -mt-4 w-20 rounded-md py-1 text-sm whitespace-nowrap" onclick={swap}
+	<button class="-mt-4 w-20 rounded-md bg-card py-1 text-sm whitespace-nowrap hover:bg-muted" onclick={swap}
 		>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
 	>
 	<div class="flex w-full flex-col gap-2">

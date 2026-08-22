@@ -11,7 +11,7 @@
 {#if ctx.ready}
 	{#if !api.collections}
 		<div class="flex w-full justify-center">
-			<Alert.Root class="items-centers bg-destructive/80 flex w-full max-w-xl flex-col">
+			<Alert.Root class="items-centers flex w-full max-w-xl flex-col bg-destructive/80">
 				<Alert.Title class="flex flex-wrap">
 					{#each entries as [key, value] (key)}
 						{#if !value}
@@ -22,13 +22,13 @@
 					{/each}
 				</Alert.Title>
 				<Alert.Description class="w-full">
-					<p class="text-primary w-full text-center">Most data is missing due to the user's API settings.</p>
+					<p class="w-full text-center text-primary">Most data is missing due to the user's API settings.</p>
 				</Alert.Description>
 			</Alert.Root>
 		</div>
 	{:else if entries.some(([, value]) => !value)}
 		<div class="flex w-full justify-center">
-			<Alert.Root class="items-centers bg-completed flex w-full max-w-xl flex-col">
+			<Alert.Root class="items-centers flex w-full max-w-xl flex-col bg-completed">
 				<Alert.Title class="flex w-full flex-wrap">
 					{#each entries as [key, value] (key)}
 						{#if !value}

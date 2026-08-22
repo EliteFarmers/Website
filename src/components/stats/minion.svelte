@@ -74,7 +74,7 @@
 					></div>
 				{/each}
 			</div>
-			<div class="tier-cover bg-card absolute"></div>
+			<div class="tier-cover absolute bg-card"></div>
 		</div>
 	{/snippet}
 

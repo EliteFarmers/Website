@@ -22,9 +22,9 @@
 <button
 	type="button"
 	onclick={handleClick}
-	class={`bg-card my-2 inline-flex cursor-pointer flex-col gap-2 rounded-lg border p-4 shadow-sm ${selected ? 'ring-primary ring-2' : ''}`}
+	class={`my-2 inline-flex cursor-pointer flex-col gap-2 rounded-lg border bg-card p-4 shadow-sm ${selected ? 'ring-2 ring-primary' : ''}`}
 >
-	<div class="text-muted-foreground flex items-center gap-2 text-sm font-medium">
+	<div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
 		<LayoutGrid class="size-4" />
 		Block Grid ({rows}×{cols})
 	</div>
@@ -47,7 +47,7 @@
 			{/each}
 		{/each}
 		{#if rows > 3 || cols > 6}
-			<div class="text-muted-foreground flex size-8 items-center justify-center text-xs">...</div>
+			<div class="flex size-8 items-center justify-center text-xs text-muted-foreground">...</div>
 		{/if}
 	</div>
 </button>

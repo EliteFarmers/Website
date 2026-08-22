@@ -187,7 +187,7 @@
 </script>
 
 {#if !impact && unavailableLabel}
-	<span class="text-muted-foreground whitespace-nowrap">{unavailableLabel}</span>
+	<span class="whitespace-nowrap text-muted-foreground">{unavailableLabel}</span>
 {:else}
 	<Popover.Mobile hasContent={!!impact} class="w-96 max-w-[calc(100vw-2rem)]">
 		{#snippet trigger()}
@@ -201,13 +201,13 @@
 						{totalCoins > 0 ? '+' : ''}{formatRate(totalCoins)}/hr
 					</span>
 					{#if payoffHours}
-						<span class="text-muted-foreground text-xs whitespace-nowrap"
+						<span class="text-xs whitespace-nowrap text-muted-foreground"
 							>{formatPayoff(payoffHours)} payoff</span
 						>
 					{/if}
 				</span>
 			{:else}
-				<span class="text-muted-foreground whitespace-nowrap">No Change</span>
+				<span class="whitespace-nowrap text-muted-foreground">No Change</span>
 			{/if}
 		{/snippet}
 
@@ -215,21 +215,21 @@
 			<div class="flex flex-col gap-3 text-sm">
 				<div class="flex items-center justify-between gap-6">
 					<p class="font-semibold">Rate Impact</p>
-					<p class={totalCoins < 0 ? 'text-destructive font-semibold' : 'dark:text-completed font-semibold'}>
+					<p class={totalCoins < 0 ? 'font-semibold text-destructive' : 'font-semibold dark:text-completed'}>
 						{formatSigned(totalCoins)}/hr
 					</p>
 				</div>
 
 				{#if totalCost > 0}
 					<div class="flex flex-col gap-1">
-						<p class="text-muted-foreground font-medium">Payoff Estimate</p>
-						<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+						<p class="font-medium text-muted-foreground">Payoff Estimate</p>
+						<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
 							<p class="truncate">Upgrade Cost</p>
 							<p class="font-mono {referenceOnlyPrices ? 'text-muted-foreground' : ''}">
 								{formatRate(totalCost)}
 							</p>
 						</div>
-						<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+						<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
 							<p class="truncate">Time to Pay Off</p>
 							<p class="font-mono {payoffHours ? 'dark:text-completed' : 'text-muted-foreground'}">
 								{payoffHours ? formatPayoff(payoffHours) : 'No positive coin gain'}
@@ -243,9 +243,9 @@
 				{:else}
 					{#if hasRows(collectionRows)}
 						<div class="flex flex-col gap-1">
-							<p class="text-muted-foreground font-medium">Collection Deltas</p>
+							<p class="font-medium text-muted-foreground">Collection Deltas</p>
 							{#each collectionRows.rows as row (row.id)}
-								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+								<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
 									<p class="truncate">{row.key}</p>
 									<p class="font-mono {row.value < 0 ? 'text-destructive' : 'dark:text-completed'}">
 										{formatSigned(row.value)}
@@ -253,8 +253,8 @@
 								</div>
 							{/each}
 							{#if collectionRows.miscCount > 0}
-								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
-									<p class="text-muted-foreground truncate">Misc</p>
+								<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
+									<p class="truncate text-muted-foreground">Misc</p>
 									<p
 										class="font-mono {collectionRows.miscValue < 0
 											? 'text-destructive'
@@ -269,9 +269,9 @@
 
 					{#if hasRows(npcRows)}
 						<div class="flex flex-col gap-1">
-							<p class="text-muted-foreground font-medium">Coin Sources</p>
+							<p class="font-medium text-muted-foreground">Coin Sources</p>
 							{#each npcRows.rows as [source, value] (source)}
-								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+								<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
 									<p class="truncate">{source}</p>
 									<p class="font-mono {value < 0 ? 'text-destructive' : 'dark:text-completed'}">
 										{formatSigned(value)}
@@ -279,8 +279,8 @@
 								</div>
 							{/each}
 							{#if npcRows.miscCount > 0}
-								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
-									<p class="text-muted-foreground truncate">Misc</p>
+								<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
+									<p class="truncate text-muted-foreground">Misc</p>
 									<p
 										class="font-mono {npcRows.miscValue < 0
 											? 'text-destructive'
@@ -295,9 +295,9 @@
 
 					{#if hasRows(currencyRows)}
 						<div class="flex flex-col gap-1">
-							<p class="text-muted-foreground font-medium">Currency Deltas</p>
+							<p class="font-medium text-muted-foreground">Currency Deltas</p>
 							{#each currencyRows.rows as row (row.currencyId)}
-								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+								<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
 									<p class="truncate">{row.name}</p>
 									<p class="font-mono {row.amount < 0 ? 'text-destructive' : 'dark:text-completed'}">
 										{formatSigned(row.amount)}
@@ -305,8 +305,8 @@
 								</div>
 							{/each}
 							{#if currencyRows.miscCount > 0}
-								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
-									<p class="text-muted-foreground truncate">Misc</p>
+								<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
+									<p class="truncate text-muted-foreground">Misc</p>
 									<p
 										class="font-mono {currencyRows.miscValue < 0
 											? 'text-destructive'
@@ -321,12 +321,12 @@
 
 					{#if hasRows(rngRows)}
 						<div class="flex flex-col gap-1">
-							<p class="text-muted-foreground font-medium">RNG Item Value</p>
+							<p class="font-medium text-muted-foreground">RNG Item Value</p>
 							{#each rngRows.rows as row (row.itemId)}
-								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+								<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
 									<div class="min-w-0">
 										<p class="truncate">{row.name}</p>
-										<p class="text-muted-foreground text-xs">
+										<p class="text-xs text-muted-foreground">
 											{formatSigned(row.amount)} items @ {formatRate(row.price)} each
 										</p>
 									</div>
@@ -336,9 +336,9 @@
 								</div>
 							{/each}
 							{#if rngRows.miscCount > 0}
-								<div class="even:bg-card grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm">
+								<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-4 rounded-sm even:bg-card">
 									<div class="min-w-0">
-										<p class="text-muted-foreground truncate">Misc</p>
+										<p class="truncate text-muted-foreground">Misc</p>
 									</div>
 									<p
 										class="font-mono {rngRows.miscValue < 0

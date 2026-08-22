@@ -48,7 +48,7 @@
 
 <div
 	class="flex flex-col gap-2 rounded-md border {comment.liftedElementId
-		? 'bg-card border-accent py-2 pr-2'
+		? 'border-accent bg-card py-2 pr-2'
 		: 'border-transparent'}"
 >
 	<!-- Comment body with left border -->
@@ -60,7 +60,7 @@
 					variant="ghost"
 					size="sm"
 					onclick={onToggleCollapse}
-					class="text-muted-foreground hover:text-foreground h-5 w-5 p-0"
+					class="h-5 w-5 p-0 text-muted-foreground hover:text-foreground"
 				>
 					{#if isExpanded}
 						<ChevronDown size={14} />
@@ -69,7 +69,7 @@
 					{/if}
 				</Button>
 				{#if isExpanded}
-					<div class="bg-border w-0.5 flex-1"></div>
+					<div class="w-0.5 flex-1 bg-border"></div>
 				{/if}
 			</div>
 		{:else}
@@ -105,7 +105,7 @@
 					onCancel={() => (isEditing = false)}
 				/>
 			{:else}
-				<div class="text-foreground text-sm">
+				<div class="text-sm text-foreground">
 					<RenderMd content={comment.content} />
 				</div>
 			{/if}
@@ -125,7 +125,7 @@
 						variant="ghost"
 						size="sm"
 						onclick={onReply}
-						class="text-muted-foreground hover:text-foreground h-6 px-2 text-xs"
+						class="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
 					>
 						<MessageSquare size={14} />
 						Reply
@@ -134,7 +134,7 @@
 
 				{#if childCount && childCount > 0 && !isExpanded}
 					<Button variant="ghost" size="sm" onclick={onToggleCollapse} class="h-6">
-						<span class="text-primary text-xs font-semibold">
+						<span class="text-xs font-semibold text-primary">
 							{childCount}
 							{childCount === 1 ? 'reply' : 'replies'}
 						</span>

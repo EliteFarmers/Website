@@ -56,21 +56,21 @@
 		<ItemRequirements {itemData} />
 	{/if}
 	{#if upgrade.repeatable && upgrade.repeatable > 1}
-		<p class="text-muted-foreground text-xs">
+		<p class="text-xs text-muted-foreground">
 			This upgrade can be done <span class="font-bold">{upgrade.repeatable.toLocaleString()}</span> times!
 		</p>
 	{/if}
 	{#if upgrade.meta?.type === 'upgrade_group'}
-		<p class="text-muted-foreground text-xs">
-			<span class="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs leading-none">Set Upgrade</span>
+		<p class="text-xs text-muted-foreground">
+			<span class="rounded bg-muted px-1.5 py-0.5 text-xs leading-none text-muted-foreground">Set Upgrade</span>
 			{#if upgrade.group?.warning}
 				{upgrade.group.warning}
 			{/if}
 		</p>
 	{/if}
 	{#if upgrade.recommendation}
-		<p class="text-muted-foreground text-xs">
-			<span class="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs leading-none">
+		<p class="text-xs text-muted-foreground">
+			<span class="rounded bg-muted px-1.5 py-0.5 text-xs leading-none text-muted-foreground">
 				{upgrade.recommendation.label}
 			</span>
 			{#if upgrade.recommendation.kind === UpgradeRecommendationKind.Progression}
@@ -81,13 +81,13 @@
 		</p>
 	{/if}
 	{#if upgrade.optional}
-		<p class="text-muted-foreground text-xs">Recommended for more profit despite lower fortune.</p>
+		<p class="text-xs text-muted-foreground">Recommended for more profit despite lower fortune.</p>
 	{/if}
 	{#if upgrade.increase === 0 && upgrade.max && upgrade.max > 0 && (upgrade.effects?.length ?? 0) === 0}
 		{#if upgrade.stats}
-			<p class="text-muted-foreground text-xs">Gives no fortune right away, but has later upgrades.</p>
+			<p class="text-xs text-muted-foreground">Gives no fortune right away, but has later upgrades.</p>
 		{:else}
-			<p class="text-muted-foreground text-xs">Shown for completion!</p>
+			<p class="text-xs text-muted-foreground">Shown for completion!</p>
 		{/if}
 	{/if}
 </div>

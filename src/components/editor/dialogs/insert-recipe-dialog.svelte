@@ -88,7 +88,7 @@
 				</div>
 			</div>
 
-			<ArrowRight class="text-muted-foreground size-6 shrink-0" />
+			<ArrowRight class="size-6 shrink-0 text-muted-foreground" />
 
 			<div class="flex flex-col gap-2">
 				<Label>Output</Label>

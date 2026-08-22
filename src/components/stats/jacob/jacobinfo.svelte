@@ -13,7 +13,7 @@
 	class="mx-2 mb-8 flex w-full flex-col items-center justify-center gap-4 py-4 align-middle"
 	aria-labelledby="Jacob"
 >
-	<h1 id="Jacob" class="font-emoji pt-2 text-center text-4xl">{name} &nbsp;-&nbsp; Jacob Stats</h1>
+	<h1 id="Jacob" class="pt-2 text-center font-emoji text-4xl">{name} &nbsp;-&nbsp; Jacob Stats</h1>
 
 	<Cropstats class="my-8" />
 	<Medals />

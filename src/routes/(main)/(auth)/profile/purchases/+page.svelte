@@ -64,7 +64,7 @@
 <div class="my-16 flex w-full flex-col gap-6">
 	<div class="flex flex-col gap-2">
 		<h1 class="text-3xl font-bold">Payments</h1>
-		<p class="text-muted-foreground max-w-3xl">
+		<p class="max-w-3xl text-muted-foreground">
 			Track everything you have purchased through Elite, including gifts and recurring checkouts.
 		</p>
 	</div>
@@ -109,7 +109,7 @@
 		</div>
 
 		{#if form?.error}
-			<p class="text-destructive text-sm">{form.error}</p>
+			<p class="text-sm text-destructive">{form.error}</p>
 		{/if}
 
 		{#if products.length > 0}
@@ -130,7 +130,7 @@
 				</AccordionItem>
 			</Accordion>
 		{:else}
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted-foreground">
 				No active products. Visit the <Button href="/shop" variant="link" class="h-auto p-0">Shop</Button> to get
 				started!
 			</p>

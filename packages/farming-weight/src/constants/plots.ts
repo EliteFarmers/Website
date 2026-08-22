@@ -1,6 +1,6 @@
 import type { UpgradeCost } from './upgrades.js';
 
-export const enum PlotType {
+export enum PlotType {
 	Beginner = 'beginner',
 	Intermediate = 'intermediate',
 	Advanced = 'advanced',

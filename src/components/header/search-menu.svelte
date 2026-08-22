@@ -98,8 +98,8 @@
 		{...rest}
 	>
 		<Search />
-		<span class="text-muted-foreground hidden lg:inline-flex">Search For Player...</span>
-		<span class="text-muted-foreground inline-flex lg:hidden">Search...</span>
+		<span class="hidden text-muted-foreground lg:inline-flex">Search For Player...</span>
+		<span class="inline-flex text-muted-foreground lg:hidden">Search...</span>
 	</Button>
 {/if}
 
@@ -108,23 +108,23 @@
 	<Tabs.Root class="w-full" bind:value={destination}>
 		<ScrollArea class="w-full py-1" orientation="horizontal">
 			<Tabs.List class="flex w-full gap-2 rounded-none bg-inherit">
-				<Tabs.Trigger value="" class="data-[state=active]:border-border border-2 border-transparent"
+				<Tabs.Trigger value="" class="border-2 border-transparent data-[state=active]:border-border"
 					>Stats</Tabs.Trigger
 				>
-				<Tabs.Trigger value="/garden" class="data-[state=active]:border-border border-2 border-transparent"
+				<Tabs.Trigger value="/garden" class="border-2 border-transparent data-[state=active]:border-border"
 					>Garden</Tabs.Trigger
 				>
-				<Tabs.Trigger value="/fortune" class="data-[state=active]:border-border border-2 border-transparent"
+				<Tabs.Trigger value="/fortune" class="border-2 border-transparent data-[state=active]:border-border"
 					>Fortune</Tabs.Trigger
 				>
 				<Tabs.Trigger
 					value="/pest-farming"
-					class="data-[state=active]:border-border border-2 border-transparent">Pest Farming</Tabs.Trigger
+					class="border-2 border-transparent data-[state=active]:border-border">Pest Farming</Tabs.Trigger
 				>
-				<Tabs.Trigger value="/contests" class="data-[state=active]:border-border border-2 border-transparent"
+				<Tabs.Trigger value="/contests" class="border-2 border-transparent data-[state=active]:border-border"
 					>Contests</Tabs.Trigger
 				>
-				<Tabs.Trigger value="/charts" class="data-[state=active]:border-border border-2 border-transparent"
+				<Tabs.Trigger value="/charts" class="border-2 border-transparent data-[state=active]:border-border"
 					>Charts</Tabs.Trigger
 				>
 			</Tabs.List>
@@ -151,7 +151,7 @@
 					</Command.Item>
 				{:else}
 					{#if searchStr == ''}
-						<p class="text-muted-foreground text-center text-sm">No players found.</p>
+						<p class="text-center text-sm text-muted-foreground">No players found.</p>
 					{/if}
 				{/each}
 			</Command.Group>
@@ -161,7 +161,7 @@
 						{name}
 					</Command.Item>
 				{:else}
-					<p class="text-muted-foreground text-center text-sm">No leaderboards found.</p>
+					<p class="text-center text-sm text-muted-foreground">No leaderboards found.</p>
 				{/each}
 			</Command.Group>
 		</Command.List>

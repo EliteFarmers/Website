@@ -18,7 +18,10 @@ export class BustlingReforge extends BaseReforge {
 				[Rarity.Uncommon]: { stats: { [Stat.FarmingFortune]: 2 }, cost: 2_000 },
 				[Rarity.Rare]: { stats: { [Stat.FarmingFortune]: 4 }, cost: 3_000 },
 				[Rarity.Epic]: { stats: { [Stat.FarmingFortune]: 6 }, cost: 6_000 },
-				[Rarity.Legendary]: { stats: { [Stat.FarmingFortune]: 8 }, cost: 10_000 },
+				[Rarity.Legendary]: {
+					stats: { [Stat.FarmingFortune]: 8 },
+					cost: 10_000,
+				},
 				[Rarity.Mythic]: { stats: { [Stat.FarmingFortune]: 10 }, cost: 15_000 },
 			},
 		});

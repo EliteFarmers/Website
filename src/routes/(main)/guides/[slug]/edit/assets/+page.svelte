@@ -29,7 +29,7 @@
 					{@const assetReferenced = edit.isAssetReferenced(asset.id)}
 					<div class="flex gap-3 rounded-md border p-3">
 						<div
-							class="bg-muted flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-md"
+							class="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted"
 						>
 							{#if isImageAsset(asset)}
 								<img
@@ -48,7 +48,7 @@
 									<p class="truncate text-sm font-medium">
 										{asset.image?.title || asset.litematic?.name || asset.fileName}
 									</p>
-									<p class="text-muted-foreground mt-1 text-xs">{asset.fileName}</p>
+									<p class="mt-1 text-xs text-muted-foreground">{asset.fileName}</p>
 								</div>
 								<Button
 									variant="ghost"
@@ -84,7 +84,7 @@
 						</div>
 					</div>
 				{:else}
-					<p class="text-muted-foreground rounded-md border border-dashed p-4 text-sm sm:col-span-2">
+					<p class="rounded-md border border-dashed p-4 text-sm text-muted-foreground sm:col-span-2">
 						No uploaded assets yet. Use the asset button in the editor toolbar to upload images or
 						litematics.
 					</p>

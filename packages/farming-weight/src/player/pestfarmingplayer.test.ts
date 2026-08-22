@@ -32,7 +32,10 @@ function tool(id: keyof typeof FARMING_TOOLS, uuid: string, overrides: Partial<E
 	const item = FarmingTool.fakeItem(FARMING_TOOLS[id]!)!;
 	item.item.uuid = uuid;
 	item.item.enchantments = overrides.enchantments ?? item.item.enchantments;
-	item.item.attributes = { ...item.item.attributes, ...(overrides.attributes ?? {}) };
+	item.item.attributes = {
+		...item.item.attributes,
+		...(overrides.attributes ?? {}),
+	};
 	item.item.gems = overrides.gems ?? item.item.gems;
 	return item.item;
 }

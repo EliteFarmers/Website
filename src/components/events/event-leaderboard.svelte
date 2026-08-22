@@ -20,7 +20,7 @@
 			value={key}
 			id={key}
 			class="w-full px-1 {highlightUuid === member.playerUuid
-				? 'border-link rounded-md border-2'
+				? 'rounded-md border-2 border-link'
 				: 'border-none'}"
 		>
 			<EventMember {member} rank={i + 1} {running} {event} />

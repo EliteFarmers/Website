@@ -266,23 +266,23 @@ export function selectArmorLoadoutPieces(
 }
 
 export class ArmorLoadout {
-	public declare helmet?: FarmingArmor;
-	public declare chestplate?: FarmingArmor;
-	public declare leggings?: FarmingArmor;
-	public declare boots?: FarmingArmor;
+	declare public helmet?: FarmingArmor;
+	declare public chestplate?: FarmingArmor;
+	declare public leggings?: FarmingArmor;
+	declare public boots?: FarmingArmor;
 
 	public get armor(): (FarmingArmor | null)[] {
 		return [this.helmet ?? null, this.chestplate ?? null, this.leggings ?? null, this.boots ?? null];
 	}
 
-	public declare pieces: FarmingArmor[];
-	public declare armorFortune: number;
+	declare public pieces: FarmingArmor[];
+	declare public armorFortune: number;
 	get fortune() {
 		return this.armorFortune;
 	}
-	public declare setBonuses: ActiveArmorSetBonus[];
+	declare public setBonuses: ActiveArmorSetBonus[];
 
-	public declare options?: PlayerOptions;
+	declare public options?: PlayerOptions;
 
 	constructor(armor: FarmingArmor[], options?: PlayerOptions) {
 		this.setBonuses = [];
@@ -558,23 +558,23 @@ export class ArmorLoadout {
 }
 
 export class EquipmentLoadout {
-	public declare necklace?: FarmingEquipment;
-	public declare cloak?: FarmingEquipment;
-	public declare belt?: FarmingEquipment;
-	public declare gloves?: FarmingEquipment;
+	declare public necklace?: FarmingEquipment;
+	declare public cloak?: FarmingEquipment;
+	declare public belt?: FarmingEquipment;
+	declare public gloves?: FarmingEquipment;
 
 	get equipment(): (FarmingEquipment | null)[] {
 		return [this.necklace ?? null, this.cloak ?? null, this.belt ?? null, this.gloves ?? null];
 	}
 
-	public declare equipmentPieces: FarmingEquipment[];
-	public declare equipmentFortune: number;
+	declare public equipmentPieces: FarmingEquipment[];
+	declare public equipmentFortune: number;
 	get fortune() {
 		return this.equipmentFortune;
 	}
-	public declare equipmentSetBonuses: ActiveArmorSetBonus[];
+	declare public equipmentSetBonuses: ActiveArmorSetBonus[];
 
-	public declare options?: PlayerOptions;
+	declare public options?: PlayerOptions;
 
 	constructor(equipment: FarmingEquipment[], options?: PlayerOptions) {
 		this.equipmentSetBonuses = [];
@@ -831,7 +831,7 @@ export class EquipmentLoadout {
 export class ArmorSet {
 	public readonly armorLoadout: ArmorLoadout;
 	public readonly equipmentLoadout: EquipmentLoadout;
-	public declare options?: PlayerOptions;
+	declare public options?: PlayerOptions;
 
 	constructor(armor: FarmingArmor[], equipment: FarmingEquipment[] = [], options?: PlayerOptions) {
 		this.options = options;
@@ -843,28 +843,32 @@ export class ArmorSet {
 		return this.armorLoadout.helmet;
 	}
 	public set helmet(piece: FarmingArmor | undefined) {
-		piece ? this.armorLoadout.setPiece(piece) : this.armorLoadout.clearSlot(GearSlot.Helmet);
+		if (piece) this.armorLoadout.setPiece(piece);
+		else this.armorLoadout.clearSlot(GearSlot.Helmet);
 	}
 
 	public get chestplate() {
 		return this.armorLoadout.chestplate;
 	}
 	public set chestplate(piece: FarmingArmor | undefined) {
-		piece ? this.armorLoadout.setPiece(piece) : this.armorLoadout.clearSlot(GearSlot.Chestplate);
+		if (piece) this.armorLoadout.setPiece(piece);
+		else this.armorLoadout.clearSlot(GearSlot.Chestplate);
 	}
 
 	public get leggings() {
 		return this.armorLoadout.leggings;
 	}
 	public set leggings(piece: FarmingArmor | undefined) {
-		piece ? this.armorLoadout.setPiece(piece) : this.armorLoadout.clearSlot(GearSlot.Leggings);
+		if (piece) this.armorLoadout.setPiece(piece);
+		else this.armorLoadout.clearSlot(GearSlot.Leggings);
 	}
 
 	public get boots() {
 		return this.armorLoadout.boots;
 	}
 	public set boots(piece: FarmingArmor | undefined) {
-		piece ? this.armorLoadout.setPiece(piece) : this.armorLoadout.clearSlot(GearSlot.Boots);
+		if (piece) this.armorLoadout.setPiece(piece);
+		else this.armorLoadout.clearSlot(GearSlot.Boots);
 	}
 
 	public get armor(): (FarmingArmor | null)[] {
@@ -875,28 +879,32 @@ export class ArmorSet {
 		return this.equipmentLoadout.necklace;
 	}
 	public set necklace(piece: FarmingEquipment | undefined) {
-		piece ? this.equipmentLoadout.setPiece(piece) : this.equipmentLoadout.clearSlot(GearSlot.Necklace);
+		if (piece) this.equipmentLoadout.setPiece(piece);
+		else this.equipmentLoadout.clearSlot(GearSlot.Necklace);
 	}
 
 	public get cloak() {
 		return this.equipmentLoadout.cloak;
 	}
 	public set cloak(piece: FarmingEquipment | undefined) {
-		piece ? this.equipmentLoadout.setPiece(piece) : this.equipmentLoadout.clearSlot(GearSlot.Cloak);
+		if (piece) this.equipmentLoadout.setPiece(piece);
+		else this.equipmentLoadout.clearSlot(GearSlot.Cloak);
 	}
 
 	public get belt() {
 		return this.equipmentLoadout.belt;
 	}
 	public set belt(piece: FarmingEquipment | undefined) {
-		piece ? this.equipmentLoadout.setPiece(piece) : this.equipmentLoadout.clearSlot(GearSlot.Belt);
+		if (piece) this.equipmentLoadout.setPiece(piece);
+		else this.equipmentLoadout.clearSlot(GearSlot.Belt);
 	}
 
 	public get gloves() {
 		return this.equipmentLoadout.gloves;
 	}
 	public set gloves(piece: FarmingEquipment | undefined) {
-		piece ? this.equipmentLoadout.setPiece(piece) : this.equipmentLoadout.clearSlot(GearSlot.Gloves);
+		if (piece) this.equipmentLoadout.setPiece(piece);
+		else this.equipmentLoadout.clearSlot(GearSlot.Gloves);
 	}
 
 	get equipment(): (FarmingEquipment | null)[] {
@@ -1073,8 +1081,8 @@ export class ArmorSet {
 }
 
 export class FarmingArmor extends UpgradeableBase {
-	public declare readonly item: EliteItemDto;
-	public declare readonly info: FarmingArmorInfo;
+	declare public readonly item: EliteItemDto;
+	declare public readonly info: FarmingArmorInfo;
 	public get type() {
 		return ReforgeTarget.Armor;
 	}
@@ -1088,10 +1096,10 @@ export class FarmingArmor extends UpgradeableBase {
 		return this.info.slot;
 	}
 
-	public declare readonly rarity: Rarity;
-	public declare readonly reforge: Reforge | undefined;
-	public declare readonly reforgeStats: ReforgeTier | undefined;
-	public declare readonly recombobulated: boolean;
+	declare public readonly rarity: Rarity;
+	declare public readonly reforge: Reforge | undefined;
+	declare public readonly reforgeStats: ReforgeTier | undefined;
+	declare public readonly recombobulated: boolean;
 
 	public get potential() {
 		if (!this.info.family) {
@@ -1100,10 +1108,10 @@ export class FarmingArmor extends UpgradeableBase {
 		// Add the set bonus potential to the fortune
 		return this.fortune + (ARMOR_SET_BONUS[this.info.family]?.piecePotential?.[Stat.FarmingFortune] ?? 0);
 	}
-	public declare fortune: number;
-	public declare fortuneBreakdown: Record<string, number>;
+	declare public fortune: number;
+	declare public fortuneBreakdown: Record<string, number>;
 
-	public declare options?: PlayerOptions;
+	declare public options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		super({ item, options, items: FARMING_ARMOR_INFO });

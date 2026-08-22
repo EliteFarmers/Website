@@ -78,7 +78,9 @@ describe('matchesScopeForDrop', () => {
 	});
 
 	test('feast / inSeason flags are AND-ed against the env', () => {
-		const ctx = dropCtx({ env: { ...baseEnv, harvestFeast: true, inSeason: true } });
+		const ctx = dropCtx({
+			env: { ...baseEnv, harvestFeast: true, inSeason: true },
+		});
 		expect(matchesScopeForDrop({ requiresHarvestFeast: true }, ctx)).toBe(true);
 		expect(matchesScopeForDrop({ requiresInSeason: true }, ctx)).toBe(true);
 		expect(matchesScopeForDrop({ requiresHarvestFeast: true }, dropCtx())).toBe(false);
@@ -205,7 +207,12 @@ describe('resolveOverbloomScalar', () => {
 			scope: { tags: ['seasoning'] },
 		},
 		// not Overbloom-related: ignored
-		{ source: 'Other', op: 'add-rare-pct', value: 100, scope: { tags: ['overbloom'] } },
+		{
+			source: 'Other',
+			op: 'add-rare-pct',
+			value: 100,
+			scope: { tags: ['overbloom'] },
+		},
 		// Cropeetle: mul-rare, ignored by Overbloom scalar
 		{
 			source: 'Cropeetle',
@@ -233,7 +240,11 @@ describe('produceAddedDrops', () => {
 		{
 			source: 'Warty Bug Shard',
 			op: 'add-drop',
-			drop: { itemId: 'WARTY', chance: 0.0001, tags: ['overbloom', 'rare-crop'] },
+			drop: {
+				itemId: 'WARTY',
+				chance: 0.0001,
+				tags: ['overbloom', 'rare-crop'],
+			},
 			scope: { crops: [Crop.NetherWart] },
 		},
 		{
@@ -248,7 +259,11 @@ describe('produceAddedDrops', () => {
 		expect(produceAddedDrops(effects, env)).toEqual([
 			{
 				source: 'Warty Bug Shard',
-				payload: { itemId: 'WARTY', chance: 0.0001, tags: ['overbloom', 'rare-crop'] },
+				payload: {
+					itemId: 'WARTY',
+					chance: 0.0001,
+					tags: ['overbloom', 'rare-crop'],
+				},
 			},
 		]);
 	});
@@ -323,7 +338,10 @@ describe('resolveDropEffects pipeline', () => {
 	});
 
 	test('appliesToAddedDrops: false excludes added drops', () => {
-		const noAdded: Effect = { ...overbloom, scope: { ...overbloom.scope, appliesToAddedDrops: false } };
+		const noAdded: Effect = {
+			...overbloom,
+			scope: { ...overbloom.scope, appliesToAddedDrops: false },
+		};
 		const r = resolveDropEffects([noAdded], warty);
 		expect(r.addRarePct).toBe(0);
 	});

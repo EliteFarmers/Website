@@ -20,7 +20,7 @@
 			>
 		</CardHeader>
 		<CardContent class="space-y-4">
-			<div class="bg-destructive/20 border-destructive/70 rounded-md border p-3 text-sm">
+			<div class="rounded-md border border-destructive/70 bg-destructive/20 p-3 text-sm">
 				Please note that despite being able to assign multiple authors, <strong
 					>editing the guide simultaneously with others is not currently supported.</strong
 				> To avoid losing changes, coordinate with your co-authors and only edit the guide when others are not making
@@ -39,7 +39,7 @@
 										>{author.isOwner ? 'Owner' : 'Editor'}</Badge
 									>
 								</div>
-								<p class="text-muted-foreground mt-1 text-xs">{author.id}</p>
+								<p class="mt-1 text-xs text-muted-foreground">{author.id}</p>
 							</div>
 							<div class="flex shrink-0 gap-2">
 								{#if !author.isOwner}
@@ -71,7 +71,7 @@
 						<UserPlus class="mr-2 size-4" />
 						Add Player
 					</Button>
-					<p class="text-muted-foreground text-sm">
+					<p class="text-sm text-muted-foreground">
 						{edit.editableAuthors.length} / {MAX_GUIDE_AUTHORS} authors
 					</p>
 				</div>
@@ -85,7 +85,7 @@
 
 				<div class="grid gap-3">
 					{#if edit.authorError}
-						<p class="text-destructive text-sm">{edit.authorError}</p>
+						<p class="text-sm text-destructive">{edit.authorError}</p>
 					{/if}
 					<Button
 						onclick={() => edit.handleSaveAuthors()}
@@ -100,7 +100,7 @@
 						<div class="flex items-center justify-between rounded-md border p-3">
 							<div>
 								<p class="font-medium">{author.author.name}</p>
-								<p class="text-muted-foreground text-xs">{author.author.id}</p>
+								<p class="text-xs text-muted-foreground">{author.author.id}</p>
 							</div>
 							<Badge variant={author.isOwner ? 'default' : 'secondary'}
 								>{author.isOwner ? 'Owner' : 'Editor'}</Badge
@@ -108,7 +108,7 @@
 						</div>
 					{/each}
 				</div>
-				<p class="text-muted-foreground text-sm">Only the guide owner or an admin can change authors.</p>
+				<p class="text-sm text-muted-foreground">Only the guide owner or an admin can change authors.</p>
 			{/if}
 		</CardContent>
 	</Card>

@@ -13,11 +13,11 @@
 </script>
 
 {#if emailLink}
-	<a {href} class={cn('text-link font-medium underline underline-offset-4', className)} {...restProps}>
+	<a {href} class={cn('font-medium text-link underline underline-offset-4', className)} {...restProps}>
 		{@render children?.()}
 	</a>
 {:else if internal}
-	<a {href} {target} {rel} class={cn('text-link font-medium underline underline-offset-4', className)} {...restProps}>
+	<a {href} {target} {rel} class={cn('font-medium text-link underline underline-offset-4', className)} {...restProps}>
 		{@render children?.()}
 	</a>
 {:else}

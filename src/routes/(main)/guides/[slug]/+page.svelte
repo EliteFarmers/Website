@@ -325,7 +325,7 @@
 			{#each items as item (item.id)}
 				<a
 					href="#{item.id}"
-					class="text-muted-foreground hover:text-foreground transition-colors"
+					class="text-muted-foreground transition-colors hover:text-foreground"
 					class:mt-2={item.isFooter}
 					class:border-t={item.isFooter}
 					class:pt-2={item.isFooter}
@@ -341,7 +341,7 @@
 
 {#if !guideData}
 	<div class="flex flex-col items-center justify-center gap-4 py-16">
-		<div class="text-destructive text-lg font-semibold">Guide not found</div>
+		<div class="text-lg font-semibold text-destructive">Guide not found</div>
 		<p class="text-muted-foreground">The guide you're looking for doesn't exist or has been deleted.</p>
 		<a href="/guides">
 			<Button>Back to Guides</Button>
@@ -366,16 +366,16 @@
 	/>
 	<div class="flex flex-col gap-6">
 		{#if guideData.isDraft && guideData.rejectionReason}
-			<div class="bg-destructive/10 border-destructive my-4 rounded-lg border p-4">
-				<p class="text-destructive font-semibold">Rejection Notice</p>
+			<div class="my-4 rounded-lg border border-destructive bg-destructive/10 p-4">
+				<p class="font-semibold text-destructive">Rejection Notice</p>
 				<p class="mt-1 text-sm">{guideData.rejectionReason}</p>
 			</div>
 		{/if}
 
 		{#if guideData.isDraft}
-			<div class="bg-muted/50 border-border my-4 rounded-lg border p-4">
+			<div class="my-4 rounded-lg border border-border bg-muted/50 p-4">
 				<p class="font-semibold">You are viewing a draft version</p>
-				<p class="text-muted-foreground mt-1 text-sm">This guide is not visible to the public.</p>
+				<p class="mt-1 text-sm text-muted-foreground">This guide is not visible to the public.</p>
 				{#if canEditGuide}
 					<div class="mt-3 flex gap-2">
 						<a href="/guides/{guideData.slug}/edit">
@@ -391,12 +391,12 @@
 				<div class="relative flex items-start justify-center gap-4">
 					<h1 class="text-4xl font-bold">{guideData.title}</h1>
 				</div>
-				<p class="text-muted-foreground text-lg">{guideData.description}</p>
+				<p class="text-lg text-muted-foreground">{guideData.description}</p>
 			</div>
 
 			<div class="flex flex-col items-center gap-4">
 				<div class="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-					<div class="text-foreground flex flex-wrap items-center justify-center gap-2 font-medium">
+					<div class="flex flex-wrap items-center justify-center gap-2 font-medium text-foreground">
 						{#each authors as guideAuthor (guideAuthor.author.id)}
 							<div class="flex items-center gap-1.5">
 								{#if guideAuthor.author.avatar}
@@ -542,7 +542,7 @@
 	</AlertDialog>
 
 	{#snippet guideActions(guide: FullGuideWithAuthors)}
-		<div class="bg-card flex items-center rounded-lg border">
+		<div class="flex items-center rounded-lg border bg-card">
 			<Button
 				variant={userVote === 1 ? 'default' : 'ghost'}
 				size="sm"

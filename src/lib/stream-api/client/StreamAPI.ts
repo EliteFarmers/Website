@@ -23,6 +23,7 @@ export type getLiveStreamsResponse200 = {
 export type getLiveStreamsResponseSuccess = getLiveStreamsResponse200 & {
 	headers: Headers;
 };
+
 export type getLiveStreamsResponse = getLiveStreamsResponseSuccess;
 
 export const getGetLiveStreamsUrl = (params: GetLiveStreamsParams) => {
@@ -60,6 +61,7 @@ export type getStreamerResponse200 = {
 export type getStreamerResponseSuccess = getStreamerResponse200 & {
 	headers: Headers;
 };
+
 export type getStreamerResponse = getStreamerResponseSuccess;
 
 export const getGetStreamerUrl = (twitchLogin: string) => {
@@ -85,6 +87,7 @@ export type listStreamersResponse200 = {
 export type listStreamersResponseSuccess = listStreamersResponse200 & {
 	headers: Headers;
 };
+
 export type listStreamersResponse = listStreamersResponseSuccess;
 
 export const getListStreamersUrl = () => {

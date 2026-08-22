@@ -39,7 +39,11 @@ describe('buildEffectEnvironment', () => {
 
 	test('grandFeast forces inSeason true regardless of inSeasonCrops', () => {
 		const player = makePlayer({
-			harvestFeast: { active: true, grandFeast: true, inSeasonCrops: [Crop.Wheat] },
+			harvestFeast: {
+				active: true,
+				grandFeast: true,
+				inSeasonCrops: [Crop.Wheat],
+			},
 		});
 		expect(buildEffectEnvironment(player, Crop.Carrot).inSeason).toBe(true);
 		expect(buildEffectEnvironment(player, Crop.Wheat).inSeason).toBe(true);

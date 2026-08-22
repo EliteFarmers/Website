@@ -12,9 +12,9 @@
 	let { comment }: Props = $props();
 </script>
 
-<div class="not-prose border-primary/30 bg-primary/5 my-3 rounded-md border p-3 text-sm">
+<div class="not-prose my-3 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
 	<div class="mb-2 flex flex-wrap items-center gap-2">
-		<Pin class="text-primary size-4 rotate-45 fill-current" />
+		<Pin class="size-4 rotate-45 fill-current text-primary" />
 		<span class="font-medium">Pinned comment</span>
 		<span class="text-muted-foreground">from {comment.author.name}</span>
 		{#if comment.isGuideAuthor}
@@ -26,7 +26,7 @@
 	</div>
 
 	<div class="mt-1 flex flex-row items-center gap-1">
-		<a href="#comment-{comment.sqid}" class="text-primary ml-auto text-xs font-semibold hover:underline"
+		<a href="#comment-{comment.sqid}" class="ml-auto text-xs font-semibold text-primary hover:underline"
 			>Jump to thread</a
 		>
 		<ArrowRight class="size-4" />

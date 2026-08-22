@@ -134,7 +134,7 @@
 					</Button>
 				</div>
 				{#if form?.error}
-					<span class="text-destructive text-sm"
+					<span class="text-sm text-destructive"
 						>{form?.error?.toString().replaceAll('`', '"') ?? 'Something went wrong!'}</span
 					>
 				{/if}
@@ -191,7 +191,7 @@
 	{#snippet miscSettings()}
 		<SettingListItem title="Hide from search engines">
 			{#snippet subtitle()}
-				<span class="text-muted-foreground block max-w-md text-sm"
+				<span class="block max-w-md text-sm text-muted-foreground"
 					>Toggle whether to hide linked accounts from search engine results. May take days to propagate
 					fully.</span
 				>
@@ -253,5 +253,5 @@
 {/snippet}
 
 {#snippet emptyMessage(text: string)}
-	<p class="text-muted-foreground w-full text-center text-sm">{text}</p>
+	<p class="w-full text-center text-sm text-muted-foreground">{text}</p>
 {/snippet}

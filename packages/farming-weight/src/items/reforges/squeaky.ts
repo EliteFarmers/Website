@@ -14,19 +14,35 @@ export class SqueakyReforge extends BaseReforge {
 			},
 			tiers: {
 				[Rarity.Common]: {
-					stats: { [Stat.FarmingFortune]: 2, [Stat.BonusPestChance]: 0.5, [Stat.PestCooldownReduction]: 2.5 },
+					stats: {
+						[Stat.FarmingFortune]: 2,
+						[Stat.BonusPestChance]: 0.5,
+						[Stat.PestCooldownReduction]: 2.5,
+					},
 					cost: 7_500,
 				},
 				[Rarity.Uncommon]: {
-					stats: { [Stat.FarmingFortune]: 4, [Stat.BonusPestChance]: 0.5, [Stat.PestCooldownReduction]: 2.5 },
+					stats: {
+						[Stat.FarmingFortune]: 4,
+						[Stat.BonusPestChance]: 0.5,
+						[Stat.PestCooldownReduction]: 2.5,
+					},
 					cost: 15_000,
 				},
 				[Rarity.Rare]: {
-					stats: { [Stat.FarmingFortune]: 6, [Stat.BonusPestChance]: 1, [Stat.PestCooldownReduction]: 2.5 },
+					stats: {
+						[Stat.FarmingFortune]: 6,
+						[Stat.BonusPestChance]: 1,
+						[Stat.PestCooldownReduction]: 2.5,
+					},
 					cost: 30_000,
 				},
 				[Rarity.Epic]: {
-					stats: { [Stat.FarmingFortune]: 8, [Stat.BonusPestChance]: 1.5, [Stat.PestCooldownReduction]: 2.5 },
+					stats: {
+						[Stat.FarmingFortune]: 8,
+						[Stat.BonusPestChance]: 1.5,
+						[Stat.PestCooldownReduction]: 2.5,
+					},
 					cost: 75_000,
 				},
 				[Rarity.Legendary]: {

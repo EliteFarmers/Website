@@ -12,7 +12,7 @@
 	let free = $derived(!product.price || +dollars === 0);
 </script>
 
-<p class="bg-progress h-fit rounded-md px-4 py-2 text-center leading-none font-semibold text-white">
+<p class="h-fit rounded-md bg-progress px-4 py-2 text-center leading-none font-semibold text-white">
 	{#if free}
 		Free
 	{:else}

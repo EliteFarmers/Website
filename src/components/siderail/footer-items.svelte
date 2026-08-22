@@ -45,7 +45,7 @@
 				aria-label="Learn how badges work"
 				title="Learn how badges work"
 			>
-				<Question class="text-muted-foreground size-4" />
+				<Question class="size-4 text-muted-foreground" />
 			</a>
 		</div>
 		<RailItem

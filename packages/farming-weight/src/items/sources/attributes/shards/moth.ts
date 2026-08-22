@@ -20,7 +20,10 @@ export class MothShard extends FarmingAttributeShard {
 						op: 'add-mechanic',
 						mechanic: FarmingMechanic.PestCooldownReductionSeconds,
 						value: level * 0.5,
-						meta: { description: 'Flat Pest spawn cooldown reduction', valueDisplay: 'stat' },
+						meta: {
+							description: 'Flat Pest spawn cooldown reduction',
+							valueDisplay: 'stat',
+						},
 					},
 				]
 			: [];

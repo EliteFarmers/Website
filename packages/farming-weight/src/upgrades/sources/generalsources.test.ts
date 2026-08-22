@@ -293,7 +293,9 @@ test('Freshly Baked accessory tier-up costs use kernels currency', () => {
 test('zero-delta general upgrades remain visible for multi-stat fortune queries', () => {
 	const player = new FarmingPlayer({});
 
-	const upgrades = player.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom] });
+	const upgrades = player.getUpgrades({
+		stats: [Stat.FarmingFortune, Stat.Overbloom],
+	});
 	const relic = upgrades.find((u) => u.title === 'Relic of Power');
 
 	expect(relic).toBeDefined();

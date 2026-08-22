@@ -24,7 +24,7 @@
 	>
 		{#each columns as column (column)}
 			<span
-				class="animate-obfuscated block"
+				class="block animate-obfuscated"
 				style:width="1ch"
 				style:flex="0 0 1ch"
 				style={`--obfuscated-steps: ${ObfuscationSteps}; --obfuscated-distance: ${ObfuscationDistance};`}

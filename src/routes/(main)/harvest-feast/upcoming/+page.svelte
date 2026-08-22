@@ -118,12 +118,12 @@
 					class="gap-2 text-sm md:text-base"
 				>
 					{#snippet starting()}
-						<p class="text-muted-foreground mb-0.5 text-sm leading-none whitespace-nowrap md:text-base">
+						<p class="mb-0.5 text-sm leading-none whitespace-nowrap text-muted-foreground md:text-base">
 							Feast starts in
 						</p>
 					{/snippet}
 					{#snippet ending()}
-						<p class="text-muted-foreground mb-0.5 text-sm leading-none whitespace-nowrap md:text-base">
+						<p class="mb-0.5 text-sm leading-none whitespace-nowrap text-muted-foreground md:text-base">
 							Feast ends in
 						</p>
 					{/snippet}
@@ -149,7 +149,7 @@
 		</div>
 
 		{#if !hasVisibleData}
-			<p class="text-muted-foreground text-center">No crops match the current filter.</p>
+			<p class="text-center text-muted-foreground">No crops match the current filter.</p>
 		{:else}
 			<div class="mx-8 flex w-full flex-col items-center justify-center gap-4 md:w-[70%]">
 				{#if currentRotation && currentRotation.crops.length > 0}

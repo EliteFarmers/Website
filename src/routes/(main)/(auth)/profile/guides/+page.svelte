@@ -42,7 +42,7 @@
 			{#await guides}
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{#each Array.from({ length: 3 }, (_, i) => i) as i (i)}
-						<div class="bg-muted h-32 animate-pulse rounded-lg"></div>
+						<div class="h-32 animate-pulse rounded-lg bg-muted"></div>
 					{/each}
 				</div>
 			{:then guideList}
@@ -73,7 +73,7 @@
 				{/if}
 			{:catch}
 				<div class="flex flex-col items-center justify-center gap-4 py-12">
-					<div class="text-destructive text-lg font-semibold">Error loading guides</div>
+					<div class="text-lg font-semibold text-destructive">Error loading guides</div>
 				</div>
 			{/await}
 		</TabsContent>
@@ -82,7 +82,7 @@
 			{#await guides}
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{#each Array.from({ length: 3 }, (_, i) => i) as i (i)}
-						<div class="bg-muted h-32 animate-pulse rounded-lg"></div>
+						<div class="h-32 animate-pulse rounded-lg bg-muted"></div>
 					{/each}
 				</div>
 			{:then guideList}
@@ -109,7 +109,7 @@
 				{/if}
 			{:catch}
 				<div class="flex flex-col items-center justify-center gap-4 py-12">
-					<div class="text-destructive text-lg font-semibold">Error loading guides</div>
+					<div class="text-lg font-semibold text-destructive">Error loading guides</div>
 				</div>
 			{/await}
 		</TabsContent>
@@ -118,7 +118,7 @@
 			{#await guides}
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{#each Array.from({ length: 3 }, (_, i) => i) as i (i)}
-						<div class="bg-muted h-32 animate-pulse rounded-lg"></div>
+						<div class="h-32 animate-pulse rounded-lg bg-muted"></div>
 					{/each}
 				</div>
 			{:then guideList}
@@ -145,7 +145,7 @@
 				{/if}
 			{:catch}
 				<div class="flex flex-col items-center justify-center gap-4 py-12">
-					<div class="text-destructive text-lg font-semibold">Error loading guides</div>
+					<div class="text-lg font-semibold text-destructive">Error loading guides</div>
 				</div>
 			{/await}
 		</TabsContent>
@@ -154,7 +154,7 @@
 			{#await guides}
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{#each Array.from({ length: 3 }, (_, i) => i) as i (i)}
-						<div class="bg-muted h-32 animate-pulse rounded-lg"></div>
+						<div class="h-32 animate-pulse rounded-lg bg-muted"></div>
 					{/each}
 				</div>
 			{:then guideList}
@@ -181,7 +181,7 @@
 				{/if}
 			{:catch}
 				<div class="flex flex-col items-center justify-center gap-4 py-12">
-					<div class="text-destructive text-lg font-semibold">Error loading guides</div>
+					<div class="text-lg font-semibold text-destructive">Error loading guides</div>
 				</div>
 			{/await}
 		</TabsContent>
@@ -190,7 +190,7 @@
 			{#await guides}
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{#each Array.from({ length: 3 }, (_, i) => i) as i (i)}
-						<div class="bg-muted h-32 animate-pulse rounded-lg"></div>
+						<div class="h-32 animate-pulse rounded-lg bg-muted"></div>
 					{/each}
 				</div>
 			{:then guideList}
@@ -217,7 +217,7 @@
 				{/if}
 			{:catch}
 				<div class="flex flex-col items-center justify-center gap-4 py-12">
-					<div class="text-destructive text-lg font-semibold">Error loading guides</div>
+					<div class="text-lg font-semibold text-destructive">Error loading guides</div>
 				</div>
 			{/await}
 		</TabsContent>

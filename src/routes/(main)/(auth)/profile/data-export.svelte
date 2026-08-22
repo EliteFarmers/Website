@@ -124,7 +124,7 @@
 		<FileArchive class="size-5" />
 		<h2 class="scroll-mt-20 text-2xl" id="data-export">Data Export</h2>
 	</div>
-	<p class="text-muted-foreground max-w-2xl text-sm">
+	<p class="max-w-2xl text-sm text-muted-foreground">
 		Request a copy of all data we have stored about your account. Exports are limited to one request every 30 days
 		and expire after 7 days.
 	</p>
@@ -132,7 +132,7 @@
 	{#if loading}
 		<div class="flex items-center gap-2">
 			<Loader2 class="size-4 animate-spin" />
-			<span class="text-muted-foreground text-sm">Loading export status...</span>
+			<span class="text-sm text-muted-foreground">Loading export status...</span>
 		</div>
 	{:else if exportStatus}
 		<div class="flex flex-col gap-1 rounded-lg border p-4">
@@ -181,7 +181,7 @@
 			{/if}
 
 			{#if isFailed && exportStatus.failureReason}
-				<p class="text-destructive text-sm">{exportStatus.failureReason}</p>
+				<p class="text-sm text-destructive">{exportStatus.failureReason}</p>
 			{/if}
 
 			{#if exportStatus.canDownload && isReady}
@@ -194,14 +194,14 @@
 					Download Export
 				</Button>
 				<span
-					class="bg-destructive/80 text-destructive-foreground mt-1 w-fit rounded-sm p-1 text-xs wrap-break-word"
+					class="mt-1 w-fit rounded-sm bg-destructive/80 p-1 text-xs wrap-break-word text-destructive-foreground"
 				>
 					Warning: The exported file may contain sensitive information. Do not share it with anyone.
 				</span>
 			{/if}
 
 			{#if isPending}
-				<p class="text-muted-foreground text-sm">
+				<p class="text-sm text-muted-foreground">
 					Your export is being prepared. This may take a few minutes. You can leave this page and come back
 					later.
 				</p>
@@ -216,13 +216,13 @@
 				Request New Export
 			</Button>
 		{:else if exportStatus.nextEligibleAt}
-			<div class="text-muted-foreground flex items-center text-sm">
+			<div class="flex items-center text-sm text-muted-foreground">
 				<span>You can request a new export after</span>
 				<DateDisplay timestamp={new Date(exportStatus.nextEligibleAt).getTime()} />
 			</div>
 		{/if}
 	{:else}
-		<p class="text-muted-foreground text-sm">No previous exports found.</p>
+		<p class="text-sm text-muted-foreground">No previous exports found.</p>
 		<Button onclick={requestExport} disabled={requesting} class="w-fit">
 			{#if requesting}
 				<Loader2 class="size-4 animate-spin" />
@@ -231,7 +231,7 @@
 		</Button>
 	{/if}
 
-	<p class="text-muted-foreground max-w-2xl text-sm">
+	<p class="max-w-2xl text-sm text-muted-foreground">
 		To request deletion of your data, please
 		<a href="/contact" class="text-foreground underline underline-offset-4">contact us</a>.
 	</p>

@@ -1,5 +1,10 @@
-onlyBuiltDependencies:
-    - esbuild
-    - svelte-preprocess
+allowBuilds:
+    esbuild: true
+    sharp: true
+    svelte-preprocess: true
+nodeLinker: hoisted
 packages:
     - packages/*
+overrides:
+    svelte>esrap: 2.3.5
+    prosemirror-changeset: 2.4.1

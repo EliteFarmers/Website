@@ -203,7 +203,7 @@ export class PestFarmingPlayer {
 	declare vacuums: Vacuum[];
 	declare selectedVacuum?: Vacuum;
 
-	private declare inventory: FarmingPlayer;
+	declare private inventory: FarmingPlayer;
 
 	constructor(options: PestFarmingPlayerOptions) {
 		this.setOptions(options);
@@ -247,8 +247,16 @@ export class PestFarmingPlayer {
 			new Set(Object.values(defaultMain).filter((uuid): uuid is string => typeof uuid === 'string'))
 		);
 		const defaults: PestArmorSetLoadout[] = [
-			{ id: PEST_MAIN_ARMOR_SET_ID, name: 'Farm/Kill Armor', pieces: defaultMain },
-			{ id: PEST_SPAWN_ARMOR_SET_ID, name: 'Spawn Armor', pieces: defaultSpawn },
+			{
+				id: PEST_MAIN_ARMOR_SET_ID,
+				name: 'Farm/Kill Armor',
+				pieces: defaultMain,
+			},
+			{
+				id: PEST_SPAWN_ARMOR_SET_ID,
+				name: 'Spawn Armor',
+				pieces: defaultSpawn,
+			},
 		];
 		const savedById = new Map((saved ?? []).map((set) => [set.id, set]));
 		const source = defaults.map((fallback, index) => {
@@ -592,7 +600,12 @@ export class PestFarmingPlayer {
 	}
 
 	getVacuumProgress(stats: Stat[] = VACUUM_STATS): FortuneSourceProgress[] {
-		return this.selectedVacuum?.getProgress({ stats, sourceTypes: PEST_KILL_VACUUM_SOURCE_TYPES }) ?? [];
+		return (
+			this.selectedVacuum?.getProgress({
+				stats,
+				sourceTypes: PEST_KILL_VACUUM_SOURCE_TYPES,
+			}) ?? []
+		);
 	}
 
 	getPhaseStat(phase: PestFarmingPhase, stat: Stat, crop?: Crop): number {
@@ -606,7 +619,10 @@ export class PestFarmingPlayer {
 		const player = this.phases[phase];
 		const queryCrop = crop ?? this.options.selectedCrop;
 		const env = player.buildEnvironment(queryCrop);
-		return resolveMechanicTotal(player.collectEffects(env), mechanic, { env, crop: queryCrop });
+		return resolveMechanicTotal(player.collectEffects(env), mechanic, {
+			env,
+			crop: queryCrop,
+		});
 	}
 
 	getPhaseStatBreakdown(phase: PestFarmingPhase, stat: Stat, crop?: Crop): StatBreakdown {
@@ -843,7 +859,10 @@ export class PestFarmingPlayer {
 			pets: clonePets(this.inventory.pets),
 			vacuums: cloneItems(this.vacuums),
 			selectedVacuumId,
-			armorSets: this.armorSetLoadouts.map((set) => ({ ...set, pieces: { ...set.pieces } })),
+			armorSets: this.armorSetLoadouts.map((set) => ({
+				...set,
+				pieces: { ...set.pieces },
+			})),
 			phaseLoadouts: Object.fromEntries(
 				Object.entries(this.phaseLoadouts).map(([phase, loadout]) => [phase, { ...loadout }])
 			) as Record<PestFarmingPhase, PestPhaseLoadout>,

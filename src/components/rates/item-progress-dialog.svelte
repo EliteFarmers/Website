@@ -89,10 +89,10 @@
 
 <Dialog.Root bind:open>
 	<Dialog.ScrollContent parentClass="w-[calc(100vw-1rem)] max-w-4xl sm:w-full" class="p-0">
-		<div class="bg-card/80 flex flex-col gap-4 border-b p-4 sm:flex-row sm:items-start sm:justify-between sm:p-6">
+		<div class="flex flex-col gap-4 border-b bg-card/80 p-4 sm:flex-row sm:items-start sm:justify-between sm:p-6">
 			<div class="flex min-w-0 items-center gap-4">
 				{#if progress?.item?.skyblockId}
-					<div class="bg-background rounded-lg border p-2">
+					<div class="rounded-lg border bg-background p-2">
 						<ItemRender
 							skyblockId={progress.item.skyblockId}
 							pet={progress.item.attributes?.pet === 'true'}
@@ -150,7 +150,7 @@
 
 			{#if hasUpgrades && totalCost > 0}
 				<div class="flex flex-col items-end justify-center text-left sm:text-right">
-					<p class="text-muted-foreground text-sm">Completion Cost</p>
+					<p class="text-sm text-muted-foreground">Completion Cost</p>
 					<p class="{referenceOnlyPrices ? 'text-muted-foreground' : 'text-completed'} text-2xl font-bold">
 						{Math.round(totalCost).toLocaleString()}
 					</p>
@@ -170,7 +170,7 @@
 					</div>
 				{/if}
 
-				<p class="text-muted-foreground text-sm">
+				<p class="text-sm text-muted-foreground">
 					These progress bars represent your progress towards the max! If it's an item, the bars will show
 					your item compared to the max possible version/upgrade from this item.
 				</p>
@@ -181,15 +181,15 @@
 						{#if progress.nextInfo?.skyblockId !== undefined}
 							<div class="flex flex-1 flex-col gap-1">
 								{#if progress.info?.upgrade?.reason === UpgradeReason.Situational}
-									<h3 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+									<h3 class="text-sm font-medium tracking-wide text-muted-foreground uppercase">
 										Alternate Item
 									</h3>
 								{:else if progress.info?.upgrade?.reason === UpgradeReason.DeadEnd}
-									<h3 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+									<h3 class="text-sm font-medium tracking-wide text-muted-foreground uppercase">
 										Switch To
 									</h3>
 								{:else}
-									<h3 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+									<h3 class="text-sm font-medium tracking-wide text-muted-foreground uppercase">
 										Upgrade To
 									</h3>
 								{/if}
@@ -214,21 +214,21 @@
 											href={progress.nextInfo.wiki}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="text-link mt-0.5"
+											class="mt-0.5 text-link"
 										>
 											<Info size={16} />
 										</a>
 									{/if}
 								</div>
 								{#if progress.info?.upgrade?.why}
-									<p class="text-muted-foreground text-sm">{progress.info.upgrade.why}</p>
+									<p class="text-sm text-muted-foreground">{progress.info.upgrade.why}</p>
 								{/if}
 							</div>
 						{/if}
 
 						{#if progress.maxInfo?.skyblockId !== undefined}
 							<div class="flex flex-1 flex-col gap-1">
-								<h3 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+								<h3 class="text-sm font-medium tracking-wide text-muted-foreground uppercase">
 									Max Item
 								</h3>
 								<div class="flex flex-row items-center gap-1">
@@ -242,7 +242,7 @@
 											href={progress.maxInfo.wiki}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="text-link mt-0.5"
+											class="mt-0.5 text-link"
 										>
 											<Info size={16} />
 										</a>
@@ -257,7 +257,7 @@
 			{#if hasUpgrades}
 				<hr class="border-muted" />
 				<div>
-					<h3 class="text-muted-foreground mb-4 text-sm font-semibold">Available Upgrades</h3>
+					<h3 class="mb-4 text-sm font-semibold text-muted-foreground">Available Upgrades</h3>
 					<div class="flex flex-col gap-2">
 						{#each sortedUpgrades as upgrade (getUpgradeKey(upgrade))}
 							{#if expandUpgrade}
@@ -277,13 +277,13 @@
 
 			{#if !progress}
 				<div class="flex flex-col items-center justify-center py-12 text-center">
-					<p class="text-muted-foreground text-lg">No information available</p>
+					<p class="text-lg text-muted-foreground">No information available</p>
 				</div>
 			{:else if progress.item}
 				<ItemLore item={progress.item} otherDebugData={{ progress, sortedUpgrades }} />
 			{/if}
 		</div>
-		<div class="bg-card/80 flex items-center justify-end gap-2 border-t p-4">
+		<div class="flex items-center justify-end gap-2 border-t bg-card/80 p-4">
 			<Button variant="outline" onclick={() => (open = false)}>Close</Button>
 		</div>
 	</Dialog.ScrollContent>

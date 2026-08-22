@@ -57,16 +57,16 @@
 
 		<div class="flex max-w-4xl flex-col gap-4 md:flex-row">
 			<a
-				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
+				class="group relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border bg-card p-6 shadow-xl"
 				href="/fortune"
 				onclick={() => trackHomeCta('fortune')}
 			>
-				<div class="bg-progress/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
-				<div class="bg-progress/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
+				<div class="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-progress/10 blur-3xl"></div>
+				<div class="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-progress/5 blur-3xl"></div>
 
 				<div class="relative z-10 flex flex-col gap-6">
 					<div class="flex flex-col gap-2">
-						<div class="text-primary flex items-center gap-2">
+						<div class="flex items-center gap-2 text-primary">
 							<CircleDollarSign class="h-5 w-5" />
 							<span class="font-bold tracking-wider uppercase">Cheapest Fortune</span>
 						</div>
@@ -76,21 +76,21 @@
 					</div>
 				</div>
 
-				<div class="group-hover:animate-bounce-horizontal relative z-10 flex flex-col items-center gap-4">
+				<div class="relative z-10 flex flex-col items-center gap-4 group-hover:animate-bounce-horizontal">
 					<ArrowRight class="size-6" />
 				</div>
 			</a>
 			<a
-				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
+				class="group relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border bg-card p-6 shadow-xl"
 				href="/shop"
 				onclick={() => trackHomeCta('shop')}
 			>
-				<div class="bg-primary/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
-				<div class="bg-primary/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
+				<div class="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl"></div>
+				<div class="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-primary/5 blur-3xl"></div>
 
 				<div class="relative z-10 flex flex-col gap-6">
 					<div class="flex flex-col gap-2">
-						<div class="text-primary flex items-center gap-2">
+						<div class="flex items-center gap-2 text-primary">
 							<ShoppingCart class="h-5 w-5" />
 							<span class="font-bold tracking-wider uppercase">Shop</span>
 						</div>
@@ -98,7 +98,7 @@
 					</div>
 				</div>
 
-				<div class="group-hover:animate-bounce-horizontal relative z-10 flex flex-col items-center gap-4">
+				<div class="relative z-10 flex flex-col items-center gap-4 group-hover:animate-bounce-horizontal">
 					<ArrowRight class="size-6" />
 				</div>
 			</a>
@@ -123,7 +123,7 @@
 			</ScrollArea>
 			<a href="/articles" class="group relative flex flex-row items-center justify-end gap-4">
 				<span class="mr-10 font-semibold underline">View All Articles</span>
-				<div class="group-hover:animate-bounce-horizontal absolute top-0 right-2">
+				<div class="absolute top-0 right-2 group-hover:animate-bounce-horizontal">
 					<ArrowRight class="size-6" />
 				</div>
 			</a>

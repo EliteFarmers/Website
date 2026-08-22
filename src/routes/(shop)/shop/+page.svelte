@@ -62,7 +62,7 @@
 		<h1 class="max-w-3xl text-4xl font-black tracking-tight text-balance sm:text-5xl lg:text-6xl">
 			The Elite Shop
 		</h1>
-		<p class="text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg">
+		<p class="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
 			Check out cosmetics and premium perks for your Elite Skyblock profile!
 		</p>
 	</section>
@@ -88,7 +88,7 @@
 					category.products?.[0]}
 				<a
 					href="/shop/category/{category.slug}"
-					class="group border-border/60 bg-card relative overflow-hidden rounded-[1.75rem] border shadow-sm transition-transform duration-300 hover:-translate-y-1"
+					class="group relative overflow-hidden rounded-[1.75rem] border border-border/60 bg-card shadow-sm transition-transform duration-300 hover:-translate-y-1"
 					data-sveltekit-preload-data="tap"
 				>
 					<div class="aspect-video overflow-hidden">
@@ -144,7 +144,7 @@
 					<div>
 						<h2 class="text-3xl font-black tracking-tight">{category.title}</h2>
 						{#if category.description}
-							<p class="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed">
+							<p class="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
 								{category.description}
 							</p>
 						{/if}
@@ -152,7 +152,7 @@
 
 					<a
 						href="/shop/category/{category.slug}"
-						class="text-primary inline-flex items-center gap-2 text-sm font-semibold"
+						class="inline-flex items-center gap-2 text-sm font-semibold text-primary"
 						data-sveltekit-preload-data="tap"
 					>
 						View collection

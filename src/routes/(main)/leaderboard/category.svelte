@@ -22,18 +22,18 @@
 </script>
 
 <section
-	class="md:bg-card flex w-full flex-1 flex-col justify-center gap-2 rounded-lg md:border-2 md:p-4"
+	class="flex w-full flex-1 flex-col justify-center gap-2 rounded-lg md:border-2 md:bg-card md:p-4"
 	data-sveltekit-preload-data="tap"
 >
 	<h2 class="text-2xl font-semibold">{title}</h2>
 
 	<div
-		class="bg-border grid h-full w-full flex-1 border-collapse grid-cols-1 gap-0.5 overflow-clip rounded-md border-2 sm:grid-cols-2 md:grid-cols-3"
+		class="grid h-full w-full flex-1 border-collapse grid-cols-1 gap-0.5 overflow-clip rounded-md border-2 bg-border sm:grid-cols-2 md:grid-cols-3"
 	>
 		{#each leaderboards ?? [] as lb (lb.id)}
-			<div class="bg-background flex h-10 w-full flex-row items-center">
+			<div class="flex h-10 w-full flex-row items-center bg-background">
 				<div class="flex flex-1 items-center justify-center">
-					<a href="/leaderboard/{lb.id}" class="hover:bg-card/60 flex-1 items-center truncate p-2 px-3 pr-0">
+					<a href="/leaderboard/{lb.id}" class="flex-1 items-center truncate p-2 px-3 pr-0 hover:bg-card/60">
 						<div class="flex flex-row items-center gap-2">
 							{#if lb.icon}
 								<img
@@ -49,7 +49,7 @@
 				<div class="flex h-full">
 					{#each lb.intervals ?? [] as interval (interval)}
 						{#if interval !== 'current'}
-							<div class="hover:bg-card/60 flex h-full flex-col items-center justify-center">
+							<div class="flex h-full flex-col items-center justify-center hover:bg-card/60">
 								<Tooltip.Simple>
 									{#snippet child({ props })}
 										<a
@@ -86,5 +86,5 @@
 </section>
 
 {#snippet empty(className: string)}
-	<div class="bg-background h-10 w-full {className}"></div>
+	<div class="h-10 w-full bg-background {className}"></div>
 {/snippet}

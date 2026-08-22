@@ -91,7 +91,7 @@
 		<div class="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-start sm:justify-between sm:p-5">
 			<div class="min-w-0">
 				<Dialog.Title class="text-lg leading-tight font-semibold">{row.label}</Dialog.Title>
-				<Dialog.Description class="text-muted-foreground mt-1 text-sm">
+				<Dialog.Description class="mt-1 text-sm text-muted-foreground">
 					{row.detail}
 				</Dialog.Description>
 			</div>
@@ -111,7 +111,7 @@
 					{#each lineGroups as group (group.name)}
 						<section class="overflow-hidden rounded-md border">
 							<header
-								class="bg-muted/30 grid gap-2 border-b px-3 py-2 text-sm sm:grid-cols-[minmax(0,1fr)_8rem] sm:items-center"
+								class="grid gap-2 border-b bg-muted/30 px-3 py-2 text-sm sm:grid-cols-[minmax(0,1fr)_8rem] sm:items-center"
 							>
 								<div class="min-w-0">
 									<h3 class="truncate font-semibold">{group.name}</h3>
@@ -126,7 +126,7 @@
 								</p>
 							</header>
 							<div
-								class="bg-background text-muted-foreground hidden gap-3 border-b px-3 py-2 text-xs font-semibold uppercase sm:grid sm:grid-cols-[minmax(0,1fr)_7rem_7rem_8rem]"
+								class="hidden gap-3 border-b bg-background px-3 py-2 text-xs font-semibold text-muted-foreground uppercase sm:grid sm:grid-cols-[minmax(0,1fr)_7rem_7rem_8rem]"
 							>
 								<span>Line Item</span>
 								<span class="text-right">Qty/hr</span>
@@ -141,13 +141,13 @@
 										<div class="flex min-w-0 items-center gap-3">
 											{#if line.itemId}
 												<div
-													class="bg-background flex size-8 shrink-0 items-center justify-center rounded-md border"
+													class="flex size-8 shrink-0 items-center justify-center rounded-md border bg-background"
 												>
 													<ItemRender skyblockId={line.itemId} class="size-8" />
 												</div>
 											{:else}
 												<div
-													class="bg-muted text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-md border"
+													class="flex size-8 shrink-0 items-center justify-center rounded-md border bg-muted text-muted-foreground"
 												>
 													<CircleDollarSign class="size-4" />
 												</div>
@@ -157,19 +157,19 @@
 											</div>
 										</div>
 										<div class="flex justify-between gap-3 sm:block sm:text-right">
-											<span class="text-muted-foreground text-xs sm:hidden">Qty/hr</span>
+											<span class="text-xs text-muted-foreground sm:hidden">Qty/hr</span>
 											<span class="font-mono text-xs tabular-nums">
 												{formatLineQuantity(line.quantity)}
 											</span>
 										</div>
 										<div class="flex justify-between gap-3 sm:block sm:text-right">
-											<span class="text-muted-foreground text-xs sm:hidden">Unit</span>
+											<span class="text-xs text-muted-foreground sm:hidden">Unit</span>
 											<span class="font-mono text-xs tabular-nums">
 												{formatLinePrice(line.price, getPriceSourceLabel(line.priceSource))}
 											</span>
 										</div>
 										<div class="flex justify-between gap-3 sm:block sm:text-right">
-											<span class="text-muted-foreground text-xs sm:hidden">Coins/hr</span>
+											<span class="text-xs text-muted-foreground sm:hidden">Coins/hr</span>
 											<span
 												class={cn(
 													'font-mono text-xs font-semibold tabular-nums',
@@ -185,7 +185,7 @@
 						</section>
 					{/each}
 				{:else}
-					<div class="text-muted-foreground rounded-md border border-dashed p-4 text-sm">
+					<div class="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
 						No priced line items for this source.
 					</div>
 				{/if}

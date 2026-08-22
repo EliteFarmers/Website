@@ -19,16 +19,16 @@
 	<div class="space-y-1">
 		<div class="flex items-start gap-2">
 			{#if reassignableGiftCount > 0}
-				<div class="bg-destructive/10 text-destructive mt-0.5 rounded-full p-1">
+				<div class="mt-0.5 rounded-full bg-destructive/10 p-1 text-destructive">
 					<AlertTriangle class="size-3.5" />
 				</div>
 			{/if}
 
 			<div class="space-y-1">
 				<p class="font-medium">Order #{getOrderDisplayId(order.orderId)}</p>
-				<p class="text-muted-foreground font-mono text-xs break-all">{order.orderId}</p>
+				<p class="font-mono text-xs break-all text-muted-foreground">{order.orderId}</p>
 				{#if recipientText}
-					<p class="text-muted-foreground text-xs">{recipientText}</p>
+					<p class="text-xs text-muted-foreground">{recipientText}</p>
 				{/if}
 			</div>
 		</div>

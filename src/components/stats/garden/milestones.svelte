@@ -45,10 +45,10 @@
 <div class="flex max-w-4xl flex-1 flex-col gap-2">
 	<div class="flex flex-row items-center justify-between gap-2">
 		<div class="flex flex-row items-center gap-2">
-			<button class="bg-card hover:bg-muted w-24 rounded-md py-1 text-sm whitespace-nowrap" onclick={swap}
+			<button class="w-24 rounded-md bg-card py-1 text-sm whitespace-nowrap hover:bg-muted" onclick={swap}
 				>{highestSort ? 'Milestone ↓' : 'A-Z ↓'}</button
 			>
-			<button class="bg-card hover:bg-muted w-20 rounded-md py-1 text-sm whitespace-nowrap" onclick={swapOverflow}
+			<button class="w-20 rounded-md bg-card py-1 text-sm whitespace-nowrap hover:bg-muted" onclick={swapOverflow}
 				>{overflow ? 'Overflow' : 'Normal'}</button
 			>
 		</div>

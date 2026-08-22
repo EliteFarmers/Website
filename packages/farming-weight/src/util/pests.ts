@@ -74,12 +74,23 @@ export function fortuneFromPestBestiary(bestiaryKills: Record<string, number>): 
 	return unlockedPestBestiaryTiers(bestiaryKills, false) * FORTUNE_PER_PEST_BRACKET;
 }
 
-export function getGardenBestiaryProgress(
-	bestiaryKills: Record<string, number>
-): Record<string, { kills: number; nextBracketKills: number | null; bracketsUnlocked: number; name: string }> {
+export function getGardenBestiaryProgress(bestiaryKills: Record<string, number>): Record<
+	string,
+	{
+		kills: number;
+		nextBracketKills: number | null;
+		bracketsUnlocked: number;
+		name: string;
+	}
+> {
 	const progress: Record<
 		string,
-		{ kills: number; nextBracketKills: number | null; bracketsUnlocked: number; name: string }
+		{
+			kills: number;
+			nextBracketKills: number | null;
+			bracketsUnlocked: number;
+			name: string;
+		}
 	> = {};
 
 	for (const [bestiaryId, pestId] of PEST_BESTIARY_ENTRIES) {

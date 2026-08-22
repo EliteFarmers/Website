@@ -32,7 +32,7 @@
 						{member.status === 3 ? 'Unban' : 'Restore'} User
 					</DropdownMenu.Item>
 				{:else}
-					<DropdownMenu.Item onclick={() => actions['ban'](member)} class="text-destructive cursor-pointer">
+					<DropdownMenu.Item onclick={() => actions['ban'](member)} class="cursor-pointer text-destructive">
 						<Trash_2 size={16} />
 						Ban User
 					</DropdownMenu.Item>

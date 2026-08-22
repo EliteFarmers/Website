@@ -142,7 +142,7 @@
 <div class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
 	<div class="flex flex-wrap items-center gap-3">
 		<a
-			class="text-muted-foreground hover:text-primary inline-flex items-center gap-2 text-sm font-medium transition-colors"
+			class="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
 			href={resolve('/shop')}
 			data-sveltekit-preload-data="tap"
 		>
@@ -151,7 +151,7 @@
 		</a>
 		{#if primaryCategory}
 			<a
-				class="border-border/60 bg-background hover:bg-card inline-flex rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+				class="inline-flex rounded-full border border-border/60 bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-card"
 				href={resolve(`/shop/category/${primaryCategory.slug}` as '/shop/category/[slug]')}
 				data-sveltekit-preload-data="tap"
 			>
@@ -162,27 +162,27 @@
 
 	<div class="grid gap-12 lg:grid-cols-2">
 		<div class="flex flex-col gap-6">
-			<div class="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
+			<div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
 				{#if product.images?.length || leadPreviewStyle}
 					{@const totalSlides = (product.images?.length ?? 0) + (leadPreviewStyle ? 1 : 0)}
 					<Carousel.Root class="w-full">
 						<Carousel.Content>
 							{#if leadPreviewStyle}
 								<Carousel.Item>
-									<div class="bg-background flex aspect-video w-full items-center p-4">
+									<div class="flex aspect-video w-full items-center bg-background p-4">
 										{#if leadPreviewStyle.leaderboard || leadPreviewStyle.frame?.leaderboard}
 											<div class="flex w-full flex-col justify-center">
-												<div class="border-border/50 origin-left rounded-md border p-2 py-3">
+												<div class="origin-left rounded-md border border-border/50 p-2 py-3">
 													<div class="flex items-center gap-3 opacity-50 grayscale">
 														<div
-															class="bg-card-foreground/30 h-6 w-16 shrink-0 rounded"
+															class="h-6 w-16 shrink-0 rounded bg-card-foreground/30"
 														></div>
 														<div class="flex flex-col gap-1">
-															<div class="bg-card-foreground/30 h-5 w-24 rounded"></div>
-															<div class="bg-card-foreground/30 h-3 w-16 rounded"></div>
+															<div class="h-5 w-24 rounded bg-card-foreground/30"></div>
+															<div class="h-3 w-16 rounded bg-card-foreground/30"></div>
 														</div>
 														<div
-															class="bg-card-foreground/30 ml-auto h-6 w-24 rounded"
+															class="ml-auto h-6 w-24 rounded bg-card-foreground/30"
 														></div>
 													</div>
 												</div>
@@ -201,17 +201,17 @@
 													/>
 												</div>
 
-												<div class="border-border/50 origin-left rounded-md border p-2 py-3">
+												<div class="origin-left rounded-md border border-border/50 p-2 py-3">
 													<div class="flex items-center gap-3 opacity-50 grayscale">
 														<div
-															class="bg-card-foreground/30 h-6 w-16 shrink-0 rounded"
+															class="h-6 w-16 shrink-0 rounded bg-card-foreground/30"
 														></div>
 														<div class="flex flex-col gap-1">
-															<div class="bg-card-foreground/30 h-5 w-24 rounded"></div>
-															<div class="bg-card-foreground/30 h-3 w-16 rounded"></div>
+															<div class="h-5 w-24 rounded bg-card-foreground/30"></div>
+															<div class="h-3 w-16 rounded bg-card-foreground/30"></div>
 														</div>
 														<div
-															class="bg-card-foreground/30 ml-auto h-6 w-24 rounded"
+															class="ml-auto h-6 w-24 rounded bg-card-foreground/30"
 														></div>
 													</div>
 												</div>
@@ -244,7 +244,7 @@
 											/>
 										</div>
 										{#if image.description}
-											<div class="bg-muted/30 border-t p-3 text-center text-sm font-medium">
+											<div class="border-t bg-muted/30 p-3 text-center text-sm font-medium">
 												{image.title ? image.title + ': ' : ''}{image.description}
 											</div>
 										{/if}
@@ -258,7 +258,7 @@
 						{/if}
 					</Carousel.Root>
 				{:else}
-					<div class="bg-muted/30 flex aspect-video w-full items-center justify-center">
+					<div class="flex aspect-video w-full items-center justify-center bg-muted/30">
 						<Package size={80} class="text-muted-foreground/30" />
 					</div>
 				{/if}
@@ -267,7 +267,7 @@
 			{#if product.isSubscription}
 				<div class="max-w-none">
 					<h3 class="font-semibold">Subscription access</h3>
-					<p class="text-muted-foreground text-sm leading-relaxed">
+					<p class="text-sm leading-relaxed text-muted-foreground">
 						These perks stay active while your subscription is live, and you can cancel whenever you want.
 					</p>
 				</div>
@@ -278,7 +278,7 @@
 			<div>
 				<h1 class="text-4xl font-extrabold tracking-tight lg:text-5xl">{product.name}</h1>
 				{#if product.description}
-					<p class="text-muted-foreground mt-2 max-w-lg text-base leading-relaxed">
+					<p class="mt-2 max-w-lg text-base leading-relaxed text-muted-foreground">
 						{product.description}
 					</p>
 				{/if}
@@ -287,9 +287,9 @@
 						<span class="text-3xl font-bold">Free</span>
 					{:else}
 						<span class="text-3xl font-bold">${dollars}</span>
-						<span class="text-muted-foreground text-lg">USD</span>
+						<span class="text-lg text-muted-foreground">USD</span>
 						{#if product.isSubscription}
-							<span class="text-muted-foreground text-lg">/ month</span>
+							<span class="text-lg text-muted-foreground">/ month</span>
 						{/if}
 					{/if}
 				</div>
@@ -299,7 +299,7 @@
 						{#each productCategories as category (category.id)}
 							<a
 								href={resolve(`/shop/category/${category.slug}` as '/shop/category/[slug]')}
-								class="border-border/60 bg-background inline-flex rounded-full border px-3 py-1 text-sm font-medium"
+								class="inline-flex rounded-full border border-border/60 bg-background px-3 py-1 text-sm font-medium"
 								data-sveltekit-preload-data="tap"
 							>
 								{category.title}
@@ -344,8 +344,8 @@
 					{/if}
 				{/if}
 				{#if shouldPromptGiftCheckout}
-					<div class="bg-primary/6 border-primary/20 flex items-start gap-3 rounded-lg border p-4 text-sm">
-						<Info class="text-primary mt-0.5 shrink-0" size={16} />
+					<div class="flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/6 p-4 text-sm">
+						<Info class="mt-0.5 shrink-0 text-primary" size={16} />
 						<p class="text-muted-foreground">
 							{#if supportsGifting}
 								You already own this item on your account. If you want another copy, start a gift
@@ -358,8 +358,8 @@
 					</div>
 				{/if}
 				{#if inCurrentCheckout}
-					<div class="bg-muted/50 flex items-start gap-3 rounded-lg p-4 text-sm">
-						<Info class="text-primary mt-0.5 shrink-0" size={16} />
+					<div class="flex items-start gap-3 rounded-lg bg-muted/50 p-4 text-sm">
+						<Info class="mt-0.5 shrink-0 text-primary" size={16} />
 						<p class="text-muted-foreground">
 							{#if shouldPromptGiftCheckout}
 								This gift item is already in your basket. Open checkout to choose who should receive it.
@@ -371,8 +371,8 @@
 					</div>
 				{/if}
 
-				<div class="border-border/60 bg-card/70 rounded-xl border p-4 text-sm">
-					<p class="text-muted-foreground leading-relaxed">
+				<div class="rounded-xl border border-border/60 bg-card/70 p-4 text-sm">
+					<p class="leading-relaxed text-muted-foreground">
 						Manage your items in <a href={resolve('/profile/purchases')} class="text-link hover:underline"
 							>purchase history</a
 						>
@@ -382,18 +382,18 @@
 				</div>
 			</div>
 
-			<div class="border-border rounded-xl border p-6">
+			<div class="rounded-xl border border-border p-6">
 				<h3 class="mb-4 text-xl font-semibold">What you'll unlock</h3>
 				{#snippet featureRow(Icon: typeof Image, title: string, description: string)}
 					<div class="flex gap-3">
 						<div
-							class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+							class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
 						>
 							<Icon size={20} />
 						</div>
 						<div>
 							<p class="mb-0.5 leading-none font-medium">{title}</p>
-							<p class="text-muted-foreground text-sm">{description}</p>
+							<p class="text-sm text-muted-foreground">{description}</p>
 						</div>
 					</div>
 				{/snippet}
@@ -401,13 +401,13 @@
 					{#if product.weightStyles?.length}
 						<div class="flex gap-3">
 							<div
-								class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+								class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
 							>
 								<Image size={20} />
 							</div>
 							<div>
 								<p class="mb-0.5 leading-none font-medium">Cosmetics</p>
-								<p class="text-muted-foreground text-sm">
+								<p class="text-sm text-muted-foreground">
 									Includes {product.weightStyles.length} cosmetic{product.weightStyles.length > 1
 										? 's'
 										: ''}
@@ -420,7 +420,7 @@
 					{#if product.features?.embedColors?.length}
 						<div class="flex gap-3">
 							<div
-								class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+								class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
 							>
 								<Palette size={20} />
 							</div>
@@ -442,7 +442,7 @@
 					{#if badge}
 						<div class="flex gap-3">
 							<div
-								class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+								class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
 							>
 								<Tag size={20} />
 							</div>
@@ -483,7 +483,7 @@
 						)}
 					{/if}
 
-					<p class="text-muted-foreground text-sm">
+					<p class="text-sm text-muted-foreground">
 						Most cosmetics can be equipped any time from <a
 							href={resolve('/profile/settings')}
 							class="text-link hover:underline">profile settings</a
@@ -497,15 +497,15 @@
 	{#if productStyles.length}
 		<section id="styles" class="mt-24 scroll-mt-24">
 			<div class="mb-8 flex items-center gap-4">
-				<div class="bg-border h-px flex-1"></div>
+				<div class="h-px flex-1 bg-border"></div>
 				<h2 class="text-3xl font-bold">Style previews</h2>
-				<div class="bg-border h-px flex-1"></div>
+				<div class="h-px flex-1 bg-border"></div>
 			</div>
 
 			<div class="grid gap-8">
 				{#each [...productStyles].sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0) as style (style.id)}
-					<div class="bg-card border-border overflow-hidden rounded-xl border shadow-sm">
-						<div class="bg-muted/30 border-b px-6 py-4">
+					<div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+						<div class="border-b bg-muted/30 px-6 py-4">
 							<div class="flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:items-center">
 								<h3 class="text-xl font-bold">{style.name}</h3>
 								{#if style.author}

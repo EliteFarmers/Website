@@ -26,7 +26,7 @@
 <section class="flex flex-col gap-6">
 	<div class="flex flex-col gap-2">
 		<h2 class="text-2xl font-semibold">Members</h2>
-		<p class="text-muted-foreground text-sm">
+		<p class="text-sm text-muted-foreground">
 			Sorted by weekly guild experience. Select the "Member Leaderboards" tab to view guild standings across
 			leaderboards.
 		</p>

@@ -174,7 +174,7 @@ export function getUpgradeableEnchant(
 			// Get amount of level 1 enchantment items needed to craft the same applied level
 			// Ex: 4 level 1 items = 2 level 2 items = 1 level 3 item
 			// Count = Math.pow(2, applied - 1)
-			const count = Math.pow(2, applied - 1);
+			const count = 2 ** (applied - 1);
 			items[enchantNameToId(enchant) + '_1'] = count;
 			break;
 		}

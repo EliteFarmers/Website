@@ -25,8 +25,8 @@
 
 {#if filteredOptions.length !== 0}
 	<div class="flex flex-col items-start gap-2 rounded-md">
-		<p class="text-muted-foreground mb-2 text-sm">
-			These accounts already have <span class="text-foreground font-mono select-all">{username}</span> linked in Hypixel!
+		<p class="mb-2 text-sm text-muted-foreground">
+			These accounts already have <span class="font-mono text-foreground select-all">{username}</span> linked in Hypixel!
 		</p>
 		<ScrollArea class="flex max-h-48 w-full flex-col rounded-md border p-2 px-3">
 			<div class="flex flex-col gap-2">

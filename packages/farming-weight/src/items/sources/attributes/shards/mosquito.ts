@@ -22,7 +22,10 @@ export class MosquitoShard extends FarmingAttributeShard {
 				op: 'add-mechanic',
 				mechanic: FarmingMechanic.EnchantedCropChance,
 				value: level * 0.001,
-				meta: { description: 'Chance to find an Enchanted Crop while Farming', valueDisplay: 'percent' },
+				meta: {
+					description: 'Chance to find an Enchanted Crop while Farming',
+					valueDisplay: 'percent',
+				},
 			},
 		];
 		if (!env.crop) return effects;

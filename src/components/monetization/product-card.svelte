@@ -25,13 +25,13 @@
 
 <a
 	class={cn(
-		'group bg-card hover:bg-accent/50 border-border relative flex w-full max-w-70 flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+		'group relative flex w-full max-w-70 flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:bg-accent/50 hover:shadow-xl',
 		className
 	)}
 	href="/shop/{product.id}"
 	data-sveltekit-preload-data="tap"
 >
-	<div class="bg-muted/30 relative flex aspect-video w-full items-center justify-center overflow-hidden">
+	<div class="relative flex aspect-video w-full items-center justify-center overflow-hidden bg-muted/30">
 		{#if image}
 			<img
 				src={image}
@@ -43,14 +43,14 @@
 		{/if}
 		{#if isOwned}
 			<span
-				class="bg-primary shadow-primary/30 text-primary-foreground absolute top-2 left-2 rounded-full px-2 py-0.5 text-xs font-semibold shadow-md"
+				class="absolute top-2 left-2 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground shadow-md shadow-primary/30"
 			>
 				Owned
 			</span>
 		{/if}
 		{#if isNew}
 			<span
-				class="bg-destructive shadow-destructive/50 text-destructive-foreground absolute top-2 right-2 rounded-full px-2 py-0.5 text-xs font-semibold shadow-md"
+				class="absolute top-2 right-2 rounded-full bg-destructive px-2 py-0.5 text-xs font-semibold text-destructive-foreground shadow-md shadow-destructive/50"
 				>NEW</span
 			>
 		{/if}
@@ -60,7 +60,7 @@
 		<h3 class="line-clamp-1 text-lg font-bold tracking-tight">{product.name}</h3>
 
 		{#if product.description}
-			<p class="text-muted-foreground mt-1 line-clamp-2 text-sm">
+			<p class="mt-1 line-clamp-2 text-sm text-muted-foreground">
 				{product.description}
 			</p>
 		{/if}
@@ -73,14 +73,14 @@
 					<div class="flex items-baseline gap-1">
 						<span class="text-lg font-bold">${dollars}</span>
 						{#if product.isSubscription}
-							<span class="text-muted-foreground text-xs">/mo</span>
+							<span class="text-xs text-muted-foreground">/mo</span>
 						{/if}
 					</div>
 				{/if}
 			</div>
 
 			<div
-				class="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+				class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
 			>
 				{#if isOwned}
 					<Gift size={16} />

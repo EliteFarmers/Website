@@ -20,7 +20,7 @@
 	let full = $derived(event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers);
 </script>
 
-<Accordion.Item value={key} id={key} class="outline-border my-2 rounded-lg outline-2">
+<Accordion.Item value={key} id={key} class="my-2 rounded-lg outline-2 outline-border">
 	<Accordion.Trigger class="w-full pr-4">
 		<div class="flex w-full flex-col gap-2 px-4">
 			<div class="flex flex-row items-center justify-between">
@@ -55,12 +55,12 @@
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<Accordion.Root type="multiple" class="text-primary w-full">
+		<Accordion.Root type="multiple" class="w-full text-primary">
 			{#each members as member, i (member.playerUuid ?? i)}
 				<Accordion.Item
 					value={team.id + i.toString()}
 					class="px-4 {highlightUuid === member.playerUuid
-						? 'border-link rounded-md border-2'
+						? 'rounded-md border-2 border-link'
 						: 'border-none'}"
 				>
 					<EventMember {member} {running} {event} owner={team.ownerUuid === member.playerUuid} />

@@ -553,7 +553,7 @@
 			{#each row as cell, colIdx (colIdx)}
 				<div
 					style="grid-row: {rowIdx + 1}; grid-column: {colIdx + 1};"
-					class={`relative flex aspect-square w-full max-w-8 items-center justify-center overflow-hidden border sm:size-8 md:size-12 md:max-w-12 ${cell.isTarget ? 'ring-primary/50 ring-1' : ''}`}
+					class={`relative flex aspect-square w-full max-w-8 items-center justify-center overflow-hidden border sm:size-8 md:size-12 md:max-w-12 ${cell.isTarget ? 'ring-1 ring-primary/50' : ''}`}
 				>
 					{#if cell.blockName}
 						<img

@@ -29,7 +29,7 @@
 	{:else}
 		<span class="truncate">{team.name}</span>
 		{#if isOwner}
-			<Crown size={16} class="text-completed w-4" />
+			<Crown size={16} class="w-4 text-completed" />
 		{/if}
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>

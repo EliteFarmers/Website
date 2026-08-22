@@ -18,7 +18,7 @@
 
 <div
 	class={cn(
-		'bg-card relative grid aspect-square size-9 place-items-center rounded-md border shadow-md sm:size-12',
+		'relative grid aspect-square size-9 place-items-center rounded-md border bg-card shadow-md sm:size-12',
 		customClass
 	)}
 >

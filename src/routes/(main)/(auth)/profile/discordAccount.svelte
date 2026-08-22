@@ -11,7 +11,7 @@
 	let { account = {} }: Props = $props();
 </script>
 
-<div class="bg-card relative isolate flex w-full flex-col overflow-clip rounded-lg border-2">
+<div class="relative isolate flex w-full flex-col overflow-clip rounded-lg border-2 bg-card">
 	<div class="relative">
 		<Avatar.Root class="relative z-20 aspect-video size-full max-h-64 overflow-clip">
 			{#if account.banner}
@@ -21,7 +21,7 @@
 					alt="{account.username}'s Banner"
 				/>
 			{/if}
-			<Avatar.Fallback class="bg-muted/20 size-full">
+			<Avatar.Fallback class="size-full bg-muted/20">
 				{#snippet child({ props })}
 					<div {...props}></div>
 				{/snippet}
@@ -30,7 +30,7 @@
 		<UserIcon
 			user={account}
 			size={512}
-			class="bg-card pointer-events-none absolute bottom-0 left-4 z-30 size-32 translate-y-16 overflow-hidden rounded-full select-none"
+			class="pointer-events-none absolute bottom-0 left-4 z-30 size-32 translate-y-16 overflow-hidden rounded-full bg-card select-none"
 		/>
 	</div>
 	<div class="relative mt-16 flex flex-row items-center gap-4 p-4">
@@ -38,11 +38,11 @@
 			<p class="text-2xl font-semibold">{account.displayName}</p>
 			<span class="text-sm">{account.username}</span>
 			<div class="flex flex-row items-center gap-1">
-				<p class="text-muted-foreground text-sm">{account.id}</p>
+				<p class="text-sm text-muted-foreground">{account.id}</p>
 				<CopyToClipboard
 					text={account.id}
 					size="sm"
-					class="text-muted-foreground hover:text-foreground -my-2"
+					class="-my-2 text-muted-foreground hover:text-foreground"
 				/>
 			</div>
 		</div>

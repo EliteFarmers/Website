@@ -3,7 +3,7 @@
 	import { GetUserOrdersList } from '$lib/remote/payments.remote';
 	import { Button } from '$ui/button';
 	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$ui/card';
-	import type { PaginationState } from '@tanstack/table-core';
+	import type { PaginationState } from '$ui/data-table';
 	import { DEFAULT_PAYMENTS_PAGE_SIZE } from '../payments';
 	import { getColumns } from './columns.js';
 	import OrderDetailDialog from './order-detail-dialog.svelte';
@@ -117,8 +117,8 @@
 			</div>
 
 			{#if errorMessage}
-				<div class="border-destructive/30 bg-destructive/5 rounded-lg border px-3 py-2 text-sm">
-					<p class="text-destructive font-medium">{errorMessage}</p>
+				<div class="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm">
+					<p class="font-medium text-destructive">{errorMessage}</p>
 					<Button class="mt-2" variant="outline" size="sm" onclick={() => loadOrders()}>Retry</Button>
 				</div>
 			{/if}

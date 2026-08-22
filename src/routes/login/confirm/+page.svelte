@@ -27,7 +27,7 @@
 <Head title="Login Confirmation" description="Please accept the login confirmation to continue." />
 
 <div class="my-8 flex w-full flex-row items-center justify-center md:my-16 lg:my-32">
-	<div class="bg-card mx-2 flex max-w-lg flex-col gap-4 rounded-lg border-2 p-8">
+	<div class="mx-2 flex max-w-lg flex-col gap-4 rounded-lg border-2 bg-card p-8">
 		<h1 class="text-center text-2xl font-semibold">{confirmation.title ?? 'Please Accept To Continue'}</h1>
 		<div class="my-4 text-base" id="contents">
 			<ScrollArea class="flex max-h-64 flex-col rounded-lg border p-4 pr-2">
@@ -43,7 +43,7 @@
 				>
 			</form>
 		</div>
-		<div class="text-muted-foreground mt-4 text-center text-sm">
+		<div class="mt-4 text-center text-sm text-muted-foreground">
 			By continuing to use this service, you agree to the contents of this notice.
 		</div>
 	</div>

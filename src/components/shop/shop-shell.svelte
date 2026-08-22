@@ -15,11 +15,11 @@
 	let { categories, storefront, footerHtml = '', children }: Props = $props();
 </script>
 
-<div class="bg-background text-foreground relative min-h-screen overflow-x-clip">
+<div class="relative min-h-screen overflow-x-clip bg-background text-foreground">
 	<div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-		<div class="bg-primary/10 absolute -top-48 -left-32 h-112 w-md rounded-full blur-3xl"></div>
-		<div class="bg-progress/10 absolute top-56 -right-32 h-96 w-[24rem] rounded-full blur-3xl"></div>
-		<div class="bg-wildrose/10 absolute right-[18%] bottom-40 h-80 w-[20rem] rounded-full blur-3xl"></div>
+		<div class="absolute -top-48 -left-32 h-112 w-md rounded-full bg-primary/10 blur-3xl"></div>
+		<div class="absolute top-56 -right-32 h-96 w-[24rem] rounded-full bg-progress/10 blur-3xl"></div>
+		<div class="absolute right-[18%] bottom-40 h-80 w-[20rem] rounded-full bg-wildrose/10 blur-3xl"></div>
 	</div>
 
 	<ShopHeader {categories} />

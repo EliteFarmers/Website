@@ -54,13 +54,7 @@ export const zodResendGiftParams = zod.object({
 
 export const zodResendGiftBody = zod.object({
 	orderItemIds: zod.array(zod.string()).describe('Name of weight style to unlock.'),
-	mode: zod
-		.enum({
-			Self: 'Self',
-			GiftUser: 'GiftUser',
-			GiftGuild: 'GiftGuild',
-		})
-		.nullish(),
+	mode: zod.enum(['Self', 'GiftUser', 'GiftGuild']).nullish(),
 	playerUuidOrIgn: zod.string().nullish(),
 	guildId: zod.int().nullish(),
 	message: zod.string().nullish(),
@@ -150,19 +144,11 @@ export const zodUpdateAccountBody = zod.object({
 			zod.string(),
 			zod.object({
 				style: zod.object({
-					mode: zod.enum({
-						None: 0,
-						Inherit: 1,
-						Selected: 2,
-					}),
+					mode: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
 					id: zod.int().nullish(),
 				}),
 				frame: zod.object({
-					mode: zod.enum({
-						None: 0,
-						Inherit: 1,
-						Selected: 2,
-					}),
+					mode: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
 					id: zod.int().nullish(),
 				}),
 			})
@@ -415,13 +401,7 @@ export const zodReplayWebhookParams = zod.object({
  * @summary List content reports
  */
 export const zodListContentReportsQueryParams = zod.object({
-	status: zod
-		.enum({
-			Open: 'open',
-			Reviewed: 'reviewed',
-			Dismissed: 'dismissed',
-		})
-		.optional(),
+	status: zod.enum(['open', 'reviewed', 'dismissed']).optional(),
 });
 
 /**
@@ -435,11 +415,7 @@ export const zodResolveContentReportBodyResolutionNoteMin = 0;
 export const zodResolveContentReportBodyResolutionNoteMax = 1000;
 
 export const zodResolveContentReportBody = zod.object({
-	status: zod.enum({
-		Open: 'open',
-		Reviewed: 'reviewed',
-		Dismissed: 'dismissed',
-	}),
+	status: zod.enum(['open', 'reviewed', 'dismissed']),
 	resolutionNote: zod
 		.string()
 		.min(zodResolveContentReportBodyResolutionNoteMin)
@@ -830,32 +806,24 @@ export const zodGetUpcomingEventsQueryParams = zod.object({
  * @summary List public feedback
  */
 export const zodListFeedbackQueryParams = zod.object({
-	type: zod
-		.enum({
-			Suggestion: 'suggestion',
-			Bug: 'bug',
-		})
-		.optional(),
+	type: zod.enum(['suggestion', 'bug']).optional(),
 	status: zod
-		.enum({
-			Open: 'open',
-			UnderReview: 'underReview',
-			Planned: 'planned',
-			InProgress: 'inProgress',
-			Shipped: 'shipped',
-			Declined: 'declined',
-			Confirmed: 'confirmed',
-			Fixed: 'fixed',
-			CannotReproduce: 'cannotReproduce',
-			Duplicate: 'duplicate',
-		})
+		.enum([
+			'open',
+			'underReview',
+			'planned',
+			'inProgress',
+			'shipped',
+			'declined',
+			'confirmed',
+			'fixed',
+			'cannotReproduce',
+			'duplicate',
+		])
 		.optional(),
 	tags: zod.array(zod.int()).nullish(),
 	query: zod.string().nullish(),
-	sort: zod.enum({
-		Newest: 'newest',
-		Top: 'top',
-	}),
+	sort: zod.enum(['newest', 'top']),
 	page: zod.int(),
 	pageSize: zod.int(),
 });
@@ -1089,22 +1057,8 @@ export const zodAnalyzeGreenhouseBody = zod.object({
 		inventory: zod.record(zod.string(), zod.number()),
 		coins: zod.number(),
 		market: zod.object({
-			buyChannels: zod.array(
-				zod.enum({
-					Npc: 'npc',
-					BazaarInstant: 'bazaarInstant',
-					BazaarOrder: 'bazaarOrder',
-					Auction: 'auction',
-				})
-			),
-			sellChannels: zod.array(
-				zod.enum({
-					Npc: 'npc',
-					BazaarInstant: 'bazaarInstant',
-					BazaarOrder: 'bazaarOrder',
-					Auction: 'auction',
-				})
-			),
+			buyChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
+			sellChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
 			feePercent: zod.number(),
 			slippagePercent: zod.number(),
 		}),
@@ -1192,22 +1146,8 @@ export const zodCreateGreenhousePlanBody = zod.object({
 		inventory: zod.record(zod.string(), zod.number()),
 		coins: zod.number(),
 		market: zod.object({
-			buyChannels: zod.array(
-				zod.enum({
-					Npc: 'npc',
-					BazaarInstant: 'bazaarInstant',
-					BazaarOrder: 'bazaarOrder',
-					Auction: 'auction',
-				})
-			),
-			sellChannels: zod.array(
-				zod.enum({
-					Npc: 'npc',
-					BazaarInstant: 'bazaarInstant',
-					BazaarOrder: 'bazaarOrder',
-					Auction: 'auction',
-				})
-			),
+			buyChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
+			sellChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
 			feePercent: zod.number(),
 			slippagePercent: zod.number(),
 		}),
@@ -1225,30 +1165,14 @@ export const zodCreateGreenhousePlanBody = zod.object({
 		})
 	),
 	targetMutationId: zod.string(),
-	strategy: zod.enum({
-		Standard: 'standard',
-		ChorusLifecycle: 'chorusLifecycle',
-	}),
+	strategy: zod.enum(['standard', 'chorusLifecycle']),
 	chorusHarvestsPerDay: zod.number(),
 	chorusHarvestHours: zod.array(zod.number()),
-	objective: zod.enum({
-		MarketProfit: 'marketProfit',
-		NpcProfit: 'npcProfit',
-		Sowdust: 'sowdust',
-		FarmingExperience: 'farmingExperience',
-		Collection: 'collection',
-		SpaceEfficiency: 'spaceEfficiency',
-	}),
+	objective: zod.enum(['marketProfit', 'npcProfit', 'sowdust', 'farmingExperience', 'collection', 'spaceEfficiency']),
 	collectionItemId: zod.string().nullish(),
 	requestedTargetCount: zod.int().nullish(),
-	existingPlantPolicy: zod.enum({
-		Preserve: 'preserve',
-		AllowReplacement: 'allowReplacement',
-	}),
-	uniqueCropPolicy: zod.enum({
-		None: 'none',
-		CompleteMissingGlobal: 'completeMissingGlobal',
-	}),
+	existingPlantPolicy: zod.enum(['preserve', 'allowReplacement']),
+	uniqueCropPolicy: zod.enum(['none', 'completeMissingGlobal']),
 	minimumUniqueCropGroups: zod.int(),
 	maximumUniqueCropGroups: zod.int().nullish(),
 	penalizeUnwantedMutations: zod.coerce.boolean<boolean>(),
@@ -1321,22 +1245,8 @@ export const zodListGreenhouseProfitsBody = zod.object({
 		})
 	),
 	market: zod.object({
-		buyChannels: zod.array(
-			zod.enum({
-				Npc: 'npc',
-				BazaarInstant: 'bazaarInstant',
-				BazaarOrder: 'bazaarOrder',
-				Auction: 'auction',
-			})
-		),
-		sellChannels: zod.array(
-			zod.enum({
-				Npc: 'npc',
-				BazaarInstant: 'bazaarInstant',
-				BazaarOrder: 'bazaarOrder',
-				Auction: 'auction',
-			})
-		),
+		buyChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
+		sellChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
 		feePercent: zod.number(),
 		slippagePercent: zod.number(),
 	}),
@@ -1395,22 +1305,8 @@ export const zodGetGreenhouseProfitDetailsBody = zod.object({
 		})
 	),
 	market: zod.object({
-		buyChannels: zod.array(
-			zod.enum({
-				Npc: 'npc',
-				BazaarInstant: 'bazaarInstant',
-				BazaarOrder: 'bazaarOrder',
-				Auction: 'auction',
-			})
-		),
-		sellChannels: zod.array(
-			zod.enum({
-				Npc: 'npc',
-				BazaarInstant: 'bazaarInstant',
-				BazaarOrder: 'bazaarOrder',
-				Auction: 'auction',
-			})
-		),
+		buyChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
+		sellChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
 		feePercent: zod.number(),
 		slippagePercent: zod.number(),
 	}),
@@ -1540,22 +1436,8 @@ export const zodCreateGreenhouseSimulationBody = zod.object({
 		inventory: zod.record(zod.string(), zod.number()),
 		coins: zod.number(),
 		market: zod.object({
-			buyChannels: zod.array(
-				zod.enum({
-					Npc: 'npc',
-					BazaarInstant: 'bazaarInstant',
-					BazaarOrder: 'bazaarOrder',
-					Auction: 'auction',
-				})
-			),
-			sellChannels: zod.array(
-				zod.enum({
-					Npc: 'npc',
-					BazaarInstant: 'bazaarInstant',
-					BazaarOrder: 'bazaarOrder',
-					Auction: 'auction',
-				})
-			),
+			buyChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
+			sellChannels: zod.array(zod.enum(['npc', 'bazaarInstant', 'bazaarOrder', 'auction'])),
 			feePercent: zod.number(),
 			slippagePercent: zod.number(),
 		}),
@@ -1569,15 +1451,7 @@ export const zodCreateGreenhouseSimulationBody = zod.object({
 	),
 	actions: zod.array(
 		zod.object({
-			type: zod.enum({
-				Plant: 'plant',
-				Harvest: 'harvest',
-				Water: 'water',
-				Wake: 'wake',
-				Remove: 'remove',
-				ChangeSurface: 'changeSurface',
-				Sell: 'sell',
-			}),
+			type: zod.enum(['plant', 'harvest', 'water', 'wake', 'remove', 'changeSurface', 'sell']),
 			atHour: zod.number(),
 			plot: zod.int(),
 			x: zod.int(),
@@ -1593,32 +1467,18 @@ export const zodCreateGreenhouseSimulationBody = zod.object({
 			label: zod.string(),
 			actions: zod.array(
 				zod.object({
-					kind: zod.enum({
-						Concrete: 'concrete',
-						HarvestAllReady: 'harvestAllReady',
-						HarvestSelectedReady: 'harvestSelectedReady',
-						WaterBelowThreshold: 'waterBelowThreshold',
-						WakeSleeping: 'wakeSleeping',
-						EnsurePlannedPlant: 'ensurePlannedPlant',
-					}),
-					guard: zod.enum({
-						Always: 'always',
-						IfMature: 'ifMature',
-						IfEmpty: 'ifEmpty',
-						IfWaterBelowThreshold: 'ifWaterBelowThreshold',
-						IfSleeping: 'ifSleeping',
-					}),
+					kind: zod.enum([
+						'concrete',
+						'harvestAllReady',
+						'harvestSelectedReady',
+						'waterBelowThreshold',
+						'wakeSleeping',
+						'ensurePlannedPlant',
+					]),
+					guard: zod.enum(['always', 'ifMature', 'ifEmpty', 'ifWaterBelowThreshold', 'ifSleeping']),
 					action: zod
 						.object({
-							type: zod.enum({
-								Plant: 'plant',
-								Harvest: 'harvest',
-								Water: 'water',
-								Wake: 'wake',
-								Remove: 'remove',
-								ChangeSurface: 'changeSurface',
-								Sell: 'sell',
-							}),
+							type: zod.enum(['plant', 'harvest', 'water', 'wake', 'remove', 'changeSurface', 'sell']),
 							atHour: zod.number(),
 							plot: zod.int(),
 							x: zod.int(),
@@ -1634,11 +1494,7 @@ export const zodCreateGreenhouseSimulationBody = zod.object({
 			),
 		})
 	),
-	traceMode: zod.enum({
-		None: 'none',
-		Summary: 'summary',
-		Full: 'full',
-	}),
+	traceMode: zod.enum(['none', 'summary', 'full']),
 });
 
 /**
@@ -1667,16 +1523,16 @@ export const zodGetGreenhouseSimulationEventsParams = zod.object({
  * @summary Create a new guide draft
  */
 export const zodCreateGuideBody = zod.object({
-	type: zod.enum({
-		General: 0,
-		Farm: 1,
-		Greenhouse: 2,
-		Contest: 3,
-		MoneyMaking: 4,
-		Builds: 5,
-		Tools: 6,
-		Events: 7,
-	}),
+	type: zod.union([
+		zod.literal(0),
+		zod.literal(1),
+		zod.literal(2),
+		zod.literal(3),
+		zod.literal(4),
+		zod.literal(5),
+		zod.literal(6),
+		zod.literal(7),
+	]),
 });
 
 /**
@@ -1686,23 +1542,19 @@ export const zodCreateGuideBody = zod.object({
 export const zodListGuidesQueryParams = zod.object({
 	query: zod.string().nullish(),
 	type: zod
-		.enum({
-			General: 0,
-			Farm: 1,
-			Greenhouse: 2,
-			Contest: 3,
-			MoneyMaking: 4,
-			Builds: 5,
-			Tools: 6,
-			Events: 7,
-		})
+		.union([
+			zod.literal(0),
+			zod.literal(1),
+			zod.literal(2),
+			zod.literal(3),
+			zod.literal(4),
+			zod.literal(5),
+			zod.literal(6),
+			zod.literal(7),
+		])
 		.optional(),
 	tags: zod.array(zod.int()).nullish(),
-	sort: zod.enum({
-		Newest: 'newest',
-		TopRated: 'topRated',
-		Trending: 'trending',
-	}),
+	sort: zod.enum(['newest', 'topRated', 'trending']),
 	page: zod.int(),
 	pageSize: zod.int(),
 });
@@ -2026,14 +1878,7 @@ export const zodCreateEventAdminBodyBlockedRoleMax = 24;
 export const zodCreateEventAdminBody = zod.object({
 	name: zod.string().max(zodCreateEventAdminBodyNameMax).describe('The name of the event'),
 	type: zod
-		.enum({
-			None: 'none',
-			FarmingWeight: 'farmingWeight',
-			Collection: 'collection',
-			Experience: 'experience',
-			Medals: 'medals',
-			Pests: 'pests',
-		})
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event')
 		.nullish(),
 	guildId: zod.string().describe('The Discord server id as a string for the event'),
@@ -2347,19 +2192,19 @@ export const zodRemoveJacobLeaderboardExcludedTimespanParams = zod.object({
  */
 export const zodGetHypixelGuildsQueryParams = zod.object({
 	sortBy: zod
-		.enum({
-			MemberCount: 'memberCount',
-			SkyblockExperience: 'skyblockExperience',
-			SkyblockExperienceAverage: 'skyblockExperienceAverage',
-			SkillLevel: 'skillLevel',
-			SkillLevelAverage: 'skillLevelAverage',
-			HypixelLevelAverage: 'hypixelLevelAverage',
-			SlayerExperience: 'slayerExperience',
-			CatacombsExperience: 'catacombsExperience',
-			FarmingWeight: 'farmingWeight',
-			Networth: 'networth',
-			NetworthAverage: 'networthAverage',
-		})
+		.enum([
+			'memberCount',
+			'skyblockExperience',
+			'skyblockExperienceAverage',
+			'skillLevel',
+			'skillLevelAverage',
+			'hypixelLevelAverage',
+			'slayerExperience',
+			'catacombsExperience',
+			'farmingWeight',
+			'networth',
+			'networthAverage',
+		])
 		.optional(),
 	collection: zod.string().nullish(),
 	skill: zod.string().nullish(),
@@ -2401,11 +2246,7 @@ export const zodGetHypixelGuildMembersLeaderboardQueryParams = zod.object({
 			'Game mode to filter leaderboard by. Leave empty to get all modes.\n            Options: \"ironman\", \"island\", \"classic\"'
 		),
 	removed: zod
-		.enum({
-			NotRemoved: 0,
-			Removed: 1,
-			All: 2,
-		})
+		.union([zod.literal(0), zod.literal(1), zod.literal(2)])
 		.optional()
 		.describe(
 			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\n            Default is profiles that have not been removed\/wiped.\n            0 = Not Removed\n            1 = Removed\n            2 = All'
@@ -2461,11 +2302,7 @@ export const zodGetPlayerRank1QueryParams = zod.object({
 			'Game mode to filter leaderboard by. Leave empty to get all modes.\n            Options: \"ironman\", \"island\", \"classic\"'
 		),
 	removed: zod
-		.enum({
-			NotRemoved: 0,
-			Removed: 1,
-			All: 2,
-		})
+		.union([zod.literal(0), zod.literal(1), zod.literal(2)])
 		.optional()
 		.describe(
 			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\n            Default is profiles that have not been removed\/wiped.\n            0 = Not Removed\n            1 = Removed\n            2 = All'
@@ -2509,11 +2346,7 @@ export const zodGetProfileRank1QueryParams = zod.object({
 			'Game mode to filter leaderboard by. Leave empty to get all modes.\n            Options: \"ironman\", \"island\", \"classic\"'
 		),
 	removed: zod
-		.enum({
-			NotRemoved: 0,
-			Removed: 1,
-			All: 2,
-		})
+		.union([zod.literal(0), zod.literal(1), zod.literal(2)])
 		.optional()
 		.describe(
 			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\n            Default is profiles that have not been removed\/wiped.\n            0 = Not Removed\n            1 = Removed\n            2 = All'
@@ -2541,11 +2374,7 @@ export const zodGetLeaderboardQueryParams = zod.object({
 			'Game mode to filter leaderboard by. Leave empty to get all modes.\n            Options: \"ironman\", \"island\", \"classic\"'
 		),
 	removed: zod
-		.enum({
-			NotRemoved: 0,
-			Removed: 1,
-			All: 2,
-		})
+		.union([zod.literal(0), zod.literal(1), zod.literal(2)])
 		.optional()
 		.describe(
 			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\n            Default is profiles that have not been removed\/wiped.\n            0 = Not Removed\n            1 = Removed\n            2 = All'
@@ -2601,11 +2430,7 @@ export const zodGetPlayerRank2QueryParams = zod.object({
 			'Game mode to filter leaderboard by. Leave empty to get all modes.\n            Options: \"ironman\", \"island\", \"classic\"'
 		),
 	removed: zod
-		.enum({
-			NotRemoved: 0,
-			Removed: 1,
-			All: 2,
-		})
+		.union([zod.literal(0), zod.literal(1), zod.literal(2)])
 		.optional()
 		.describe(
 			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\n            Default is profiles that have not been removed\/wiped.\n            0 = Not Removed\n            1 = Removed\n            2 = All'
@@ -2649,11 +2474,7 @@ export const zodGetProfileRank2QueryParams = zod.object({
 			'Game mode to filter leaderboard by. Leave empty to get all modes.\n            Options: \"ironman\", \"island\", \"classic\"'
 		),
 	removed: zod
-		.enum({
-			NotRemoved: 0,
-			Removed: 1,
-			All: 2,
-		})
+		.union([zod.literal(0), zod.literal(1), zod.literal(2)])
 		.optional()
 		.describe(
 			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\n            Default is profiles that have not been removed\/wiped.\n            0 = Not Removed\n            1 = Removed\n            2 = All'
@@ -2691,45 +2512,41 @@ export const zodGetNotificationsQueryParams = zod.object({
 export const zodUpdateNotificationPreferencesBody = zod.object({
 	preferences: zod.array(
 		zod.object({
-			type: zod.enum({
-				System: 'system',
-				GuideApproved: 'guideApproved',
-				GuideEditApproved: 'guideEditApproved',
-				GuideRejected: 'guideRejected',
-				GuideDeleted: 'guideDeleted',
-				CommentApproved: 'commentApproved',
-				CommentEditApproved: 'commentEditApproved',
-				CommentRejected: 'commentRejected',
-				NewComment: 'newComment',
-				NewReply: 'newReply',
-				ShopPurchase: 'shopPurchase',
-				GuideSubmitted: 'guideSubmitted',
-				ShopRefund: 'shopRefund',
-				GiftReceived: 'giftReceived',
-				GiftReassignable: 'giftReassignable',
-				GiftClaimed: 'giftClaimed',
-				DataExportReady: 'dataExportReady',
-				BadgeUnlocked: 'badgeUnlocked',
-				ManagedPackApproved: 'managedPackApproved',
-				ManagedPackOwnershipAssigned: 'managedPackOwnershipAssigned',
-				AuctionSold: 'auctionSold',
-				FeedbackSubmitted: 'feedbackSubmitted',
-				FeedbackApproved: 'feedbackApproved',
-				FeedbackRejected: 'feedbackRejected',
-				FeedbackStatusChanged: 'feedbackStatusChanged',
-				FeedbackMerged: 'feedbackMerged',
-				FeedbackUpdate: 'feedbackUpdate',
-				BugReportReply: 'bugReportReply',
-				BugReportNeedsInformation: 'bugReportNeedsInformation',
-				BugReportLinked: 'bugReportLinked',
-				BugReportStatusChanged: 'bugReportStatusChanged',
-				FeedbackDeleted: 'feedbackDeleted',
-			}),
-			channel: zod.enum({
-				InApp: 'inApp',
-				BrowserPush: 'browserPush',
-				DiscordDm: 'discordDm',
-			}),
+			type: zod.enum([
+				'system',
+				'guideApproved',
+				'guideEditApproved',
+				'guideRejected',
+				'guideDeleted',
+				'commentApproved',
+				'commentEditApproved',
+				'commentRejected',
+				'newComment',
+				'newReply',
+				'shopPurchase',
+				'guideSubmitted',
+				'shopRefund',
+				'giftReceived',
+				'giftReassignable',
+				'giftClaimed',
+				'dataExportReady',
+				'badgeUnlocked',
+				'managedPackApproved',
+				'managedPackOwnershipAssigned',
+				'auctionSold',
+				'feedbackSubmitted',
+				'feedbackApproved',
+				'feedbackRejected',
+				'feedbackStatusChanged',
+				'feedbackMerged',
+				'feedbackUpdate',
+				'bugReportReply',
+				'bugReportNeedsInformation',
+				'bugReportLinked',
+				'bugReportStatusChanged',
+				'feedbackDeleted',
+			]),
+			channel: zod.enum(['inApp', 'browserPush', 'discordDm']),
 			enabled: zod.coerce.boolean<boolean>(),
 			updatedAt: zod.iso.datetime({ offset: true }).nullish(),
 		})
@@ -2781,13 +2598,7 @@ export const zodHiddenCreateTebexCheckoutBody = zod.object({
 	),
 	recipient: zod
 		.object({
-			mode: zod
-				.enum({
-					Self: 'Self',
-					GiftUser: 'GiftUser',
-					GiftGuild: 'GiftGuild',
-				})
-				.nullish(),
+			mode: zod.enum(['Self', 'GiftUser', 'GiftGuild']).nullish(),
 			playerUuidOrIgn: zod.string().nullish(),
 			guildId: zod.int().nullish(),
 			message: zod.string().nullish(),
@@ -2821,13 +2632,7 @@ export const zodHiddenUpdateTebexCheckoutBody = zod.object({
 	),
 	recipient: zod
 		.object({
-			mode: zod
-				.enum({
-					Self: 'Self',
-					GiftUser: 'GiftUser',
-					GiftGuild: 'GiftGuild',
-				})
-				.nullish(),
+			mode: zod.enum(['Self', 'GiftUser', 'GiftGuild']).nullish(),
 			playerUuidOrIgn: zod.string().nullish(),
 			guildId: zod.int().nullish(),
 			message: zod.string().nullish(),
@@ -2918,11 +2723,7 @@ export const zodCreateContentReportBodyReasonMin = 0;
 export const zodCreateContentReportBodyReasonMax = 1000;
 
 export const zodCreateContentReportBody = zod.object({
-	targetType: zod.enum({
-		Guide: 'guide',
-		Comment: 'comment',
-		Feedback: 'feedback',
-	}),
+	targetType: zod.enum(['guide', 'comment', 'feedback']),
 	targetId: zod.int().gt(zodCreateContentReportBodyTargetIdExclusiveMin),
 	reason: zod.string().min(zodCreateContentReportBodyReasonMin).max(zodCreateContentReportBodyReasonMax),
 });

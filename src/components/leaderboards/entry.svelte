@@ -109,7 +109,7 @@
 
 <div class="relative isolate aspect-[8/1] w-full max-w-xl overflow-visible">
 	<div
-		class="bg-background group {style
+		class="group bg-background {style
 			? 'dark text-primary'
 			: ''} absolute inset-0 flex flex-col items-center justify-center overflow-clip rounded-md border bg-no-repeat"
 		style="justify-content: {style?.background?.align ?? 'center'}; background-color: {style?.background
@@ -131,7 +131,7 @@
 						sizes="(max-width: 576px) 100vw, 576px"
 						alt=""
 						aria-hidden="true"
-						class="bg-card group-hover:bg-muted pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
+						class="pointer-events-none absolute inset-0 z-0 h-full w-full bg-card object-cover group-hover:bg-muted"
 						style="object-fit: {style?.background?.imageFit ?? 'cover'}; object-position: {style?.background
 							?.positionX ?? 50}% {focalY(style?.background)}%; opacity: {style?.background
 							?.imageOpacity ?? 1};"
@@ -152,7 +152,7 @@
 						: undefined}
 					alt=""
 					aria-hidden="true"
-					class="bg-card group-hover:bg-muted pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
+					class="pointer-events-none absolute inset-0 z-0 h-full w-full bg-card object-cover group-hover:bg-muted"
 					style="object-fit: {style?.background?.imageFit ?? 'cover'}; object-position: {style?.background
 						?.positionX ?? 50}% {focalY(style?.background)}%; opacity: {style?.background?.imageOpacity ??
 						1};"
@@ -287,6 +287,6 @@
 
 {#snippet removed()}
 	{#if entry.removed}
-		<CircleSlash class="text-destructive size-4" />
+		<CircleSlash class="size-4 text-destructive" />
 	{/if}
 {/snippet}

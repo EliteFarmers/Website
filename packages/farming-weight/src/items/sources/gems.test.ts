@@ -39,16 +39,33 @@ describe('class-backed gemstone sources', () => {
 		});
 
 		expect(gemEffects(gear, Rarity.Legendary, 'Gemmed Item (Gems)')).toEqual([
-			{ source: 'Gemmed Item (Gems)', op: 'add-stat', stat: Stat.FarmingFortune, value: 8 },
+			{
+				source: 'Gemmed Item (Gems)',
+				op: 'add-stat',
+				stat: Stat.FarmingFortune,
+				value: 8,
+			},
 		]);
 		expect(gemEffects(gear, Rarity.Legendary, 'Gemmed Item (Gems)', 0.5)).toEqual([
-			{ source: 'Gemmed Item (Gems)', op: 'add-stat', stat: Stat.FarmingFortune, value: 4 },
+			{
+				source: 'Gemmed Item (Gems)',
+				op: 'add-stat',
+				stat: Stat.FarmingFortune,
+				value: 4,
+			},
 		]);
 	});
 
 	test('gemSlotDeltaEffects calculates upgrade deltas from the same class source', () => {
 		expect(
 			gemSlotDeltaEffects('PERIDOT_0', Rarity.Legendary, GemRarity.Fine, GemRarity.Flawless, 'Gemmed Item (Gems)')
-		).toEqual([{ source: 'Gemmed Item (Gems)', op: 'add-stat', stat: Stat.FarmingFortune, value: 1 }]);
+		).toEqual([
+			{
+				source: 'Gemmed Item (Gems)',
+				op: 'add-stat',
+				stat: Stat.FarmingFortune,
+				value: 1,
+			},
+		]);
 	});
 });

@@ -9,7 +9,7 @@
 </script>
 
 <div
-	class="my-4 aspect-video w-full overflow-hidden rounded-lg border bg-black {selected ? 'ring-primary ring-2' : ''}"
+	class="my-4 aspect-video w-full overflow-hidden rounded-lg border bg-black {selected ? 'ring-2 ring-primary' : ''}"
 >
 	{#if videoId}
 		<YoutubeIframe {videoId} />

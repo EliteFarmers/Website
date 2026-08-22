@@ -13,8 +13,20 @@ export interface FarmingMechanicInfo {
 
 export const FARMING_MECHANIC_INFO: Record<FarmingMechanic, FarmingMechanicInfo> = {
 	[FarmingMechanic.CropGrowth]: { name: 'Crop Growth', icon: '☀' },
-	[FarmingMechanic.SprayonatorMaterialChance]: { name: 'Sprayonator Material Chance', icon: '%' },
-	[FarmingMechanic.EnchantedCropChance]: { name: 'Enchanted Crop Chance', icon: '%' },
-	[FarmingMechanic.AtmosphericFilterEffect]: { name: 'Atmospheric Filter Effect', icon: '%' },
-	[FarmingMechanic.PestCooldownReductionSeconds]: { name: 'Pest Cooldown Reduction', icon: '%' },
+	[FarmingMechanic.SprayonatorMaterialChance]: {
+		name: 'Sprayonator Material Chance',
+		icon: '%',
+	},
+	[FarmingMechanic.EnchantedCropChance]: {
+		name: 'Enchanted Crop Chance',
+		icon: '%',
+	},
+	[FarmingMechanic.AtmosphericFilterEffect]: {
+		name: 'Atmospheric Filter Effect',
+		icon: '%',
+	},
+	[FarmingMechanic.PestCooldownReductionSeconds]: {
+		name: 'Pest Cooldown Reduction',
+		icon: '%',
+	},
 };

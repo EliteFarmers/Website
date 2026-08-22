@@ -31,13 +31,13 @@
 	});
 </script>
 
-<header class="border-border/60 bg-background/85 sticky top-0 z-40 border-b backdrop-blur-xl">
+<header class="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
 	<div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
 		<div class="flex flex-wrap items-center gap-3">
 			<div class="group flex items-center gap-3" data-sveltekit-preload-data="tap">
 				<a href="/shop" class="group flex items-center gap-3">
 					<div
-						class="from-primary/20 to-primary/5 border-border/60 flex size-11 items-center justify-center rounded-2xl border bg-linear-to-br shadow-sm"
+						class="flex size-11 items-center justify-center rounded-2xl border border-border/60 bg-linear-to-br from-primary/20 to-primary/5 shadow-sm"
 					>
 						<img src="/favicon.webp" alt="Elite Shop" class="size-7 rounded-md" />
 					</div>
@@ -46,7 +46,7 @@
 						<p class="text-lg font-black">Shop</p>
 					</div>
 				</a>
-				<Button variant="ghost" class="text-muted-foreground hidden sm:inline-flex" href="/">
+				<Button variant="ghost" class="hidden text-muted-foreground sm:inline-flex" href="/">
 					<ChevronLeft class="size-3" />
 					Back to Elite
 				</Button>
@@ -60,7 +60,7 @@
 						<ShoppingBag />
 						<span>{checkoutItemCount} {checkoutItemCount === 1 ? 'item' : 'items'}</span>
 						{#if checkoutTotal}
-							<span class="text-muted-foreground hidden text-xs sm:inline">{checkoutTotal}</span>
+							<span class="hidden text-xs text-muted-foreground sm:inline">{checkoutTotal}</span>
 						{/if}
 					</Button>
 				{:else}
@@ -78,7 +78,7 @@
 			<Button
 				href="/shop"
 				variant={activePath === '/shop' ? 'default' : 'outline'}
-				class="border-border/60 inline-flex rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
+				class="inline-flex rounded-full border-border/60 px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
 				data-sveltekit-preload-data="tap"
 			>
 				All Collections
@@ -89,7 +89,7 @@
 				<Button
 					href={categoryHref}
 					variant={activePath === categoryHref ? 'default' : 'outline'}
-					class="border-border/60 inline-flex rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
+					class="inline-flex rounded-full border-border/60 px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
 					data-sveltekit-preload-data="tap"
 				>
 					{category.title}

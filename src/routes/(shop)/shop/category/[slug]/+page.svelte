@@ -65,7 +65,7 @@
 		{/if}
 
 		<div class="relative flex flex-col gap-4 p-6 sm:p-8 lg:p-12">
-			<div class="bg-primary/20 absolute top-0 left-8 h-28 w-28 -translate-y-1/2 rounded-full blur-3xl"></div>
+			<div class="absolute top-0 left-8 h-28 w-28 -translate-y-1/2 rounded-full bg-primary/20 blur-3xl"></div>
 
 			<div class="relative space-y-4">
 				<h1 class="max-w-3xl text-3xl font-bold sm:text-4xl lg:text-5xl">
@@ -83,14 +83,14 @@
 			<div class="relative flex flex-wrap gap-3">
 				<a
 					href="/shop"
-					class="bg-primary text-primary-foreground inline-flex rounded-full px-5 py-2.5 text-sm font-semibold shadow-sm"
+					class="inline-flex rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm"
 					data-sveltekit-preload-data="tap"
 				>
 					Back to Shop
 				</a>
 				<a
 					href="#products"
-					class="bg-background/15 inline-flex rounded-full border px-5 py-2.5 text-sm font-semibold"
+					class="inline-flex rounded-full border bg-background/15 px-5 py-2.5 text-sm font-semibold"
 				>
 					Browse
 				</a>
@@ -100,7 +100,7 @@
 
 	{#if data.category.longDescription}
 		<section class="prose prose-neutral dark:prose-invert max-w-3xl">
-			<div class="text-muted-foreground leading-relaxed">
+			<div class="leading-relaxed text-muted-foreground">
 				<RenderMd content={data.category.longDescription} />
 			</div>
 		</section>
@@ -150,15 +150,15 @@
 				{#each data.otherCategories as category (category.id)}
 					<a
 						href="/shop/category/{category.slug}"
-						class="border-border/60 bg-card hover:bg-card/80 rounded-3xl border p-5 transition-colors"
+						class="rounded-3xl border border-border/60 bg-card p-5 transition-colors hover:bg-card/80"
 						data-sveltekit-preload-data="tap"
 					>
 						<h3 class="text-xl font-bold tracking-tight">{category.title}</h3>
-						<p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">
 							{category.description ??
 								'Discover another part of the shop with its own mix of cosmetics and perks.'}
 						</p>
-						<span class="text-primary mt-4 inline-flex items-center gap-2 text-sm font-semibold">
+						<span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
 							Explore
 							<ArrowRight class="size-4" />
 						</span>

@@ -22,9 +22,9 @@
 <button
 	type="button"
 	onclick={handleClick}
-	class={`bg-card my-2 flex w-full cursor-pointer flex-col gap-3 rounded-lg border p-4 text-left shadow-sm ${selected ? 'ring-primary ring-2' : ''}`}
+	class={`my-2 flex w-full cursor-pointer flex-col gap-3 rounded-lg border bg-card p-4 text-left shadow-sm ${selected ? 'ring-2 ring-primary' : ''}`}
 >
-	<div class="text-muted-foreground flex items-center gap-2 text-sm font-medium">
+	<div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
 		<Users class="size-4" />
 		Credits ({entries.length})
 	</div>
@@ -36,11 +36,11 @@
 						<PlayerHead uuid={entry.username} class="size-6 rounded-sm" />
 						<span>{entry.username || 'Unnamed'}</span>
 					</div>
-					<span class="text-muted-foreground line-clamp-1">{entry.reason || 'No reason set'}</span>
+					<span class="line-clamp-1 text-muted-foreground">{entry.reason || 'No reason set'}</span>
 				</div>
 			{/each}
 		</div>
 	{:else}
-		<span class="text-muted-foreground text-sm">Click to add credits</span>
+		<span class="text-sm text-muted-foreground">Click to add credits</span>
 	{/if}
 </button>

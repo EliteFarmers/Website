@@ -37,7 +37,7 @@
 	<div class="mx-2 flex w-full max-w-4xl flex-col gap-8 sm:mx-4">
 		<header class="markdown space-y-3">
 			<h1>Guide Block Dictionary</h1>
-			<p class="text-muted-foreground text-base leading-7">
+			<p class="text-base leading-7 text-muted-foreground">
 				A quick reference for guide editor blocks and the toolbar buttons that insert them.
 			</p>
 		</header>
@@ -128,7 +128,7 @@
 			description="Blocks for larger sections and highlighted information."
 		>
 			<BlockDictionaryEntry name="Two Column (Plain)" description="Side-by-side content without a strong frame.">
-				<Columns class="stroke-muted-foreground size-4" />
+				<Columns class="size-4 stroke-muted-foreground" />
 			</BlockDictionaryEntry>
 			<BlockDictionaryEntry name="Two Column (Bordered)" description="Side-by-side content with visible borders.">
 				<Columns class="size-4" />

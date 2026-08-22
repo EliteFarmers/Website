@@ -17,7 +17,7 @@
 	let showDebugInfo = $state(false);
 </script>
 
-<div class="dark bg-background relative flex flex-col gap-2 rounded-md p-2">
+<div class="dark relative flex flex-col gap-2 rounded-md bg-background p-2">
 	{#if title}
 		<span class="font-mono text-lg">
 			<FormattedText text={item.name ?? 'Unknown Item'} />
@@ -48,17 +48,17 @@
 		{/if}
 	</div>
 	<button
-		class="text-muted-foreground hover:text-destructive absolute right-2 bottom-2 flex items-center gap-1 text-sm"
+		class="absolute right-2 bottom-2 flex items-center gap-1 text-sm text-muted-foreground hover:text-destructive"
 		onclick={() => (showDebugInfo = !showDebugInfo)}
 	>
 		<Bug class="size-4" />
 	</button>
 	{#if showDebugInfo}
-		<div class="bg-card text-primary mt-2 rounded-md p-2 text-sm">
+		<div class="mt-2 rounded-md bg-card p-2 text-sm text-primary">
 			<pre class="break-all whitespace-pre-wrap">{JSON.stringify(item, null, 2)}</pre>
 		</div>
 		{#if otherDebugData}
-			<div class="bg-card text-primary mt-2 rounded-md p-2 text-sm">
+			<div class="mt-2 rounded-md bg-card p-2 text-sm text-primary">
 				<pre class="break-all whitespace-pre-wrap">{JSON.stringify(otherDebugData, null, 2)}</pre>
 			</div>
 		{/if}

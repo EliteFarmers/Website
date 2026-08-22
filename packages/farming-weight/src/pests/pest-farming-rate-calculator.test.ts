@@ -129,7 +129,9 @@ test('pest rate calculation uses each pest drop crop fortune even when farming a
 	};
 	const player = {
 		crop: { getRates: (_crop: Crop, blocks: number) => emptyCropRates(blocks) },
-		spawn: { getRates: (_crop: Crop, blocks: number) => emptyCropRates(blocks) },
+		spawn: {
+			getRates: (_crop: Crop, blocks: number) => emptyCropRates(blocks),
+		},
 		kill: {
 			getStatBreakdown: (stat: Stat, crop?: Crop) => ({
 				'Test Crop Fortune': {
@@ -248,7 +250,7 @@ test('normal spawn pools contain twelve base-weight pests and swap the daylight 
 	const nightWeights = weightsFor('night');
 
 	expect(Object.keys(dayWeights)).toHaveLength(12);
-	expect(Object.values(dayWeights)).toEqual(new Array(12).fill(100));
+	expect(Object.values(dayWeights)).toEqual(Array(12).fill(100));
 	expect(dayWeights[Pest.Dragonfly]).toBe(100);
 	expect(dayWeights[Pest.Firefly]).toBeUndefined();
 	expect(dayWeights[Pest.Mouse]).toBeUndefined();
@@ -355,7 +357,11 @@ test('max Mosquito raises the vinyl bonus from 1000 to 1500 weight', () => {
 		crop: { getRates },
 		spawn: {
 			getRates,
-			selectedPet: { type: FarmingPets.Mosquito, rarity: Rarity.Legendary, level: 100 },
+			selectedPet: {
+				type: FarmingPets.Mosquito,
+				rarity: Rarity.Legendary,
+				level: 100,
+			},
 		},
 		kill: {
 			getStatBreakdown: () => ({}),
@@ -519,7 +525,10 @@ test.each([1, 4])('Mantid scalar resolution honors the recent-kill cap with %i a
 	].slice(0, pieceCount);
 	const configuredKills = 7;
 	const baseBonusPestChance = 2_500;
-	const player = new PestFarmingPlayer({ armor, mantidPestKills: configuredKills });
+	const player = new PestFarmingPlayer({
+		armor,
+		mantidPestKills: configuredKills,
+	});
 	const originalGetPhaseStat = player.getPhaseStat.bind(player);
 	vi.spyOn(player, 'getPhaseStat').mockImplementation((phase, stat, crop) => {
 		if (phase === PestFarmingPhase.Spawn && stat === Stat.BonusPestChance) {
@@ -635,7 +644,10 @@ test('upgrade impact completeness is based on missing delta prices', () => {
 });
 
 test('price-only revaluation preserves mechanics and matches a fresh calculation', () => {
-	const player = new PestFarmingPlayer({ selectedCrop: Crop.Wheat, wrigglingLarva: 0 });
+	const player = new PestFarmingPlayer({
+		selectedCrop: Crop.Wheat,
+		wrigglingLarva: 0,
+	});
 	const emptyPriceBook: PestRatePriceBook = {
 		version: 'empty',
 		items: {},

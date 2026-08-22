@@ -75,7 +75,10 @@ describe('new pest attribute shards', () => {
 		expect(effects).toContainEqual(
 			expect.objectContaining({
 				op: 'add-drop',
-				drop: expect.objectContaining({ itemId: 'ENCHANTED_WHEAT', chance: 0.00001 }),
+				drop: expect.objectContaining({
+					itemId: 'ENCHANTED_WHEAT',
+					chance: 0.00001,
+				}),
 			})
 		);
 	});
@@ -127,7 +130,10 @@ describe('CropeetleShard', () => {
 	});
 
 	test('buffs all normal Overbloom drops instead of only special crops', () => {
-		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { crop_bug: 1 } });
+		const player = createFarmingPlayer({
+			farmingLevel: 60,
+			attributes: { crop_bug: 1 },
+		});
 		const env = buildEffectEnvironment(player, Crop.Wheat);
 		const effects = new CropeetleShard().getEffects(player, env);
 
@@ -198,7 +204,10 @@ describe('WartyBugShard', () => {
 	});
 
 	test('produceAddedDrops surfaces the Warty payload only on Nether Wart', () => {
-		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { wart_eater: 1 } });
+		const player = createFarmingPlayer({
+			farmingLevel: 60,
+			attributes: { wart_eater: 1 },
+		});
 		const wartEnv = buildEffectEnvironment(player, Crop.NetherWart);
 		const wheatEnv = buildEffectEnvironment(player, Crop.Wheat);
 		const wartEffects = new WartyBugShard().getEffects(player, wartEnv);
@@ -212,7 +221,10 @@ describe('WartyBugShard', () => {
 
 describe('DragonflyShard', () => {
 	test('+0.5 wisdom per level', () => {
-		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { garden_wisdom: 1 } });
+		const player = createFarmingPlayer({
+			farmingLevel: 60,
+			attributes: { garden_wisdom: 1 },
+		});
 		const env = buildEffectEnvironment(player);
 		const effects = new DragonflyShard().getEffects(player, env);
 		expect(effects).toHaveLength(1);
@@ -226,7 +238,10 @@ describe('FireflyShard / LunarMothShard', () => {
 	const both = { solar_power: 1, lunar_power: 1 };
 
 	test('Firefly active by default; emits +5 fortune at level 1', () => {
-		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { solar_power: 1 } });
+		const player = createFarmingPlayer({
+			farmingLevel: 60,
+			attributes: { solar_power: 1 },
+		});
 		const env = buildEffectEnvironment(player);
 		const effects = new FireflyShard().getEffects(player, env);
 		expect(effects).toHaveLength(1);
@@ -269,7 +284,10 @@ describe('FireflyShard / LunarMothShard', () => {
 
 describe('TermiteShard', () => {
 	test('inactive without infested plot', () => {
-		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { infiltration: 1 } });
+		const player = createFarmingPlayer({
+			farmingLevel: 60,
+			attributes: { infiltration: 1 },
+		});
 		const env = buildEffectEnvironment(player);
 		expect(new TermiteShard().getEffects(player, env)).toEqual([]);
 		const state = new TermiteShard().getActive!(player, env);
@@ -291,7 +309,10 @@ describe('TermiteShard', () => {
 
 describe('GalaxyFishShard', () => {
 	test('+1 fortune per level for farming/mining/foraging', () => {
-		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { ultimate_dna: 1 } });
+		const player = createFarmingPlayer({
+			farmingLevel: 60,
+			attributes: { ultimate_dna: 1 },
+		});
 		const env = buildEffectEnvironment(player);
 		const effects = new GalaxyFishShard().getEffects(player, env);
 		expect(effects).toHaveLength(3);
@@ -302,7 +323,10 @@ describe('GalaxyFishShard', () => {
 
 describe('PestShard', () => {
 	test('emits pest-specific flat Overbloom at level 1', () => {
-		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { pest_luck: 1 } });
+		const player = createFarmingPlayer({
+			farmingLevel: 60,
+			attributes: { pest_luck: 1 },
+		});
 		const env = buildEffectEnvironment(player);
 		const effects = new PestShard().getEffects(player, env);
 
@@ -321,7 +345,10 @@ describe('PestShard', () => {
 	});
 
 	test('only buffs pest drops and reaches +5 flat Overbloom at max level', () => {
-		const player = createFarmingPlayer({ farmingLevel: 60, attributes: { pest_luck: 999 } });
+		const player = createFarmingPlayer({
+			farmingLevel: 60,
+			attributes: { pest_luck: 999 },
+		});
 		const env = buildEffectEnvironment(player);
 		const effects = new PestShard().getEffects(player, env);
 

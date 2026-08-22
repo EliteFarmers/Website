@@ -108,18 +108,18 @@
 					}}
 					class="{selected
 						? 'border-muted'
-						: 'border-transparent'} hover:bg-muted/30 flex w-full cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-[3px] border-solid px-1.5 py-0.5"
+						: 'border-transparent'} flex w-full cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-[3px] border-solid px-1.5 py-0.5 hover:bg-muted/30"
 				>
 					<Toolconfig {tool} {player} />
 				</button>
 			{/if}
 		{:else}
-			<p class="text-muted-foreground text-sm">No matching tools found!</p>
+			<p class="text-sm text-muted-foreground">No matching tools found!</p>
 		{/each}
 		{#if $player.tools.filter((tool) => tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? ''])).length > 2}
 			<button
 				onclick={toggleShow}
-				class="hover:bg-card/50 flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm"
+				class="flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm hover:bg-card/50"
 			>
 				{show === 2 ? 'Show More' : 'Show Less'}
 			</button>

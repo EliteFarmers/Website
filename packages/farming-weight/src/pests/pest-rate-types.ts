@@ -234,8 +234,11 @@ export interface PestRateValuationDelta {
 	missingCurrencyIds: string[];
 }
 
-export interface PestFarmingUpgradeRateImpact
-	extends UpgradeRateImpact<PestFarmingRateResult, PestFarmingRateResult, PestFarmingRateDelta> {
+export interface PestFarmingUpgradeRateImpact extends UpgradeRateImpact<
+	PestFarmingRateResult,
+	PestFarmingRateResult,
+	PestFarmingRateDelta
+> {
 	phase: PestFarmingPhase;
 	upgradeKey: string;
 	valuationDelta: PestRateValuationDelta;

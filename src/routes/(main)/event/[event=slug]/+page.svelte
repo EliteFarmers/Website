@@ -136,11 +136,11 @@
 </HeroBanner>
 
 <div class="mt-64 flex flex-col items-center justify-center gap-8 pt-8" data-sveltekit-preload-data="tap">
-	<div class="bg-card relative flex w-full flex-col items-center rounded-md border-2 p-4 md:w-fit">
+	<div class="relative flex w-full flex-col items-center rounded-md border-2 bg-card p-4 md:w-fit">
 		{#if end < time}
 			<p class="md:text-lg">Event Ended!</p>
 		{:else}
-			<p class="bg-card absolute top-2 mb-2 rounded-md p-1 pt-0 font-mono md:text-lg">
+			<p class="absolute top-2 mb-2 rounded-md bg-card p-1 pt-0 font-mono md:text-lg">
 				{#if start > time}
 					Event Starts In
 				{:else}
@@ -151,7 +151,7 @@
 		{/if}
 	</div>
 	<div class="mx-4 flex w-full max-w-6xl flex-col items-center gap-8 lg:flex-row lg:items-start">
-		<section class="bg-card flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md border-2 p-8">
+		<section class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md border-2 bg-card p-8">
 			<div class="flex flex-row items-center gap-2">
 				<h2 class="text-3xl">{event.name}</h2>
 				{#if data.session?.perms.admin}
@@ -218,7 +218,7 @@
 					{/if}
 				</div>
 				{#if joinable && !joined}
-					<div class="text-muted-foreground flex flex-row items-center justify-center gap-1 text-sm">
+					<div class="flex flex-row items-center justify-center gap-1 text-sm text-muted-foreground">
 						<CircleAlert class="size-4" />
 						<span
 							>You must be in the <a href="#host" class="underline">host Discord server</a> to join!</span
@@ -227,14 +227,14 @@
 				{/if}
 				{#if self?.disqualified}
 					<div class="flex flex-col justify-start gap-1 text-sm">
-						<p class="text-destructive text-lg">You have been removed from this event.</p>
+						<p class="text-lg text-destructive">You have been removed from this event.</p>
 						<p>Reason</p>
-						<p class="bg-card rounded-sm p-2">{self.notes ?? 'Unknown - Ask Server Staff'}</p>
+						<p class="rounded-sm bg-card p-2">{self.notes ?? 'Unknown - Ask Server Staff'}</p>
 					</div>
 				{/if}
 			</div>
 		</section>
-		<section class="bg-card flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md border-2 p-8">
+		<section class="flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-8">
 			<div class="flex w-full flex-row items-center justify-center gap-8">
 				{#if teamEvent}
 					<Button onclick={swapLeaderboard} variant="outline" size="sm">
@@ -285,7 +285,7 @@
 	</div>
 
 	<section class="flex w-full max-w-4xl scroll-mt-64 flex-col gap-4" id="host">
-		<div class="bg-card flex flex-col items-center justify-between gap-2 rounded-md border-2 p-4 md:flex-row">
+		<div class="flex flex-col items-center justify-between gap-2 rounded-md border-2 bg-card p-4 md:flex-row">
 			<div class="flex flex-1 flex-col gap-2">
 				<span class="text-muted-foreground italic">This event is hosted by...</span>
 				<div class="flex flex-row items-center gap-2">
@@ -320,7 +320,7 @@
 		</p>
 	</section>
 
-	<section class="bg-card flex w-full max-w-4xl flex-col items-start gap-4 rounded-md border-2 p-8" id="faq">
+	<section class="flex w-full max-w-4xl flex-col items-start gap-4 rounded-md border-2 bg-card p-8" id="faq">
 		<h3 class="text-2xl">Frequently Asked Questions</h3>
 		<Accordion.Root type="multiple" class="w-full">
 			<Accordion.Item value="item-1">

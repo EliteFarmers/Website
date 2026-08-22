@@ -190,7 +190,7 @@
 								tabindex="0"
 								onmousedown={() => handleMouseDown(rowIdx, colIdx)}
 								onmouseenter={() => handleMouseEnter(rowIdx, colIdx)}
-								class={`relative flex size-10 cursor-pointer items-center justify-center overflow-hidden border ${isSelected ? 'ring-primary ring-2' : ''}`}
+								class={`relative flex size-10 cursor-pointer items-center justify-center overflow-hidden border ${isSelected ? 'ring-2 ring-primary' : ''}`}
 							>
 								{#if cell.blockName}
 									<img
@@ -211,7 +211,7 @@
 				</div>
 
 				{#if selectionBounds}
-					<div class="bg-muted flex min-w-48 flex-col gap-3 rounded-lg border p-4">
+					<div class="flex min-w-48 flex-col gap-3 rounded-lg border bg-muted p-4">
 						<h4 class="font-medium">
 							{#if getSelectedCellCount() === 1}
 								Cell ({selectionBounds.minRow + 1}, {selectionBounds.minCol + 1})

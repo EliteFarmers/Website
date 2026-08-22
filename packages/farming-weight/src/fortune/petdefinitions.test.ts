@@ -349,7 +349,10 @@ describe('Pet Item Modifier Calculations', () => {
 		const fullBreakdown = pet.getFullBreakdown();
 		expect(pet.level).toBe(100);
 		expect(pet.getFortune(Stat.BonusPestChance)).toBeCloseTo(50 * (4 / 3), 8);
-		expect(fullBreakdown['Bonus Pest Chance']).toStrictEqual({ value: 50, stat: Stat.BonusPestChance });
+		expect(fullBreakdown['Bonus Pest Chance']).toStrictEqual({
+			value: 50,
+			stat: Stat.BonusPestChance,
+		});
 		expect(fullBreakdown['Minos Relic']?.value).toBeCloseTo(50 / 3, 8);
 		expect(fullBreakdown['Minos Relic']?.stat).toBe(Stat.BonusPestChance);
 	});

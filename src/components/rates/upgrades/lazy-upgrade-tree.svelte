@@ -43,5 +43,5 @@
 {#if node}
 	<UpgradeTree {node} {items} {costFn} {applyUpgrade} {defaultOpen} {referenceOnlyPrices} />
 {:else}
-	<p class="text-muted-foreground py-2 text-center text-sm italic">Loading upgrade path...</p>
+	<p class="py-2 text-center text-sm text-muted-foreground italic">Loading upgrade path...</p>
 {/if}

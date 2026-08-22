@@ -23,7 +23,7 @@
 		</CardHeader>
 		<CardContent class="space-y-3">
 			{#if edit.historyError}
-				<p class="text-destructive text-sm">{edit.historyError}</p>
+				<p class="text-sm text-destructive">{edit.historyError}</p>
 			{/if}
 			{#each versions as version (version.id)}
 				<div class="flex flex-col gap-3 rounded-md border p-3 sm:flex-row sm:items-center sm:justify-between">
@@ -35,8 +35,8 @@
 								<Badge variant="secondary">Published</Badge>
 							{/if}
 						</div>
-						<p class="text-muted-foreground mt-1 truncate text-sm">{version.title}</p>
-						<p class="text-muted-foreground text-xs">{new Date(version.createdAt).toLocaleString()}</p>
+						<p class="mt-1 truncate text-sm text-muted-foreground">{version.title}</p>
+						<p class="text-xs text-muted-foreground">{new Date(version.createdAt).toLocaleString()}</p>
 					</div>
 					<div class="flex shrink-0 gap-2">
 						<Button variant="outline" size="sm" onclick={() => (edit.previewVersion = version)}>
@@ -50,7 +50,7 @@
 					</div>
 				</div>
 			{:else}
-				<p class="text-muted-foreground rounded-md border border-dashed p-4 text-sm">No saved revisions yet.</p>
+				<p class="rounded-md border border-dashed p-4 text-sm text-muted-foreground">No saved revisions yet.</p>
 			{/each}
 		</CardContent>
 	</Card>

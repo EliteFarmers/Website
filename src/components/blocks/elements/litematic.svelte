@@ -14,15 +14,15 @@
 	});
 </script>
 
-<div class="not-prose bg-muted/20 my-4 rounded-md border p-4">
+<div class="not-prose my-4 rounded-md border bg-muted/20 p-4">
 	<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 		<div class="flex min-w-0 items-center gap-3">
-			<div class="bg-background mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-md border">
+			<div class="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-md border bg-background">
 				<FileArchive class="size-5" />
 			</div>
 			<div class="min-w-0">
 				<p class="truncate font-semibold">{node.name || node.fileName}</p>
-				<div class="text-muted-foreground mt-1 flex flex-wrap items-center gap-2 text-xs">
+				<div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
 					{#if node.author}
 						<span>{node.author}</span>
 					{/if}
@@ -43,7 +43,7 @@
 				<Download class="mr-2 size-4" />
 				Download
 			</a>
-			<p class="text-muted-foreground text-xs">
+			<p class="text-xs text-muted-foreground">
 				Litematic files are safe to import into <a
 					href="https://modrinth.com/mod/litematica"
 					target="_blank"
