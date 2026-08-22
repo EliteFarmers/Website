@@ -1,4 +1,4 @@
-import { Crop } from '../constants/crops.js';
+import { Crop, HARVEST_FEAST_MATERIALS } from '../constants/crops.js';
 import { FarmingMechanic } from '../constants/mechanics.js';
 import { Pest, SPRAY_TO_PESTS, Spray } from '../constants/pests.js';
 import { FarmingPets } from '../constants/pets.js';
@@ -16,6 +16,7 @@ import {
 	NATURAL_PESTS,
 	PEST_DROP_DEFINITIONS,
 	type PestDropDefinition,
+	type PestRareDropDefinition,
 } from './pest-drops.js';
 import type {
 	DetailedPestDropsResult,
@@ -42,7 +43,7 @@ const DEFAULT_INTERVAL_SECONDS = 3600;
 const BASE_SPAWN_CHANCE_PER_BREAK = 0.002;
 const ATMOSPHERIC_FILTER_SPAWN_MULTIPLIER = 1.15;
 const DEFAULT_PEST_MAX_ACTIVE = 8;
-const PEST_RARE_DROP_FORTUNE_SCALING = 600;
+const PEST_PET_LUCK_DROP_SCALING = 600;
 const MANTID_RECENT_KILL_CAP = 20;
 const MANTID_RECENT_KILL_BONUS_PER_PIECE = 0.25;
 const MANTID_RESOLUTION_ITERATIONS = 8;
@@ -128,7 +129,12 @@ export class PestFarmingRateCalculator {
 		const cropBreaking = sumCropRateResults([farmCrop, spawnCrop]);
 		const pestDrops = this.calculatePestDrops(spawnDistribution, phaseStats, player);
 		const intervalScale = (this.options.intervalSeconds ?? DEFAULT_INTERVAL_SECONDS) / debug.cycleSeconds;
-		const economy = this.calculateEconomy(spawnDistribution.expectedPestsPerSpawn, debug, intervalScale);
+		const economy = this.calculateEconomy(
+			spawnDistribution.expectedPestsPerSpawn,
+			debug,
+			intervalScale,
+			pestDrops.feastRareCrops
+		);
 		const perCycle = sumQuantities(
 			cropBreaking,
 			pestDrops.total,
@@ -383,6 +389,18 @@ export class PestFarmingRateCalculator {
 		if (this.phaseStats) return this.phaseStats;
 
 		const player = this.getCalculationPlayer();
+		const farmPestCooldownReductionBreakdown =
+			typeof player.getPhaseStatBreakdown === 'function'
+				? Object.fromEntries(
+						Object.entries(
+							player.getPhaseStatBreakdown(PestFarmingPhase.Farm, Stat.PestCooldownReduction)
+						).map(([source, entry]) => [source, entry.value])
+					)
+				: {};
+		const farmPestCooldownReductionSecondsBreakdown =
+			typeof player.getPhaseMechanicBreakdown === 'function'
+				? player.getPhaseMechanicBreakdown(PestFarmingPhase.Farm, FarmingMechanic.PestCooldownReductionSeconds)
+				: {};
 		const associatedCropFortune = Object.fromEntries(
 			Object.values(Crop).map((crop) => [crop, getAssociatedCropFortune(player.kill, crop)])
 		) as Partial<Record<Crop, number>>;
@@ -390,11 +408,16 @@ export class PestFarmingRateCalculator {
 		const rawSpawnBonusPestChance = player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance);
 		const spawnBonusPestChance = this.resolveMantidSpawnBonusPestChance(player, rawSpawnBonusPestChance);
 		this.phaseStats = {
-			farmPestCooldownReduction: player.getPhaseStat(PestFarmingPhase.Farm, Stat.PestCooldownReduction),
-			farmPestCooldownReductionSeconds: player.getPhaseMechanic(
-				PestFarmingPhase.Farm,
-				FarmingMechanic.PestCooldownReductionSeconds
-			),
+			farmPestCooldownReduction:
+				typeof player.getPhaseStatBreakdown === 'function'
+					? sumRecord(farmPestCooldownReductionBreakdown)
+					: player.getPhaseStat(PestFarmingPhase.Farm, Stat.PestCooldownReduction),
+			farmPestCooldownReductionBreakdown,
+			farmPestCooldownReductionSeconds:
+				typeof player.getPhaseMechanicBreakdown === 'function'
+					? sumRecord(farmPestCooldownReductionSecondsBreakdown)
+					: player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.PestCooldownReductionSeconds),
+			farmPestCooldownReductionSecondsBreakdown,
 			spawnBonusPestChance,
 			spawnAtmosphericFilterEffect: player.getPhaseMechanic(
 				PestFarmingPhase.Spawn,
@@ -450,8 +473,7 @@ export class PestFarmingRateCalculator {
 		const cooldownReduction = Math.max(0, Math.min(100, phaseStats.farmPestCooldownReduction + finneganReduction));
 		const rawCooldown =
 			300 * repellentMultiplier * (1 - cooldownReduction / 100) - phaseStats.farmPestCooldownReductionSeconds;
-		const minCooldown = cycle.finneganActive ? 75 : 135;
-		const cooldownSeconds = Math.min(1200, Math.max(minCooldown, rawCooldown));
+		const cooldownSeconds = Math.max(0, rawCooldown);
 		const spawnBlocksPerSecond = cycle.spawnBlocksPerSecond ?? cycle.blocksPerSecond;
 		const spawnChancePerBreak =
 			BASE_SPAWN_CHANCE_PER_BREAK *
@@ -556,8 +578,10 @@ export class PestFarmingRateCalculator {
 	): {
 		byPest: Partial<Record<Pest, DetailedPestDropsResult>>;
 		total: PestRateQuantities;
+		feastRareCrops: PestRateQuantities;
 	} {
 		const byPest: Partial<Record<Pest, DetailedPestDropsResult>> = {};
+		const feastRareCrops = emptyQuantities();
 		let context: PestDropCalculationContext | undefined;
 		for (const [pestKey, probability] of Object.entries(spawnDistribution.pestTypeProbabilities)) {
 			const pest = pestKey as Pest;
@@ -567,11 +591,13 @@ export class PestFarmingRateCalculator {
 			if (!definition) continue;
 			context ??= this.createPestDropCalculationContext(phaseStats, player);
 			byPest[pest] = this.calculateDropsForPest(definition, expectedPests, context);
+			this.addFeastRareCrops(feastRareCrops, definition, expectedPests, context, player);
 		}
 
 		return {
 			byPest,
 			total: sumQuantities(...Object.values(byPest).map(pestDropsToQuantities)),
+			feastRareCrops,
 		};
 	}
 
@@ -628,22 +654,7 @@ export class PestFarmingRateCalculator {
 
 		for (const drop of definition.rareDrops ?? []) {
 			const crop = definition.guaranteedDrops[0]?.crop ?? this.options.crop;
-			const cropFortune = definition.pest === Pest.Mouse ? 0 : (context.associatedCropFortune[crop] ?? 0);
-			const petLuck = drop.includesPetLuck ? context.petLuck : 0;
-			const fortuneMultiplier =
-				drop.affectedByFortune === false
-					? 1
-					: 1 + (context.farmingFortune + cropFortune + petLuck) / PEST_RARE_DROP_FORTUNE_SCALING;
-			const tags = new Set<DropTag>(['pest', 'overbloom']);
-			const resolved = resolveDropEffects(context.effects, {
-				env: context.env,
-				crop,
-				dropKind: 'pest',
-				itemId: drop.itemId,
-				tags,
-			});
-			const effectMultiplier = (1 + resolved.addRarePct / 100) * resolved.mulRare * resolved.mulDrop;
-			const amount = expectedPests * drop.amount * drop.chance * fortuneMultiplier * effectMultiplier;
+			const amount = this.calculateRareDropAmount(drop, expectedPests, context, crop);
 			if (amount > 0) addRecord(result.rngItems, drop.itemId, amount);
 		}
 
@@ -655,10 +666,68 @@ export class PestFarmingRateCalculator {
 		return result;
 	}
 
+	private addFeastRareCrops(
+		result: PestRateQuantities,
+		definition: PestDropDefinition,
+		expectedPests: number,
+		context: PestDropCalculationContext,
+		player: PestFarmingPlayer
+	): void {
+		const feastDrop = definition.feastRareDrop;
+		if (feastDrop && player.kill.buildEnvironment(feastDrop.crop).inSeason) {
+			const amount = this.calculateRareDropAmount(feastDrop, expectedPests, context, this.options.crop, [
+				'rare-crop',
+				'feast',
+			]);
+			if (amount > 0) addRecord(result.rngItems, feastDrop.itemId, amount);
+		}
+
+		if (definition.pest !== Pest.Mouse) return;
+		const inSeasonDrops = (Object.entries(HARVEST_FEAST_MATERIALS) as [Crop, string][])
+			.map(([crop, itemId]) => ({
+				crop,
+				itemId,
+			}))
+			.filter((drop) => player.kill.buildEnvironment(drop.crop).inSeason);
+		if (inSeasonDrops.length === 0) return;
+
+		for (const drop of inSeasonDrops) {
+			const amount = this.calculateRareDropAmount(
+				{ itemId: drop.itemId, amount: 1, chance: 0.3 / inSeasonDrops.length },
+				expectedPests,
+				context,
+				this.options.crop,
+				['rare-crop', 'feast']
+			);
+			if (amount > 0) addRecord(result.rngItems, drop.itemId, amount);
+		}
+	}
+
+	private calculateRareDropAmount(
+		drop: PestRareDropDefinition,
+		expectedPests: number,
+		context: PestDropCalculationContext,
+		crop: Crop,
+		extraTags: readonly DropTag[] = []
+	): number {
+		const petLuck = drop.includesPetLuck ? context.petLuck : 0;
+		const tags = new Set<DropTag>(['pest', 'overbloom', ...extraTags]);
+		const resolved = resolveDropEffects(context.effects, {
+			env: context.env,
+			crop,
+			dropKind: 'pest',
+			itemId: drop.itemId,
+			tags,
+		});
+		const dropChanceMultiplier = 1 + resolved.addRarePct / 100 + petLuck / PEST_PET_LUCK_DROP_SCALING;
+		return expectedPests * drop.amount * drop.chance * dropChanceMultiplier * resolved.mulRare * resolved.mulDrop;
+	}
+
 	private calculateEconomy(
 		expectedPestsPerSpawn: number,
 		debug: PestCycleDebug,
-		intervalScale: number
+		intervalScale: number,
+		calculatedFeastRareCrops: PestRateQuantities
 	): {
 		pestExchanges: PestRateQuantities;
 		pestShards: PestRateQuantities;
@@ -669,7 +738,7 @@ export class PestFarmingRateCalculator {
 		const pestExchanges = emptyQuantities();
 		const pestShards = emptyQuantities();
 		const costs = emptyQuantities();
-		const feastRareCrops = emptyQuantities();
+		const feastRareCrops = sumQuantities(calculatedFeastRareCrops);
 		if (!economy) return { pestExchanges, pestShards, costs, feastRareCrops };
 
 		const pestsPerCycle = expectedPestsPerSpawn;

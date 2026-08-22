@@ -52,13 +52,23 @@ export function assertValidEffect(effect: Effect): void {
 
 /** Sum additive calculator mechanics. */
 export function resolveMechanicTotal(effects: readonly Effect[], mechanic: FarmingMechanic, ctx: StatContext): number {
-	let total = 0;
+	return Object.values(resolveMechanicBreakdown(effects, mechanic, ctx)).reduce((total, value) => total + value, 0);
+}
+
+/** Per-source breakdown of additive calculator mechanics. */
+export function resolveMechanicBreakdown(
+	effects: readonly Effect[],
+	mechanic: FarmingMechanic,
+	ctx: StatContext
+): Record<string, number> {
+	const out: Record<string, number> = {};
 	for (const effect of effects) {
 		if (effect.op !== 'add-mechanic' || effect.mechanic !== mechanic) continue;
 		if (!matchesScopeForStat(effect.scope, ctx)) continue;
-		total += resolveValue(effect, ctx);
+		const value = resolveValue(effect, ctx);
+		if (value !== 0) out[effect.source] = (out[effect.source] ?? 0) + value;
 	}
-	return total;
+	return out;
 }
 
 /**

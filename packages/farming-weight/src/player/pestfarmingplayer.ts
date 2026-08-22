@@ -9,7 +9,7 @@ import type {
 	StatQueryOptions,
 	UpgradeTreeNode,
 } from '../constants/upgrades.js';
-import { resolveMechanicTotal } from '../effects/resolver.js';
+import { resolveMechanicBreakdown } from '../effects/resolver.js';
 import {
 	ArmorLoadout,
 	type ArmorSet,
@@ -616,10 +616,17 @@ export class PestFarmingPlayer {
 	}
 
 	getPhaseMechanic(phase: PestFarmingPhase, mechanic: FarmingMechanic, crop?: Crop): number {
+		return Object.values(this.getPhaseMechanicBreakdown(phase, mechanic, crop)).reduce(
+			(sum, value) => sum + value,
+			0
+		);
+	}
+
+	getPhaseMechanicBreakdown(phase: PestFarmingPhase, mechanic: FarmingMechanic, crop?: Crop): Record<string, number> {
 		const player = this.phases[phase];
 		const queryCrop = crop ?? this.options.selectedCrop;
 		const env = player.buildEnvironment(queryCrop);
-		return resolveMechanicTotal(player.collectEffects(env), mechanic, {
+		return resolveMechanicBreakdown(player.collectEffects(env), mechanic, {
 			env,
 			crop: queryCrop,
 		});

@@ -268,6 +268,32 @@ test('Warty RNG Drops', () => {
 	expect(result.rngItems?.['WARTY']).toBe(50);
 });
 
+test('added RNG drops retain their producing effect source', () => {
+	const result = detailed({
+		crop: Crop.Wheat,
+		blocksBroken: 10_000,
+		effects: [
+			{
+				source: 'Bovine Blessing',
+				op: 'add-drop',
+				drop: {
+					itemId: 'CHEESE_FUEL',
+					chance: 0.0001,
+					tags: ['pet-drop'],
+				},
+			},
+		],
+	});
+
+	expect(result.rngItems?.CHEESE_FUEL).toBe(1);
+	expect(result.appliedEffects.CHEESE_FUEL).toContainEqual({
+		source: 'Bovine Blessing',
+		op: 'add-drop',
+		phase: 'produce-drops',
+		amount: 1,
+	});
+});
+
 test('Burrowing RNG Drops', () => {
 	const result = detailed({
 		crop: Crop.Mushroom,

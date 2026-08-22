@@ -1,7 +1,8 @@
 {
 	"editor.tabSize": 4,
 	"[svelte]": {
-		"editor.tabSize": 2
+		"editor.tabSize": 2,
+		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
 	"editor.detectIndentation": false,
 	"eslint.validate": ["javascript", "javascriptreact", "typescript", "svelte"],

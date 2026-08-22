@@ -279,6 +279,16 @@ export function calculateDetailedDropsFromEffects(
 		const rareMultiplier = (1 + addRarePct / 100) * mulRare * mulDrop;
 		const finalAmount = candidate.baseAmount * rareMultiplier;
 		if (finalAmount <= 0) continue;
+		const producingEffect: AppliedEffect | undefined =
+			candidate.fromAddDrop && candidate.source
+				? {
+						source: candidate.source,
+						op: 'add-drop',
+						phase: 'produce-drops',
+						amount: finalAmount,
+					}
+				: undefined;
+		const appliedEffects = producingEffect ? [producingEffect, ...applied] : applied;
 
 		if (candidate.output === 'collection') {
 			result.collection += finalAmount;
@@ -292,11 +302,11 @@ export function calculateDetailedDropsFromEffects(
 					(result.coinSources[candidate.source ?? candidate.itemId] ?? 0) + finalAmount * itemNpc;
 			}
 
-			if (applied.length > 0) {
+			if (appliedEffects.length > 0) {
 				result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(
-					applied
+					appliedEffects
 				);
-				aggregateEffectsBreakdown(result.effectsBreakdown, applied);
+				aggregateEffectsBreakdown(result.effectsBreakdown, appliedEffects);
 			}
 			continue;
 		}
@@ -304,11 +314,11 @@ export function calculateDetailedDropsFromEffects(
 		if (candidate.output === 'currency') {
 			result.currencies[candidate.itemId] = (result.currencies[candidate.itemId] ?? 0) + finalAmount;
 
-			if (applied.length > 0) {
+			if (appliedEffects.length > 0) {
 				result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(
-					applied
+					appliedEffects
 				);
-				aggregateEffectsBreakdown(result.effectsBreakdown, applied);
+				aggregateEffectsBreakdown(result.effectsBreakdown, appliedEffects);
 			}
 			continue;
 		}
@@ -316,9 +326,11 @@ export function calculateDetailedDropsFromEffects(
 		result.rngItems ??= {};
 		result.rngItems[candidate.itemId] = (result.rngItems[candidate.itemId] ?? 0) + finalAmount;
 
-		if (applied.length > 0) {
-			result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(applied);
-			aggregateEffectsBreakdown(result.effectsBreakdown, applied);
+		if (appliedEffects.length > 0) {
+			result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(
+				appliedEffects
+			);
+			aggregateEffectsBreakdown(result.effectsBreakdown, appliedEffects);
 		}
 	}
 

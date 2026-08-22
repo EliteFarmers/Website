@@ -1,5 +1,6 @@
 import { expect, test, vi } from 'vitest';
-import { Crop } from '../constants/crops.js';
+import { Crop, HARVEST_FEAST_MATERIALS } from '../constants/crops.js';
+import { ITEM_IDS } from '../constants/itemids.js';
 import { Pest, Spray } from '../constants/pests.js';
 import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
@@ -183,6 +184,208 @@ test('pest rate calculation uses each pest drop crop fortune even when farming a
 	expect(miteDrops.items[miteDrop.itemId]).toBeCloseTo(expectedMiteCropDrops, 8);
 });
 
+test('pest RNG drops use Overbloom without Farming Fortune and add Pet Luck only for pet drops', () => {
+	const farmingFortune = 1_200;
+	const cropFortune = 600;
+	const pestKillFortune = 900;
+	const overbloom = 40;
+	const petLuck = 300;
+	const getRates = (_crop: Crop, blocks: number) => emptyCropRates(blocks);
+	const player = {
+		crop: { getRates },
+		spawn: { getRates },
+		kill: {
+			getStatBreakdown: (stat: Stat) => ({
+				'Test Crop Fortune': {
+					value: cropFortune,
+					stat,
+				},
+			}),
+			buildEnvironment: () => ({}),
+			collectEffects: () => [
+				{
+					source: 'Test Overbloom',
+					op: 'add-rare-pct',
+					value: overbloom,
+					scope: { tags: ['overbloom'] },
+					relatedStats: [Stat.Overbloom],
+				},
+			],
+		},
+		getPhaseStat: (phase: PestFarmingPhase, stat: Stat) => {
+			if (phase !== PestFarmingPhase.Kill) return 0;
+			if (stat === Stat.FarmingFortune) return farmingFortune;
+			if (stat === Stat.PestKillFortune) return pestKillFortune;
+			if (stat === Stat.Overbloom) return overbloom;
+			if (stat === Stat.PetLuck) return petLuck;
+			return 0;
+		},
+		getPhaseMechanic: () => 0,
+	} as unknown as PestFarmingPlayer;
+	const result = new PestFarmingRateCalculator({
+		player,
+		options: {
+			crop: Crop.Pumpkin,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+			attraction: {
+				excludedPests: Object.values(Pest).filter((pest) => pest !== Pest.Rat),
+			},
+		},
+	}).calculate();
+	const ratDrops = result.breakdown.pestDrops.byPest[Pest.Rat]!;
+	const ordinaryDrop = PEST_DROP_DEFINITIONS[Pest.Rat].rareDrops!.find(
+		(drop) => drop.itemId === 'VINYL_RODENT_REVOLUTION'
+	)!;
+	const petDrop = PEST_DROP_DEFINITIONS[Pest.Rat].rareDrops!.find((drop) => drop.itemId === 'RAT')!;
+
+	expect(ratDrops.rngItems[ordinaryDrop.itemId]! / ratDrops.expectedPests).toBeCloseTo(
+		ordinaryDrop.amount * ordinaryDrop.chance * (1 + overbloom / 100),
+		8
+	);
+	expect(ratDrops.rngItems[petDrop.itemId]! / ratDrops.expectedPests).toBeCloseTo(
+		petDrop.amount * petDrop.chance * (1 + overbloom / 100 + petLuck / 600),
+		8
+	);
+});
+
+test('Slug pet rates use the current 1% Epic and 0.2% Legendary base drop chances', () => {
+	const pestsPerHour = 156.2;
+	const slugSplit = 0.553;
+	const overbloom = 164.4;
+	const petLuck = 107;
+	const epicSlug = PEST_DROP_DEFINITIONS[Pest.Slug].rareDrops!.find((drop) => drop.itemId === 'SLUG;3')!;
+	const legendarySlug = PEST_DROP_DEFINITIONS[Pest.Slug].rareDrops!.find((drop) => drop.itemId === 'SLUG;4')!;
+
+	const expectedLegendarySlugsPerHour =
+		pestsPerHour * slugSplit * legendarySlug.chance * (1 + overbloom / 100 + petLuck / 600);
+
+	expect(epicSlug.chance).toBe(0.01);
+	expect(legendarySlug.chance).toBe(0.002);
+	expect(expectedLegendarySlugsPerHour).toBeCloseTo(0.487578, 6);
+});
+
+test('pest drop definitions match the current guaranteed scaling and rare drop chances', () => {
+	const expectedScaling: Partial<Record<Pest, number>> = {
+		[Pest.Fly]: 52.5,
+		[Pest.Cricket]: 15.75,
+		[Pest.Locust]: 15.75,
+		[Pest.Rat]: 52.5,
+		[Pest.Mosquito]: 26.25,
+		[Pest.Worm]: 10.5,
+		[Pest.Mite]: 26.25,
+		[Pest.Moth]: 18,
+		[Pest.Slug]: 52.5,
+		[Pest.Beetle]: 18,
+		[Pest.Dragonfly]: 26.25,
+		[Pest.Firefly]: 26.25,
+		[Pest.Mantis]: 26.25,
+	};
+	for (const [pest, scalingFortune] of Object.entries(expectedScaling) as [Pest, number][]) {
+		for (const drop of PEST_DROP_DEFINITIONS[pest].guaranteedDrops) {
+			expect(drop.scalingFortune, `${pest} guaranteed drop scaling`).toBe(scalingFortune);
+		}
+	}
+
+	const rareChance = (pest: Pest, itemId: string): number | undefined =>
+		PEST_DROP_DEFINITIONS[pest].rareDrops?.find((drop) => drop.itemId === itemId)?.chance;
+	const expectedRareChances: [Pest, string, number][] = [
+		[Pest.Fly, 'BEADY_EYES', 0.03],
+		[Pest.Fly, ITEM_IDS.EnchantedHayBale, 0.0075],
+		[Pest.Cricket, 'ENCHANTED_GOLDEN_CARROT', 0.0075],
+		[Pest.Cricket, 'CHIRPING_STEREO', 0.01],
+		[Pest.Locust, 'LOCUST_LARVA', 0.04],
+		[Pest.Locust, 'ENCHANTED_BAKED_POTATO', 0.0075],
+		[Pest.Rat, 'POLISHED_PUMPKIN', 0.0075],
+		[Pest.Rat, 'RAT', 0.004],
+		[Pest.Mosquito, 'ENCHANTED_SUGAR_CANE', 0.0075],
+		[Pest.Mosquito, 'CLIPPED_WINGS', 0.02],
+		[Pest.Worm, 'BOOKWORMS_FAVORITE_BOOK', 0.04],
+		[Pest.Worm, 'ENCHANTED_MELON_BLOCK', 0.0075],
+		[Pest.Mite, 'ENCHANTED_CACTUS', 0.0075],
+		[Pest.Mite, 'ATMOSPHERIC_FILTER', 0.005],
+		[Pest.Moth, 'ENCHANTED_COOKIE', 0.0075],
+		[Pest.Moth, 'WRIGGLING_LARVA', 0.01],
+		[Pest.Slug, ITEM_IDS.EnchantedRedMushroomBlock, 0.00375],
+		[Pest.Slug, ITEM_IDS.EnchantedBrownMushroomBlock, 0.00375],
+		[Pest.Slug, 'SLUG;3', 0.01],
+		[Pest.Slug, 'SLUG;4', 0.002],
+		[Pest.Beetle, 'ENCHANTMENT_PESTERMINATOR_1', 0.07],
+		[Pest.Beetle, 'MUTANT_NETHER_STALK', 0.0075],
+		[Pest.Dragonfly, ITEM_IDS.VerminVaporizerChip, 0.02],
+		[Pest.Dragonfly, 'COMPACTED_SUNFLOWER', 0.0075],
+		[Pest.Firefly, 'FIRE_IN_A_BOTTLE', 0.02],
+		[Pest.Firefly, 'COMPACTED_MOONFLOWER', 0.0075],
+		[Pest.Mantis, 'MANTID_CLAW', 0.02],
+		[Pest.Mantis, 'COMPACTED_WILD_ROSE', 0.0075],
+		[Pest.Mouse, 'SQUEAKY_TOY', 0.05],
+		[Pest.Mouse, 'SQUEAKY_MOUSEMAT', 0.01],
+		[Pest.Mouse, 'DYE_DUNG', 0.00002],
+		[Pest.LunarMoth, 'ENCHANTMENT_ULTIMATE_SUNSET_1', 0.35],
+	];
+	for (const [pest, itemId, chance] of expectedRareChances) {
+		expect(rareChance(pest, itemId), `${pest} ${itemId}`).toBe(chance);
+	}
+
+	for (const pest of Object.values(Pest).filter((pest) => pest !== Pest.Mouse && pest !== Pest.LunarMoth)) {
+		expect(
+			PEST_DROP_DEFINITIONS[pest].rareDrops?.find((drop) => drop.itemId.startsWith('VINYL_'))?.chance,
+			`${pest} vinyl chance`
+		).toBe(0.05);
+		expect(rareChance(pest, 'DYE_DUNG'), `${pest} Dung Dye chance`).toBe(0.000004);
+	}
+	expect(
+		PEST_DROP_DEFINITIONS[Pest.LunarMoth].rareDrops
+			?.filter((drop) => drop.itemId === 'DYE_DUNG')
+			.map((drop) => drop.chance)
+	).toEqual([0.000004, 0.00002]);
+
+	expect(PEST_DROP_DEFINITIONS[Pest.LunarMoth].guaranteedDrops).toMatchObject([
+		{ crop: Crop.Sunflower, itemId: 'ENCHANTED_SUNFLOWER', baseAmount: 2, scalingFortune: 26.25 },
+		{ crop: Crop.Moonflower, itemId: 'ENCHANTED_MOONFLOWER', baseAmount: 2, scalingFortune: 26.25 },
+		{ crop: Crop.WildRose, itemId: 'ENCHANTED_WILD_ROSE', baseAmount: 2, scalingFortune: 26.25 },
+	]);
+});
+
+test('Harvest Feast pest drops are calculated from the live in-season crop list', () => {
+	const feastPlayer = new PestFarmingPlayer({
+		harvestFeast: { active: true, inSeasonCrops: [Crop.Wheat, Crop.Carrot] },
+	});
+	const onlyPest = (pest: Pest) => ({
+		includeSpecialPests: pest === Pest.Mouse,
+		excludedPests: Object.values(Pest).filter((candidate) => candidate !== pest),
+	});
+	const flyResult = new PestFarmingRateCalculator({
+		player: feastPlayer,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+			attraction: onlyPest(Pest.Fly),
+		},
+	}).calculate();
+	const expectedFlies = flyResult.breakdown.pestDrops.byPest[Pest.Fly]!.expectedPests;
+
+	expect(flyResult.breakdown.economy.feastRareCrops.rngItems[HARVEST_FEAST_MATERIALS[Crop.Wheat]!]).toBeCloseTo(
+		expectedFlies * 0.15,
+		8
+	);
+	expect(flyResult.breakdown.economy.feastRareCrops.rngItems[HARVEST_FEAST_MATERIALS[Crop.Carrot]!]).toBeUndefined();
+
+	const mouseResult = new PestFarmingRateCalculator({
+		player: feastPlayer,
+		options: {
+			crop: Crop.Wheat,
+			cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+			attraction: onlyPest(Pest.Mouse),
+		},
+	}).calculate();
+	const expectedMice = mouseResult.breakdown.pestDrops.byPest[Pest.Mouse]!.expectedPests;
+	const mouseFeastDrops = mouseResult.breakdown.economy.feastRareCrops.rngItems;
+
+	expect(mouseFeastDrops[HARVEST_FEAST_MATERIALS[Crop.Wheat]!]).toBeCloseTo(expectedMice * 0.15, 8);
+	expect(mouseFeastDrops[HARVEST_FEAST_MATERIALS[Crop.Carrot]!]).toBeCloseTo(expectedMice * 0.15, 8);
+	expect(Object.values(mouseFeastDrops).reduce((sum, amount) => sum + amount, 0)).toBeCloseTo(expectedMice * 0.3, 8);
+});
+
 test('bonus pest chance controls expected pests per spawn', () => {
 	const player = new PestFarmingPlayer({});
 	const calculator = new PestFarmingRateCalculator({
@@ -333,6 +536,46 @@ test('official pest weights add Sprayonator and vinyl bonuses to the base weight
 	expect(probabilities[Pest.Locust]).toBeCloseTo(1_100 / 4_200, 8);
 	expect(probabilities[Pest.Mosquito]).toBeCloseTo(100 / 4_200, 8);
 	expect(probabilities[Pest.Firefly]).toBeUndefined();
+});
+
+test('Moth Shard is attributed and reduces both pest cooldown and farm phase by five seconds', () => {
+	const calculate = (player: PestFarmingPlayer) =>
+		new PestFarmingRateCalculator({
+			player,
+			options: {
+				crop: Crop.Wheat,
+				cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+			},
+		}).calculate();
+	const before = calculate(new PestFarmingPlayer({}));
+	const after = calculate(new PestFarmingPlayer({ attributes: { pest_cooldown: 999 } }));
+
+	expect(after.phaseStats.farmPestCooldownReductionSecondsBreakdown).toEqual({ 'Moth Shard': 5 });
+	expect(after.phaseStats.farmPestCooldownReductionSeconds).toBe(5);
+	expect(after.debug.cooldownSeconds).toBe(before.debug.cooldownSeconds - 5);
+	expect(after.debug.farmSeconds).toBe(before.debug.farmSeconds - 5);
+});
+
+test('Moth Shard applies after maximum percentage reductions without an artificial cooldown floor', () => {
+	const player = new PestFarmingPlayer({ attributes: { pest_cooldown: 999 } });
+	const getPhaseStatBreakdown = player.getPhaseStatBreakdown.bind(player);
+	vi.spyOn(player, 'getPhaseStatBreakdown').mockImplementation((phase, stat, crop) => {
+		if (phase === PestFarmingPhase.Farm && stat === Stat.PestCooldownReduction) {
+			return { 'Maximum Percentage Reduction': { value: 55, stat } };
+		}
+		return getPhaseStatBreakdown(phase, stat, crop);
+	});
+	const calculate = (finneganActive: boolean) =>
+		new PestFarmingRateCalculator({
+			player,
+			options: {
+				crop: Crop.Wheat,
+				cycle: { ...DEFAULT_PEST_CYCLE_SETTINGS, finneganActive },
+			},
+		}).calculate();
+
+	expect(calculate(false).debug.cooldownSeconds).toBe(130);
+	expect(calculate(true).debug.cooldownSeconds).toBe(70);
 });
 
 test('Sprayonator tiers use the same official material attraction weight', () => {

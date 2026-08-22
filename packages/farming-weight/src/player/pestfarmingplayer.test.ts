@@ -304,6 +304,9 @@ test('new pest shards keep visible stats and internal mechanics separate', () =>
 	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.CropGrowth)).toBe(10);
 	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.EnchantedCropChance)).toBe(0.01);
 	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.PestCooldownReductionSeconds)).toBe(5);
+	expect(
+		player.getPhaseMechanicBreakdown(PestFarmingPhase.Farm, FarmingMechanic.PestCooldownReductionSeconds)
+	).toEqual({ 'Moth Shard': 5 });
 	expect(player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance)).toBe(10);
 	expect(player.getPhaseMechanic(PestFarmingPhase.Spawn, FarmingMechanic.AtmosphericFilterEffect)).toBe(20);
 	expect(player.getPhaseStat(PestFarmingPhase.Kill, Stat.PestKillFortune)).toBe(50);

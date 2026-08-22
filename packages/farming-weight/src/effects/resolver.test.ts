@@ -1,11 +1,14 @@
 import { describe, expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
+import { FarmingMechanic } from '../constants/mechanics.js';
 import { SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
 import { isGlobalOverbloomScope, matchesScopeForDrop, matchesScopeForStat } from './matcher.js';
 import {
 	produceAddedDrops,
 	resolveDropEffects,
+	resolveMechanicBreakdown,
+	resolveMechanicTotal,
 	resolveOverbloomBreakdown,
 	resolveOverbloomScalar,
 	resolveStatBreakdown,
@@ -179,6 +182,51 @@ describe('resolveStatTotal / resolveStatBreakdown', () => {
 	test('breakdown groups by source name', () => {
 		const out = resolveStatBreakdown(effects, Stat.FarmingFortune, statCtx({ crop: Crop.Wheat }));
 		expect(out).toEqual({ A: 10, B: 5, E: 7 });
+	});
+});
+
+describe('resolveMechanicTotal / resolveMechanicBreakdown', () => {
+	const effects: Effect[] = [
+		{
+			source: 'Moth Shard',
+			op: 'add-mechanic',
+			mechanic: FarmingMechanic.PestCooldownReductionSeconds,
+			value: 2,
+		},
+		{
+			source: 'Moth Shard',
+			op: 'add-mechanic',
+			mechanic: FarmingMechanic.PestCooldownReductionSeconds,
+			value: 3,
+		},
+		{
+			source: 'Other',
+			op: 'add-mechanic',
+			mechanic: FarmingMechanic.PestCooldownReductionSeconds,
+			value: 1,
+		},
+		{
+			source: 'Wrong Mechanic',
+			op: 'add-mechanic',
+			mechanic: FarmingMechanic.CropGrowth,
+			value: 999,
+		},
+		{
+			source: 'Wrong Crop',
+			op: 'add-mechanic',
+			mechanic: FarmingMechanic.PestCooldownReductionSeconds,
+			value: 999,
+			scope: { crops: [Crop.Carrot] },
+		},
+	];
+
+	test('groups matching additive mechanics by source', () => {
+		const ctx = statCtx({ crop: Crop.Wheat });
+		expect(resolveMechanicBreakdown(effects, FarmingMechanic.PestCooldownReductionSeconds, ctx)).toEqual({
+			'Moth Shard': 5,
+			Other: 1,
+		});
+		expect(resolveMechanicTotal(effects, FarmingMechanic.PestCooldownReductionSeconds, ctx)).toBe(6);
 	});
 });
 

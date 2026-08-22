@@ -3,6 +3,7 @@
 	import { Button } from '$ui/button';
 	import Settings from '@lucide/svelte/icons/settings';
 	import type { PestFarmingRateResult, PestRatePriceBook } from 'farming-weight';
+	import PestCooldownDetailsDialog from './pest-cooldown-details-dialog.svelte';
 	import PestRateBreakdownDialog from './pest-rate-breakdown-dialog.svelte';
 	import { buildPestRateBreakdown } from './pest-rate-breakdown-model';
 
@@ -153,8 +154,7 @@
 		</div>
 
 		<div class="h-fit rounded-lg border bg-card p-4">
-			<h3 class="text-sm leading-tight font-semibold">Assumptions</h3>
-			<div class="mt-3 divide-y">
+			<div class="divide-y">
 				{#each model.summary as metric (metric.label)}
 					<div class="flex items-start justify-between gap-3 py-2 first:pt-0 last:pb-0">
 						<div class="min-w-0">
@@ -166,8 +166,19 @@
 						</p>
 					</div>
 				{/each}
-				{#each model.cycleAssumptions as metric (metric.label)}
-					<div class="flex items-start justify-between gap-3 py-2 first:pt-0 last:pb-0">
+			</div>
+
+			<div class="-mx-4 mt-3 flex items-center justify-between gap-3 border-y bg-muted/30 px-4 py-3">
+				<div class="min-w-0">
+					<p class="text-sm font-medium">{model.cooldown.label}</p>
+					<p class="text-xs text-muted-foreground">{model.cooldown.value}</p>
+				</div>
+				<PestCooldownDetailsDialog value={model.cooldown.value} details={model.cooldown.details} />
+			</div>
+
+			<div class="divide-y">
+				{#each model.phaseAssumptions as metric (metric.label)}
+					<div class="flex items-start justify-between gap-3 py-2 last:pb-0">
 						<div class="min-w-0">
 							<p class="text-sm font-medium">{metric.label}</p>
 							<p class="text-xs text-muted-foreground">{metric.detail}</p>
