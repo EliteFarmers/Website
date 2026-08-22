@@ -45,7 +45,7 @@ export class GlobalContext {
 	#authorized = $derived(this.#session !== undefined);
 	#data = new PersistedState<PersistedData>('global-data', {
 		dismissedAnnouncements: [],
-		settings: {},
+		settings: { leaderboardOverrides: {} },
 		packs: [],
 		localTexturePackOverrides: [],
 		newSidebar: {},

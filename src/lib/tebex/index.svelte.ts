@@ -1,10 +1,6 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
-import type {
-	CreateTebexCheckoutRequest,
-	CreateTebexCheckoutRequestRecipient,
-	TebexCurrentCheckoutDto,
-} from '$lib/api';
+import type { CheckoutRecipientDto, CreateTebexCheckoutRequest, TebexCurrentCheckoutDto } from '$lib/api';
 import { trackAnalytics } from '$lib/analytics';
 import { getGlobalContext, GlobalContext } from '$lib/hooks/global.svelte';
 import Tebex from '@tebexio/tebex.js';
@@ -268,7 +264,7 @@ export class TebexContext {
 		const currentCheckoutQuery = this.#ensureCurrentCheckoutQuery();
 		const existingCheckout = currentCheckoutQuery?.current ?? null;
 		if (!existingCheckout?.canMutate || !currentCheckoutQuery) return false;
-		const nextRecipient: CreateTebexCheckoutRequestRecipient = playerUuidOrIgn
+		const nextRecipient: CheckoutRecipientDto = playerUuidOrIgn
 			? { mode: 'GiftUser', playerUuidOrIgn }
 			: { mode: 'Self' };
 

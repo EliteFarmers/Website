@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type {
 		CosmeticSelection,
+		DictionaryOfStringAndLeaderboardAppearanceOverride,
 		LeaderboardAppearanceOverride,
-		UserSettingsDtoLeaderboardOverrides,
 	} from '$lib/api';
 	import { CosmeticSelectionMode } from '$lib/api/schemas/CosmeticSelectionMode';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
@@ -16,12 +16,12 @@
 
 	interface Props {
 		leaderboards: Record<string, LeaderboardInfo>;
-		overrides: UserSettingsDtoLeaderboardOverrides;
+		overrides: DictionaryOfStringAndLeaderboardAppearanceOverride;
 		styleOptions: StyleOption[];
 		frameOptions: StyleOption[];
 		showFrameOptions?: boolean;
 		disabled?: boolean;
-		onchange: (overrides: UserSettingsDtoLeaderboardOverrides) => void;
+		onchange: (overrides: DictionaryOfStringAndLeaderboardAppearanceOverride) => void;
 	}
 
 	let {

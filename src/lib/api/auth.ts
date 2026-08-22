@@ -5,7 +5,7 @@ import {
 	type AuthorizedAccountDto,
 	type AuthResponseDto,
 	type AuthSessionDto,
-	type AuthSessionDtoPendingConfirmation,
+	type ConfirmationDto,
 } from '$lib/api';
 import type { Cookies } from '@sveltejs/kit';
 
@@ -27,7 +27,7 @@ export async function FetchUserSession(
 	cookies: Cookies,
 	skipRefresh = false,
 	forceRefresh = false,
-	pendingConfirmation?: AuthSessionDtoPendingConfirmation
+	pendingConfirmation?: ConfirmationDto
 ): Promise<AuthSession | undefined> {
 	const access = cookies.get('access_token');
 	const refreshToken = cookies.get('refresh_token');
@@ -87,7 +87,7 @@ async function refreshUserSession(cookies: Cookies): Promise<AuthSession | undef
 	if (newTokens) {
 		UpdateAuthCookies(cookies, newTokens);
 		// Skip refresh to not cause infinite loop
-		return await FetchUserSession(cookies, true, false, newTokens.pending_confirmation);
+		return await FetchUserSession(cookies, true, false, newTokens.pending_confirmation ?? undefined);
 	} else {
 		DeleteAuthCookies(cookies);
 	}

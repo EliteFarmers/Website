@@ -5,13 +5,15 @@
 	import Head from '$comp/seo/head.svelte';
 	import LinkOptions from '$comp/settings/link-options.svelte';
 	import LinkingGuide from '$comp/settings/linking-guide.svelte';
+	import { trackAnalytics, trackAnalyticsError } from '$lib/analytics';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
 	import { Input } from '$ui/input';
 	import { Separator } from '$ui/separator';
 	import Check from '@lucide/svelte/icons/check';
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
+	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -22,6 +24,7 @@
 	let loading = $state(false);
 	let mcUsername = $state('');
 	let skipExisting = $state(false);
+	let lastTrackedStep = 1;
 
 	const user = $derived(data.user);
 	const hasLinkedAccount = $derived(user?.minecraftAccounts && user.minecraftAccounts.length > 0);
@@ -37,8 +40,81 @@
 		}
 	});
 
+	onMount(() => {
+		trackAnalytics('onboarding.started', {
+			has_linked_account: Boolean(hasLinkedAccount),
+			suggested_account_count: data.accountOptions?.length ?? 0,
+			has_custom_redirect: data.redirectTo !== '/',
+		});
+	});
+
+	$effect(() => {
+		if (step === lastTrackedStep) return;
+
+		const previousStep = lastTrackedStep;
+		lastTrackedStep = step;
+
+		if (step === 2) {
+			trackAnalytics('onboarding.link_viewed', {
+				from_step: previousStep,
+				has_linked_account: Boolean(hasLinkedAccount),
+				suggested_account_count: data.accountOptions?.length ?? 0,
+			});
+		} else if (step === 3) {
+			trackAnalytics('onboarding.completed', {
+				outcome: form?.success ? 'linked' : 'already_linked',
+			});
+		}
+	});
+
 	function nextStep() {
+		trackAnalytics('onboarding.continued', {
+			from_step: step === 1 ? 'welcome' : 'link_account',
+			has_linked_account: Boolean(hasLinkedAccount),
+		});
 		step++;
+	}
+
+	function useDifferentAccount() {
+		trackAnalytics('onboarding.manual_link_selected', {
+			suggested_account_count: data.accountOptions?.length ?? 0,
+		});
+		skipExisting = true;
+	}
+
+	function back() {
+		trackAnalytics('onboarding.back', {
+			from_view: skipExisting ? 'manual_link' : 'link_account',
+		});
+
+		if (skipExisting) {
+			skipExisting = false;
+		} else {
+			step = 1;
+		}
+	}
+
+	function enhanceLink(method: 'suggested' | 'manual'): SubmitFunction {
+		return () => {
+			loading = true;
+			trackAnalytics('onboarding.link_attempted', { method });
+
+			return async ({ result, update }) => {
+				loading = false;
+
+				if (result.type === 'success') {
+					trackAnalytics('onboarding.link_succeeded', { method });
+				} else {
+					trackAnalyticsError('onboarding.link_failed', {
+						method,
+						result: result.type,
+						status: result.status,
+					});
+				}
+
+				await update();
+			};
+		};
 	}
 
 	$effect(() => {
@@ -48,6 +124,9 @@
 	});
 
 	function finish() {
+		trackAnalytics('onboarding.get_started', {
+			outcome: form?.success ? 'linked' : 'already_linked',
+		});
 		goto(data.redirectTo);
 	}
 </script>
@@ -100,23 +179,17 @@
 								mcUsername = option.ign;
 							}}
 						>
-							<Button variant="outline" class="mt-2" onclick={() => (skipExisting = true)}>
+							<Button variant="outline" class="mt-2" onclick={useDifferentAccount}>
 								Use a different account
 							</Button>
 							{#snippet button(option)}
 								<form
 									method="POST"
 									action="?/link"
-									use:enhance={() => {
-										loading = true;
-										return async ({ update }) => {
-											loading = false;
-											await update();
-										};
-									}}
+									use:enhance={enhanceLink('suggested')}
 									class="flex flex-col gap-4"
 								>
-									<input type="hidden" name="ign" value={option.ign} />
+									<input type="hidden" name="ign" value={option.uuid} />
 									<Button type="submit" disabled={loading}>Link</Button>
 								</form>
 							{/snippet}
@@ -126,13 +199,7 @@
 						<form
 							method="POST"
 							action="?/link"
-							use:enhance={() => {
-								loading = true;
-								return async ({ update }) => {
-									loading = false;
-									await update();
-								};
-							}}
+							use:enhance={enhanceLink('manual')}
 							class="flex flex-col gap-4"
 						>
 							<div class="flex flex-col gap-2">
@@ -181,23 +248,26 @@
 		</Card.Content>
 		<Card.Footer class="flex justify-between">
 			{#if step === 1}
-				<Button variant="ghost" href="/logout">Logout</Button>
+				<Button variant="ghost" href="/logout" onclick={() => trackAnalytics('onboarding.logout')}
+					>Logout</Button
+				>
 				<Button onclick={nextStep}>Continue</Button>
 			{:else if step === 2}
-				<Button
-					variant="ghost"
-					onclick={() => {
-						if (skipExisting) {
-							skipExisting = false;
-						} else {
-							step = 1;
-						}
-					}}>Back</Button
-				>
+				<Button variant="ghost" onclick={back}>Back</Button>
 				{#if hasLinkedAccount}
 					<Button onclick={nextStep}>Continue</Button>
 				{:else}
-					<Button variant="ghost" href="/">Skip for now</Button>
+					<Button
+						variant="ghost"
+						href="/"
+						onclick={() => {
+							trackAnalytics('onboarding.skipped', {
+								had_suggested_accounts: Boolean(data.accountOptions?.length),
+							});
+						}}
+					>
+						Skip for now
+					</Button>
 				{/if}
 			{:else}
 				<div class="w-full">

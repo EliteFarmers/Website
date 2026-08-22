@@ -165,7 +165,7 @@
 							};
 						}}
 					>
-						<input type="hidden" name="username" value={option.ign} />
+						<input type="hidden" name="username" value={option.uuid} />
 						<Button type="submit" class="flex-1" formaction="?/link" disabled={loading}>Link</Button>
 					</form>
 				{/snippet}

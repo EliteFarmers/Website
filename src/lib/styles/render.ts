@@ -1,4 +1,4 @@
-import type { WeightStyleWithDataDtoImageRefs } from '$lib/api/schemas';
+import type { DictionaryOfStringAndImageAttachmentDto } from '$lib/api/schemas';
 import { createCanvas, type Image, loadImage, type SKRSContext2D } from '@napi-rs/canvas';
 import { mapPositions } from './maker';
 import type { BackgroundStyle, LeaderboardStyle } from './style';
@@ -16,7 +16,7 @@ const SIZE_VARIANTS: { name: string; width: number }[] = [
 
 function resolveImageUrl(
 	imageKey: string | undefined,
-	imageRefs: WeightStyleWithDataDtoImageRefs | undefined,
+	imageRefs: DictionaryOfStringAndImageAttachmentDto | undefined,
 	targetWidth: number
 ): string | undefined {
 	if (!imageKey) return undefined;
@@ -45,7 +45,7 @@ export async function getLeaderboardBackground(
 	data?: LeaderboardStyle | undefined,
 	fallback?: BackgroundStyle | undefined,
 	width?: number,
-	imageRefs?: WeightStyleWithDataDtoImageRefs
+	imageRefs?: DictionaryOfStringAndImageAttachmentDto
 ) {
 	const backgroundStyle = data?.background;
 	if (!backgroundStyle) {

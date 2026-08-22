@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import { articleGetArticlesResponse } from '$lib/api/client/EliteCms.zod';
+import { ArticleGetArticlesResponse } from '$lib/api/client/EliteCms.zod';
 import { mdToHtml, mdToInline } from '$lib/md';
 import qs from 'qs';
 import * as z from 'zod';
@@ -71,7 +71,7 @@ export async function fetchArticleBySlug(slug: string) {
 		}
 	);
 
-	const data = await fetchCmsData<z.infer<typeof articleGetArticlesResponse>>(`/articles?${query}`);
+	const data = await fetchCmsData<z.infer<typeof ArticleGetArticlesResponse>>(`/articles?${query}`);
 
 	if (!data?.data?.length) {
 		return null;
