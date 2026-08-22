@@ -45,7 +45,7 @@
 			class="flex min-h-[calc(100vh-4rem)] w-full flex-col items-center justify-center gap-4"
 			in:fade={{ delay: 300 }}
 		>
-			<LoaderCircle class="text-muted-foreground size-32 animate-spin" />
+			<LoaderCircle class="size-32 animate-spin text-muted-foreground" />
 			<p class="font-semibold">Loading data...</p>
 		</div>
 	{:then profile}
@@ -65,8 +65,8 @@
 	<h1 class="m-16 p-16 text-center font-mono text-6xl font-bold">{profile.code}</h1>
 	<h4 class="font-lighter text-center text-2xl">{profile.error}</h4>
 	<div class="item m-12 mb-32 flex flex-row justify-center gap-4 text-center">
-		<a href={resolve('/')} class="shadow-gray 0 bg-muted hover:bg-card rounded-md p-4 shadow-md">Return Home</a>
-		<button onclick={() => location.reload()} class="shadow-gray bg-muted hover:bg-card rounded-md p-4 shadow-md"
+		<a href={resolve('/')} class="shadow-gray 0 rounded-md bg-muted p-4 shadow-md hover:bg-card">Return Home</a>
+		<button onclick={() => location.reload()} class="shadow-gray rounded-md bg-muted p-4 shadow-md hover:bg-card"
 			>Reload</button
 		>
 	</div>

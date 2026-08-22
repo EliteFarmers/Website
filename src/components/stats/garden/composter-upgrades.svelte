@@ -66,7 +66,7 @@
 								href={selectedProgress.wiki}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="text-link mt-0.5"
+								class="mt-0.5 text-link"
 							>
 								<Info size={16} />
 							</a>
@@ -93,7 +93,7 @@
 			? 'border-border'
 			: allMaxed
 				? 'border-transparent'
-				: 'hover:border-border/50 border-transparent'}"
+				: 'border-transparent hover:border-border/50'}"
 		onclick={() => (selected = type)}
 		disabled={allMaxed}
 	>

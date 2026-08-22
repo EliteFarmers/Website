@@ -14,7 +14,7 @@
 <a
 	href="/@{entry.playerName}/{entry.profileUuid}"
 	data-sveltekit-preload-data="tap"
-	class="bg-card-primary hover:bg-muted rounded-md"
+	class="bg-card-primary rounded-md hover:bg-muted"
 >
 	<div class="flex justify-between gap-0 md:gap-2">
 		<div
@@ -46,7 +46,7 @@
 			{#if entry.removed}
 				<Popover.Mobile>
 					{#snippet trigger()}
-						<CircleAlert class="text-destructive mt-0.5" />
+						<CircleAlert class="mt-0.5 text-destructive" />
 					{/snippet}
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>

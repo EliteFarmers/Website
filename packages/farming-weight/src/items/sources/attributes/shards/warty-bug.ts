@@ -29,7 +29,9 @@ export class WartyBugShard extends FarmingAttributeShard {
 					dropKind: 'rare',
 					tags: ['overbloom', 'rare-crop'],
 				},
-				meta: { description: `${(chance * 100).toFixed(3)}% chance per block to drop Warty` },
+				meta: {
+					description: `${(chance * 100).toFixed(3)}% chance per block to drop Warty`,
+				},
 			},
 		];
 	}

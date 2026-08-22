@@ -144,7 +144,7 @@
 		<Accordion.Root type="single" class="w-full" value="bazaar">
 			<Accordion.Item
 				value="bazaar"
-				class="outline-border w-full rounded-md px-2 outline {referenceOnlyPrices ? 'opacity-60' : ''}"
+				class="w-full rounded-md px-2 outline outline-border {referenceOnlyPrices ? 'opacity-60' : ''}"
 			>
 				<Accordion.Trigger class="py-2 hover:no-underline">
 					<div class="flex w-full items-center justify-between gap-2 pr-2">
@@ -174,7 +174,7 @@
 							</div>
 							{#if result.rngItems}
 								<div class="flex flex-row items-center gap-2">
-									<span class="text-muted-foreground text-sm">Include RNG</span>
+									<span class="text-sm text-muted-foreground">Include RNG</span>
 									<Switch bind:checked={includeRng} />
 								</div>
 							{/if}
@@ -182,7 +182,7 @@
 
 						<div class="flex flex-col gap-2">
 							{#if craftList.length === 0}
-								<p class="text-muted-foreground text-sm">No bazaar conversions available.</p>
+								<p class="text-sm text-muted-foreground">No bazaar conversions available.</p>
 							{:else}
 								{#each craftList as craft, i (craft.id)}
 									{@const isBest = i === 0}
@@ -201,7 +201,7 @@
 														...rng,
 													}}
 												>
-													<p class="text-muted-foreground text-xs">
+													<p class="text-xs text-muted-foreground">
 														Includes RNG item value using lowest AH/BZ price when available.
 													</p>
 												</CoinsBreakdown>
@@ -216,19 +216,19 @@
 												/>
 											{/if}
 										</div>
-										<div class="text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 text-sm">
+										<div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
 											<span>
-												Items: <span class="text-foreground font-medium"
+												Items: <span class="font-medium text-foreground"
 													>{Math.floor(craft.items).toLocaleString()}</span
 												>
 											</span>
 											<span>
-												Each: <span class="text-foreground font-medium"
+												Each: <span class="font-medium text-foreground"
 													>{Math.floor(craft.per).toLocaleString()}</span
 												>
 											</span>
 											<span>
-												Profit: <span class="text-foreground font-medium"
+												Profit: <span class="font-medium text-foreground"
 													>{Math.floor(craft.profit).toLocaleString()}</span
 												>
 											</span>
@@ -251,7 +251,7 @@
 										<div class="flex items-start justify-between gap-4">
 											<div class="min-w-0">
 												<p class="truncate text-sm font-semibold">{x.name}</p>
-												<p class="text-muted-foreground text-xs">
+												<p class="text-xs text-muted-foreground">
 													{itemsText} @ {Math.floor(x.per).toLocaleString()} (NPC {Math.floor(
 														x.npc
 													).toLocaleString()})
@@ -259,13 +259,13 @@
 											</div>
 											<div class="shrink-0 text-right">
 												<p class="text-sm font-semibold">{bzCoins.toLocaleString()}</p>
-												<p class="text-muted-foreground text-xs">
+												<p class="text-xs text-muted-foreground">
 													+{Math.floor(x.gain).toLocaleString()} over NPC
 												</p>
 											</div>
 										</div>
 									{/each}
-									<p class="text-muted-foreground mt-2 text-xs">
+									<p class="mt-2 text-xs text-muted-foreground">
 										Included in totals: Other items = {Math.floor(otherCoinsTotal).toLocaleString()}
 										({Math.floor(otherCoinsNpcRemaining).toLocaleString()} to NPC, {Math.floor(
 											sellToBazaarCoins
@@ -274,7 +274,7 @@
 								</div>
 							</div>
 						{:else}
-							<p class="text-muted-foreground text-xs">
+							<p class="text-xs text-muted-foreground">
 								Other drops have no profitable bazaar price over NPC.
 							</p>
 						{/if}
@@ -292,7 +292,7 @@
 										<div class="flex items-start justify-between gap-4">
 											<div class="min-w-0">
 												<p class="truncate text-sm font-semibold">{name}</p>
-												<p class="text-muted-foreground text-xs">
+												<p class="text-xs text-muted-foreground">
 													{itemsText} @ {Math.floor(per).toLocaleString()} each to bazaar
 												</p>
 											</div>
@@ -321,7 +321,7 @@
 							</div>
 						{/if}
 
-						<p class="text-muted-foreground text-xs">
+						<p class="text-xs text-muted-foreground">
 							Prices used are averaged {$ratesData.bzMode === 'order' ? 'sell order' : 'instant sell'} prices.
 						</p>
 					</div>

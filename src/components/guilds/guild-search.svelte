@@ -115,7 +115,7 @@
 		{#snippet child({ props })}
 			<Button variant="outline" class="w-full justify-between gap-2" {...props}>
 				<span class="flex items-center gap-2 text-left">
-					<Search class="text-muted-foreground h-4 w-4" />
+					<Search class="h-4 w-4 text-muted-foreground" />
 					<span class="font-medium">Search Guilds</span>
 				</span>
 			</Button>
@@ -136,7 +136,7 @@
 					{:else if trimmedQuery.length === 0}
 						<span class="text-muted-foreground">Start typing to search guilds.</span>
 					{:else if isLoading}
-						<span class="text-muted-foreground flex items-center gap-2 px-4">
+						<span class="flex items-center gap-2 px-4 text-muted-foreground">
 							<Loader2 class="h-4 w-4 animate-spin" />
 							<span>Loading...</span>
 						</span>
@@ -150,8 +150,8 @@
 							{#each results as guild (guild.id)}
 								<Command.Item value={guild.name} onSelect={() => handleSelect(guild)}>
 									<div class="flex flex-1 flex-col text-left">
-										<span class="text-foreground font-medium">{guild.name}</span>
-										<span class="text-muted-foreground text-xs">
+										<span class="font-medium text-foreground">{guild.name}</span>
+										<span class="text-xs text-muted-foreground">
 											{guild.memberCount.toLocaleString()} members
 										</span>
 									</div>

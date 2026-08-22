@@ -23,13 +23,13 @@
 
 <div
 	{...rest}
-	class="hover:bg-muted/50 data-[state=selected]:bg-muted flex flex-1 flex-row rounded-md border-2 px-2 transition-colors"
+	class="flex flex-1 flex-row rounded-md border-2 px-2 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
 >
 	<div class="flex h-20 w-full flex-row items-center justify-between gap-2 sm:h-16">
 		<div class="flex flex-col justify-center">
 			<span class="md:text-lg">{rank.title}{lb?.suffix ? ` ${lb.suffix}` : ''}</span>
 			{#if rank.amount === 0}
-				<span class="text-muted-foreground text-sm">No progress yet!</span>
+				<span class="text-sm text-muted-foreground">No progress yet!</span>
 			{:else}
 				<span class="text-sm">{formatLeaderboardAmount(lb, rank.amount)}</span>
 			{/if}
@@ -42,10 +42,10 @@
 			rank={rank.rank}
 		>
 			<span>
-				<span class="text-muted-foreground mr-0.5">#</span><span class="font-mono text-2xl">{rank.rank}</span>
+				<span class="mr-0.5 text-muted-foreground">#</span><span class="font-mono text-2xl">{rank.rank}</span>
 			</span>
 			<div
-				class="text-muted-foreground group-hover:text-primary group-hover:animate-bounce-horizontal absolute right-1 hidden sm:block"
+				class="absolute right-1 hidden text-muted-foreground group-hover:animate-bounce-horizontal group-hover:text-primary sm:block"
 			>
 				<ArrowRight size={18} />
 			</div>

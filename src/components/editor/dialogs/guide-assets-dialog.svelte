@@ -329,7 +329,7 @@
 		</Dialog.Header>
 
 		{#if errorMessage}
-			<div class="border-destructive/30 bg-destructive/5 text-destructive rounded-md border p-3 text-sm">
+			<div class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
 				{errorMessage}
 			</div>
 		{/if}
@@ -372,7 +372,7 @@
 						role="button"
 						tabindex={0}
 						aria-busy={isWorking}
-						class="border-muted-foreground/30 bg-muted/20 hover:border-primary/50 flex flex-col items-center justify-center gap-3 rounded-md border border-dashed p-6 text-center transition-colors data-[busy=true]:pointer-events-none data-[busy=true]:opacity-75"
+						class="flex flex-col items-center justify-center gap-3 rounded-md border border-dashed border-muted-foreground/30 bg-muted/20 p-6 text-center transition-colors hover:border-primary/50 data-[busy=true]:pointer-events-none data-[busy=true]:opacity-75"
 						data-busy={isWorking}
 						ondragover={(event) => event.preventDefault()}
 						ondrop={uploadDroppedImage}
@@ -387,13 +387,13 @@
 						}}
 					>
 						{#if isWorking}
-							<Loader2 class="text-muted-foreground size-6 animate-spin" />
+							<Loader2 class="size-6 animate-spin text-muted-foreground" />
 						{:else}
-							<Upload class="text-muted-foreground size-6" />
+							<Upload class="size-6 text-muted-foreground" />
 						{/if}
 						<div>
 							<p class="text-sm font-medium">{uploadStatus || 'Drop an image here'}</p>
-							<p class="text-muted-foreground text-xs">
+							<p class="text-xs text-muted-foreground">
 								{isWorking ? 'Processing and inserting when ready' : 'PNG, JPG, WebP, or GIF'}
 							</p>
 						</div>
@@ -429,7 +429,7 @@
 							/>
 							<div class="min-w-0 flex-1">
 								<p class="truncate text-sm font-medium">{assetTitle(asset)}</p>
-								<p class="text-muted-foreground mt-1 text-xs">
+								<p class="mt-1 text-xs text-muted-foreground">
 									{asset.image?.width} x {asset.image?.height}
 								</p>
 								{#if isReferenced}
@@ -456,7 +456,7 @@
 							</div>
 						</div>
 					{:else}
-						<p class="text-muted-foreground rounded-md border border-dashed p-4 text-sm sm:col-span-2">
+						<p class="rounded-md border border-dashed p-4 text-sm text-muted-foreground sm:col-span-2">
 							No uploaded images yet.
 						</p>
 					{/each}
@@ -531,7 +531,7 @@
 						role="button"
 						tabindex={0}
 						aria-busy={isWorking}
-						class="border-muted-foreground/30 bg-muted/20 hover:border-primary/50 flex flex-col items-center justify-center gap-3 rounded-md border border-dashed p-6 text-center transition-colors data-[busy=true]:pointer-events-none data-[busy=true]:opacity-75"
+						class="flex flex-col items-center justify-center gap-3 rounded-md border border-dashed border-muted-foreground/30 bg-muted/20 p-6 text-center transition-colors hover:border-primary/50 data-[busy=true]:pointer-events-none data-[busy=true]:opacity-75"
 						data-busy={isWorking}
 						ondragover={(event) => event.preventDefault()}
 						ondrop={uploadDroppedLitematic}
@@ -546,13 +546,13 @@
 						}}
 					>
 						{#if isWorking}
-							<Loader2 class="text-muted-foreground size-6 animate-spin" />
+							<Loader2 class="size-6 animate-spin text-muted-foreground" />
 						{:else}
-							<FileArchive class="text-muted-foreground size-6" />
+							<FileArchive class="size-6 text-muted-foreground" />
 						{/if}
 						<div>
 							<p class="text-sm font-medium">{uploadStatus || 'Drop a litematic here'}</p>
-							<p class="text-muted-foreground text-xs">
+							<p class="text-xs text-muted-foreground">
 								{isWorking ? 'Validating and inserting when ready' : 'Litematica schematic files'}
 							</p>
 						</div>
@@ -586,7 +586,7 @@
 								<FileArchive class="size-5 shrink-0" />
 								<div class="min-w-0">
 									<p class="truncate text-sm font-medium">{assetTitle(asset)}</p>
-									<div class="text-muted-foreground mt-1 flex flex-wrap gap-2 text-xs">
+									<div class="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
 										{#if asset.litematic?.width && asset.litematic.height && asset.litematic.length}
 											<Badge variant="outline"
 												>{asset.litematic.width} x {asset.litematic.height} x {asset.litematic
@@ -624,7 +624,7 @@
 							</div>
 						</div>
 					{:else}
-						<p class="text-muted-foreground rounded-md border border-dashed p-4 text-sm">
+						<p class="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
 							No litematic schematics yet.
 						</p>
 					{/each}

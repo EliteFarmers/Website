@@ -61,9 +61,9 @@
 {#if ctx.ready}
 	{#if !hasGardenData}
 		<div class="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 px-4 py-16 text-center">
-			<Sprout class="text-muted-foreground size-12" />
+			<Sprout class="size-12 text-muted-foreground" />
 			<h1 class="text-2xl font-semibold md:text-3xl">No Garden Data</h1>
-			<p class="text-muted-foreground max-w-md text-sm md:text-base">
+			<p class="max-w-md text-sm text-muted-foreground md:text-base">
 				{ctx.ignMeta} hasn't visited the Garden on this profile yet. Pest farming stats become available once garden
 				data is recorded.
 			</p>
@@ -89,7 +89,7 @@
 				{openSettings}
 			/>
 
-			<section class="pest-deferred-section bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
+			<section class="pest-deferred-section flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
 				<header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 					<div class="flex flex-col gap-1">
 						<h2 class="text-xl leading-tight font-semibold">{pest.selectedCropName} Fortune</h2>
@@ -154,12 +154,12 @@
 
 			<section class="pest-deferred-section pest-deferred-section--large flex flex-col gap-5">
 				<header
-					class="bg-background/95 supports-backdrop-filter:bg-background/80 sticky top-16 z-20 -mx-2 flex flex-col gap-2 border-b px-2 py-3 backdrop-blur"
+					class="sticky top-16 z-20 -mx-2 flex flex-col gap-2 border-b bg-background/95 px-2 py-3 backdrop-blur supports-backdrop-filter:bg-background/80"
 				>
 					<div class="flex flex-wrap items-center justify-between gap-3">
 						<div class="flex flex-col gap-1">
 							<h2 class="text-2xl leading-tight font-semibold">{pest.activePhaseConfig.title}</h2>
-							<p class="text-muted-foreground text-sm">{pest.activePhaseConfig.description}</p>
+							<p class="text-sm text-muted-foreground">{pest.activePhaseConfig.description}</p>
 						</div>
 						<div class="flex items-center gap-2">
 							<Button
@@ -171,11 +171,11 @@
 								<Settings class="size-4" />
 							</Button>
 							<Tabs.Root bind:value={pest.activePhase}>
-								<div class="bg-muted/40 grid w-full grid-cols-3 gap-1 rounded-lg border p-1 sm:w-fit">
+								<div class="grid w-full grid-cols-3 gap-1 rounded-lg border bg-muted/40 p-1 sm:w-fit">
 									{#each PHASE_CONFIG as config (config.phase)}
 										<Tabs.Trigger
 											value={config.phase}
-											class="text-muted-foreground data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:text-foreground rounded-md border border-transparent px-5 py-2 text-sm font-semibold transition-colors data-[state=active]:shadow-sm"
+											class="rounded-md border border-transparent px-5 py-2 text-sm font-semibold text-muted-foreground transition-colors data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm"
 										>
 											{config.label}
 										</Tabs.Trigger>
@@ -186,11 +186,11 @@
 					</div>
 				</header>
 
-				<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
+				<section class="flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
 					<div class="grid gap-3 md:grid-cols-2">
 						<!-- Armor set loadout card -->
-						<div class="bg-muted/30 flex flex-col gap-2 rounded-md border p-3">
-							<p class="text-muted-foreground text-xs leading-snug font-medium">Armor Set</p>
+						<div class="flex flex-col gap-2 rounded-md border bg-muted/30 p-3">
+							<p class="text-xs leading-snug font-medium text-muted-foreground">Armor Set</p>
 							<div class="grid grid-cols-2 gap-2">
 								{#each pest.armorSetLoadouts as set (set.id)}
 									<Button
@@ -208,12 +208,12 @@
 						</div>
 
 						<!-- Pet loadout card -->
-						<div class="bg-muted/30 flex flex-col justify-center gap-2 rounded-md border p-3">
+						<div class="flex flex-col justify-center gap-2 rounded-md border bg-muted/30 p-3">
 							{#if pest.pets.length > 0}
 								<div class="flex items-center gap-2">
 									<DropdownMenu.Root>
 										<DropdownMenu.Trigger
-											class="hover:bg-muted/40 group focus-visible:ring-ring/50 flex flex-1 items-center gap-3 rounded-md p-1 text-left transition-colors outline-none focus-visible:ring-2"
+											class="group flex flex-1 items-center gap-3 rounded-md p-1 text-left transition-colors outline-none hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring/50"
 											aria-label="Change pet"
 										>
 											{#if pest.activePhasePet}
@@ -224,13 +224,13 @@
 												/>
 											{:else}
 												<div
-													class="bg-card text-muted-foreground/60 flex size-11 shrink-0 items-center justify-center rounded-md border"
+													class="flex size-11 shrink-0 items-center justify-center rounded-md border bg-card text-muted-foreground/60"
 												>
 													<CircleHelp class="size-5" />
 												</div>
 											{/if}
 											<div class="min-w-0 flex-1">
-												<p class="text-muted-foreground text-xs font-medium">Active Pet</p>
+												<p class="text-xs font-medium text-muted-foreground">Active Pet</p>
 												<div class="truncate text-base font-semibold">
 													{#if pest.activePhasePet}
 														<FormattedText text={pest.activePhasePet.getFormattedName()} />
@@ -240,7 +240,7 @@
 												</div>
 											</div>
 											<ChevronDown
-												class="text-muted-foreground size-4 shrink-0 transition-transform group-data-[state=open]:rotate-180"
+												class="size-4 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-180"
 											/>
 										</DropdownMenu.Trigger>
 										<DropdownMenu.Content
@@ -296,13 +296,13 @@
 							{:else}
 								<div class="flex items-center gap-3 p-1">
 									<div
-										class="bg-card text-muted-foreground/60 flex size-11 shrink-0 items-center justify-center rounded-md border"
+										class="flex size-11 shrink-0 items-center justify-center rounded-md border bg-card text-muted-foreground/60"
 									>
 										<CircleHelp class="size-5" />
 									</div>
 									<div class="min-w-0">
-										<p class="text-muted-foreground text-xs font-medium">Active Pet</p>
-										<p class="text-muted-foreground text-sm">No farming pets found.</p>
+										<p class="text-xs font-medium text-muted-foreground">Active Pet</p>
+										<p class="text-sm text-muted-foreground">No farming pets found.</p>
 									</div>
 								</div>
 							{/if}
@@ -311,7 +311,7 @@
 
 					{#if pest.activePhase === PestFarmingPhase.Kill}
 						<div
-							class="border-border/60 bg-muted/30 text-muted-foreground flex items-center gap-2 rounded-md border border-dashed p-3 text-sm"
+							class="flex items-center gap-2 rounded-md border border-dashed border-border/60 bg-muted/30 p-3 text-sm text-muted-foreground"
 						>
 							<CircleHelp class="size-4 shrink-0" />
 							<span>Vacuum stats apply during the Kill phase, configure your vacuum above!</span>
@@ -365,7 +365,7 @@
 					</PestGearSelector>
 				{/if}
 
-				<section class="bg-card flex flex-col gap-3 rounded-lg border p-4 md:p-6">
+				<section class="flex flex-col gap-3 rounded-lg border bg-card p-4 md:p-6">
 					<header class="flex items-center justify-between gap-3">
 						<h2 class="text-xl leading-tight font-semibold">{pest.activePhaseConfig.progress}</h2>
 					</header>
@@ -384,15 +384,15 @@
 				<section class="flex flex-col gap-4">
 					<h2 class="text-2xl leading-tight font-semibold">Upgrades</h2>
 					<div
-						class="border-primary/30 bg-primary/5 text-foreground flex flex-col gap-2 rounded-lg border p-3 text-sm md:p-4"
+						class="flex flex-col gap-2 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm text-foreground md:p-4"
 					>
 						<div class="flex items-start gap-2">
-							<TriangleAlert class="text-primary mt-0.5 size-4 shrink-0" />
+							<TriangleAlert class="mt-0.5 size-4 shrink-0 text-primary" />
 							<p>
 								These upgrade suggestions are a work in progress. Please report any issues or feedback
 								on our <a
 									href="/support"
-									class="text-link font-medium underline-offset-2 hover:underline">support server</a
+									class="font-medium text-link underline-offset-2 hover:underline">support server</a
 								>.
 							</p>
 						</div>

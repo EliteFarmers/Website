@@ -1,6 +1,6 @@
 import type { HypixelGuildDetailsDto } from '$lib/api';
 import { renderComponent } from '$ui/data-table';
-import type { ColumnDef } from '@tanstack/table-core';
+import type { ColumnDef } from '$ui/data-table';
 import GuildCatacombsXp from './columns/guild-catacombs-xp.svelte';
 import GuildFarmingWeight from './columns/guild-farming-weight.svelte';
 import GuildMemberCount from './columns/guild-member-count.svelte';

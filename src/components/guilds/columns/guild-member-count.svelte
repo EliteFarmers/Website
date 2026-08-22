@@ -11,7 +11,7 @@
 
 <div class="flex flex-1 flex-col items-start justify-center gap-1">
 	<p class="flex flex-row items-center gap-1 text-base">
-		<Users class="text-muted-foreground size-5" />
+		<Users class="size-5 text-muted-foreground" />
 		<span>{guild.memberCount}</span>
 	</p>
 </div>

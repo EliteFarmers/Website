@@ -14,7 +14,7 @@
 
 <a
 	href="/server/{guild.id}"
-	class="bg-card relative flex w-full flex-1 flex-row items-center justify-between overflow-clip rounded-lg p-8 py-8 {guild.banner
+	class="relative flex w-full flex-1 flex-row items-center justify-between overflow-clip rounded-lg bg-card p-8 py-8 {guild.banner
 		? 'text-white'
 		: ''}"
 >

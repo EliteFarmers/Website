@@ -265,7 +265,10 @@ function enchantSourceBuilder(
 					},
 				];
 			},
-			upgrades: (tool) => getUpgradeableEnchant(tool, id, Stat.FarmingFortune, { includeWhenNoStatImpact: true }),
+			upgrades: (tool) =>
+				getUpgradeableEnchant(tool, id, Stat.FarmingFortune, {
+					includeWhenNoStatImpact: true,
+				}),
 		};
 	}
 

@@ -69,7 +69,7 @@
 					{#if item.skyblockId}
 						<ItemRender skyblockId={item.skyblockId} class="size-8" />
 					{:else}
-						<div class="bg-muted size-8 rounded border"></div>
+						<div class="size-8 rounded border bg-muted"></div>
 					{/if}
 					<Input
 						value={item.skyblockId}

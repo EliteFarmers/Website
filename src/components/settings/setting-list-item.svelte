@@ -28,7 +28,7 @@
 			{@render icon?.()}
 			<p>{title}</p>
 			{#if wiki}
-				<a href={wiki} target="_blank" rel="noopener noreferrer" class="text-link inline-block">
+				<a href={wiki} target="_blank" rel="noopener noreferrer" class="inline-block text-link">
 					<Info class="size-4 pt-0.5" />
 				</a>
 			{/if}
@@ -39,7 +39,7 @@
 			</p>
 		{/if}
 		{#if description}
-			<p class="text-muted-foreground mb-1 text-sm">
+			<p class="mb-1 text-sm text-muted-foreground">
 				{description}
 			</p>
 		{/if}

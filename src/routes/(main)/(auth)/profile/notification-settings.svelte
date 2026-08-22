@@ -155,7 +155,7 @@
 		{#each types as item (item.type)}
 			<SettingListItem title={item.label}>
 				{#snippet subtitle()}
-					<span class="text-muted-foreground block max-w-md text-sm"
+					<span class="block max-w-md text-sm text-muted-foreground"
 						>Choose where this alert is delivered.</span
 					>
 				{/snippet}
@@ -176,9 +176,9 @@
 		{/each}
 	</div>
 	{#if pushSupported && browserPermission === 'denied'}
-		<p class="text-muted-foreground text-sm">Browser notifications are blocked in this browser.</p>
+		<p class="text-sm text-muted-foreground">Browser notifications are blocked in this browser.</p>
 	{/if}
 	{#if pushError}
-		<p class="text-destructive text-sm">{pushError}</p>
+		<p class="text-sm text-destructive">{pushError}</p>
 	{/if}
 </div>

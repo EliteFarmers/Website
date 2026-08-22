@@ -21,16 +21,16 @@
 </script>
 
 <div
-	class="bg-card group shadow-accent-green/60 hover:border-accent-green flex flex-col gap-2 rounded-md border p-4 transition-shadow hover:shadow-md md:basis-64"
+	class="group flex flex-col gap-2 rounded-md border bg-card p-4 shadow-accent-green/60 transition-shadow hover:border-accent-green hover:shadow-md md:basis-64"
 >
 	<div class="flex h-full w-full items-center justify-between gap-4 md:flex-col">
-		<div class="text-accent-green flex flex-col justify-center gap-1 font-semibold md:items-center">
+		<div class="flex flex-col justify-center gap-1 font-semibold text-accent-green md:items-center">
 			<div class="flex w-full flex-1 flex-col text-2xl md:my-8 md:items-center md:text-5xl">
 				<p>{total.toLocaleString()}</p>
 			</div>
 			<p class="md:text-lg">SkyBlock Gems</p>
 			{#if bonus}
-				<p class="text-muted-foreground text-xs md:text-sm">
+				<p class="text-xs text-muted-foreground md:text-sm">
 					{base.toLocaleString()} gems + {bonus.toLocaleString()} bonus gems
 				</p>
 			{/if}
@@ -65,10 +65,10 @@
 	<div class="flex flex-row gap-1">
 		<ItemRender skyblockId="BOOSTER_COOKIE" class="size-10" />
 		<div class="flex items-center gap-1 md:flex-col">
-			<span class="text-muted-foreground self-center text-sm"
+			<span class="self-center text-sm text-muted-foreground"
 				>Worth {cookiesWorth.toFixed(1)} booster cookies
 				{#if cookieValue}
-					<span class="text-muted-foreground text-sm">
+					<span class="text-sm text-muted-foreground">
 						or ~<span class="text-completed">{Math.round(cookiesWorth * cookieValue).toLocaleString()}</span
 						> coins
 					</span>

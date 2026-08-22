@@ -120,13 +120,13 @@
 									class="flex flex-row flex-nowrap justify-between gap-4 whitespace-nowrap"
 								>
 									<p class="flex min-w-0 items-center-safe gap-2">
-										<span class="text-primary truncate">
+										<span class="truncate text-primary">
 											<FormattedText text={itemId} />
 										</span>
 										<span>x{toReadable(Number(amount))}</span>
 									</p>
 									<p class="flex items-center-safe gap-1 uppercase">
-										<span class="text-muted-foreground text-xs">N/A</span>
+										<span class="text-xs text-muted-foreground">N/A</span>
 									</p>
 								</Item.Description>
 							</Item.Content>
@@ -145,7 +145,7 @@
 									class="flex flex-row flex-nowrap justify-between gap-4 whitespace-nowrap"
 								>
 									<p class="flex min-w-0 items-center-safe gap-2">
-										<span class="text-primary truncate">
+										<span class="truncate text-primary">
 											<FormattedText text={value.name?.replace('Enchanted ', 'E. ') ?? itemId} />
 										</span>
 										<span>x{toReadable(Number(amount), navigator.language, 2)}</span>
@@ -153,7 +153,7 @@
 									<Popover.Mobile>
 										{#snippet trigger()}
 											<p class="flex items-center-safe gap-1 uppercase">
-												<span class="text-muted-foreground text-xs">{bestSellMethod}</span>
+												<span class="text-xs text-muted-foreground">{bestSellMethod}</span>
 												<span class="text-completed">
 													{toReadable(Number(bestPrice) * Number(amount))}
 												</span>
@@ -175,19 +175,19 @@
 												{#if isBest || Number(val) > 0}
 													<div>
 														<p
-															class="text-muted-foreground flex items-center gap-0.5 text-sm font-medium uppercase"
+															class="flex items-center gap-0.5 text-sm font-medium text-muted-foreground uppercase"
 														>
 															<span class="text-muted-foreground">
 																{key}:
 															</span>
 															<span
-																class="data-[best=true]:text-completed text-primary"
+																class="text-primary data-[best=true]:text-completed"
 																data-best={isBest}
 															>
 																{toReadable(Number(val))}
 															</span>
 														</p>
-														<p class="text-muted-foreground/80 ml-4 text-xs">
+														<p class="ml-4 text-xs text-muted-foreground/80">
 															{toReadable(Number(val) * Number(amount))} total
 														</p>
 													</div>

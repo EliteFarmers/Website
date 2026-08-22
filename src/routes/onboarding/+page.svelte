@@ -133,7 +133,7 @@
 
 <Head title="Onboarding" description="Welcome to Elite!" />
 
-<div class="bg-background flex min-h-screen items-center justify-center p-4">
+<div class="flex min-h-screen items-center justify-center bg-background p-4">
 	<Card.Root class="w-full max-w-lg">
 		<Card.Header>
 			<Card.Title class="text-2xl">
@@ -167,8 +167,8 @@
 				</div>
 			{:else if step === 2}
 				{#if hasLinkedAccount}
-					<div class="bg-muted/50 rounded-lg border p-4">
-						<p class="text-completed font-semibold">Account Linked!</p>
+					<div class="rounded-lg border bg-muted/50 p-4">
+						<p class="font-semibold text-completed">Account Linked!</p>
 						<p>You have already linked <strong>{user?.minecraftAccounts?.[0]?.name}</strong>.</p>
 					</div>
 				{:else}
@@ -219,24 +219,24 @@
 							</Button>
 						</form>
 						<div class="mx-auto mt-4 flex w-full flex-col text-center">
-							<p class="text-muted-foreground mb-2 text-sm">
-								Ensure <span class="text-foreground font-mono select-all">{discordUsername}</span> is linked
+							<p class="mb-2 text-sm text-muted-foreground">
+								Ensure <span class="font-mono text-foreground select-all">{discordUsername}</span> is linked
 								in hypixel.net social menu.
 							</p>
 							<LinkingGuide username={discordUsername} />
 						</div>
 					{/if}
 				{/if}
-				<div class="text-muted-foreground text-sm">
+				<div class="text-sm text-muted-foreground">
 					<p>
 						<strong>Note:</strong> You can add secondary accounts later in your profile settings.
 					</p>
 				</div>
 			{:else if step === 3}
 				<div class="flex flex-col items-center gap-4 text-center">
-					<div class="bg-completed/10 dark:bg-completed/20 rounded-full p-3">
+					<div class="rounded-full bg-completed/10 p-3 dark:bg-completed/20">
 						<!-- Check icon -->
-						<Check class="text-completed h-6 w-6" />
+						<Check class="h-6 w-6 text-completed" />
 					</div>
 					<h3 class="text-xl font-semibold">Welcome to Elite!</h3>
 					<p class="text-muted-foreground">Your account is fully set up. You can now access all features.</p>

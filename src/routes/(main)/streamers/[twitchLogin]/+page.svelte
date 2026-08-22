@@ -61,10 +61,10 @@
 <main class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
 	{#if liveStream && twitchLogin}
 		<section class="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(20rem,0.75fr)]">
-			<div class="bg-card overflow-hidden rounded-md border shadow-sm">
+			<div class="overflow-hidden rounded-md border bg-card shadow-sm">
 				<TwitchEmbed channel={twitchLogin} title="{displayName} Twitch stream" frame={false} />
 			</div>
-			<div class="bg-card flex flex-col justify-between gap-5 rounded-md border p-5 shadow-sm">
+			<div class="flex flex-col justify-between gap-5 rounded-md border bg-card p-5 shadow-sm">
 				<div class="flex flex-col gap-4">
 					<div class="flex flex-wrap items-center gap-2">
 						<Badge class="gap-1.5 bg-red-600 text-white">
@@ -79,7 +79,7 @@
 						{/if}
 						<div class="min-w-0">
 							<h1 class="truncate text-4xl font-bold tracking-normal">{displayName}</h1>
-							<p class="text-muted-foreground mt-1 truncate">@{twitchLogin}</p>
+							<p class="mt-1 truncate text-muted-foreground">@{twitchLogin}</p>
 						</div>
 					</div>
 					<p class="text-lg leading-7">{liveStream.title}</p>
@@ -92,7 +92,7 @@
 		</section>
 	{:else}
 		<header
-			class="bg-card flex flex-col gap-5 rounded-md border p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+			class="flex flex-col gap-5 rounded-md border bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between"
 		>
 			<div class="flex min-w-0 items-center gap-3">
 				{#if streamer?.minecraftUuid}
@@ -100,7 +100,7 @@
 				{/if}
 				<div class="min-w-0">
 					<h1 class="truncate text-4xl font-bold tracking-normal">{displayName}</h1>
-					<p class="text-muted-foreground mt-1 truncate">@{twitchLogin}</p>
+					<p class="mt-1 truncate text-muted-foreground">@{twitchLogin}</p>
 				</div>
 			</div>
 			<Button href={twitchHref} target="_blank" rel="noreferrer" variant="outline" class="w-fit">
@@ -111,9 +111,9 @@
 	{/if}
 
 	<div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-		<section class="bg-card flex min-w-0 flex-col gap-4 rounded-md border p-6 shadow-sm">
+		<section class="flex min-w-0 flex-col gap-4 rounded-md border bg-card p-6 shadow-sm">
 			<div class="flex items-center gap-2">
-				<User class="text-muted-foreground size-5" />
+				<User class="size-5 text-muted-foreground" />
 				<h2 class="text-2xl font-semibold">About</h2>
 			</div>
 			{#if streamer?.aboutMarkdown}
@@ -127,9 +127,9 @@
 
 		<aside class="flex flex-col gap-4">
 			{#if links.length > 0}
-				<section class="bg-card flex flex-col gap-3 rounded-md border p-5 shadow-sm">
+				<section class="flex flex-col gap-3 rounded-md border bg-card p-5 shadow-sm">
 					<div class="flex items-center gap-2">
-						<LinkIcon class="text-muted-foreground size-5" />
+						<LinkIcon class="size-5 text-muted-foreground" />
 						<h2 class="text-xl font-semibold">Links</h2>
 					</div>
 					<div class="flex flex-col gap-2">
@@ -157,16 +157,16 @@
 			{/if}
 
 			{#if codes.length > 0}
-				<section class="bg-card flex flex-col gap-3 rounded-md border p-5 shadow-sm">
+				<section class="flex flex-col gap-3 rounded-md border bg-card p-5 shadow-sm">
 					<div class="flex items-center gap-2">
-						<Tags class="text-muted-foreground size-5" />
+						<Tags class="size-5 text-muted-foreground" />
 						<h2 class="text-xl font-semibold">Creator Codes</h2>
 					</div>
 					<div class="flex flex-col gap-2">
 						{#each codes as code (code.label)}
 							<div class="flex flex-row items-center gap-2 rounded-md border p-3">
 								<div class="flex-1">
-									<p class="text-muted-foreground text-sm">{code.label}</p>
+									<p class="text-sm text-muted-foreground">{code.label}</p>
 									<p class="font-mono text-lg font-semibold">{code.value}</p>
 								</div>
 								<CopyToClipboard text={code.value} />
@@ -177,9 +177,9 @@
 			{/if}
 
 			{#if streamer?.minecraftUuid}
-				<section class="bg-card flex flex-col gap-3 rounded-md border p-5 shadow-sm">
+				<section class="flex flex-col gap-3 rounded-md border bg-card p-5 shadow-sm">
 					<div class="flex items-center gap-2">
-						<Shirt class="text-muted-foreground size-5" />
+						<Shirt class="size-5 text-muted-foreground" />
 						<h2 class="text-xl font-semibold">Minecraft</h2>
 					</div>
 					<p class="text-lg font-semibold">{minecraftName ?? 'Linked Minecraft account'}</p>

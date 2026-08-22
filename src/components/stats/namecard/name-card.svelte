@@ -245,7 +245,7 @@
 
 {#snippet rankLink(small = false)}
 	<LeaderboardRankLink
-		class="hover:bg-muted flex h-full max-w-fit flex-col items-center justify-center rounded-md p-0.5 lg:p-1"
+		class="flex h-full max-w-fit flex-col items-center justify-center rounded-md p-0.5 hover:bg-muted lg:p-1"
 		category="farmingweight"
 		player={ctx.ign}
 		profile={ctx.selectedProfile?.profileName}

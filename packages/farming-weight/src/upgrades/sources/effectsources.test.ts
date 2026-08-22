@@ -32,8 +32,18 @@ describe('source-layer effect collection', () => {
 		const env = player.buildEnvironment(Crop.CocoaBeans);
 		const effects = collectGeneralFortuneSourceEffects(player);
 
-		expect(resolveStatTotal(effects, Stat.CocoaBeanFortune, { env, crop: Crop.CocoaBeans })).toBe(5);
-		expect(resolveStatTotal(effects, Stat.FarmingFortune, { env, crop: Crop.CocoaBeans })).toBe(0);
+		expect(
+			resolveStatTotal(effects, Stat.CocoaBeanFortune, {
+				env,
+				crop: Crop.CocoaBeans,
+			})
+		).toBe(5);
+		expect(
+			resolveStatTotal(effects, Stat.FarmingFortune, {
+				env,
+				crop: Crop.CocoaBeans,
+			})
+		).toBe(0);
 		expect(effects).toContainEqual({
 			source: 'Refined Dark Cacao Truffle',
 			op: 'add-stat',

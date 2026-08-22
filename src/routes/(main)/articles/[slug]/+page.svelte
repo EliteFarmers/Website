@@ -76,7 +76,7 @@
 </Head>
 
 <main class="flex w-full flex-col items-center">
-	<article class="md:bg-card my-8 flex max-w-4xl flex-col justify-center px-2 py-8 md:p-16">
+	<article class="my-8 flex max-w-4xl flex-col justify-center px-2 py-8 md:bg-card md:p-16">
 		<div>
 			<img
 				src={article.cover?.url
@@ -94,13 +94,13 @@
 			{#if article.releasedAt}
 				<DateDisplay timestamp={new Date(article.releasedAt).getTime()} />
 				{#if new Date(article.releasedAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
-					<span class="text-completed text-sm font-semibold">NEW</span>
+					<span class="text-sm font-semibold text-completed">NEW</span>
 				{/if}
 			{/if}
 		</ArticleAuthor>
 
 		{#if article.lastUpdated && article.lastUpdated !== article.releasedAt}
-			<div class="text-muted-foreground mt-1 text-sm">
+			<div class="mt-1 text-sm text-muted-foreground">
 				Last updated: <DateDisplay timestamp={new Date(article.lastUpdated).getTime()} />
 			</div>
 		{/if}

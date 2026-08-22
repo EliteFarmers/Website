@@ -109,7 +109,10 @@ export class PestFarmingRateCalculator {
 			intervalSeconds: input.options.intervalSeconds ?? DEFAULT_INTERVAL_SECONDS,
 			cycle: normalizeCycleSettings(input.options.cycle),
 		};
-		this.priceBook = input.priceBook ?? { version: 'empty', missingItemMode: 'exclude' };
+		this.priceBook = input.priceBook ?? {
+			version: 'empty',
+			missingItemMode: 'exclude',
+		};
 		this.armorSelection = input.armorSelection;
 	}
 
@@ -732,7 +735,11 @@ export class PestFarmingRateCalculator {
 		const valueBucketPerHour = (quantity: PestRateQuantities, scale = intervalScale) =>
 			valueBucket(quantity, scale) * perHourScale;
 		const cropBreaking = valueBucketPerHour(buckets.cropBreaking);
-		const pestDrops = valueBucketPerHour({ ...buckets.pestDrops, rngItems: {}, npcCoins: 0 });
+		const pestDrops = valueBucketPerHour({
+			...buckets.pestDrops,
+			rngItems: {},
+			npcCoins: 0,
+		});
 		const rngDrops = valueBucketPerHour({
 			items: {},
 			rngItems: buckets.pestDrops.rngItems,

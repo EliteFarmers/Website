@@ -76,7 +76,7 @@
 
 		<div class="flex flex-col gap-3 py-4">
 			<div
-				class="text-muted-foreground grid grid-cols-[minmax(10rem,14rem)_1fr_2.5rem] gap-2 px-1 text-xs font-medium"
+				class="grid grid-cols-[minmax(10rem,14rem)_1fr_2.5rem] gap-2 px-1 text-xs font-medium text-muted-foreground"
 			>
 				<span>Player</span>
 				<span>Reason</span>

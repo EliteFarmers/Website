@@ -87,7 +87,7 @@
 						{#snippet child({ props })}
 							<Sidebar.MenuButton
 								{...props}
-								class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground truncate md:max-w-none {capital}"
+								class="truncate data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:max-w-none {capital}"
 							>
 								{#snippet tooltipContent()}
 									<span class="inline-block {capital}">{crumb.tooltip ?? crumb.name}</span>

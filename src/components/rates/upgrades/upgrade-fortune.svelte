@@ -154,7 +154,7 @@
 		<div class="flex flex-col gap-1">
 			{#if primaryEffect}
 				<div
-					class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
+					class="flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none even:bg-card"
 				>
 					<p class="flex items-center gap-1">
 						<span>{primaryEffectIcon}</span>
@@ -165,7 +165,7 @@
 			{/if}
 			{#if primaryStat.value !== 0}
 				<div
-					class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
+					class="flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none even:bg-card"
 				>
 					<p class="flex items-center gap-1">
 						<span>{STAT_ICONS[primaryStat.stat] ?? '?'}</span>
@@ -178,7 +178,7 @@
 			{/if}
 			{#each otherStats as { stat, value } (stat)}
 				<div
-					class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
+					class="flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none even:bg-card"
 				>
 					<p class="flex items-center gap-1">
 						<span>{STAT_ICONS[stat] ?? ''}</span>
@@ -192,17 +192,17 @@
 		</div>
 
 		{#if primaryEffect?.description}
-			<p class="text-muted-foreground max-w-sm text-sm">{primaryEffect.description}</p>
+			<p class="max-w-sm text-sm text-muted-foreground">{primaryEffect.description}</p>
 		{/if}
 
 		{#if isNegative}
-			<p class="text-muted-foreground max-w-sm text-sm">
+			<p class="max-w-sm text-sm text-muted-foreground">
 				This upgrade is suggested despite lower stats because it increases profit per hour.
 			</p>
 		{:else if forCompletion}
-			<p class="text-muted-foreground max-w-sm text-sm">This upgrade is shown for completion.</p>
+			<p class="max-w-sm text-sm text-muted-foreground">This upgrade is shown for completion.</p>
 		{:else if maxOnly}
-			<p class="text-muted-foreground max-w-sm text-sm">
+			<p class="max-w-sm text-sm text-muted-foreground">
 				This upgrade gives no fortune right away, but maxes out at {(upgrade.max ?? 0).toLocaleString()} fortune as
 				you upgrade it later.
 			</p>

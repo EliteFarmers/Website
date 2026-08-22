@@ -23,7 +23,9 @@ import {
 } from './shards/index.js';
 
 function defineAttributeShards<const T extends Record<string, FarmingAttributeShard>>(
-	shards: T & { [K in keyof T]: FarmingAttributeShard & { readonly attributeId: K } }
+	shards: T & {
+		[K in keyof T]: FarmingAttributeShard & { readonly attributeId: K };
+	}
 ): T {
 	return shards;
 }

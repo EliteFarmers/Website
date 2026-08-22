@@ -69,7 +69,7 @@
 								<span
 									role="button"
 									tabindex="0"
-									class="hover:text-foreground cursor-pointer p-0 group-data-[state=collapsed]:hidden"
+									class="cursor-pointer p-0 group-data-[state=collapsed]:hidden hover:text-foreground"
 									onclick={(e) => {
 										e.stopPropagation();
 										onEdit();
@@ -139,7 +139,7 @@
 					<Input
 						type="text"
 						bind:value={favorite.name}
-						class="border-border bg-card h-8 w-full rounded-md border-2 px-1.5"
+						class="h-8 w-full rounded-md border-2 border-border bg-card px-1.5"
 						maxlength={32}
 						placeholder="Favorite Name"
 					/>
@@ -148,7 +148,7 @@
 			<Button
 				variant="ghost"
 				size="sm"
-				class="text-sidebar-foreground/70 ml-auto h-8 px-2 py-0"
+				class="ml-auto h-8 px-2 py-0 text-sidebar-foreground/70"
 				onclick={() => {
 					favorites.removeFavorite(favorite.href);
 				}}

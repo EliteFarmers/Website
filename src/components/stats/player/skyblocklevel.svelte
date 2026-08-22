@@ -23,7 +23,7 @@
 					player={ctx.ign}
 					profile={ctx.member.current?.profileName ?? ctx.selectedProfile?.profileName}
 					{rank}
-					class="bg-card hover:bg-muted rounded-md px-1.5"
+					class="rounded-md bg-card px-1.5 hover:bg-muted"
 				>
 					<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 						>{rank}</span

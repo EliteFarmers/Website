@@ -28,10 +28,10 @@
 	<div
 		class="{sizes[
 			size
-		]} bg-muted flex aspect-square items-center justify-center rounded-md bg-blend-darken select-none {className ??
+		]} flex aspect-square items-center justify-center rounded-md bg-muted bg-blend-darken select-none {className ??
 			''}"
 	>
-		<p class="text-muted-foreground mb-0.5 leading-none">
+		<p class="mb-0.5 leading-none text-muted-foreground">
 			{guild?.name
 				?.split(' ')
 				.slice(0, 3)

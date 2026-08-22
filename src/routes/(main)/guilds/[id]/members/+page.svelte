@@ -207,7 +207,7 @@
 	<div class="flex flex-col gap-4">
 		<div class="flex flex-col gap-2">
 			<h2 class="text-2xl font-semibold">{data.guild.name} Member Leaderboards</h2>
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted-foreground">
 				View and rank guild members across any Elite <a href="/leaderboard" class="text-primary underline"
 					>leaderboard</a
 				>!
@@ -276,20 +276,20 @@
 				{#snippet namePrefix({ entry })}
 					{#if data.guild.tag}
 						<span
-							class="text-muted-foreground text-xs font-semibold tracking-wide uppercase"
+							class="text-xs font-semibold tracking-wide text-muted-foreground uppercase"
 							aria-label={`${data.guild.tag} guild tag for ${entry.ign ?? entry.members?.[0]?.ign ?? 'member'}`}
 						>
 							{data.guild.tag}
 						</span>
-						<span aria-hidden="true" class="text-muted-foreground text-xs">•</span>
+						<span aria-hidden="true" class="text-xs text-muted-foreground">•</span>
 					{/if}
 				{/snippet}
 			</LeaderboardEntriesColumns>
 		{:else if !loading}
-			<p class="text-muted-foreground text-sm">No members found for this leaderboard.</p>
+			<p class="text-sm text-muted-foreground">No members found for this leaderboard.</p>
 		{/if}
 	{:else if !loading}
-		<p class="text-muted-foreground text-sm">No members found for this leaderboard.</p>
+		<p class="text-sm text-muted-foreground">No members found for this leaderboard.</p>
 	{/if}
 
 	{#if totalPages >= 1}
@@ -302,15 +302,15 @@
 							variant="outline"
 							class="relative flex flex-row items-center gap-2 overflow-hidden text-sm"
 						>
-							<div class="bg-primary/15 absolute -top-24 -right-24 h-32 w-32 rounded-full blur-xl"></div>
+							<div class="absolute -top-24 -right-24 h-32 w-32 rounded-full bg-primary/15 blur-xl"></div>
 							<div
-								class="bg-primary/10 absolute -bottom-24 -left-24 h-32 w-32 rounded-full blur-xl"
+								class="absolute -bottom-24 -left-24 h-32 w-32 rounded-full bg-primary/10 blur-xl"
 							></div>
 							<ShoppingCart class="size-4" />
 							Buy Cosmetics!
 						</Button>
 					{/if}
-					<p class="text-muted-foreground text-sm">
+					<p class="text-sm text-muted-foreground">
 						Showing {currentOffset.toLocaleString()} - {currentEnd.toLocaleString()} of
 						{totalEntries.toLocaleString()} entries.
 					</p>

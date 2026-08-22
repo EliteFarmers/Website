@@ -39,7 +39,12 @@ export class GenericChipSource extends FortuneSource {
 		for (const [statKey, value] of Object.entries(stats) as [Stat, number][]) {
 			if (statKey === Stat.Overbloom) continue;
 			if (!value) continue;
-			out.push({ source: this.name, op: 'add-stat', stat: statKey, value: value * chipLevel });
+			out.push({
+				source: this.name,
+				op: 'add-stat',
+				stat: statKey,
+				value: value * chipLevel,
+			});
 		}
 		return out;
 	}

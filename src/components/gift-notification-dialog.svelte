@@ -62,7 +62,7 @@
 				Someone sent you {itemCount === 1 ? 'an item' : `${itemCount} items`} on the Elite store. Head to your profile
 				to view and claim {itemCount === 1 ? 'it' : 'them'}.
 				{#if expiryText}
-					<span class="text-destructive/80 mt-1 block">Your gift goes back to the sender {expiryText}.</span>
+					<span class="mt-1 block text-destructive/80">Your gift goes back to the sender {expiryText}.</span>
 				{/if}
 			</Dialog.Description>
 		</Dialog.Header>

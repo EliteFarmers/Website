@@ -55,7 +55,7 @@
 	<header class="flex flex-col justify-between gap-3 border-b pb-3 md:flex-row md:items-end">
 		<div class="flex flex-col gap-1">
 			<h2 class="text-xl leading-tight font-semibold">Rate Breakdown</h2>
-			<p class="text-muted-foreground text-sm tabular-nums">
+			<p class="text-sm text-muted-foreground tabular-nums">
 				{formatNumber(result.breakdown.pestSpawning.pestsPerInterval * result.debug.intervalsPerHour, 1)} pests/hr
 				<span class="px-1">·</span>
 				{formatNumber((result.debug.farmBlocks + result.debug.spawnBlocks) * result.debug.cyclesPerHour)} crop blocks/hr
@@ -69,16 +69,16 @@
 
 	<div class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
 		<div class="flex flex-col gap-3">
-			<div class="bg-card rounded-lg border px-4 py-3 {referenceOnlyPrices ? 'opacity-60' : ''}">
-				<p class="text-muted-foreground text-xs font-medium">Total Coins</p>
+			<div class="rounded-lg border bg-card px-4 py-3 {referenceOnlyPrices ? 'opacity-60' : ''}">
+				<p class="text-xs font-medium text-muted-foreground">Total Coins</p>
 				<p class="font-mono text-2xl leading-tight font-semibold tabular-nums">
 					{formatRate(result.valuation.coinsPerHour)}
 				</p>
 			</div>
 
-			<div class="bg-card h-fit overflow-hidden rounded-lg border">
+			<div class="h-fit overflow-hidden rounded-lg border bg-card">
 				<div
-					class="bg-muted/30 text-muted-foreground grid grid-cols-[minmax(0,1fr)_8rem] gap-3 border-b px-4 py-3 text-xs font-semibold uppercase sm:grid-cols-[minmax(0,1fr)_8rem_5rem]"
+					class="grid grid-cols-[minmax(0,1fr)_8rem] gap-3 border-b bg-muted/30 px-4 py-3 text-xs font-semibold text-muted-foreground uppercase sm:grid-cols-[minmax(0,1fr)_8rem_5rem]"
 				>
 					<span>Source</span>
 					<span class="text-right">Coins/hr</span>
@@ -88,17 +88,17 @@
 					{#each model.rows as row (row.key)}
 						{@const share = getRateShare(row.value, result.valuation.coinsPerHour)}
 						<div
-							class="hover:bg-muted/30 grid gap-3 px-4 py-3 transition-colors sm:grid-cols-[minmax(0,1fr)_8rem_5rem] sm:items-center"
+							class="grid gap-3 px-4 py-3 transition-colors hover:bg-muted/30 sm:grid-cols-[minmax(0,1fr)_8rem_5rem] sm:items-center"
 						>
 							<div class="min-w-0">
 								<div class="flex items-center justify-between gap-3">
 									<p class="font-medium">{row.label}</p>
-									<p class="text-muted-foreground shrink-0 text-xs tabular-nums sm:hidden">
+									<p class="shrink-0 text-xs text-muted-foreground tabular-nums sm:hidden">
 										{formatNumber(share, 1)}%
 									</p>
 								</div>
-								<p class="text-muted-foreground mt-0.5 text-xs">{row.detail}</p>
-								<div class="bg-muted mt-2 h-1.5 overflow-hidden rounded-full">
+								<p class="mt-0.5 text-xs text-muted-foreground">{row.detail}</p>
+								<div class="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
 									<div
 										class="{row.value < 0 ? 'bg-destructive' : 'bg-primary'} h-full rounded-full"
 										style:width="{share}%"
@@ -115,7 +115,7 @@
 								>
 									{formatRate(row.value)}
 								</p>
-								<p class="text-muted-foreground hidden text-xs tabular-nums sm:block">
+								<p class="hidden text-xs text-muted-foreground tabular-nums sm:block">
 									{formatNumber(share, 1)}%
 								</p>
 							</div>
@@ -125,7 +125,7 @@
 
 					{#if model.displayedDelta !== 0}
 						<div
-							class="bg-muted/30 grid gap-2 px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_8rem_5rem] sm:items-center"
+							class="grid gap-2 bg-muted/30 px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_8rem_5rem] sm:items-center"
 						>
 							<span class="text-muted-foreground">Rounding / Unshown Sources</span>
 							<span class="font-mono tabular-nums sm:text-right">
@@ -137,12 +137,12 @@
 				</div>
 			</div>
 
-			<div class="bg-card rounded-lg border px-4 py-3">
-				<p class="text-muted-foreground text-sm">
+			<div class="rounded-lg border bg-card px-4 py-3">
+				<p class="text-sm text-muted-foreground">
 					Change
 					<button
 						type="button"
-						class="text-link font-medium underline underline-offset-2 hover:no-underline"
+						class="font-medium text-link underline underline-offset-2 hover:no-underline"
 						onclick={openSettings}
 					>
 						settings
@@ -152,14 +152,14 @@
 			</div>
 		</div>
 
-		<div class="bg-card h-fit rounded-lg border p-4">
+		<div class="h-fit rounded-lg border bg-card p-4">
 			<h3 class="text-sm leading-tight font-semibold">Assumptions</h3>
 			<div class="mt-3 divide-y">
 				{#each model.summary as metric (metric.label)}
 					<div class="flex items-start justify-between gap-3 py-2 first:pt-0 last:pb-0">
 						<div class="min-w-0">
 							<p class="text-sm font-medium">{metric.label}</p>
-							<p class="text-muted-foreground text-xs">{metric.detail}</p>
+							<p class="text-xs text-muted-foreground">{metric.detail}</p>
 						</div>
 						<p class="font-mono text-sm font-semibold whitespace-nowrap tabular-nums">
 							{metric.value}
@@ -170,7 +170,7 @@
 					<div class="flex items-start justify-between gap-3 py-2 first:pt-0 last:pb-0">
 						<div class="min-w-0">
 							<p class="text-sm font-medium">{metric.label}</p>
-							<p class="text-muted-foreground text-xs">{metric.detail}</p>
+							<p class="text-xs text-muted-foreground">{metric.detail}</p>
 						</div>
 						<p class="font-mono text-sm font-semibold whitespace-nowrap tabular-nums">
 							{metric.value}

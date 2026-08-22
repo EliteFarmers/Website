@@ -17,7 +17,7 @@
 </script>
 
 <section
-	class="bg-card grid w-full max-w-7xl overflow-hidden rounded-md border shadow-sm lg:grid-cols-[minmax(0,1.65fr)_minmax(20rem,0.85fr)]"
+	class="grid w-full max-w-7xl overflow-hidden rounded-md border bg-card shadow-sm lg:grid-cols-[minmax(0,1.65fr)_minmax(20rem,0.85fr)]"
 >
 	<TwitchEmbed channel={item.twitchLogin} title="{item.displayName} Twitch stream" frame={false} />
 	<div class="flex min-w-0 flex-col justify-between gap-5 border-t p-5 lg:border-t-0 lg:border-l">
@@ -29,7 +29,7 @@
 				{/if}
 				<div class="min-w-0">
 					<h2 class="truncate text-3xl font-bold tracking-normal sm:text-4xl">{item.displayName}</h2>
-					<p class="text-muted-foreground mt-1 truncate">@{item.twitchLogin}</p>
+					<p class="mt-1 truncate text-muted-foreground">@{item.twitchLogin}</p>
 				</div>
 			</div>
 			<p class="line-clamp-5 text-base leading-7">{title}</p>

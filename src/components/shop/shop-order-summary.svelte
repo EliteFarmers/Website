@@ -7,16 +7,16 @@
 	let { checkout }: { checkout: CheckoutState } = $props();
 </script>
 
-<section class="border-border/60 bg-card/80 rounded-4xl border p-6 shadow-sm sm:p-8">
+<section class="rounded-4xl border border-border/60 bg-card/80 p-6 shadow-sm sm:p-8">
 	<h2 class="text-2xl font-black tracking-tight">Order Summary</h2>
 
 	<div class="mt-6 space-y-4">
-		<div class="bg-background/70 rounded-3xl border p-4">
+		<div class="rounded-3xl border bg-background/70 p-4">
 			<div class="flex flex-row items-center gap-1">
 				<Gift class="size-4" />
 				<p class="text-base font-semibold">{checkout.deliveryLabel}</p>
 			</div>
-			<p class="text-muted-foreground mt-1 text-xs leading-relaxed">{checkout.deliveryDescription}</p>
+			<p class="mt-1 text-xs leading-relaxed text-muted-foreground">{checkout.deliveryDescription}</p>
 		</div>
 
 		<div class="space-y-3">
@@ -29,13 +29,13 @@
 				<span class="font-medium">{checkout.checkoutStatusLabel}</span>
 			</div>
 
-			<div class="border-border border-t pt-3">
+			<div class="border-t border-border pt-3">
 				<div class="flex items-center justify-between">
 					<span class="text-lg font-semibold">Total</span>
 					{#if checkout.totalPrice !== null}
 						<span class="text-lg font-bold">${checkout.totalPrice.toFixed(2)}</span>
 					{:else}
-						<span class="text-muted-foreground text-sm font-medium">{checkout.totalPriceLabel}</span>
+						<span class="text-sm font-medium text-muted-foreground">{checkout.totalPriceLabel}</span>
 					{/if}
 				</div>
 			</div>

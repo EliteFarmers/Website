@@ -391,7 +391,7 @@
 			{:catch}
 				<div class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 p-4 text-center">
 					<h2 class="text-center text-3xl font-semibold">Failed to load graphs</h2>
-					<p class="text-muted-foreground text-sm">{String(collectionsError ?? 'Unknown error')}</p>
+					<p class="text-sm text-muted-foreground">{String(collectionsError ?? 'Unknown error')}</p>
 				</div>
 			{/await}
 		{:else}
@@ -459,7 +459,7 @@
 		{:catch}
 			<div class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 p-4 text-center">
 				<h2 class="text-center text-3xl font-semibold">Failed to load graphs</h2>
-				<p class="text-muted-foreground text-sm">{String(skillsError ?? 'Unknown error')}</p>
+				<p class="text-sm text-muted-foreground">{String(skillsError ?? 'Unknown error')}</p>
 			</div>
 		{/await}
 	{:else}

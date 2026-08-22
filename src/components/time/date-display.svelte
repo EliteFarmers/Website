@@ -15,7 +15,7 @@
 </script>
 
 <PopoverMobile
-	class={cn('bg-muted inline-block w-fit', className)}
+	class={cn('inline-block w-fit bg-muted', className)}
 	triggerClass="inline-flex min-h-6 w-fit items-center"
 >
 	{#snippet trigger()}

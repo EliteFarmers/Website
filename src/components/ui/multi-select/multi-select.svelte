@@ -58,7 +58,7 @@
 							<Badge variant="secondary" class="mr-1">
 								{option?.label ?? v}
 								<button
-									class="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
+									class="ml-1 rounded-full ring-offset-background outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
 									onkeydown={(e) => {
 										if (e.key === 'Enter') {
 											remove(v);
@@ -74,7 +74,7 @@
 										remove(v);
 									}}
 								>
-									<X class="text-muted-foreground hover:text-foreground h-3 w-3" />
+									<X class="h-3 w-3 text-muted-foreground hover:text-foreground" />
 								</button>
 							</Badge>
 						{/each}

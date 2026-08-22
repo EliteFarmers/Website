@@ -16,13 +16,13 @@
 			class="aspect-video w-full rounded-md bg-black object-cover opacity-85 transition-all duration-300 ease-in-out group-hover:opacity-100"
 		/>
 		<div
-			class="text-muted-foreground group-hover:text-primary flex flex-row items-center justify-between gap-2 transition-all duration-300 ease-in-out"
+			class="flex flex-row items-center justify-between gap-2 text-muted-foreground transition-all duration-300 ease-in-out group-hover:text-primary"
 		>
 			<ArticleAuthor {article} />
 			{#if article.releasedAt}
 				<div class="flex flex-row items-center gap-2 text-sm">
 					{#if new Date(article.releasedAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
-						<span class="text-completed text-sm font-semibold">NEW</span>
+						<span class="text-sm font-semibold text-completed">NEW</span>
 					{/if}
 					<DateDisplay timestamp={new Date(article.releasedAt).getTime()} />
 				</div>
@@ -33,7 +33,7 @@
 		<p class="text-sm">{article.summary}</p>
 		<div class="flex flex-row items-center gap-1">
 			{#each article.categories as c (c.slug)}
-				<span class="bg-muted inline-block rounded-sm px-2 py-0.5 text-xs font-semibold">{c.name}</span>
+				<span class="inline-block rounded-sm bg-muted px-2 py-0.5 text-xs font-semibold">{c.name}</span>
 			{/each}
 		</div>
 	</article>

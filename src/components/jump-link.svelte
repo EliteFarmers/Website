@@ -16,7 +16,7 @@
 	href="#{id}"
 	variant="ghost"
 	size="sm"
-	class="text-muted-foreground mx-2 scroll-mt-32 {className}"
+	class="mx-2 scroll-mt-32 text-muted-foreground {className}"
 	id={self ? id : undefined}
 >
 	<Link {size} />

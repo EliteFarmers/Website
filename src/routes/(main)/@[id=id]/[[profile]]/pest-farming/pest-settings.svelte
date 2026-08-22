@@ -104,7 +104,7 @@
 
 <div class="relative w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
 	<SettingHeader class="mt-0 text-2xl">Pest Farming Settings</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">Buffs that increase Bonus Pest Chance for spawning more pests.</p>
+	<p class="px-1 text-sm text-muted-foreground">Buffs that increase Bonus Pest Chance for spawning more pests.</p>
 	<SettingBigSeperator />
 
 	<SettingListItem
@@ -235,7 +235,7 @@
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Contest Bonuses</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">Bonuses that only apply during Jacob's Farming Contest.</p>
+	<p class="px-1 text-sm text-muted-foreground">Bonuses that only apply during Jacob's Farming Contest.</p>
 	<SettingBigSeperator />
 
 	<SettingListItem
@@ -259,7 +259,7 @@
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Pest Attraction</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">
+	<p class="px-1 text-sm text-muted-foreground">
 		Weights that change which pests spawn. Spray material and Hooverius vinyl choices affect attraction.
 	</p>
 	<SettingBigSeperator />
@@ -308,7 +308,7 @@
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Cycle Timing</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">
+	<p class="px-1 text-sm text-muted-foreground">
 		Tune the farming, swapping, spawning, and vacuuming assumptions used for coins per hour.
 	</p>
 	<SettingBigSeperator />

@@ -40,7 +40,7 @@
 			{#each members ?? [] as member, i (member.uuid ?? i)}
 				<a
 					href={`/@${member.uuid}/${ctx.selectedProfile?.profileId}`}
-					class="hover:bg-muted flex justify-between gap-4 rounded-sm p-2 text-xl font-semibold"
+					class="flex justify-between gap-4 rounded-sm p-2 text-xl font-semibold hover:bg-muted"
 				>
 					<span class="font-emoji">{formatIgn(member.username, member.meta)}</span>
 					<span class="font-normal">{member.farmingWeight?.toLocaleString()}</span>

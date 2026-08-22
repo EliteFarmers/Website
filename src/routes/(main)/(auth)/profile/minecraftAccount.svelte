@@ -18,7 +18,7 @@
 	let loading = $state(false);
 </script>
 
-<div class="bg-card flex flex-col gap-2 rounded-md p-4">
+<div class="flex flex-col gap-2 rounded-md bg-card p-4">
 	<div class="flex flex-row items-center justify-between gap-2">
 		<div class="flex items-center gap-4">
 			<PlayerHead uuid={mc.id} size="2xl" />
@@ -28,7 +28,7 @@
 			{#if mc.primaryAccount}
 				<Popover.Mobile>
 					{#snippet trigger()}
-						<Star size={16} class="text-completed fill-current" />
+						<Star size={16} class="fill-current text-completed" />
 					{/snippet}
 					<p class="font-semibold">Primary Account</p>
 					<div class="pt-2">
@@ -68,7 +68,7 @@
 	</div>
 	<div class="flex flex-wrap items-baseline justify-between gap-2">
 		<div class="flex flex-row items-center gap-1 leading-none">
-			<p class="text-muted-foreground text-xs sm:text-sm">{mc.id}</p>
+			<p class="text-xs text-muted-foreground sm:text-sm">{mc.id}</p>
 			<CopyToClipboard text={mc.id} size="sm" class="text-muted-foreground hover:text-foreground" />
 		</div>
 	</div>

@@ -29,13 +29,13 @@
 	let styles = $derived(product.weightStyles ?? []);
 </script>
 
-<div class={cn('bg-muted/50 inline-block rounded-md p-4', className)}>
+<div class={cn('inline-block rounded-md bg-muted/50 p-4', className)}>
 	<div class="flex min-w-0 items-center justify-start gap-2">
 		{#if product.thumbnail?.url}
 			<img
 				src={product.thumbnail.url}
 				alt={product.name}
-				class="bg-muted size-20 shrink-0 rounded-sm object-cover p-2"
+				class="size-20 shrink-0 rounded-sm bg-muted object-cover p-2"
 			/>
 		{/if}
 		<div class="flex {showFeatures ? 'flex-col' : 'flex-row'} w-full grow justify-start gap-x-2">

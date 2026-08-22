@@ -37,7 +37,7 @@
 </script>
 
 <div class="flex w-full flex-row items-center gap-2 align-middle">
-	<div class="bg-card flex max-h-30 w-full flex-1 items-center justify-start gap-2 rounded-lg p-1 align-middle">
+	<div class="flex max-h-30 w-full flex-1 items-center justify-start gap-2 rounded-lg bg-card p-1 align-middle">
 		<div class="crop-container pixelated flex aspect-square h-10 w-10 sm:h-14 sm:w-14 md:h-20 md:w-20">
 			<img
 				src="/images/crops/{key}.png"
@@ -54,7 +54,7 @@
 							player={page.params.id}
 							profile={page.params.profile}
 							{rank}
-							class="bg-card hover:bg-muted rounded-md px-1.5"
+							class="rounded-md bg-card px-1.5 hover:bg-muted"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{rank}</span

@@ -48,14 +48,14 @@
 				<select
 					id="type"
 					bind:value={selectedType}
-					class="border-input bg-background rounded-md border px-3 py-2 text-sm"
+					class="rounded-md border border-input bg-background px-3 py-2 text-sm"
 				>
 					<option value="">Select a type</option>
 					{#each guideTypes as type (type.value)}
 						<option value={type.value}>{type.label}</option>
 					{/each}
 				</select>
-				<p class="text-muted-foreground mt-1 text-xs">
+				<p class="mt-1 text-xs text-muted-foreground">
 					{selectedGuideType?.description ?? 'Select a type to see description'}
 				</p>
 			</div>

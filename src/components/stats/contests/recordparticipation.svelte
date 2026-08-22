@@ -55,25 +55,25 @@
 			<div class="flex flex-col text-lg">
 				<p class="p-1 text-lg">
 					{#if entry.position !== -1}
-						<span class="xs:text-md text-progress text-sm sm:text-xl">#</span><span
-							class=" xs:text-xl text-progress text-lg sm:text-2xl">{(entry.position ?? 0) + 1}</span
+						<span class="xs:text-md text-sm text-progress sm:text-xl">#</span><span
+							class=" xs:text-xl text-lg text-progress sm:text-2xl">{(entry.position ?? 0) + 1}</span
 						>
 					{:else}
-						<span class="xs:text-md text-progress text-sm sm:text-xl">???</span>
+						<span class="xs:text-md text-sm text-progress sm:text-xl">???</span>
 					{/if}
 					<span class="xs:text-md text-sm sm:text-xl">
 						/ {entry.participants?.toLocaleString() ?? '???'}</span
 					>
 				</p>
 				<p class="text-center font-mono text-sm font-light">
-					<span class="bg-card rounded-md p-1 whitespace-nowrap">
+					<span class="rounded-md bg-card p-1 whitespace-nowrap">
 						{new Date(Number(entry.timestamp ?? 0) * 1000).toLocaleString(undefined, {
 							timeStyle: 'short',
 							dateStyle: 'short',
 							timeZone: 'UTC',
 						})}
 					</span>
-					<span class="bg-card rounded-md p-1 whitespace-nowrap">
+					<span class="rounded-md bg-card p-1 whitespace-nowrap">
 						{getReadableSkyblockMonthDay(Number(entry.timestamp ?? 0))}
 					</span>
 				</p>

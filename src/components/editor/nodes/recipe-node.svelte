@@ -21,12 +21,12 @@
 <button
 	type="button"
 	onclick={handleClick}
-	class={`bg-card my-2 inline-flex cursor-pointer items-center gap-4 rounded-lg border p-4 shadow-sm ${selected ? 'ring-primary ring-2' : ''}`}
+	class={`my-2 inline-flex cursor-pointer items-center gap-4 rounded-lg border bg-card p-4 shadow-sm ${selected ? 'ring-2 ring-primary' : ''}`}
 >
 	<div class="grid grid-cols-3 gap-1">
 		{#each { length: 9 }, i (i)}
 			{@const slot = grid[i]}
-			<div class="bg-muted relative flex size-10 items-center justify-center rounded border">
+			<div class="relative flex size-10 items-center justify-center rounded border bg-muted">
 				{#if slot?.skyblockId}
 					<EditorItemRender skyblockId={slot.skyblockId} class="size-8" />
 					{#if slot.count && slot.count > 1}
@@ -37,9 +37,9 @@
 		{/each}
 	</div>
 
-	<ArrowRight class="text-muted-foreground size-5" />
+	<ArrowRight class="size-5 text-muted-foreground" />
 
-	<div class="bg-muted relative flex size-12 items-center justify-center rounded border-2">
+	<div class="relative flex size-12 items-center justify-center rounded border-2 bg-muted">
 		{#if output?.skyblockId}
 			<EditorItemRender skyblockId={output.skyblockId} class="size-10" />
 			{#if output.count && output.count > 1}

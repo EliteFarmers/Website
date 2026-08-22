@@ -245,7 +245,7 @@
 
 <div class="my-16 flex flex-col justify-start justify-items-center gap-16 lg:flex-row">
 	<section class="flex w-full max-w-3xl flex-col gap-y-16">
-		<section class="bg-card space-y-4 rounded-lg border-2 p-4">
+		<section class="space-y-4 rounded-lg border-2 bg-card p-4">
 			<form
 				action="?/updateSettings"
 				method="post"
@@ -370,7 +370,7 @@
 					<input type="hidden" name="nameStyle" bind:value={changedSettings.nameStyle} />
 				</SettingListItem>
 				<div class="flex flex-col items-end gap-2 md:flex-row md:items-center md:justify-end">
-					<p class="text-muted-foreground w-full text-right text-sm">
+					<p class="w-full text-right text-sm text-muted-foreground">
 						Preview not available for name cards yet!
 					</p>
 					<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
@@ -443,12 +443,12 @@
 				<SettingSeperator />
 				<SettingListItem title="Custom Emoji">
 					{#snippet subtitle()}
-						<span class="text-muted-foreground text-sm"
+						<span class="text-sm text-muted-foreground"
 							>Set a custom emoji to be shown next to your linked account's name!</span
 						>
 						{#if !unlockedSettings.emoji}
 							<br />
-							<span class="text-destructive/80 text-sm"
+							<span class="text-sm text-destructive/80"
 								>Not unlocked! Purchase this as part of <a
 									href={resolve('/premium')}
 									class="text-link underline">Elite Premium</a
@@ -480,12 +480,12 @@
 				<SettingSeperator />
 				<SettingListItem title="Hide Shop Promotions">
 					{#snippet subtitle()}
-						<span class="text-muted-foreground text-sm"
+						<span class="text-sm text-muted-foreground"
 							>Toggle whether to hide shop promotions in bot commands.</span
 						>
 						{#if !unlockedSettings.shopPromotions}
 							<br />
-							<span class="text-destructive/80 text-sm"
+							<span class="text-sm text-destructive/80"
 								>Not unlocked! Purchase this as part of <a
 									href={resolve('/premium')}
 									class="text-link underline">Elite Premium</a
@@ -505,12 +505,12 @@
 				<SettingSeperator />
 				<SettingListItem title="Override Weight Style">
 					{#snippet subtitle()}
-						<span class="text-muted-foreground text-sm"
+						<span class="text-sm text-muted-foreground"
 							>Toggle whether to apply your weight style on everyone you look up.</span
 						>
 						{#if !unlockedSettings.styleOverride}
 							<br />
-							<span class="text-destructive/80 text-sm"
+							<span class="text-sm text-destructive/80"
 								>Not unlocked! Purchase this as part of <a
 									href={resolve('/premium')}
 									class="text-link underline">Elite Premium</a
@@ -530,12 +530,12 @@
 				<SettingSeperator />
 				<SettingListItem title="Default 'More Info'">
 					{#snippet subtitle()}
-						<span class="text-muted-foreground text-sm"
+						<span class="text-sm text-muted-foreground"
 							>Toggle whether the 'More Info' section is shown by default in the weight command.</span
 						>
 						{#if !unlockedSettings.moreInfo}
 							<br />
-							<span class="text-destructive/80 text-sm"
+							<span class="text-sm text-destructive/80"
 								>Not unlocked! Purchase this as part of <a
 									href={resolve('/premium')}
 									class="text-link underline">Elite Premium</a
@@ -556,7 +556,7 @@
 			</form>
 		</section>
 
-		<section class="bg-card space-y-4 rounded-lg border-2 p-4">
+		<section class="space-y-4 rounded-lg border-2 bg-card p-4">
 			<h1 class="text-2xl">Manage Badges</h1>
 			{#if !user.minecraftAccounts?.some((mc) => mc.badges && mc.badges.length > 0)}
 				<p>You don't have any badges yet!</p>
@@ -588,7 +588,7 @@
 			{/if}
 		</section>
 
-		<section class="bg-card space-y-4 rounded-lg border-2 p-4">
+		<section class="space-y-4 rounded-lg border-2 bg-card p-4">
 			<h1 class="scroll-mt-32 text-2xl" id="themes">Themes</h1>
 			<div class="rounded-lg border-2 pt-4">
 				<div class="mx-0 flex flex-col items-center justify-center md:mx-16">
@@ -605,7 +605,7 @@
 								<Carousel.Item class="">
 									<Card.Root class={theme.class} style="color-scheme: {theme.class}">
 										<Card.Content
-											class="bg-background flex aspect-video items-center justify-center rounded-lg p-6"
+											class="flex aspect-video items-center justify-center rounded-lg bg-background p-6"
 											style="color-scheme: {theme.class};"
 										>
 											<!-- Theme Preview -->
@@ -618,38 +618,38 @@
 															class="aspect-square max-w-5"
 															alt="Elite Logo"
 														/>
-														<Menu class="text-foreground h-5 w-5" />
+														<Menu class="h-5 w-5 text-foreground" />
 													</div>
 													<div class="flex items-center gap-2">
 														<div
-															class="bg hover:bg-muted flex h-8 items-center rounded-sm border px-3"
+															class="bg flex h-8 items-center rounded-sm border px-3 hover:bg-muted"
 														>
-															<Search class="text-muted-foreground h-4 w-4" />
-															<span class="text-muted-foreground ml-2 text-sm"
+															<Search class="h-4 w-4 text-muted-foreground" />
+															<span class="ml-2 text-sm text-muted-foreground"
 																>Search...</span
 															>
 														</div>
 														{#if theme.isDark}
-															<Moon class="text-foreground h-5 w-5" />
+															<Moon class="h-5 w-5 text-foreground" />
 														{:else}
-															<Sun class="text-foreground h-5 w-5" />
+															<Sun class="h-5 w-5 text-foreground" />
 														{/if}
 													</div>
 												</div>
 												<!-- rest of the preview -->
 												<div class="space-y-4">
-													<div class="bg-muted h-5 w-1/4 rounded"></div>
-													<div class="bg-muted h-4 w-1/2 rounded"></div>
-													<div class="bg-muted h-4 w-3/5 rounded"></div>
-													<div class="bg-muted h-4 w-3/4 rounded"></div>
-													<div class="bg-muted h-4 w-3/4 rounded"></div>
+													<div class="h-5 w-1/4 rounded bg-muted"></div>
+													<div class="h-4 w-1/2 rounded bg-muted"></div>
+													<div class="h-4 w-3/5 rounded bg-muted"></div>
+													<div class="h-4 w-3/4 rounded bg-muted"></div>
+													<div class="h-4 w-3/4 rounded bg-muted"></div>
 													<div class="flex gap-2">
 														<button
 															onclick={() => console.log('hey dont touch me!')}
 															aria-label="Theme preview button"
-															class="border-border bg-primary hover:bg-accent h-9 w-8 rounded border-2 px-8"
+															class="h-9 w-8 rounded border-2 border-border bg-primary px-8 hover:bg-accent"
 														></button>
-														<div class="bg-muted h-9 flex-1 rounded"></div>
+														<div class="h-9 flex-1 rounded bg-muted"></div>
 													</div>
 													<div class="grid grid-cols-2 gap-2">
 														<div class="bg-muted-variant h-16 rounded"></div>
@@ -665,7 +665,7 @@
 						<Carousel.Previous class="hidden md:flex" />
 						<Carousel.Next class="hidden md:flex" />
 					</Carousel.Root>
-					<div class="text-muted-foreground py-4 text-center text-lg">
+					<div class="py-4 text-center text-lg text-muted-foreground">
 						{themeName}
 					</div>
 				</div>

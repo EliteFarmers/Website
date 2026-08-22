@@ -2,7 +2,7 @@
 	import { Button } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import type { Table } from '@tanstack/table-core';
+	import type { Table } from '$ui/data-table';
 	import type { WithoutChildren } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 

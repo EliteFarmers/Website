@@ -1,6 +1,6 @@
 import type { UserOrderDto } from '$lib/api';
 import { renderComponent } from '$ui/data-table';
-import type { ColumnDef } from '@tanstack/table-core';
+import type { ColumnDef } from '$ui/data-table';
 import DateCell from './date-cell.svelte';
 import ItemsCell from './items-cell.svelte';
 import OrderCell from './order-cell.svelte';

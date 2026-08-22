@@ -64,7 +64,7 @@
 <main class="@container flex flex-col items-center">
 	<div class="my-16 text-center">
 		<h1 class="text-4xl font-bold">Community Guides</h1>
-		<p class="text-muted-foreground mt-2">Discover and share guides created by the community</p>
+		<p class="mt-2 text-muted-foreground">Discover and share guides created by the community</p>
 		<div class="mt-6 flex items-center justify-center gap-2">
 			<a href="/guides/new">
 				<Button>Create Guide</Button>
@@ -84,10 +84,10 @@
 		<section class="mb-12 w-full max-w-96 px-4 @sm:max-w-lg @2xl:max-w-2xl @6xl:max-w-4xl">
 			{#await bookmarks}
 				<div class="space-y-3">
-					<div class="bg-muted h-5 w-40 animate-pulse rounded"></div>
+					<div class="h-5 w-40 animate-pulse rounded bg-muted"></div>
 					<div class="grid gap-3 @2xl:grid-cols-2 @6xl:grid-cols-4">
 						{#each Array.from({ length: 4 }, (_, i) => i) as i (i)}
-							<div class="bg-muted h-28 animate-pulse rounded-lg"></div>
+							<div class="h-28 animate-pulse rounded-lg bg-muted"></div>
 						{/each}
 					</div>
 				</div>
@@ -96,7 +96,7 @@
 					<div class="space-y-3">
 						<div class="flex items-center justify-between gap-3">
 							<div class="flex items-center gap-2">
-								<Bookmark class="text-muted-foreground size-4" />
+								<Bookmark class="size-4 text-muted-foreground" />
 								<h2 class="text-lg font-semibold">Bookmarked Guides</h2>
 							</div>
 							<a href="/profile/bookmarks">
@@ -108,17 +108,17 @@
 							{#each bookmarkList.slice(0, 4) as guide (guide.id)}
 								<a href="/guides/{guide.slug}" class="group min-w-0">
 									<div
-										class="bg-card hover:border-link/50 flex h-full min-h-28 flex-col rounded-lg border p-3 transition-all hover:shadow-md"
+										class="flex h-full min-h-28 flex-col rounded-lg border bg-card p-3 transition-all hover:border-link/50 hover:shadow-md"
 									>
 										<div class="min-w-0">
 											<h3
-												class="group-hover:text-primary line-clamp-2 text-sm font-semibold wrap-break-word"
+												class="line-clamp-2 text-sm font-semibold wrap-break-word group-hover:text-primary"
 											>
 												{guide.title}
 											</h3>
 											{#if guide.description}
 												<p
-													class="text-muted-foreground mt-1 line-clamp-2 text-xs wrap-break-word"
+													class="mt-1 line-clamp-2 text-xs wrap-break-word text-muted-foreground"
 												>
 													{guide.description}
 												</p>
@@ -126,7 +126,7 @@
 										</div>
 
 										<div
-											class="text-muted-foreground mt-auto flex items-center justify-between border-t pt-2 text-xs"
+											class="mt-auto flex items-center justify-between border-t pt-2 text-xs text-muted-foreground"
 										>
 											<span class="inline-flex items-center gap-1">
 												<ThumbsUp class="size-3.5" />
@@ -142,7 +142,7 @@
 				{/if}
 			{:catch}
 				<div
-					class="text-muted-foreground flex items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm"
+					class="flex items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm text-muted-foreground"
 				>
 					<span>Failed to load bookmarked guides.</span>
 					<a href="/profile/bookmarks">
@@ -197,7 +197,7 @@
 			class="mb-8 grid w-full max-w-96 grid-cols-1 gap-4 px-4 @sm:max-w-lg @2xl:max-w-2xl @6xl:max-w-4xl @6xl:grid-cols-2"
 		>
 			{#each Array.from({ length: 6 }, (_, i) => i) as i (i)}
-				<div class="bg-muted h-48 animate-pulse rounded-lg"></div>
+				<div class="h-48 animate-pulse rounded-lg bg-muted"></div>
 			{/each}
 		</div>
 	{:then guideList}
@@ -214,17 +214,17 @@
 				{#each guideList as guide (guide.id)}
 					<a href="/guides/{guide.slug}" class="group">
 						<div
-							class="bg-card hover:border-link/50 flex h-full flex-col gap-3 rounded-lg border p-4 transition-all hover:shadow-md"
+							class="flex h-full flex-col gap-3 rounded-lg border bg-card p-4 transition-all hover:border-link/50 hover:shadow-md"
 						>
 							<div class="flex items-start justify-between gap-3">
 								<div class="min-w-0 flex-1">
 									<h3
-										class="group-hover:text-primary line-clamp-2 text-lg font-semibold wrap-break-word"
+										class="line-clamp-2 text-lg font-semibold wrap-break-word group-hover:text-primary"
 									>
 										{guide.title}
 									</h3>
 									{#if guide.description}
-										<p class="text-muted-foreground mt-1 line-clamp-2 text-sm wrap-break-word">
+										<p class="mt-1 line-clamp-2 text-sm wrap-break-word text-muted-foreground">
 											{guide.description}
 										</p>
 									{/if}
@@ -246,7 +246,7 @@
 								{/if}
 							</div>
 
-							<div class="text-muted-foreground flex items-center justify-between border-t pt-2 text-xs">
+							<div class="flex items-center justify-between border-t pt-2 text-xs text-muted-foreground">
 								<div class="flex items-center gap-2">
 									<ThumbsUp class="my-0 inline size-3.5 py-0" />
 									<span> {(guide.score ?? 0).toLocaleString()}</span>
@@ -264,7 +264,7 @@
 					disabled={currentPage === 0}
 					onclick={() => (currentPage = Math.max(0, currentPage - 1))}>Previous</Button
 				>
-				<span class="text-muted-foreground text-sm">Page {currentPage + 1}</span>
+				<span class="text-sm text-muted-foreground">Page {currentPage + 1}</span>
 				<Button
 					variant="outline"
 					disabled={guideList.length < 20}
@@ -274,8 +274,8 @@
 		{/if}
 	{:catch error}
 		<div class="flex flex-col items-center justify-center gap-4 px-4 py-16 text-center">
-			<div class="text-destructive text-lg font-semibold">Failed to load guides</div>
-			<p class="text-muted-foreground max-w-sm">{error?.message || 'Please try again later'}</p>
+			<div class="text-lg font-semibold text-destructive">Failed to load guides</div>
+			<p class="max-w-sm text-muted-foreground">{error?.message || 'Please try again later'}</p>
 		</div>
 	{/await}
 </main>

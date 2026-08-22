@@ -17,10 +17,10 @@
 	</div>
 
 	{#if order.providerStatus}
-		<p class="text-muted-foreground text-xs">Provider: {humanizeOrderLabel(order.providerStatus)}</p>
+		<p class="text-xs text-muted-foreground">Provider: {humanizeOrderLabel(order.providerStatus)}</p>
 	{/if}
 
 	{#if order.recurringReference}
-		<p class="text-muted-foreground text-xs">Recurring payment</p>
+		<p class="text-xs text-muted-foreground">Recurring payment</p>
 	{/if}
 </div>

@@ -43,7 +43,7 @@
 			})}
 		</h4>
 		<!-- Countdown/relative time -->
-		<h4 class="bg-card max-w-fit rounded-md px-2 text-center text-xl font-semibold whitespace-nowrap">
+		<h4 class="max-w-fit rounded-md bg-card px-2 text-center text-xl font-semibold whitespace-nowrap">
 			{#if current}
 				Started
 			{:else}
@@ -58,7 +58,7 @@
 			<Popover.Mobile>
 				{#snippet trigger()}
 					<div>
-						<div class="bg-card flex-1 flex-col items-center rounded-md text-center">
+						<div class="flex-1 flex-col items-center rounded-md bg-card text-center">
 							<img class="pixelated w-16" src={PROPER_CROP_TO_IMG[name]} alt="" />
 						</div>
 					</div>

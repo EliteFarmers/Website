@@ -91,7 +91,7 @@
 					class="col-span-3"
 				/>
 			</div>
-			<p class="text-muted-foreground col-span-4 text-sm">
+			<p class="col-span-4 text-sm text-muted-foreground">
 				Use multiplier for stack prices (e.g., 64 for a full stack).
 			</p>
 		</div>

@@ -53,7 +53,7 @@
 	<div class="grid gap-6 lg:grid-cols-2">
 		{#if hasWeight}
 			<div class="min-w-0">
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-wider uppercase">Weight command</p>
+				<p class="mb-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">Weight command</p>
 				<div class="overflow-hidden rounded-lg border p-2">
 					<WeightStyle {style} {ign} {uuid} {weight} />
 				</div>
@@ -62,7 +62,7 @@
 
 		{#if hasLeaderboard || hasLeaderboardFrame}
 			<div class="min-w-0">
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-wider uppercase">
+				<p class="mb-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
 					Leaderboard{hasLeaderboardFrame && !hasLeaderboard ? ' frame' : ''}
 				</p>
 				<div class="py-2">
@@ -81,7 +81,7 @@
 
 		{#if hasNameCard || hasNameCardFrame}
 			<div class="min-w-0 lg:col-span-2">
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-wider uppercase">
+				<p class="mb-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
 					Name card{hasNameCardFrame && !hasNameCard ? ' frame' : ''}
 				</p>
 				<NameCardStylePreview {style} {ign} {uuid} weight={weight.totalWeight ?? 10000} />
@@ -90,7 +90,7 @@
 
 		{#if hasPage}
 			<div class="min-w-0 lg:col-span-2">
-				<p class="text-muted-foreground mb-3 text-xs font-semibold tracking-wider uppercase">
+				<p class="mb-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
 					Profile page theme
 				</p>
 				<PageStylePreview {style} {ign} />

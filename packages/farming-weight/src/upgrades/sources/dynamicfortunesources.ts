@@ -21,7 +21,11 @@ export interface DynamicFortuneSource<T> {
 	alwaysInclude?: true;
 	wiki?: (source: T) => string | undefined;
 	exists: (source: T) => boolean;
-	active?: (source: T) => { active: boolean; reason?: string; fortune?: number };
+	active?: (source: T) => {
+		active: boolean;
+		reason?: string;
+		fortune?: number;
+	};
 	activeStat?: (source: T, stat: Stat) => { active: boolean; reason?: string; value?: number };
 	max: (source: T) => number;
 	current: (source: T) => number;

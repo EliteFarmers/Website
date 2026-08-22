@@ -167,7 +167,7 @@
 		<h3 class="mt-2 mb-4 text-xl leading-none font-semibold">Greenhouse Upgrades</h3>
 		<div class="flex flex-col items-center justify-center gap-6 md:flex-row">
 			<div class="flex flex-col gap-2">
-				<p class="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+				<p class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
 					Greenhouse Plant Slots
 				</p>
 				<div class="grid h-fit w-fit grid-cols-10 gap-px">
@@ -237,7 +237,7 @@
 		<div class="flex flex-col gap-5">
 			{#each groupedMutations as [rarity, mutations] (rarity)}
 				<div class="flex flex-col gap-2">
-					<p class="text-muted-foreground text-xs font-semibold tracking-wide uppercase">{rarity}</p>
+					<p class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{rarity}</p>
 					<div class="grid grid-cols-2 gap-2 md:grid-cols-3">
 						{#each mutations as entry (entry.key)}
 							<Item.Root
@@ -278,36 +278,36 @@
 
 			<div class="flex flex-col gap-6 py-4">
 				<div class="grid grid-cols-2 gap-2 md:grid-cols-5">
-					<div class="bg-muted rounded-md border p-2">
-						<p class="text-muted-foreground text-xs font-medium uppercase">Rarity</p>
+					<div class="rounded-md border bg-muted p-2">
+						<p class="text-xs font-medium text-muted-foreground uppercase">Rarity</p>
 						<p class="text-sm font-semibold">{selectedMutation.rarity}</p>
 					</div>
-					<div class="bg-muted rounded-md border p-2">
-						<p class="text-muted-foreground text-xs font-medium uppercase">Status</p>
+					<div class="rounded-md border bg-muted p-2">
+						<p class="text-xs font-medium text-muted-foreground uppercase">Status</p>
 						<p class="text-sm font-semibold">{getMutationStatusText(selectedMutation.status)}</p>
 					</div>
-					<div class="bg-muted rounded-md border p-2">
-						<p class="text-muted-foreground text-xs font-medium uppercase">Size</p>
+					<div class="rounded-md border bg-muted p-2">
+						<p class="text-xs font-medium text-muted-foreground uppercase">Size</p>
 						<p class="text-sm font-semibold">
 							{selectedMutation.mutation.growth.size[0] ?? 1}x{selectedMutation.mutation.growth.size[1] ??
 								1}
 						</p>
 					</div>
-					<div class="bg-muted rounded-md border p-2">
-						<p class="text-muted-foreground text-xs font-medium uppercase">Surface</p>
+					<div class="rounded-md border bg-muted p-2">
+						<p class="text-xs font-medium text-muted-foreground uppercase">Surface</p>
 						<p class="text-sm font-semibold">
 							{formatMutationField(selectedMutation.mutation.growth.surface)}
 						</p>
 					</div>
-					<div class="bg-muted rounded-md border p-2">
-						<p class="text-muted-foreground text-xs font-medium uppercase">Growth Stages</p>
+					<div class="rounded-md border bg-muted p-2">
+						<p class="text-xs font-medium text-muted-foreground uppercase">Growth Stages</p>
 						<p class="text-sm font-semibold">{selectedMutation.mutation.growth.stages}</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col items-center gap-2">
 					<p class="text-sm font-semibold">Spread Grid</p>
-					<p class="text-muted-foreground text-center text-sm">
+					<p class="text-center text-sm text-muted-foreground">
 						These are just the base requirements, not an optimal greenhouse layout!
 					</p>
 					<MutationRequirementsGrid
@@ -319,7 +319,7 @@
 				{#if selectedMutation.mutation.spreadingConditions?.length}
 					<div class="flex flex-col gap-1">
 						<p class="text-sm font-semibold">Conditions</p>
-						<ul class="text-muted-foreground list-disc pl-5 text-sm">
+						<ul class="list-disc pl-5 text-sm text-muted-foreground">
 							{#each selectedMutation.mutation.spreadingConditions as condition, idx (idx)}
 								<li>{getSpreadConditionLabel(condition)}</li>
 							{/each}

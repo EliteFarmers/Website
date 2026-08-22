@@ -35,7 +35,7 @@
 		{#each articles as article (article.slug)}
 			<ArticlePill {article} />
 		{:else}
-			<p class="text-muted-foreground col-span-full my-32 text-center">No articles found!</p>
+			<p class="col-span-full my-32 text-center text-muted-foreground">No articles found!</p>
 		{/each}
 	</div>
 	<div

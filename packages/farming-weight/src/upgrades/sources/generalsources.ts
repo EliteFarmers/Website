@@ -154,7 +154,10 @@ function gardenChipEffectSummaries(
 function getLevelDeltaStats(
 	currentLevel: number,
 	nextLevel: number,
-	source: { fortunePerLevel: number; statsPerLevel?: Partial<Record<Stat, number>> }
+	source: {
+		fortunePerLevel: number;
+		statsPerLevel?: Partial<Record<Stat, number>>;
+	}
 ): Partial<Record<Stat, number>> {
 	const result: Partial<Record<Stat, number>> = {};
 	// Always include FarmingFortune
@@ -321,7 +324,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		current: (player) => {
 			return fortuneFromPestBestiary(player.options.bestiaryKills ?? {});
 		},
-		progress: (player, stats) => {
+		progress: (player, _stats) => {
 			const list = getGardenBestiaryProgress(player.options.bestiaryKills ?? {});
 			return Object.entries(list).map(([bestiaryId, pest]) => {
 				const pestId = PEST_BESTIARY_IDS[bestiaryId] ?? null;
@@ -634,13 +637,17 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			if (stat !== Stat.BonusPestChance) return 0;
 			const first = FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE;
 			const accessory = first
-				? FarmingAccessory.fakeItem(first, { ...player.options, pesthunterAccessoryEnabled: true })
+				? FarmingAccessory.fakeItem(first, {
+						...player.options,
+						pesthunterAccessoryEnabled: true,
+					})
 				: undefined;
 			const last = accessory?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.PESTHUNTER_RELIC;
 			return last
-				? (FarmingAccessory.fakeItem(last, { ...player.options, pesthunterAccessoryEnabled: true })?.getStat(
-						stat
-					) ?? 0)
+				? (FarmingAccessory.fakeItem(last, {
+						...player.options,
+						pesthunterAccessoryEnabled: true,
+					})?.getStat(stat) ?? 0)
 				: 0;
 		},
 		currentStat: (player, stat) => {
@@ -695,9 +702,10 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				const badge = FARMING_ACCESSORIES_INFO.PESTHUNTER_BADGE;
 				if (!badge) return [];
 				const value =
-					FarmingAccessory.fakeItem(badge, { ...player.options, pesthunterAccessoryEnabled: true })?.getStat(
-						Stat.BonusPestChance
-					) ?? 0;
+					FarmingAccessory.fakeItem(badge, {
+						...player.options,
+						pesthunterAccessoryEnabled: true,
+					})?.getStat(Stat.BonusPestChance) ?? 0;
 				return [
 					{
 						title: badge.name,
@@ -1395,12 +1403,21 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 		active: (player) => {
 			if (chip.skyblockId !== 'OVERDRIVE_GARDEN_CHIP') return { active: true };
 			if (!player.options.jacobContest?.enabled) {
-				return { active: false, reason: "Overdrive only applies during Jacob's Contest." };
+				return {
+					active: false,
+					reason: "Overdrive only applies during Jacob's Contest.",
+				};
 			}
 			if (!player.options.jacobContest.crop) {
-				return { active: false, reason: "Select an active Jacob's Contest crop to apply Overdrive." };
+				return {
+					active: false,
+					reason: "Select an active Jacob's Contest crop to apply Overdrive.",
+				};
 			}
-			return { active: true, reason: `Applies to ${player.options.jacobContest.crop} during contest.` };
+			return {
+				active: true,
+				reason: `Applies to ${player.options.jacobContest.crop} during contest.`,
+			};
 		},
 		progress: (player) => {
 			const level = getChipLevel(player.options.chips?.[chipId]);

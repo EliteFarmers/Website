@@ -16,7 +16,7 @@
 		<Accordion.Root type="single" class="w-full" value={open ? '1' : undefined}>
 			<Accordion.Item value="1" class="border-none p-0">
 				<Accordion.Trigger class="border-none p-2">
-					<div class="bg-card flex flex-row items-center gap-2 rounded-sm">
+					<div class="flex flex-row items-center gap-2 rounded-sm bg-card">
 						{@render header?.()}
 					</div>
 				</Accordion.Trigger>

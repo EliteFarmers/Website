@@ -513,16 +513,10 @@ export const getClaimGiftUrl = (orderId: string) => {
  * @summary Claim a Pending Gift
  */
 export const claimGift = async (orderId: string, claimGiftRequest: ClaimGiftRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<claimGiftResponse>(getClaimGiftUrl(orderId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(claimGiftRequest),
 	});
 };
@@ -559,16 +553,10 @@ export const getDeclineGiftUrl = (orderId: string) => {
  * @summary Decline Pending Gift Items
  */
 export const declineGift = async (orderId: string, declineGiftRequest: DeclineGiftRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<declineGiftResponse>(getDeclineGiftUrl(orderId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(declineGiftRequest),
 	});
 };
@@ -605,16 +593,10 @@ export const getResendGiftUrl = (orderId: string) => {
  * @summary Reassign Expired or Returned Gift Items
  */
 export const resendGift = async (orderId: string, resendGiftRequest: ResendGiftRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<resendGiftResponse>(getResendGiftUrl(orderId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(resendGiftRequest),
 	});
 };
@@ -845,16 +827,10 @@ export const getUpdateAccountUrl = () => {
  * @summary Update Account Settings
  */
 export const updateAccount = async (updateUserSettingsDto: UpdateUserSettingsDto, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateAccountResponse>(getUpdateAccountUrl(), {
 		...options,
 		method: 'PATCH',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(updateUserSettingsDto),
 	});
 };
@@ -895,16 +871,10 @@ export const updateBadges = async (
 	listOfEditUserBadgeDto: ListOfEditUserBadgeDto,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateBadgesResponse>(getUpdateBadgesUrl(playerUuid), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(listOfEditUserBadgeDto),
 	});
 };
@@ -941,16 +911,10 @@ export const updateFortuneSettings = async (
 	memberFortuneSettingsDto: MemberFortuneSettingsDto,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateFortuneSettingsResponse>(getUpdateFortuneSettingsUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(memberFortuneSettingsDto),
 	});
 };
@@ -1295,16 +1259,10 @@ export const getCreateConfirmationUrl = () => {
  * @summary Create a new confirmation
  */
 export const createConfirmation = async (createConfirmationDto: CreateConfirmationDto, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createConfirmationResponse>(getCreateConfirmationUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createConfirmationDto),
 	});
 };
@@ -1588,16 +1546,10 @@ export const rejectGuide = async (
 	rejectGuideRequest: RejectGuideRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<rejectGuideResponse>(getRejectGuideUrl(guideId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(rejectGuideRequest),
 	});
 };
@@ -1810,16 +1762,10 @@ export const pauseRecurringPayment = async (
 	pauseRecurringPaymentRequest: PauseRecurringPaymentRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<pauseRecurringPaymentResponse>(getPauseRecurringPaymentUrl(orderId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(pauseRecurringPaymentRequest),
 	});
 };
@@ -1974,16 +1920,10 @@ export const resolveRecipient = async (
 	resolveRecipientRequest: ResolveRecipientRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<resolveRecipientResponse>(getResolveRecipientUrl(orderId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(resolveRecipientRequest),
 	});
 };
@@ -2165,16 +2105,10 @@ export const resolveContentReport = async (
 	resolveContentReportRouteRequest: ResolveContentReportRouteRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<resolveContentReportResponse>(getResolveContentReportUrl(reportId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(resolveContentReportRouteRequest),
 	});
 };
@@ -2256,16 +2190,10 @@ export const getCreateTagUrl = () => {
  * @summary Create a tag
  */
 export const createTag = async (createTagRequest: CreateTagRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createTagResponse>(getCreateTagUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createTagRequest),
 	});
 };
@@ -2347,16 +2275,10 @@ export const getUpdateTagUrl = (id: string | number) => {
  * @summary Update a tag
  */
 export const updateTag = async (id: string | number, updateTagRequest: UpdateTagRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateTagResponse>(getUpdateTagUrl(id), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(updateTagRequest),
 	});
 };
@@ -2369,6 +2291,7 @@ export type getAnnouncementResponse200 = {
 export type getAnnouncementResponseSuccess = getAnnouncementResponse200 & {
 	headers: Headers;
 };
+
 export type getAnnouncementResponse = getAnnouncementResponseSuccess;
 
 export const getGetAnnouncementUrl = () => {
@@ -2428,6 +2351,7 @@ export type getConfirmationResponse200 = {
 export type getConfirmationResponseSuccess = getConfirmationResponse200 & {
 	headers: Headers;
 };
+
 export type getConfirmationResponse = getConfirmationResponseSuccess;
 
 export const getGetConfirmationUrl = (id: string | number) => {
@@ -2487,6 +2411,7 @@ export type loginResponse200 = {
 export type loginResponseSuccess = loginResponse200 & {
 	headers: Headers;
 };
+
 export type loginResponse = loginResponseSuccess;
 
 export const getLoginUrl = () => {
@@ -2498,16 +2423,10 @@ export const getLoginUrl = () => {
  * @summary Log in
  */
 export const login = async (discordLoginDto: DiscordLoginDto, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<loginResponse>(getLoginUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(discordLoginDto),
 	});
 };
@@ -2554,6 +2473,7 @@ export type refreshAuthResponse200 = {
 export type refreshAuthResponseSuccess = refreshAuthResponse200 & {
 	headers: Headers;
 };
+
 export type refreshAuthResponse = refreshAuthResponseSuccess;
 
 export const getRefreshAuthUrl = () => {
@@ -2565,16 +2485,10 @@ export const getRefreshAuthUrl = () => {
  * @summary Refresh Auth Token
  */
 export const refreshAuth = async (authRefreshDto: AuthRefreshDto, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<refreshAuthResponse>(getRefreshAuthUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(authRefreshDto),
 	});
 };
@@ -2587,6 +2501,7 @@ export type getBadgesResponse200 = {
 export type getBadgesResponseSuccess = getBadgesResponse200 & {
 	headers: Headers;
 };
+
 export type getBadgesResponse = getBadgesResponseSuccess;
 
 export const getGetBadgesUrl = () => {
@@ -2635,16 +2550,10 @@ export const getCreateBugReportUrl = () => {
  * @summary Create a private bug report
  */
 export const createBugReport = async (createBugReportRequest: CreateBugReportRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createBugReportResponse>(getCreateBugReportUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createBugReportRequest),
 	});
 };
@@ -2685,16 +2594,10 @@ export const addBugReportComment = async (
 	addBugReportCommentRouteRequest: AddBugReportCommentRouteRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<addBugReportCommentResponse>(getAddBugReportCommentUrl(reportId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(addBugReportCommentRouteRequest),
 	});
 };
@@ -2810,16 +2713,10 @@ export const editComment = async (
 	editCommentRequest: EditCommentRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<editCommentResponse>(getEditCommentUrl(commentId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(editCommentRequest),
 	});
 };
@@ -2861,16 +2758,10 @@ export const voteComment = async (
 	voteCommentRequest: VoteCommentRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<voteCommentResponse>(getVoteCommentUrl(commentId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(voteCommentRequest),
 	});
 };
@@ -2883,6 +2774,7 @@ export type getCurrentContestsResponse200 = {
 export type getCurrentContestsResponseSuccess = getCurrentContestsResponse200 & {
 	headers: Headers;
 };
+
 export type getCurrentContestsResponse = getCurrentContestsResponseSuccess;
 
 export const getGetCurrentContestsUrl = () => {
@@ -2975,6 +2867,7 @@ export type getContestsAtTimestampResponse200 = {
 export type getContestsAtTimestampResponseSuccess = getContestsAtTimestampResponse200 & {
 	headers: Headers;
 };
+
 export type getContestsAtTimestampResponse = getContestsAtTimestampResponseSuccess;
 
 export const getGetContestsAtTimestampUrl = (
@@ -3018,6 +2911,7 @@ export type getEventDefaultsResponse200 = {
 export type getEventDefaultsResponseSuccess = getEventDefaultsResponse200 & {
 	headers: Headers;
 };
+
 export type getEventDefaultsResponse = getEventDefaultsResponseSuccess;
 
 export const getGetEventDefaultsUrl = () => {
@@ -3043,6 +2937,7 @@ export type getTeamWordListResponse200 = {
 export type getTeamWordListResponseSuccess = getTeamWordListResponse200 & {
 	headers: Headers;
 };
+
 export type getTeamWordListResponse = getTeamWordListResponseSuccess;
 
 export const getGetTeamWordListUrl = () => {
@@ -3068,6 +2963,7 @@ export type getEventResponse200 = {
 export type getEventResponseSuccess = getEventResponse200 & {
 	headers: Headers;
 };
+
 export type getEventResponse = getEventResponseSuccess;
 
 export const getGetEventUrl = (eventId: string | bigint | number) => {
@@ -3208,6 +3104,7 @@ export type getEventMembersResponse200 = {
 export type getEventMembersResponseSuccess = getEventMembersResponse200 & {
 	headers: Headers;
 };
+
 export type getEventMembersResponse = getEventMembersResponseSuccess;
 
 export const getGetEventMembersUrl = (eventId: string | bigint | number) => {
@@ -3232,6 +3129,7 @@ export type getEventTeamResponse200 = {
 export type getEventTeamResponseSuccess = getEventTeamResponse200 & {
 	headers: Headers;
 };
+
 export type getEventTeamResponse = getEventTeamResponseSuccess;
 
 export const getGetEventTeamUrl = (eventId: string | bigint | number, teamId: string | number) => {
@@ -3317,16 +3215,10 @@ export const updateTeam = async (
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateTeamResponse>(getUpdateTeamUrl(eventId, teamId), {
 		...options,
 		method: 'PATCH',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(updateEventTeamDto),
 	});
 };
@@ -3400,16 +3292,10 @@ export const joinTeam = async (
 	joinTeamBody: string,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<joinTeamResponse>(getJoinTeamUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(joinTeamBody),
 	});
 };
@@ -3523,16 +3409,10 @@ export const setTeamOwner = async (
 	changeTeamOwnerRequest: ChangeTeamOwnerRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<setTeamOwnerResponse>(getSetTeamOwnerUrl(eventId, teamId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(changeTeamOwnerRequest),
 	});
 };
@@ -3545,6 +3425,7 @@ export type getEventTeamsResponse200 = {
 export type getEventTeamsResponseSuccess = getEventTeamsResponse200 & {
 	headers: Headers;
 };
+
 export type getEventTeamsResponse = getEventTeamsResponseSuccess;
 
 export const getGetEventTeamsUrl = (eventId: string | bigint | number) => {
@@ -3592,16 +3473,10 @@ export const createTeam = async (
 	createEventTeamDto: CreateEventTeamDto,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createTeamResponse>(getCreateTeamUrl(eventId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createEventTeamDto),
 	});
 };
@@ -3614,6 +3489,7 @@ export type getUpcomingEventsResponse200 = {
 export type getUpcomingEventsResponseSuccess = getUpcomingEventsResponse200 & {
 	headers: Headers;
 };
+
 export type getUpcomingEventsResponse = getUpcomingEventsResponseSuccess;
 
 export const getGetUpcomingEventsUrl = (params?: GetUpcomingEventsParams) => {
@@ -3648,6 +3524,7 @@ export type listFeedbackResponse200 = {
 export type listFeedbackResponseSuccess = listFeedbackResponse200 & {
 	headers: Headers;
 };
+
 export type listFeedbackResponse = listFeedbackResponseSuccess;
 
 export const getListFeedbackUrl = (params: ListFeedbackParams) => {
@@ -3782,16 +3659,10 @@ export const getSaveSuggestionUrl = () => {
  * @summary Create or update a suggestion draft
  */
 export const saveSuggestion = async (saveSuggestionRequest: SaveSuggestionRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<saveSuggestionResponse>(getSaveSuggestionUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(saveSuggestionRequest),
 	});
 };
@@ -3852,6 +3723,7 @@ export type listFeedbackTagsResponse200 = {
 export type listFeedbackTagsResponseSuccess = listFeedbackTagsResponse200 & {
 	headers: Headers;
 };
+
 export type listFeedbackTagsResponse = listFeedbackTagsResponseSuccess;
 
 export const getListFeedbackTagsUrl = () => {
@@ -3907,16 +3779,10 @@ export const createFeedbackComment = async (
 	createFeedbackCommentRouteRequest: CreateFeedbackCommentRouteRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createFeedbackCommentResponse>(getCreateFeedbackCommentUrl(postId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createFeedbackCommentRouteRequest),
 	});
 };
@@ -3929,6 +3795,7 @@ export type listFeedbackCommentsResponse200 = {
 export type listFeedbackCommentsResponseSuccess = listFeedbackCommentsResponse200 & {
 	headers: Headers;
 };
+
 export type listFeedbackCommentsResponse = listFeedbackCommentsResponseSuccess;
 
 export const getListFeedbackCommentsUrl = (postId: string | number) => {
@@ -3976,16 +3843,10 @@ export const reactFeedback = async (
 	reactFeedbackRouteRequest: ReactFeedbackRouteRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<reactFeedbackResponse>(getReactFeedbackUrl(postId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(reactFeedbackRouteRequest),
 	});
 };
@@ -4031,6 +3892,7 @@ export type getFeedbackResponse200 = {
 export type getFeedbackResponseSuccess = getFeedbackResponse200 & {
 	headers: Headers;
 };
+
 export type getFeedbackResponse = getFeedbackResponseSuccess;
 
 export const getGetFeedbackUrl = (slug: string) => {
@@ -4179,16 +4041,10 @@ export const getAnalyzeGreenhouseUrl = () => {
  * @summary Analyze a greenhouse layout
  */
 export const analyzeGreenhouse = async (analyzeGreenhouseRequest: AnalyzeGreenhouseRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<analyzeGreenhouseResponse>(getAnalyzeGreenhouseUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(analyzeGreenhouseRequest),
 	});
 };
@@ -4201,6 +4057,7 @@ export type getGreenhouseCatalogResponse200 = {
 export type getGreenhouseCatalogResponseSuccess = getGreenhouseCatalogResponse200 & {
 	headers: Headers;
 };
+
 export type getGreenhouseCatalogResponse = getGreenhouseCatalogResponseSuccess;
 
 export const getGetGreenhouseCatalogUrl = () => {
@@ -4280,16 +4137,10 @@ export const createGreenhousePlan = async (
 	createGreenhousePlanRequest: CreateGreenhousePlanRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createGreenhousePlanResponse>(getCreateGreenhousePlanUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createGreenhousePlanRequest),
 	});
 };
@@ -4463,16 +4314,10 @@ export const listGreenhouseProfits = async (
 	listGreenhouseProfitsRequest: ListGreenhouseProfitsRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<listGreenhouseProfitsResponse>(getListGreenhouseProfitsUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(listGreenhouseProfitsRequest),
 	});
 };
@@ -4530,16 +4375,10 @@ export const getGreenhouseProfitDetails = async (
 	listGreenhouseProfitsRequest: ListGreenhouseProfitsRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<getGreenhouseProfitDetailsResponse>(getGetGreenhouseProfitDetailsUrl(plantId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(listGreenhouseProfitsRequest),
 	});
 };
@@ -4576,16 +4415,10 @@ export const createGreenhouseRender = async (
 	createGreenhouseRenderRequest: CreateGreenhouseRenderRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createGreenhouseRenderResponse>(getCreateGreenhouseRenderUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createGreenhouseRenderRequest),
 	});
 };
@@ -4687,16 +4520,10 @@ export const createGreenhouseSimulation = async (
 	createGreenhouseSimulationRequest: CreateGreenhouseSimulationRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createGreenhouseSimulationResponse>(getCreateGreenhouseSimulationUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createGreenhouseSimulationRequest),
 	});
 };
@@ -4874,16 +4701,10 @@ export const getCreateGuideUrl = () => {
  * @summary Create a new guide draft
  */
 export const createGuide = async (createGuideRequest: CreateGuideRequest, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createGuideResponse>(getCreateGuideUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createGuideRequest),
 	});
 };
@@ -4896,6 +4717,7 @@ export type listGuidesResponse200 = {
 export type listGuidesResponseSuccess = listGuidesResponse200 & {
 	headers: Headers;
 };
+
 export type listGuidesResponse = listGuidesResponseSuccess;
 
 export const getListGuidesUrl = (params: ListGuidesParams) => {
@@ -5027,16 +4849,10 @@ export const replaceGuideAuthors = async (
 	replaceGuideAuthorsRequest: ReplaceGuideAuthorsRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<replaceGuideAuthorsResponse>(getReplaceGuideAuthorsUrl(guideId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(replaceGuideAuthorsRequest),
 	});
 };
@@ -5156,16 +4972,10 @@ export const createComment = async (
 	createCommentRequest: CreateCommentRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createCommentResponse>(getCreateCommentUrl(guideId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createCommentRequest),
 	});
 };
@@ -5245,16 +5055,10 @@ export const hoistComment = async (
 	hoistCommentRequest: HoistCommentRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<hoistCommentResponse>(getHoistCommentUrl(guideId, commentId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(hoistCommentRequest),
 	});
 };
@@ -5544,16 +5348,10 @@ export const voteGuide = async (
 	voteGuideRequest: VoteGuideRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<voteGuideResponse>(getVoteGuideUrl(guideId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(voteGuideRequest),
 	});
 };
@@ -5634,16 +5432,10 @@ export const updateGuide = async (
 	updateGuideRequest: UpdateGuideRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateGuideResponse>(getUpdateGuideUrl(id), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(updateGuideRequest),
 	});
 };
@@ -5656,6 +5448,7 @@ export type getGuideResponse200 = {
 export type getGuideResponseSuccess = getGuideResponse200 & {
 	headers: Headers;
 };
+
 export type getGuideResponse = getGuideResponseSuccess;
 
 export const getGetGuideUrl = (slug: string, params: GetGuideParams) => {
@@ -5693,6 +5486,7 @@ export type listCommentsResponse200 = {
 export type listCommentsResponseSuccess = listCommentsResponse200 & {
 	headers: Headers;
 };
+
 export type listCommentsResponse = listCommentsResponseSuccess;
 
 export const getListCommentsUrl = (slug: string) => {
@@ -6092,16 +5886,10 @@ export const createEventAdmin = async (
 	createEventDto: CreateEventDto,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createEventAdminResponse>(getCreateEventAdminUrl(discordId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createEventDto),
 	});
 };
@@ -6143,16 +5931,10 @@ export const updateEventAdmin = async (
 	editEventDto: EditEventDto,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateEventAdminResponse>(getUpdateEventAdminUrl(discordId, eventId), {
 		...options,
 		method: 'PATCH',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(editEventDto),
 	});
 };
@@ -6298,16 +6080,10 @@ export const banMemberAdmin = async (
 	banMemberAdminBody: string,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<banMemberAdminResponse>(getBanMemberAdminUrl(discordId, eventId, playerUuid), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(banMemberAdminBody),
 	});
 };
@@ -6536,16 +6312,10 @@ export const createTeamAdmin = async (
 	params?: CreateTeamAdminParams,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createTeamAdminResponse>(getCreateTeamAdminUrl(discordId, eventId, params), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createEventTeamDto),
 	});
 };
@@ -6732,16 +6502,10 @@ export const setTeamOwnerAdmin = async (
 	setTeamOwnerRequest: SetTeamOwnerRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<setTeamOwnerAdminResponse>(getSetTeamOwnerAdminUrl(discordId, eventId, teamId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(setTeamOwnerRequest),
 	});
 };
@@ -6880,6 +6644,7 @@ export type getPublicGuildsResponse200 = {
 export type getPublicGuildsResponseSuccess = getPublicGuildsResponse200 & {
 	headers: Headers;
 };
+
 export type getPublicGuildsResponse = getPublicGuildsResponseSuccess;
 
 export const getGetPublicGuildsUrl = () => {
@@ -6929,18 +6694,12 @@ export const banParticipationFromJacobLeaderboard = async (
 	banParticipationRequestBanParticipationRequestBody: BanParticipationRequestBanParticipationRequestBody,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<banParticipationFromJacobLeaderboardResponse>(
 		getBanParticipationFromJacobLeaderboardUrl(discordId),
 		{
 			...options,
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
 			body: JSON.stringify(banParticipationRequestBanParticipationRequestBody),
 		}
 	);
@@ -7025,16 +6784,10 @@ export const banPlayerFromJacobLeaderboard = async (
 	banPlayerRequestBanPlayerRequestBody: BanPlayerRequestBanPlayerRequestBody,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<banPlayerFromJacobLeaderboardResponse>(getBanPlayerFromJacobLeaderboardUrl(discordId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(banPlayerRequestBanPlayerRequestBody),
 	});
 };
@@ -7114,18 +6867,12 @@ export const addJacobLeaderboardExcludedTimespan = async (
 	addExcludedTimespanRequestAddExcludedTimespanRequestBody: AddExcludedTimespanRequestAddExcludedTimespanRequestBody,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<addJacobLeaderboardExcludedTimespanResponse>(
 		getAddJacobLeaderboardExcludedTimespanUrl(discordId),
 		{
 			...options,
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
 			body: JSON.stringify(addExcludedTimespanRequestAddExcludedTimespanRequestBody),
 		}
 	);
@@ -7187,6 +6934,7 @@ export type getHarvestFeastRotationsResponse200 = {
 export type getHarvestFeastRotationsResponseSuccess = getHarvestFeastRotationsResponse200 & {
 	headers: Headers;
 };
+
 export type getHarvestFeastRotationsResponse = getHarvestFeastRotationsResponseSuccess;
 
 export const getGetHarvestFeastRotationsUrl = () => {
@@ -7301,6 +7049,7 @@ export type getHypixelGuildResponse200 = {
 export type getHypixelGuildResponseSuccess = getHypixelGuildResponse200 & {
 	headers: Headers;
 };
+
 export type getHypixelGuildResponse = getHypixelGuildResponseSuccess;
 
 export const getGetHypixelGuildUrl = (guildId: string) => {
@@ -7325,6 +7074,7 @@ export type getHypixelGuildMembersLeaderboardResponse200 = {
 export type getHypixelGuildMembersLeaderboardResponseSuccess = getHypixelGuildMembersLeaderboardResponse200 & {
 	headers: Headers;
 };
+
 export type getHypixelGuildMembersLeaderboardResponse = getHypixelGuildMembersLeaderboardResponseSuccess;
 
 export const getGetHypixelGuildMembersLeaderboardUrl = (
@@ -7630,6 +7380,7 @@ export type getLeaderboardsResponse200 = {
 export type getLeaderboardsResponseSuccess = getLeaderboardsResponse200 & {
 	headers: Headers;
 };
+
 export type getLeaderboardsResponse = getLeaderboardsResponseSuccess;
 
 export const getGetLeaderboardsUrl = () => {
@@ -7654,6 +7405,7 @@ export type getPlayerLeaderboardRanksResponse200 = {
 export type getPlayerLeaderboardRanksResponseSuccess = getPlayerLeaderboardRanksResponse200 & {
 	headers: Headers;
 };
+
 export type getPlayerLeaderboardRanksResponse = getPlayerLeaderboardRanksResponseSuccess;
 
 export const getGetPlayerLeaderboardRanksUrl = (
@@ -7807,16 +7559,10 @@ export const updateNotificationPreferences = async (
 	updateNotificationPreferencesRequest: UpdateNotificationPreferencesRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateNotificationPreferencesResponse>(getUpdateNotificationPreferencesUrl(), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(updateNotificationPreferencesRequest),
 	});
 };
@@ -7829,6 +7575,7 @@ export type getNotificationPushPublicKeyResponse200 = {
 export type getNotificationPushPublicKeyResponseSuccess = getNotificationPushPublicKeyResponse200 & {
 	headers: Headers;
 };
+
 export type getNotificationPushPublicKeyResponse = getNotificationPushPublicKeyResponseSuccess;
 
 export const getGetNotificationPushPublicKeyUrl = () => {
@@ -7877,16 +7624,10 @@ export const upsertNotificationPushSubscription = async (
 	upsertNotificationPushSubscriptionRequest: UpsertNotificationPushSubscriptionRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<upsertNotificationPushSubscriptionResponse>(getUpsertNotificationPushSubscriptionUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(upsertNotificationPushSubscriptionRequest),
 	});
 };
@@ -8037,16 +7778,10 @@ export const hiddenCreateTebexCheckout = async (
 	createTebexCheckoutRequest: CreateTebexCheckoutRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<hiddenCreateTebexCheckoutResponse>(getHiddenCreateTebexCheckoutUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createTebexCheckoutRequest),
 	});
 };
@@ -8178,16 +7913,10 @@ export const hiddenUpdateTebexCheckout = async (
 	createTebexCheckoutRequest: CreateTebexCheckoutRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<hiddenUpdateTebexCheckoutResponse>(getHiddenUpdateTebexCheckoutUrl(orderId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createTebexCheckoutRequest),
 	});
 };
@@ -8200,6 +7929,7 @@ export type getStyleResponse200 = {
 export type getStyleResponseSuccess = getStyleResponse200 & {
 	headers: Headers;
 };
+
 export type getStyleResponse = getStyleResponseSuccess;
 
 export const getGetStyleUrl = (styleId: string | number) => {
@@ -8224,6 +7954,7 @@ export type getStylesResponse200 = {
 export type getStylesResponseSuccess = getStylesResponse200 & {
 	headers: Headers;
 };
+
 export type getStylesResponse = getStylesResponseSuccess;
 
 export const getGetStylesUrl = () => {
@@ -8286,6 +8017,7 @@ export type getProductsResponse200 = {
 export type getProductsResponseSuccess = getProductsResponse200 & {
 	headers: Headers;
 };
+
 export type getProductsResponse = getProductsResponseSuccess;
 
 export const getGetProductsUrl = () => {
@@ -8540,16 +8272,10 @@ export const toggleRecapVisibility = async (
 	toggleRecapVisibilityRequestBody: ToggleRecapVisibilityRequestBody,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<toggleRecapVisibilityResponse>(getToggleRecapVisibilityUrl(year, playerUuid, profileUuid), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(toggleRecapVisibilityRequestBody),
 	});
 };
@@ -8590,16 +8316,10 @@ export const createContentReport = async (
 	createContentReportRequest: CreateContentReportRequest,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createContentReportResponse>(getCreateContentReportUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createContentReportRequest),
 	});
 };
@@ -8612,6 +8332,7 @@ export type getAuctionHouseProductsResponse200 = {
 export type getAuctionHouseProductsResponseSuccess = getAuctionHouseProductsResponse200 & {
 	headers: Headers;
 };
+
 export type getAuctionHouseProductsResponse = getAuctionHouseProductsResponseSuccess;
 
 export const getGetAuctionHouseProductsUrl = () => {
@@ -8637,6 +8358,7 @@ export type getAuctionResponse200 = {
 export type getAuctionResponseSuccess = getAuctionResponse200 & {
 	headers: Headers;
 };
+
 export type getAuctionResponse = getAuctionResponseSuccess;
 
 export const getGetAuctionUrl = (auctionId: string) => {
@@ -8662,6 +8384,7 @@ export type getBazaarProductsResponse200 = {
 export type getBazaarProductsResponseSuccess = getBazaarProductsResponse200 & {
 	headers: Headers;
 };
+
 export type getBazaarProductsResponse = getBazaarProductsResponseSuccess;
 
 export const getGetBazaarProductsUrl = () => {
@@ -8687,6 +8410,7 @@ export type getHypixelGlyphFontResponse204 = {
 export type getHypixelGlyphFontResponseSuccess = getHypixelGlyphFontResponse204 & {
 	headers: Headers;
 };
+
 export type getHypixelGlyphFontResponse = getHypixelGlyphFontResponseSuccess;
 
 export const getGetHypixelGlyphFontUrl = () => {
@@ -8712,6 +8436,7 @@ export type skyblockGemShopResponse200 = {
 export type skyblockGemShopResponseSuccess = skyblockGemShopResponse200 & {
 	headers: Headers;
 };
+
 export type skyblockGemShopResponse = skyblockGemShopResponseSuccess;
 
 export const getSkyblockGemShopUrl = () => {
@@ -8737,6 +8462,7 @@ export type getSkyblockItemsResponse200 = {
 export type getSkyblockItemsResponseSuccess = getSkyblockItemsResponse200 & {
 	headers: Headers;
 };
+
 export type getSkyblockItemsResponse = getSkyblockItemsResponseSuccess;
 
 export const getGetSkyblockItemsUrl = () => {
@@ -8762,6 +8488,7 @@ export type getCategoriesResponse200 = {
 export type getCategoriesResponseSuccess = getCategoriesResponse200 & {
 	headers: Headers;
 };
+
 export type getCategoriesResponse = getCategoriesResponseSuccess;
 
 export const getGetCategoriesUrl = (params?: GetCategoriesParams) => {
@@ -8798,6 +8525,7 @@ export type listTagsResponse200 = {
 export type listTagsResponseSuccess = listTagsResponse200 & {
 	headers: Headers;
 };
+
 export type listTagsResponse = listTagsResponseSuccess;
 
 export const getListTagsUrl = () => {
@@ -8823,6 +8551,7 @@ export type getResourcePacksResponse200 = {
 export type getResourcePacksResponseSuccess = getResourcePacksResponse200 & {
 	headers: Headers;
 };
+
 export type getResourcePacksResponse = getResourcePacksResponseSuccess;
 
 export const getGetResourcePacksUrl = () => {
@@ -8848,6 +8577,7 @@ export type getTexturePackIconResponse204 = {
 export type getTexturePackIconResponseSuccess = getTexturePackIconResponse204 & {
 	headers: Headers;
 };
+
 export type getTexturePackIconResponse = getTexturePackIconResponseSuccess;
 
 export const getGetTexturePackIconUrl = (packId: string) => {
@@ -8873,6 +8603,7 @@ export type getBlockTextureResponse204 = {
 export type getBlockTextureResponseSuccess = getBlockTextureResponse204 & {
 	headers: Headers;
 };
+
 export type getBlockTextureResponse = getBlockTextureResponseSuccess;
 
 export const getGetBlockTextureUrl = (blockId: string, params?: GetBlockTextureParams) => {
@@ -8909,6 +8640,7 @@ export type getItemTextureResponse204 = {
 export type getItemTextureResponseSuccess = getItemTextureResponse204 & {
 	headers: Headers;
 };
+
 export type getItemTextureResponse = getItemTextureResponseSuccess;
 
 export const getGetItemTextureUrl = (itemId: string, params?: GetItemTextureParams) => {
@@ -8945,6 +8677,7 @@ export type getPetTextureResponse204 = {
 export type getPetTextureResponseSuccess = getPetTextureResponse204 & {
 	headers: Headers;
 };
+
 export type getPetTextureResponse = getPetTextureResponseSuccess;
 
 export const getGetPetTextureUrl = (petId: string, params?: GetPetTextureParams) => {
@@ -8981,6 +8714,7 @@ export type getInventoryItemTextureResponse204 = {
 export type getInventoryItemTextureResponseSuccess = getInventoryItemTextureResponse204 & {
 	headers: Headers;
 };
+
 export type getInventoryItemTextureResponse = getInventoryItemTextureResponseSuccess;
 
 export const getGetInventoryItemTextureUrl = (
@@ -9026,6 +8760,7 @@ export type getInventoryItemMetaResponse200 = {
 export type getInventoryItemMetaResponseSuccess = getInventoryItemMetaResponse200 & {
 	headers: Headers;
 };
+
 export type getInventoryItemMetaResponse = getInventoryItemMetaResponseSuccess;
 
 export const getGetInventoryItemMetaUrl = (
@@ -9137,16 +8872,10 @@ export const setAdminRole = async (
 	setAdminRoleBody: string,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<setAdminRoleResponse>(getSetAdminRoleUrl(discordId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(setAdminRoleBody),
 	});
 };
@@ -9241,16 +8970,10 @@ export const updateContestPings = async (
 	updateContestPingsRequestUpdateContestPings: UpdateContestPingsRequestUpdateContestPings,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateContestPingsResponse>(getUpdateContestPingsUrl(discordId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(updateContestPingsRequestUpdateContestPings),
 	});
 };
@@ -9287,16 +9010,10 @@ export const getSetInviteUrl = (discordId: string | bigint | number) => {
  * @summary Set invite code for a guild
  */
 export const setInvite = async (discordId: string | bigint | number, setInviteBody: string, options?: RequestInit) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<setInviteResponse>(getSetInviteUrl(discordId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(setInviteBody),
 	});
 };
@@ -9342,16 +9059,10 @@ export const createGuildJacobLeaderboard = async (
 	createJacobLeaderboardRequestCreateJacobLeaderboard: CreateJacobLeaderboardRequestCreateJacobLeaderboard,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<createGuildJacobLeaderboardResponse>(getCreateGuildJacobLeaderboardUrl(discordId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createJacobLeaderboardRequestCreateJacobLeaderboard),
 	});
 };
@@ -9448,18 +9159,12 @@ export const updateGuildJacobLeaderboard = async (
 	updateJacobLeaderboardRequestUpdateJacobLeaderboard: UpdateJacobLeaderboardRequestUpdateJacobLeaderboard,
 	options?: RequestInit
 ) => {
-	const getHeaders = (h?: HeadersInit | Headers) => {
-		if (!h) return {};
-		if (h instanceof Headers) return Object.fromEntries(h.entries());
-		if (Array.isArray(h)) return Object.fromEntries(h);
-		return h;
-	};
 	return customFetch<updateGuildJacobLeaderboardResponse>(
 		getUpdateGuildJacobLeaderboardUrl(discordId, leaderboardId),
 		{
 			...options,
 			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
 			body: JSON.stringify(updateJacobLeaderboardRequestUpdateJacobLeaderboard),
 		}
 	);
@@ -9725,6 +9430,7 @@ export type getUserGuidesResponse200 = {
 export type getUserGuidesResponseSuccess = getUserGuidesResponse200 & {
 	headers: Headers;
 };
+
 export type getUserGuidesResponse = getUserGuidesResponseSuccess;
 
 export const getGetUserGuidesUrl = (accountId: string | bigint | number) => {
@@ -9750,6 +9456,7 @@ export type getWebsiteCacheReloadSignalResponse200 = {
 export type getWebsiteCacheReloadSignalResponseSuccess = getWebsiteCacheReloadSignalResponse200 & {
 	headers: Headers;
 };
+
 export type getWebsiteCacheReloadSignalResponse = getWebsiteCacheReloadSignalResponseSuccess;
 
 export const getGetWebsiteCacheReloadSignalUrl = () => {
@@ -9774,6 +9481,7 @@ export type getWebsiteSitemapContentResponse200 = {
 export type getWebsiteSitemapContentResponseSuccess = getWebsiteSitemapContentResponse200 & {
 	headers: Headers;
 };
+
 export type getWebsiteSitemapContentResponse = getWebsiteSitemapContentResponseSuccess;
 
 export const getGetWebsiteSitemapContentUrl = () => {
@@ -9845,6 +9553,7 @@ export type getAllWeightsResponse200 = {
 export type getAllWeightsResponseSuccess = getAllWeightsResponse200 & {
 	headers: Headers;
 };
+
 export type getAllWeightsResponse = getAllWeightsResponseSuccess;
 
 export const getGetAllWeightsUrl = () => {

@@ -41,25 +41,25 @@
 <div class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
 	<section class="space-y-4">
 		<div class="space-y-3">
-			<p class="text-primary text-sm font-semibold">Checkout</p>
+			<p class="text-sm font-semibold text-primary">Checkout</p>
 			<h1 class="max-w-3xl text-4xl font-black sm:text-5xl">
 				{checkout.checkoutPageTitle}
 			</h1>
-			<p class="text-muted-foreground max-w-3xl text-base leading-relaxed sm:text-lg">
+			<p class="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
 				{checkout.checkoutPageDescription}
 			</p>
 		</div>
 
 		{#if checkout.showingCheckoutSuccess}
 			<section
-				class="border-border/60 bg-card/70 flex flex-col items-center gap-5 rounded-4xl border px-6 py-14 text-center shadow-sm"
+				class="flex flex-col items-center gap-5 rounded-4xl border border-border/60 bg-card/70 px-6 py-14 text-center shadow-sm"
 			>
-				<div class="bg-primary/10 text-primary flex size-16 items-center justify-center rounded-3xl">
+				<div class="flex size-16 items-center justify-center rounded-3xl bg-primary/10 text-primary">
 					<Gift class="size-8" />
 				</div>
 				<div class="space-y-2">
 					<h2 class="text-3xl font-black tracking-tight">Thanks for your order.</h2>
-					<p class="text-muted-foreground mx-auto max-w-2xl text-sm leading-relaxed sm:text-base">
+					<p class="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
 						Your checkout was submitted through Tebex. Purchases usually appear in your history shortly
 						after processing finishes.
 					</p>
@@ -71,14 +71,14 @@
 			</section>
 		{:else if checkout.showingCheckoutError}
 			<section
-				class="border-border/60 bg-card/70 flex flex-col items-center gap-5 rounded-4xl border px-6 py-14 text-center shadow-sm"
+				class="flex flex-col items-center gap-5 rounded-4xl border border-border/60 bg-card/70 px-6 py-14 text-center shadow-sm"
 			>
-				<div class="bg-destructive/10 text-destructive flex size-16 items-center justify-center rounded-3xl">
+				<div class="flex size-16 items-center justify-center rounded-3xl bg-destructive/10 text-destructive">
 					<X class="size-8" />
 				</div>
 				<div class="space-y-2">
 					<h2 class="text-3xl font-black tracking-tight">Payment did not go through.</h2>
-					<p class="text-muted-foreground mx-auto max-w-2xl text-sm leading-relaxed sm:text-base">
+					<p class="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
 						You can reopen Tebex checkout and try again, or return to your basket to make changes first.
 					</p>
 				</div>
@@ -99,14 +99,14 @@
 			</section>
 		{:else if !checkout.hasCheckoutToReview}
 			<section
-				class="border-border/60 bg-card/70 flex flex-col items-center gap-4 rounded-4xl border px-6 py-12 text-center shadow-sm"
+				class="flex flex-col items-center gap-4 rounded-4xl border border-border/60 bg-card/70 px-6 py-12 text-center shadow-sm"
 			>
-				<div class="bg-primary/10 text-primary flex size-16 items-center justify-center rounded-3xl">
+				<div class="flex size-16 items-center justify-center rounded-3xl bg-primary/10 text-primary">
 					<Package class="size-8" />
 				</div>
 				<div class="space-y-2">
 					<h2 class="text-2xl font-black tracking-tight">Your basket is empty.</h2>
-					<p class="text-muted-foreground max-w-lg text-sm leading-relaxed sm:text-base">
+					<p class="max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
 						Add something from the shop first, then come back here to confirm the order and recipient.
 					</p>
 				</div>
@@ -115,11 +115,11 @@
 		{:else}
 			<div class="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_22rem]">
 				<div class="flex flex-col gap-8">
-					<section class="border-border/60 bg-card/70 rounded-4xl border p-6 shadow-sm sm:p-8">
+					<section class="rounded-4xl border border-border/60 bg-card/70 p-6 shadow-sm sm:p-8">
 						<div class="flex flex-wrap items-center justify-between gap-3">
 							<div>
 								<h2 class="text-2xl font-black tracking-tight">Your basket</h2>
-								<p class="text-muted-foreground mt-1 text-sm leading-relaxed">
+								<p class="mt-1 text-sm leading-relaxed text-muted-foreground">
 									{checkout.basketItemCount}
 									{checkout.basketItemCount === 1 ? 'item' : 'items'} in this order.
 								</p>

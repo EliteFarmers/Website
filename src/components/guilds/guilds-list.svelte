@@ -5,7 +5,7 @@
 	import type { HypixelGuildDetailsDto } from '$lib/api/schemas/HypixelGuildDetailsDto';
 	import { SortHypixelGuildsBy } from '$lib/api/schemas/SortHypixelGuildsBy';
 	import { getHypixelGuildsList } from '$lib/remote/guilds.remote';
-	import type { PaginationState, SortingState } from '@tanstack/table-core';
+	import type { PaginationState, SortingState } from '$ui/data-table';
 	import { onMount } from 'svelte';
 	import { getColumns } from './columns.js';
 	import GuildsTable from './guilds-table.svelte';
@@ -152,6 +152,6 @@
 		loading={isLoading}
 	/>
 	{#if errorMessage}
-		<p class="text-destructive mt-2 text-sm">{errorMessage}</p>
+		<p class="mt-2 text-sm text-destructive">{errorMessage}</p>
 	{/if}
 </div>

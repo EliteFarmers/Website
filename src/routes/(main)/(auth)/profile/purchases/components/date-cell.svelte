@@ -14,6 +14,6 @@
 <div class="min-w-44 space-y-1">
 	<p class="font-medium">{formatOrderDateTime(order.orderDate)}</p>
 	{#if resolutionText}
-		<p class="text-muted-foreground text-xs">{resolutionText}</p>
+		<p class="text-xs text-muted-foreground">{resolutionText}</p>
 	{/if}
 </div>

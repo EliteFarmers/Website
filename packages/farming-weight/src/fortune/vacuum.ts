@@ -35,28 +35,28 @@ const DEFAULT_VACUUM_STATS = [Stat.PestKillFortune, Stat.Damage, Stat.FarmingFor
 const INSECT_POWER_DAMAGE_PER_LEVEL = 0.03;
 
 export class Vacuum extends UpgradeableBase {
-	public declare item: EliteItemDto;
-	public declare info: VacuumInfo;
+	declare public item: EliteItemDto;
+	declare public info: VacuumInfo;
 
 	public override get type(): ReforgeTarget {
 		return ReforgeTarget.Vacuum;
 	}
 
-	public declare itemname: string;
-	private declare colorPrefix: string;
+	declare public itemname: string;
+	declare private colorPrefix: string;
 	public get name() {
 		return this.colorPrefix + (this.reforge?.name ?? '') + ' ' + this.itemname;
 	}
 
-	public declare rarity: Rarity;
-	public declare reforge: Reforge | undefined;
-	public declare reforgeStats: ReforgeTier | undefined;
-	public declare farmingForDummies: number;
-	public declare bookwormBooks: number;
-	public declare recombobulated: boolean;
-	public declare fortune: number;
-	public declare fortuneBreakdown: Record<string, number>;
-	public declare options?: PlayerOptions;
+	declare public rarity: Rarity;
+	declare public reforge: Reforge | undefined;
+	declare public reforgeStats: ReforgeTier | undefined;
+	declare public farmingForDummies: number;
+	declare public bookwormBooks: number;
+	declare public recombobulated: boolean;
+	declare public fortune: number;
+	declare public fortuneBreakdown: Record<string, number>;
+	declare public options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		super({ item, options, items: VACUUMS });
@@ -312,8 +312,14 @@ export class Vacuum extends UpgradeableBase {
 			const upgraded = Vacuum.fakeItem(info, this.options);
 			if (!upgraded) return;
 			upgraded.item.uuid = this.item.uuid;
-			upgraded.item.enchantments = { ...upgraded.item.enchantments, ...this.item.enchantments };
-			upgraded.item.attributes = { ...upgraded.item.attributes, ...this.item.attributes };
+			upgraded.item.enchantments = {
+				...upgraded.item.enchantments,
+				...this.item.enchantments,
+			};
+			upgraded.item.attributes = {
+				...upgraded.item.attributes,
+				...this.item.attributes,
+			};
 			upgraded.item.gems = { ...this.item.gems };
 			this.rebuildVacuum(upgraded.item, this.options);
 			return;

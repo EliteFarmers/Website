@@ -2,7 +2,7 @@
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { getItemsFromUpgrades } from '$lib/items';
 	import { getItem } from '$lib/remote/items.remote';
-	import type { Row } from '@tanstack/table-core';
+	import type { Row } from '$ui/data-table';
 	import { type FortuneUpgrade, type UpgradeInfo, type UpgradeTreeNode } from 'farming-weight';
 	import { untrack } from 'svelte';
 	import UpgradeTree from './upgrade-tree.svelte';
@@ -68,7 +68,7 @@
 
 <div class="flex flex-col gap-2 p-2">
 	{#if !tree}
-		<p class="text-muted-foreground py-2 text-center text-sm italic">Loading upgrade path...</p>
+		<p class="py-2 text-center text-sm text-muted-foreground italic">Loading upgrade path...</p>
 	{:else if tree.children.length > 0}
 		{#each tree.children as child, i (getUpgradeKey(child.upgrade, i))}
 			<UpgradeTree
@@ -81,6 +81,6 @@
 			/>
 		{/each}
 	{:else}
-		<p class="text-muted-foreground py-2 text-center text-sm italic">No further upgrades available in this path.</p>
+		<p class="py-2 text-center text-sm text-muted-foreground italic">No further upgrades available in this path.</p>
 	{/if}
 </div>

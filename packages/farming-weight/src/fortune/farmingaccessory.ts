@@ -14,16 +14,16 @@ import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
 
 export class FarmingAccessory extends UpgradeableBase {
-	public declare readonly item: EliteItemDto;
-	public declare readonly info: FarmingAccessoryInfo;
+	declare public readonly item: EliteItemDto;
+	declare public readonly info: FarmingAccessoryInfo;
 
-	public declare readonly rarity: Rarity;
-	public declare readonly recombobulated: boolean;
+	declare public readonly rarity: Rarity;
+	declare public readonly recombobulated: boolean;
 
-	public declare fortune: number;
-	public declare fortuneBreakdown: Record<string, number>;
+	declare public fortune: number;
+	declare public fortuneBreakdown: Record<string, number>;
 
-	public declare options?: PlayerOptions;
+	declare public options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		super({ item, options, items: FARMING_ACCESSORIES_INFO });

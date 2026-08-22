@@ -83,7 +83,7 @@
 					<TooltipSimple side="left">
 						{#snippet trigger()}
 							<span
-								class="text-muted-foreground hover:text-foreground flex size-6 shrink-0 items-center justify-center rounded-sm"
+								class="flex size-6 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground"
 							>
 								<Info size={14} />
 								<span class="sr-only">Effect note</span>

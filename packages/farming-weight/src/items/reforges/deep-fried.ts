@@ -34,7 +34,10 @@ export class DeepFriedReforge extends BaseReforge {
 				op: 'mul-drop',
 				value: 1.25,
 				scope: { tags: ['seasoning'], requiresHarvestFeast: true },
-				meta: { description: '+25% Seasoning during Harvest Feast', valueDisplay: 'factor' },
+				meta: {
+					description: '+25% Seasoning during Harvest Feast',
+					valueDisplay: 'factor',
+				},
 			},
 		];
 	}

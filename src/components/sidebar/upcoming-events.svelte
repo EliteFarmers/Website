@@ -74,18 +74,18 @@
 						<span class="flex-1 truncate text-lg leading-none font-semibold">{event.name}</span>
 						<div class="flex w-full flex-row items-center justify-start gap-1">
 							{#if ended}
-								<span class="text-muted-foreground text-sm">Ended Recently!</span>
+								<span class="text-sm text-muted-foreground">Ended Recently!</span>
 							{:else}
 								{#if started}
-									<span class="text-muted-foreground text-sm">Ends In</span>
+									<span class="text-sm text-muted-foreground">Ends In</span>
 								{:else}
-									<span class="text-muted-foreground text-sm">Starts In</span>
+									<span class="text-sm text-muted-foreground">Starts In</span>
 								{/if}
 								<div class="flex flex-1 flex-row items-center justify-start">
 									{#if event.startTime}
 										<SidebarCountdown {event} />
 									{:else}
-										<span class="text-muted-foreground text-sm">No date set</span>
+										<span class="text-sm text-muted-foreground">No date set</span>
 									{/if}
 								</div>
 							{/if}

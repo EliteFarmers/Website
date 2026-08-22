@@ -50,9 +50,9 @@ export interface ToolCurrentLevelProgress {
 }
 
 export class FarmingTool extends UpgradeableBase {
-	public declare item: EliteItemDto;
-	public declare crops: Crop[];
-	public declare info: FarmingToolInfo;
+	declare public item: EliteItemDto;
+	declare public crops: Crop[];
+	declare public info: FarmingToolInfo;
 
 	public override get type(): ReforgeTarget {
 		return ReforgeTarget.FarmingTool;
@@ -63,8 +63,8 @@ export class FarmingTool extends UpgradeableBase {
 		return this.info;
 	}
 
-	public declare itemname: string;
-	private declare colorPrefix: string;
+	declare public itemname: string;
+	declare private colorPrefix: string;
 	public get name() {
 		return this.colorPrefix + (this.reforge?.name ?? '') + ' ' + this.itemname;
 	}
@@ -73,23 +73,23 @@ export class FarmingTool extends UpgradeableBase {
 		return this.reforge?.name === REFORGES.bountiful?.name;
 	}
 
-	public declare rarity: Rarity;
-	public declare counter: number | undefined;
-	public declare cultivating: number;
-	public declare reforge: Reforge | undefined;
-	public declare reforgeStats: ReforgeTier | undefined;
-	public declare logCounter: number;
-	public declare collAnalysis: number;
+	declare public rarity: Rarity;
+	declare public counter: number | undefined;
+	declare public cultivating: number;
+	declare public reforge: Reforge | undefined;
+	declare public reforgeStats: ReforgeTier | undefined;
+	declare public logCounter: number;
+	declare public collAnalysis: number;
 
-	public declare farmingForDummies: number;
-	public declare recombobulated: boolean;
+	declare public farmingForDummies: number;
+	declare public recombobulated: boolean;
 
-	public declare fortune: number;
-	public declare fortuneBreakdown: Record<string, number>;
+	declare public fortune: number;
+	declare public fortuneBreakdown: Record<string, number>;
 
-	public declare level: number;
-	public declare xp: number;
-	public declare overclocks: number;
+	declare public level: number;
+	declare public xp: number;
+	declare public overclocks: number;
 
 	/**
 	 * Tool XP (`levelable_exp`) is XP within the current level and resets on level-up.
@@ -149,7 +149,7 @@ export class FarmingTool extends UpgradeableBase {
 		};
 	}
 
-	public declare options?: PlayerOptions;
+	declare public options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		super({ item, options, items: FARMING_TOOLS });

@@ -9,7 +9,12 @@ const almostMaxHelmet = {
 	uuid: '9a6966f0-dd42-4797-af83-e0461f00bd02',
 	name: '§dMossy Fermento Helmet §4✦',
 	lore: ['§d§l§ka§r §d§l§d§lLEGENDARY HELMET §d§l§ka'],
-	enchantments: { rejuvenate: 5, respiration: 3, aqua_affinity: 1, pesterminator: 3 },
+	enchantments: {
+		rejuvenate: 5,
+		respiration: 3,
+		aqua_affinity: 1,
+		pesterminator: 3,
+	},
 	attributes: {
 		skin: 'FERMENTO_ULTIMATE',
 		modifier: 'mossy',

@@ -17,12 +17,12 @@
 	{/each}
 
 	{#if summary.extraCount > 0}
-		<p class="text-muted-foreground text-xs">
+		<p class="text-xs text-muted-foreground">
 			+{summary.extraCount} more line item{summary.extraCount === 1 ? '' : 's'}
 		</p>
 	{/if}
 
-	<p class="text-muted-foreground text-xs">
+	<p class="text-xs text-muted-foreground">
 		{summary.totalQuantity.toLocaleString()} total unit{summary.totalQuantity === 1 ? '' : 's'}
 	</p>
 </div>

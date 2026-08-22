@@ -58,7 +58,7 @@
 
 <div class="mx-2 my-4 flex w-full flex-col items-center">
 	<div
-		class="bg-card relative flex h-20 w-full max-w-7xl items-center justify-center gap-1 overflow-hidden rounded-md border-2"
+		class="relative flex h-20 w-full max-w-7xl items-center justify-center gap-1 overflow-hidden rounded-md border-2 bg-card"
 	>
 		<div class="flex-1/5"></div>
 		<div class="flex flex-3/5 items-center justify-center">
@@ -101,10 +101,10 @@
 				{#await cookieValue then value}
 					{@const coins = value.lowest}
 					{#if coins == 0}
-						<p class="text-muted-foreground text-sm">No market data</p>
+						<p class="text-sm text-muted-foreground">No market data</p>
 					{:else}
-						<p class="text-completed text-sm">{coins.toLocaleString()} Coins</p>
-						<p class="text-completed text-sm">
+						<p class="text-sm text-completed">{coins.toLocaleString()} Coins</p>
+						<p class="text-sm text-completed">
 							{Math.round(coins / 325).toLocaleString()} Coins/Gem
 						</p>
 					{/if}
@@ -116,7 +116,7 @@
 	<h2 class="my-12 text-4xl font-semibold">Firesales</h2>
 	<div class="mx-2 flex w-full flex-wrap justify-center gap-4">
 		{#if !firesales?.length}
-			<p class="text-muted-foreground mb-8">There are no firesales at the moment!</p>
+			<p class="mb-8 text-muted-foreground">There are no firesales at the moment!</p>
 		{:else}
 			{#each firesales as sale (sale.startsAt)}
 				{#each sale.items as item (item.itemId)}
@@ -135,11 +135,11 @@
 									class="max-w-fit gap-4"
 								>
 									{#snippet starting()}
-										<p class="text-muted-foreground text-sm">Starts in:</p>
+										<p class="text-sm text-muted-foreground">Starts in:</p>
 									{/snippet}
 
 									{#snippet ending()}
-										<p class="text-muted-foreground text-sm">Ends in:</p>
+										<p class="text-sm text-muted-foreground">Ends in:</p>
 									{/snippet}
 								</Countdown>
 							</div>
@@ -150,7 +150,7 @@
 		{/if}
 	</div>
 	{#if firesales?.length}
-		<span class="text-muted-foreground mt-2 text-sm"
+		<span class="mt-2 text-sm text-muted-foreground"
 			>* Stock number doesn't update! Items could be sold out already if the sale has started.</span
 		>
 	{/if}
@@ -171,10 +171,10 @@
 							{#await getItemValue(outputItem.item_id) then value}
 								{@const coins = value.lowest}
 								{#if coins == 0}
-									<p class="text-muted-foreground text-sm">No market data</p>
+									<p class="text-sm text-muted-foreground">No market data</p>
 								{:else}
-									<p class="text-completed text-sm">{coins.toLocaleString()} Coins</p>
-									<p class="text-completed text-sm">
+									<p class="text-sm text-completed">{coins.toLocaleString()} Coins</p>
+									<p class="text-sm text-completed">
 										{Math.round(coins / item.cost[0].amount).toLocaleString()} Coins/Gem
 									</p>
 								{/if}
@@ -202,10 +202,10 @@
 							{#await getItemValue(outputItem.item_id) then value}
 								{@const coins = value.lowest}
 								{#if coins == 0}
-									<p class="text-muted-foreground text-sm">No market data</p>
+									<p class="text-sm text-muted-foreground">No market data</p>
 								{:else}
-									<p class="text-completed text-sm">{coins.toLocaleString()} Coins</p>
-									<p class="text-completed text-sm">
+									<p class="text-sm text-completed">{coins.toLocaleString()} Coins</p>
+									<p class="text-sm text-completed">
 										{Math.round(coins / item.cost[0].amount).toLocaleString()} Coins/Gem
 									</p>
 								{/if}
@@ -218,13 +218,13 @@
 	</div>
 
 	<div>
-		<p class="text-muted-foreground mt-12 max-w-3xl text-center text-sm" id="creator-code-note">
+		<p class="mt-12 max-w-3xl text-center text-sm text-muted-foreground" id="creator-code-note">
 			*Creator codes are the only way to get discounts on SkyBlock Gems. By using creator code <strong
 				>{STORE_CODE.code}</strong
 			>, you get 5% off your Hypixel Store purchase, support the creator, and allow them to continue making
 			content. Thank you for your support!
 		</p>
-		<p class="text-muted-foreground mt-4 max-w-3xl text-center text-sm">
+		<p class="mt-4 max-w-3xl text-center text-sm text-muted-foreground">
 			This website is not affiliated with Hypixel, their gem listings here are shown for your convenience only.
 			All purchases are made through the official Hypixel Store.
 		</p>
@@ -238,7 +238,7 @@
 		>
 
 		<div class="flex flex-col items-center">
-			<div class="bg-card flex w-full max-w-80 flex-col items-center gap-1 rounded-md border px-1 py-1">
+			<div class="flex w-full max-w-80 flex-col items-center gap-1 rounded-md border bg-card px-1 py-1">
 				<div
 					style="background-image: url('/images/creatorcode.webp');"
 					class="@container relative aspect-3/1 w-full max-w-80 rounded-sm bg-cover bg-no-repeat"

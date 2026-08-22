@@ -15,7 +15,11 @@ export abstract class BaseItem implements ItemDefinition {
 	abstract get maxRarity(): Rarity;
 
 	upgrade?: Upgrade;
-	gemSlots?: { slot_type: string; costs: GemSlotCost[]; requirements?: GemSlotRequirement[] }[];
+	gemSlots?: {
+		slot_type: string;
+		costs: GemSlotCost[];
+		requirements?: GemSlotRequirement[];
+	}[];
 	stats?: RarityRecord<StatsRecord>;
 	baseStats?: Partial<Record<Stat, number>>;
 	cost?: UpgradeCost;
@@ -31,5 +35,9 @@ export abstract class BaseItem implements ItemDefinition {
 	family?: string;
 	familyOrder?: number;
 	contestStatsMultiplier?: number;
-	perLevelStats?: { skill: Skill; appliesTo?: ReforgeTarget[]; stats: Partial<Record<Stat, number>> };
+	perLevelStats?: {
+		skill: Skill;
+		appliesTo?: ReforgeTarget[];
+		stats: Partial<Record<Stat, number>>;
+	};
 }

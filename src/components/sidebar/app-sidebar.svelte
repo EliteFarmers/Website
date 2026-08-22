@@ -70,16 +70,16 @@
 						)}
 					>
 						{#if gbl.user?.settings.features?.hideShopPromotions !== true}
-							<div class="bg-primary/15 absolute -top-24 -right-24 h-32 w-32 rounded-full blur-xl"></div>
+							<div class="absolute -top-24 -right-24 h-32 w-32 rounded-full bg-primary/15 blur-xl"></div>
 							<div
-								class="bg-primary/10 absolute -bottom-24 -left-24 h-32 w-32 rounded-full blur-xl"
+								class="absolute -bottom-24 -left-24 h-32 w-32 rounded-full bg-primary/10 blur-xl"
 							></div>
 						{/if}
-						<ShoppingCart class="text-primary m-0 size-5 p-0" />
-						<span class="text-primary font-semibold">Shop</span>
+						<ShoppingCart class="m-0 size-5 p-0 text-primary" />
+						<span class="font-semibold text-primary">Shop</span>
 						{#if page.data.newProducts}
 							<span
-								class="bg-destructive text-destructive-foreground absolute right-2 rounded-full px-1 text-[10px] font-bold group-data-[state=collapsed]:hidden"
+								class="absolute right-2 rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground group-data-[state=collapsed]:hidden"
 								>NEW</span
 							>
 						{/if}

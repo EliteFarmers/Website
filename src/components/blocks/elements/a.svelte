@@ -28,7 +28,7 @@
 </script>
 
 {#if internal}
-	<a {href} {target} {rel} class="text-link font-medium underline underline-offset-4">
+	<a {href} {target} {rel} class="font-medium text-link underline underline-offset-4">
 		{@render children?.()}
 	</a>
 {:else}

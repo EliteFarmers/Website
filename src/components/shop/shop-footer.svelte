@@ -16,20 +16,20 @@
 	const { PUBLIC_COMMUNITY_INVITE, PUBLIC_SUPPORT_SERVER_INVITE } = env;
 </script>
 
-<footer class="border-border/50 via-background to-card/60 relative mt-24 border-t bg-linear-to-b from-transparent">
+<footer class="relative mt-24 border-t border-border/50 bg-linear-to-b from-transparent via-background to-card/60">
 	<div class="mx-auto flex w-full max-w-7xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
 		<section
-			class="from-card to-card/70 border-border/60 relative overflow-hidden rounded-4xl border bg-linear-to-br p-8 shadow-sm"
+			class="relative overflow-hidden rounded-4xl border border-border/60 bg-linear-to-br from-card to-card/70 p-8 shadow-sm"
 		>
-			<div class="bg-primary/10 absolute top-0 right-0 h-48 w-48 rounded-full blur-3xl"></div>
+			<div class="absolute top-0 right-0 h-48 w-48 rounded-full bg-primary/10 blur-3xl"></div>
 			<div class="relative grid gap-6 lg:grid-cols-[1.2fr_1fr] lg:items-center">
 				<div class="space-y-3">
-					<div class="text-primary inline-flex items-center gap-2 text-sm font-semibold">
+					<div class="inline-flex items-center gap-2 text-sm font-semibold text-primary">
 						<Sparkles class="size-4" />
 						Back to Elite
 					</div>
 					<h2 class="max-w-2xl text-3xl font-black tracking-tight sm:text-4xl">Done shopping?</h2>
-					<p class="text-muted-foreground max-w-2xl text-sm sm:text-base">
+					<p class="max-w-2xl text-sm text-muted-foreground sm:text-base">
 						Equip your new cosmetics or jump back into your stats.
 					</p>
 				</div>
@@ -38,15 +38,15 @@
 					{#each storefront.exitLinks as link (link.id)}
 						<a
 							href={link.href}
-							class="border-border/60 bg-background/80 hover:bg-card group flex items-center justify-between gap-4 rounded-2xl border p-4 transition-colors"
+							class="group flex items-center justify-between gap-4 rounded-2xl border border-border/60 bg-background/80 p-4 transition-colors hover:bg-card"
 						>
 							<div>
 								<p class="font-semibold">{link.label}</p>
 								{#if link.description}
-									<p class="text-muted-foreground mt-1 text-sm">{link.description}</p>
+									<p class="mt-1 text-sm text-muted-foreground">{link.description}</p>
 								{/if}
 							</div>
-							<ArrowRight class="text-primary group-hover:animate-bounce-horizontal size-5 shrink-0" />
+							<ArrowRight class="size-5 shrink-0 text-primary group-hover:animate-bounce-horizontal" />
 						</a>
 					{/each}
 				</div>
@@ -56,7 +56,7 @@
 		<div class="grid gap-10 md:grid-cols-3">
 			<div class="space-y-3">
 				<p class="text-sm font-semibold">Elite Shop</p>
-				<p class="text-muted-foreground text-sm leading-relaxed">
+				<p class="text-sm leading-relaxed text-muted-foreground">
 					Cosmetics and account perks for the Elite Skyblock community.
 				</p>
 			</div>
@@ -101,7 +101,7 @@
 			</div>
 		</div>
 
-		<div class="border-border/50 flex flex-col gap-3 border-t pt-6 text-xs">
+		<div class="flex flex-col gap-3 border-t border-border/50 pt-6 text-xs">
 			<p class="text-muted-foreground">Not affiliated with Hypixel, Mojang, or Microsoft.</p>
 			{#if footerHtml}
 				<div class="text-muted-foreground [&_a]:text-foreground [&_a]:underline-offset-2 [&_a]:hover:underline">

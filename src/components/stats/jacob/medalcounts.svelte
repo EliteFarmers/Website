@@ -26,7 +26,7 @@
 
 <div class="flex flex-wrap justify-center gap-2 md:flex-row md:gap-4">
 	{#if participations}
-		<div class="bg-card flex flex-1 items-center justify-center gap-2 rounded-md">
+		<div class="flex flex-1 items-center justify-center gap-2 rounded-md bg-card">
 			<Popover.Mobile>
 				{#snippet trigger()}
 					<p class="p-2 text-xl leading-none font-semibold md:px-2">
@@ -41,7 +41,7 @@
 	{/if}
 	{#each Object.entries(medals) as [medal, amount] (medal)}
 		<div
-			class="bg-card flex max-w-24 min-w-16 flex-1 basis-8 items-center justify-center gap-2 rounded-md p-1 md:p-2"
+			class="flex max-w-24 min-w-16 flex-1 basis-8 items-center justify-center gap-2 rounded-md bg-card p-1 md:p-2"
 		>
 			<img src="/images/medals/{medal}.webp" alt={medal} class="pixelated size-6 md:size-8" />
 			<p class="text-2xl font-semibold">

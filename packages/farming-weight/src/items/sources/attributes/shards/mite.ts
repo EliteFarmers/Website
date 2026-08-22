@@ -20,7 +20,10 @@ export class MiteShard extends FarmingAttributeShard {
 						op: 'add-mechanic',
 						mechanic: FarmingMechanic.AtmosphericFilterEffect,
 						value: level * 2,
-						meta: { description: 'Increased Atmospheric Filter effect', valueDisplay: 'percent' },
+						meta: {
+							description: 'Increased Atmospheric Filter effect',
+							valueDisplay: 'percent',
+						},
 					},
 				]
 			: [];

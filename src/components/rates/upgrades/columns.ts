@@ -1,6 +1,6 @@
 import type { RatesItemPriceData } from '$lib/api/elite';
 import { renderComponent } from '$ui/data-table';
-import type { ColumnDef } from '@tanstack/table-core';
+import type { ColumnDef } from '$ui/data-table';
 import type { FortuneUpgrade, UpgradeRateImpact, UpgradeTreeNode } from 'farming-weight';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 import UpgradeCompleteButton from './upgrade-complete-button.svelte';

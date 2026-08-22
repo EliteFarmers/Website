@@ -254,7 +254,7 @@ class FarmingWeight {
 	};
 
 	getCropWeight = (crop: Crop) => {
-		CROP_WEIGHT[crop];
+		return CROP_WEIGHT[crop];
 	};
 }
 

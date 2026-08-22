@@ -20,7 +20,10 @@ export class LocustShard extends FarmingAttributeShard {
 						op: 'add-mechanic',
 						mechanic: FarmingMechanic.CropGrowth,
 						value: level,
-						meta: { description: 'Crop Growth while in The Garden', valueDisplay: 'stat' },
+						meta: {
+							description: 'Crop Growth while in The Garden',
+							valueDisplay: 'stat',
+						},
 					},
 				]
 			: [];

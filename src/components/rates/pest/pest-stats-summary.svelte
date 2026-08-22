@@ -23,7 +23,7 @@
 <div class="flex flex-row gap-4 max-md:flex-wrap">
 	{#each entries as entry (entry.stat)}
 		{@const accent = getStatColor(entry.stat, 1) ?? 'bg-progress'}
-		<div class="bg-card relative flex w-fit flex-col gap-3 overflow-hidden rounded-lg border p-4 md:flex-1">
+		<div class="relative flex w-fit flex-col gap-3 overflow-hidden rounded-lg border bg-card p-4 md:flex-1">
 			<div class={cn('absolute inset-x-0 top-0 h-1', accent)}></div>
 			<div class="flex items-center justify-between gap-2">
 				<div class="flex min-w-0 items-center gap-2">
@@ -39,7 +39,7 @@
 					{#snippet trigger({ props })}
 						<button
 							{...props}
-							class="text-muted-foreground hover:text-foreground inline-flex size-6 items-center justify-center rounded-md transition-colors"
+							class="inline-flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
 							aria-label="View breakdown"
 						>
 							<Info class="size-4" />

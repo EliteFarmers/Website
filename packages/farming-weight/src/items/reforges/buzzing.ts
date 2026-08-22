@@ -14,12 +14,24 @@ export class BuzzingReforge extends BaseReforge {
 			},
 			tiers: {
 				[Rarity.Common]: { stats: { [Stat.FarmingFortune]: 2 }, cost: 10_000 },
-				[Rarity.Uncommon]: { stats: { [Stat.FarmingFortune]: 3 }, cost: 20_000 },
+				[Rarity.Uncommon]: {
+					stats: { [Stat.FarmingFortune]: 3 },
+					cost: 20_000,
+				},
 				[Rarity.Rare]: { stats: { [Stat.FarmingFortune]: 5 }, cost: 50_000 },
 				[Rarity.Epic]: { stats: { [Stat.FarmingFortune]: 7 }, cost: 75_000 },
-				[Rarity.Legendary]: { stats: { [Stat.FarmingFortune]: 9 }, cost: 100_000 },
-				[Rarity.Mythic]: { stats: { [Stat.FarmingFortune]: 11 }, cost: 150_000 },
-				[Rarity.Divine]: { stats: { [Stat.FarmingFortune]: 11 }, cost: 250_000 },
+				[Rarity.Legendary]: {
+					stats: { [Stat.FarmingFortune]: 9 },
+					cost: 100_000,
+				},
+				[Rarity.Mythic]: {
+					stats: { [Stat.FarmingFortune]: 11 },
+					cost: 150_000,
+				},
+				[Rarity.Divine]: {
+					stats: { [Stat.FarmingFortune]: 11 },
+					cost: 250_000,
+				},
 			},
 		});
 	}

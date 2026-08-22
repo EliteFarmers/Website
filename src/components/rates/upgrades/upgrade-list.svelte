@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { RatesItemPriceData } from '$lib/api/elite.js';
-	import type { SortingState } from '@tanstack/table-core';
+	import type { SortingState } from '$ui/data-table';
 	import type { FortuneUpgrade, UpgradeInfo, UpgradeRateImpact, UpgradeTreeNode } from 'farming-weight';
 	import { untrack } from 'svelte';
 	import { getColumns } from './columns.js';

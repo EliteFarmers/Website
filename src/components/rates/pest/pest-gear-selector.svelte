@@ -66,16 +66,16 @@
 	}
 </script>
 
-<section class="bg-card flex flex-col gap-4 rounded-lg border p-4 md:p-6">
+<section class="flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
 	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 		<div class="flex items-center gap-3">
-			<div class="bg-muted text-foreground flex size-10 items-center justify-center rounded-md">
+			<div class="flex size-10 items-center justify-center rounded-md bg-muted text-foreground">
 				<Shield class="size-5" />
 			</div>
 			<div>
 				<h2 class="text-xl leading-tight font-semibold">{title}</h2>
 				{#if subtitle}
-					<p class="text-muted-foreground text-sm">{subtitle}</p>
+					<p class="text-sm text-muted-foreground">{subtitle}</p>
 				{/if}
 			</div>
 		</div>
@@ -102,7 +102,7 @@
 			{@const hasBetterRateOption = piece && bestRateDelta > 0}
 
 			<div
-				class="hover:bg-muted/30 flex w-full items-center justify-between gap-2 rounded-md py-2 transition-colors"
+				class="flex w-full items-center justify-between gap-2 rounded-md py-2 transition-colors hover:bg-muted/30"
 			>
 				<div class="flex min-w-0 flex-row items-center gap-1">
 					{#if options.length > 0}
@@ -139,7 +139,7 @@
 													/>
 													<FormattedText text={option.item.name ?? ''} />
 													{#if blockedBy}
-														<span class="text-muted-foreground text-xs whitespace-nowrap"
+														<span class="text-xs whitespace-nowrap text-muted-foreground"
 															>(on {blockedBy})</span
 														>
 													{/if}
@@ -175,11 +175,11 @@
 							<FormattedText text={piece.item.name ?? ''} />
 						</div>
 					{:else}
-						<div class="bg-muted/40 flex size-10 items-center justify-center rounded-md">
-							<Shield class="text-muted-foreground size-5" />
+						<div class="flex size-10 items-center justify-center rounded-md bg-muted/40">
+							<Shield class="size-5 text-muted-foreground" />
 						</div>
 						<div class="min-w-0">
-							<p class="text-muted-foreground text-sm capitalize">No {slot.toLowerCase()}</p>
+							<p class="text-sm text-muted-foreground capitalize">No {slot.toLowerCase()}</p>
 						</div>
 					{/if}
 				</div>

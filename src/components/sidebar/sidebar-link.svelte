@@ -52,7 +52,7 @@
 				{/if}
 				<span>{item.title}</span>
 				{#if showNew}
-					<span class="bg-destructive/50 text-primary ml-auto rounded-sm px-2 py-0.5 text-xs font-medium"
+					<span class="ml-auto rounded-sm bg-destructive/50 px-2 py-0.5 text-xs font-medium text-primary"
 						>New</span
 					>
 				{/if}

@@ -119,7 +119,7 @@
 			<div class="flex h-8 flex-row items-center gap-2">
 				<Countdown start={startTime} end={endTime} class="gap-2 text-sm md:text-base">
 					{#snippet ending()}
-						<p class="text-muted-foreground mb-0.5 text-sm leading-none whitespace-nowrap md:text-base">
+						<p class="mb-0.5 text-sm leading-none whitespace-nowrap text-muted-foreground md:text-base">
 							Ending in
 						</p>
 					{/snippet}
@@ -228,7 +228,7 @@
 	/>
 	{#if !lb?.entries.length && !loading}
 		<div class="mb-8 flex flex-row items-center justify-center">
-			<p class="text-muted-foreground w-full max-w-4xl rounded-lg border-2 py-16 text-center">
+			<p class="w-full max-w-4xl rounded-lg border-2 py-16 text-center text-muted-foreground">
 				No entries found!
 			</p>
 		</div>
@@ -242,9 +242,9 @@
 							variant="outline"
 							class="relative flex flex-row items-center gap-2 overflow-hidden text-sm"
 						>
-							<div class="bg-primary/15 absolute -top-24 -right-24 h-32 w-32 rounded-full blur-xl"></div>
+							<div class="absolute -top-24 -right-24 h-32 w-32 rounded-full bg-primary/15 blur-xl"></div>
 							<div
-								class="bg-primary/10 absolute -bottom-24 -left-24 h-32 w-32 rounded-full blur-xl"
+								class="absolute -bottom-24 -left-24 h-32 w-32 rounded-full bg-primary/10 blur-xl"
 							></div>
 							<ShoppingCart class="size-4" />
 							Buy Cosmetics!

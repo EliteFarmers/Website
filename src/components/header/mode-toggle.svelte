@@ -124,7 +124,7 @@
 				{#if availablePacks.length}
 					<div class="flex w-full flex-col gap-2">
 						<div class="flex flex-col gap-1">
-							<span class="text-muted-foreground text-sm"
+							<span class="text-sm text-muted-foreground"
 								>Drag packs here to apply them. Higher packs take priority.</span
 							>
 							<div
@@ -144,7 +144,7 @@
 											{#if isPreviewPack(item.id)}
 												<button
 													type="button"
-													class="text-destructive hover:text-destructive/80 inline-flex items-center gap-1 p-2 text-sm whitespace-nowrap"
+													class="inline-flex items-center gap-1 p-2 text-sm whitespace-nowrap text-destructive hover:text-destructive/80"
 													onclick={() => removePreviewPack(item.id)}
 												>
 													<Trash_2 class="size-4" />
@@ -171,7 +171,7 @@
 												/>
 												<div class="flex flex-col">
 													<span class="font-medium">{pack?.name}</span>
-													<span class="text-muted-foreground text-sm"
+													<span class="text-sm text-muted-foreground"
 														>by {pack?.authors.join(', ')}</span
 													>
 												</div>
@@ -188,7 +188,7 @@
 								{/each}
 								{#if enabledItems.length === 0}
 									<div
-										class="text-muted-foreground flex min-h-12 max-w-sm items-center justify-center text-sm"
+										class="flex min-h-12 max-w-sm items-center justify-center text-sm text-muted-foreground"
 									>
 										Drag packs from below to enable them!
 									</div>
@@ -199,7 +199,7 @@
 						<div class="flex flex-col gap-1 rounded-lg">
 							<div class="flex flex-col">
 								<span class="font-medium">Available Packs</span>
-								<span class="text-muted-foreground text-sm"
+								<span class="text-sm text-muted-foreground"
 									>Keep unused packs here until you want to enable them.</span
 								>
 							</div>
@@ -233,7 +233,7 @@
 										{#if isPreviewPack(item.id)}
 											<button
 												type="button"
-												class="text-destructive hover:text-destructive/80 inline-flex items-center gap-1 px-1 text-xs"
+												class="inline-flex items-center gap-1 px-1 text-xs text-destructive hover:text-destructive/80"
 												onclick={() => removePreviewPack(item.id)}
 											>
 												<X class="size-3" />
@@ -244,7 +244,7 @@
 								{/each}
 								{#if availableItems.length === 0}
 									<div
-										class="text-muted-foreground flex min-h-12 items-center justify-center text-sm"
+										class="flex min-h-12 items-center justify-center text-sm text-muted-foreground"
 									>
 										All loaded packs are enabled.
 									</div>

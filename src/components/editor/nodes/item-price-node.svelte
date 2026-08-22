@@ -21,7 +21,7 @@
 <button
 	type="button"
 	onclick={handleClick}
-	class={`inline-flex cursor-pointer items-center gap-1 rounded-md border border-amber-300 bg-amber-100 px-2 py-0.5 text-sm font-medium text-amber-800 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200 ${selected ? 'ring-primary ring-2' : ''}`}
+	class={`inline-flex cursor-pointer items-center gap-1 rounded-md border border-amber-300 bg-amber-100 px-2 py-0.5 text-sm font-medium text-amber-800 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200 ${selected ? 'ring-2 ring-primary' : ''}`}
 >
 	<Coins class="size-3.5" />
 	<span class="font-mono">{displayText}</span>

@@ -102,7 +102,10 @@ test('Mooshroom Cow fortune test', () => {
 		'Green Bandana': 60,
 	});
 
-	const petWithStrength = new FarmingPet(mooshroom, { gardenLevel: 15, strength: 1500 });
+	const petWithStrength = new FarmingPet(mooshroom, {
+		gardenLevel: 15,
+		strength: 1500,
+	});
 	expect(petWithStrength.fortune).toBe(212);
 
 	expect(petWithStrength.breakdown).toStrictEqual({
@@ -114,7 +117,12 @@ test('Mooshroom Cow fortune test', () => {
 
 test('new farming pet drops and Orchid Mantis bonuses are exposed as effects', () => {
 	const env = buildEffectEnvironmentFromOptions({});
-	const bee = new FarmingPet({ type: 'BEE', exp: 30_000_000_000, tier: 'LEGENDARY', heldItem: null });
+	const bee = new FarmingPet({
+		type: 'BEE',
+		exp: 30_000_000_000,
+		tier: 'LEGENDARY',
+		heldItem: null,
+	});
 	const mooshroom = new FarmingPet({
 		type: 'MOOSHROOM_COW',
 		exp: 30_000_000_000,
@@ -122,15 +130,30 @@ test('new farming pet drops and Orchid Mantis bonuses are exposed as effects', (
 		heldItem: null,
 	});
 	const mantis = new FarmingPet(
-		{ type: 'ORCHID_MANTIS', exp: 30_000_000_000, tier: 'LEGENDARY', heldItem: null },
+		{
+			type: 'ORCHID_MANTIS',
+			exp: 30_000_000_000,
+			tier: 'LEGENDARY',
+			heldItem: null,
+		},
 		{ speed: 400 }
 	);
 	const rareMantis = new FarmingPet(
-		{ type: 'ORCHID_MANTIS', exp: 30_000_000_000, tier: 'RARE', heldItem: null },
+		{
+			type: 'ORCHID_MANTIS',
+			exp: 30_000_000_000,
+			tier: 'RARE',
+			heldItem: null,
+		},
 		{ speed: 400 }
 	);
 	const slowMantis = new FarmingPet(
-		{ type: 'ORCHID_MANTIS', exp: 30_000_000_000, tier: 'LEGENDARY', heldItem: null },
+		{
+			type: 'ORCHID_MANTIS',
+			exp: 30_000_000_000,
+			tier: 'LEGENDARY',
+			heldItem: null,
+		},
 		{ speed: 100 }
 	);
 
@@ -142,8 +165,15 @@ test('new farming pet drops and Orchid Mantis bonuses are exposed as effects', (
 	);
 	expect(mooshroom.getEffects(env)).toEqual(
 		expect.arrayContaining([
-			expect.objectContaining({ drop: expect.objectContaining({ itemId: 'CHEESE_FUEL', chance: 0.0001 }) }),
-			expect.objectContaining({ drop: expect.objectContaining({ itemId: 'DUNG', chance: 0.0001 }) }),
+			expect.objectContaining({
+				drop: expect.objectContaining({
+					itemId: 'CHEESE_FUEL',
+					chance: 0.0001,
+				}),
+			}),
+			expect.objectContaining({
+				drop: expect.objectContaining({ itemId: 'DUNG', chance: 0.0001 }),
+			}),
 		])
 	);
 	expect(mantis.getFortune(Stat.Speed)).toBe(30);
@@ -154,8 +184,15 @@ test('new farming pet drops and Orchid Mantis bonuses are exposed as effects', (
 	expect(mantis.getToolExperienceMultiplier()).toBe(1.2);
 	expect(mantis.getEffects(env)).toEqual(
 		expect.arrayContaining([
-			expect.objectContaining({ drop: expect.objectContaining({ itemId: 'JELLY', chance: 0.0001 }) }),
-			expect.objectContaining({ drop: expect.objectContaining({ itemId: 'PLANT_MATTER', chance: 0.0001 }) }),
+			expect.objectContaining({
+				drop: expect.objectContaining({ itemId: 'JELLY', chance: 0.0001 }),
+			}),
+			expect.objectContaining({
+				drop: expect.objectContaining({
+					itemId: 'PLANT_MATTER',
+					chance: 0.0001,
+				}),
+			}),
 		])
 	);
 });
@@ -287,8 +324,14 @@ test('Pig Pet Shining Stampede shows potato fortune in pet breakdown', () => {
 
 	const breakdown = player.selectedPet?.getFullBreakdown(player);
 
-	expect(breakdown?.['Potato Fortune']).toStrictEqual({ value: 20, stat: Stat.PotatoFortune });
-	expect(breakdown?.['Shining Stampede']).toStrictEqual({ value: 50, stat: Stat.PotatoFortune });
+	expect(breakdown?.['Potato Fortune']).toStrictEqual({
+		value: 20,
+		stat: Stat.PotatoFortune,
+	});
+	expect(breakdown?.['Shining Stampede']).toStrictEqual({
+		value: 50,
+		stat: Stat.PotatoFortune,
+	});
 });
 
 test('Pet progress exposes separate upgrades for each owned pet', () => {

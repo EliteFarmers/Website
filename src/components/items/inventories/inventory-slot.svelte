@@ -78,7 +78,7 @@
 {:else}
 	<div
 		class={cn(
-			'bg-card size-9 rounded-md border p-1 shadow-md sm:size-12',
+			'size-9 rounded-md border bg-card p-1 shadow-md sm:size-12',
 			highlight ? 'border-link/50' : '',
 			customClass
 		)}

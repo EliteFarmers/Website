@@ -46,7 +46,7 @@
 				player={page.params.id}
 				profile={page.params.profile}
 				{rank}
-				class="bg-card text-completed hover:bg-muted rounded-md px-1.5 py-0.5 font-semibold"
+				class="rounded-md bg-card px-1.5 py-0.5 font-semibold text-completed hover:bg-muted"
 			>
 				<span class="xs:text-md text-sm leading-none sm:text-lg">#</span><span
 					class="text-md xs:text-lg leading-none sm:text-xl">{rank}</span
@@ -63,18 +63,18 @@
 		</div>
 	</div>
 	<div
-		class="bg-card relative h-8 w-full rounded-lg"
+		class="relative h-8 w-full rounded-lg bg-card"
 		onmouseenter={() => (hovering = true)}
 		onmouseleave={() => (hovering = false)}
 		role="none"
 	>
 		{#if loading}
-			<div class="bg-muted absolute top-0 bottom-0 left-0 animate-pulse rounded-lg" style="width: 100%;"></div>
+			<div class="absolute top-0 bottom-0 left-0 animate-pulse rounded-lg bg-muted" style="width: 100%;"></div>
 		{:else if percent >= 100}
-			<div class="bg-completed absolute top-0 bottom-0 left-0 rounded-lg" style="width: 100%;"></div>
+			<div class="absolute top-0 bottom-0 left-0 rounded-lg bg-completed" style="width: 100%;"></div>
 		{:else}
 			<div
-				class="bg-progress absolute top-0 bottom-0 left-0 rounded-lg"
+				class="absolute top-0 bottom-0 left-0 rounded-lg bg-progress"
 				style="width: {Math.max(2, percent)}%;"
 			></div>
 		{/if}

@@ -19,7 +19,7 @@
 					{metadata.title}
 				</h1>
 				{#if metadata.description}
-					<p class="text-muted-foreground text-base text-balance">
+					<p class="text-base text-balance text-muted-foreground">
 						{metadata.description}
 					</p>
 				{/if}
@@ -27,7 +27,7 @@
 			{#if metadata.published || dev}
 				<Component />
 			{:else}
-				<div class="bg-card container mx-auto rounded-md border-2 py-8">
+				<div class="container mx-auto rounded-md border-2 bg-card py-8">
 					<div class="flex flex-col items-center justify-evenly gap-8 md:flex-row">
 						<Construction class="size-24" />
 						<div class="flex flex-col items-center">

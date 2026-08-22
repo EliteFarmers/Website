@@ -75,21 +75,21 @@ export class BlessedReforge extends BaseReforge {
 		const source = sourceName ?? `Reforge: ${this.name}`;
 		return [
 			...super.getEffects(rarity, source),
-			...LIST_OF_CROPS.map(
-				(crop): Effect => ({
-					source: 'Blessed Reforge',
-					op: 'add-drop',
-					scope: { crops: [crop] },
-					drop: {
-						itemId: crop,
-						output: 'collection',
-						baseAmount: BLESSED_DROP_CHANCE * BLESSED_DROP_AMOUNT,
-						dropKind: 'crop',
-						tags: ['crop-drop'],
-					},
-					meta: { description: '0.22% chance per block to drop 160 of the crop being farmed' },
-				})
-			),
+			...LIST_OF_CROPS.map((crop): Effect => ({
+				source: 'Blessed Reforge',
+				op: 'add-drop',
+				scope: { crops: [crop] },
+				drop: {
+					itemId: crop,
+					output: 'collection',
+					baseAmount: BLESSED_DROP_CHANCE * BLESSED_DROP_AMOUNT,
+					dropKind: 'crop',
+					tags: ['crop-drop'],
+				},
+				meta: {
+					description: '0.22% chance per block to drop 160 of the crop being farmed',
+				},
+			})),
 		];
 	}
 }

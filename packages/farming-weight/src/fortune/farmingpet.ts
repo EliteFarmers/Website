@@ -50,17 +50,17 @@ function improvesRequestedStat(upgrade: FortuneUpgrade, stats: readonly Stat[]):
 type ComputedPetAbilityStats = ReturnType<FarmingPetAbility['computed']>;
 
 export class FarmingPet {
-	public declare readonly pet: FarmingPetType;
-	public declare readonly type: FarmingPets;
-	public declare readonly info: FarmingPetInfo;
-	public declare readonly rarity: Rarity;
-	public declare readonly level: number;
-	public declare readonly item: FarmingPetItemInfo | undefined;
+	declare public readonly pet: FarmingPetType;
+	declare public readonly type: FarmingPets;
+	declare public readonly info: FarmingPetInfo;
+	declare public readonly rarity: Rarity;
+	declare public readonly level: number;
+	declare public readonly item: FarmingPetItemInfo | undefined;
 
-	public declare fortune: number;
-	public declare breakdown: Record<string, number>;
+	declare public fortune: number;
+	declare public breakdown: Record<string, number>;
 
-	public declare options?: PlayerOptions;
+	declare public options?: PlayerOptions;
 
 	constructor(pet: FarmingPetType, options?: PlayerOptions) {
 		this.options = options;
@@ -450,7 +450,9 @@ export class FarmingPet {
 		const queryStats = stats && stats.length > 0 ? stats : [Stat.FarmingFortune];
 		const currentAbilityStatsCache = new Map<FarmingPetAbility, ComputedPetAbilityStats>();
 		const currentStats = this.getStatTotals(queryStats, player, currentAbilityStatsCache);
-		const maxPet = this.withChanges({ exp: this.getXpForLevel(this.info.maxLevel ?? 100) });
+		const maxPet = this.withChanges({
+			exp: this.getXpForLevel(this.info.maxLevel ?? 100),
+		});
 		const maxStats = maxPet.getStatTotals(
 			queryStats,
 			player,

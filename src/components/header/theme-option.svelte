@@ -13,7 +13,7 @@
 
 <button
 	onclick={() => (currentTheme.theme = theme.class)}
-	class="flex cursor-pointer flex-row items-center {theme.class} bg-background border-border hover:bg-card flex flex-row items-center justify-between gap-2 rounded-md border px-4 py-2 md:w-full"
+	class="flex cursor-pointer flex-row items-center {theme.class} flex flex-row items-center justify-between gap-2 rounded-md border border-border bg-background px-4 py-2 hover:bg-card md:w-full"
 	style="color-scheme: {theme.class};"
 >
 	<span class="text-primary capitalize">{theme.name}</span>

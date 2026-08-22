@@ -13,7 +13,7 @@
 	let { guild, link = false }: Props = $props();
 </script>
 
-<div class="bg-card m-1 inline-block rounded-md p-4">
+<div class="m-1 inline-block rounded-md bg-card p-4">
 	<div class="flex items-center justify-between">
 		<div class="flex min-w-0 shrink items-center justify-start gap-4">
 			<GuildIcon {guild} />

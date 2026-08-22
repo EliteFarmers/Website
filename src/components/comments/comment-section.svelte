@@ -61,8 +61,8 @@
 		/>
 		<Separator />
 	{:else}
-		<p class="text-muted-foreground text-sm italic">
-			<a href="/login?redirect={encodeURIComponent(page.url.pathname)}" class="hover:text-primary/70 underline"
+		<p class="text-sm text-muted-foreground italic">
+			<a href="/login?redirect={encodeURIComponent(page.url.pathname)}" class="underline hover:text-primary/70"
 				>Sign in</a
 			> to post a comment
 		</p>

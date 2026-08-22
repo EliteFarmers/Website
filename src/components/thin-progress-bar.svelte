@@ -32,7 +32,7 @@
 	{...rest}
 >
 	<div
-		class="bg-muted absolute top-1/2 left-0 h-1.5 w-full -translate-y-1/2 overflow-hidden rounded-full"
+		class="absolute top-1/2 left-0 h-1.5 w-full -translate-y-1/2 overflow-hidden rounded-full bg-muted"
 		aria-hidden="true"
 	>
 		<div

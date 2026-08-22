@@ -49,12 +49,27 @@ test('thorny uses the live Farming Fortune, Overbloom, and application costs', (
 			thorny.getTier(rarity)
 		)
 	).toEqual([
-		{ stats: { [Stat.FarmingFortune]: 2, [Stat.Overbloom]: 0.25 }, cost: 20_000 },
-		{ stats: { [Stat.FarmingFortune]: 4, [Stat.Overbloom]: 0.5 }, cost: 40_000 },
-		{ stats: { [Stat.FarmingFortune]: 6, [Stat.Overbloom]: 0.75 }, cost: 80_000 },
+		{
+			stats: { [Stat.FarmingFortune]: 2, [Stat.Overbloom]: 0.25 },
+			cost: 20_000,
+		},
+		{
+			stats: { [Stat.FarmingFortune]: 4, [Stat.Overbloom]: 0.5 },
+			cost: 40_000,
+		},
+		{
+			stats: { [Stat.FarmingFortune]: 6, [Stat.Overbloom]: 0.75 },
+			cost: 80_000,
+		},
 		{ stats: { [Stat.FarmingFortune]: 8, [Stat.Overbloom]: 1 }, cost: 150_000 },
-		{ stats: { [Stat.FarmingFortune]: 10, [Stat.Overbloom]: 1.25 }, cost: 300_000 },
-		{ stats: { [Stat.FarmingFortune]: 12, [Stat.Overbloom]: 1.5 }, cost: 600_000 },
+		{
+			stats: { [Stat.FarmingFortune]: 10, [Stat.Overbloom]: 1.25 },
+			cost: 300_000,
+		},
+		{
+			stats: { [Stat.FarmingFortune]: 12, [Stat.Overbloom]: 1.5 },
+			cost: 600_000,
+		},
 	]);
 });
 

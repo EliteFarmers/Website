@@ -18,7 +18,7 @@
 </script>
 
 <a
-	class={cn('group bg-card shadow-primary inline-block max-w-48 rounded-lg border-2 hover:drop-shadow-lg', className)}
+	class={cn('group inline-block max-w-48 rounded-lg border-2 bg-card shadow-primary hover:drop-shadow-lg', className)}
 	{href}
 	{...rest}
 >
@@ -30,7 +30,7 @@
 		<div class="relative flex w-full flex-row items-center justify-between p-2 text-sm font-semibold">
 			<p class="inline-block max-w-48 flex-1 truncate px-2">{name}</p>
 
-			<div class="text-muted-foreground group-hover:animate-bounce-horizontal pr-1">
+			<div class="pr-1 text-muted-foreground group-hover:animate-bounce-horizontal">
 				<ArrowRight size={18} />
 			</div>
 		</div>

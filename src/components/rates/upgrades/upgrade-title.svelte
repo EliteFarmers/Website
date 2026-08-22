@@ -43,7 +43,7 @@
 	</p>
 	<UpgradeDescription {upgrade} {items} />
 	{#if canExpand && toggleExpanded}
-		<Button variant="link" size="sm" class="text-muted-foreground h-auto p-0" onclick={() => toggleExpanded()}>
+		<Button variant="link" size="sm" class="h-auto p-0 text-muted-foreground" onclick={() => toggleExpanded()}>
 			{#if expanded}
 				<ChevronDown class="mr-1 h-3 w-3" /> Hide upgrade path
 			{:else}

@@ -22,7 +22,7 @@
 
 {#snippet announcement(a: AnnouncementDto)}
 	<div
-		class="bg-card border-completed group flex scroll-mt-32 flex-col items-center justify-between gap-4 rounded-lg border-2 p-2 text-sm transition-transform sm:flex-row"
+		class="group flex scroll-mt-32 flex-col items-center justify-between gap-4 rounded-lg border-2 border-completed bg-card p-2 text-sm transition-transform sm:flex-row"
 		id="announcement-{a.id}"
 	>
 		<div class="flex items-center gap-2">
@@ -32,7 +32,7 @@
 					<AnnouncementIcon announcement={a} class="mb-1 inline size-6 md:hidden" />
 					<span class="text-lg font-semibold md:text-xl">{a.title}</span>
 				</span>
-				<span class="text-muted-foreground mt-3 max-w-4xl text-sm sm:mt-1">
+				<span class="mt-3 max-w-4xl text-sm text-muted-foreground sm:mt-1">
 					<RenderHtml content={a.content} />
 				</span>
 			</div>

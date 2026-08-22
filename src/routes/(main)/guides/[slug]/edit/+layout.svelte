@@ -59,7 +59,7 @@
 
 {#if loadError}
 	<div class="flex flex-col items-center justify-center gap-4 py-16">
-		<div class="text-destructive text-lg font-semibold">Failed to load guide</div>
+		<div class="text-lg font-semibold text-destructive">Failed to load guide</div>
 		<p class="text-muted-foreground">{loadError.message || 'Please try again later'}</p>
 		<a href="/guides">
 			<Button>Back to Guides</Button>
@@ -70,7 +70,7 @@
 		<div class="flex items-center justify-between">
 			<div>
 				<h1 class="text-3xl font-bold">Edit Guide</h1>
-				<p class="text-muted-foreground mt-1">
+				<p class="mt-1 text-muted-foreground">
 					{#if edit.saveError}
 						<span class="text-destructive">{edit.saveError}</span>
 					{:else if edit.saveStatus === 'saving'}
@@ -160,7 +160,7 @@
 				<div class="mt-4 space-y-4">
 					<div class="rounded-md border p-3">
 						<p class="font-medium">{edit.previewVersion.title}</p>
-						<p class="text-muted-foreground mt-1 text-sm">{edit.previewVersion.description}</p>
+						<p class="mt-1 text-sm text-muted-foreground">{edit.previewVersion.description}</p>
 					</div>
 
 					<div class="max-h-[60vh] overflow-y-auto rounded-md border p-4">
@@ -229,7 +229,7 @@
 					rules.
 				</AlertDialogDescription>
 			</AlertDialogHeader>
-			<div class="text-muted-foreground space-y-2 text-sm">
+			<div class="space-y-2 text-sm text-muted-foreground">
 				<p>Before submitting, check that:</p>
 				<ul class="list-disc space-y-1 pl-5">
 					<li>The title, description, and guide content are complete.</li>

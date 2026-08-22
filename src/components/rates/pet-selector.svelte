@@ -90,7 +90,7 @@
 				<div
 					class="{selected
 						? 'border-muted'
-						: 'border-transparent'} has-[.selectable:hover]:bg-muted/30 flex w-full cursor-pointer items-center justify-between rounded-lg border-[3px] border-solid px-1"
+						: 'border-transparent'} flex w-full cursor-pointer items-center justify-between rounded-lg border-[3px] border-solid px-1 has-[.selectable:hover]:bg-muted/30"
 				>
 					<div class="flex h-full flex-1 flex-row items-center">
 						<DropdownMenu.Root>
@@ -136,7 +136,7 @@
 							<Popover.Mobile>
 								{#snippet trigger()}
 									<div class="px-1">
-										<TriangleAlert size={20} class="text-completed -mb-1" />
+										<TriangleAlert size={20} class="-mb-1 text-completed" />
 									</div>
 								{/snippet}
 								<div class="max-w-xs">
@@ -154,7 +154,7 @@
 		{#if Object.values(activeId).filter((v) => v).length > 2}
 			<button
 				onclick={toggleShow}
-				class="hover:bg-card/50 flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm"
+				class="flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm hover:bg-card/50"
 			>
 				{show === 2 ? 'Show More' : 'Show Less'}
 			</button>

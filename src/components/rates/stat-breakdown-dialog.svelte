@@ -103,7 +103,7 @@
 			{:else}
 				<button
 					{...tooltipTriggerData.props}
-					class="hover:bg-accent hover:text-accent-foreground inline-flex size-8 items-center justify-center rounded-md transition-colors"
+					class="inline-flex size-8 items-center justify-center rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
 				>
 					<Info class="size-4" />
 				</button>
@@ -132,7 +132,7 @@
 				<div class="flex flex-col gap-1 p-4">
 					{#each list as item (item.key)}
 						<div
-							class="even:bg-card flex flex-row justify-between gap-6 rounded-sm p-1 text-sm leading-tight"
+							class="flex flex-row justify-between gap-6 rounded-sm p-1 text-sm leading-tight even:bg-card"
 						>
 							<div class="flex min-w-0 flex-col">
 								<div class="flex min-w-0 items-center gap-1">
@@ -146,7 +146,7 @@
 									{/if}
 								</div>
 								{#if item.stat && item.stat !== stat}
-									<p class="text-muted-foreground text-xs">{STAT_NAMES[item.stat] ?? item.stat}</p>
+									<p class="text-xs text-muted-foreground">{STAT_NAMES[item.stat] ?? item.stat}</p>
 								{/if}
 							</div>
 							<p class="shrink-0 font-mono tabular-nums">{format(item.value)}</p>
@@ -154,14 +154,14 @@
 					{/each}
 				</div>
 				{#if children}
-					<div class="text-muted-foreground mt-4 text-sm wrap-break-word">
+					<div class="mt-4 text-sm wrap-break-word text-muted-foreground">
 						{@render children()}
 					</div>
 				{/if}
 			</ScrollArea>
 
 			<div
-				class="bg-background text-primary flex flex-row justify-between gap-4 border-t p-4 text-sm font-semibold"
+				class="flex flex-row justify-between gap-4 border-t bg-background p-4 text-sm font-semibold text-primary"
 			>
 				<p>Total</p>
 				<p class="font-mono tabular-nums">{format(displayTotal)}</p>

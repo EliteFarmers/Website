@@ -39,13 +39,13 @@
 		{@render itemCost(item, amount)}
 	{/each}
 	{#if upgrade.cost?.coins}
-		<p class="text-muted-foreground text-sm">
+		<p class="text-sm text-muted-foreground">
 			+ <span class="text-primary dark:text-completed">{upgrade.cost?.coins?.toLocaleString()}</span>
 			<span class="text-muted-foreground">coins</span>
 		</p>
 	{/if}
 	{#if upgrade.cost?.applyCost?.coins}
-		<p class="text-muted-foreground text-sm">
+		<p class="text-sm text-muted-foreground">
 			+ <span class="text-primary dark:text-completed">{upgrade.cost?.applyCost?.coins?.toLocaleString()}</span>
 			<span class="text-muted-foreground">coins to apply</span>
 		</p>
@@ -99,7 +99,7 @@
 
 	<div class="flex max-w-80 min-w-0 flex-row items-center gap-1">
 		<span class="shrink-0 text-sm font-semibold">{amount}x</span>
-		<div class="bg-background w-fit max-w-full min-w-0 rounded-sm border px-1">
+		<div class="w-fit max-w-full min-w-0 rounded-sm border bg-background px-1">
 			{#if sbItem?.item?.name}
 				{@const itemDisplayName = sbItem.item.name
 					.replace('Enchantment Ultimate', '')
@@ -130,13 +130,13 @@
 			<span class="{marketPriceClass} ml-1 shrink-0 text-sm whitespace-nowrap">
 				{Math.round(lowestAh * amount).toLocaleString()}
 			</span>
-			<span class="text-muted-foreground shrink-0 whitespace-nowrap">coins</span>
+			<span class="shrink-0 whitespace-nowrap text-muted-foreground">coins</span>
 		{:else if sbItem?.bazaar && sbItem.bazaar.averageBuyOrder > 0}
 			{@const averageBuyOrder = sbItem.bazaar.averageBuyOrder}
 			<span class="{marketPriceClass} ml-1 shrink-0 text-sm whitespace-nowrap">
 				{Math.round(averageBuyOrder * amount).toLocaleString()}
 			</span>
-			<span class="text-muted-foreground shrink-0 whitespace-nowrap">coins</span>
+			<span class="shrink-0 whitespace-nowrap text-muted-foreground">coins</span>
 		{/if}
 	</div>
 {/snippet}

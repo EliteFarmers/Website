@@ -40,7 +40,7 @@
 	<Tooltip.Root>
 		<Tooltip.Trigger>
 			{#snippet child({ props })}
-				<p {...props} class="text-muted-foreground text-xs">{timeAgo}</p>
+				<p {...props} class="text-xs text-muted-foreground">{timeAgo}</p>
 			{/snippet}
 		</Tooltip.Trigger>
 		<Tooltip.Content>{date.toLocaleString()}</Tooltip.Content>
@@ -52,11 +52,11 @@
 		{/if}
 
 		{#if isEdited}
-			<span class="text-muted-foreground text-xs">(edited{comment.isEditedByAdmin ? ' by admin' : ''})</span>
+			<span class="text-xs text-muted-foreground">(edited{comment.isEditedByAdmin ? ' by admin' : ''})</span>
 		{/if}
 
 		{#if isPending}
-			<span class="text-completed text-xs">(pending review)</span>
+			<span class="text-xs text-completed">(pending review)</span>
 		{/if}
 	{/if}
 </div>

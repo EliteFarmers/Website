@@ -56,7 +56,7 @@
 					{#each cropWeights() as [cropName, weight] (cropName)}
 						{@const crop = getCropDisplayName(getCropFromName(cropName) ?? Crop.Wheat)}
 						<div
-							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
+							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 						>
 							<div class="flex flex-row items-center gap-2">
 								<img src={PROPER_CROP_TO_IMG[crop]} alt={crop} class="pixelated aspect-square" />
@@ -68,7 +68,7 @@
 				{:else if event.type === EventType.Medals}
 					{#each medalWeights() as [medal, weight] (medal)}
 						<div
-							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
+							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 						>
 							<div class="flex flex-row items-center gap-2">
 								<img
@@ -84,7 +84,7 @@
 				{:else if event.type === EventType.Pests}
 					{#each pestWeights() as [pest, weight] (pest)}
 						<div
-							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
+							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 						>
 							<div class="flex flex-row items-center gap-2">
 								<img
@@ -100,7 +100,7 @@
 				{:else if event.type === EventType.Collections}
 					{#each collectionWeights() as [id, { name, weight }] (id)}
 						<div
-							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
+							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 						>
 							<div class="flex flex-row items-center gap-2">
 								<p class="font-semibold whitespace-nowrap">{name}</p>

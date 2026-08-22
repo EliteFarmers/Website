@@ -36,7 +36,7 @@
 	</header>
 
 	{#if directory.serviceUnavailable}
-		<div class="bg-card text-muted-foreground rounded-md border p-4 text-sm">
+		<div class="rounded-md border bg-card p-4 text-sm text-muted-foreground">
 			Some stream data could not be loaded. The page is showing the data that is currently available.
 		</div>
 	{/if}
@@ -85,15 +85,15 @@
 	{/if}
 
 	{#if !directory.hero && directory.promotedLive.length === 0 && directory.discoveredLive.length === 0 && directory.registeredOffline.length === 0}
-		<section class="bg-card flex min-h-64 flex-col items-center justify-center rounded-md border p-8 text-center">
+		<section class="flex min-h-64 flex-col items-center justify-center rounded-md border bg-card p-8 text-center">
 			<h2 class="text-2xl font-semibold">No streamers found</h2>
-			<p class="text-muted-foreground mt-2 max-w-md">
+			<p class="mt-2 max-w-md text-muted-foreground">
 				Check back soon for live SkyBlock streams and featured creators.
 			</p>
 		</section>
 	{/if}
 
-	<section class="bg-card rounded-md border p-6 shadow-sm">
+	<section class="rounded-md border bg-card p-6 shadow-sm">
 		<h2 class="text-2xl font-semibold">FAQ</h2>
 		<Accordion.Root type="multiple" class="mt-4 w-full">
 			<Accordion.Item value="how-streamers-appear">

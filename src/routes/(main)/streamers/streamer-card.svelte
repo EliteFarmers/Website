@@ -20,7 +20,7 @@
 	href={item.href}
 	target={item.external ? '_blank' : undefined}
 	rel={item.external ? 'noreferrer' : undefined}
-	class="group bg-card hover:border-primary/50 flex h-full flex-col overflow-hidden rounded-md border shadow-sm transition hover:-translate-y-0.5 hover:shadow-md {showThumbnail
+	class="group flex h-full flex-col overflow-hidden rounded-md border bg-card shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md {showThumbnail
 		? 'min-h-64'
 		: 'min-h-0'}"
 >
@@ -62,10 +62,10 @@
 			{/if}
 			<div class="min-w-0 flex-1">
 				<h3 class="truncate text-lg font-semibold">{item.displayName}</h3>
-				<p class="text-muted-foreground truncate text-sm">@{item.twitchLogin}</p>
+				<p class="truncate text-sm text-muted-foreground">@{item.twitchLogin}</p>
 			</div>
 			{#if item.external}
-				<ExternalLink class="text-muted-foreground mt-1 size-4 shrink-0" />
+				<ExternalLink class="mt-1 size-4 shrink-0 text-muted-foreground" />
 			{/if}
 		</div>
 		{#if title}

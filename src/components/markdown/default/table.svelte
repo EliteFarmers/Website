@@ -7,7 +7,7 @@
 <div class="my-6 w-full overflow-y-auto rounded-lg">
 	<table
 		class={cn(
-			'after:ring-border relative w-full overflow-hidden text-sm after:absolute after:inset-0 after:rounded-lg after:ring-1',
+			'relative w-full overflow-hidden text-sm after:absolute after:inset-0 after:rounded-lg after:ring-1 after:ring-border',
 			className
 		)}
 		{...restProps}

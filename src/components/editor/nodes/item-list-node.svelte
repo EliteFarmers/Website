@@ -20,9 +20,9 @@
 <button
 	type="button"
 	onclick={handleClick}
-	class={`bg-card my-2 flex w-full cursor-pointer flex-col gap-2 rounded-lg border p-4 text-left shadow-sm ${selected ? 'ring-primary ring-2' : ''}`}
+	class={`my-2 flex w-full cursor-pointer flex-col gap-2 rounded-lg border bg-card p-4 text-left shadow-sm ${selected ? 'ring-2 ring-primary' : ''}`}
 >
-	<div class="text-muted-foreground flex items-center gap-2 text-sm font-medium">
+	<div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
 		<ShoppingCart class="size-4" />
 		Item List ({items.length} items)
 	</div>
@@ -35,10 +35,10 @@
 				</div>
 			{/each}
 			{#if items.length > 6}
-				<span class="text-muted-foreground text-xs">+{items.length - 6} more</span>
+				<span class="text-xs text-muted-foreground">+{items.length - 6} more</span>
 			{/if}
 		</div>
 	{:else}
-		<span class="text-muted-foreground text-sm">Click to add items</span>
+		<span class="text-sm text-muted-foreground">Click to add items</span>
 	{/if}
 </button>

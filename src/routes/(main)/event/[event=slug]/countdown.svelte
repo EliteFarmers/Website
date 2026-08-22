@@ -31,7 +31,7 @@
 						format={{ minimumIntegerDigits: 2 }}
 					/>
 				</div>
-				<span class="text-muted-foreground text-sm font-normal">Days</span>
+				<span class="text-sm font-normal text-muted-foreground">Days</span>
 			</div>
 			<div
 				class="flex min-h-16 flex-1 flex-col items-center justify-center gap-1 {counter.hours <= 0 &&
@@ -47,7 +47,7 @@
 						format={{ minimumIntegerDigits: 2 }}
 					/>
 				</div>
-				<span class="text-muted-foreground text-sm font-normal">Hours</span>
+				<span class="text-sm font-normal text-muted-foreground">Hours</span>
 			</div>
 			<div
 				class="flex min-h-16 flex-1 flex-col items-center justify-center gap-1 {counter.minutes <= 0 &&
@@ -64,7 +64,7 @@
 						format={{ minimumIntegerDigits: 2 }}
 					/>
 				</div>
-				<span class="text-muted-foreground text-sm font-normal">Minutes</span>
+				<span class="text-sm font-normal text-muted-foreground">Minutes</span>
 			</div>
 			<div
 				class="flex min-h-16 flex-1 flex-col items-center justify-center gap-1 {counter.seconds <= 0 &&
@@ -82,7 +82,7 @@
 						format={{ minimumIntegerDigits: 2 }}
 					/>
 				</div>
-				<span class="text-muted-foreground text-sm font-normal">Seconds</span>
+				<span class="text-sm font-normal text-muted-foreground">Seconds</span>
 			</div>
 		</div>
 	</NumberFlowGroup>

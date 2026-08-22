@@ -15,7 +15,12 @@ export const T1_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 50000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '5', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '5',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 	{
@@ -25,7 +30,12 @@ export const T1_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 100000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '15', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '15',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 ];
@@ -39,7 +49,12 @@ export const T2_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 50000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '5', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '5',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 	{
@@ -49,7 +64,12 @@ export const T2_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 100000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '15', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '15',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 	{
@@ -59,7 +79,12 @@ export const T2_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 250000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '25', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '25',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 ];
@@ -73,7 +98,12 @@ export const T3_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 50000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '5', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '5',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 	{
@@ -83,7 +113,12 @@ export const T3_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 100000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '15', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '15',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 	{
@@ -93,7 +128,12 @@ export const T3_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 250000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '25', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '25',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 	{
@@ -103,7 +143,12 @@ export const T3_TOOL_GEMS: ToolGemSlot[] = [
 			{ type: 'COINS', coins: 1000000 },
 		],
 		requirements: [
-			{ type: 'ITEM_DATA', data_key: 'levelable_lvl', value: '50', operator: 'GREATER_THAN_OR_EQUALS' },
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '50',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
 		],
 	},
 ];

@@ -122,7 +122,7 @@
 	<section class="flex flex-col items-center gap-4">
 		<!-- <h2 class="text-3xl">Server Jacob Leaderboard{leaderboards.length === 1 ? '' : 's'}</h2> -->
 		{#if leaderboards.length > 0}
-			<div class="max-w-8xl flex flex-wrap gap-4">
+			<div class="flex max-w-8xl flex-wrap gap-4">
 				{#each leaderboards as leaderboard, i (i)}
 					<Leaderboard {leaderboard} />
 				{/each}

@@ -17,7 +17,7 @@
 	}
 </script>
 
-<div class="bg-card my-4 rounded-lg border p-4 shadow-sm">
+<div class="my-4 rounded-lg border bg-card p-4 shadow-sm">
 	<div class="flex flex-col gap-2">
 		{#each node.items as item (item.skyblockId)}
 			{@const priceQuery = getItemValue(item.skyblockId)}
@@ -25,7 +25,7 @@
 			<div class="flex items-center gap-3">
 				<ItemRender skyblockId={item.skyblockId} class="size-8" />
 				<span class="font-medium">{item.quantity}x</span>
-				<span class="text-muted-foreground flex-1 text-sm">{priceQuery.current?.name ?? item.skyblockId}</span>
+				<span class="flex-1 text-sm text-muted-foreground">{priceQuery.current?.name ?? item.skyblockId}</span>
 				{#if priceQuery.loading}
 					<span class="animate-pulse font-mono text-sm">...</span>
 				{:else}

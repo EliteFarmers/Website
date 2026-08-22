@@ -119,7 +119,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		current: ({ player, crop }) => {
 			return (player.options.cropUpgrades?.[crop] ?? 0) * GARDEN_CROP_UPGRADES.fortunePerLevel;
 		},
-		max: ({ crop }) => {
+		max: () => {
 			return GARDEN_CROP_UPGRADES.fortunePerLevel * GARDEN_CROP_UPGRADES.maxLevel;
 		},
 		maxStat: ({ crop }, stat) => {
@@ -171,13 +171,13 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		max: () => {
 			return COCOA_FORTUNE_UPGRADE.fortunePerLevel * COCOA_FORTUNE_UPGRADE.maxLevel;
 		},
-		maxStat: ({ crop }, stat) => {
+		maxStat: (_input, stat) => {
 			if (stat === Stat.CocoaBeanFortune) {
 				return COCOA_FORTUNE_UPGRADE.fortunePerLevel * COCOA_FORTUNE_UPGRADE.maxLevel;
 			}
 			return 0;
 		},
-		currentStat: ({ player, crop }, stat) => {
+		currentStat: ({ player }, stat) => {
 			if (stat === Stat.CocoaBeanFortune) {
 				return (player.options.cocoaFortuneUpgrade ?? 0) * COCOA_FORTUNE_UPGRADE.fortunePerLevel;
 			}

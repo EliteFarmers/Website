@@ -574,7 +574,9 @@ test('ArmorSet.getUpgrades surfaces Sunset enchant for Overbloom', () => {
 		],
 	});
 
-	const overbloomUpgrades = player.armorSet.getUpgrades({ stat: Stat.Overbloom });
+	const overbloomUpgrades = player.armorSet.getUpgrades({
+		stat: Stat.Overbloom,
+	});
 	const sunset = overbloomUpgrades.find((u) => u.title === 'Sunset 3');
 	expect(sunset).toBeDefined();
 	expect(sunset?.stats?.[Stat.Overbloom]).toBe(1);

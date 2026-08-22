@@ -77,7 +77,7 @@
 </script>
 
 <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 py-10">
-	<section class="bg-card rounded-lg border p-6 shadow-sm">
+	<section class="rounded-lg border bg-card p-6 shadow-sm">
 		<div class="flex flex-col gap-6">
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-wrap items-center gap-3">
@@ -87,13 +87,13 @@
 					{/if}
 				</div>
 				{#if data.guild.description}
-					<p class="text-muted-foreground max-w-2xl whitespace-pre-wrap">{data.guild.description}</p>
+					<p class="max-w-2xl whitespace-pre-wrap text-muted-foreground">{data.guild.description}</p>
 				{/if}
 				{#if preferredGames.length}
 					<div class="flex flex-wrap gap-2">
 						{#each preferredGames as game (game)}
 							<span
-								class="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase"
+								class="rounded-full bg-muted px-3 py-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
 							>
 								{game}
 							</span>
@@ -101,21 +101,21 @@
 					</div>
 				{/if}
 			</div>
-			<div class="text-muted-foreground flex flex-col items-start gap-3 text-sm sm:items-center md:flex-row">
+			<div class="flex flex-col items-start gap-3 text-sm text-muted-foreground sm:items-center md:flex-row">
 				{#if createdAt}
 					<span class="flex items-center gap-2">
-						<span class="text-foreground font-medium">Created</span>
-						<DateDisplay timestamp={createdAt} class="text-foreground font-medium" />
+						<span class="font-medium text-foreground">Created</span>
+						<DateDisplay timestamp={createdAt} class="font-medium text-foreground" />
 					</span>
 				{/if}
 				{#if lastUpdated}
 					<span class="flex items-center gap-2">
-						<span class="text-foreground font-medium">Last Updated</span>
-						<DateDisplay timestamp={lastUpdated} class="text-foreground font-medium" />
+						<span class="font-medium text-foreground">Last Updated</span>
+						<DateDisplay timestamp={lastUpdated} class="font-medium text-foreground" />
 					</span>
 				{/if}
 				<a
-					class="text-primary flex flex-row items-center gap-1 hover:underline"
+					class="flex flex-row items-center gap-1 text-primary hover:underline"
 					href="https://plancke.io/hypixel/guild/name/{data.guild.name}"
 					>Plancke
 					<ExternalLink class="size-4" />
@@ -131,8 +131,8 @@
 	{#if overviewStats.length}
 		<section class="grid gap-4 md:grid-cols-2">
 			{#each overviewStats as stat (stat.key)}
-				<div class="bg-card rounded-lg border p-4">
-					<p class="text-muted-foreground text-sm">{stat.label}</p>
+				<div class="rounded-lg border bg-card p-4">
+					<p class="text-sm text-muted-foreground">{stat.label}</p>
 					<p class="text-2xl font-semibold">{stat.value}</p>
 				</div>
 			{/each}

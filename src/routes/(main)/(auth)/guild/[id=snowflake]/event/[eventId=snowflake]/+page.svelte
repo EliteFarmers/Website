@@ -105,7 +105,7 @@
 <div class="mt-64 flex flex-col items-center gap-4">
 	<section class="flex w-full max-w-7xl flex-col items-center justify-center justify-items-center gap-8">
 		<div
-			class="bg-card flex w-[90%] max-w-(--breakpoint-lg) flex-col justify-center justify-items-center rounded-md border-2 p-4 md:w-[70%]"
+			class="flex w-[90%] max-w-(--breakpoint-lg) flex-col justify-center justify-items-center rounded-md border-2 bg-card p-4 md:w-[70%]"
 		>
 			<div class="flex flex-col justify-between gap-2 p-4 md:flex-row">
 				<div class="flex flex-col gap-2">
@@ -113,7 +113,7 @@
 						{#if !event.approved}
 							<Popover.Mobile>
 								{#snippet trigger()}
-									<TriangleAlert class="text-destructive mt-1.5" />
+									<TriangleAlert class="mt-1.5 text-destructive" />
 								{/snippet}
 								<div>
 									<p class="font-semibold">Pending approval!</p>
@@ -195,7 +195,7 @@
 
 	<MemberList members={(members ?? []).concat(bans ?? [])} {teams} {event} teamWords={data.teamWords} />
 
-	<div class="bg-card flex flex-col rounded-md border-2 p-4">
+	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		{#if event.type === EventType.FarmingWeight && cropWeights}
 			<form
 				action="?/editCropWeights"
@@ -235,7 +235,7 @@
 						</div>
 					{/each}
 				</div>
-				<p class="text-muted-foreground text-sm leading-relaxed">
+				<p class="text-sm leading-relaxed text-muted-foreground">
 					Default values are balanced, Pumpkin and Melon RNG drops don't get counted in events.
 				</p>
 
@@ -449,7 +449,7 @@
 							</Button>
 						</div>
 					{:else}
-						<p class="text-muted-foreground text-sm leading-relaxed">No collections have been added yet.</p>
+						<p class="text-sm leading-relaxed text-muted-foreground">No collections have been added yet.</p>
 					{/each}
 				</div>
 
@@ -472,7 +472,7 @@
 					</Button>
 				</div>
 
-				<p class="text-muted-foreground text-sm leading-relaxed">
+				<p class="text-sm leading-relaxed text-muted-foreground">
 					Enter internal SkyBlock IDs / item ids for collections. It's whatever Hypixel has as a key in the
 					collections object.
 				</p>
@@ -485,7 +485,7 @@
 			<p>Event Type not supported</p>
 		{/if}
 	</div>
-	<div class="bg-card flex flex-col rounded-md border-2 p-4">
+	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		<form
 			action="?/forceAddMember"
 			method="post"
@@ -513,7 +513,7 @@
 			</div>
 		</form>
 	</div>
-	<div class="bg-card flex flex-col rounded-md border-2 p-4">
+	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		<form
 			action="?/permDeleteMember"
 			method="post"
@@ -601,7 +601,7 @@
 			</div>
 
 			<Button type="submit" disabled={pending}>Edit Event</Button>
-			<p class="text-muted-foreground text-base leading-relaxed">
+			<p class="text-base leading-relaxed text-muted-foreground">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>
@@ -638,7 +638,7 @@
 					>Clear Banner</Button
 				>
 			</div>
-			<p class="text-muted-foreground text-base leading-relaxed">
+			<p class="text-base leading-relaxed text-muted-foreground">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>

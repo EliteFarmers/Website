@@ -14,7 +14,7 @@
 </script>
 
 <span
-	class="text-completed bg-card outline-completed/70 inline-flex items-center gap-1 rounded-sm px-1 py-0 font-medium outline-1"
+	class="inline-flex items-center gap-1 rounded-sm bg-card px-1 py-0 font-medium text-completed outline-1 outline-completed/70"
 >
 	<Coins class="my-0 inline size-3 py-0" />
 	{#if priceQuery.loading}
@@ -22,6 +22,6 @@
 	{:else if priceQuery.error}
 		<span class="text-destructive">Error</span>
 	{:else}
-		<span class="text-primary font-mono">{displayPrice.toLocaleString()}</span>
+		<span class="font-mono text-primary">{displayPrice.toLocaleString()}</span>
 	{/if}
 </span>

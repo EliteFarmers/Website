@@ -132,7 +132,7 @@
 		</Card.Root>
 	</section>
 
-	<Alert.Root class="border-link/30 w-full max-w-4xl border-2">
+	<Alert.Root class="w-full max-w-4xl border-2 border-link/30">
 		<Alert.Title class="text-lg">Want to unlock a feature?</Alert.Title>
 		<Alert.Description class="text-base">
 			<p>
@@ -143,13 +143,13 @@
 		</Alert.Description>
 	</Alert.Root>
 
-	<section class="bg-card flex w-full max-w-4xl flex-col rounded-lg border-2 p-4">
+	<section class="flex w-full max-w-4xl flex-col rounded-lg border-2 bg-card p-4">
 		<SettingListItem
 			title="Upcoming Contest Pings"
 			class={!features?.contestPingsEnabled ? 'cursor-not-allowed opacity-50 select-none' : undefined}
 		>
 			{#snippet subtitle()}
-				<span class="text-muted-foreground text-sm">Manage your server specific contest pings!</span>
+				<span class="text-sm text-muted-foreground">Manage your server specific contest pings!</span>
 			{/snippet}
 			<Button href="/guild/{data.guildId}/pings" class="px-8" disabled={!features?.contestPingsEnabled}
 				>Manage</Button
@@ -161,7 +161,7 @@
 			class={!features?.jacobLeaderboardEnabled ? 'cursor-not-allowed opacity-50 select-none' : undefined}
 		>
 			{#snippet subtitle()}
-				<span class="text-muted-foreground text-sm">Manage your server specific jacob leaderboards!</span>
+				<span class="text-sm text-muted-foreground">Manage your server specific jacob leaderboards!</span>
 			{/snippet}
 			<Button href="/guild/{data.guildId}/jacob" class="px-8" disabled={!features?.jacobLeaderboardEnabled}
 				>Manage</Button
@@ -173,17 +173,17 @@
 			class={!features?.eventsEnabled ? 'cursor-not-allowed opacity-50 select-none' : undefined}
 		>
 			{#snippet subtitle()}
-				<span class="text-muted-foreground text-sm">Manage your server specific events!</span>
+				<span class="text-sm text-muted-foreground">Manage your server specific events!</span>
 			{/snippet}
 
 			<Button href="/guild/{data.guildId}/events" class="px-8" disabled={!features?.eventsEnabled}>Manage</Button>
 		</SettingListItem>
 	</section>
 
-	<section class="bg-card flex w-full max-w-4xl flex-col rounded-lg border-2 p-4">
+	<section class="flex w-full max-w-4xl flex-col rounded-lg border-2 bg-card p-4">
 		<SettingListItem title="Request Data Refresh">
 			{#snippet subtitle()}
-				<span class="text-muted-foreground text-sm"
+				<span class="text-sm text-muted-foreground"
 					>Something out of date? You can get your guild data refreshed here.</span
 				>
 			{/snippet}

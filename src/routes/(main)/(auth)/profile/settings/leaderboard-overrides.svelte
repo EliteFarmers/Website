@@ -112,7 +112,7 @@
 	<div class="mt-4 space-y-5">
 		{#if configuredLeaderboards.length > 0}
 			<div class="space-y-2">
-				<p class="text-muted-foreground text-sm">Configured</p>
+				<p class="text-sm text-muted-foreground">Configured</p>
 				{#each configuredLeaderboards as leaderboard (leaderboard.id)}
 					{@render overrideRow(leaderboard)}
 				{/each}
@@ -122,7 +122,7 @@
 		<div class="space-y-2">
 			<label for={searchId} class="text-sm font-medium">Add an override</label>
 			<div class="relative">
-				<Search class="text-muted-foreground pointer-events-none absolute top-2.5 left-3 size-4" />
+				<Search class="pointer-events-none absolute top-2.5 left-3 size-4 text-muted-foreground" />
 				<Input
 					id={searchId}
 					class="pl-9"
@@ -132,7 +132,7 @@
 			</div>
 
 			{#if !normalizedSearch}
-				<p class="text-muted-foreground text-sm">Search to choose another leaderboard.</p>
+				<p class="text-sm text-muted-foreground">Search to choose another leaderboard.</p>
 			{:else if searchResults.length > 0}
 				<div class="space-y-2">
 					{#each searchResults as leaderboard (leaderboard.id)}
@@ -140,7 +140,7 @@
 					{/each}
 				</div>
 			{:else}
-				<p class="text-muted-foreground text-sm">No matching leaderboards without an override.</p>
+				<p class="text-sm text-muted-foreground">No matching leaderboards without an override.</p>
 			{/if}
 		</div>
 	</div>
@@ -156,10 +156,10 @@
 	>
 		<div class="min-w-0">
 			<p class="truncate text-sm font-medium">{name}</p>
-			<p class="text-muted-foreground truncate text-xs">{leaderboard.id}</p>
+			<p class="truncate text-xs text-muted-foreground">{leaderboard.id}</p>
 		</div>
 		<select
-			class="bg-background h-9 min-w-0 rounded-md border px-2 text-sm"
+			class="h-9 min-w-0 rounded-md border bg-background px-2 text-sm"
 			value={selectionValue(overrides[leaderboard.id]?.style)}
 			onchange={(event) => updateOverride(leaderboard.id, 'style', event.currentTarget.value)}
 			aria-label={`${name} style`}
@@ -173,7 +173,7 @@
 		</select>
 		{#if showFrameOptions}
 			<select
-				class="bg-background h-9 min-w-0 rounded-md border px-2 text-sm"
+				class="h-9 min-w-0 rounded-md border bg-background px-2 text-sm"
 				value={selectionValue(overrides[leaderboard.id]?.frame)}
 				onchange={(event) => updateOverride(leaderboard.id, 'frame', event.currentTarget.value)}
 				aria-label={`${name} frame`}

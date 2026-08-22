@@ -116,7 +116,7 @@
 	<div class="my-4 flex max-w-7xl flex-wrap gap-4 px-2">
 		{#each loadouts as loadout (loadout.id)}
 			{@const pet = loadout.petLocalId ? petsByLocalId[loadout.petLocalId] : undefined}
-			<article class="bg-card flex min-w-0 flex-col gap-4 rounded-lg border p-4 shadow-sm">
+			<article class="flex min-w-0 flex-col gap-4 rounded-lg border bg-card p-4 shadow-sm">
 				<div class="flex items-center gap-3">
 					<h3 class="text-lg font-semibold">Loadout {loadout.id}</h3>
 				</div>
@@ -124,7 +124,7 @@
 				<div class="flex flex-col gap-3">
 					{#if loadout.armorSetId != null}
 						<div class="flex items-center justify-between gap-3">
-							<p class="text-muted-foreground text-sm font-medium">Armor</p>
+							<p class="text-sm font-medium text-muted-foreground">Armor</p>
 						</div>
 						<div class="grid grid-cols-4 gap-2">
 							{#if inventoriesLoaded}
@@ -148,7 +148,7 @@
 
 					{#if loadout.equipmentSetId != null}
 						<div class="flex items-center justify-between gap-3">
-							<p class="text-muted-foreground text-sm font-medium">Equipment</p>
+							<p class="text-sm font-medium text-muted-foreground">Equipment</p>
 						</div>
 						<div class="grid grid-cols-4 gap-2">
 							{#if inventoriesLoaded}
@@ -172,17 +172,17 @@
 				</div>
 
 				{#if pet}
-					<div class="bg-muted/30 flex items-center gap-3 rounded-md p-3">
+					<div class="flex items-center gap-3 rounded-md bg-muted/30 p-3">
 						<ItemRender skyblockId={pet.type} pet class="size-11 shrink-0" />
 						<div class="min-w-0">
 							<p class="truncate font-medium">{label(pet.type)}</p>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Level {pet.level}{pet.tier ? ` · ${label(pet.tier)}` : ''}
 							</p>
 						</div>
 					</div>
 				{:else if loadout.petLocalId}
-					<p class="text-muted-foreground text-sm">Linked pet data is unavailable.</p>
+					<p class="text-sm text-muted-foreground">Linked pet data is unavailable.</p>
 				{/if}
 
 				<dl class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-2 text-sm">

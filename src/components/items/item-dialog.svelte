@@ -45,7 +45,7 @@
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.ScrollContent class="dark bg-background border-border text-primary">
+	<Dialog.ScrollContent class="dark border-border bg-background text-primary">
 		{#if selectedItem}
 			<ItemLore
 				item={selectedItem}
@@ -70,12 +70,12 @@
 				{:else if deletorCompactorItems.length > 0}
 					<div class="my-4 grid w-fit grid-cols-9 items-center justify-center gap-1">
 						{#each deletorCompactorItems as [key, itemId] (key)}
-							<ItemRender skyblockId={itemId} class="bg-card size-12 rounded-sm border" />
+							<ItemRender skyblockId={itemId} class="size-12 rounded-sm border bg-card" />
 						{/each}
 					</div>
 				{/if}
 				{#if itemDetails !== null}
-					<div class="text-primary bg-card mt-4 mb-4 flex flex-col gap-2 rounded-md border p-2">
+					<div class="mt-4 mb-4 flex flex-col gap-2 rounded-md border bg-card p-2 text-primary">
 						<p class="text-lg font-semibold">Item Value</p>
 						{#if itemDetails?.ready && itemDetails.current.meta?.networth}
 							{@const networthValue = itemDetails.current.meta.networth.price ?? 0}
@@ -118,7 +118,7 @@
 						availablePacks.find((p) => p.id === itemDetails.current.meta?.packId) ??
 						(itemDetails.current.meta.packId === 'vanilla' ? VANILLA_PACK : undefined)}
 					<a
-						class="text-muted-foreground hover:border-border mt-4 mb-4 flex w-fit flex-row items-center gap-2 rounded-md border border-t border-transparent p-2 text-sm"
+						class="mt-4 mb-4 flex w-fit flex-row items-center gap-2 rounded-md border border-t border-transparent p-2 text-sm text-muted-foreground hover:border-border"
 						href={pack?.downloadUrl}
 						target="_blank"
 						rel="noopener"

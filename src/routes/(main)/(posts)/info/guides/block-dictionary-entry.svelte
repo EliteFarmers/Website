@@ -13,12 +13,12 @@
 	} = $props();
 </script>
 
-<article class="bg-card rounded-lg border p-4">
+<article class="rounded-lg border bg-card p-4">
 	<div class="flex items-start gap-3">
 		<Button
 			variant="ghost"
 			size="icon"
-			class="bg-muted/40 pointer-events-none shrink-0 border"
+			class="pointer-events-none shrink-0 border bg-muted/40"
 			tabindex={-1}
 			aria-label={name}
 			title={name}
@@ -28,7 +28,7 @@
 
 		<div class="min-w-0 space-y-1">
 			<h3 class="text-sm leading-5 font-semibold">{name}</h3>
-			<p class="text-muted-foreground text-sm leading-6">{description}</p>
+			<p class="text-sm leading-6 text-muted-foreground">{description}</p>
 		</div>
 	</div>
 </article>

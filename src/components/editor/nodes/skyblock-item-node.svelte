@@ -23,7 +23,7 @@
 <button
 	type="button"
 	onclick={handleClick}
-	class={`relative mx-1 inline-flex cursor-pointer border-none bg-transparent p-0 align-middle ${selected ? 'ring-primary rounded-md ring-2' : ''}`}
+	class={`relative mx-1 inline-flex cursor-pointer border-none bg-transparent p-0 align-middle ${selected ? 'rounded-md ring-2 ring-primary' : ''}`}
 >
-	<EditorItemRender {skyblockId} class={`bg-card rounded-md border shadow-sm ${sizeClass}`} />
+	<EditorItemRender {skyblockId} class={`rounded-md border bg-card shadow-sm ${sizeClass}`} />
 </button>

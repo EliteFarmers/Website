@@ -70,9 +70,9 @@
 				/>
 			</div>
 			{#if errorMessage}
-				<p class="text-destructive text-sm">{errorMessage}</p>
+				<p class="text-sm text-destructive">{errorMessage}</p>
 			{/if}
-			<p class="text-muted-foreground text-xs">
+			<p class="text-xs text-muted-foreground">
 				Please note that submitting a report does not guarantee that the content will be removed. If this is
 				something you need a response on, <a href="/contact" class="text-link hover:underline">contact us</a>
 				with more information.
