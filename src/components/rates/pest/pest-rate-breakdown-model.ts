@@ -4,6 +4,7 @@ import {
 	CROP_INFO,
 	Pest,
 	getPestName,
+	type AppliedEffect,
 	type DetailedDropsFromEffectsResult,
 	type DetailedPestDropsResult,
 	type PestFarmingRateResult,
@@ -34,13 +35,31 @@ export type PestRateMetric = {
 	label: string;
 	value: string;
 	detail: string;
+	details?: PestRateMetricDetails;
+};
+
+export type PestRateMetricDetailLine = {
+	label: string;
+	value: string;
+	detail?: string;
+	emphasis?: boolean;
+	itemName?: boolean;
+};
+
+export type PestRateMetricDetails = {
+	title: string;
+	groups: {
+		label: string;
+		lines: PestRateMetricDetailLine[];
+	}[];
 };
 
 export type PestRateBreakdownModel = {
 	rows: PestRateBreakdownRow[];
 	displayedDelta: number;
 	summary: PestRateMetric[];
-	cycleAssumptions: PestRateMetric[];
+	cooldown: PestRateMetric & { details: PestRateMetricDetails };
+	phaseAssumptions: PestRateMetric[];
 };
 
 type BuildOptions = {
@@ -60,6 +79,13 @@ type QuantityLineOptions = {
 };
 
 const VALUE_THRESHOLD = 0.5;
+
+export function getCropBreakingRngGroup(appliedEffects: readonly AppliedEffect[] | undefined): string {
+	const producingSources = new Set(
+		(appliedEffects ?? []).filter((effect) => effect.op === 'add-drop').map((effect) => effect.source)
+	);
+	return producingSources.size === 1 ? [...producingSources][0]! : 'Rare Crop Output';
+}
 
 export function buildPestRateBreakdown(options: BuildOptions): PestRateBreakdownModel {
 	const { result, formatNumber, formatDuration } = options;
@@ -201,8 +227,19 @@ export function buildPestRateBreakdown(options: BuildOptions): PestRateBreakdown
 				value: `${formatNumber(cropBlocksPerHour)}/hr`,
 				detail: `${formatNumber(spawnBlocksPerHour)} while spawning`,
 			},
+			{
+				label: 'Pest Mix',
+				value: topPests.value,
+				detail: topPests.detail,
+			},
 		],
-		cycleAssumptions: [
+		cooldown: {
+			label: 'Cooldown',
+			value: formatDuration(result.debug.cooldownSeconds),
+			detail: 'Effective Pest spawn cooldown',
+			details: buildFarmPhaseDetails(result, formatNumber, formatDuration),
+		},
+		phaseAssumptions: [
 			{
 				label: 'Farm Phase',
 				value: formatDuration(result.debug.farmSeconds),
@@ -223,13 +260,140 @@ export function buildPestRateBreakdown(options: BuildOptions): PestRateBreakdown
 				value: formatDuration(result.debug.killPhaseSeconds),
 				detail: `${formatNumber(result.breakdown.pestSpawning.expectedPestsPerSpawn, 2)} pests/cycle`,
 			},
+		],
+	};
+}
+
+export function buildFarmPhaseDetails(
+	result: PestFarmingRateResult,
+	formatNumber: (value: number, maximumFractionDigits?: number) => string,
+	formatDuration: (seconds: number) => string
+): PestRateMetricDetails {
+	const repellent = {
+		none: { label: 'None', multiplier: 1 },
+		normal: { label: 'Regular', multiplier: 2 },
+		max: { label: 'MAX', multiplier: 4 },
+	}[result.options.cycle.pestRepellent];
+	const percentageReductionEntries = Object.entries(result.phaseStats.farmPestCooldownReductionBreakdown ?? {});
+	if (percentageReductionEntries.length === 0 && result.phaseStats.farmPestCooldownReduction !== 0) {
+		percentageReductionEntries.push(['Pest Cooldown Reduction', result.phaseStats.farmPestCooldownReduction]);
+	}
+	const percentageReductionLines = percentageReductionEntries
+		.filter(([, value]) => value !== 0)
+		.sort(([, a], [, b]) => Math.abs(b) - Math.abs(a))
+		.map(([source, value]) => ({
+			label: source,
+			value: formatReduction(value, '%', formatNumber),
+			itemName: source !== 'Pest Cooldown Reduction',
+		}));
+	const flatReductionEntries = Object.entries(result.phaseStats.farmPestCooldownReductionSecondsBreakdown ?? {});
+	if (flatReductionEntries.length === 0 && result.phaseStats.farmPestCooldownReductionSeconds !== 0) {
+		flatReductionEntries.push(['Flat Cooldown Reduction', result.phaseStats.farmPestCooldownReductionSeconds]);
+	}
+	const flatReductionLines = flatReductionEntries
+		.filter(([, value]) => value !== 0)
+		.sort(([, a], [, b]) => Math.abs(b) - Math.abs(a))
+		.map(([source, value]) => ({
+			label: source,
+			value: formatReduction(value, 's', formatNumber),
+			detail: 'Flat reduction after percentages',
+			itemName: source !== 'Flat Cooldown Reduction',
+		}));
+	const finneganLines = result.options.cycle.finneganActive
+		? [
+				{
+					label: 'Finnegan',
+					value: '-20%',
+					detail: 'Mayor perk',
+				},
+			]
+		: [];
+	const reductions = [...percentageReductionLines, ...finneganLines, ...flatReductionLines];
+
+	return {
+		title: 'Pest Cooldown Details',
+		groups: [
 			{
-				label: 'Pest Mix',
-				value: topPests.value,
-				detail: topPests.detail,
+				label: 'Cooldown setup',
+				lines: [
+					{
+						label: 'Base Pest Cooldown',
+						value: formatDuration(300),
+					},
+					{
+						label: 'Pest Repellent',
+						value: `×${repellent.multiplier}`,
+						detail: repellent.label,
+					},
+					{
+						label: 'Cooldown Before Reductions',
+						value: formatDuration(300 * repellent.multiplier),
+						emphasis: true,
+					},
+				],
+			},
+			{
+				label: 'Cooldown reductions',
+				lines: [
+					...(reductions.length > 0
+						? reductions
+						: [
+								{
+									label: 'Active Reductions',
+									value: 'None',
+								},
+							]),
+					{
+						label: 'Pest Cooldown',
+						value: formatDuration(result.debug.cooldownSeconds),
+						emphasis: true,
+					},
+				],
+			},
+			{
+				label: 'Active farming time',
+				lines: [
+					{
+						label: 'Kill Phase Overlap',
+						value: formatReduction(result.debug.killPhaseSeconds, 'duration', formatNumber, formatDuration),
+						detail: 'Occurs during the cooldown',
+					},
+					{
+						label: 'Early Spawn Swap',
+						value: formatReduction(
+							result.debug.spawnPreCooldownSeconds,
+							'duration',
+							formatNumber,
+							formatDuration
+						),
+						detail: 'Stops farming before cooldown ends',
+					},
+					{
+						label: 'Farm Phase',
+						value: formatDuration(result.debug.farmSeconds),
+						emphasis: true,
+					},
+				],
 			},
 		],
 	};
+}
+
+function formatReduction(
+	value: number,
+	unit: '%' | 's' | 'duration',
+	formatNumber: (value: number, maximumFractionDigits?: number) => string,
+	formatDuration?: (seconds: number) => string
+): string {
+	const prefix = value >= 0 ? '-' : '+';
+	const absoluteValue = Math.abs(value);
+	if (absoluteValue === 0) {
+		if (unit === 'duration') return formatDuration?.(0) ?? '0s';
+		return `0${unit}`;
+	}
+	if (unit === 'duration')
+		return `${prefix}${formatDuration?.(absoluteValue) ?? `${formatNumber(absoluteValue, 1)}s`}`;
+	return `${prefix}${formatNumber(absoluteValue, unit === 's' ? 1 : 2)}${unit}`;
 }
 
 function formatIdentifier(value: string) {
@@ -287,18 +451,19 @@ function createLineHelpers({ priceBook, items }: BuildOptions) {
 	const pricedItemLines = (
 		record: Record<string, number>,
 		keyPrefix: string,
-		labelPrefix: string,
+		labelPrefix: string | ((itemId: string) => string),
 		sourcePrices: Record<string, number> = {}
 	): PestRateBreakdownLine[] =>
 		Object.entries(record).map(([itemId, quantity]) => {
 			const price = priceBook.items?.[itemId];
 			const fallbackPrice = quantity !== 0 ? sourcePrices[itemId] / quantity : undefined;
 			const unitPrice = price?.coins ?? fallbackPrice;
+			const group = typeof labelPrefix === 'function' ? labelPrefix(itemId) : labelPrefix;
 			return {
-				key: `${keyPrefix}:item:${labelPrefix}:${itemId}`,
+				key: `${keyPrefix}:item:${group}:${itemId}`,
 				label: getItemName(itemId),
 				itemId,
-				group: labelPrefix,
+				group,
 				quantity,
 				price: unitPrice,
 				priceSource: price?.source ?? (fallbackPrice !== undefined ? 'npc' : undefined),
@@ -410,7 +575,12 @@ function createLineHelpers({ priceBook, items }: BuildOptions) {
 		const itemSourcePrices = getItemSourcePrices(cropRates, representedSources, getItemName);
 		return sortLineItems([
 			...pricedItemLines(cropRates.items, 'crop-breaking', 'Crop Item Output', itemSourcePrices),
-			...pricedItemLines(cropRates.rngItems ?? {}, 'crop-breaking:rng', 'Rare Crop Output', itemSourcePrices),
+			...pricedItemLines(
+				cropRates.rngItems ?? {},
+				'crop-breaking:rng',
+				(itemId) => getCropBreakingRngGroup(cropRates.appliedEffects[itemId]),
+				itemSourcePrices
+			),
 			...currencyLines(cropRates.currencies, 1, 'crop-breaking:currency', 'Currency Output'),
 			...coinSourceLines(
 				omitRecord(cropRates.coinSources, representedSources),
@@ -494,6 +664,7 @@ function sumDetailedCropRates(...results: DetailedDropsFromEffectsResult[]): Det
 		addNumberRecords(result.currencies, entry.currencies);
 		addNumberRecords(result.rngItems ?? {}, entry.rngItems ?? {});
 		addNumberRecords(result.specialCropBonusBreakdown, entry.specialCropBonusBreakdown);
+		addAppliedEffectRecords(result.appliedEffects, entry.appliedEffects);
 	}
 	return result;
 }
@@ -518,6 +689,15 @@ function addNumberRecords(target: Record<string, number>, source: Record<string,
 	for (const [key, value] of Object.entries(source)) {
 		if (!value) continue;
 		target[key] = (target[key] ?? 0) + value;
+	}
+}
+
+function addAppliedEffectRecords(
+	target: Record<string, AppliedEffect[]>,
+	source: Record<string, AppliedEffect[]>
+): void {
+	for (const [itemId, effects] of Object.entries(source)) {
+		target[itemId] = [...(target[itemId] ?? []), ...effects];
 	}
 }
 

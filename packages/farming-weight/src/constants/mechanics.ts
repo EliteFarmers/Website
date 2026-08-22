@@ -27,6 +27,6 @@ export const FARMING_MECHANIC_INFO: Record<FarmingMechanic, FarmingMechanicInfo>
 	},
 	[FarmingMechanic.PestCooldownReductionSeconds]: {
 		name: 'Pest Cooldown Reduction',
-		icon: '%',
+		icon: 's',
 	},
 };

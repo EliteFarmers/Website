@@ -149,13 +149,14 @@ export interface Effect {
 }
 
 /**
- * Per-drop record of an applied effect, surfaced via `DetailedDropsResult`.
+ * Per-drop record of an effect that produced or modified an output, surfaced
+ * via `DetailedDropsResult`.
  */
 export interface AppliedEffect {
 	source: string;
 	op: EffectOp;
 	phase: EffectPhase;
-	/** Resolved numeric contribution at this drop. */
+	/** Resolved contribution. For `add-drop`, this is the expected produced amount. */
 	amount: number;
 	relatedStats?: readonly Stat[];
 	scope?: Scope;
