@@ -14,7 +14,7 @@
 export type LeaderboardType = (typeof LeaderboardType)[keyof typeof LeaderboardType];
 
 export const LeaderboardType = {
-	Current: 0,
-	Weekly: 1,
-	Monthly: 2,
+	Current: 'Current',
+	Weekly: 'Weekly',
+	Monthly: 'Monthly',
 } as const;

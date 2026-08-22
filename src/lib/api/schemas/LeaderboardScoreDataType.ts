@@ -14,7 +14,7 @@
 export type LeaderboardScoreDataType = (typeof LeaderboardScoreDataType)[keyof typeof LeaderboardScoreDataType];
 
 export const LeaderboardScoreDataType = {
-	Double: 0,
-	Long: 1,
-	Decimal: 2,
+	Double: 'Double',
+	Long: 'Long',
+	Decimal: 'Decimal',
 } as const;
