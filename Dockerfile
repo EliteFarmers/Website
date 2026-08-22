@@ -1,5 +1,5 @@
 FROM node:24.15-alpine AS builder
-RUN npm install -g pnpm@10.15.0
+RUN npm install -g pnpm@11.22.0
 WORKDIR /app
 
 COPY package*.json .
@@ -20,7 +20,7 @@ RUN pnpm prune --production
 
 
 FROM node:24.15-alpine
-RUN npm install -g pnpm@10.15.0
+RUN npm install -g pnpm@11.22.0
 WORKDIR /app
 
 ARG PUBLIC_COMMIT_HASH
