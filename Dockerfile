@@ -16,7 +16,7 @@ ENV PUBLIC_COMMIT_HASH=$PUBLIC_COMMIT_HASH
 # Generates the oss.txt license file for used software
 RUN pnpm run license
 RUN pnpm run build
-RUN pnpm prune --production
+RUN CI=true pnpm prune --production
 
 
 FROM node:24.15-alpine
