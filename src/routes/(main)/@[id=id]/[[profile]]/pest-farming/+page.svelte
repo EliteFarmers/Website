@@ -1,13 +1,12 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import FloatingButton from '$comp/floating-button.svelte';
-	import FormattedText from '$comp/items/formatted-text.svelte';
-	import ItemRender from '$comp/items/item-render.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import CategoryProgress from '$comp/rates/category-progress.svelte';
-	import PestGearSelector from '$comp/rates/pest/pest-gear-selector.svelte';
+	import PestLoadoutCard from '$comp/rates/pest/pest-loadout-card.svelte';
 	import PestRateBreakdown from '$comp/rates/pest/pest-rate-breakdown.svelte';
 	import PestStatsSummary from '$comp/rates/pest/pest-stats-summary.svelte';
-	import VacuumSelector from '$comp/rates/pest/vacuum-selector.svelte';
+	import PestUpgradePhaseNav from '$comp/rates/pest/pest-upgrade-phase-nav.svelte';
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
@@ -16,15 +15,12 @@
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
-	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { Skeleton } from '$ui/skeleton';
 	import * as Tabs from '$ui/tabs';
-	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import CircleHelp from '@lucide/svelte/icons/circle-help';
 	import Settings from '@lucide/svelte/icons/settings';
 	import Sprout from '@lucide/svelte/icons/sprout';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { PEST_ARMOR_SLOTS, PEST_EQUIPMENT_SLOTS, PestFarmingPhase } from 'farming-weight';
+	import { PestFarmingPhase } from 'farming-weight';
 	import { PestFarmingPageContext, PHASE_CONFIG } from './pest-farming-context.svelte';
 	import PestSettings from './pest-settings.svelte';
 
@@ -38,19 +34,11 @@
 		$ratesData.settings = true;
 		trackAnalytics('pest_farming.settings_opened');
 	}
-
-	function formatNumber(value: number, maximumFractionDigits = 0) {
-		return value.toLocaleString(undefined, { maximumFractionDigits });
-	}
-
-	function formatRate(value: number) {
-		return `${formatNumber(value)}/hr`;
-	}
 </script>
 
 <StatsHead
 	title="Pest Farming"
-	description="Track pest farming phases, shared equipment, vacuum progress, and phase-scoped upgrades for Hypixel SkyBlock farming."
+	description="Track pest farming phases, loadouts, vacuum progress, and phase-scoped upgrades for Hypixel SkyBlock farming."
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/pest-farming"
 />
 
@@ -71,13 +59,6 @@
 	{:else}
 		<div class="mx-auto flex w-full max-w-6xl flex-col gap-8 px-2 py-4 md:gap-10 md:py-6">
 			<section class="flex flex-col gap-4">
-				<div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-					<h1 class="text-3xl leading-tight font-semibold md:text-4xl">Pest Farming</h1>
-					<Button variant="outline" size="sm" onclick={openSettings} class="self-start md:self-auto">
-						<Settings class="size-4" />
-						Settings
-					</Button>
-				</div>
 				<Cropselector radio={true} analyticsEvent="pest_farming.crop_selected" />
 			</section>
 
@@ -92,7 +73,9 @@
 			<section class="pest-deferred-section flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
 				<header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 					<div class="flex flex-col gap-1">
-						<h2 class="text-xl leading-tight font-semibold">{pest.selectedCropName} Fortune</h2>
+						<h2 class="text-xl leading-tight font-semibold">
+							{pest.selectedCropName} Fortune
+						</h2>
 					</div>
 					<Fortunebreakdown
 						title="{pest.selectedCropName} Fortune"
@@ -101,7 +84,7 @@
 						breakdown={pest.cropFortune.breakdown}
 					/>
 				</header>
-				<PestStatsSummary entries={pest.cropContextSummary} />
+				<PestStatsSummary entries={pest.cropContextSummary} compact />
 				<CategoryProgress
 					name="{pest.selectedCropName} Progress"
 					progress={pest.cropProgress}
@@ -114,44 +97,6 @@
 				/>
 			</section>
 
-			<PestGearSelector
-				title="Shared Equipment"
-				armorSet={pest.sharedEquipmentSet}
-				slots={PEST_EQUIPMENT_SLOTS}
-				selectPiece={(slot, uuid) => pest.selectSharedEquipment(slot, uuid)}
-				clearPiece={(slot) => pest.clearSharedEquipment(slot)}
-				getPieceBreakdown={(piece) => pest.getSharedEquipmentPieceBreakdown(piece)}
-				getPieceRateImpact={(piece) => pest.getSharedEquipmentPieceRateImpact(piece)}
-			>
-				<CategoryProgress
-					name="Shared Equipment Progress"
-					progress={pest.sharedEquipmentProgress}
-					items={pest.itemsData}
-					costFn={getUpgradeCost}
-					referenceOnlyPrices={ctx.isNonClassicProfile}
-					applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
-					expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
-					getUpgrades={(progress) => pest.getProgressUpgrades(progress)}
-				/>
-			</PestGearSelector>
-
-			<VacuumSelector
-				vacuums={pest.vacuums}
-				selected={pest.selectedVacuum}
-				onSelect={(id) => pest.selectVacuum(id)}
-			>
-				<CategoryProgress
-					name="Vacuum Upgrades"
-					progress={pest.vacuumProgress}
-					items={pest.itemsData}
-					costFn={getUpgradeCost}
-					referenceOnlyPrices={ctx.isNonClassicProfile}
-					applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
-					expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
-					getUpgrades={(progress) => pest.getProgressUpgrades(progress)}
-				/>
-			</VacuumSelector>
-
 			<section class="pest-deferred-section pest-deferred-section--large flex flex-col gap-5">
 				<header
 					class="sticky top-16 z-20 -mx-2 flex flex-col gap-2 border-b bg-background/95 px-2 py-3 backdrop-blur supports-backdrop-filter:bg-background/80"
@@ -162,13 +107,9 @@
 							<p class="text-sm text-muted-foreground">{pest.activePhaseConfig.description}</p>
 						</div>
 						<div class="flex items-center gap-2">
-							<Button
-								variant="outline"
-								class="h-12 w-12"
-								onclick={openSettings}
-								aria-label="Open pest farming settings"
-							>
+							<Button variant="outline" size="sm" onclick={openSettings}>
 								<Settings class="size-4" />
+								Settings
 							</Button>
 							<Tabs.Root bind:value={pest.activePhase}>
 								<div class="grid w-full grid-cols-3 gap-1 rounded-lg border bg-muted/40 p-1 sm:w-fit">
@@ -186,184 +127,9 @@
 					</div>
 				</header>
 
-				<section class="flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
-					<div class="grid gap-3 md:grid-cols-2">
-						<!-- Armor set loadout card -->
-						<div class="flex flex-col gap-2 rounded-md border bg-muted/30 p-3">
-							<p class="text-xs leading-snug font-medium text-muted-foreground">Armor Set</p>
-							<div class="grid grid-cols-2 gap-2">
-								{#each pest.armorSetLoadouts as set (set.id)}
-									<Button
-										type="button"
-										size="sm"
-										variant={set.id === pest.activePhaseLoadout.armorSetId ? 'default' : 'outline'}
-										class="min-w-0 justify-start"
-										aria-pressed={set.id === pest.activePhaseLoadout.armorSetId}
-										onclick={() => pest.selectPhaseArmorSet(pest.activePhase, set.id)}
-									>
-										<span class="truncate">{set.name}</span>
-									</Button>
-								{/each}
-							</div>
-						</div>
+				<PestStatsSummary entries={pest.pestStats} compact />
 
-						<!-- Pet loadout card -->
-						<div class="flex flex-col justify-center gap-2 rounded-md border bg-muted/30 p-3">
-							{#if pest.pets.length > 0}
-								<div class="flex items-center gap-2">
-									<DropdownMenu.Root>
-										<DropdownMenu.Trigger
-											class="group flex flex-1 items-center gap-3 rounded-md p-1 text-left transition-colors outline-none hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring/50"
-											aria-label="Change pet"
-										>
-											{#if pest.activePhasePet}
-												<ItemRender
-													skyblockId={pest.activePhasePet.pet.type ?? ''}
-													pet
-													class="size-11 shrink-0"
-												/>
-											{:else}
-												<div
-													class="flex size-11 shrink-0 items-center justify-center rounded-md border bg-card text-muted-foreground/60"
-												>
-													<CircleHelp class="size-5" />
-												</div>
-											{/if}
-											<div class="min-w-0 flex-1">
-												<p class="text-xs font-medium text-muted-foreground">Active Pet</p>
-												<div class="truncate text-base font-semibold">
-													{#if pest.activePhasePet}
-														<FormattedText text={pest.activePhasePet.getFormattedName()} />
-													{:else}
-														<span class="text-muted-foreground">Select pet</span>
-													{/if}
-												</div>
-											</div>
-											<ChevronDown
-												class="size-4 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-180"
-											/>
-										</DropdownMenu.Trigger>
-										<DropdownMenu.Content
-											class="max-h-96 min-w-(--bits-dropdown-menu-anchor-width) overflow-y-auto"
-											align="start"
-										>
-											<DropdownMenu.Label
-												>Pets ranked for {pest.activePhaseConfig.label.toLowerCase()} phase</DropdownMenu.Label
-											>
-											<DropdownMenu.Separator />
-											<DropdownMenu.RadioGroup
-												value={pest.activePhaseLoadout.petId ?? ''}
-												onValueChange={(value) =>
-													value && pest.selectPhasePet(pest.activePhase, value)}
-											>
-												{#each pest.pets
-													.filter((pet) => !!pet.pet.uuid)
-													.sort((a, b) => (pest.getPetRateImpact(b, pest.activePhase) ?? Number.NEGATIVE_INFINITY) - (pest.getPetRateImpact(a, pest.activePhase) ?? Number.NEGATIVE_INFINITY)) as pet, i (pet.pet.uuid ?? i)}
-													{@const petRateDelta = pest.getPetRateImpact(pet, pest.activePhase)}
-													<DropdownMenu.RadioItem value={pet.pet.uuid ?? ''}>
-														<div class="flex flex-row items-center gap-2">
-															<ItemRender
-																skyblockId={pet.pet.type ?? ''}
-																pet
-																class="size-6"
-															/>
-															<FormattedText text={pet.getFormattedName()} />
-															{#if petRateDelta !== undefined && petRateDelta !== 0}
-																<span
-																	class="{petRateDelta > 0
-																		? 'dark:text-completed'
-																		: 'text-muted-foreground'} ml-auto text-xs whitespace-nowrap tabular-nums"
-																>
-																	{petRateDelta > 0 ? '+' : ''}{formatRate(
-																		petRateDelta
-																	)}
-																</span>
-															{/if}
-														</div>
-													</DropdownMenu.RadioItem>
-												{/each}
-											</DropdownMenu.RadioGroup>
-										</DropdownMenu.Content>
-									</DropdownMenu.Root>
-
-									{#if pest.activePhasePet}
-										<Fortunebreakdown
-											title="{pest.activePhaseConfig.label} Pet Stats"
-											breakdown={pest.getPetBreakdown(pest.activePhasePet, pest.activePhase)}
-										/>
-									{/if}
-								</div>
-							{:else}
-								<div class="flex items-center gap-3 p-1">
-									<div
-										class="flex size-11 shrink-0 items-center justify-center rounded-md border bg-card text-muted-foreground/60"
-									>
-										<CircleHelp class="size-5" />
-									</div>
-									<div class="min-w-0">
-										<p class="text-xs font-medium text-muted-foreground">Active Pet</p>
-										<p class="text-sm text-muted-foreground">No farming pets found.</p>
-									</div>
-								</div>
-							{/if}
-						</div>
-					</div>
-
-					{#if pest.activePhase === PestFarmingPhase.Kill}
-						<div
-							class="flex items-center gap-2 rounded-md border border-dashed border-border/60 bg-muted/30 p-3 text-sm text-muted-foreground"
-						>
-							<CircleHelp class="size-4 shrink-0" />
-							<span>Vacuum stats apply during the Kill phase, configure your vacuum above!</span>
-						</div>
-					{/if}
-
-					<PestStatsSummary entries={pest.pestStats} />
-				</section>
-
-				{#if pest.activeArmorSet}
-					<PestGearSelector
-						title="Armor"
-						armorSet={pest.activeArmorSet}
-						slots={PEST_ARMOR_SLOTS}
-						selectPiece={(slot, uuid) =>
-							pest.selectArmorSetPiece(pest.activePhaseLoadout.armorSetId, slot, uuid)}
-						clearPiece={(slot) => pest.clearArmorSetPiece(pest.activePhaseLoadout.armorSetId, slot)}
-						getPieceBreakdown={(piece) => pest.getPhasePieceBreakdown(piece)}
-						getPieceRateImpact={(piece) => pest.getPhasePieceRateImpact(piece)}
-						blockedUuids={pest.armorSetConflictLabels}
-					>
-						{#snippet headerAction()}
-							{#if pest.armorSetLoadouts.length > 1}
-								<div class="flex gap-1.5">
-									{#each pest.armorSetLoadouts as set (set.id)}
-										<Button
-											type="button"
-											size="sm"
-											variant={set.id === pest.activePhaseLoadout.armorSetId
-												? 'default'
-												: 'outline'}
-											aria-pressed={set.id === pest.activePhaseLoadout.armorSetId}
-											onclick={() => pest.selectPhaseArmorSet(pest.activePhase, set.id)}
-										>
-											<span class="truncate">{set.name}</span>
-										</Button>
-									{/each}
-								</div>
-							{/if}
-						{/snippet}
-						<CategoryProgress
-							name="Armor Progress"
-							progress={pest.activeArmorSetProgress}
-							items={pest.itemsData}
-							costFn={getUpgradeCost}
-							referenceOnlyPrices={ctx.isNonClassicProfile}
-							applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
-							expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
-							getUpgrades={(progress) => pest.getProgressUpgrades(progress)}
-						/>
-					</PestGearSelector>
-				{/if}
+				<PestLoadoutCard {pest} />
 
 				<section class="flex flex-col gap-3 rounded-lg border bg-card p-4 md:p-6">
 					<header class="flex items-center justify-between gap-3">
@@ -382,33 +148,18 @@
 				</section>
 
 				<section class="flex flex-col gap-4">
-					<h2 class="text-2xl leading-tight font-semibold">Upgrades</h2>
-					<div
-						class="flex flex-col gap-2 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm text-foreground md:p-4"
-					>
-						<div class="flex items-start gap-2">
-							<TriangleAlert class="mt-0.5 size-4 shrink-0 text-primary" />
-							<p>
-								These upgrade suggestions are a work in progress. Please report any issues or feedback
-								on our <a
-									href="/support"
-									class="font-medium text-link underline-offset-2 hover:underline">support server</a
-								>.
-							</p>
-						</div>
+					<h2 class="text-2xl leading-tight font-semibold">{pest.activePhaseConfig.label} Upgrades</h2>
+					<PestUpgradePhaseNav bind:phase={pest.activePhase} />
+					<div class="flex items-start gap-2 text-sm text-muted-foreground">
+						<TriangleAlert class="mt-0.5 size-4 shrink-0" />
+						<p>
+							These upgrade suggestions are a work in progress. Please report issues or feedback on our
+							<a
+								href={resolve('/support')}
+								class="font-medium text-link underline-offset-2 hover:underline">support server</a
+							>.
+						</p>
 					</div>
-					{#if pest.activePhase === PestFarmingPhase.Spawn && pest.activePhaseLoadout.armorSetId === 'main'}
-						<div
-							class="mt-1 flex items-center gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-2 text-sm"
-						>
-							<TriangleAlert class="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-							<p>
-								You're viewing Spawn phase upgrades while equipped with your Farm/Kill armor. Upgrading
-								this set for spawning may leave you worse off. Switch to your Spawn armor set before
-								applying these upgrades.
-							</p>
-						</div>
-					{/if}
 					<UpgradeList
 						upgrades={pest.activePhaseUpgrades}
 						items={pest.itemsData}

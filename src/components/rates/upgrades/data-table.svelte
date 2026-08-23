@@ -73,6 +73,9 @@
 		},
 		enableRowSelection: true,
 		enableExpanding: true,
+		autoResetExpanded: false,
+		autoResetPageIndex: false,
+		getRowCanExpand: () => !!renderSubComponent,
 		onRowSelectionChange: (updater) => {
 			if (typeof updater === 'function') {
 				rowSelection = updater(rowSelection);

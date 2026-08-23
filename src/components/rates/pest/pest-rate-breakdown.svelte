@@ -55,7 +55,7 @@
 <section class="flex flex-col gap-4">
 	<header class="flex flex-col justify-between gap-3 border-b pb-3 md:flex-row md:items-end">
 		<div class="flex flex-col gap-1">
-			<h2 class="text-xl leading-tight font-semibold">Rate Breakdown</h2>
+			<h1 class="text-xl leading-tight font-semibold">Pest Farming Rates</h1>
 			<p class="text-sm text-muted-foreground tabular-nums">
 				{formatNumber(result.breakdown.pestSpawning.pestsPerInterval * result.debug.intervalsPerHour, 1)} pests/hr
 				<span class="px-1">·</span>

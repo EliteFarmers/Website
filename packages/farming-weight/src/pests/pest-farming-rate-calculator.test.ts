@@ -477,7 +477,6 @@ test('mosquito smooth jazz scales the additive vinyl attraction bonus using rari
 			getPhaseMechanic: () => 0,
 			phaseLoadouts: {},
 			armorSetLoadouts: [],
-			sharedEquipment: {},
 			selectedVacuum: undefined,
 		} as unknown as PestFarmingPlayer;
 
@@ -615,7 +614,6 @@ test('max Mosquito raises the vinyl bonus from 1000 to 1500 weight', () => {
 		getPhaseMechanic: () => 0,
 		phaseLoadouts: {},
 		armorSetLoadouts: [],
-		sharedEquipment: {},
 		selectedVacuum: undefined,
 	} as unknown as PestFarmingPlayer;
 	const distribution = new PestFarmingRateCalculator({
@@ -1245,7 +1243,6 @@ function createSheetFixturePlayer(): PestFarmingPlayer {
 		getPhaseMechanic: () => 0,
 		phaseLoadouts: {},
 		armorSetLoadouts: [],
-		sharedEquipment: {},
 		selectedVacuum: undefined,
 	} as unknown as PestFarmingPlayer;
 }

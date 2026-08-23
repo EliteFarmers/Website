@@ -67,8 +67,24 @@ export interface PestArmorSetLoadout {
 	pieces: Partial<Record<GearSlot, string | null>>;
 }
 
+export interface PestEquipmentSetLoadout {
+	id: string;
+	name: string;
+	pieces: Partial<Record<GearSlot, string | null>>;
+}
+
+export interface PestLoadoutPreset {
+	id: string;
+	name: string;
+	armorSetId?: string;
+	equipmentSetId?: string;
+	petId?: string;
+}
+
 export interface PestPhaseLoadout {
-	armorSetId: string;
+	presetId: string;
+	armorSetId?: string;
+	equipmentSetId?: string;
 	petId?: string;
 }
 
@@ -80,8 +96,11 @@ export interface PestFarmingPlayerOptions extends PlayerOptions {
 	selectedVacuum?: Vacuum;
 	selectedVacuumId?: string;
 	armorSets?: PestArmorSetLoadout[];
+	equipmentSets?: PestEquipmentSetLoadout[];
+	loadoutPresets?: PestLoadoutPreset[];
+	phasePresetIds?: Partial<Record<PestFarmingPhase, string>>;
+	/** @deprecated Use loadoutPresets and phasePresetIds. */
 	phaseLoadouts?: Partial<Record<PestFarmingPhase, Partial<PestPhaseLoadout>>>;
-	sharedEquipment?: Partial<Record<GearSlot, string>>;
 }
 
 export interface PestStatView {
@@ -196,10 +215,12 @@ export class PestFarmingPlayer {
 	declare spawn: FarmingPlayer;
 	declare kill: FarmingPlayer;
 	declare armorSetLoadouts: PestArmorSetLoadout[];
+	declare equipmentSetLoadouts: PestEquipmentSetLoadout[];
+	declare loadoutPresets: PestLoadoutPreset[];
+	declare phasePresetIds: Record<PestFarmingPhase, string>;
 	declare armorSetModels: Record<string, ArmorLoadout>;
+	declare equipmentSetModels: Record<string, EquipmentLoadout>;
 	declare phaseLoadouts: Record<PestFarmingPhase, PestPhaseLoadout>;
-	declare sharedEquipment: Partial<Record<GearSlot, string>>;
-	declare sharedEquipmentSet: EquipmentLoadout;
 	declare vacuums: Vacuum[];
 	declare selectedVacuum?: Vacuum;
 
@@ -219,12 +240,16 @@ export class PestFarmingPlayer {
 			this.vacuums[0];
 
 		this.armorSetLoadouts = this.createArmorSetLoadouts(options.armorSets);
-		this.sharedEquipment = this.createSharedEquipment(options.sharedEquipment);
-		this.phaseLoadouts = this.createPhaseLoadouts(options.phaseLoadouts);
+		this.equipmentSetLoadouts = this.createEquipmentSetLoadouts(options.equipmentSets);
+		this.loadoutPresets = this.createLoadoutPresets(options.loadoutPresets, options.phaseLoadouts);
+		this.phasePresetIds = this.createPhasePresetIds(options.phasePresetIds, options.phaseLoadouts);
+		this.phaseLoadouts = this.createPhaseLoadouts();
 		this.armorSetModels = Object.fromEntries(
 			this.armorSetLoadouts.map((loadout) => [loadout.id, this.createArmorSetModel(loadout)])
 		);
-		this.sharedEquipmentSet = this.createSharedEquipmentSet();
+		this.equipmentSetModels = Object.fromEntries(
+			this.equipmentSetLoadouts.map((loadout) => [loadout.id, this.createEquipmentSetModel(loadout)])
+		);
 		this.phases = Object.fromEntries(
 			PEST_FARMING_PHASES.map((phase) => [phase, this.createPhasePlayer(phase)])
 		) as Record<PestFarmingPhase, FarmingPlayer>;
@@ -242,6 +267,10 @@ export class PestFarmingPlayer {
 	}
 
 	private createArmorSetLoadouts(saved?: PestArmorSetLoadout[]): PestArmorSetLoadout[] {
+		if (this.usesPresetCatalogs()) {
+			return this.normalizeArmorSets(saved ?? []);
+		}
+
 		const defaultMain = this.pickArmorPieces();
 		const defaultSpawn = this.pickArmorPieces(
 			new Set(Object.values(defaultMain).filter((uuid): uuid is string => typeof uuid === 'string'))
@@ -296,41 +325,131 @@ export class PestFarmingPlayer {
 		});
 	}
 
-	private createSharedEquipment(saved?: Partial<Record<GearSlot, string>>): Partial<Record<GearSlot, string>> {
-		const selected: Partial<Record<GearSlot, string>> = {};
-		for (const slot of PEST_EQUIPMENT_SLOTS) {
-			const uuid = saved?.[slot];
-			if (uuid && this.findEquipment(slot, uuid)) selected[slot] = uuid;
-		}
-
-		return this.pickEquipmentPieces(selected);
+	private usesPresetCatalogs(): boolean {
+		return this.options.loadoutPresets !== undefined || this.options.phasePresetIds !== undefined;
 	}
 
-	private createPhaseLoadouts(
-		saved?: Partial<Record<PestFarmingPhase, Partial<PestPhaseLoadout>>>
-	): Record<PestFarmingPhase, PestPhaseLoadout> {
-		const mainId = this.armorSetLoadouts[0]?.id ?? PEST_MAIN_ARMOR_SET_ID;
-		const spawnSet = this.armorSetLoadouts.find((set) => set.id === PEST_SPAWN_ARMOR_SET_ID);
-		const defaultSpawnId = spawnSet && hasArmorPieces(spawnSet) ? spawnSet.id : mainId;
+	private normalizeArmorSets(source: PestArmorSetLoadout[]): PestArmorSetLoadout[] {
+		const usedIds = new Set<string>();
+		const result: PestArmorSetLoadout[] = [];
+		for (const [index, set] of source.entries()) {
+			const id = set.id.trim();
+			if (!id || usedIds.has(id)) continue;
+			const pieces: Partial<Record<GearSlot, string | null>> = {};
+			for (const slot of PEST_ARMOR_SLOTS) {
+				if (!Object.hasOwn(set.pieces, slot)) continue;
+				const uuid = set.pieces[slot];
+				if (uuid === null) pieces[slot] = null;
+				else if (uuid && this.findArmor(slot, uuid)) {
+					pieces[slot] = uuid;
+				}
+			}
+			usedIds.add(id);
+			result.push({ id, name: set.name.trim() || `Armor Set ${index + 1}`, pieces });
+		}
+		return result;
+	}
 
+	private createEquipmentSetLoadouts(saved?: PestEquipmentSetLoadout[]): PestEquipmentSetLoadout[] {
+		const source = saved ?? [
+			{
+				id: 'default-equipment',
+				name: 'Equipment Set',
+				pieces: this.pickEquipmentPieces(),
+			},
+		];
+		const usedIds = new Set<string>();
+		const result: PestEquipmentSetLoadout[] = [];
+		for (const [index, set] of source.entries()) {
+			const id = set.id.trim();
+			if (!id || usedIds.has(id)) continue;
+			const pieces: Partial<Record<GearSlot, string | null>> = {};
+			for (const slot of PEST_EQUIPMENT_SLOTS) {
+				if (!Object.hasOwn(set.pieces, slot)) continue;
+				const uuid = set.pieces[slot];
+				if (uuid === null) pieces[slot] = null;
+				else if (uuid && this.findEquipment(slot, uuid)) {
+					pieces[slot] = uuid;
+				}
+			}
+			usedIds.add(id);
+			result.push({ id, name: set.name.trim() || `Equipment Set ${index + 1}`, pieces });
+		}
+		return result;
+	}
+
+	private createLoadoutPresets(
+		saved?: PestLoadoutPreset[],
+		legacy?: Partial<Record<PestFarmingPhase, Partial<PestPhaseLoadout>>>
+	): PestLoadoutPreset[] {
+		if (saved?.length) {
+			const ids = new Set<string>();
+			return saved.flatMap((preset, index) => {
+				const id = preset.id.trim();
+				if (!id || ids.has(id)) return [];
+				ids.add(id);
+				return [this.normalizePreset({ ...preset, id, name: preset.name.trim() || `Loadout ${index + 1}` })];
+			});
+		}
+
+		if (!this.usesPresetCatalogs()) {
+			const result: PestLoadoutPreset[] = [];
+			for (const phase of PEST_FARMING_PHASES) {
+				const armorSetId = legacy?.[phase]?.armorSetId;
+				const defaultArmorId =
+					phase === PestFarmingPhase.Spawn && hasArmorPieces(this.getArmorSetLoadout(PEST_SPAWN_ARMOR_SET_ID))
+						? PEST_SPAWN_ARMOR_SET_ID
+						: (this.armorSetLoadouts[0]?.id ?? PEST_MAIN_ARMOR_SET_ID);
+				result.push(
+					this.normalizePreset({
+						id: `legacy-${phase}`,
+						name: `${phase.charAt(0).toUpperCase()}${phase.slice(1)} Loadout`,
+						armorSetId: this.getArmorSetLoadout(armorSetId)?.id ?? defaultArmorId,
+						equipmentSetId: this.equipmentSetLoadouts[0]?.id,
+						petId: legacy?.[phase]?.petId ?? this.pickBestPetId(phase),
+					})
+				);
+			}
+			return result;
+		}
+
+		return [
+			this.normalizePreset({
+				id: 'default-loadout',
+				name: 'Default Loadout',
+				armorSetId: this.armorSetLoadouts[0]?.id,
+				equipmentSetId: this.equipmentSetLoadouts[0]?.id,
+				petId: this.pickBestPetId(PestFarmingPhase.Farm),
+			}),
+		];
+	}
+
+	private normalizePreset(preset: PestLoadoutPreset): PestLoadoutPreset {
+		const armorSetId = this.getArmorSetLoadout(preset.armorSetId)?.id;
+		const equipmentSetId = this.getEquipmentSetLoadout(preset.equipmentSetId)?.id;
+		const petId = this.findPetId(preset.petId);
+		return { ...preset, armorSetId, equipmentSetId, petId };
+	}
+
+	private createPhasePresetIds(
+		saved?: Partial<Record<PestFarmingPhase, string>>,
+		legacy?: Partial<Record<PestFarmingPhase, Partial<PestPhaseLoadout>>>
+	): Record<PestFarmingPhase, string> {
+		const fallback = this.loadoutPresets[0]?.id ?? 'default-loadout';
 		return Object.fromEntries(
 			PEST_FARMING_PHASES.map((phase) => {
-				const fallbackSetId = phase === PestFarmingPhase.Spawn ? defaultSpawnId : mainId;
-				const savedSetId = saved?.[phase]?.armorSetId;
-				const armorSetId = this.armorSetLoadouts.some((set) => set.id === savedSetId)
-					? savedSetId!
-					: fallbackSetId;
-				const fallbackPet = this.pickBestPetId(phase);
-				const savedPet = saved?.[phase]?.petId;
-				const petId = this.inventory.pets.some((pet) => pet.pet.uuid === savedPet) ? savedPet : fallbackPet;
+				const legacyId = !this.usesPresetCatalogs() ? `legacy-${phase}` : undefined;
+				const requested = saved?.[phase] ?? legacy?.[phase]?.presetId ?? legacyId;
+				return [phase, this.getLoadoutPreset(requested)?.id ?? fallback];
+			})
+		) as Record<PestFarmingPhase, string>;
+	}
 
-				return [
-					phase,
-					{
-						armorSetId,
-						petId,
-					},
-				];
+	private createPhaseLoadouts(): Record<PestFarmingPhase, PestPhaseLoadout> {
+		return Object.fromEntries(
+			PEST_FARMING_PHASES.map((phase) => {
+				const preset = this.getLoadoutPreset(this.phasePresetIds[phase]) ?? this.loadoutPresets[0];
+				return [phase, this.resolvePreset(preset)];
 			})
 		) as Record<PestFarmingPhase, PestPhaseLoadout>;
 	}
@@ -347,10 +466,17 @@ export class PestFarmingPlayer {
 		});
 
 		this.applyArmorLoadout(player, this.getArmorSetLoadout(this.phaseLoadouts[phase].armorSetId));
-		this.applySharedEquipment(player);
+		this.applyEquipmentLoadout(player, this.getEquipmentSetLoadout(this.phaseLoadouts[phase].equipmentSetId));
 		const petId = this.phaseLoadouts[phase].petId;
-		const pet = player.pets.find((candidate) => candidate.pet.uuid === petId);
-		if (pet) player.selectPet(pet);
+		const pet = player.pets.find((candidate) => this.getPetId(candidate) === petId);
+		if (pet) {
+			player.selectPet(pet);
+		} else {
+			// FarmingPlayer selects an active/default pet during construction. Phase
+			// loadouts must keep an explicit empty pet choice genuinely empty.
+			player.selectedPet = undefined;
+			player.options.selectedPet = undefined;
+		}
 		player.permFortune = player.getGeneralFortune();
 		player.tempFortune = player.getTempFortune();
 		return player;
@@ -362,15 +488,20 @@ export class PestFarmingPlayer {
 		this.kill = this.phases[PestFarmingPhase.Kill];
 	}
 
+	private resolvePreset(preset?: PestLoadoutPreset): PestPhaseLoadout {
+		return {
+			presetId: preset?.id ?? '',
+			armorSetId: this.getArmorSetLoadout(preset?.armorSetId)?.id,
+			equipmentSetId: this.getEquipmentSetLoadout(preset?.equipmentSetId)?.id,
+			petId: this.findPetId(preset?.petId),
+		};
+	}
+
 	private setPhaseLoadout(phase: PestFarmingPhase, loadout: PestPhaseLoadout): void {
-		this.phaseLoadouts = {
-			...this.phaseLoadouts,
-			[phase]: loadout,
-		};
-		this.options.phaseLoadouts = {
-			...(this.options.phaseLoadouts ?? {}),
-			[phase]: { ...loadout },
-		};
+		this.phaseLoadouts = { ...this.phaseLoadouts, [phase]: loadout };
+		this.phasePresetIds = { ...this.phasePresetIds, [phase]: loadout.presetId };
+		this.options.phasePresetIds = { ...(this.options.phasePresetIds ?? {}), [phase]: loadout.presetId };
+		this.options.phaseLoadouts = { ...(this.options.phaseLoadouts ?? {}), [phase]: { ...loadout } };
 	}
 
 	private refreshPhaseFortune(phase: PestFarmingPhase): void {
@@ -380,35 +511,65 @@ export class PestFarmingPlayer {
 		this.refreshPhaseAliases();
 	}
 
+	setPhasePreset(phase: PestFarmingPhase, presetId: string): boolean {
+		const preset = this.getLoadoutPreset(presetId);
+		if (!preset || this.phasePresetIds[phase] === presetId) return false;
+		this.setPhaseLoadout(phase, this.resolvePreset(preset));
+		this.applyPhaseSelection(phase);
+		return true;
+	}
+
 	setPhaseArmorSet(phase: PestFarmingPhase, armorSetId: string): boolean {
 		if (!this.getArmorSetLoadout(armorSetId)) return false;
 
 		const current = this.phaseLoadouts[phase];
 		if (current.armorSetId === armorSetId) return false;
 
-		this.setPhaseLoadout(phase, {
-			...current,
-			armorSetId,
-		});
-		this.applyArmorLoadout(this.phases[phase], this.getArmorSetLoadout(armorSetId));
-		this.refreshPhaseFortune(phase);
+		this.setPhaseOverride(phase, { ...current, armorSetId });
 		return true;
 	}
 
 	setPhasePet(phase: PestFarmingPhase, petId: string): boolean {
-		if (!this.inventory.pets.some((pet) => pet.pet.uuid === petId)) return false;
+		const stablePetId = this.findPetId(petId);
+		if (!stablePetId) return false;
 
 		const current = this.phaseLoadouts[phase];
-		if (current.petId === petId) return false;
-
-		this.setPhaseLoadout(phase, {
-			...current,
-			petId,
-		});
-		const pet = this.phases[phase].pets.find((candidate) => candidate.pet.uuid === petId);
-		if (pet) this.phases[phase].selectPet(pet);
-		this.refreshPhaseAliases();
+		if (current.petId === stablePetId) return false;
+		this.setPhaseOverride(phase, { ...current, petId: stablePetId });
 		return true;
+	}
+
+	private setPhaseOverride(phase: PestFarmingPhase, loadout: PestPhaseLoadout): void {
+		const id = `phase-${phase}-selection`;
+		const preset: PestLoadoutPreset = {
+			id,
+			name: `${phase.charAt(0).toUpperCase()}${phase.slice(1)} Loadout`,
+			armorSetId: loadout.armorSetId,
+			equipmentSetId: loadout.equipmentSetId,
+			petId: loadout.petId,
+		};
+		const existing = this.loadoutPresets.findIndex((candidate) => candidate.id === id);
+		if (existing >= 0) this.loadoutPresets[existing] = preset;
+		else this.loadoutPresets.push(preset);
+		this.options.loadoutPresets = this.loadoutPresets.map((candidate) => ({ ...candidate }));
+		this.setPhaseLoadout(phase, this.resolvePreset(preset));
+		this.applyPhaseSelection(phase);
+	}
+
+	private applyPhaseSelection(phase: PestFarmingPhase): void {
+		const player = this.phases[phase];
+		const loadout = this.phaseLoadouts[phase];
+		this.applyArmorLoadout(player, this.getArmorSetLoadout(loadout.armorSetId));
+		this.applyEquipmentLoadout(player, this.getEquipmentSetLoadout(loadout.equipmentSetId));
+		const pet = player.pets.find((candidate) => this.getPetId(candidate) === loadout.petId);
+		player.selectedPet = pet;
+		player.options.selectedPet = pet;
+		this.refreshPhaseFortune(phase);
+	}
+
+	private rebuildPhasePlayer(phase: PestFarmingPhase): void {
+		this.phases[phase] = this.createPhasePlayer(phase);
+		this.refreshPhaseAliases();
 	}
 
 	private applyArmorLoadout(player: FarmingPlayer, loadout?: PestArmorSetLoadout): void {
@@ -421,10 +582,10 @@ export class PestFarmingPlayer {
 		}
 	}
 
-	private applySharedEquipment(player: FarmingPlayer): void {
+	private applyEquipmentLoadout(player: FarmingPlayer, loadout?: PestEquipmentSetLoadout): void {
 		for (const slot of PEST_EQUIPMENT_SLOTS) {
 			player.armorSet.clearSlot(slot);
-			const uuid = this.sharedEquipment[slot];
+			const uuid = loadout?.pieces[slot];
 			if (!uuid) continue;
 			const piece = player.armorSet.slotOptions[slot]?.find((option) => option.item.uuid === uuid);
 			if (piece instanceof FarmingEquipment) player.armorSet.setPiece(piece);
@@ -444,12 +605,12 @@ export class PestFarmingPlayer {
 		return model;
 	}
 
-	private createSharedEquipmentSet(): EquipmentLoadout {
+	private createEquipmentSetModel(loadout: PestEquipmentSetLoadout): EquipmentLoadout {
 		const equipment = FarmingEquipment.fromArray(cloneItems(this.inventory.equipment), this.options);
 		const model = new EquipmentLoadout(equipment, this.options);
 		for (const slot of PEST_EQUIPMENT_SLOTS) {
 			model.clearSlot(slot);
-			const uuid = this.sharedEquipment[slot];
+			const uuid = loadout.pieces[slot];
 			if (!uuid) continue;
 			const piece = model.slotOptions[slot]?.find((option) => option.item.uuid === uuid);
 			if (piece instanceof FarmingEquipment) model.setPiece(piece);
@@ -512,8 +673,11 @@ export class PestFarmingPlayer {
 	}
 
 	private pickBestPetId(_phase: PestFarmingPhase): string | undefined {
-		const selectedUuid = this.options.selectedPet?.pet.uuid ?? undefined;
-		return selectedUuid ?? this.inventory.selectedPet?.pet.uuid ?? this.inventory.pets[0]?.pet.uuid ?? undefined;
+		return (
+			(this.options.selectedPet ? this.getPetId(this.options.selectedPet) : undefined) ??
+			(this.inventory.selectedPet ? this.getPetId(this.inventory.selectedPet) : undefined) ??
+			(this.inventory.pets[0] ? this.getPetId(this.inventory.pets[0]) : undefined)
+		);
 	}
 
 	private findArmor(slot: GearSlot, uuid: string): FarmingArmor | undefined {
@@ -524,6 +688,16 @@ export class PestFarmingPlayer {
 		return this.inventory.equipment.find((piece) => piece.slot === slot && piece.item.uuid === uuid);
 	}
 
+	private getPetId(pet: FarmingPet): string | undefined {
+		return pet.pet.uuid || pet.pet.localId || undefined;
+	}
+
+	private findPetId(id: string | undefined): string | undefined {
+		if (!id) return undefined;
+		const pet = this.inventory.pets.find((candidate) => this.getPetId(candidate) === id);
+		return pet ? this.getPetId(pet) : undefined;
+	}
+
 	getArmorSetLoadout(id: string | undefined): PestArmorSetLoadout | undefined {
 		return this.armorSetLoadouts.find((set) => set.id === id);
 	}
@@ -532,8 +706,20 @@ export class PestFarmingPlayer {
 		return id ? this.armorSetModels[id] : undefined;
 	}
 
-	getArmorSetConflict(uuid: string, armorSetId: string): PestArmorSetLoadout | undefined {
-		return this.armorSetLoadouts.find((set) => set.id !== armorSetId && Object.values(set.pieces).includes(uuid));
+	getEquipmentSetLoadout(id: string | undefined): PestEquipmentSetLoadout | undefined {
+		return this.equipmentSetLoadouts.find((set) => set.id === id);
+	}
+
+	getEquipmentSetModel(id: string | undefined): EquipmentLoadout | undefined {
+		return id ? this.equipmentSetModels?.[id] : undefined;
+	}
+
+	getLoadoutPreset(id: string | undefined): PestLoadoutPreset | undefined {
+		return this.loadoutPresets.find((preset) => preset.id === id);
+	}
+
+	getPhasePreset(phase: PestFarmingPhase): PestLoadoutPreset | undefined {
+		return this.getLoadoutPreset(this.phasePresetIds[phase]);
 	}
 
 	getPhasePlayer(phase: PestFarmingPhase): FarmingPlayer {
@@ -595,8 +781,8 @@ export class PestFarmingPlayer {
 		return this.getArmorSetModel(armorSetId)?.getProgress(stats) ?? [];
 	}
 
-	getSharedEquipmentProgress(stats: Stat[] = PEST_FARMING_STATS): FortuneSourceProgress[] {
-		return this.sharedEquipmentSet.getProgress(stats);
+	getEquipmentSetProgress(equipmentSetId: string, stats: Stat[] = PEST_FARMING_STATS): FortuneSourceProgress[] {
+		return this.getEquipmentSetModel(equipmentSetId)?.getProgress(stats) ?? [];
 	}
 
 	getVacuumProgress(stats: Stat[] = VACUUM_STATS): FortuneSourceProgress[] {
@@ -714,21 +900,44 @@ export class PestFarmingPlayer {
 		if (phase === PestFarmingPhase.Kill && this.applyVacuumUpgrade(upgrade)) return;
 
 		const itemUuid = upgrade.meta?.itemUuid;
-		if (itemUuid && this.isSharedEquipmentUuid(itemUuid)) {
-			for (const phasePlayer of Object.values(this.phases)) phasePlayer.applyUpgrade(upgrade);
-			this.syncSharedEquipmentSet();
+		const equipmentSetIds = itemUuid ? this.getEquipmentSetIdsForUuid(itemUuid) : [];
+		if (equipmentSetIds.length > 0) {
+			this.inventory.applyUpgrade(upgrade);
+			for (const phaseKey of PEST_FARMING_PHASES) {
+				if (equipmentSetIds.includes(this.phaseLoadouts[phaseKey].equipmentSetId ?? '')) {
+					this.phases[phaseKey] = this.createPhasePlayer(phaseKey);
+				}
+			}
+			this.syncEquipmentSetModels(equipmentSetIds);
 			this.refreshPhaseAliases();
 			return;
 		}
 
 		const armorSetIds = itemUuid ? this.getArmorSetIdsForUuid(itemUuid) : [];
 		if (armorSetIds.length > 0) {
+			this.inventory.applyUpgrade(upgrade);
 			for (const phaseKey of PEST_FARMING_PHASES) {
-				if (armorSetIds.includes(this.phaseLoadouts[phaseKey].armorSetId)) {
-					this.phases[phaseKey].applyUpgrade(upgrade);
+				if (armorSetIds.includes(this.phaseLoadouts[phaseKey].armorSetId ?? '')) {
+					this.phases[phaseKey] = this.createPhasePlayer(phaseKey);
 				}
 			}
 			this.syncArmorSetModels(armorSetIds);
+			this.refreshPhaseAliases();
+			return;
+		}
+
+		const petId = itemUuid
+			? this.inventory.pets.find((pet) => pet.pet.uuid === itemUuid)
+				? this.findPetId(itemUuid)
+				: undefined
+			: undefined;
+		if (petId) {
+			this.inventory.applyUpgrade(upgrade);
+			for (const phaseKey of PEST_FARMING_PHASES) {
+				if (this.phaseLoadouts[phaseKey].petId === petId) {
+					this.phases[phaseKey] = this.createPhasePlayer(phaseKey);
+				}
+			}
 			this.refreshPhaseAliases();
 			return;
 		}
@@ -836,22 +1045,25 @@ export class PestFarmingPlayer {
 		});
 	}
 
-	private isSharedEquipmentUuid(uuid: string): boolean {
-		return Object.values(this.sharedEquipment).includes(uuid);
-	}
-
 	private getArmorSetIdsForUuid(uuid: string): string[] {
 		return this.armorSetLoadouts.filter((set) => Object.values(set.pieces).includes(uuid)).map((set) => set.id);
 	}
 
-	private syncSharedEquipmentSet(): void {
-		this.sharedEquipmentSet = this.createSharedEquipmentSet();
+	private getEquipmentSetIdsForUuid(uuid: string): string[] {
+		return this.equipmentSetLoadouts.filter((set) => Object.values(set.pieces).includes(uuid)).map((set) => set.id);
 	}
 
 	private syncArmorSetModels(ids: string[]): void {
 		for (const id of ids) {
 			const loadout = this.getArmorSetLoadout(id);
 			if (loadout) this.armorSetModels[id] = this.createArmorSetModel(loadout);
+		}
+	}
+
+	private syncEquipmentSetModels(ids: string[]): void {
+		for (const id of ids) {
+			const loadout = this.getEquipmentSetLoadout(id);
+			if (loadout) this.equipmentSetModels[id] = this.createEquipmentSetModel(loadout);
 		}
 	}
 
@@ -870,10 +1082,10 @@ export class PestFarmingPlayer {
 				...set,
 				pieces: { ...set.pieces },
 			})),
-			phaseLoadouts: Object.fromEntries(
-				Object.entries(this.phaseLoadouts).map(([phase, loadout]) => [phase, { ...loadout }])
-			) as Record<PestFarmingPhase, PestPhaseLoadout>,
-			sharedEquipment: { ...this.sharedEquipment },
+			equipmentSets: this.equipmentSetLoadouts.map((set) => ({ ...set, pieces: { ...set.pieces } })),
+			loadoutPresets: this.loadoutPresets.map((preset) => ({ ...preset })),
+			phasePresetIds: { ...this.phasePresetIds },
+			phaseLoadouts: undefined,
 		});
 	}
 }

@@ -35,8 +35,8 @@ export class SquashHelmet extends BaseItem {
 			items: {
 				CONDENSED_FERMENTO: 2,
 				ENCHANTED_SUGAR_CANE: 32,
-				ENCHANTED_HUGE_MUSHROOM_2: 32,
-				ENCHANTED_HUGE_MUSHROOM_1: 32,
+				ENCHANTED_HUGE_MUSHROOM_2: 16,
+				ENCHANTED_HUGE_MUSHROOM_1: 16,
 			},
 		},
 	};
@@ -87,8 +87,8 @@ export class SquashChestplate extends BaseItem {
 			items: {
 				CONDENSED_FERMENTO: 2,
 				ENCHANTED_SUGAR_CANE: 32,
-				ENCHANTED_HUGE_MUSHROOM_2: 32,
-				ENCHANTED_HUGE_MUSHROOM_1: 32,
+				ENCHANTED_HUGE_MUSHROOM_2: 16,
+				ENCHANTED_HUGE_MUSHROOM_1: 16,
 				MUTANT_NETHER_STALK: 30,
 				ENCHANTED_CACTUS: 25,
 			},
@@ -141,8 +141,8 @@ export class SquashLeggings extends BaseItem {
 			items: {
 				CONDENSED_FERMENTO: 2,
 				ENCHANTED_SUGAR_CANE: 32,
-				ENCHANTED_HUGE_MUSHROOM_2: 32,
-				ENCHANTED_HUGE_MUSHROOM_1: 32,
+				ENCHANTED_HUGE_MUSHROOM_2: 16,
+				ENCHANTED_HUGE_MUSHROOM_1: 16,
 				MUTANT_NETHER_STALK: 40,
 			},
 		},
@@ -193,8 +193,8 @@ export class SquashBoots extends BaseItem {
 		cost: {
 			items: {
 				CONDENSED_FERMENTO: 2,
-				ENCHANTED_HUGE_MUSHROOM_2: 32,
-				ENCHANTED_HUGE_MUSHROOM_1: 32,
+				ENCHANTED_HUGE_MUSHROOM_2: 16,
+				ENCHANTED_HUGE_MUSHROOM_1: 16,
 			},
 		},
 	};

@@ -37,6 +37,7 @@ export * from './items/tools.js';
 export * from './items/vacuums.js';
 export * from './pests/pest-drops.js';
 export * from './pests/pest-farming-rate-calculator.js';
+export * from './pests/pest-loadout-optimizer.js';
 export * from './pests/pest-rate-types.js';
 export * from './player/pestfarmingplayer.js';
 export * from './player/player.js';

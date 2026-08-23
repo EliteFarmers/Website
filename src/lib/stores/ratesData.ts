@@ -1,11 +1,8 @@
 import { browser } from '$app/environment';
 import {
-	PEST_MAIN_ARMOR_SET_ID,
-	PEST_SPAWN_ARMOR_SET_ID,
 	DEFAULT_PEST_CYCLE_SETTINGS,
 	Pest,
 	type PestAttractionSettings,
-	PestFarmingPhase,
 	Spray,
 	SprayonatorTier,
 	ZorroMode,
@@ -22,7 +19,6 @@ export type PestFarmingTimeOfDay = 'day' | 'night';
 
 export interface PestFarmingData {
 	selectedCrop?: string;
-	phaseLoadouts: Partial<Record<PestFarmingPhase, { armorSetId: string }>>;
 	sprayedPlot: boolean;
 	sprayonatorTier: SprayonatorTier;
 	pesthunterAccessoryEnabled: boolean;
@@ -53,7 +49,7 @@ export interface RatesData {
 	pestFarming: PestFarmingData;
 }
 
-type PartialRatesData = Partial<Omit<RatesData, 'temp' | 'pestFarming'>> & {
+export type PartialRatesData = Partial<Omit<RatesData, 'temp' | 'pestFarming'>> & {
 	temp?: Partial<RatesData['temp']>;
 	pestFarming?: Partial<PestFarmingData>;
 };
@@ -67,7 +63,7 @@ export const MissingRatesDataSchema = z.object({
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 9,
+	v: 11,
 	settings: false,
 	chipRarities: {},
 	communityCenter: 0,
@@ -97,7 +93,6 @@ const defaultData = {
 	infestedPlotProbability: 0.2,
 	zorroMode: ZorroMode.Normal,
 	pestFarming: {
-		phaseLoadouts: {},
 		sprayedPlot: true,
 		sprayonatorTier: SprayonatorTier.Regular,
 		pesthunterAccessoryEnabled: true,
@@ -125,14 +120,6 @@ const defaultData = {
 	},
 } as RatesData;
 
-function isLegacyDefaultPhaseLoadouts(loadouts?: Partial<PestFarmingData['phaseLoadouts']>): boolean {
-	return (
-		loadouts?.[PestFarmingPhase.Farm]?.armorSetId === PEST_MAIN_ARMOR_SET_ID &&
-		loadouts?.[PestFarmingPhase.Spawn]?.armorSetId === PEST_SPAWN_ARMOR_SET_ID &&
-		loadouts?.[PestFarmingPhase.Kill]?.armorSetId === PEST_MAIN_ARMOR_SET_ID
-	);
-}
-
 function normalizePestAttractionSettings(
 	data?: (Partial<PestAttractionSettings> & { selectedPest?: Pest }) | null
 ): PestAttractionSettings {
@@ -146,21 +133,8 @@ function normalizePestAttractionSettings(
 }
 
 function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingData {
-	const armorSetIds = new Set([PEST_MAIN_ARMOR_SET_ID, PEST_SPAWN_ARMOR_SET_ID]);
-	const phaseLoadouts: PestFarmingData['phaseLoadouts'] = {};
-
-	if (!isLegacyDefaultPhaseLoadouts(data?.phaseLoadouts)) {
-		for (const phase of [PestFarmingPhase.Farm, PestFarmingPhase.Spawn, PestFarmingPhase.Kill]) {
-			const armorSetId = data?.phaseLoadouts?.[phase]?.armorSetId;
-			if (armorSetId && armorSetIds.has(armorSetId)) {
-				phaseLoadouts[phase] = { armorSetId };
-			}
-		}
-	}
-
 	return {
 		selectedCrop: data?.selectedCrop,
-		phaseLoadouts,
 		sprayedPlot: data?.sprayedPlot ?? defaultData.pestFarming.sprayedPlot,
 		sprayonatorTier: data?.sprayonatorTier ?? defaultData.pestFarming.sprayonatorTier,
 		pesthunterAccessoryEnabled: true,
@@ -173,8 +147,7 @@ function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingD
 	};
 }
 
-function normalizeRatesData(data?: PartialRatesData | null): RatesData {
-	const resetPestFarming = data?.v !== defaultData.v;
+export function normalizeRatesData(data?: PartialRatesData | null): RatesData {
 	return {
 		...defaultData,
 		...(data ?? {}),
@@ -184,7 +157,7 @@ function normalizeRatesData(data?: PartialRatesData | null): RatesData {
 			...defaultData.temp,
 			...(data?.temp ?? {}),
 		},
-		pestFarming: resetPestFarming ? normalizePestFarmingData() : normalizePestFarmingData(data?.pestFarming),
+		pestFarming: normalizePestFarmingData(data?.pestFarming),
 	};
 }
 
@@ -219,10 +192,6 @@ export function getRatesData() {
 	}
 
 	store.update((rates) => {
-		if (!rates || rates.v !== defaultData.v) {
-			return normalizeRatesData();
-		}
-
 		return normalizeRatesData(rates);
 	});
 
