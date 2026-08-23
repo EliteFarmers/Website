@@ -35,7 +35,7 @@ export const getColumns = (
 					upgrade: row.original,
 					items: itemsLookup,
 					expanded: row.getIsExpanded(),
-					toggleExpanded: row.toggleExpanded,
+					toggleExpanded: () => row.toggleExpanded(),
 					canExpand: !!expandUpgrade && (canExpandUpgrade?.(row.original) ?? false),
 				});
 			},

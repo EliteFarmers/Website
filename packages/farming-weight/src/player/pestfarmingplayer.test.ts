@@ -63,7 +63,7 @@ function vacuum(id: string, overrides: Partial<EliteItemDto> = {}): EliteItemDto
 	};
 }
 
-test('phase loadouts use phase armor, shared equipment, and independent pets', () => {
+test('phase loadouts use phase armor, equipment, and independent pets', () => {
 	const player = new PestFarmingPlayer({
 		armor: [
 			armor('HELIANTHUS_HELMET', 'main-helmet'),
@@ -98,9 +98,13 @@ test('phase loadouts use phase armor, shared equipment, and independent pets', (
 			[PestFarmingPhase.Spawn]: { armorSetId: 'spawn', petId: 'mosquito' },
 			[PestFarmingPhase.Kill]: { armorSetId: 'main', petId: 'hedgehog' },
 		},
-		sharedEquipment: {
-			[GearSlot.Belt]: 'pesthunter-belt',
-		},
+		equipmentSets: [
+			{
+				id: 'pest-equipment',
+				name: 'Pest Equipment',
+				pieces: { [GearSlot.Belt]: 'pesthunter-belt' },
+			},
+		],
 	});
 
 	expect(player.getPhaseArmorSet(PestFarmingPhase.Farm).helmet?.item.uuid).toBe('main-helmet');
@@ -116,7 +120,24 @@ test('phase loadouts use phase armor, shared equipment, and independent pets', (
 	expect(player.getPhasePlayer(PestFarmingPhase.Kill).selectedPet?.pet.uuid).toBe('hedgehog');
 });
 
-test('default shared equipment prefers pest equipment over generic farming fortune', () => {
+test('an empty phase pet does not inherit the inventory default pet', () => {
+	const player = new PestFarmingPlayer({
+		pets: [pet(FarmingPets.MooshroomCow, 'mooshroom')],
+		loadoutPresets: [{ id: 'empty-pet', name: 'No Pet' }],
+		phasePresetIds: {
+			[PestFarmingPhase.Farm]: 'empty-pet',
+			[PestFarmingPhase.Spawn]: 'empty-pet',
+			[PestFarmingPhase.Kill]: 'empty-pet',
+		},
+	});
+
+	for (const phase of [PestFarmingPhase.Farm, PestFarmingPhase.Spawn, PestFarmingPhase.Kill]) {
+		expect(player.phaseLoadouts[phase].petId).toBeUndefined();
+		expect(player.getPhasePlayer(phase).selectedPet).toBeUndefined();
+	}
+});
+
+test('default equipment set prefers pest equipment over generic farming fortune', () => {
 	const player = new PestFarmingPlayer({
 		equipment: [
 			equipment('BLOSSOM_BELT', 'blossom-belt'),
@@ -126,8 +147,8 @@ test('default shared equipment prefers pest equipment over generic farming fortu
 		],
 	});
 
-	expect(player.sharedEquipment[GearSlot.Belt]).toBe('pesthunter-belt');
-	expect(player.sharedEquipment[GearSlot.Cloak]).toBe('pest-vest');
+	expect(player.equipmentSetLoadouts[0]?.pieces[GearSlot.Belt]).toBe('pesthunter-belt');
+	expect(player.equipmentSetLoadouts[0]?.pieces[GearSlot.Cloak]).toBe('pest-vest');
 });
 
 test('default pest armor loadouts prefer equipped and separate wardrobe sets before loose pieces', () => {
@@ -238,7 +259,7 @@ test('default spawn phase keeps the generated spawn armor set as a rate-selectio
 	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).helmet?.item.uuid).toBe('spawn-helmet');
 });
 
-test('phase armor and shared equipment progress are scoped to their loadout types', () => {
+test('phase armor and equipment progress are scoped to their loadout types', () => {
 	const player = new PestFarmingPlayer({
 		armor: [armor('HELIANTHUS_HELMET', 'main-helmet')],
 		equipment: [equipment('BLOSSOM_BELT', 'blossom-belt')],
@@ -251,14 +272,12 @@ test('phase armor and shared equipment progress are scoped to their loadout type
 				},
 			},
 		],
-		sharedEquipment: {
-			[GearSlot.Belt]: 'blossom-belt',
-		},
+		equipmentSets: [{ id: 'equipment', name: 'Equipment', pieces: { [GearSlot.Belt]: 'blossom-belt' } }],
 	});
 
 	const armorProgressNames = player.getArmorSetProgress('main', [Stat.FarmingFortune]).map((entry) => entry.name);
 	const equipmentProgressNames = player
-		.getSharedEquipmentProgress([Stat.FarmingFortune, Stat.BonusPestChance])
+		.getEquipmentSetProgress('equipment', [Stat.FarmingFortune, Stat.BonusPestChance])
 		.map((entry) => entry.name);
 
 	expect(armorProgressNames).toContain('Helmet');
@@ -274,9 +293,7 @@ test('phase armor and shared equipment progress are scoped to their loadout type
 test('farm phase includes pest cooldown reduction as a relevant phase stat', () => {
 	const player = new PestFarmingPlayer({
 		equipment: [equipment('PESTHUNTERS_CLOAK', 'pesthunter-cloak')],
-		sharedEquipment: {
-			[GearSlot.Cloak]: 'pesthunter-cloak',
-		},
+		equipmentSets: [{ id: 'equipment', name: 'Equipment', pieces: { [GearSlot.Cloak]: 'pesthunter-cloak' } }],
 	});
 
 	const view = player.getPhaseStatView(PestFarmingPhase.Farm);
@@ -464,9 +481,13 @@ test('phase armor set changes update only the selected phase loadout', () => {
 			[PestFarmingPhase.Spawn]: { armorSetId: 'spawn' },
 			[PestFarmingPhase.Kill]: { armorSetId: 'main' },
 		},
-		sharedEquipment: {
-			[GearSlot.Belt]: 'pesthunter-belt',
-		},
+		equipmentSets: [
+			{
+				id: 'pest-equipment',
+				name: 'Pest Equipment',
+				pieces: { [GearSlot.Belt]: 'pesthunter-belt' },
+			},
+		],
 	});
 
 	const farmBefore = player.getPhasePlayer(PestFarmingPhase.Farm);
@@ -605,7 +626,7 @@ test('only the farm/kill and spawn armor sets are retained', () => {
 	expect(player.phaseLoadouts[PestFarmingPhase.Kill].armorSetId).toBe('main');
 });
 
-test('different armor sets cannot share the same armor piece', () => {
+test('phase armor sets can reuse the same owned armor piece', () => {
 	const player = new PestFarmingPlayer({
 		armor: [armor('HELIANTHUS_HELMET', 'shared-helmet')],
 		armorSets: [
@@ -624,16 +645,71 @@ test('different armor sets cannot share the same armor piece', () => {
 				},
 			},
 		],
-		phaseLoadouts: {
-			[PestFarmingPhase.Farm]: { armorSetId: 'main' },
-			[PestFarmingPhase.Spawn]: { armorSetId: 'spawn' },
-			[PestFarmingPhase.Kill]: { armorSetId: 'main' },
+		loadoutPresets: [
+			{ id: 'main-preset', name: 'Main', armorSetId: 'main' },
+			{ id: 'spawn-preset', name: 'Spawn', armorSetId: 'spawn' },
+		],
+		phasePresetIds: {
+			[PestFarmingPhase.Farm]: 'main-preset',
+			[PestFarmingPhase.Spawn]: 'spawn-preset',
+			[PestFarmingPhase.Kill]: 'main-preset',
 		},
 	});
 
 	expect(player.getArmorSetLoadout('main')?.pieces[GearSlot.Helmet]).toBe('shared-helmet');
-	expect(player.getArmorSetLoadout('spawn')?.pieces[GearSlot.Helmet]).toBeUndefined();
-	expect(player.getArmorSetConflict('shared-helmet', 'spawn')?.id).toBe('main');
+	expect(player.getArmorSetLoadout('spawn')?.pieces[GearSlot.Helmet]).toBe('shared-helmet');
+});
+
+test('preset catalogs preserve partial sets, resolve local-id pets, and clone shared assignments', () => {
+	const player = new PestFarmingPlayer({
+		armor: [armor('HELIANTHUS_HELMET', 'shared-helmet')],
+		equipment: [equipment('PESTHUNTERS_BELT', 'pest-belt')],
+		pets: [
+			{
+				localId: 'pet-local-id',
+				type: FarmingPets.Mosquito,
+				tier: Rarity.Legendary,
+				exp: 18_867_000,
+			},
+		],
+		armorSets: [
+			{
+				id: 'partial',
+				name: 'Partial',
+				pieces: { [GearSlot.Helmet]: 'shared-helmet', [GearSlot.Boots]: null },
+			},
+			{
+				id: 'duplicate',
+				name: 'Duplicate',
+				pieces: { [GearSlot.Helmet]: 'shared-helmet' },
+			},
+		],
+		equipmentSets: [{ id: 'pest-equipment', name: 'Pest Equipment', pieces: { [GearSlot.Belt]: 'pest-belt' } }],
+		loadoutPresets: [
+			{
+				id: 'shared-preset',
+				name: 'Shared Preset',
+				armorSetId: 'partial',
+				equipmentSetId: 'pest-equipment',
+				petId: 'pet-local-id',
+			},
+		],
+		phasePresetIds: {
+			[PestFarmingPhase.Farm]: 'shared-preset',
+			[PestFarmingPhase.Spawn]: 'shared-preset',
+			[PestFarmingPhase.Kill]: 'shared-preset',
+		},
+	});
+
+	expect(player.getArmorSetLoadout('partial')?.pieces[GearSlot.Boots]).toBeNull();
+	expect(player.getArmorSetLoadout('duplicate')?.pieces[GearSlot.Helmet]).toBe('shared-helmet');
+	expect(player.getPhasePlayer(PestFarmingPhase.Spawn).selectedPet?.pet.localId).toBe('pet-local-id');
+	expect(player.getPhaseArmorSet(PestFarmingPhase.Kill).belt?.item.uuid).toBe('pest-belt');
+
+	const cloned = player.clone();
+	expect(cloned.phasePresetIds).toStrictEqual(player.phasePresetIds);
+	expect(cloned.loadoutPresets).toStrictEqual(player.loadoutPresets);
+	expect(cloned.getArmorSetLoadout('partial')?.pieces).not.toBe(player.getArmorSetLoadout('partial')?.pieces);
 });
 
 test('wriggling larva contributes only to spawn phase pest chance progress and upgrades', () => {

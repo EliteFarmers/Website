@@ -13,41 +13,65 @@
 
 	interface Props {
 		entries: Entry[];
+		compact?: boolean;
 	}
 
-	let { entries }: Props = $props();
+	let { entries, compact = false }: Props = $props();
 
 	const format = (value: number) => (+value.toFixed(2)).toLocaleString();
 </script>
 
-<div class="flex flex-row gap-4 max-md:flex-wrap">
+<div class={compact ? 'flex flex-wrap gap-2' : 'flex flex-row gap-4 max-md:flex-wrap'}>
 	{#each entries as entry (entry.stat)}
 		{@const accent = getStatColor(entry.stat, 1) ?? 'bg-progress'}
-		<div class="relative flex w-fit flex-col gap-3 overflow-hidden rounded-lg border bg-card p-4 md:flex-1">
-			<div class={cn('absolute inset-x-0 top-0 h-1', accent)}></div>
-			<div class="flex items-center justify-between gap-2">
-				<div class="flex min-w-0 items-center gap-2">
-					<span class="text-lg leading-none">{STAT_ICONS[entry.stat]}</span>
-					<h2 class="truncate text-sm font-medium tracking-wide uppercase">{STAT_NAMES[entry.stat]}</h2>
+		{#if compact}
+			<StatBreakdownDialog
+				title="{STAT_NAMES[entry.stat]} Breakdown"
+				stat={entry.stat}
+				total={entry.total}
+				breakdown={entry.breakdown}
+			>
+				{#snippet trigger({ props })}
+					<button
+						{...props}
+						class="inline-flex min-h-9 items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-sm shadow-xs transition-colors hover:bg-muted/50"
+						aria-label="View {STAT_NAMES[entry.stat]} breakdown"
+					>
+						<span class={cn('size-2 rounded-full', accent)}></span>
+						<span class="leading-none">{STAT_ICONS[entry.stat]}</span>
+						<span class="font-medium text-muted-foreground">{STAT_NAMES[entry.stat]}</span>
+						<span class="font-mono font-semibold tabular-nums">{format(entry.total)}</span>
+						<Info class="size-3.5 text-muted-foreground" />
+					</button>
+				{/snippet}
+			</StatBreakdownDialog>
+		{:else}
+			<div class="relative flex w-fit flex-col gap-3 overflow-hidden rounded-lg border bg-card p-4 md:flex-1">
+				<div class={cn('absolute inset-x-0 top-0 h-1', accent)}></div>
+				<div class="flex items-center justify-between gap-2">
+					<div class="flex min-w-0 items-center gap-2">
+						<span class="text-lg leading-none">{STAT_ICONS[entry.stat]}</span>
+						<h2 class="truncate text-sm font-medium tracking-wide uppercase">{STAT_NAMES[entry.stat]}</h2>
+					</div>
+					<StatBreakdownDialog
+						title="{STAT_NAMES[entry.stat]} Breakdown"
+						stat={entry.stat}
+						total={entry.total}
+						breakdown={entry.breakdown}
+					>
+						{#snippet trigger({ props })}
+							<button
+								{...props}
+								class="inline-flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
+								aria-label="View breakdown"
+							>
+								<Info class="size-4" />
+							</button>
+						{/snippet}
+					</StatBreakdownDialog>
 				</div>
-				<StatBreakdownDialog
-					title="{STAT_NAMES[entry.stat]} Breakdown"
-					stat={entry.stat}
-					total={entry.total}
-					breakdown={entry.breakdown}
-				>
-					{#snippet trigger({ props })}
-						<button
-							{...props}
-							class="inline-flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
-							aria-label="View breakdown"
-						>
-							<Info class="size-4" />
-						</button>
-					{/snippet}
-				</StatBreakdownDialog>
+				<div class="font-mono text-3xl font-semibold tabular-nums">{format(entry.total)}</div>
 			</div>
-			<div class="font-mono text-3xl font-semibold tabular-nums">{format(entry.total)}</div>
-		</div>
+		{/if}
 	{/each}
 </div>

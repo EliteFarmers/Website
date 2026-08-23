@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FormattedText from '$comp/items/formatted-text.svelte';
+	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
@@ -33,7 +33,7 @@
 		getPieceRateImpact: (piece: FarmingArmor | FarmingEquipment) => number | undefined;
 		overallBreakdown?: Record<string, { value: number; stat: Stat }>;
 		slots?: readonly GearSlot[];
-		blockedUuids?: Record<string, string>;
+		embedded?: boolean;
 		headerAction?: import('svelte').Snippet;
 		children?: import('svelte').Snippet;
 	}
@@ -48,7 +48,7 @@
 		getPieceRateImpact,
 		overallBreakdown,
 		slots,
-		blockedUuids = {},
+		embedded = false,
 		headerAction,
 		children,
 	}: Props = $props();
@@ -66,39 +66,38 @@
 	}
 </script>
 
-<section class="flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
-	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-		<div class="flex items-center gap-3">
-			<div class="flex size-10 items-center justify-center rounded-md bg-muted text-foreground">
-				<Shield class="size-5" />
+<section class={embedded ? 'flex flex-col gap-4' : 'flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6'}>
+	{#if !embedded}
+		<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+			<div class="flex items-center gap-3">
+				<div class="flex size-10 items-center justify-center rounded-md bg-muted text-foreground">
+					<Shield class="size-5" />
+				</div>
+				<div>
+					<h2 class="text-xl leading-tight font-semibold">{title}</h2>
+					{#if subtitle}
+						<p class="text-sm text-muted-foreground">{subtitle}</p>
+					{/if}
+				</div>
 			</div>
-			<div>
-				<h2 class="text-xl leading-tight font-semibold">{title}</h2>
-				{#if subtitle}
-					<p class="text-sm text-muted-foreground">{subtitle}</p>
+			<div class="flex items-center gap-2">
+				{@render headerAction?.()}
+				{#if overallBreakdown}
+					<FortuneBreakdown title="Pest Gear Stats" breakdown={overallBreakdown} />
 				{/if}
 			</div>
-		</div>
-		<div class="flex items-center gap-2">
-			{@render headerAction?.()}
-			{#if overallBreakdown}
-				<FortuneBreakdown title="Pest Gear Stats" breakdown={overallBreakdown} />
-			{/if}
-		</div>
-	</header>
+		</header>
+	{/if}
 
 	<div class="flex flex-col gap-2">
 		{#each slotEntries as [slot, piece] (piece ?? slot)}
 			{@const options = armorSet.slotOptions[slot] ?? []}
-			{@const eligible = options.filter(
-				(o) => !o.item.uuid || !blockedUuids[o.item.uuid] || o.item.uuid === piece?.item.uuid
-			)}
 			{@const sortedOptions = [...options].sort(
 				(a, b) =>
 					(getPieceRateImpact(b) ?? Number.NEGATIVE_INFINITY) -
 					(getPieceRateImpact(a) ?? Number.NEGATIVE_INFINITY)
 			)}
-			{@const bestRateDelta = eligible.reduce((max, p) => Math.max(max, getPieceRateImpact(p) ?? 0), 0)}
+			{@const bestRateDelta = options.reduce((max, p) => Math.max(max, getPieceRateImpact(p) ?? 0), 0)}
 			{@const hasBetterRateOption = piece && bestRateDelta > 0}
 
 			<div
@@ -122,27 +121,14 @@
 								>
 									{#each sortedOptions as option, i (option.item.uuid ?? i)}
 										{#if option.item.uuid}
-											{@const blockedBy =
-												option.item.uuid !== piece?.item.uuid
-													? blockedUuids[option.item.uuid]
-													: undefined}
 											{@const rateDelta = getPieceRateImpact(option)}
-											<DropdownMenu.RadioItem
-												value={option.item.uuid}
-												disabled={!!blockedBy}
-												class={blockedBy ? 'opacity-50' : ''}
-											>
+											<DropdownMenu.RadioItem value={option.item.uuid}>
 												<div class="flex flex-row items-center gap-2">
 													<ItemRender
 														skyblockId={option.item.skyblockId ?? ''}
 														class="size-6"
 													/>
-													<FormattedText text={option.item.name ?? ''} />
-													{#if blockedBy}
-														<span class="text-xs whitespace-nowrap text-muted-foreground"
-															>(on {blockedBy})</span
-														>
-													{/if}
+													<ItemName name={option.item.name ?? ''} />
 													{#if rateDelta !== undefined && rateDelta !== 0}
 														<span
 															class="{rateDelta > 0
@@ -172,7 +158,7 @@
 					{#if piece}
 						<ItemRender skyblockId={piece.item.skyblockId ?? ''} class="size-10" />
 						<div class="min-w-0 truncate text-base font-semibold">
-							<FormattedText text={piece.item.name ?? ''} />
+							<ItemName name={piece.item.name ?? ''} />
 						</div>
 					{:else}
 						<div class="flex size-10 items-center justify-center rounded-md bg-muted/40">

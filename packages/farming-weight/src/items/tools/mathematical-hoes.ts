@@ -370,7 +370,7 @@ export class EuclidsWheatHoe2 extends BaseItem {
 		cost: {
 			items: {
 				JACOBS_TICKET: 256,
-				ENCHANTED_HAY_BALE: 256,
+				ENCHANTED_HAY_BALE: 80,
 			},
 		},
 	};

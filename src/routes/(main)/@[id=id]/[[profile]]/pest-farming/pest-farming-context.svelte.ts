@@ -4,6 +4,14 @@ import { PROPER_CROP_TO_API_CROP } from '$lib/constants/crops';
 import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 import { getLevelProgress } from '$lib/format';
 import { getItemsFromUpgrades } from '$lib/items';
+import {
+	clonePestLoadoutState,
+	importPestLoadouts,
+	type PestLoadoutProfileState,
+	type StoredPestArmorSet,
+	type StoredPestEquipmentSet,
+	type StoredPestLoadoutPreset,
+} from '$lib/rates/pest-loadouts';
 import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 import { getItems } from '$lib/remote/items.remote';
 import {
@@ -34,10 +42,9 @@ import {
 	PEST_FARMING_PHASE_MECHANICS,
 	PEST_FARMING_PHASE_STATS,
 	PEST_FARMING_STATS,
-	PEST_MAIN_ARMOR_SET_ID,
-	PEST_SPAWN_ARMOR_SET_ID,
 	PestFarmingPhase,
 	PestFarmingRateCalculator,
+	optimizePestLoadouts,
 	SprayonatorTier,
 	Stat,
 	STAT_NAMES,
@@ -47,11 +54,12 @@ import {
 	type FortuneSourceProgress,
 	type FortuneUpgrade,
 	type PestArmorSetLoadout,
+	type PestEquipmentSetLoadout,
 	type PestAttractionSettings,
 	type PestCycleSettings,
 	type PestFarmingPlayerOptions,
 	type PestFarmingUpgradeRateImpact,
-	type PestPhaseLoadout,
+	type PestLoadoutPreset,
 	type PestRateItemPrice,
 	type PestRatePriceBook,
 	type StatBreakdown,
@@ -91,14 +99,6 @@ export const PHASE_CONFIG = [
 		progress: 'Kill Sources',
 	},
 ] as const;
-
-const SHARED_EQUIPMENT_STATS = [
-	Stat.BonusPestChance,
-	Stat.PestCooldownReduction,
-	Stat.PestKillFortune,
-	Stat.FarmingFortune,
-	Stat.Overbloom,
-];
 
 const PEST_UPGRADE_TREE_MAX_DEPTH = 4;
 
@@ -165,9 +165,10 @@ export class PestFarmingPageContext {
 	rates = $derived(this.#rates.current);
 	pestVersion = $state(0);
 	selectedVacuumId = $state('');
-	armorSets = $state<PestArmorSetLoadout[]>([]);
-	phaseLoadouts = $state<Partial<Record<PestFarmingPhase, PestPhaseLoadout>>>({});
-	sharedEquipment = $state<Partial<Record<GearSlot, string>>>({});
+	loadoutState = $state<PestLoadoutProfileState>();
+	optimizationRunning = $state(false);
+	optimizationEvaluated = $state(0);
+	optimizationPass = $state(0);
 	activePhase = $state<PestFarmingPhase>(PestFarmingPhase.Farm);
 	itemsData = $state<RatesItemPriceData>({});
 	itemsVersion = $state(0);
@@ -176,6 +177,9 @@ export class PestFarmingPageContext {
 	#skipNextRatesDataRefresh = false;
 	#profileKey = '';
 	#lastItemRequestKey = '';
+	#loadoutImportKey = '';
+	#optimizationRevision = 0;
+	#needsInitialOptimization = false;
 
 	pets = $derived.by(() => (this.ctx.ready ? FarmingPet.fromArray(this.ctx.pets) : []));
 	tools = $derived.by(() => (this.ctx.ready ? FarmingTool.fromArray(this.ctx.tools as EliteItemDto[]) : []));
@@ -268,13 +272,9 @@ export class PestFarmingPageContext {
 	pestPlayer: PestFarmingPlayer = createPestFarmingPlayer({} as PestFarmingPlayerOptions);
 
 	activePhaseConfig = $derived(PHASE_CONFIG.find((config) => config.phase === this.activePhase) ?? PHASE_CONFIG[0]);
-	armorSetLoadouts = $derived.by(() => {
+	activeLoadoutPreset = $derived.by(() => {
 		this.trackPestVersion();
-		return this.pestPlayer.armorSetLoadouts;
-	});
-	sharedEquipmentSet = $derived.by(() => {
-		this.trackPestVersion();
-		return this.pestPlayer.sharedEquipmentSet;
+		return this.pestPlayer.getPhasePreset(this.activePhase);
 	});
 	activePhaseLoadout = $derived.by(() => {
 		this.trackPestVersion();
@@ -284,18 +284,35 @@ export class PestFarmingPageContext {
 		this.trackPestVersion();
 		return this.pestPlayer.getArmorSetModel(this.activePhaseLoadout.armorSetId);
 	});
+	activeEquipmentSet = $derived.by(() => {
+		this.trackPestVersion();
+		return this.pestPlayer.getEquipmentSetModel(this.activePhaseLoadout.equipmentSetId);
+	});
 	activePhasePlayer = $derived.by(() => {
 		this.trackPestVersion();
 		return this.pestPlayer.getPhasePlayer(this.activePhase);
 	});
 	activePhasePet = $derived(
-		this.activePhasePlayer.pets.find((pet) => pet.pet.uuid === this.activePhaseLoadout.petId)
+		this.activePhasePlayer.pets.find(
+			(pet) => (pet.pet.uuid || pet.pet.localId || undefined) === this.activePhaseLoadout.petId
+		)
 	);
 
 	pestStats = $derived.by(() => {
 		this.trackPestVersion();
+		const cropStat = CROP_INFO[this.selectedCropKey]?.fortuneType ?? Stat.FarmingFortune;
 		return this.getPhaseStats(this.activePhase).map((stat) => {
-			const breakdown = this.pestPlayer.getPhaseStatBreakdown(this.activePhase, stat, this.selectedCropKey);
+			const combinedBreakdown = this.pestPlayer.getPhaseStatBreakdown(
+				this.activePhase,
+				stat,
+				this.selectedCropKey
+			);
+			const breakdown =
+				stat === cropStat && cropStat !== Stat.FarmingFortune
+					? Object.fromEntries(
+							Object.entries(combinedBreakdown).filter(([, entry]) => entry.stat === cropStat)
+						)
+					: combinedBreakdown;
 			return {
 				stat,
 				total: sumStatBreakdown(breakdown),
@@ -328,8 +345,15 @@ export class PestFarmingPageContext {
 
 	cropContextSummary = $derived.by(() => {
 		this.trackPestVersion();
+		const cropStat = CROP_INFO[this.selectedCropKey]?.fortuneType ?? Stat.FarmingFortune;
 		return this.cropContextStats.map((stat) => {
-			const breakdown = this.pestPlayer.crop.getStatBreakdown(stat, this.selectedCropKey);
+			const combinedBreakdown = this.pestPlayer.crop.getStatBreakdown(stat, this.selectedCropKey);
+			const breakdown =
+				stat === cropStat && cropStat !== Stat.FarmingFortune
+					? Object.fromEntries(
+							Object.entries(combinedBreakdown).filter(([, entry]) => entry.stat === cropStat)
+						)
+					: combinedBreakdown;
 			return {
 				stat,
 				total: sumStatBreakdown(breakdown),
@@ -343,17 +367,24 @@ export class PestFarmingPageContext {
 		return this.pestPlayer.getCropProgress(this.selectedCropKey, this.cropContextStats);
 	});
 
-	sharedEquipmentProgress = $derived.by(() => {
+	activeEquipmentSetProgress = $derived.by(() => {
 		this.trackPestVersion();
-		return this.pestPlayer.getSharedEquipmentProgress(SHARED_EQUIPMENT_STATS);
+		return this.activePhaseLoadout.equipmentSetId
+			? this.pestPlayer.getEquipmentSetProgress(
+					this.activePhaseLoadout.equipmentSetId,
+					this.getPhaseStats(this.activePhase)
+				)
+			: [];
 	});
 
 	activeArmorSetProgress = $derived.by(() => {
 		this.trackPestVersion();
-		return this.pestPlayer.getArmorSetProgress(
-			this.activePhaseLoadout.armorSetId,
-			this.getPhaseStats(this.activePhase)
-		);
+		return this.activePhaseLoadout.armorSetId
+			? this.pestPlayer.getArmorSetProgress(
+					this.activePhaseLoadout.armorSetId,
+					this.getPhaseStats(this.activePhase)
+				)
+			: [];
 	});
 
 	activePhaseGeneralProgress = $derived.by(() => {
@@ -384,23 +415,11 @@ export class PestFarmingPageContext {
 		});
 	});
 
-	armorSetConflictLabels = $derived.by(() => {
-		this.trackPestVersion();
-		const result: Record<string, string> = {};
-		for (const set of this.pestPlayer.armorSetLoadouts) {
-			if (set.id === this.activePhaseLoadout.armorSetId) continue;
-			for (const uuid of Object.values(set.pieces)) {
-				if (uuid) result[uuid] = set.name;
-			}
-		}
-		return result;
-	});
-
 	visibleProgressUpgrades = $derived.by(() => {
 		this.trackPestVersion();
 		const progress = [
 			...this.cropProgress,
-			...this.sharedEquipmentProgress,
+			...this.activeEquipmentSetProgress,
 			...this.activeArmorSetProgress,
 			...this.activePhaseGeneralProgress,
 			...(this.activePhase === PestFarmingPhase.Kill ? this.vacuumProgress : []),
@@ -425,7 +444,6 @@ export class PestFarmingPageContext {
 	]);
 
 	constructor() {
-		this.phaseLoadouts = this.#getPersistedPhaseLoadouts();
 		this.options = this.#buildOptions({});
 		this.refreshPestPlayer();
 
@@ -435,23 +453,14 @@ export class PestFarmingPageContext {
 		$effect(() => this.#syncExternalState());
 		$effect(() => this.#syncSelectedCrop());
 		$effect(() => this.#syncVacuumSelection());
-		$effect(() => this.#syncDefaultSpawnArmorSelection());
+		$effect(() => this.#syncInitialOptimization());
 
 		onMount(() => this.#restoreSavedCrop());
 	}
 
 	refreshPestPlayer() {
-		let player = createPestFarmingPlayer(this.options);
-		const phaseLoadouts = this.#getRateSelectedDefaultPhaseLoadouts(player);
-		if (phaseLoadouts) {
-			this.options = {
-				...this.options,
-				phaseLoadouts,
-			} as PestFarmingPlayerOptions;
-			player = createPestFarmingPlayer(this.options);
-		}
-		this.pestPlayer = player;
-		this.#syncSessionSelectionsFromPestPlayer();
+		this.pestPlayer = createPestFarmingPlayer(this.options);
+		this.selectedVacuumId = this.pestPlayer.selectedVacuum?.item.uuid ?? this.selectedVacuumId;
 		this.pestVersion++;
 	}
 
@@ -464,89 +473,50 @@ export class PestFarmingPageContext {
 		return `${this.ctx.uuid}:${this.ctx.selectedProfile?.profileId ?? ''}`;
 	}
 
-	#getPersistedPhaseLoadouts(): Partial<Record<PestFarmingPhase, PestPhaseLoadout>> {
-		const loadouts = this.rates.pestFarming.phaseLoadouts;
-		return Object.fromEntries(
-			[PestFarmingPhase.Farm, PestFarmingPhase.Spawn, PestFarmingPhase.Kill]
-				.map((phase) => {
-					const armorSetId = loadouts[phase]?.armorSetId;
-					return armorSetId ? [phase, { armorSetId }] : undefined;
-				})
-				.filter((entry): entry is [PestFarmingPhase, PestPhaseLoadout] => entry !== undefined)
-		);
-	}
-
-	#getPersistablePhaseLoadouts(
-		loadouts: Record<PestFarmingPhase, PestPhaseLoadout>
-	): PestFarmingData['phaseLoadouts'] {
-		return {
-			[PestFarmingPhase.Farm]: { armorSetId: loadouts[PestFarmingPhase.Farm].armorSetId },
-			[PestFarmingPhase.Spawn]: { armorSetId: loadouts[PestFarmingPhase.Spawn].armorSetId },
-			[PestFarmingPhase.Kill]: { armorSetId: loadouts[PestFarmingPhase.Kill].armorSetId },
-		};
-	}
-
 	#resetSessionSelections(): void {
+		this.cancelLoadoutOptimization();
 		this.selectedVacuumId = '';
-		this.armorSets = [];
-		this.sharedEquipment = {};
-		this.phaseLoadouts = this.#getPersistedPhaseLoadouts();
+		this.loadoutState = undefined;
 	}
 
-	#syncSessionSelectionsFromPestPlayer(): void {
-		this.armorSets = this.pestPlayer.armorSetLoadouts.map((set) => ({
-			...set,
-			pieces: { ...set.pieces },
-		}));
-		this.phaseLoadouts = Object.fromEntries(
-			Object.entries(this.pestPlayer.phaseLoadouts).map(([phase, loadout]) => [phase, { ...loadout }])
-		) as Record<PestFarmingPhase, PestPhaseLoadout>;
-		this.sharedEquipment = { ...this.pestPlayer.sharedEquipment };
-		this.selectedVacuumId = this.pestPlayer.selectedVacuum?.item.uuid ?? this.selectedVacuumId;
+	#loadProfileLoadouts(): boolean {
+		if (!this.ctx.farmingInventory.current) return false;
+		const imported = importPestLoadouts({
+			armor: this.ctx.armor,
+			equipment: this.ctx.equipment,
+			pets: this.ctx.pets,
+			loadouts: this.ctx.member.current?.memberData?.loadouts ?? [],
+		});
+		this.loadoutState = clonePestLoadoutState(imported);
+		this.#needsInitialOptimization = true;
+		return true;
 	}
 
-	#syncDefaultSpawnArmorSelection(): void {
+	#getLoadoutImportKey(): string {
+		return JSON.stringify({
+			profile: this.#getProfileKey(),
+			armor: this.ctx.armor.map((item) => [item.uuid, item.slot]),
+			equipment: this.ctx.equipment.map((item) => [item.uuid, item.slot]),
+			pets: this.ctx.pets.map((pet) => [pet.uuid, pet.localId, pet.type, pet.exp, pet.heldItem]),
+			loadouts: this.ctx.member.current?.memberData?.loadouts ?? [],
+		});
+	}
+
+	#syncInitialOptimization(): void {
 		void this.pestRatePriceBook.version;
-		if (this.rates.pestFarming.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId) return;
-
-		const phaseLoadouts = this.#getRateSelectedDefaultPhaseLoadouts(this.pestPlayer);
-		if (!phaseLoadouts) return;
-
-		this.options = {
-			...this.options,
-			phaseLoadouts,
-		} as PestFarmingPlayerOptions;
-		untrack(() => this.refreshPestPlayer());
-	}
-
-	#getRateSelectedDefaultPhaseLoadouts(
-		player: PestFarmingPlayer
-	): Record<PestFarmingPhase, PestPhaseLoadout> | undefined {
-		const candidates = this.#getDefaultSpawnArmorCandidateIds(player);
-		if (!candidates) return;
-
-		const bestId = this.#createRateCalculator(player).getBestSpawnPhaseArmorSetId(candidates);
-		if (!bestId || player.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId === bestId) return;
-
-		return {
-			...player.phaseLoadouts,
-			[PestFarmingPhase.Spawn]: {
-				...player.phaseLoadouts[PestFarmingPhase.Spawn],
-				armorSetId: bestId,
-			},
-		};
-	}
-
-	#getDefaultSpawnArmorCandidateIds(player: PestFarmingPlayer): readonly string[] | undefined {
-		if (this.rates.pestFarming.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId) return undefined;
-
-		const mainId =
-			player.armorSetLoadouts.find((set) => set.id === PEST_MAIN_ARMOR_SET_ID)?.id ??
-			player.armorSetLoadouts[0]?.id;
-		const spawnId = player.armorSetLoadouts.find((set) => set.id === PEST_SPAWN_ARMOR_SET_ID)?.id;
-		if (!mainId || !spawnId || mainId === spawnId) return undefined;
-
-		return [mainId, spawnId];
+		void this.rateImpacts.ready;
+		void this.itemsVersion;
+		if (
+			!this.#needsInitialOptimization ||
+			this.optimizationRunning ||
+			!this.loadoutState ||
+			!this.rateImpacts.ready ||
+			(this.neededItems.length > 0 && this.itemsVersion === 0)
+		) {
+			return;
+		}
+		this.#needsInitialOptimization = false;
+		untrack(() => void this.optimizeLoadouts());
 	}
 
 	trackPestVersion(): number {
@@ -582,7 +552,7 @@ export class PestFarmingPageContext {
 
 	getPhaseStats(phase: PestFarmingPhase): Stat[] {
 		const stats = PEST_FARMING_PHASE_STATS[phase];
-		if (phase !== PestFarmingPhase.Kill) return stats;
+		if (phase === PestFarmingPhase.Spawn) return stats;
 
 		const cropStat = CROP_INFO[this.selectedCropKey]?.fortuneType;
 		if (!cropStat || stats.includes(cropStat)) return stats;
@@ -594,8 +564,8 @@ export class PestFarmingPageContext {
 		return this.getPieceBreakdown(piece, this.getPhaseStats(this.activePhase));
 	}
 
-	getSharedEquipmentPieceBreakdown(piece: FarmingArmor | FarmingEquipment): StatBreakdown {
-		return this.getPieceBreakdown(piece, SHARED_EQUIPMENT_STATS);
+	getActiveEquipmentPieceBreakdown(piece: FarmingArmor | FarmingEquipment): StatBreakdown {
+		return this.getPieceBreakdown(piece, this.getPhaseStats(this.activePhase));
 	}
 
 	getPhasePieceRateImpact(piece: FarmingArmor | FarmingEquipment): number | undefined {
@@ -608,13 +578,14 @@ export class PestFarmingPageContext {
 		return this.rateImpacts.gearImpacts.get(`armor:${armorSetId}:${slot}:${uuid}`);
 	}
 
-	getSharedEquipmentPieceRateImpact(piece: FarmingArmor | FarmingEquipment): number | undefined {
+	getActiveEquipmentPieceRateImpact(piece: FarmingArmor | FarmingEquipment): number | undefined {
 		const slot = piece.slot;
 		const uuid = piece.item.uuid;
+		const equipmentSetId = this.activePhaseLoadout.equipmentSetId;
 		if (!slot || !uuid) return 0;
-		if (this.sharedEquipment[slot] === uuid) return 0;
+		if (this.pestPlayer.getEquipmentSetLoadout(equipmentSetId)?.pieces[slot] === uuid) return 0;
 
-		return this.rateImpacts.gearImpacts.get(`equipment:${slot}:${uuid}`);
+		return this.rateImpacts.gearImpacts.get(`equipment:${equipmentSetId}:${slot}:${uuid}`);
 	}
 
 	getPetBreakdown(pet: FarmingPet, phase: PestFarmingPhase): StatBreakdown {
@@ -631,9 +602,9 @@ export class PestFarmingPageContext {
 	}
 
 	getPetRateImpact(pet: FarmingPet, phase: PestFarmingPhase): number | undefined {
-		const uuid = pet.pet.uuid;
+		const uuid = pet.pet.uuid || pet.pet.localId || undefined;
 		if (!uuid) return 0;
-		if (this.phaseLoadouts[phase]?.petId === uuid) return 0;
+		if (this.pestPlayer.phaseLoadouts[phase]?.petId === uuid) return 0;
 
 		return this.rateImpacts.petImpacts.get(`pet:${phase}:${uuid}`);
 	}
@@ -698,20 +669,56 @@ export class PestFarmingPageContext {
 	}
 
 	getStoredArmorSets(): PestArmorSetLoadout[] {
-		return (this.armorSets.length ? this.armorSets : this.pestPlayer.armorSetLoadouts).map((set) => ({
+		return this.pestPlayer.armorSetLoadouts.map((set) => ({
 			...set,
 			pieces: { ...set.pieces },
 		}));
 	}
 
+	getStoredEquipmentSets(): PestEquipmentSetLoadout[] {
+		return this.pestPlayer.equipmentSetLoadouts.map((set) => ({ ...set, pieces: { ...set.pieces } }));
+	}
+
+	#commitLoadoutState(state: PestLoadoutProfileState, cancelOptimization = true): void {
+		if (cancelOptimization && this.optimizationRunning) this.cancelLoadoutOptimization();
+		this.loadoutState = clonePestLoadoutState(state);
+		this.refreshPestPlayerWith({
+			armorSets: this.loadoutState.armorSets,
+			equipmentSets: this.loadoutState.equipmentSets,
+			loadoutPresets: this.loadoutState.presets,
+			phasePresetIds: this.loadoutState.phasePresetIds,
+			phaseLoadouts: undefined,
+		});
+	}
+
 	updateArmorSets(armorSets: PestArmorSetLoadout[]): void {
-		this.armorSets = armorSets.map((set) => ({ ...set, pieces: { ...set.pieces } }));
-		this.refreshPestPlayerWith({ armorSets });
+		if (!this.loadoutState) return;
+		const previous = new Map(this.loadoutState.armorSets.map((set) => [set.id, set]));
+		this.#commitLoadoutState({
+			...this.loadoutState,
+			armorSets: armorSets.map((set) => ({
+				...set,
+				pieces: { ...set.pieces },
+				source: { ...(previous.get(set.id)?.source ?? { kind: 'local' as const }) },
+			})),
+		});
+	}
+
+	updateEquipmentSets(equipmentSets: PestEquipmentSetLoadout[]): void {
+		if (!this.loadoutState) return;
+		const previous = new Map(this.loadoutState.equipmentSets.map((set) => [set.id, set]));
+		this.#commitLoadoutState({
+			...this.loadoutState,
+			equipmentSets: equipmentSets.map((set) => ({
+				...set,
+				pieces: { ...set.pieces },
+				source: { ...(previous.get(set.id)?.source ?? { kind: 'local' as const }) },
+			})),
+		});
 	}
 
 	selectArmorSetPiece(armorSetId: string, slot: GearSlot, uuid: string): void {
 		if (!PEST_ARMOR_SLOTS.includes(slot as (typeof PEST_ARMOR_SLOTS)[number])) return;
-		if (this.pestPlayer.getArmorSetConflict(uuid, armorSetId)) return;
 
 		const armorSets = this.getStoredArmorSets();
 		const next = armorSets.map((set) =>
@@ -741,56 +748,185 @@ export class PestFarmingPageContext {
 		trackAnalytics('pest_farming.armor_cleared', { slot, phase: this.activePhase });
 	}
 
-	selectSharedEquipment(slot: GearSlot, uuid: string): void {
+	selectEquipmentSetPiece(equipmentSetId: string, slot: GearSlot, uuid: string): void {
 		if (!PEST_EQUIPMENT_SLOTS.includes(slot as (typeof PEST_EQUIPMENT_SLOTS)[number])) return;
-		const sharedEquipment = {
-			...this.sharedEquipment,
-			[slot]: uuid,
-		};
-		this.sharedEquipment = sharedEquipment;
-		this.refreshPestPlayerWith({ sharedEquipment });
+		const next = this.getStoredEquipmentSets().map((set) =>
+			set.id === equipmentSetId ? { ...set, pieces: { ...set.pieces, [slot]: uuid } } : set
+		);
+		this.updateEquipmentSets(next);
 		trackAnalytics('pest_farming.equipment_selected', { slot });
 	}
 
-	clearSharedEquipment(slot: GearSlot): void {
-		const sharedEquipment = { ...this.sharedEquipment };
-		delete sharedEquipment[slot];
-		this.sharedEquipment = sharedEquipment;
-		this.refreshPestPlayerWith({ sharedEquipment });
+	clearEquipmentSetPiece(equipmentSetId: string, slot: GearSlot): void {
+		const next = this.getStoredEquipmentSets().map((set) =>
+			set.id === equipmentSetId ? { ...set, pieces: { ...set.pieces, [slot]: null } } : set
+		);
+		this.updateEquipmentSets(next);
 		trackAnalytics('pest_farming.equipment_cleared', { slot });
 	}
 
-	selectPhaseArmorSet(phase: PestFarmingPhase, armorSetId: string): void {
-		if (!this.pestPlayer.setPhaseArmorSet(phase, armorSetId)) return;
-		const baseLoadouts = this.pestPlayer.phaseLoadouts;
-		const phaseLoadouts = {
-			...baseLoadouts,
-			[phase]: {
-				...baseLoadouts[phase],
-				armorSetId,
-			},
-		};
-		this.phaseLoadouts = phaseLoadouts;
-		this.options = { ...this.options, phaseLoadouts } as PestFarmingPlayerOptions;
-		this.#updatePestFarmingData({ phaseLoadouts: this.#getPersistablePhaseLoadouts(phaseLoadouts) });
-		this.pestVersion++;
-		trackAnalytics('pest_farming.phase_armor_set_selected', { phase });
+	selectPhasePet(phase: PestFarmingPhase, petId?: string): void {
+		const preset = this.pestPlayer.getPhasePreset(phase);
+		if (!preset) return;
+		this.updatePreset(preset.id, { petId }, this.getPresetPhases(preset.id).length > 1 ? phase : undefined);
+		trackAnalytics('pest_farming.phase_pet_selected', { phase });
 	}
 
-	selectPhasePet(phase: PestFarmingPhase, petId: string): void {
-		if (!this.pestPlayer.setPhasePet(phase, petId)) return;
-		const baseLoadouts = this.pestPlayer.phaseLoadouts;
-		const phaseLoadouts = {
-			...baseLoadouts,
-			[phase]: {
-				...baseLoadouts[phase],
-				petId,
-			},
+	updatePreset(id: string, patch: Partial<PestLoadoutPreset>, forkForPhase?: PestFarmingPhase): string | undefined {
+		if (!this.loadoutState) return;
+		const existing = this.loadoutState.presets.find((preset) => preset.id === id);
+		if (!existing) return;
+		const nextId = forkForPhase ? this.#localEntityId('loadout') : id;
+		const updated: StoredPestLoadoutPreset = {
+			...existing,
+			...patch,
+			id: nextId,
+			name: patch.name?.trim() || existing.name,
+			source: forkForPhase ? { kind: 'local' } : { ...existing.source },
 		};
-		this.phaseLoadouts = phaseLoadouts;
-		this.options = { ...this.options, phaseLoadouts } as PestFarmingPlayerOptions;
-		this.pestVersion++;
-		trackAnalytics('pest_farming.phase_pet_selected', { phase });
+		const presets = forkForPhase
+			? [...this.loadoutState.presets, updated]
+			: this.loadoutState.presets.map((preset) => (preset.id === id ? updated : preset));
+		const phasePresetIds = forkForPhase
+			? { ...this.loadoutState.phasePresetIds, [forkForPhase]: nextId }
+			: this.loadoutState.phasePresetIds;
+		this.#commitLoadoutState({ ...this.loadoutState, presets, phasePresetIds });
+		return nextId;
+	}
+
+	createArmorSet(name = 'New Armor Set', pieces: Partial<Record<GearSlot, string | null>> = {}): string | undefined {
+		if (!this.loadoutState) return;
+		const id = this.#localEntityId('armor');
+		const set: StoredPestArmorSet = { id, name, pieces: { ...pieces }, source: { kind: 'local' } };
+		this.#commitLoadoutState({ ...this.loadoutState, armorSets: [...this.loadoutState.armorSets, set] });
+		return id;
+	}
+
+	createEquipmentSet(
+		name = 'New Equipment Set',
+		pieces: Partial<Record<GearSlot, string | null>> = {}
+	): string | undefined {
+		if (!this.loadoutState) return;
+		const id = this.#localEntityId('equipment');
+		const set: StoredPestEquipmentSet = { id, name, pieces: { ...pieces }, source: { kind: 'local' } };
+		this.#commitLoadoutState({ ...this.loadoutState, equipmentSets: [...this.loadoutState.equipmentSets, set] });
+		return id;
+	}
+
+	getPresetPhases(id: string): PestFarmingPhase[] {
+		if (!this.loadoutState) return [];
+		return Object.entries(this.loadoutState.phasePresetIds)
+			.filter(([, presetId]) => presetId === id)
+			.map(([phase]) => phase as PestFarmingPhase);
+	}
+
+	getArmorSetPresetIds(id: string): string[] {
+		return this.loadoutState?.presets.filter((preset) => preset.armorSetId === id).map((preset) => preset.id) ?? [];
+	}
+
+	getEquipmentSetPresetIds(id: string): string[] {
+		return (
+			this.loadoutState?.presets.filter((preset) => preset.equipmentSetId === id).map((preset) => preset.id) ?? []
+		);
+	}
+
+	forkActiveArmorSet(): string | undefined {
+		const current = this.pestPlayer.getArmorSetLoadout(this.activePhaseLoadout.armorSetId);
+		const id = this.createArmorSet(`${this.activePhaseConfig.label} Armor`, current?.pieces);
+		if (!id || !this.activeLoadoutPreset) return id;
+		this.updatePreset(
+			this.activeLoadoutPreset.id,
+			{ armorSetId: id },
+			this.getPresetPhases(this.activeLoadoutPreset.id).length > 1 ? this.activePhase : undefined
+		);
+		return id;
+	}
+
+	forkActiveEquipmentSet(): string | undefined {
+		const current = this.pestPlayer.getEquipmentSetLoadout(this.activePhaseLoadout.equipmentSetId);
+		const id = this.createEquipmentSet(`${this.activePhaseConfig.label} Equipment`, current?.pieces);
+		if (!id || !this.activeLoadoutPreset) return id;
+		this.updatePreset(
+			this.activeLoadoutPreset.id,
+			{ equipmentSetId: id },
+			this.getPresetPhases(this.activeLoadoutPreset.id).length > 1 ? this.activePhase : undefined
+		);
+		return id;
+	}
+
+	prepareActiveArmorSetForEdit(): string | undefined {
+		const setId = this.activePhaseLoadout.armorSetId;
+		if (!setId || !this.activeLoadoutPreset) return this.forkActiveArmorSet();
+		const presetShared = this.getPresetPhases(this.activeLoadoutPreset.id).length > 1;
+		const setShared = this.getArmorSetPresetIds(setId).some((id) => id !== this.activeLoadoutPreset?.id);
+		return presetShared || setShared ? this.forkActiveArmorSet() : setId;
+	}
+
+	prepareActiveEquipmentSetForEdit(): string | undefined {
+		const setId = this.activePhaseLoadout.equipmentSetId;
+		if (!setId || !this.activeLoadoutPreset) return this.forkActiveEquipmentSet();
+		const presetShared = this.getPresetPhases(this.activeLoadoutPreset.id).length > 1;
+		const setShared = this.getEquipmentSetPresetIds(setId).some((id) => id !== this.activeLoadoutPreset?.id);
+		return presetShared || setShared ? this.forkActiveEquipmentSet() : setId;
+	}
+
+	#localEntityId(kind: string): string {
+		const suffix = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+		return `local:${kind}:${suffix}`;
+	}
+
+	async optimizeLoadouts(): Promise<boolean> {
+		if (!this.loadoutState || this.optimizationRunning) return false;
+		const revision = ++this.#optimizationRevision;
+		this.optimizationRunning = true;
+		this.optimizationEvaluated = 0;
+		this.optimizationPass = 0;
+		const profileKey = this.#getProfileKey();
+		const existingSources = new Map(this.loadoutState.presets.map((preset) => [preset.id, preset.source]));
+		try {
+			const result = await optimizePestLoadouts({
+				player: this.pestPlayer,
+				options: {
+					crop: this.selectedCropKey,
+					cycle: this.pestRateSettings,
+					attraction: this.pestAttraction,
+				},
+				priceBook: this.pestRatePriceBook,
+				shouldCancel: () => revision !== this.#optimizationRevision || profileKey !== this.#getProfileKey(),
+				yieldControl: () =>
+					new Promise((resolve) => {
+						if (globalThis.requestAnimationFrame) globalThis.requestAnimationFrame(() => resolve());
+						else globalThis.setTimeout(resolve, 0);
+					}),
+				onProgress: (progress) => {
+					if (revision !== this.#optimizationRevision) return;
+					this.optimizationEvaluated = progress.evaluated;
+					this.optimizationPass = progress.pass;
+				},
+			});
+			if (result.cancelled || revision !== this.#optimizationRevision || !this.loadoutState) return false;
+			const presets: StoredPestLoadoutPreset[] = result.presets.map((preset) => ({
+				...preset,
+				source: { ...(existingSources.get(preset.id) ?? { kind: 'optimizer' as const }) },
+			}));
+			this.#commitLoadoutState(
+				{
+					...this.loadoutState,
+					presets,
+					phasePresetIds: result.phasePresetIds,
+				},
+				false
+			);
+			trackAnalytics('pest_farming.loadouts_optimized', { evaluated: result.evaluated });
+			return true;
+		} finally {
+			if (revision === this.#optimizationRevision) this.optimizationRunning = false;
+		}
+	}
+
+	cancelLoadoutOptimization(): void {
+		this.#optimizationRevision++;
+		this.optimizationRunning = false;
 	}
 
 	getPestRateImpact(upgrade: FortuneUpgrade): PestFarmingUpgradeRateImpact | undefined {
@@ -829,16 +965,19 @@ export class PestFarmingPageContext {
 	): PestRateComparisonTask[] {
 		const tasks: PestRateComparisonTask[] = [];
 		const armorSetId = this.activePhaseLoadout.armorSetId;
+		const equipmentSetId = this.activePhaseLoadout.equipmentSetId;
+		const presetId = this.activePhaseLoadout.presetId;
 		const armorSets = this.getStoredArmorSets();
-		const sharedEquipment = { ...this.sharedEquipment };
-		const phaseLoadouts = Object.fromEntries(
-			Object.entries(this.phaseLoadouts).map(([phaseKey, loadout]) => [phaseKey, { ...loadout }])
-		) as Record<PestFarmingPhase, PestPhaseLoadout>;
+		const equipmentSets = this.getStoredEquipmentSets();
+		const loadoutPresets = this.pestPlayer.loadoutPresets.map((preset) => ({ ...preset }));
+		const phasePresetIds = { ...this.pestPlayer.phasePresetIds };
 		const baseOptions: PestFarmingPlayerOptions = {
 			...this.options,
 			armorSets,
-			phaseLoadouts,
-			sharedEquipment,
+			equipmentSets,
+			loadoutPresets,
+			phasePresetIds,
+			phaseLoadouts: undefined,
 			selectedVacuumId: this.selectedVacuumId,
 		};
 		const rateOptions = {
@@ -864,7 +1003,8 @@ export class PestFarmingPageContext {
 		][]) {
 			for (const piece of options) {
 				const uuid = piece.item.uuid;
-				if (!uuid || this.pestPlayer.getArmorSetLoadout(armorSetId)?.pieces[slot] === uuid) continue;
+				if (!armorSetId || !uuid || this.pestPlayer.getArmorSetLoadout(armorSetId)?.pieces[slot] === uuid)
+					continue;
 				const patchedArmorSets = armorSets.map((set) =>
 					set.id === armorSetId ? { ...set, pieces: { ...set.pieces, [slot]: uuid } } : set
 				);
@@ -876,32 +1016,39 @@ export class PestFarmingPageContext {
 			}
 		}
 
-		for (const [slot, options] of Object.entries(this.sharedEquipmentSet.slotOptions) as [
+		for (const [slot, options] of Object.entries(this.activeEquipmentSet?.slotOptions ?? {}) as [
 			GearSlot,
 			(FarmingArmor | FarmingEquipment)[],
 		][]) {
 			for (const piece of options) {
 				const uuid = piece.item.uuid;
-				if (!uuid || sharedEquipment[slot] === uuid) continue;
+				if (
+					!equipmentSetId ||
+					!uuid ||
+					this.pestPlayer.getEquipmentSetLoadout(equipmentSetId)?.pieces[slot] === uuid
+				)
+					continue;
+				const patchedEquipmentSets = equipmentSets.map((set) =>
+					set.id === equipmentSetId ? { ...set, pieces: { ...set.pieces, [slot]: uuid } } : set
+				);
 				tasks.push({
-					key: `equipment:${slot}:${uuid}`,
+					key: `equipment:${equipmentSetId}:${slot}:${uuid}`,
 					type: 'gear',
-					calculate: () => createComparison({ sharedEquipment: { ...sharedEquipment, [slot]: uuid } }),
+					calculate: () => createComparison({ equipmentSets: patchedEquipmentSets }),
 				});
 			}
 		}
 
 		for (const pet of this.activePhasePlayer.pets) {
-			const uuid = pet.pet.uuid;
-			if (!uuid || phaseLoadouts[phase]?.petId === uuid) continue;
-			const patchedLoadouts = {
-				...phaseLoadouts,
-				[phase]: { ...phaseLoadouts[phase], petId: uuid },
-			};
+			const uuid = pet.pet.uuid || pet.pet.localId || undefined;
+			if (!uuid || this.activePhaseLoadout.petId === uuid) continue;
+			const patchedPresets = loadoutPresets.map((preset) =>
+				preset.id === presetId ? { ...preset, petId: uuid } : preset
+			);
 			tasks.push({
 				key: `pet:${phase}:${uuid}`,
 				type: 'pet',
-				calculate: () => createComparison({ phaseLoadouts: patchedLoadouts }),
+				calculate: () => createComparison({ loadoutPresets: patchedPresets }),
 			});
 		}
 
@@ -1011,9 +1158,7 @@ export class PestFarmingPageContext {
 	#buildOptions(previous: Partial<PestFarmingPlayerOptions> = {}): PestFarmingPlayerOptions {
 		const rates = this.rates;
 		const selectedVacuumId = untrack(() => this.selectedVacuumId);
-		const armorSets = untrack(() => this.armorSets);
-		const phaseLoadouts = untrack(() => this.phaseLoadouts);
-		const sharedEquipment = untrack(() => this.sharedEquipment);
+		const loadoutState = untrack(() => this.loadoutState);
 
 		return {
 			...previous,
@@ -1024,9 +1169,11 @@ export class PestFarmingPageContext {
 			accessories: this.ctx.accessories as EliteItemDto[],
 			pets: this.pets,
 			selectedVacuumId,
-			armorSets,
-			phaseLoadouts: Object.keys(phaseLoadouts).length > 0 ? phaseLoadouts : undefined,
-			sharedEquipment,
+			armorSets: loadoutState?.armorSets,
+			equipmentSets: loadoutState?.equipmentSets,
+			loadoutPresets: loadoutState?.presets,
+			phasePresetIds: loadoutState?.phasePresetIds,
+			phaseLoadouts: undefined,
 			selectedCrop: this.selectedCropKey,
 
 			refinedTruffles: this.ctx.member.current?.chocolateFactory?.refinedTrufflesConsumed ?? 0,
@@ -1114,13 +1261,21 @@ export class PestFarmingPageContext {
 		const profileKey = this.#getProfileKey();
 		if (profileKey !== this.#profileKey) {
 			this.#profileKey = profileKey;
+			this.#loadoutImportKey = '';
 			this.#resetSessionSelections();
+		}
+		const importKey = this.#getLoadoutImportKey();
+		let importedLoadouts = false;
+		if (importKey !== this.#loadoutImportKey) {
+			if (!this.#loadProfileLoadouts()) return;
+			this.#loadoutImportKey = importKey;
+			importedLoadouts = true;
 		}
 		const previous = untrack(() => this.options);
 		const nextOptions = this.#buildOptions(previous);
 		if (this.#skipNextRatesDataRefresh) {
 			this.#skipNextRatesDataRefresh = false;
-			return;
+			if (!importedLoadouts) return;
 		}
 		this.options = nextOptions;
 		untrack(() => this.refreshPestPlayer());

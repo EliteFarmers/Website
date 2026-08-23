@@ -10,6 +10,7 @@ import type { PlayerOptions } from '../../player/playeroptions.js';
 
 export interface FarmingPetType {
 	uuid?: string | null;
+	localId?: string | null;
 	type?: string;
 	exp?: number;
 	active?: boolean;

@@ -60,5 +60,8 @@
 		"*": false,
 		"markdown": true
 	},
-	"cSpell.words": ["Hanni", "hypixel", "lucide", "Mooshroom", "Skyblock"]
+	"cSpell.words": ["Hanni", "hypixel", "lucide", "Mooshroom", "Skyblock"],
+	"[typescript]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
+	}
 }

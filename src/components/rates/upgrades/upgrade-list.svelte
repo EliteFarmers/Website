@@ -97,19 +97,21 @@
 </script>
 
 <div class="w-full max-w-6xl py-2">
-	<UpgradesTable data={tableData} {columns} initialSorting={initialSorting ?? [{ id: 'costper', desc: false }]}>
-		{#snippet renderSubComponent({ row })}
-			{#if expandUpgrade}
-				<UpgradeTreeWrapper
-					upgrade={row.original}
-					{items}
-					{expandUpgrade}
-					{costFn}
-					{applyUpgrade}
-					{row}
-					{referenceOnlyPrices}
-				/>
-			{/if}
-		{/snippet}
-	</UpgradesTable>
+	{#key pathVersion}
+		<UpgradesTable data={tableData} {columns} initialSorting={initialSorting ?? [{ id: 'costper', desc: false }]}>
+			{#snippet renderSubComponent({ row })}
+				{#if expandUpgrade}
+					<UpgradeTreeWrapper
+						upgrade={row.original}
+						{items}
+						{expandUpgrade}
+						{costFn}
+						{applyUpgrade}
+						{row}
+						{referenceOnlyPrices}
+					/>
+				{/if}
+			{/snippet}
+		</UpgradesTable>
+	{/key}
 </div>

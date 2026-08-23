@@ -11,29 +11,57 @@
 		vacuums: Vacuum[];
 		selected: Vacuum | undefined;
 		onSelect: (id: string) => void;
+		embedded?: boolean;
 		children?: import('svelte').Snippet;
 	}
 
-	let { vacuums, selected, onSelect, children }: Props = $props();
+	let { vacuums, selected, onSelect, embedded = false, children }: Props = $props();
 
 	const selectableVacuums = $derived(vacuums.filter((vacuum) => !!vacuum.item.uuid));
 </script>
 
-<section class="flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
-	<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-		<div class="flex items-center gap-3">
-			<div class="flex size-10 items-center justify-center rounded-md bg-muted text-foreground">
-				<SprayCan class="size-5" />
+<section class={embedded ? 'flex flex-col gap-4' : 'flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6'}>
+	{#if !embedded}
+		<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+			<div class="flex items-center gap-3">
+				<div class="flex size-10 items-center justify-center rounded-md bg-muted text-foreground">
+					<SprayCan class="size-5" />
+				</div>
+				<div>
+					<h2 class="text-xl leading-tight font-semibold">Vacuum</h2>
+				</div>
 			</div>
-			<div>
-				<h2 class="text-xl leading-tight font-semibold">Vacuum</h2>
-			</div>
-		</div>
 
-		{#if selectableVacuums.length > 0}
+			{#if selectableVacuums.length > 0}
+				<Select.Simple
+					size="sm"
+					class="sm:max-w-64"
+					value={selected?.item.uuid}
+					options={selectableVacuums.map((vacuum) => ({ value: vacuum.item.uuid ?? '', label: vacuum.name }))}
+					placeholder="Select vacuum"
+					change={(value?: string) => {
+						if (value) onSelect(value);
+					}}
+				>
+					{#snippet trigger(option)}
+						{#if option}
+							<FormattedText text={option.label} />
+						{:else}
+							<span>Select vacuum</span>
+						{/if}
+					{/snippet}
+					{#snippet option(option)}
+						<FormattedText text={option.label} />
+					{/snippet}
+				</Select.Simple>
+			{/if}
+		</header>
+	{:else if selectableVacuums.length > 0}
+		<div class="max-w-md">
+			<label for="kill-phase-vacuum" class="mb-1.5 block text-sm font-medium">Kill vacuum</label>
 			<Select.Simple
-				size="sm"
-				class="sm:max-w-64"
+				id="kill-phase-vacuum"
+				class="w-full"
 				value={selected?.item.uuid}
 				options={selectableVacuums.map((vacuum) => ({ value: vacuum.item.uuid ?? '', label: vacuum.name }))}
 				placeholder="Select vacuum"
@@ -52,8 +80,8 @@
 					<FormattedText text={option.label} />
 				{/snippet}
 			</Select.Simple>
-		{/if}
-	</header>
+		</div>
+	{/if}
 
 	{#if selected}
 		<div class="flex flex-col gap-3 rounded-md bg-muted/30 p-3 sm:flex-row sm:items-center sm:justify-between">
