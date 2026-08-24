@@ -16,7 +16,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 	locals.access_token = cookies.get('access_token');
 	locals.refresh_token = cookies.get('refresh_token');
 	locals.cache = cache;
-	locals.ads = !event.route.id?.includes('/(auth)') && !event.route.id?.includes('/shop');
+	locals.ads =
+		!event.route.id?.includes('/(auth)') &&
+		!event.route.id?.includes('/shop') &&
+		!event.route.id?.startsWith('/profile');
 
 	if (locals.access_token) {
 		locals.persistSession = true;
@@ -64,7 +67,7 @@ async function ResolveWithSecurityHeaders(
 			html = html.replace('%elite.misc%', privateEnv.PUBLIC_MISC_HEAD_TAG || '');
 			const isAdFree =
 				event.locals.session?.flags?.includes('AD_FREE') || event.locals.session?.perms?.viewAdminPages;
-			const shouldShowAds = !isAdFree && !event.locals.bot && event.locals.ads;
+			const shouldShowAds = !isAdFree && event.locals.ads;
 			if (shouldShowAds) {
 				return html.replace('%elite.adscript%', privateEnv.AD_SCRIPT || '');
 			}
