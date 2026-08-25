@@ -1,5 +1,10 @@
 import { Stat } from '../constants/stats.js';
-import type { FortuneSourceProgress, FortuneSourceType, StatQueryOptions } from '../constants/upgrades.js';
+import type {
+	FortuneSourceProgress,
+	FortuneSourceType,
+	FortuneUpgrade,
+	StatQueryOptions,
+} from '../constants/upgrades.js';
 import type {
 	DynamicFortuneSource,
 	DynamicUpgradeSource,
@@ -8,6 +13,25 @@ import type {
 
 export interface SourceProgressOptions extends Pick<StatQueryOptions, 'stat' | 'stats' | 'mechanics' | 'sourceTypes'> {
 	defaultSourceType?: FortuneSourceType;
+}
+
+const completionUpgradesByProgress = new WeakMap<FortuneSourceProgress, readonly FortuneUpgrade[]>();
+
+/**
+ * Returns alternatives used internally to decide whether a progress source is
+ * effectively complete. They are kept separate from the serializable progress
+ * contract so they cannot accidentally be rendered as normal recommendations.
+ */
+export function getSourceCompletionUpgrades(progress: FortuneSourceProgress): readonly FortuneUpgrade[] {
+	return completionUpgradesByProgress.get(progress) ?? [];
+}
+
+export function setSourceCompletionUpgrades(
+	progress: FortuneSourceProgress,
+	upgrades: readonly FortuneUpgrade[]
+): void {
+	if (upgrades.length > 0) completionUpgradesByProgress.set(progress, upgrades);
+	else completionUpgradesByProgress.delete(progress);
 }
 
 function resolveSourceProgressOptions(options?: Stat[] | SourceProgressOptions): SourceProgressOptions {
@@ -141,6 +165,11 @@ export function getSourceProgress<T extends object>(
 			}
 		}
 
+		if (source.completionUpgrades) {
+			const completionUpgrades = source.completionUpgrades(upgradeable, stats, mechanics);
+			setSourceCompletionUpgrades(progress, completionUpgrades);
+		}
+
 		// Keep legacy progress output clean: skip sources that contribute nothing
 		// (but preserve stat-aware or upgrade-bearing sources).
 		if (
@@ -150,6 +179,7 @@ export function getSourceProgress<T extends object>(
 			!progress.stats &&
 			!progress.effects &&
 			!progress.upgrades &&
+			getSourceCompletionUpgrades(progress).length === 0 &&
 			!progress.progress
 		) {
 			continue;

@@ -47,7 +47,7 @@ const maxHelmet = {
 		'',
 		'§7Selected: §8Black Wheat',
 		'',
-		'§d§l§ka§r §d§l§d§lMYTHIC HELMET §d§l§ka',
+		'§6§l§ka§r §6§l§6§lLEGENDARY HELMET §6§l§ka',
 	],
 	enchantments: {
 		rejuvenate: 5,
@@ -108,7 +108,7 @@ const almostMaxHelmet = {
 		'',
 		'§7Selected: §8Black Wheat',
 		'',
-		'§d§l§ka§r §d§l§d§lLEGENDARY HELMET §d§l§ka',
+		'§5§l§ka§r §5§l§5§lEPIC HELMET §5§l§ka',
 	],
 	enchantments: {
 		rejuvenate: 5,
@@ -127,8 +127,8 @@ const almostMaxHelmet = {
 
 test('Maxed Helmet Upgrades Test', () => {
 	const item = new FarmingArmor(maxHelmet);
-	expect(item.fortune).toBe(92);
-	expect(item.fortuneBreakdown['Peridot Gems']).toBe(20);
+	expect(item.fortune).toBe(83);
+	expect(item.fortuneBreakdown['Peridot Gems']).toBe(16);
 	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(1);
 	expect(upgrades[0]?.title).toBe('Helianthus Helmet');
@@ -148,20 +148,20 @@ test('Upgradeable info lookup preserves fake object compatibility', () => {
 
 test('Almost Maxed Helmet Upgrades Test', () => {
 	const item = new FarmingArmor(almostMaxHelmet);
-	expect(item.fortune).toBe(72);
-	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
+	expect(item.fortune).toBe(65);
+	expect(item.fortuneBreakdown['Peridot Gems']).toBe(9);
 
 	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(5);
 
 	const recomb = upgrades.find((u) => u.action === 'recombobulate');
 	expect(recomb).toBeDefined();
-	expect(recomb?.increase).toBe(8);
+	expect(recomb?.increase).toBe(7);
 
 	const perfectPeridot = upgrades.find((u) => u.title === 'Perfect Peridot Gemstone');
 	expect(perfectPeridot).toBeDefined();
 	expect(perfectPeridot?.action).toBe('apply');
-	expect(perfectPeridot?.increase).toBe(2);
+	expect(perfectPeridot?.increase).toBe(1);
 
 	const pest4 = upgrades.find((u) => u.title === 'Pesterminator 4');
 	expect(pest4).toBeDefined();

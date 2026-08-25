@@ -14,8 +14,8 @@ export class CocoaChopper1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.CocoaBeans];
@@ -43,8 +43,8 @@ export class CocoaChopper2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.CocoaBeans];
@@ -72,8 +72,8 @@ export class CocoaChopper3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cocoa_Chopper';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.CocoaBeans];

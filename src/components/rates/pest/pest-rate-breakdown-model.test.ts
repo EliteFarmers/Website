@@ -40,7 +40,7 @@ describe('Farm Phase details', () => {
 				},
 			},
 		}).calculate();
-		result.phaseStats.farmPestCooldownReductionBreakdown = { 'Pesthunter Gear': 10 };
+		result.phaseStats.spawnPestCooldownReductionBreakdown = { 'Pesthunter Gear': 10 };
 		const details = buildFarmPhaseDetails(
 			result,
 			(value, maximumFractionDigits = 0) => value.toFixed(maximumFractionDigits),

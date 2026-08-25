@@ -37,8 +37,8 @@ export class FermentoHelmet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Fermento_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override family = 'FERMENTO';
@@ -81,8 +81,8 @@ export class FermentoChestplate extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Fermento_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override family = 'FERMENTO';
@@ -125,8 +125,8 @@ export class FermentoLeggings extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Fermento_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override family = 'FERMENTO';
@@ -169,8 +169,8 @@ export class FermentoBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Fermento_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override family = 'FERMENTO';

@@ -274,9 +274,9 @@ export function buildFarmPhaseDetails(
 		normal: { label: 'Regular', multiplier: 2 },
 		max: { label: 'MAX', multiplier: 4 },
 	}[result.options.cycle.pestRepellent];
-	const percentageReductionEntries = Object.entries(result.phaseStats.farmPestCooldownReductionBreakdown ?? {});
-	if (percentageReductionEntries.length === 0 && result.phaseStats.farmPestCooldownReduction !== 0) {
-		percentageReductionEntries.push(['Pest Cooldown Reduction', result.phaseStats.farmPestCooldownReduction]);
+	const percentageReductionEntries = Object.entries(result.phaseStats.spawnPestCooldownReductionBreakdown ?? {});
+	if (percentageReductionEntries.length === 0 && result.phaseStats.spawnPestCooldownReduction !== 0) {
+		percentageReductionEntries.push(['Pest Cooldown Reduction', result.phaseStats.spawnPestCooldownReduction]);
 	}
 	const percentageReductionLines = percentageReductionEntries
 		.filter(([, value]) => value !== 0)
@@ -286,9 +286,9 @@ export function buildFarmPhaseDetails(
 			value: formatReduction(value, '%', formatNumber),
 			itemName: source !== 'Pest Cooldown Reduction',
 		}));
-	const flatReductionEntries = Object.entries(result.phaseStats.farmPestCooldownReductionSecondsBreakdown ?? {});
-	if (flatReductionEntries.length === 0 && result.phaseStats.farmPestCooldownReductionSeconds !== 0) {
-		flatReductionEntries.push(['Flat Cooldown Reduction', result.phaseStats.farmPestCooldownReductionSeconds]);
+	const flatReductionEntries = Object.entries(result.phaseStats.spawnPestCooldownReductionSecondsBreakdown ?? {});
+	if (flatReductionEntries.length === 0 && result.phaseStats.spawnPestCooldownReductionSeconds !== 0) {
+		flatReductionEntries.push(['Flat Cooldown Reduction', result.phaseStats.spawnPestCooldownReductionSeconds]);
 	}
 	const flatReductionLines = flatReductionEntries
 		.filter(([, value]) => value !== 0)

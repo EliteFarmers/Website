@@ -15,8 +15,8 @@ export class LotusBracelet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Lotus_Bracelet';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override family = 'LOTUS';
@@ -40,8 +40,8 @@ export class LotusBelt extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Lotus_Belt';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override family = 'LOTUS';
@@ -65,8 +65,8 @@ export class LotusNecklace extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Lotus_Necklace';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override family = 'LOTUS';
@@ -90,8 +90,8 @@ export class LotusCloak extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Lotus_Cloak';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override family = 'LOTUS';

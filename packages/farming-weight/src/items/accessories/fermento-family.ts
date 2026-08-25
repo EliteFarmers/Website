@@ -13,7 +13,7 @@ export class HelianthusRelic extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Helianthus_Relic';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Legendary;
 	}
 
@@ -34,7 +34,7 @@ export class FermentoArtifact extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Fermento_Artifact';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 
@@ -73,7 +73,7 @@ export class SquashRing extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Squash_Ring';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 
@@ -109,7 +109,7 @@ export class CropieTalisman extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cropie_Talisman';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Common;
 	}
 

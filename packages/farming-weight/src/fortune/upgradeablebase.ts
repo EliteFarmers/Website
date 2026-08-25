@@ -6,7 +6,7 @@ import type { PlayerOptions } from '../player/playeroptions.js';
 import { getItemProgress } from '../upgrades/progress.js';
 import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from '../upgrades/upgrades.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
-import { getRarityFromItem, previousRarity } from '../util/itemstats.js';
+import { getRarityFromItem } from '../util/itemstats.js';
 import type { EliteItemDto } from './item.js';
 import type { Upgradeable, UpgradeableInfo } from './upgradeable.js';
 
@@ -48,7 +48,7 @@ export class UpgradeableBase implements Upgradeable {
 		this.options = options.options;
 		this.items = options.items;
 
-		this.rarity = getRarityFromItem(this.item, previousRarity(this.info.maxRarity) ?? Rarity.Common);
+		this.rarity = getRarityFromItem(this.item, this.info.baseRarity);
 
 		this.reforge = REFORGES[options.item.attributes?.modifier ?? ''] ?? undefined;
 		this.reforgeStats = this.reforge?.tiers?.[this.rarity];

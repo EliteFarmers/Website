@@ -9,9 +9,9 @@ import { FARMING_ENCHANTS } from '../../constants/enchants.js';
 import { Rarity, REFORGES } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
-import { GemRarity } from '../../fortune/item.js';
 import type { Vacuum } from '../../fortune/vacuum.js';
 import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
+import { GemRarity } from '../../fortune/item.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
 import { getCurrentReforgeEffectSummaries, getReforgeEffectSummaries, getUpgradeableGems } from '../upgrades.js';
@@ -129,21 +129,21 @@ export const VACUUM_FORTUNE_SOURCES: DynamicFortuneSource<Vacuum>[] = [
 		name: 'Gemstone Slots',
 		wiki: () => 'https://w.elitesb.gg/Gemstone_Slot',
 		exists: (vacuum) => {
-			const last = (vacuum.getLastItemUpgrade() ?? vacuum)?.info;
-			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;
+			const last = (vacuum.getLastItemUpgrade() ?? vacuum).info;
+			return last.gemSlots?.some((s) => s.slot_type === 'PERIDOT') === true;
 		},
 		max: (vacuum) => {
-			const last = (vacuum.getLastItemUpgrade() ?? vacuum)?.info;
-			const peridotSlots = last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
-			const maxRarity = last?.maxRarity ?? Rarity.Common;
+			const last = (vacuum.getLastItemUpgrade() ?? vacuum).info;
+			const peridotSlots = last.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
+			const maxRarity = last.maxRarity;
 			return peridotSlots * getPeridotGemFortune(maxRarity, GemRarity.Perfect);
 		},
 		current: (vacuum) => getPeridotFortune(vacuum.rarity, vacuum.item),
 		maxStat: (vacuum, stat) => {
 			if (stat !== Stat.FarmingFortune) return 0;
-			const last = (vacuum.getLastItemUpgrade() ?? vacuum)?.info;
-			const peridotSlots = last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
-			const maxRarity = last?.maxRarity ?? Rarity.Common;
+			const last = (vacuum.getLastItemUpgrade() ?? vacuum).info;
+			const peridotSlots = last.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
+			const maxRarity = last.maxRarity;
 			return peridotSlots * getPeridotGemFortune(maxRarity, GemRarity.Perfect);
 		},
 		currentStat: (vacuum, stat) =>

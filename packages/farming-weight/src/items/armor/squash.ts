@@ -19,7 +19,7 @@ export class SquashHelmet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Squash_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 
@@ -71,7 +71,7 @@ export class SquashChestplate extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Squash_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 
@@ -125,7 +125,7 @@ export class SquashLeggings extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Squash_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 
@@ -178,7 +178,7 @@ export class SquashBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Squash_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 

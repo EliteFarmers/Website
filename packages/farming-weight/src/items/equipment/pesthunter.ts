@@ -20,8 +20,8 @@ export class PesthuntersGloves extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pesthunter%27s_Gloves';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override family = 'PESTHUNTERS';
@@ -43,8 +43,8 @@ export class PesthuntersBelt extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pesthunter%27s_Belt';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override family = 'PESTHUNTERS';
@@ -66,8 +66,8 @@ export class PesthuntersNecklace extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pesthunter%27s_Necklace';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override family = 'PESTHUNTERS';
@@ -89,8 +89,8 @@ export class PesthuntersCloak extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pesthunter%27s_Cloak';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override family = 'PESTHUNTERS';

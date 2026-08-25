@@ -26,7 +26,7 @@ export class FreshlyBakedHeirloom extends FreshlyBakedAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Freshly_Baked_Heirloom';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Legendary;
 	}
 
@@ -45,7 +45,7 @@ export class FreshlyBakedRelic extends FreshlyBakedAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Freshly_Baked_Relic';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Epic;
 	}
 
@@ -71,7 +71,7 @@ export class FreshlyBakedArtifact extends FreshlyBakedAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Freshly_Baked_Artifact';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 
@@ -97,7 +97,7 @@ export class FreshlyBakedRing extends FreshlyBakedAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Freshly_Baked_Ring';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 
@@ -123,7 +123,7 @@ export class FreshlyBakedTalisman extends FreshlyBakedAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Freshly_Baked_Talisman';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Common;
 	}
 

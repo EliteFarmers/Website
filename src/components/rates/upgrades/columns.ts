@@ -1,4 +1,5 @@
 import type { RatesItemPriceData } from '$lib/api/elite';
+import { getRateImpactCoinValue } from '$lib/rates/upgrade-rate-value';
 import { renderComponent } from '$ui/data-table';
 import type { ColumnDef } from '$ui/data-table';
 import type { FortuneUpgrade, UpgradeRateImpact, UpgradeTreeNode } from 'farming-weight';
@@ -137,31 +138,3 @@ export const getColumns = (
 			enableHiding: false,
 		},
 	] as ColumnDef<FortuneUpgrade>[];
-
-function getRateImpactCoinValue(impact: AnyUpgradeRateImpact | undefined, itemsLookup?: RatesItemPriceData) {
-	if (!impact) return 0;
-	if (impact.valuationDelta?.coinsPerHour !== undefined) return impact.valuationDelta.coinsPerHour;
-
-	let total = impact.delta.npcCoins;
-	for (const [itemId, amount] of Object.entries(impact.delta.rngItems ?? {})) {
-		total += getItemSellValue(itemId, itemsLookup) * amount;
-	}
-
-	return total;
-}
-
-function getItemSellValue(itemId: string, itemsLookup?: RatesItemPriceData) {
-	const item = itemsLookup?.[itemId];
-	if (!item) return 0;
-
-	const npc = item.bazaar?.npc || item.item?.npc_sell_price || 0;
-	const bazaar = item.bazaar?.averageSellOrder || item.bazaar?.averageSell || 0;
-	const auctionPrices = item.auctions
-		?.map((auction) => (auction.lowest > 0 ? auction.lowest : auction.last))
-		.filter((price) => price > 0);
-	const auction = auctionPrices?.length ? Math.min(...auctionPrices) : 0;
-	const marketValues = [bazaar, auction].filter((value) => value > 0);
-	const market = marketValues.length ? Math.min(...marketValues) : 0;
-
-	return Math.max(npc, market);
-}

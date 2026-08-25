@@ -433,7 +433,7 @@ const bustlingLeggings = {
 		'§7Cropie Armor, and Squash Armor.',
 		'§7§7Grants §650☘ Farming Fortune§7.',
 		'',
-		'§6§lLEGENDARY LEGGINGS',
+		'§5§lEPIC LEGGINGS',
 	],
 	enchantments: {
 		pesterminator: 5,

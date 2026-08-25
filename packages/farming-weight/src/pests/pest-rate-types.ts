@@ -123,11 +123,13 @@ export interface PestSpawnDistribution {
 }
 
 export interface PestRatePhaseStats {
-	farmPestCooldownReduction: number;
-	farmPestCooldownReductionBreakdown: Record<string, number>;
-	farmPestCooldownReductionSeconds: number;
-	farmPestCooldownReductionSecondsBreakdown: Record<string, number>;
+	spawnPestCooldownReduction: number;
+	spawnPestCooldownReductionBreakdown: Record<string, number>;
+	spawnPestCooldownReductionSeconds: number;
+	spawnPestCooldownReductionSecondsBreakdown: Record<string, number>;
 	spawnBonusPestChance: number;
+	spawnBonusPestChanceBreakdown: Record<string, number>;
+	spawnMantidRecentPestKills: number;
 	spawnAtmosphericFilterEffect: number;
 	killFarmingFortune: number;
 	killPestKillFortune: number;

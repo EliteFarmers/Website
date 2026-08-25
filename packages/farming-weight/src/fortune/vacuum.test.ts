@@ -226,6 +226,28 @@ test('vacuum Peridot slot costs only charge the locked Hooverius second slot unl
 	expect(secondSlot?.cost?.items?.FINE_PERIDOT_GEM).toBe(21);
 });
 
+test('Mythic Hooverius gemstone progress uses Mythic Perfect gems as its maximum', () => {
+	const hooverius = new Vacuum(
+		vacuum('INFINI_VACUUM_HOOVERIUS', {
+			attributes: { rarity: Rarity.Mythic, rarity_upgrades: '1' },
+			gems: {
+				PERIDOT_0: 'FLAWLESS',
+				PERIDOT_1: 'FLAWLESS',
+			},
+		})
+	);
+	const gemstones = hooverius
+		.getProgress([Stat.FarmingFortune])
+		.find((progress) => progress.name === 'Gemstone Slots');
+
+	expect(gemstones?.stats?.[Stat.FarmingFortune]).toEqual({ current: 16, max: 20, ratio: 0.8 });
+	expect(
+		hooverius
+			.getUpgrades({ stat: Stat.FarmingFortune })
+			.filter((upgrade) => upgrade.title === 'Perfect Peridot Gemstone')
+	).toHaveLength(2);
+});
+
 test('vacuum tier upgrades preserve existing upgrade state when applied', () => {
 	const current = new Vacuum(
 		vacuum('SKYMART_VACUUM', {

@@ -15,8 +15,8 @@ export class ZorrosCape extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Zorro%27s_Cape';
 	}
-	get maxRarity() {
-		return Rarity.Mythic;
+	get baseRarity() {
+		return Rarity.Legendary;
 	}
 
 	override slot = GearSlot.Cloak;
@@ -44,8 +44,8 @@ export class PestVest extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pest_Vest';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override slot = GearSlot.Cloak;

@@ -14,8 +14,8 @@ export class CactusKnife1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.Cactus];
@@ -43,8 +43,8 @@ export class CactusKnife2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Cactus];
@@ -72,8 +72,8 @@ export class CactusKnife3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cactus_Knife';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Cactus];

@@ -19,7 +19,7 @@ abstract class FarmhandArmorPiece extends BaseItem {
 		return 'https://w.elitesb.gg/Farmhand_Armor';
 	}
 
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Common;
 	}
 }

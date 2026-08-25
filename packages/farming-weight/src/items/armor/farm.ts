@@ -19,7 +19,7 @@ abstract class HaymakerArmorPiece extends BaseItem {
 		return 'https://w.elitesb.gg/Haymaker_Armor';
 	}
 
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Common;
 	}
 }

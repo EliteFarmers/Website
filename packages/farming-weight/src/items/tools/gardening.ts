@@ -41,7 +41,7 @@ export class RookieHoe extends GardeningTool {
 	get wiki() {
 		return 'https://w.elitesb.gg/Rookie_Hoe';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Common;
 	}
 	override crops = [...HOE_CROPS];
@@ -59,7 +59,7 @@ export class RookieFarmingAxe extends GardeningTool {
 	get wiki() {
 		return 'https://w.elitesb.gg/Rookie_Farming_Axe';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Common;
 	}
 	override crops = [...AXE_CROPS];
@@ -77,7 +77,7 @@ export class BasicGardeningHoe extends GardeningTool {
 	get wiki() {
 		return 'https://w.elitesb.gg/Basic_Gardening_Hoe';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 	override crops = [...HOE_CROPS];
@@ -95,7 +95,7 @@ export class BasicGardeningAxe extends GardeningTool {
 	get wiki() {
 		return 'https://w.elitesb.gg/Basic_Gardening_Axe';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 	override crops = [...AXE_CROPS];
@@ -112,7 +112,7 @@ export class AdvancedGardeningHoe extends GardeningTool {
 	get wiki() {
 		return 'https://w.elitesb.gg/Advanced_Gardening_Hoe';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 	override crops = [...HOE_CROPS];
@@ -131,7 +131,7 @@ export class AdvancedGardeningAxe extends GardeningTool {
 	get wiki() {
 		return 'https://w.elitesb.gg/Advanced_Gardening_Axe';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 	override crops = [...AXE_CROPS];

@@ -11,7 +11,7 @@ export class HoeOfNoTilling extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Hoe_of_No_Tilling';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 

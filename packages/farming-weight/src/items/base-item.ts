@@ -6,13 +6,17 @@ import type { Stat, StatsRecord } from '../constants/stats.js';
 import type { Upgrade, UpgradeCost, UpgradeRecommendation } from '../constants/upgrades.js';
 import type { GemSlotCost, GemSlotRequirement } from '../fortune/upgradeable.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
+import { nextRarity } from '../util/itemstats.js';
 import type { FarmingToolType, GearSlot, ItemDefinition } from './definitions.js';
 
 export abstract class BaseItem implements ItemDefinition {
 	abstract get skyblockId(): string;
 	abstract get name(): string;
 	abstract get wiki(): string;
-	abstract get maxRarity(): Rarity;
+	abstract get baseRarity(): Rarity;
+	get maxRarity(): Rarity {
+		return nextRarity(this.baseRarity);
+	}
 
 	upgrade?: Upgrade;
 	gemSlots?: {

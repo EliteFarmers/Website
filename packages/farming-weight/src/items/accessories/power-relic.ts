@@ -11,6 +11,9 @@ export class PowerRelic extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Relic_of_Power';
 	}
+	get baseRarity() {
+		return Rarity.Epic;
+	}
 	get maxRarity() {
 		return Rarity.Mythic;
 	}

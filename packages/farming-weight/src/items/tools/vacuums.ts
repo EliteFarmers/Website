@@ -48,7 +48,7 @@ abstract class VacuumItem extends BaseItem {
 		return VACUUM_WIKI;
 	}
 
-	get maxRarity() {
+	get baseRarity() {
 		return this.rarity;
 	}
 }

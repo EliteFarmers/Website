@@ -32,7 +32,7 @@ import type { Effect, EffectEnvironment } from '../effects/types.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
-import { FarmingPet } from '../fortune/farmingpet.js';
+import { FarmingPet, getFarmingPetId } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPets } from '../items/pets.js';
@@ -49,7 +49,7 @@ import {
 } from '../upgrades/sources/effectsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
-import { nextRarity, previousRarity } from '../util/itemstats.js';
+import { nextRarity } from '../util/itemstats.js';
 import { calculateDetailedDropsFromEffects, type DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 import { createFarmingWeightCalculator, type FarmingWeightInfo } from '../weight/weightcalc.js';
 import type { PlayerOptions } from './playeroptions.js';
@@ -738,7 +738,7 @@ export class FarmingPlayer {
 		}
 
 		if ((type === 'pet_level' || type === 'pet_item') && itemUuid) {
-			const index = this.pets.findIndex((pet) => pet.pet.uuid === itemUuid);
+			const index = this.pets.findIndex((pet) => getFarmingPetId(pet) === itemUuid);
 			const target = this.pets[index];
 
 			if (target) {
@@ -752,7 +752,7 @@ export class FarmingPlayer {
 				const updatedPet = new FarmingPet(nextPetData, this.options);
 				this.pets[index] = updatedPet;
 				this.options.pets = this.pets;
-				if (this.selectedPet?.pet.uuid === itemUuid) {
+				if (this.selectedPet && getFarmingPetId(this.selectedPet) === itemUuid) {
 					this.selectedPet = updatedPet;
 					this.options.selectedPet = updatedPet;
 				}
@@ -943,7 +943,7 @@ export class FarmingPlayer {
 						};
 						setItemRarityAttribute(
 							newItem.item,
-							getUpgradedItemRarity(target.rarity, target.info.maxRarity, newItem.info.maxRarity)
+							getUpgradedItemRarity(target.rarity, target.info.baseRarity, newItem.info.baseRarity)
 						);
 						// Preserve the old item's UUID so the item remains trackable
 						newItem.item.uuid = target.item.uuid;
@@ -1159,7 +1159,7 @@ export class FarmingPlayer {
 		};
 
 		const selectedToolUuid = this.selectedTool?.item.uuid;
-		const selectedPetUuid = this.selectedPet?.pet.uuid;
+		const selectedPetUuid = this.selectedPet ? getFarmingPetId(this.selectedPet) : undefined;
 		const clonedOptions: PlayerOptions = {
 			...this.options,
 			tools: cloneItems(this.tools),
@@ -1185,7 +1185,7 @@ export class FarmingPlayer {
 			if (selectedTool) clonedPlayer.selectTool(selectedTool);
 		}
 		if (selectedPetUuid) {
-			const selectedPet = clonedPlayer.pets.find((pet) => pet.pet.uuid === selectedPetUuid);
+			const selectedPet = clonedPlayer.pets.find((pet) => getFarmingPetId(pet) === selectedPetUuid);
 			if (selectedPet) clonedPlayer.selectPet(selectedPet);
 		}
 
@@ -1533,9 +1533,7 @@ function sumRecord(record: Record<string, number>): number {
 	return Object.values(record).reduce((sum, value) => sum + value, 0);
 }
 
-function getUpgradedItemRarity(currentRarity: Rarity, currentMaxRarity: Rarity, nextMaxRarity: Rarity): Rarity {
-	const currentBaseRarity = previousRarity(currentMaxRarity);
-	const nextBaseRarity = previousRarity(nextMaxRarity);
+function getUpgradedItemRarity(currentRarity: Rarity, currentBaseRarity: Rarity, nextBaseRarity: Rarity): Rarity {
 	const rarityIncrease = compareRarity(currentRarity, currentBaseRarity);
 
 	if (rarityIncrease > 0) {

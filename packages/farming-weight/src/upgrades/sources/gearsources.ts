@@ -1,5 +1,5 @@
 import { FARMING_ENCHANTS } from '../../constants/enchants.js';
-import { compareRarity, Rarity, REFORGES, ReforgeTarget } from '../../constants/reforges.js';
+import { REFORGES, ReforgeTarget } from '../../constants/reforges.js';
 import { Skill } from '../../constants/skills.js';
 import { Stat } from '../../constants/stats.js';
 import type { FarmingArmor } from '../../fortune/farmingarmor.js';
@@ -37,22 +37,16 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 			return gear.type === ReforgeTarget.Equipment ? REFORGES?.rooted?.wiki : REFORGES?.mossy?.wiki;
 		},
 		max: (gear) => {
-			const maxRarity = (gear.getLastItemUpgrade()?.info.maxRarity ?? gear.info.maxRarity) as Rarity;
-			const current = gear.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
-			const max =
-				gear.type === ReforgeTarget.Equipment
-					? (REFORGES.rooted?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0)
-					: (REFORGES.mossy?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0);
-			// If an item is recombobulated beyond its base max rarity, keep max >= current.
-			return Math.max(max, current);
+			const maxRarity = (gear.getLastItemUpgrade() ?? gear).info.maxRarity;
+			return gear.type === ReforgeTarget.Equipment
+				? (REFORGES.rooted?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0)
+				: (REFORGES.mossy?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0);
 		},
 		current: (gear) => {
 			return gear.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
 		},
 		maxStat: (gear, stat) => {
-			const maxRarity = (gear.getLastItemUpgrade()?.info.maxRarity ?? gear.info.maxRarity) as Rarity;
-			const current = gear.reforgeStats?.stats?.[stat] ?? 0;
-
+			const maxRarity = (gear.getLastItemUpgrade() ?? gear).info.maxRarity;
 			let best = 0;
 			for (const reforge of Object.values(REFORGES)) {
 				if (!reforge || !reforge.appliesTo.includes(gear.type)) continue;
@@ -63,12 +57,13 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 				if (val > best) best = val;
 			}
 
-			return Math.max(best, current);
+			return best;
 		},
 		currentStat: (gear, stat) => {
 			return gear.reforgeStats?.stats?.[stat] ?? 0;
 		},
 		effects: getCurrentReforgeEffectSummaries,
+		completionUpgrades: (gear) => getUpgradeableReforges(gear, Object.values(Stat)),
 		upgrades: getUpgradeableReforges,
 	},
 	{
@@ -83,34 +78,28 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 			);
 		},
 		max: (upgradeable) => {
-			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable).info;
 			const currentInfo = upgradeable.info;
-			const maxRarity = (lastInfo?.maxRarity ?? currentInfo?.maxRarity ?? Rarity.Common) as Rarity;
-			const rarity = (
-				compareRarity(upgradeable.rarity, maxRarity) > 0 ? upgradeable.rarity : maxRarity
-			) as Rarity;
+			const maxRarity = lastInfo.maxRarity;
 			const peridotSlots = Math.max(
 				lastInfo?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0,
 				currentInfo?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0
 			);
-			return peridotSlots * getPeridotGemFortune(rarity, GemRarity.Perfect);
+			return peridotSlots * getPeridotGemFortune(maxRarity, GemRarity.Perfect);
 		},
 		current: (upgradeable) => {
 			return getPeridotFortune(upgradeable.rarity, upgradeable.item);
 		},
 		maxStat: (upgradeable, stat) => {
 			if (stat !== Stat.FarmingFortune) return 0;
-			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable).info;
 			const currentInfo = upgradeable.info;
-			const maxRarity = (lastInfo?.maxRarity ?? currentInfo?.maxRarity ?? Rarity.Common) as Rarity;
-			const rarity = (
-				compareRarity(upgradeable.rarity, maxRarity) > 0 ? upgradeable.rarity : maxRarity
-			) as Rarity;
+			const maxRarity = lastInfo.maxRarity;
 			const peridotSlots = Math.max(
 				lastInfo?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0,
 				currentInfo?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0
 			);
-			return peridotSlots * getPeridotGemFortune(rarity, GemRarity.Perfect);
+			return peridotSlots * getPeridotGemFortune(maxRarity, GemRarity.Perfect);
 		},
 		currentStat: (upgradeable, stat) => {
 			return stat === Stat.FarmingFortune ? getPeridotFortune(upgradeable.rarity, upgradeable.item) : 0;

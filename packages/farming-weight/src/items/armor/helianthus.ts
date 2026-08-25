@@ -31,8 +31,8 @@ export class HelianthusHelmet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Helianthus_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Mythic;
+	get baseRarity() {
+		return Rarity.Legendary;
 	}
 
 	override family = 'HELIANTHUS';
@@ -60,8 +60,8 @@ export class HelianthusChestplate extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Helianthus_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Mythic;
+	get baseRarity() {
+		return Rarity.Legendary;
 	}
 
 	override family = 'HELIANTHUS';
@@ -89,8 +89,8 @@ export class HelianthusLeggings extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Helianthus_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Mythic;
+	get baseRarity() {
+		return Rarity.Legendary;
 	}
 
 	override family = 'HELIANTHUS';
@@ -118,8 +118,8 @@ export class HelianthusBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Helianthus_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Mythic;
+	get baseRarity() {
+		return Rarity.Legendary;
 	}
 
 	override family = 'HELIANTHUS';

@@ -502,7 +502,7 @@ export class FarmingTool extends UpgradeableBase {
 			skyblockId: info.skyblockId,
 			uuid: crypto.randomUUID(),
 			lore: ['This is a fake item used for upgrade calculations!'],
-			attributes: {},
+			attributes: { rarity: info.baseRarity },
 			enchantments: {},
 		};
 
