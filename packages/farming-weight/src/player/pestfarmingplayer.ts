@@ -24,7 +24,7 @@ import { Vacuum } from '../fortune/vacuum.js';
 import { GearSlot } from '../items/armor.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { getFortuneUpgradeIdentity } from '../util/upgrade-identity.js';
-import { createFarmingPlayer, type FarmingPlayer } from './player.js';
+import { clonePlayerOptions, createFarmingPlayer, type FarmingPlayer } from './player.js';
 import type { PlayerOptions } from './playeroptions.js';
 
 export enum PestFarmingPhase {
@@ -1064,13 +1064,14 @@ export class PestFarmingPlayer {
 	clone(): PestFarmingPlayer {
 		const selectedVacuumId = this.selectedVacuum?.item.uuid ?? undefined;
 		return new PestFarmingPlayer({
-			...this.options,
+			...clonePlayerOptions(this.options),
 			tools: cloneItems(this.inventory.tools),
 			armor: cloneItems(this.inventory.armor),
 			equipment: cloneItems(this.inventory.equipment),
 			accessories: cloneItems(this.inventory.accessories),
 			pets: clonePets(this.inventory.pets),
 			vacuums: cloneItems(this.vacuums),
+			selectedVacuum: undefined,
 			selectedVacuumId,
 			armorSets: this.armorSetLoadouts.map((set) => ({
 				...set,

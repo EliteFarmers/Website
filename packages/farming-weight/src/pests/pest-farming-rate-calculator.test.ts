@@ -6,6 +6,7 @@ import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
 import { SprayonatorTier } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
+import { UpgradeAction, UpgradeCategory, type FortuneUpgrade } from '../constants/upgrades.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FARMING_ARMOR_INFO } from '../items/armor.js';
@@ -963,6 +964,75 @@ test('spawn phase bonus pest chance upgrades report positive pest rate impact', 
 
 	expect(impact.delta.expectedPestsPerCycle).toBeGreaterThan(0);
 	expect(impact.valuationDelta.coinsPerHour).toBeGreaterThan(0);
+});
+
+test('hypothetical pest upgrade impacts do not mutate profile progression', () => {
+	const player = new PestFarmingPlayer({
+		selectedCrop: Crop.Wheat,
+		plots: ['1'],
+		cropUpgrades: { [Crop.Wheat]: 2 },
+		exportableCrops: { [Crop.Wheat]: false },
+		attributes: { insect_power: 1 },
+		chips: { cropshot: 1 },
+		chipRarities: { cropshot: Rarity.Rare },
+	});
+	const phasePlayer = player.getPhasePlayer(PestFarmingPhase.Farm);
+	const stateUpgrades: FortuneUpgrade[] = [
+		{
+			title: 'Praying Mantis 2',
+			increase: 0,
+			action: UpgradeAction.LevelUp,
+			category: UpgradeCategory.Misc,
+			meta: { type: 'attribute', key: 'insect_power', value: 2 },
+		},
+		{
+			title: 'Cropshot Chip 2',
+			increase: 0,
+			action: UpgradeAction.LevelUp,
+			category: UpgradeCategory.Misc,
+			meta: { type: 'chip', id: 'CROPSHOT_GARDEN_CHIP', value: 2 },
+		},
+		{
+			title: 'Epic Cropshot Chip',
+			increase: 0,
+			action: UpgradeAction.Upgrade,
+			category: UpgradeCategory.Misc,
+			meta: { type: 'chip_rarity', id: 'CROPSHOT_GARDEN_CHIP', value: Rarity.Epic },
+		},
+	];
+	const upgrades: (FortuneUpgrade | undefined)[] = [
+		phasePlayer.getUpgrades({ stat: Stat.FarmingFortune }).find((entry) => entry.meta?.type === 'plot'),
+		phasePlayer.getCropUpgrades(Crop.Wheat).find((entry) => entry.meta?.type === 'crop_upgrade'),
+		phasePlayer.getCropUpgrades(Crop.Wheat).find((entry) => entry.meta?.id === 'exportable_crop'),
+		...stateUpgrades,
+	];
+	const calculator = new PestFarmingRateCalculator({
+		player,
+		options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+	});
+	const before = calculator.calculate();
+
+	for (const upgrade of upgrades) {
+		expect(upgrade).toBeDefined();
+		calculator.calculateUpgradeImpact({
+			phase: PestFarmingPhase.Farm,
+			upgrade: upgrade!,
+			before,
+		});
+	}
+
+	expect(player.options.plots).toStrictEqual(['1']);
+	expect(player.options.cropUpgrades?.[Crop.Wheat]).toBe(2);
+	expect(player.options.exportableCrops?.[Crop.Wheat]).toBe(false);
+	expect(player.options.attributes?.insect_power).toBe(1);
+	expect(player.options.chips?.cropshot).toBe(1);
+	expect(player.options.chipRarities?.cropshot).toBe(Rarity.Rare);
+	expect(player.getPhasePlayer(PestFarmingPhase.Farm).options.plots).toStrictEqual(['1']);
+	expect(player.getPhasePlayer(PestFarmingPhase.Farm).options.cropUpgrades?.[Crop.Wheat]).toBe(2);
+	expect(player.getPhasePlayer(PestFarmingPhase.Farm).options.exportableCrops?.[Crop.Wheat]).toBe(false);
+	expect(player.getPhasePlayer(PestFarmingPhase.Farm).options.attributes?.insect_power).toBe(1);
+	expect(player.getPhasePlayer(PestFarmingPhase.Farm).options.chips?.cropshot).toBe(1);
+	expect(player.getPhasePlayer(PestFarmingPhase.Farm).options.chipRarities?.cropshot).toBe(Rarity.Rare);
 });
 
 test('upgrade impact completeness is based on missing delta prices', () => {

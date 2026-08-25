@@ -806,6 +806,20 @@ test('vacuum stats and upgrades are scoped to the kill phase', () => {
 	expect(upgradePlayer.getPhaseStat(PestFarmingPhase.Kill, Stat.PestKillFortune)).toBe(20);
 });
 
+test('cloning preserves the selected vacuum without sharing its model', () => {
+	const selectedVacuum = new Vacuum(vacuum('INFINI_VACUUM_HOOVERIUS'));
+	const player = new PestFarmingPlayer({
+		vacuums: [selectedVacuum],
+		selectedVacuum,
+	});
+
+	const cloned = player.clone();
+
+	expect(cloned.selectedVacuum?.item.uuid).toBe(player.selectedVacuum?.item.uuid);
+	expect(cloned.selectedVacuum).not.toBe(player.selectedVacuum);
+	expect(cloned.selectedVacuum?.item).not.toBe(player.selectedVacuum?.item);
+});
+
 test('Praying Mantis Shard affects kill-phase vacuum damage', () => {
 	const player = new PestFarmingPlayer({
 		tools: [vacuum('INFINI_VACUUM_HOOVERIUS')],

@@ -58,6 +58,40 @@ export function createFarmingPlayer(options: PlayerOptions) {
 	return new FarmingPlayer(options);
 }
 
+/**
+ * Copies the mutable profile state carried by player options while leaving item
+ * collections available for the caller to replace with model-aware clones.
+ */
+export function clonePlayerOptions(options: PlayerOptions): PlayerOptions {
+	return {
+		...options,
+		cropUpgrades: options.cropUpgrades ? { ...options.cropUpgrades } : undefined,
+		milestones: options.milestones ? { ...options.milestones } : undefined,
+		exportableCrops: options.exportableCrops ? { ...options.exportableCrops } : undefined,
+		personalBests: options.personalBests ? { ...options.personalBests } : undefined,
+		collection: options.collection ? { ...options.collection } : undefined,
+		bestiaryKills: options.bestiaryKills ? { ...options.bestiaryKills } : undefined,
+		attributes: options.attributes ? { ...options.attributes } : undefined,
+		chips: options.chips ? { ...options.chips } : undefined,
+		chipRarities: options.chipRarities ? { ...options.chipRarities } : undefined,
+		perks: options.perks ? { ...options.perks } : undefined,
+		temporaryFortune: options.temporaryFortune ? { ...options.temporaryFortune } : undefined,
+		plots: options.plots ? [...options.plots] : undefined,
+		extraFortune: options.extraFortune?.map((entry) => ({ ...entry })),
+		harvestFeast: options.harvestFeast
+			? {
+					...options.harvestFeast,
+					inSeasonCrops: options.harvestFeast.inSeasonCrops
+						? [...options.harvestFeast.inSeasonCrops]
+						: undefined,
+					perks: options.harvestFeast.perks ? { ...options.harvestFeast.perks } : undefined,
+				}
+			: undefined,
+		jacobContest: options.jacobContest ? { ...options.jacobContest } : undefined,
+		zorro: options.zorro ? { ...options.zorro } : undefined,
+	};
+}
+
 export interface PlayerStatQuery {
 	stats: Stat[];
 	mechanics?: FarmingMechanic[];
@@ -1161,20 +1195,12 @@ export class FarmingPlayer {
 		const selectedToolUuid = this.selectedTool?.item.uuid;
 		const selectedPetUuid = this.selectedPet ? getFarmingPetId(this.selectedPet) : undefined;
 		const clonedOptions: PlayerOptions = {
-			...this.options,
+			...clonePlayerOptions(this.options),
 			tools: cloneItems(this.tools),
 			armor: cloneItems(this.armor),
 			equipment: cloneItems(this.equipment),
 			accessories: cloneItems(this.accessories),
 			pets: this.pets.map((p) => ({ ...p.pet })),
-			cropUpgrades: { ...this.options.cropUpgrades },
-			milestones: { ...this.options.milestones },
-			exportableCrops: { ...this.options.exportableCrops },
-			personalBests: { ...this.options.personalBests },
-			collection: { ...this.options.collection },
-			bestiaryKills: { ...this.options.bestiaryKills },
-			attributes: { ...this.options.attributes },
-			plots: [...(this.options.plots ?? [])],
 			selectedTool: undefined,
 			selectedPet: undefined,
 		};
