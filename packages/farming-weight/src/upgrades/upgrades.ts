@@ -23,7 +23,7 @@ import { reforgeEffects } from '../items/sources/reforges.js';
 import { FARMING_TOOLS, type FarmingToolInfo } from '../items/tools.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune } from '../util/gems.js';
-import { nextRarity, previousRarity } from '../util/itemstats.js';
+import { nextRarity } from '../util/itemstats.js';
 import { getUpgradeableEnchants } from './enchantupgrades.js';
 import { getItemInfo } from './itemcatalog.js';
 import { getItemScopedConflictKey } from './upgradekeys.js';
@@ -71,7 +71,7 @@ function createInfoFake(info?: UpgradeableInfo): UpgradeableBase | undefined {
 		info,
 		options: undefined,
 		recombobulated: false,
-		rarity: info.maxRarity,
+		rarity: info.baseRarity,
 		reforge: undefined,
 		reforgeStats: undefined,
 		fortune: 0,
@@ -229,8 +229,8 @@ export function getSelfFortuneUpgrade(
 		// This applies to any item with gems (armor, equipment, etc.)
 		if (upgradeable.item.gems) {
 			const currentRarity = upgradeable.rarity;
-			const currentBaseRarity = previousRarity(upgradeable.info.maxRarity) ?? upgradeable.info.maxRarity;
-			const nextBaseRarity = previousRarity(nextInfo.maxRarity) ?? nextInfo.maxRarity;
+			const currentBaseRarity = upgradeable.info.baseRarity;
+			const nextBaseRarity = nextInfo.baseRarity;
 
 			// Determine what rarity the upgraded item will be
 			const rarityIncrease = compareRarity(currentRarity, currentBaseRarity);
@@ -252,8 +252,8 @@ export function getSelfFortuneUpgrade(
 		// Reforge stats scale with item rarity (e.g., Bustling gives more fortune on Legendary vs Epic)
 		if (upgradeable.reforge) {
 			const currentRarity = upgradeable.rarity;
-			const currentBaseRarity = previousRarity(upgradeable.info.maxRarity) ?? upgradeable.info.maxRarity;
-			const nextBaseRarity = previousRarity(nextInfo.maxRarity) ?? nextInfo.maxRarity;
+			const currentBaseRarity = upgradeable.info.baseRarity;
+			const nextBaseRarity = nextInfo.baseRarity;
 
 			// Determine what rarity the upgraded item will be
 			const rarityIncrease = compareRarity(currentRarity, currentBaseRarity);
@@ -379,6 +379,7 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 
 	const rarity = upgradeable.rarity;
 	const next = nextRarity(upgradeable.rarity);
+	if (compareRarity(next, upgradeable.info.maxRarity) > 0) return;
 
 	const result = {
 		title: 'Recombobulate ' + upgradeable.item.name,

@@ -15,8 +15,8 @@ export class FungiCutter1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.Mushroom];
@@ -45,8 +45,8 @@ export class FungiCutter2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Mushroom];
@@ -75,8 +75,8 @@ export class FungiCutter3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Fungi_Cutter';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Mushroom];

@@ -32,6 +32,7 @@ export interface UpgradeableInfo {
 		costs: GemSlotCost[];
 		requirements?: GemSlotRequirement[];
 	}[];
+	baseRarity: Rarity;
 	maxRarity: Rarity;
 	stats?: RarityRecord<StatsRecord>;
 	baseStats?: Partial<Record<Stat, number>>;

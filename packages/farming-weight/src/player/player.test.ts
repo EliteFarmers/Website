@@ -813,7 +813,7 @@ test('getUpgradeRateImpact refreshes item-backed stat mutations', () => {
 				skyblockId: 'FERMENTO_BOOTS',
 				uuid: 'mossy-fermento-boots',
 				name: 'Mossy Fermento Boots',
-				lore: ['LEGENDARY BOOTS'],
+				lore: ['EPIC BOOTS'],
 				enchantments: {},
 				attributes: {
 					modifier: 'mossy',

@@ -5,7 +5,9 @@ import {
 	type PestFarmingPlayer,
 	type PestLoadoutPreset,
 } from '../player/pestfarmingplayer.js';
+import { getFarmingPetId } from '../fortune/farmingpet.js';
 import { PestFarmingRateCalculator } from './pest-farming-rate-calculator.js';
+import { pestSetCatalogSharesPieces } from './pest-loadout-constraints.js';
 import type { PestFarmingRateOptions, PestRatePriceBook } from './pest-rate-types.js';
 
 export interface PestLoadoutCandidate {
@@ -106,24 +108,42 @@ function uniqueChoices(values: (string | undefined)[]): (string | undefined)[] {
 	});
 }
 
+function requiredChoices(values: (string | undefined)[]): (string | undefined)[] {
+	const choices = uniqueChoices(values.filter((value): value is string => value !== undefined));
+	return choices.length > 0 ? choices : [undefined];
+}
+
 function createCandidateDimensions(player: PestFarmingPlayer): CandidateDimension[] {
 	return [
 		{
 			field: 'armorSetId',
-			values: uniqueChoices([undefined, ...player.armorSetLoadouts.map((set) => set.id)]),
+			values: requiredChoices(
+				player.armorSetLoadouts
+					.filter((set) => Object.values(set.pieces).some((piece) => !!piece))
+					.map((set) => set.id)
+			),
 		},
 		{
 			field: 'equipmentSetId',
-			values: uniqueChoices([undefined, ...player.equipmentSetLoadouts.map((set) => set.id)]),
+			values: requiredChoices(
+				player.equipmentSetLoadouts
+					.filter((set) => Object.values(set.pieces).some((piece) => !!piece))
+					.map((set) => set.id)
+			),
 		},
 		{
 			field: 'petId',
-			values: uniqueChoices([
-				undefined,
-				...player.crop.pets.map((pet) => pet.pet.uuid || pet.pet.localId || undefined),
-			]),
+			values: requiredChoices(player.crop.pets.map(getFarmingPetId)),
 		},
 	];
+}
+
+function getMantidArmorSetIds(player: PestFarmingPlayer): string[] {
+	return player.armorSetLoadouts
+		.filter((set) =>
+			player.getArmorSetModel(set.id)?.armor.some((piece) => piece?.item.attributes?.modifier === 'mantid')
+		)
+		.map((set) => set.id);
 }
 
 function currentSelections(player: PestFarmingPlayer): Record<PestFarmingPhase, PestLoadoutCandidate> {
@@ -140,6 +160,59 @@ function currentSelections(player: PestFarmingPlayer): Record<PestFarmingPhase, 
 			];
 		})
 	) as Record<PestFarmingPhase, PestLoadoutCandidate>;
+}
+
+function selectedDistinctSetsSharePieces(
+	setIds: (string | undefined)[],
+	sets: { id: string; pieces: Partial<Record<string, string | null>> }[]
+): boolean {
+	const selectedSetIds = uniqueChoices(setIds).filter((id): id is string => id !== undefined);
+	const usedUuids = new Set<string>();
+	for (const setId of selectedSetIds) {
+		const set = sets.find((candidate) => candidate.id === setId);
+		if (!set) continue;
+		for (const uuid of Object.values(set.pieces)) {
+			if (!uuid) continue;
+			if (usedUuids.has(uuid)) return true;
+			usedUuids.add(uuid);
+		}
+	}
+	return false;
+}
+
+function selectionsSharePhysicalPieces(
+	player: PestFarmingPlayer,
+	selections: Record<PestFarmingPhase, PestLoadoutCandidate>
+): boolean {
+	return (
+		selectedDistinctSetsSharePieces(
+			PEST_FARMING_PHASES.map((phase) => selections[phase].armorSetId),
+			player.armorSetLoadouts
+		) ||
+		selectedDistinctSetsSharePieces(
+			PEST_FARMING_PHASES.map((phase) => selections[phase].equipmentSetId),
+			player.equipmentSetLoadouts
+		)
+	);
+}
+
+function repairSharedPhysicalPieces(
+	player: PestFarmingPlayer,
+	selections: Record<PestFarmingPhase, PestLoadoutCandidate>,
+	dimensions: CandidateDimension[]
+): void {
+	for (const field of ['armorSetId', 'equipmentSetId'] as const) {
+		const sets = field === 'armorSetId' ? player.armorSetLoadouts : player.equipmentSetLoadouts;
+		if (
+			!selectedDistinctSetsSharePieces(
+				PEST_FARMING_PHASES.map((phase) => selections[phase][field]),
+				sets
+			)
+		)
+			continue;
+		const fallback = dimensions.find((dimension) => dimension.field === field)?.values[0];
+		for (const phase of PEST_FARMING_PHASES) selections[phase][field] = fallback;
+	}
 }
 
 function buildEvaluationPlayer(
@@ -169,6 +242,7 @@ function calculateRate(
 	options: PestFarmingRateOptions,
 	priceBook: PestRatePriceBook
 ): number {
+	if (selectionsSharePhysicalPieces(base, selections)) return Number.NEGATIVE_INFINITY;
 	const rate = new PestFarmingRateCalculator({
 		player: buildEvaluationPlayer(base, selections),
 		options,
@@ -207,8 +281,28 @@ function materializeResult(
 export async function optimizePestLoadouts(input: PestLoadoutOptimizerInput): Promise<PestLoadoutOptimizationResult> {
 	const player = input.player.clone();
 	const dimensions = createCandidateDimensions(player);
-	const choicesPerPhase = dimensions.reduce((total, dimension) => total + dimension.values.length, 0);
+	const sharedPieceFields = new Set<CandidateField>();
+	if (pestSetCatalogSharesPieces(player.armorSetLoadouts)) sharedPieceFields.add('armorSetId');
+	if (pestSetCatalogSharesPieces(player.equipmentSetLoadouts)) sharedPieceFields.add('equipmentSetId');
+	const mantidArmorSetIds = getMantidArmorSetIds(player);
+	const mantidArmorPairs = mantidArmorSetIds.flatMap((spawnArmorSetId) =>
+		mantidArmorSetIds.map((killArmorSetId) => ({ spawnArmorSetId, killArmorSetId }))
+	);
+	const phaseCandidateCount = dimensions.reduce((total, dimension) => total + dimension.values.length, 0);
+	const sharedCandidateCount = dimensions
+		.filter((dimension) => sharedPieceFields.has(dimension.field))
+		.reduce((total, dimension) => total + dimension.values.length, 0);
+	const candidatesPerPass =
+		PEST_FARMING_PHASES.length * phaseCandidateCount + sharedCandidateCount + mantidArmorPairs.length;
 	const selections = currentSelections(player);
+	for (const selection of Object.values(selections)) {
+		for (const dimension of dimensions) {
+			if (!dimension.values.includes(selection[dimension.field])) {
+				selection[dimension.field] = dimension.values[0];
+			}
+		}
+	}
+	repairSharedPhysicalPieces(player, selections, dimensions);
 	const batchSize = Math.max(1, input.batchSize ?? 20);
 	const frameBudgetMs = Math.max(1, input.frameBudgetMs ?? 8);
 	let evaluated = 0;
@@ -243,7 +337,7 @@ export async function optimizePestLoadouts(input: PestLoadoutOptimizerInput): Pr
 						best = candidate;
 						bestRate = candidateRate;
 					}
-					input.onProgress?.({ evaluated, pass, phase, totalCandidates: choicesPerPhase });
+					input.onProgress?.({ evaluated, pass, phase, totalCandidates: candidatesPerPass });
 					const now = globalThis.performance?.now() ?? Date.now();
 					if (evaluated % batchSize === 0 || now - frameStarted >= frameBudgetMs) {
 						await input.yieldControl?.();
@@ -256,6 +350,97 @@ export async function optimizePestLoadouts(input: PestLoadoutOptimizerInput): Pr
 					improved = true;
 				}
 			}
+		}
+
+		for (const dimension of dimensions.filter(
+			(dimension): dimension is CandidateDimension & { field: 'armorSetId' | 'equipmentSetId' } =>
+				sharedPieceFields.has(dimension.field) &&
+				(dimension.field === 'armorSetId' || dimension.field === 'equipmentSetId')
+		)) {
+			for (const value of dimension.values) {
+				if (PEST_FARMING_PHASES.every((phase) => selections[phase][dimension.field] === value)) continue;
+				if (input.shouldCancel?.()) {
+					const materialized = materializeResult(player, selections);
+					return { cancelled: true, evaluated, coinsPerHour: rate, ...materialized };
+				}
+				const next = Object.fromEntries(
+					PEST_FARMING_PHASES.map((phase) => [phase, { ...selections[phase], [dimension.field]: value }])
+				) as Record<PestFarmingPhase, PestLoadoutCandidate>;
+				const candidateRate = calculateRate(player, next, input.options, input.priceBook);
+				evaluated++;
+				const selectionOrder = PEST_FARMING_PHASES.map((phase) =>
+					compareCandidates(player, next[phase], selections[phase])
+				).find((order) => order !== 0);
+				if (
+					candidateRate > rate + RATE_EPSILON ||
+					(Math.abs(candidateRate - rate) <= RATE_EPSILON && (selectionOrder ?? 0) < 0)
+				) {
+					for (const phase of PEST_FARMING_PHASES) selections[phase] = next[phase];
+					rate = candidateRate;
+					improved = true;
+				}
+				input.onProgress?.({
+					evaluated,
+					pass,
+					phase: PestFarmingPhase.Farm,
+					totalCandidates: candidatesPerPass,
+				});
+				const now = globalThis.performance?.now() ?? Date.now();
+				if (evaluated % batchSize === 0 || now - frameStarted >= frameBudgetMs) {
+					await input.yieldControl?.();
+					frameStarted = globalThis.performance?.now() ?? Date.now();
+				}
+			}
+		}
+
+		let bestSpawn = selections[PestFarmingPhase.Spawn];
+		let bestKill = selections[PestFarmingPhase.Kill];
+		let bestPairRate = rate;
+		for (const pair of mantidArmorPairs) {
+			const spawn = { ...selections[PestFarmingPhase.Spawn], armorSetId: pair.spawnArmorSetId };
+			const kill = { ...selections[PestFarmingPhase.Kill], armorSetId: pair.killArmorSetId };
+			if (candidateKey(spawn) === candidateKey(bestSpawn) && candidateKey(kill) === candidateKey(bestKill))
+				continue;
+			if (input.shouldCancel?.()) {
+				const materialized = materializeResult(player, selections);
+				return { cancelled: true, evaluated, coinsPerHour: rate, ...materialized };
+			}
+			const next = {
+				...selections,
+				[PestFarmingPhase.Spawn]: spawn,
+				[PestFarmingPhase.Kill]: kill,
+			};
+			const candidateRate = calculateRate(player, next, input.options, input.priceBook);
+			evaluated++;
+			const pairOrder = compareCandidates(player, spawn, bestSpawn) || compareCandidates(player, kill, bestKill);
+			if (
+				candidateRate > bestPairRate + RATE_EPSILON ||
+				(Math.abs(candidateRate - bestPairRate) <= RATE_EPSILON && pairOrder < 0)
+			) {
+				bestSpawn = spawn;
+				bestKill = kill;
+				bestPairRate = candidateRate;
+			}
+			input.onProgress?.({
+				evaluated,
+				pass,
+				phase: PestFarmingPhase.Spawn,
+				totalCandidates: candidatesPerPass,
+			});
+			const now = globalThis.performance?.now() ?? Date.now();
+			if (evaluated % batchSize === 0 || now - frameStarted >= frameBudgetMs) {
+				await input.yieldControl?.();
+				frameStarted = globalThis.performance?.now() ?? Date.now();
+			}
+		}
+		if (
+			candidateKey(bestSpawn) !== candidateKey(selections[PestFarmingPhase.Spawn]) ||
+			candidateKey(bestKill) !== candidateKey(selections[PestFarmingPhase.Kill])
+		) {
+			selections[PestFarmingPhase.Spawn] = bestSpawn;
+			selections[PestFarmingPhase.Kill] = bestKill;
+			rate = bestPairRate;
+			improved = true;
 		}
 	}
 

@@ -16,8 +16,8 @@ export class FarmerBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Farmer_Boots';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override slot = GearSlot.Boots;
@@ -60,8 +60,8 @@ export class RanchersBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Rancher%27s_Boots';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override slot = GearSlot.Boots;
@@ -125,8 +125,8 @@ export class LanternHelmet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Lantern_Helmet';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override slot = GearSlot.Helmet;

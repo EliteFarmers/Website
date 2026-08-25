@@ -13,7 +13,7 @@ export class Magic8BallAccessory extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Magic_8_Ball';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Epic;
 	}
 
@@ -36,7 +36,7 @@ export class AtmosphericFilterAccessory extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Atmospheric_Filter';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 

@@ -19,7 +19,7 @@ abstract class SproutArmorPiece extends BaseItem {
 		return 'https://w.elitesb.gg/Sprout_Armor';
 	}
 
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 }

@@ -17,6 +17,7 @@
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { formatBoundaryError, getLevelProgress } from '$lib/format';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
+	import { getRateImpactCoinValue } from '$lib/rates/upgrade-rate-value';
 	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
@@ -43,8 +44,11 @@
 		getCropFromName,
 		getCropMilestoneLevels,
 		getCropUpgrades,
+		getCompletionUpgradeKey,
 		getGardenLevel,
+		getProfitCompletionUpgrades,
 		LotusGear,
+		resolveProfitAwareProgress,
 		Stat,
 		STAT_ICONS,
 		Vacuum,
@@ -54,6 +58,7 @@
 		type FortuneSourceProgress,
 		type FortuneUpgrade,
 		type PlayerOptions,
+		type UpgradeRateImpact,
 		type UpgradeTreeNode,
 	} from 'farming-weight';
 	import { Debounced } from 'runed';
@@ -104,7 +109,9 @@
 	}
 
 	const cropKey = (crop: string) =>
-		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? getCropFromName(crop)) as Crop;
+		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ??
+			getCropFromName(crop) ??
+			Crop.Wheat) as Crop;
 
 	function harvestFeastCropKey(crop: string): Crop | undefined {
 		const direct = Object.values(Crop).find((value) => value === crop);
@@ -253,10 +260,15 @@
 		return filtered;
 	});
 
-	const generalProgress = $derived($player.getProgress(FORTUNE_QUERY_STATS));
-	const gearProgress = $derived($player.armorSet.getProgress(FORTUNE_QUERY_STATS));
-	const petProgress = $derived($player.getPetProgress(FORTUNE_QUERY_STATS));
-	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
+	const rawGeneralProgress = $derived($player.getProgress(FORTUNE_QUERY_STATS));
+	const rawGearProgress = $derived($player.armorSet.getProgress(FORTUNE_QUERY_STATS));
+	const rawPetProgress = $derived($player.getPetProgress(FORTUNE_QUERY_STATS));
+	const rawCropProgress = $derived(
+		$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat, [
+			Stat.FarmingFortune,
+			CROP_INFO[selectedCropKey]?.fortuneType ?? Stat.FarmingFortune,
+		])
+	);
 
 	const cropToolSwitchOptions = $derived.by(() => {
 		const list = selectedCropKey ? tools.filter((t) => t.crop === selectedCropKey) : tools;
@@ -343,7 +355,7 @@
 		return p.upgrades ?? [];
 	}
 
-	const allProgress = $derived([...generalProgress, ...gearProgress, ...petProgress, ...cropProgress]);
+	const allProgress = $derived([...rawGeneralProgress, ...rawGearProgress, ...rawPetProgress, ...rawCropProgress]);
 
 	function expandProgressUpgrade(upgrade: FortuneUpgrade): UpgradeTreeNode {
 		return $player.expandUpgrade(upgrade, { stats: FORTUNE_QUERY_STATS });
@@ -422,10 +434,54 @@
 		return result;
 	});
 
-	const neededItems = $derived(getItemsFromUpgrades(allTreeUpgrades));
+	const completionUpgrades = $derived(getProfitCompletionUpgrades(allProgress));
+	const completionRateImpacts = $derived.by(() => {
+		const result = new SvelteMap<string, UpgradeRateImpact>();
+		if (!selectedCropKey || blocksPerHour <= 0) return result;
+		const before = $player.getRates(selectedCropKey, blocksPerHour);
+		for (const upgrade of completionUpgrades) {
+			result.set(
+				getCompletionUpgradeKey(upgrade),
+				$player.getUpgradeRateImpact(upgrade, {
+					crop: selectedCropKey,
+					blocksBroken: blocksPerHour,
+					before,
+				})
+			);
+		}
+		return result;
+	});
+	const completionRateItems = $derived.by(() => {
+		const result = new SvelteSet<string>();
+		for (const impact of completionRateImpacts.values()) {
+			if (impact.delta.collection !== 0 && selectedCropKey) result.add(selectedCropKey);
+			for (const itemId of Object.keys(impact.delta.items ?? {})) result.add(itemId);
+			for (const itemId of Object.keys(impact.delta.rngItems ?? {})) result.add(itemId);
+		}
+		return [...result];
+	});
+	const neededItems = $derived([...new Set([...getItemsFromUpgrades(allTreeUpgrades), ...completionRateItems])]);
 	const debouncedItems = new Debounced(() => neededItems, 1000);
 
 	let itemsData = $state<RatesItemPriceData>({});
+
+	function getCompletionComparison(upgrade: FortuneUpgrade) {
+		const impact = completionRateImpacts.get(getCompletionUpgradeKey(upgrade));
+		if (!impact) return undefined;
+		const requiredItems = [
+			...(impact.delta.collection !== 0 && selectedCropKey ? [selectedCropKey] : []),
+			...Object.keys(impact.delta.items ?? {}),
+			...Object.keys(impact.delta.rngItems ?? {}),
+		];
+		return {
+			complete: requiredItems.every((itemId) => itemsData[itemId] !== undefined),
+			coinsPerHour: getRateImpactCoinValue(impact, itemsData, selectedCropKey),
+		};
+	}
+
+	const generalProgress = $derived(resolveProfitAwareProgress(rawGeneralProgress, getCompletionComparison));
+	const gearProgress = $derived(resolveProfitAwareProgress(rawGearProgress, getCompletionComparison));
+	const cropProgress = $derived(resolveProfitAwareProgress(rawCropProgress, getCompletionComparison));
 
 	$effect(() => {
 		const items = debouncedItems.current;
@@ -815,11 +871,7 @@
 					{:else if CROP_INFO[selectedCropKey]}
 						<CategoryProgress
 							name="{selectedCrop || 'Wheat'} Fortune"
-							progress={$player.getCropProgress(selectedCropKey, [
-								Stat.FarmingFortune,
-								CROP_INFO[selectedCropKey].fortuneType,
-								// Stat.BonusPestChance,
-							])}
+							progress={cropProgress}
 							expandUpgrade={(u) =>
 								$player.expandUpgrade(u, {
 									stats: [

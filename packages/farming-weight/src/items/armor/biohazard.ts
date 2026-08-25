@@ -14,8 +14,8 @@ export class BiohazardHelmet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Biohazard_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override family = 'BIOHAZARD_ARMOR';
@@ -40,8 +40,8 @@ export class BiohazardChestplate extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Biohazard_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override family = 'BIOHAZARD_ARMOR';
@@ -66,8 +66,8 @@ export class BiohazardLeggings extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Biohazard_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override family = 'BIOHAZARD_ARMOR';
@@ -92,8 +92,8 @@ export class BiohazardBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Biohazard_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override family = 'BIOHAZARD_ARMOR';

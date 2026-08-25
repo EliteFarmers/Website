@@ -15,8 +15,8 @@ export class MushroomHelmet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Mushroom_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Common;
 	}
 
 	override family = 'MUSHROOM_ARMOR';
@@ -46,8 +46,8 @@ export class MushroomChestplate extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Mushroom_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Common;
 	}
 
 	override family = 'MUSHROOM_ARMOR';
@@ -77,8 +77,8 @@ export class MushroomLeggings extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Mushroom_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Common;
 	}
 
 	override family = 'MUSHROOM_ARMOR';
@@ -108,8 +108,8 @@ export class MushroomBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Mushroom_Armor';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Common;
 	}
 
 	override family = 'MUSHROOM_ARMOR';

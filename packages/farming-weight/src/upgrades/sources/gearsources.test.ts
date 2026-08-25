@@ -1,9 +1,11 @@
 import { expect, test } from 'vitest';
 import { GARDEN_VISITORS } from '../../constants/garden.js';
+import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingArmor } from '../../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../../fortune/farmingequipment.js';
+import { getSourceCompletionUpgrades } from '../getsourceprogress.js';
 
 const MAX_UNIQUE_VISITORS = Object.keys(GARDEN_VISITORS).length;
 const MAX_GREEN_THUMB_FORTUNE = MAX_UNIQUE_VISITORS * 0.25;
@@ -51,7 +53,7 @@ const almostMaxHelmet = {
 		'',
 		'§7Selected: §8Black Wheat',
 		'',
-		'§d§l§ka§r §d§l§d§lLEGENDARY HELMET §d§l§ka',
+		'§5§l§ka§r §5§l§5§lEPIC HELMET §5§l§ka',
 	],
 	enchantments: {
 		rejuvenate: 5,
@@ -70,8 +72,8 @@ const almostMaxHelmet = {
 
 test('Almost maxed fermento fortune sources', () => {
 	const item = new FarmingArmor(almostMaxHelmet);
-	expect(item.fortune).toBe(72);
-	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
+	expect(item.fortune).toBe(65);
+	expect(item.fortuneBreakdown['Peridot Gems']).toBe(9);
 
 	const upgrades = item.getUpgrades({ stat: Stat.FarmingFortune });
 	expect(upgrades).toHaveLength(5);
@@ -95,15 +97,15 @@ test('Almost maxed fermento fortune sources', () => {
 		},
 		{
 			name: 'Reforge Stats',
-			current: 25,
+			current: 20,
 			max: 30,
-			ratio: 25 / 30,
+			ratio: 20 / 30,
 		},
 		{
 			name: 'Gemstone Slots',
-			current: 11,
+			current: 9,
 			max: 20,
-			ratio: 11 / 20,
+			ratio: 9 / 20,
 		},
 		{
 			name: 'Pesterminator',
@@ -423,4 +425,36 @@ test('Sunset enchant on armor surfaces Overbloom progress and upgrade', () => {
 			value: 4,
 		})
 	);
+});
+
+test('Mantid progress retains Mossy as a completion comparison', () => {
+	const mantidHelmet = {
+		...almostMaxHelmet,
+		attributes: { ...almostMaxHelmet.attributes, modifier: 'mantid' },
+	};
+	const item = new FarmingArmor(mantidHelmet);
+	const reforgeProgress = item
+		.getProgress([Stat.FarmingFortune, Stat.BonusPestChance])
+		.find((progress) => progress.name === 'Reforge Stats');
+
+	expect(
+		reforgeProgress &&
+			getSourceCompletionUpgrades(reforgeProgress).find((upgrade) => upgrade.title === 'Reforge to Mossy')
+	).toBeDefined();
+});
+
+test('recombobulated armor gemstone progress already uses the current rarity', () => {
+	const helmet = new FarmingArmor({
+		...almostMaxHelmet,
+		lore: [],
+		attributes: {
+			...almostMaxHelmet.attributes,
+			rarity: Rarity.Mythic,
+			rarity_upgrades: '1',
+		},
+		gems: { PERIDOT_0: 'FLAWLESS', PERIDOT_1: 'FLAWLESS' },
+	});
+	const gemstones = helmet.getProgress([Stat.FarmingFortune]).find((progress) => progress.name === 'Gemstone Slots');
+
+	expect(gemstones?.stats?.[Stat.FarmingFortune]).toEqual({ current: 16, max: 20, ratio: 0.8 });
 });

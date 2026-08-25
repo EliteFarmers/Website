@@ -15,8 +15,8 @@ export class BlossomBracelet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Blossom_Bracelet';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override family = 'LOTUS';
@@ -35,8 +35,8 @@ export class BlossomBelt extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Blossom_Belt';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override family = 'LOTUS';
@@ -55,8 +55,8 @@ export class BlossomNecklace extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Blossom_Necklace';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override family = 'LOTUS';
@@ -75,8 +75,8 @@ export class BlossomCloak extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Blossom_Cloak';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override family = 'LOTUS';

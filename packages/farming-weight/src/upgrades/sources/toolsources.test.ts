@@ -1,16 +1,18 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../../constants/crops.js';
+import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
 import { FarmingPlayer } from '../../player/player.js';
+import { getSourceCompletionUpgrades } from '../getsourceprogress.js';
 
 const netherwartHoe = {
 	id: 293,
 	count: 1,
 	skyblockId: 'THEORETICAL_HOE_WARTS_3',
 	uuid: '103d2e1f-0351-429f-b116-c85e81886597',
-	name: '§dBountiful Newton Nether Wart Cutter Hoe',
+	name: '§6Bountiful Newton Nether Wart Cutter Hoe',
 	lore: [
 		'§7Speed: §a+13 §9(+13)',
 		'§7Farming Fortune: §a+128 §2(+5) §9(+10) §d(+18)',
@@ -51,7 +53,7 @@ const netherwartHoe = {
 		'§7crops.',
 		'§7Grants §6+0.2 coins §7per crop.',
 		'',
-		'§d§l§ka§r §d§l§d§lMYTHIC HOE §d§l§ka',
+		'§6§l§ka§r §6§l§6§lLEGENDARY HOE §6§l§ka',
 	],
 	enchantments: {
 		replenish: 1,
@@ -81,7 +83,7 @@ test('Test tool fortune sources', () => {
 		},
 	});
 
-	expect(tool.fortune).toBe(173);
+	expect(tool.fortune).toBe(168);
 
 	expect(tool.counter).toBe(1102505308);
 
@@ -106,15 +108,15 @@ test('Test tool fortune sources', () => {
 		},
 		{
 			name: 'Reforge Stats',
-			current: 10,
+			current: 7,
 			max: 7,
 			ratio: 1,
 		},
 		{
 			name: 'Gemstone Slots',
-			current: 10,
+			current: 8,
 			max: 32,
-			ratio: 10 / 32,
+			ratio: 8 / 32,
 		},
 		{
 			name: 'Farming For Dummies',
@@ -163,13 +165,34 @@ test('Test tool fortune sources', () => {
 		},
 	]);
 
-	expect(progress.reduce((acc, curr) => acc + curr.current, 0)).toBe(173);
+	expect(progress.reduce((acc, curr) => acc + curr.current, 0)).toBe(168);
 
 	tool.changeReforgeTo('blessed');
-	expect(tool.fortune).toBe(183);
+	expect(tool.fortune).toBe(177);
 
-	expect(tool.getProgress().reduce((acc, curr) => acc + curr.current, 0)).toBe(183);
+	expect(tool.getProgress().reduce((acc, curr) => acc + curr.current, 0)).toBe(177);
 	expect(tool.getProgress().reduce((acc, curr) => acc + curr.max, 0)).toBe(475);
+});
+
+test('tier-three hoe gemstone progress caps at its valid recombobulated Legendary rarity', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		gems: {
+			PERIDOT_0: 'FLAWLESS',
+			PERIDOT_1: 'FLAWLESS',
+			PERIDOT_2: 'FLAWLESS',
+			PERIDOT_3: 'FLAWLESS',
+		},
+	});
+	const gemstones = tool.getProgress([Stat.FarmingFortune]).find((progress) => progress.name === 'Gemstone Slots');
+
+	expect(tool.rarity).toBe(Rarity.Legendary);
+	expect(gemstones?.stats?.[Stat.FarmingFortune]).toEqual({ current: 24, max: 32, ratio: 0.75 });
+	expect(
+		tool
+			.getUpgrades({ stat: Stat.FarmingFortune })
+			.filter((upgrade) => upgrade.title === 'Perfect Peridot Gemstone')
+	).toHaveLength(4);
 });
 
 test('Turbo enchants upgrade to gourd-backed levels 6 and 7', () => {
@@ -467,6 +490,23 @@ test('Overpriced reforge exposes Overbloom effect metadata for progress and upgr
 			scope: { tags: ['overbloom'] },
 		})
 	);
+});
+
+test('Bountiful progress retains Overpriced as a completion-only comparison', () => {
+	const bountifulHoe = {
+		...t1WheatHoe,
+		attributes: { ...t1WheatHoe.attributes, modifier: 'bountiful' },
+	};
+	const tool = new FarmingTool(bountifulHoe);
+	const reforgeProgress = tool
+		.getProgress([Stat.FarmingFortune, Stat.Overbloom])
+		.find((progress) => progress.name === 'Reforge Stats');
+
+	expect(
+		reforgeProgress &&
+			getSourceCompletionUpgrades(reforgeProgress).find((upgrade) => upgrade.title === 'Reforge to Overpriced')
+	).toBeDefined();
+	expect(reforgeProgress?.upgrades?.find((upgrade) => upgrade.title === 'Reforge to Overpriced')).toBeUndefined();
 });
 
 test('Tier 3 Cane Hoe Upgrades (crop stat includes Farming Fortune upgrades)', () => {

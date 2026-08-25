@@ -17,8 +17,8 @@ export class MelonDicer1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Melon_Dicer';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.Melon];
@@ -46,8 +46,8 @@ export class MelonDicer2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Melon_Dicer_2.0';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Melon];
@@ -75,8 +75,8 @@ export class MelonDicer3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Melon_Dicer_3.0';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Melon];
@@ -95,8 +95,8 @@ export class PumpkinDicer1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pumpkin_Dicer';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.Pumpkin];
@@ -124,8 +124,8 @@ export class PumpkinDicer2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pumpkin_Dicer_2.0';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Pumpkin];
@@ -153,8 +153,8 @@ export class PumpkinDicer3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pumpkin_Dicer_3.0';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Pumpkin];

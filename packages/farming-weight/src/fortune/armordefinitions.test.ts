@@ -25,7 +25,8 @@ describe('Armor Definitions Integrity', () => {
 			const armor = getArmorInfo(piece);
 			expect(armor.name).toContain('Farmhand');
 			expect(armor.family).toBe('FARM_SUIT');
-			expect(armor.maxRarity).toBe(Rarity.Common);
+			expect(armor.baseRarity).toBe(Rarity.Common);
+			expect(armor.maxRarity).toBe(Rarity.Uncommon);
 			expect(armor.baseStats?.[Stat.FarmingFortune]).toBe(5);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(3);
 		}
@@ -37,7 +38,8 @@ describe('Armor Definitions Integrity', () => {
 			const armor = getArmorInfo(piece);
 			expect(armor.name).toContain('Haymaker');
 			expect(armor.family).toBe('FARM_ARMOR');
-			expect(armor.maxRarity).toBe(Rarity.Common);
+			expect(armor.baseRarity).toBe(Rarity.Common);
+			expect(armor.maxRarity).toBe(Rarity.Uncommon);
 			expect(armor.baseStats?.[Stat.FarmingFortune]).toBe(10);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(10);
 		}
@@ -49,7 +51,8 @@ describe('Armor Definitions Integrity', () => {
 			const armor = getArmorInfo(piece);
 			expect(armor.name).toContain('Sprout');
 			expect(armor.family).toBe('PUMPKIN');
-			expect(armor.maxRarity).toBe(Rarity.Uncommon);
+			expect(armor.baseRarity).toBe(Rarity.Uncommon);
+			expect(armor.maxRarity).toBe(Rarity.Rare);
 			expect(armor.baseStats?.[Stat.FarmingFortune]).toBe(15);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(15);
 		}
@@ -61,7 +64,8 @@ describe('Armor Definitions Integrity', () => {
 			const armor = getArmorInfo(piece);
 			expect(armor.name).toContain('Tater');
 			expect(armor.family).toBe('MELON');
-			expect(armor.maxRarity).toBe(Rarity.Uncommon);
+			expect(armor.baseRarity).toBe(Rarity.Uncommon);
+			expect(armor.maxRarity).toBe(Rarity.Rare);
 			expect(armor.special).toContain(SpecialCrop.Cropie);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(20);
 		}
@@ -82,7 +86,8 @@ describe('Armor Definitions Integrity', () => {
 			const armor = getArmorInfo(piece);
 			expect(armor.name).toContain('Cropie');
 			expect(armor.family).toBe('CROPIE');
-			expect(armor.maxRarity).toBe(Rarity.Uncommon);
+			expect(armor.baseRarity).toBe(Rarity.Uncommon);
+			expect(armor.maxRarity).toBe(Rarity.Rare);
 			expect(armor.special).toContain(SpecialCrop.Squash);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(30);
 			expect(armor.gemSlots).toHaveLength(1);
@@ -95,7 +100,8 @@ describe('Armor Definitions Integrity', () => {
 			const armor = getArmorInfo(piece);
 			expect(armor.name).toContain('Squash');
 			expect(armor.family).toBe('SQUASH');
-			expect(armor.maxRarity).toBe(Rarity.Rare);
+			expect(armor.baseRarity).toBe(Rarity.Rare);
+			expect(armor.maxRarity).toBe(Rarity.Epic);
 			expect(armor.special).toContain(SpecialCrop.Fermento);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(35);
 			expect(armor.gemSlots).toHaveLength(1);
@@ -108,6 +114,7 @@ describe('Armor Definitions Integrity', () => {
 			const armor = getArmorInfo(piece);
 			expect(armor.name).toContain('Fermento');
 			expect(armor.family).toBe('FERMENTO');
+			expect(armor.baseRarity).toBe(Rarity.Epic);
 			expect(armor.maxRarity).toBe(Rarity.Legendary);
 			expect(armor.special).toEqual([
 				SpecialCrop.Cropie,
@@ -154,6 +161,7 @@ describe('Armor Definitions Integrity', () => {
 			const armor = getArmorInfo(piece);
 			expect(armor.name).toContain('Helianthus');
 			expect(armor.family).toBe('HELIANTHUS');
+			expect(armor.baseRarity).toBe(Rarity.Legendary);
 			expect(armor.maxRarity).toBe(Rarity.Mythic);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(50);
 			expect(armor.gemSlots).toHaveLength(2);

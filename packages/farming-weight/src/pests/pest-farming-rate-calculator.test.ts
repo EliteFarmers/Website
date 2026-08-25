@@ -7,7 +7,9 @@ import { Rarity } from '../constants/reforges.js';
 import { SprayonatorTier } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
 import type { EliteItemDto } from '../fortune/item.js';
+import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FARMING_ARMOR_INFO } from '../items/armor.js';
+import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { GearSlot } from '../items/definitions.js';
 import { PestFarmingPhase, PestFarmingPlayer } from '../player/pestfarmingplayer.js';
 import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
@@ -56,6 +58,12 @@ function armorItem(
 
 function mantidArmor(id: keyof typeof FARMING_ARMOR_INFO, uuid: string): EliteItemDto {
 	return armorItem(id, uuid, { modifier: 'mantid' });
+}
+
+function equipmentItem(id: keyof typeof FARMING_EQUIPMENT_INFO, uuid: string): EliteItemDto {
+	const item = FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[id]!)!;
+	item.item.uuid = uuid;
+	return item.item;
 }
 
 function pestPlayerWithArmorSets(options: {
@@ -537,7 +545,7 @@ test('official pest weights add Sprayonator and vinyl bonuses to the base weight
 	expect(probabilities[Pest.Firefly]).toBeUndefined();
 });
 
-test('Moth Shard is attributed and reduces both pest cooldown and farm phase by five seconds', () => {
+test('Moth Shard is attributed to spawn and reduces both pest cooldown and farm phase by five seconds', () => {
 	const calculate = (player: PestFarmingPlayer) =>
 		new PestFarmingRateCalculator({
 			player,
@@ -549,8 +557,8 @@ test('Moth Shard is attributed and reduces both pest cooldown and farm phase by 
 	const before = calculate(new PestFarmingPlayer({}));
 	const after = calculate(new PestFarmingPlayer({ attributes: { pest_cooldown: 999 } }));
 
-	expect(after.phaseStats.farmPestCooldownReductionSecondsBreakdown).toEqual({ 'Moth Shard': 5 });
-	expect(after.phaseStats.farmPestCooldownReductionSeconds).toBe(5);
+	expect(after.phaseStats.spawnPestCooldownReductionSecondsBreakdown).toEqual({ 'Moth Shard': 5 });
+	expect(after.phaseStats.spawnPestCooldownReductionSeconds).toBe(5);
 	expect(after.debug.cooldownSeconds).toBe(before.debug.cooldownSeconds - 5);
 	expect(after.debug.farmSeconds).toBe(before.debug.farmSeconds - 5);
 });
@@ -559,7 +567,7 @@ test('Moth Shard applies after maximum percentage reductions without an artifici
 	const player = new PestFarmingPlayer({ attributes: { pest_cooldown: 999 } });
 	const getPhaseStatBreakdown = player.getPhaseStatBreakdown.bind(player);
 	vi.spyOn(player, 'getPhaseStatBreakdown').mockImplementation((phase, stat, crop) => {
-		if (phase === PestFarmingPhase.Farm && stat === Stat.PestCooldownReduction) {
+		if (phase === PestFarmingPhase.Spawn && stat === Stat.PestCooldownReduction) {
 			return { 'Maximum Percentage Reduction': { value: 55, stat } };
 		}
 		return getPhaseStatBreakdown(phase, stat, crop);
@@ -575,6 +583,54 @@ test('Moth Shard applies after maximum percentage reductions without an artifici
 
 	expect(calculate(false).debug.cooldownSeconds).toBe(130);
 	expect(calculate(true).debug.cooldownSeconds).toBe(70);
+});
+
+test('current spawn equipment determines when the fixed pest cooldown threshold is reached', () => {
+	const slots = [GearSlot.Necklace, GearSlot.Cloak, GearSlot.Belt, GearSlot.Gloves] as const;
+	const blossomIds = ['BLOSSOM_NECKLACE', 'BLOSSOM_CLOAK', 'BLOSSOM_BELT', 'BLOSSOM_BRACELET'] as const;
+	const pesthunterIds = [
+		'PESTHUNTERS_NECKLACE',
+		'PESTHUNTERS_CLOAK',
+		'PESTHUNTERS_BELT',
+		'PESTHUNTERS_GLOVES',
+	] as const;
+	const blossomPieces = Object.fromEntries(slots.map((slot, index) => [slot, `blossom-${index}`]));
+	const pesthunterPieces = Object.fromEntries(slots.map((slot, index) => [slot, `pesthunter-${index}`]));
+	const equipment = [
+		...blossomIds.map((id, index) => equipmentItem(id, `blossom-${index}`)),
+		...pesthunterIds.map((id, index) => equipmentItem(id, `pesthunter-${index}`)),
+	];
+	const createPlayer = (farmEquipmentSetId: string, spawnEquipmentSetId: string) =>
+		new PestFarmingPlayer({
+			equipment,
+			equipmentSets: [
+				{ id: 'blossom', name: 'Blossom', pieces: blossomPieces },
+				{ id: 'pesthunter', name: 'Pesthunter', pieces: pesthunterPieces },
+			],
+			loadoutPresets: [
+				{ id: 'farm', name: 'Farm', equipmentSetId: farmEquipmentSetId },
+				{ id: 'spawn', name: 'Spawn', equipmentSetId: spawnEquipmentSetId },
+				{ id: 'kill', name: 'Kill', equipmentSetId: 'blossom' },
+			],
+			phasePresetIds: {
+				[PestFarmingPhase.Farm]: 'farm',
+				[PestFarmingPhase.Spawn]: 'spawn',
+				[PestFarmingPhase.Kill]: 'kill',
+			},
+		});
+	const calculate = (player: PestFarmingPlayer) =>
+		new PestFarmingRateCalculator({
+			player,
+			options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+		}).calculate();
+
+	const pesthunterAtSpawn = calculate(createPlayer('blossom', 'pesthunter'));
+	const pesthunterWhileFarming = calculate(createPlayer('pesthunter', 'blossom'));
+
+	expect(pesthunterAtSpawn.phaseStats.spawnPestCooldownReduction).toBe(40);
+	expect(pesthunterAtSpawn.debug.cooldownSeconds).toBe(180);
+	expect(pesthunterWhileFarming.phaseStats.spawnPestCooldownReduction).toBe(0);
+	expect(pesthunterWhileFarming.debug.cooldownSeconds).toBe(300);
 });
 
 test('Sprayonator tiers use the same official material attraction weight', () => {
@@ -707,7 +763,7 @@ test('rate calculation can automatically use the best spawn armor candidate', ()
 	expect(result.phaseStats.spawnBonusPestChance).toBe(mainSpawnBonusPestChance);
 });
 
-test('pest rate calculation derives Mantid recent pest kills from expected spawned pests', () => {
+test('pest rate calculation derives Mantid recent pest kills from the rolling ten-minute window', () => {
 	const player = new PestFarmingPlayer({
 		armor: [
 			mantidArmor('HELIANTHUS_HELMET', 'mantid-helmet'),
@@ -717,8 +773,6 @@ test('pest rate calculation derives Mantid recent pest kills from expected spawn
 		],
 	});
 	const baseBonusPestChance = player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance);
-	const expectedResolvedBonusPestChance = (baseBonusPestChance + 1) / 0.99;
-	const expectedPestsPerSpawn = 1 + expectedResolvedBonusPestChance / 100;
 
 	const result = new PestFarmingRateCalculator({
 		player,
@@ -730,9 +784,17 @@ test('pest rate calculation derives Mantid recent pest kills from expected spawn
 
 	expect(player.options.mantidPestKills).toBeUndefined();
 	expect(baseBonusPestChance).toBe(88);
-	expect(result.phaseStats.spawnBonusPestChance).toBeGreaterThan(baseBonusPestChance);
-	expect(result.phaseStats.spawnBonusPestChance).toBeCloseTo(expectedResolvedBonusPestChance, 6);
-	expect(result.breakdown.pestSpawning.expectedPestsPerSpawn).toBeCloseTo(expectedPestsPerSpawn, 6);
+	const expectedRecentKills = Math.min(
+		20,
+		(result.breakdown.pestSpawning.expectedPestsPerSpawn * result.debug.cyclesPerHour) / 6
+	);
+	expect(result.phaseStats.spawnMantidRecentPestKills).toBeCloseTo(expectedRecentKills, 6);
+	expect(result.phaseStats.spawnBonusPestChance).toBeCloseTo(baseBonusPestChance + expectedRecentKills, 6);
+	const mantidBonusEntries = Object.entries(result.phaseStats.spawnBonusPestChanceBreakdown).filter(([source]) =>
+		source.endsWith('(Mantid Bonus)')
+	);
+	expect(mantidBonusEntries).toHaveLength(4);
+	expect(mantidBonusEntries.every(([, value]) => Math.abs(value - expectedRecentKills * 0.25) < 1e-6)).toBe(true);
 });
 
 test('Mantid resolution is independent of configured kills and does not clone the player', () => {
@@ -770,12 +832,15 @@ test.each([1, 4])('Mantid scalar resolution honors the recent-kill cap with %i a
 		armor,
 		mantidPestKills: configuredKills,
 	});
-	const originalGetPhaseStat = player.getPhaseStat.bind(player);
-	vi.spyOn(player, 'getPhaseStat').mockImplementation((phase, stat, crop) => {
+	const originalGetPhaseStatBreakdown = player.getPhaseStatBreakdown.bind(player);
+	vi.spyOn(player, 'getPhaseStatBreakdown').mockImplementation((phase, stat, crop) => {
 		if (phase === PestFarmingPhase.Spawn && stat === Stat.BonusPestChance) {
-			return baseBonusPestChance + configuredKills * pieceCount * 0.25;
+			return {
+				'Base Bonus Pest Chance': { value: baseBonusPestChance, stat },
+				'Configured (Mantid Bonus)': { value: configuredKills * pieceCount * 0.25, stat },
+			};
 		}
-		return originalGetPhaseStat(phase, stat, crop);
+		return originalGetPhaseStatBreakdown(phase, stat, crop);
 	});
 	const clone = vi.spyOn(player, 'clone');
 
@@ -788,7 +853,68 @@ test.each([1, 4])('Mantid scalar resolution honors the recent-kill cap with %i a
 	}).calculate();
 
 	expect(result.phaseStats.spawnBonusPestChance).toBe(baseBonusPestChance + 20 * pieceCount * 0.25);
+	expect(result.phaseStats.spawnMantidRecentPestKills).toBe(20);
 	expect(clone).not.toHaveBeenCalled();
+});
+
+test('Mantid kill timers survive a loadout swap but use the active set piece count', () => {
+	const createPlayer = (killSetId: 'kill-mantid' | 'kill-plain') =>
+		new PestFarmingPlayer({
+			armor: [
+				mantidArmor('HELIANTHUS_HELMET', 'spawn-mantid-helmet'),
+				mantidArmor('FERMENTO_CHESTPLATE', 'kill-mantid-chestplate'),
+				armorItem('FERMENTO_CHESTPLATE', 'kill-plain-chestplate'),
+			],
+			armorSets: [
+				{
+					id: 'spawn-mantid',
+					name: 'Spawn Mantid',
+					pieces: { [GearSlot.Helmet]: 'spawn-mantid-helmet' },
+				},
+				{
+					id: 'kill-mantid',
+					name: 'Kill Mantid',
+					pieces: { [GearSlot.Chestplate]: 'kill-mantid-chestplate' },
+				},
+				{
+					id: 'kill-plain',
+					name: 'Kill Plain',
+					pieces: { [GearSlot.Chestplate]: 'kill-plain-chestplate' },
+				},
+			],
+			loadoutPresets: [
+				{ id: 'spawn', name: 'Spawn', armorSetId: 'spawn-mantid' },
+				{ id: 'kill', name: 'Kill', armorSetId: killSetId },
+			],
+			phasePresetIds: {
+				[PestFarmingPhase.Farm]: 'kill',
+				[PestFarmingPhase.Spawn]: 'spawn',
+				[PestFarmingPhase.Kill]: 'kill',
+			},
+		});
+	const calculate = (player: PestFarmingPlayer) =>
+		new PestFarmingRateCalculator({
+			player,
+			options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+		}).calculate();
+	const withMantidWhileKilling = createPlayer('kill-mantid');
+	const withoutMantidWhileKilling = createPlayer('kill-plain');
+	const active = calculate(withMantidWhileKilling);
+	const inactive = calculate(withoutMantidWhileKilling);
+	const baseSpawnBonus = withMantidWhileKilling.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance);
+
+	expect(active.phaseStats.spawnMantidRecentPestKills).toBeGreaterThan(0);
+	expect(active.phaseStats.spawnBonusPestChance).toBeCloseTo(
+		baseSpawnBonus + active.phaseStats.spawnMantidRecentPestKills * 0.25,
+		6
+	);
+	expect(active.phaseStats.spawnBonusPestChanceBreakdown['Helianthus Helmet (Mantid Bonus)']).toBeCloseTo(
+		active.phaseStats.spawnMantidRecentPestKills * 0.25,
+		6
+	);
+	expect(inactive.phaseStats.spawnMantidRecentPestKills).toBe(0);
+	expect(inactive.phaseStats.spawnBonusPestChance).toBeCloseTo(baseSpawnBonus, 8);
+	expect(inactive.phaseStats.spawnBonusPestChanceBreakdown).not.toHaveProperty('Helianthus Helmet (Mantid Bonus)');
 });
 
 test('PestFarmingPlayer clones keep loadouts and item data deeply independent', () => {
@@ -1236,7 +1362,7 @@ function createSheetFixturePlayer(): PestFarmingPlayer {
 		spawn,
 		kill,
 		getPhaseStat: (phase: PestFarmingPhase, stat: Stat) => {
-			if (phase === PestFarmingPhase.Farm && stat === Stat.PestCooldownReduction) return 55;
+			if (phase === PestFarmingPhase.Spawn && stat === Stat.PestCooldownReduction) return 55;
 			if (phase === PestFarmingPhase.Spawn && stat === Stat.BonusPestChance) return 500.5;
 			return 0;
 		},

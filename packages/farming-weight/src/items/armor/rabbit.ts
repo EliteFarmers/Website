@@ -10,7 +10,7 @@ abstract class RabbitArmorPiece extends BaseItem {
 		return 'https://w.elitesb.gg/Rabbit_Armor';
 	}
 
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Common;
 	}
 }

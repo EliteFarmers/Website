@@ -18,11 +18,12 @@ import {
 	selectArmorLoadoutPieces,
 } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
-import type { FarmingPet } from '../fortune/farmingpet.js';
+import { type FarmingPet, getFarmingPetId } from '../fortune/farmingpet.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { Vacuum } from '../fortune/vacuum.js';
 import { GearSlot } from '../items/armor.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
+import { getFortuneUpgradeIdentity } from '../util/upgrade-identity.js';
 import { createFarmingPlayer, type FarmingPlayer } from './player.js';
 import type { PlayerOptions } from './playeroptions.js';
 
@@ -41,17 +42,13 @@ export const PEST_EQUIPMENT_SLOTS = [GearSlot.Necklace, GearSlot.Cloak, GearSlot
 export const PEST_KILL_PHASE_STATS: Stat[] = [Stat.PestKillFortune, Stat.FarmingFortune, Stat.Overbloom, Stat.Damage];
 
 export const PEST_FARMING_PHASE_STATS: Record<PestFarmingPhase, Stat[]> = {
-	[PestFarmingPhase.Farm]: [...CROP_FARMING_STATS, Stat.PestCooldownReduction],
+	[PestFarmingPhase.Farm]: CROP_FARMING_STATS,
 	[PestFarmingPhase.Spawn]: [Stat.BonusPestChance, Stat.PestCooldownReduction],
 	[PestFarmingPhase.Kill]: PEST_KILL_PHASE_STATS,
 };
 
 export const PEST_FARMING_PHASE_MECHANICS: Record<PestFarmingPhase, FarmingMechanic[]> = {
-	[PestFarmingPhase.Farm]: [
-		FarmingMechanic.CropGrowth,
-		FarmingMechanic.EnchantedCropChance,
-		FarmingMechanic.PestCooldownReductionSeconds,
-	],
+	[PestFarmingPhase.Farm]: [FarmingMechanic.CropGrowth, FarmingMechanic.EnchantedCropChance],
 	[PestFarmingPhase.Spawn]: [FarmingMechanic.AtmosphericFilterEffect, FarmingMechanic.PestCooldownReductionSeconds],
 	[PestFarmingPhase.Kill]: [FarmingMechanic.SprayonatorMaterialChance],
 };
@@ -150,21 +147,6 @@ function mergeBreakdown(left: StatBreakdown, right: StatBreakdown, prefix?: stri
 
 function sumStatBreakdown(breakdown: StatBreakdown): number {
 	return Object.values(breakdown).reduce((sum, entry) => sum + entry.value, 0);
-}
-
-function getUpgradeIdentity(upgrade: FortuneUpgrade): string {
-	return (
-		upgrade.conflictKey ??
-		[
-			upgrade.title,
-			upgrade.action,
-			upgrade.meta?.type ?? '',
-			upgrade.meta?.id ?? '',
-			upgrade.meta?.key ?? '',
-			upgrade.meta?.itemUuid ?? '',
-			upgrade.onto?.slot ?? '',
-		].join(':')
-	);
 }
 
 function getPhaseSourceTypes(phase: PestFarmingPhase, options?: StatQueryOptions): FortuneSourceType[] | undefined {
@@ -689,7 +671,7 @@ export class PestFarmingPlayer {
 	}
 
 	private getPetId(pet: FarmingPet): string | undefined {
-		return pet.pet.uuid || pet.pet.localId || undefined;
+		return getFarmingPetId(pet);
 	}
 
 	private findPetId(id: string | undefined): string | undefined {
@@ -700,6 +682,18 @@ export class PestFarmingPlayer {
 
 	getArmorSetLoadout(id: string | undefined): PestArmorSetLoadout | undefined {
 		return this.armorSetLoadouts.find((set) => set.id === id);
+	}
+
+	getArmorInventoryItems(): EliteItemDto[] {
+		return cloneItems(this.inventory.armor);
+	}
+
+	getOwnedPets(): FarmingPet[] {
+		return [...this.inventory.pets];
+	}
+
+	getPetInventoryData(): EliteItemDto[] {
+		return clonePets(this.inventory.pets);
 	}
 
 	getArmorSetModel(id: string | undefined): ArmorLoadout | undefined {
@@ -882,7 +876,7 @@ export class PestFarmingPlayer {
 
 		const deduped = new Map<string, FortuneUpgrade>();
 		for (const upgrade of upgrades) {
-			const key = getUpgradeIdentity(upgrade);
+			const key = getFortuneUpgradeIdentity(upgrade);
 			if (!deduped.has(key)) deduped.set(key, upgrade);
 		}
 
@@ -927,7 +921,7 @@ export class PestFarmingPlayer {
 		}
 
 		const petId = itemUuid
-			? this.inventory.pets.find((pet) => pet.pet.uuid === itemUuid)
+			? this.inventory.pets.find((pet) => getFarmingPetId(pet) === itemUuid)
 				? this.findPetId(itemUuid)
 				: undefined
 			: undefined;
@@ -978,10 +972,10 @@ export class PestFarmingPlayer {
 			upgrade.meta?.type &&
 			vacuumUpgradeTypes.has(upgrade.meta.type)
 		) {
-			const upgradeKey = getUpgradeIdentity(upgrade);
+			const upgradeKey = getFortuneUpgradeIdentity(upgrade);
 			const belongsToSelectedVacuum = this.selectedVacuum
 				.getUpgrades({ stats: VACUUM_STATS })
-				.some((candidate) => getUpgradeIdentity(candidate) === upgradeKey);
+				.some((candidate) => getFortuneUpgradeIdentity(candidate) === upgradeKey);
 			if (belongsToSelectedVacuum) {
 				this.selectedVacuum.applyUpgrade(upgrade);
 				return true;

@@ -39,6 +39,11 @@ export function createFarmingPet(pet: FarmingPetType) {
 	return new FarmingPet(pet);
 }
 
+export function getFarmingPetId(pet: FarmingPetType | FarmingPet): string | undefined {
+	const data = pet instanceof FarmingPet ? pet.pet : pet;
+	return data.uuid || data.localId || undefined;
+}
+
 function getPetItemId(item: FarmingPetItemInfo): string | undefined {
 	return Object.entries(FARMING_PET_ITEMS).find(([, value]) => value === item)?.[0];
 }
@@ -519,10 +524,10 @@ export class FarmingPet {
 				},
 				meta: {
 					type: 'pet_level',
-					itemUuid: this.pet.uuid ?? undefined,
+					itemUuid: getFarmingPetId(this),
 					value: nextLevel,
 				},
-				conflictKey: `pet-level:${this.pet.uuid ?? this.type}`,
+				conflictKey: `pet-level:${getFarmingPetId(this) ?? this.type}`,
 			};
 
 			if (improvesRequestedStat(upgrade, stats)) {
@@ -557,9 +562,9 @@ export class FarmingPet {
 				meta: {
 					type: 'pet_item',
 					id: itemId,
-					itemUuid: this.pet.uuid ?? undefined,
+					itemUuid: getFarmingPetId(this),
 				},
-				conflictKey: `pet-item:${this.pet.uuid ?? this.type}`,
+				conflictKey: `pet-item:${getFarmingPetId(this) ?? this.type}`,
 			};
 
 			if (improvesRequestedStat(upgrade, stats)) {

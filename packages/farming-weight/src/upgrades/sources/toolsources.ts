@@ -1,14 +1,19 @@
 import { CROP_INFO } from '../../constants/crops.js';
 import { FARMING_ENCHANTS } from '../../constants/enchants.js';
-import { Rarity, REFORGES, ReforgeTarget } from '../../constants/reforges.js';
+import { REFORGES, ReforgeTarget } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import type { FarmingTool } from '../../fortune/farmingtool.js';
-import { GemRarity } from '../../fortune/item.js';
 import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
+import { GemRarity } from '../../fortune/item.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
-import { getCurrentReforgeEffectSummaries, getReforgeEffectSummaries, getUpgradeableGems } from '../upgrades.js';
+import {
+	getCurrentReforgeEffectSummaries,
+	getReforgeEffectSummaries,
+	getUpgradeableGems,
+	getUpgradeableReforges,
+} from '../upgrades.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((c) => c.fortuneType));
@@ -69,6 +74,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		currentStat: (tool, stat) => tool.reforgeStats?.stats?.[stat] ?? 0,
 		effects: getCurrentReforgeEffectSummaries,
+		completionUpgrades: (tool) => getUpgradeableReforges(tool, Object.values(Stat)),
 		upgrades: (tool, stats) => {
 			const requestedStats = stats && stats.length > 0 ? stats : [Stat.FarmingFortune];
 			const primaryStat = requestedStats[0] ?? Stat.FarmingFortune;
@@ -164,13 +170,13 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		name: 'Gemstone Slots',
 		wiki: () => 'https://w.elitesb.gg/Gemstone_Slot',
 		exists: (upgradeable) => {
-			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
-			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable).info;
+			return last.gemSlots?.some((s) => s.slot_type === 'PERIDOT') === true;
 		},
 		max: (upgradeable) => {
-			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
-			const peridotSlots = last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
-			const maxRarity = last?.maxRarity ?? Rarity.Common;
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable).info;
+			const peridotSlots = last.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
+			const maxRarity = last.maxRarity;
 			return peridotSlots * getPeridotGemFortune(maxRarity, GemRarity.Perfect);
 		},
 		current: (upgradeable) => {
@@ -178,9 +184,9 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		maxStat: (upgradeable, stat) => {
 			if (stat !== Stat.FarmingFortune) return 0;
-			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
-			const peridotSlots = last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
-			const maxRarity = last?.maxRarity ?? Rarity.Common;
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable).info;
+			const peridotSlots = last.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
+			const maxRarity = last.maxRarity;
 			return peridotSlots * getPeridotGemFortune(maxRarity, GemRarity.Perfect);
 		},
 		currentStat: (upgradeable, stat) =>

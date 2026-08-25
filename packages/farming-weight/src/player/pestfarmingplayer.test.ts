@@ -219,6 +219,39 @@ test('default spawn phase uses the separate armor set when available', () => {
 	expect(player.getPhaseArmorSet(PestFarmingPhase.Spawn).helmet?.item.uuid).toBe('spawn-helmet');
 });
 
+test('upgrading one of two identical armor pieces preserves both physical items', () => {
+	const player = new PestFarmingPlayer({
+		armor: [armor('HELIANTHUS_BOOTS', 'farm-boots'), armor('HELIANTHUS_BOOTS', 'spawn-boots')],
+		armorSets: [
+			{ id: 'farm', name: 'Farm', pieces: { [GearSlot.Boots]: 'farm-boots' } },
+			{ id: 'spawn', name: 'Spawn', pieces: { [GearSlot.Boots]: 'spawn-boots' } },
+		],
+		loadoutPresets: [
+			{ id: 'farm', name: 'Farm', armorSetId: 'farm' },
+			{ id: 'spawn', name: 'Spawn', armorSetId: 'spawn' },
+		],
+		phasePresetIds: {
+			[PestFarmingPhase.Farm]: 'farm',
+			[PestFarmingPhase.Spawn]: 'spawn',
+			[PestFarmingPhase.Kill]: 'farm',
+		},
+	});
+	const spawnBoots = player.getArmorSetModel('spawn')!.slots[GearSlot.Boots]!;
+	const mossy = spawnBoots
+		.getUpgrades({ stats: [Stat.FarmingFortune] })
+		.find((upgrade) => upgrade.title === 'Reforge to Mossy');
+
+	expect(mossy).toBeDefined();
+	player.applyPhaseUpgrade(PestFarmingPhase.Spawn, mossy!);
+
+	expect(player.getArmorInventoryItems().map((item) => item.uuid)).toContain('farm-boots');
+	expect(player.getArmorInventoryItems().map((item) => item.uuid)).toContain('spawn-boots');
+	expect(player.getArmorSetLoadout('farm')?.pieces[GearSlot.Boots]).toBe('farm-boots');
+	expect(player.getArmorSetLoadout('spawn')?.pieces[GearSlot.Boots]).toBe('spawn-boots');
+	expect(player.getArmorSetModel('farm')?.slots[GearSlot.Boots]?.item.attributes?.modifier).toBeUndefined();
+	expect(player.getArmorSetModel('spawn')?.slots[GearSlot.Boots]?.item.attributes?.modifier).toBe('mossy');
+});
+
 test('default spawn phase keeps the generated spawn armor set as a rate-selection candidate', () => {
 	const player = new PestFarmingPlayer({
 		armor: [
@@ -290,19 +323,20 @@ test('phase armor and equipment progress are scoped to their loadout types', () 
 	expect(equipmentProgressNames).not.toContain('Armor Set Bonus');
 });
 
-test('farm phase includes pest cooldown reduction as a relevant phase stat', () => {
+test('pest cooldown reduction belongs to the spawn phase', () => {
 	const player = new PestFarmingPlayer({
 		equipment: [equipment('PESTHUNTERS_CLOAK', 'pesthunter-cloak')],
 		equipmentSets: [{ id: 'equipment', name: 'Equipment', pieces: { [GearSlot.Cloak]: 'pesthunter-cloak' } }],
 	});
 
-	const view = player.getPhaseStatView(PestFarmingPhase.Farm);
-	const farmCooldownUpgrades = player.getPhaseUpgrades(PestFarmingPhase.Farm);
+	const farmView = player.getPhaseStatView(PestFarmingPhase.Farm);
+	const spawnView = player.getPhaseStatView(PestFarmingPhase.Spawn);
+	const spawnCooldownUpgrades = player.getPhaseUpgrades(PestFarmingPhase.Spawn);
 
-	expect(PEST_FARMING_PHASE_STATS[PestFarmingPhase.Farm]).toContain(Stat.PestCooldownReduction);
-	expect(view.totals[Stat.PestCooldownReduction]).toBe(10);
-	expect(view.upgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
-	expect(farmCooldownUpgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
+	expect(PEST_FARMING_PHASE_STATS[PestFarmingPhase.Farm]).not.toContain(Stat.PestCooldownReduction);
+	expect(farmView.totals[Stat.PestCooldownReduction]).toBeUndefined();
+	expect(spawnView.totals[Stat.PestCooldownReduction]).toBe(10);
+	expect(spawnCooldownUpgrades.some((upgrade) => !!upgrade.stats?.[Stat.PestCooldownReduction])).toBe(true);
 });
 
 test('new pest shards keep visible stats and internal mechanics separate', () => {
@@ -321,8 +355,9 @@ test('new pest shards keep visible stats and internal mechanics separate', () =>
 	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.CropGrowth)).toBe(10);
 	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.EnchantedCropChance)).toBe(0.01);
 	expect(player.getPhaseMechanic(PestFarmingPhase.Farm, FarmingMechanic.PestCooldownReductionSeconds)).toBe(5);
+	expect(player.getPhaseMechanic(PestFarmingPhase.Spawn, FarmingMechanic.PestCooldownReductionSeconds)).toBe(5);
 	expect(
-		player.getPhaseMechanicBreakdown(PestFarmingPhase.Farm, FarmingMechanic.PestCooldownReductionSeconds)
+		player.getPhaseMechanicBreakdown(PestFarmingPhase.Spawn, FarmingMechanic.PestCooldownReductionSeconds)
 	).toEqual({ 'Moth Shard': 5 });
 	expect(player.getPhaseStat(PestFarmingPhase.Spawn, Stat.BonusPestChance)).toBe(10);
 	expect(player.getPhaseMechanic(PestFarmingPhase.Spawn, FarmingMechanic.AtmosphericFilterEffect)).toBe(20);

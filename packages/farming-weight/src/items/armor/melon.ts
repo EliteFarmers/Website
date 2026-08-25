@@ -19,7 +19,7 @@ export class MelonHelmet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Tater_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 
@@ -63,7 +63,7 @@ export class MelonChestplate extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Tater_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 
@@ -108,7 +108,7 @@ export class MelonLeggings extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Tater_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 
@@ -153,7 +153,7 @@ export class MelonBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Tater_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 

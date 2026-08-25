@@ -331,9 +331,9 @@ export class ArmorLoadout {
 
 	updateArmorSlot(piece: FarmingArmor) {
 		// Update the pieces array
-		const idx = this.pieces.findIndex(
-			(p) => p.item.uuid === piece.item.uuid || p.item.skyblockId === piece.item.skyblockId
-		);
+		const idx = piece.item.uuid
+			? this.pieces.findIndex((p) => p.item.uuid === piece.item.uuid)
+			: this.pieces.findIndex((p) => !p.item.uuid && p.item.skyblockId === piece.item.skyblockId);
 		if (idx >= 0) {
 			this.pieces[idx] = piece;
 		} else {
@@ -621,9 +621,9 @@ export class EquipmentLoadout {
 
 	updateEquipmentSlot(piece: FarmingEquipment) {
 		// Update the equipmentPieces array
-		const idx = this.equipmentPieces.findIndex(
-			(p) => p.item.uuid === piece.item.uuid || p.item.skyblockId === piece.item.skyblockId
-		);
+		const idx = piece.item.uuid
+			? this.equipmentPieces.findIndex((p) => p.item.uuid === piece.item.uuid)
+			: this.equipmentPieces.findIndex((p) => !p.item.uuid && p.item.skyblockId === piece.item.skyblockId);
 		if (idx >= 0) {
 			this.equipmentPieces[idx] = piece;
 		} else {
@@ -1339,7 +1339,7 @@ export class FarmingArmor extends UpgradeableBase {
 			skyblockId: info.skyblockId,
 			uuid: crypto.randomUUID(),
 			lore: ['This is a fake item used for upgrade calculations!'],
-			attributes: {},
+			attributes: { rarity: info.baseRarity },
 			enchantments: {},
 		};
 

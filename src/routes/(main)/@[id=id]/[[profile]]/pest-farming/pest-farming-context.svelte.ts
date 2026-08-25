@@ -33,10 +33,14 @@ import {
 	FarmingPet,
 	FarmingTool,
 	GearSlot,
+	getCompletionUpgradeKey,
 	getCropFromName,
 	getCropMilestoneLevels,
 	getCropUpgrades,
+	getFarmingPetId,
+	getFortuneUpgradeIdentity,
 	getGardenLevel,
+	getProfitCompletionUpgrades,
 	PEST_ARMOR_SLOTS,
 	PEST_EQUIPMENT_SLOTS,
 	PEST_FARMING_PHASE_MECHANICS,
@@ -45,6 +49,7 @@ import {
 	PestFarmingPhase,
 	PestFarmingRateCalculator,
 	optimizePestLoadouts,
+	resolveProfitAwareProgress,
 	SprayonatorTier,
 	Stat,
 	STAT_NAMES,
@@ -293,15 +298,25 @@ export class PestFarmingPageContext {
 		return this.pestPlayer.getPhasePlayer(this.activePhase);
 	});
 	activePhasePet = $derived(
-		this.activePhasePlayer.pets.find(
-			(pet) => (pet.pet.uuid || pet.pet.localId || undefined) === this.activePhaseLoadout.petId
-		)
+		this.activePhasePlayer.pets.find((pet) => getFarmingPetId(pet) === this.activePhaseLoadout.petId)
 	);
 
 	pestStats = $derived.by(() => {
 		this.trackPestVersion();
 		const cropStat = CROP_INFO[this.selectedCropKey]?.fortuneType ?? Stat.FarmingFortune;
 		return this.getPhaseStats(this.activePhase).map((stat) => {
+			if (this.activePhase === PestFarmingPhase.Spawn && stat === Stat.BonusPestChance) {
+				const breakdown = Object.fromEntries(
+					Object.entries(this.pestRateMechanicsResult.phaseStats.spawnBonusPestChanceBreakdown).map(
+						([source, value]) => [source, { value, stat }]
+					)
+				);
+				return {
+					stat,
+					total: this.pestRateMechanicsResult.phaseStats.spawnBonusPestChance,
+					breakdown,
+				};
+			}
 			const combinedBreakdown = this.pestPlayer.getPhaseStatBreakdown(
 				this.activePhase,
 				stat,
@@ -362,12 +377,12 @@ export class PestFarmingPageContext {
 		});
 	});
 
-	cropProgress = $derived.by(() => {
+	rawCropProgress = $derived.by(() => {
 		this.trackPestVersion();
 		return this.pestPlayer.getCropProgress(this.selectedCropKey, this.cropContextStats);
 	});
 
-	activeEquipmentSetProgress = $derived.by(() => {
+	rawActiveEquipmentSetProgress = $derived.by(() => {
 		this.trackPestVersion();
 		return this.activePhaseLoadout.equipmentSetId
 			? this.pestPlayer.getEquipmentSetProgress(
@@ -377,7 +392,7 @@ export class PestFarmingPageContext {
 			: [];
 	});
 
-	activeArmorSetProgress = $derived.by(() => {
+	rawActiveArmorSetProgress = $derived.by(() => {
 		this.trackPestVersion();
 		return this.activePhaseLoadout.armorSetId
 			? this.pestPlayer.getArmorSetProgress(
@@ -387,7 +402,7 @@ export class PestFarmingPageContext {
 			: [];
 	});
 
-	activePhaseGeneralProgress = $derived.by(() => {
+	rawActivePhaseGeneralProgress = $derived.by(() => {
 		this.trackPestVersion();
 		const stats = this.getPhaseStats(this.activePhase);
 		const mechanics = PEST_FARMING_PHASE_MECHANICS[this.activePhase];
@@ -401,9 +416,70 @@ export class PestFarmingPageContext {
 		return progress.filter((p) => hasRelevantStat(p) || p.progress?.some(hasRelevantStat));
 	});
 
-	vacuumProgress = $derived.by(() => {
+	rawVacuumProgress = $derived.by(() => {
 		this.trackPestVersion();
 		return this.pestPlayer.getVacuumProgress(VACUUM_STATS);
+	});
+
+	completionProgressUpgrades = $derived(
+		getProfitCompletionUpgrades([
+			...this.rawCropProgress,
+			...this.rawActiveEquipmentSetProgress,
+			...this.rawActiveArmorSetProgress,
+			...this.rawActivePhaseGeneralProgress,
+			...(this.activePhase === PestFarmingPhase.Kill ? this.rawVacuumProgress : []),
+		])
+	);
+
+	completionRateImpacts = $derived.by(() => {
+		const result = new Map<string, PestFarmingUpgradeRateImpact>();
+		const before = this.pestRateMechanicsResult;
+		for (const upgrade of this.completionProgressUpgrades) {
+			result.set(
+				getCompletionUpgradeKey(upgrade),
+				this.pestRateCalculator.calculateUpgradeImpact({
+					phase: this.activePhase,
+					upgrade,
+					before,
+				})
+			);
+		}
+		return result;
+	});
+
+	completionRateItems = $derived.by(() => {
+		const result = new Set<string>();
+		for (const impact of this.completionRateImpacts.values()) {
+			for (const itemId of this.pestRateCalculator.getRequiredPriceItems(impact.after)) result.add(itemId);
+		}
+		return [...result];
+	});
+
+	cropProgress = $derived.by(() => {
+		void this.itemsVersion;
+		return resolveProfitAwareProgress(this.rawCropProgress, (upgrade) => this.#getCompletionComparison(upgrade));
+	});
+	activeEquipmentSetProgress = $derived.by(() => {
+		void this.itemsVersion;
+		return resolveProfitAwareProgress(this.rawActiveEquipmentSetProgress, (upgrade) =>
+			this.#getCompletionComparison(upgrade)
+		);
+	});
+	activeArmorSetProgress = $derived.by(() => {
+		void this.itemsVersion;
+		return resolveProfitAwareProgress(this.rawActiveArmorSetProgress, (upgrade) =>
+			this.#getCompletionComparison(upgrade)
+		);
+	});
+	activePhaseGeneralProgress = $derived.by(() => {
+		void this.itemsVersion;
+		return resolveProfitAwareProgress(this.rawActivePhaseGeneralProgress, (upgrade) =>
+			this.#getCompletionComparison(upgrade)
+		);
+	});
+	vacuumProgress = $derived.by(() => {
+		void this.itemsVersion;
+		return resolveProfitAwareProgress(this.rawVacuumProgress, (upgrade) => this.#getCompletionComparison(upgrade));
 	});
 
 	activePhaseUpgrades = $derived.by(() => {
@@ -418,11 +494,11 @@ export class PestFarmingPageContext {
 	visibleProgressUpgrades = $derived.by(() => {
 		this.trackPestVersion();
 		const progress = [
-			...this.cropProgress,
-			...this.activeEquipmentSetProgress,
-			...this.activeArmorSetProgress,
-			...this.activePhaseGeneralProgress,
-			...(this.activePhase === PestFarmingPhase.Kill ? this.vacuumProgress : []),
+			...this.rawCropProgress,
+			...this.rawActiveEquipmentSetProgress,
+			...this.rawActiveArmorSetProgress,
+			...this.rawActivePhaseGeneralProgress,
+			...(this.activePhase === PestFarmingPhase.Kill ? this.rawVacuumProgress : []),
 		];
 		return progress.flatMap((entry) => this.getProgressUpgrades(entry));
 	});
@@ -439,6 +515,7 @@ export class PestFarmingPageContext {
 		...new Set([
 			...getItemsFromUpgrades(this.neededItemUpgrades),
 			...this.rateOutputItems,
+			...this.completionRateItems,
 			...this.rateImpacts.requiredItemIds,
 		]),
 	]);
@@ -602,7 +679,7 @@ export class PestFarmingPageContext {
 	}
 
 	getPetRateImpact(pet: FarmingPet, phase: PestFarmingPhase): number | undefined {
-		const uuid = pet.pet.uuid || pet.pet.localId || undefined;
+		const uuid = getFarmingPetId(pet);
 		if (!uuid) return 0;
 		if (this.pestPlayer.phaseLoadouts[phase]?.petId === uuid) return 0;
 
@@ -930,7 +1007,17 @@ export class PestFarmingPageContext {
 	}
 
 	getPestRateImpact(upgrade: FortuneUpgrade): PestFarmingUpgradeRateImpact | undefined {
-		return this.rateImpacts.upgradeImpacts.get(getPestUpgradeIdentity(upgrade));
+		return this.rateImpacts.upgradeImpacts.get(getFortuneUpgradeIdentity(upgrade));
+	}
+
+	#getCompletionComparison(upgrade: FortuneUpgrade) {
+		const impact = this.completionRateImpacts.get(getCompletionUpgradeKey(upgrade));
+		if (!impact) return undefined;
+		const valued = this.pestRateCalculator.revalueUpgradeImpact(impact, this.pestRatePriceBook);
+		return {
+			complete: valued.valuationDelta.complete,
+			coinsPerHour: valued.valuationDelta.coinsPerHour,
+		};
 	}
 
 	getPestRateImpactValue(upgrade: FortuneUpgrade): number {

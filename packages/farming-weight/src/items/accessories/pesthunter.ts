@@ -18,7 +18,7 @@ export class PesthunterRelic extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pesthunter_Relic';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Legendary;
 	}
 
@@ -37,7 +37,7 @@ export class PesthunterArtifact extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pesthunter_Artifact';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Epic;
 	}
 
@@ -60,7 +60,7 @@ export class PesthunterRing extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pesthunter_Ring';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Rare;
 	}
 
@@ -83,7 +83,7 @@ export class PesthunterBadge extends BaseAccessory {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pesthunter_Badge';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 

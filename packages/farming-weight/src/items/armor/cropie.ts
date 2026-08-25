@@ -19,7 +19,7 @@ export class CropieHelmet extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cropie_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 
@@ -70,7 +70,7 @@ export class CropieChestplate extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cropie_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 
@@ -122,7 +122,7 @@ export class CropieLeggings extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cropie_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 
@@ -174,7 +174,7 @@ export class CropieBoots extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Cropie_Armor';
 	}
-	get maxRarity() {
+	get baseRarity() {
 		return Rarity.Uncommon;
 	}
 

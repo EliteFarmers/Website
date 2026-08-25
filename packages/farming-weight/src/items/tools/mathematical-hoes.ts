@@ -16,8 +16,8 @@ export class GaussCarrotHoe1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.Carrot];
@@ -45,8 +45,8 @@ export class GaussCarrotHoe2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Carrot];
@@ -74,8 +74,8 @@ export class GaussCarrotHoe3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Carrot_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Carrot];
@@ -94,8 +94,8 @@ export class NewtonNetherWartsHoe1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.NetherWart];
@@ -123,8 +123,8 @@ export class NewtonNetherWartsHoe2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.NetherWart];
@@ -152,8 +152,8 @@ export class NewtonNetherWartsHoe3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Newton_Nether_Wart_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.NetherWart];
@@ -172,8 +172,8 @@ export class PythagoreanPotatoHoe1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.Potato];
@@ -201,8 +201,8 @@ export class PythagoreanPotatoHoe2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Potato];
@@ -230,8 +230,8 @@ export class PythagoreanPotatoHoe3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Pythagorean_Potato_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Potato];
@@ -250,8 +250,8 @@ export class TuringSugarCaneHoe1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.SugarCane];
@@ -279,8 +279,8 @@ export class TuringSugarCaneHoe2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.SugarCane];
@@ -308,8 +308,8 @@ export class TuringSugarCaneHoe3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Turing_Sugar_Cane_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.SugarCane];
@@ -328,8 +328,8 @@ export class EuclidsWheatHoe1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.Wheat];
@@ -357,8 +357,8 @@ export class EuclidsWheatHoe2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Wheat];
@@ -386,8 +386,8 @@ export class EuclidsWheatHoe3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Wheat_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Wheat];
@@ -406,8 +406,8 @@ export class EclipseHoe1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.Sunflower, Crop.Moonflower];
@@ -436,8 +436,8 @@ export class EclipseHoe2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.Sunflower, Crop.Moonflower];
@@ -466,8 +466,8 @@ export class EclipseHoe3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Eclipse_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.Sunflower, Crop.Moonflower];
@@ -486,8 +486,8 @@ export class WildRoseHoe1 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Rare;
+	get baseRarity() {
+		return Rarity.Uncommon;
 	}
 
 	override crops = [Crop.WildRose];
@@ -515,8 +515,8 @@ export class WildRoseHoe2 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Epic;
+	get baseRarity() {
+		return Rarity.Rare;
 	}
 
 	override crops = [Crop.WildRose];
@@ -544,8 +544,8 @@ export class WildRoseHoe3 extends BaseItem {
 	get wiki() {
 		return 'https://w.elitesb.gg/Wild_Rose_Hoe';
 	}
-	get maxRarity() {
-		return Rarity.Legendary;
+	get baseRarity() {
+		return Rarity.Epic;
 	}
 
 	override crops = [Crop.WildRose];

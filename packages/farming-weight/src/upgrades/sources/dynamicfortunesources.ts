@@ -41,6 +41,7 @@ export interface DynamicFortuneSource<T> {
 		maxInfo?: UpgradeableInfo;
 	};
 	upgrades?: (source: T, stats?: Stat[], mechanics?: FarmingMechanic[]) => FortuneUpgrade[];
+	completionUpgrades?: (source: T, stats?: Stat[], mechanics?: FarmingMechanic[]) => FortuneUpgrade[];
 }
 
 export interface DynamicUpgradeSource<T, Output = unknown> {
