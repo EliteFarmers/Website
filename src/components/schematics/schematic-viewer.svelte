@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { trackAnalytics } from '$lib/analytics';
 	import type { SchematicViewerStatusDto } from '$lib/api/schemas';
 	import { PollGuideSchematicViewer } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
@@ -121,6 +122,7 @@
 	});
 
 	async function openViewer() {
+		trackAnalytics('guides.schematic_viewer_opened');
 		expanded = true;
 		resetViewerState();
 		const session = viewerSession;

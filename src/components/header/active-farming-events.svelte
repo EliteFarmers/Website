@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Countdown from '$comp/countdown.svelte';
+	import { trackAnalytics } from '$lib/analytics';
 	import type { HarvestFeastRotationDto, HarvestFeastRotationsDto, YearlyContestsDto } from '$lib/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getNextHarvestFeastWindow, selectHarvestFeastRotations } from '$lib/harvest-feast-rotations';
@@ -113,6 +114,10 @@
 			.join('. ')
 	);
 
+	function handleOpenChange(open: boolean) {
+		if (open) trackAnalytics('navigation.farming_events_opened');
+	}
+
 	onMount(() => {
 		const interval = setInterval(() => {
 			seconds = Math.floor(Date.now() / 1000);
@@ -124,7 +129,7 @@
 
 {#if jacobContest || harvestFeastEvent}
 	<div class="hidden lg:block">
-		<Popover.Root>
+		<Popover.Root onOpenChange={handleOpenChange}>
 			<Popover.Trigger>
 				{#snippet child({ props })}
 					<Button
