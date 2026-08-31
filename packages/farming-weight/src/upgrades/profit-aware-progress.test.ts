@@ -61,12 +61,13 @@ describe('profit-aware progress', () => {
 		}));
 
 		expect(resolved[0]?.stats?.[Stat.FarmingFortune]?.max).toBe(100);
-		expect(resolved[0]?.stats?.[Stat.Overbloom]).toEqual({ current: 0, max: 0, ratio: 1 });
+		expect(resolved[0]?.stats?.[Stat.Overbloom]).toBeUndefined();
 		expect(resolved[0]?.progress?.[0]?.stats?.[Stat.FarmingFortune]).toEqual({
 			current: 20,
 			max: 20,
 			ratio: 1,
 		});
+		expect(resolved[0]?.progress?.[0]?.stats?.[Stat.Overbloom]).toBeUndefined();
 	});
 
 	it('keeps raw progress when the contextual alternative improves profit', () => {
@@ -86,6 +87,16 @@ describe('profit-aware progress', () => {
 		}));
 
 		expect(resolved[0]?.stats?.[Stat.Overbloom]?.max).toBe(7);
+	});
+
+	it('treats an explicitly negative incomplete comparison as effectively complete', () => {
+		const overpriced = reforge('Reforge to Overpriced', { [Stat.FarmingFortune]: -1, [Stat.Overbloom]: 7 }, true);
+		const resolved = resolveProfitAwareProgress(toolProgress([overpriced]), () => ({
+			complete: false,
+			coinsPerHour: -250,
+		}));
+
+		expect(resolved[0]?.stats?.[Stat.Overbloom]).toBeUndefined();
 	});
 
 	it('evaluates all alternatives in a slot once one has a special rate stat', () => {

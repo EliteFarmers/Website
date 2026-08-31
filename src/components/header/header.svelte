@@ -3,6 +3,7 @@
 	import ModeToggle from '$comp/header/mode-toggle.svelte';
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import NavBreadcrumb from '$comp/sidebar/nav-breadcrumb.svelte';
+	import type { HarvestFeastRotationsDto, YearlyContestsDto } from '$lib/api';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Separator } from '$ui/separator';
@@ -12,6 +13,14 @@
 	import { quadInOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import SmallAnnouncements from './small-announcements.svelte';
+	import ActiveFarmingEvents from './active-farming-events.svelte';
+
+	interface Props {
+		contests?: YearlyContestsDto;
+		harvestFeast?: HarvestFeastRotationsDto;
+	}
+
+	let { contests, harvestFeast }: Props = $props();
 
 	const sidebar = Sidebar.useSidebar();
 	let searchOpen = $state(false);
@@ -32,6 +41,7 @@
 		<NavBreadcrumb />
 	</div>
 	<div class="flex items-center justify-between gap-2 md:justify-end">
+		<ActiveFarmingEvents {contests} {harvestFeast} />
 		<Button
 			variant="ghost"
 			class="px-3 py-1"

@@ -8,7 +8,7 @@ import {
 	normalizeChipLevels,
 	normalizeChipRarities,
 } from '../constants/chips.js';
-import { CROP_INFO, type Crop } from '../constants/crops.js';
+import { type Crop, CROP_INFO } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
 import type { FarmingMechanic } from '../constants/mechanics.js';
 import { compareRarity, type Rarity } from '../constants/reforge-types.js';
@@ -35,7 +35,7 @@ import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FarmingPet, getFarmingPetId } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
-import { FarmingPets } from '../items/pets.js';
+import { FarmingPets, type FarmingPetType } from '../items/pets.js';
 import { FARMING_ATTRIBUTE_SHARDS } from '../items/sources/attributes/index.js';
 import { GARDEN_CHIP_CLASSES } from '../items/sources/chips.js';
 import { FARMING_TOOLS } from '../items/tools.js';
@@ -58,10 +58,6 @@ export function createFarmingPlayer(options: PlayerOptions) {
 	return new FarmingPlayer(options);
 }
 
-/**
- * Copies the mutable profile state carried by player options while leaving item
- * collections available for the caller to replace with model-aware clones.
- */
 export function clonePlayerOptions(options: PlayerOptions): PlayerOptions {
 	return {
 		...options,
@@ -321,6 +317,18 @@ export class FarmingPlayer {
 		this.selectedPet = pet;
 		this.options.selectedPet = pet;
 		this.permFortune = this.getGeneralFortune();
+	}
+
+	addPet(petData: FarmingPetType, selected = false): FarmingPet {
+		const pet = new FarmingPet({ ...petData }, this.options);
+		const petId = getFarmingPetId(pet);
+		const existing = petId ? this.pets.findIndex((candidate) => getFarmingPetId(candidate) === petId) : -1;
+		if (existing >= 0) this.pets[existing] = pet;
+		else this.pets.push(pet);
+		this.options.pets = this.pets;
+		if (selected) this.selectPet(pet);
+		else this.permFortune = this.getGeneralFortune();
+		return pet;
 	}
 
 	setStrength(strength: number) {
@@ -768,6 +776,20 @@ export class FarmingPlayer {
 				this.applyUpgrade(groupedUpgrade);
 			}
 			this.permFortune = this.getGeneralFortune();
+			return;
+		}
+
+		if (type === 'buy_pet' && id && itemUuid && key && value) {
+			const seed = new FarmingPet({ uuid: itemUuid, type: id, tier: key }, this.options);
+			this.addPet(
+				{
+					uuid: itemUuid,
+					type: id,
+					tier: key,
+					exp: seed.getXpForLevel(Number(value)),
+				},
+				upgrade.meta.selected === true
+			);
 			return;
 		}
 
@@ -1307,8 +1329,25 @@ export class FarmingPlayer {
 		};
 
 		if (upgrade.meta?.type === 'upgrade_group') {
+			const groupedUpgrades = upgrade.groupedUpgrades ?? [];
+			if (groupedUpgrades.length === 1) {
+				const memberTree = this.buildUpgradeTree(
+					groupedUpgrades[0]!,
+					depth,
+					maxDepth,
+					crop,
+					new Set(visited),
+					usedConflictKeys,
+					stats,
+					sourceTypes,
+					includeAllTierUpgradeChildren
+				);
+				node.children.push(...memberTree.children);
+				return node;
+			}
+
 			const sequentialPlayer = this.clone();
-			for (const groupedUpgrade of upgrade.groupedUpgrades ?? []) {
+			for (const groupedUpgrade of groupedUpgrades) {
 				const childStatsBefore = sequentialPlayer.getAllStats(stats, crop);
 				const childPlayer = sequentialPlayer.clone();
 				childPlayer.applyUpgrade(groupedUpgrade);
@@ -1473,7 +1512,7 @@ export class FarmingPlayer {
 				player.armor.find((a) => a.item.uuid === itemUuid) ??
 				player.equipment.find((e) => e.item.uuid === itemUuid) ??
 				player.accessories.find((a) => a.item.uuid === itemUuid) ??
-				player.pets.find((p) => p.pet.uuid === itemUuid);
+				player.pets.find((p) => getFarmingPetId(p) === itemUuid);
 
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
 				const itemUpgrades =
@@ -1483,6 +1522,8 @@ export class FarmingPlayer {
 								stats: queryStats,
 								sourceTypes,
 							}) as FortuneUpgrade[]);
+				if (meta.type === 'buy_pet') return itemUpgrades;
+
 				// Filter to only include upgrades of the same type (enchant chains, tier upgrades, etc.)
 				// For gem upgrades, also match on slot to only show follow-ups for that specific slot
 				for (const u of itemUpgrades) {

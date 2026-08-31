@@ -78,7 +78,7 @@ async function ResolveWithSecurityHeaders(
 	// Security headers
 	response.headers.set(
 		'Permissions-Policy',
-		'accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), geolocation=()'
+		'accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), geolocation=()'
 	);
 	response.headers.set('X-Content-Type-Options', 'nosniff');
 

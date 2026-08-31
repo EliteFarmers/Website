@@ -4,10 +4,11 @@ import type {
 	PestFarmingRateCalculator,
 	PestFarmingRateResult,
 	PestFarmingUpgradeRateImpact,
+	PestRateComparisonTask,
 	PestRatePriceBook,
 } from 'farming-weight';
-import { PestFarmingPhase } from 'farming-weight';
-import { PestRateImpactController, type PestRateComparisonTask } from './pest-rate-impact-controller.svelte';
+import { getFortuneUpgradeIdentity, PestFarmingPhase } from 'farming-weight';
+import { PestRateImpactController } from './pest-rate-impact-controller.svelte';
 
 vi.mock('$app/environment', () => ({ browser: true }));
 
@@ -44,6 +45,38 @@ test('deduplicates upgrades and comparisons by stable identity', async () => {
 	controller.revalue(calculator, priceBook('priced'));
 	expect(controller.upgradeImpacts.size).toBe(1);
 	expect(controller.gearImpacts.get('same-gear')).toBe(5);
+});
+
+test('stores impacts under the canonical upgrade identity used by the UI', async () => {
+	const before = result('mechanics-a', 10);
+	const canonicalUpgrade = {
+		title: 'Canonical identity',
+		action: 'apply',
+		meta: {
+			type: 'item',
+			id: 'ITEM_ID',
+			key: 'item_key',
+			itemUuid: 'item-uuid',
+		},
+		onto: { slot: 'helmet' },
+	} as unknown as FortuneUpgrade;
+	const canonicalKey = getFortuneUpgradeIdentity(canonicalUpgrade);
+	const calculator = calculatorStub({
+		calculateUpgradeImpact: vi.fn(() => impact(canonicalKey, before, result('upgrade', 12))),
+	});
+	const controller = new PestRateImpactController();
+
+	controller.restart({
+		calculator,
+		before,
+		phase: PestFarmingPhase.Farm,
+		upgrades: [canonicalUpgrade],
+		comparisons: [],
+	});
+	await flushFrames();
+	controller.revalue(calculator, priceBook('priced'));
+
+	expect(controller.upgradeImpacts.get(canonicalKey)?.upgradeKey).toBe(canonicalKey);
 });
 
 test('discards stale work after a newer generation starts', async () => {
@@ -102,6 +135,73 @@ test('price-only revaluation does not repeat mechanical evaluations', async () =
 	expect(calculateComparison).toHaveBeenCalledTimes(1);
 	expect(revalueUpgradeImpact).toHaveBeenCalledTimes(2);
 	expect(revalueResult).toHaveBeenCalledTimes(4);
+});
+
+test('an identical restart keeps completed impacts instead of rebuilding them', async () => {
+	const before = result('mechanics', 10);
+	const calculateUpgradeImpact = vi.fn(() => impact('upgrade', before, result('upgraded', 12)));
+	const calculator = calculatorStub({ calculateUpgradeImpact });
+	const controller = new PestRateImpactController();
+	const input = {
+		calculator,
+		before,
+		phase: PestFarmingPhase.Farm,
+		upgrades: [upgrade('upgrade')],
+		comparisons: [],
+	};
+
+	controller.restart(input);
+	await flushFrames();
+	controller.revalue(calculator, priceBook('priced'));
+	const completedImpacts = controller.upgradeImpacts;
+
+	controller.restart({ ...input, upgrades: [upgrade('upgrade'), upgrade('upgrade')] });
+
+	expect(controller.ready).toBe(true);
+	expect(controller.upgradeImpacts).toBe(completedImpacts);
+	expect(calculateUpgradeImpact).toHaveBeenCalledTimes(1);
+	expect(frames).toHaveLength(0);
+});
+
+test('keeps the last completed impacts visible while different mechanics rebuild', async () => {
+	const first = result('first', 10);
+	const second = result('second', 20);
+	const calculator = calculatorStub({
+		calculateUpgradeImpact: vi
+			.fn()
+			.mockReturnValueOnce(impact('upgrade', first, result('first-upgraded', 12)))
+			.mockReturnValueOnce(impact('upgrade', second, result('second-upgraded', 24))),
+	});
+	const controller = new PestRateImpactController();
+
+	controller.restart({
+		calculator,
+		before: first,
+		phase: PestFarmingPhase.Farm,
+		upgrades: [upgrade('upgrade')],
+		comparisons: [],
+	});
+	await flushFrames();
+	controller.revalue(calculator, priceBook('priced'));
+	const completedImpacts = controller.upgradeImpacts;
+
+	controller.restart({
+		calculator,
+		before: second,
+		phase: PestFarmingPhase.Farm,
+		upgrades: [upgrade('upgrade')],
+		comparisons: [],
+	});
+
+	expect(controller.ready).toBe(false);
+	expect(controller.upgradeImpacts).toBe(completedImpacts);
+	expect(controller.upgradeImpacts.has('upgrade')).toBe(true);
+
+	await flushFrames();
+	controller.revalue(calculator, priceBook('priced'));
+	expect(controller.ready).toBe(true);
+	expect(controller.upgradeImpacts).not.toBe(completedImpacts);
+	expect(calculator.calculateUpgradeImpact).toHaveBeenCalledTimes(2);
 });
 
 function result(mechanicsKey: string, coinsPerHour: number): PestFarmingRateResult {

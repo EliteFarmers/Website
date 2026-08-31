@@ -15,6 +15,8 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies, url }) =
 		cache: {
 			events: cache.events,
 			announcements: cache.announcements ?? [],
+			contests: cache.contests,
+			harvestfeast: cache.harvestfeast,
 			footer: cache.businessInfo.footer,
 			texturepacks: cache.texturepacks,
 		},

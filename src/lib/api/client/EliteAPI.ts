@@ -173,6 +173,7 @@ import type {
 	ResolveRecipientRequest,
 	ResourcePackReloadResult,
 	SaveSuggestionRequest,
+	SchematicViewerStatusDto,
 	SearchAccountsParams,
 	SearchHypixelGuildsParams,
 	SearchHypixelGuildsResponse,
@@ -4663,6 +4664,42 @@ export const getGreenhouseSimulationEvents = async (jobId: string, options?: Req
 	});
 };
 
+export type getGuideSchematicViewerResponse200 = {
+	data: SchematicViewerStatusDto;
+	status: 200;
+};
+
+export type getGuideSchematicViewerResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getGuideSchematicViewerResponseSuccess = getGuideSchematicViewerResponse200 & {
+	headers: Headers;
+};
+export type getGuideSchematicViewerResponseError = getGuideSchematicViewerResponse400 & {
+	headers: Headers;
+};
+
+export type getGuideSchematicViewerResponse =
+	| getGuideSchematicViewerResponseSuccess
+	| getGuideSchematicViewerResponseError;
+
+export const getGetGuideSchematicViewerUrl = (assetId: string) => {
+	return `${ELITE_API_URL}/guide-assets/${assetId}/viewer`;
+};
+
+/**
+ * Returns generation status and the browser-ready model URL for a litematic asset.
+ * @summary Get guide schematic viewer status
+ */
+export const getGuideSchematicViewer = async (assetId: string, options?: RequestInit) => {
+	return customFetch<getGuideSchematicViewerResponse>(getGetGuideSchematicViewerUrl(assetId), {
+		...options,
+		method: 'GET',
+	});
+};
+
 export type createGuideResponse201 = {
 	data: GuideDto;
 	status: 201;
@@ -4809,6 +4846,49 @@ export const deleteGuideAsset = async (guideId: string | number, assetId: string
 	return customFetch<deleteGuideAssetResponse>(getDeleteGuideAssetUrl(guideId, assetId), {
 		...options,
 		method: 'DELETE',
+	});
+};
+
+export type retryGuideSchematicViewerResponse200 = {
+	data: SchematicViewerStatusDto;
+	status: 200;
+};
+
+export type retryGuideSchematicViewerResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type retryGuideSchematicViewerResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type retryGuideSchematicViewerResponseSuccess = retryGuideSchematicViewerResponse200 & {
+	headers: Headers;
+};
+export type retryGuideSchematicViewerResponseError = (
+	| retryGuideSchematicViewerResponse400
+	| retryGuideSchematicViewerResponse401
+) & {
+	headers: Headers;
+};
+
+export type retryGuideSchematicViewerResponse =
+	| retryGuideSchematicViewerResponseSuccess
+	| retryGuideSchematicViewerResponseError;
+
+export const getRetryGuideSchematicViewerUrl = (guideId: string | number, assetId: string) => {
+	return `${ELITE_API_URL}/guides/${guideId}/assets/${assetId}/viewer/retry`;
+};
+
+/**
+ * @summary Retry guide schematic viewer generation
+ */
+export const retryGuideSchematicViewer = async (guideId: string | number, assetId: string, options?: RequestInit) => {
+	return customFetch<retryGuideSchematicViewerResponse>(getRetryGuideSchematicViewerUrl(guideId, assetId), {
+		...options,
+		method: 'POST',
 	});
 };
 

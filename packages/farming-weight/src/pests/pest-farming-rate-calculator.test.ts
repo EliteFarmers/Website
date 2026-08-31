@@ -7,11 +7,11 @@ import { Rarity } from '../constants/reforges.js';
 import { SprayonatorTier } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeAction, UpgradeCategory, type FortuneUpgrade } from '../constants/upgrades.js';
-import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
+import type { EliteItemDto } from '../fortune/item.js';
 import { FARMING_ARMOR_INFO } from '../items/armor.js';
-import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { GearSlot } from '../items/definitions.js';
+import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { PestFarmingPhase, PestFarmingPlayer } from '../player/pestfarmingplayer.js';
 import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 import { calculatePestCropDropAmount, PEST_DROP_DEFINITIONS } from './pest-drops.js';
@@ -930,6 +930,33 @@ test('PestFarmingPlayer clones keep loadouts and item data deeply independent', 
 	expect(player.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId).toBe('spawn');
 	expect(cloned.phaseLoadouts[PestFarmingPhase.Spawn]?.armorSetId).toBe('main');
 	expect(player.crop.armor[0]!.item.attributes?.modifier).toBeUndefined();
+});
+
+test('mechanics key changes when farm-only gear changes output', () => {
+	const player = pestPlayerWithArmorSets({
+		main: ['CROPIE_HELMET', 'CROPIE_CHESTPLATE', 'CROPIE_LEGGINGS', 'CROPIE_BOOTS'],
+		spawn: ['HELIANTHUS_HELMET', 'HELIANTHUS_CHESTPLATE', 'HELIANTHUS_LEGGINGS', 'HELIANTHUS_BOOTS'],
+	});
+	player.setPhaseArmorSet(PestFarmingPhase.Spawn, 'spawn');
+	player.setPhaseArmorSet(PestFarmingPhase.Kill, 'spawn');
+	const calculator = () =>
+		new PestFarmingRateCalculator({
+			player,
+			options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+		});
+	const before = calculator().calculate();
+
+	player.applyPhaseUpgrade(PestFarmingPhase.Farm, {
+		title: 'Mossy Croppie Helmet',
+		increase: 0,
+		action: UpgradeAction.Upgrade,
+		category: UpgradeCategory.Reforge,
+		meta: { type: 'reforge', id: 'mossy', itemUuid: 'main-helmet' },
+	});
+	const after = calculator().calculate();
+
+	expect(after.breakdown.cropBreaking.farm.collection).toBeGreaterThan(before.breakdown.cropBreaking.farm.collection);
+	expect(after.mechanicsKey).not.toBe(before.mechanicsKey);
 });
 
 test('spawn phase bonus pest chance upgrades report positive pest rate impact', () => {

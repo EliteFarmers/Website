@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import * as Popover from '$ui/popover';
+	import PawPrint from '@lucide/svelte/icons/paw-print';
 	import {
 		FARMING_MECHANIC_INFO,
 		STAT_ICONS,
@@ -120,9 +121,12 @@
 	);
 
 	const hasEffects = $derived((upgrade.effects?.length ?? 0) > 0);
+	const isAtomicUpgrade = $derived(upgrade.group?.atomic === true);
+	const isPetPurchase = $derived(upgrade.group?.kind === 'pet-purchase');
+	const isLoadoutUpgrade = $derived(upgrade.group?.kind === 'loadout');
 	const isNegative = $derived(headerValue < 0);
 	const maxOnly = $derived(!hasEffects && headerValue === 0 && upgrade.max && upgrade.max > 0);
-	const forCompletion = $derived(upgrade.stats === undefined && !hasEffects && headerValue === 0);
+	const forCompletion = $derived(!isAtomicUpgrade && upgrade.stats === undefined && !hasEffects && headerValue === 0);
 
 	const background = $derived(
 		maxOnly || forCompletion ? 'bg-progress/40' : isNegative ? 'bg-destructive/60' : 'bg-progress'
@@ -138,9 +142,23 @@
 				className
 			)}
 		>
-			<span>{hasEffects ? primaryEffectIcon : (STAT_ICONS[primaryStat.stat] ?? '?')}</span>
+			{#if isPetPurchase}
+				<PawPrint class="size-4 shrink-0" aria-hidden="true" />
+			{:else}
+				<span
+					>{isLoadoutUpgrade
+						? 'Set'
+						: hasEffects
+							? primaryEffectIcon
+							: (STAT_ICONS[primaryStat.stat] ?? '?')}</span
+				>
+			{/if}
 			<span class="text-md relative z-10 pr-1 font-mono leading-none md:text-lg">
-				{#if hasEffects && primaryEffectValue}
+				{#if isPetPurchase}
+					Pet
+				{:else if isLoadoutUpgrade}
+					Set
+				{:else if hasEffects && primaryEffectValue}
 					{primaryEffectValue}
 				{:else}
 					{headerValue !== 0 ? (+headerValue.toFixed(2)).toLocaleString() : '0'}
@@ -149,7 +167,18 @@
 		</div>
 	{/snippet}
 	<div class="flex max-w-xs flex-col gap-2">
-		<p class="font-semibold">Upgrade Stats</p>
+		<p class="font-semibold">
+			{isPetPurchase ? 'Pet Purchase' : isLoadoutUpgrade ? 'Loadout Upgrade' : 'Upgrade Stats'}
+		</p>
+		{#if isPetPurchase}
+			<p class="text-sm text-muted-foreground">
+				This gain includes purchasing and, when required, configuring a max-level pet.
+			</p>
+		{:else if isLoadoutUpgrade}
+			<p class="text-sm text-muted-foreground">
+				This gain comes from using a separate physical armor set in the recommended phases.
+			</p>
+		{/if}
 
 		<div class="flex flex-col gap-1">
 			{#if primaryEffect}

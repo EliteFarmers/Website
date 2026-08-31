@@ -50,7 +50,8 @@
 		"d3-shape": "^3.2.0",
 		"farming-weight": "workspace:*",
 		"isomorphic-dompurify": "^3.22.0",
-		"sitemap": "^9.0.1"
+		"sitemap": "^9.0.1",
+		"three": "^0.185.1"
 	},
 	"devDependencies": {
 		"@date-fns/utc": "^2.1.1",
@@ -84,6 +85,7 @@
 		"@types/eslint": "^9.6.1",
 		"@types/node": "^24.13.3",
 		"@types/qs": "^6.15.1",
+		"@types/three": "^0.185.4",
 		"@typeschema/class-validator": "^0.3.0",
 		"@vinejs/vine": "^4.4.0",
 		"arktype": "^2.2.3",

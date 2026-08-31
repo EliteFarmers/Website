@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
+import { resolveProfitAwareProgress } from '../upgrades/profit-aware-progress.js';
 import { FarmingTool } from './farmingtool.js';
 import type { EliteItemDto } from './item.js';
 import { Vacuum } from './vacuum.js';
@@ -175,6 +176,24 @@ test('pest-focused Beady vacuum progress does not show or suggest normal fortune
 	expect(reforgeProgress?.stats?.[Stat.FarmingFortune]).toBeUndefined();
 	expect(reforgeProgress?.stats?.[Stat.PestKillFortune]?.current).toBe(100);
 	expect(upgrades.some((u) => u.title === 'Reforge to Buzzing')).toBe(false);
+});
+
+test('profit-aware Beady progress removes Buzzing-only farming fortune', () => {
+	const tool = new Vacuum(
+		vacuum('INFINI_VACUUM_HOOVERIUS', {
+			attributes: { rarity: Rarity.Legendary, modifier: 'beady' },
+		})
+	);
+	const rawProgress = tool.getProgress([Stat.PestKillFortune, Stat.Damage, Stat.FarmingFortune]);
+	const rawReforge = rawProgress.find((progress) => progress.name === 'Reforge Stats');
+	expect(rawReforge?.stats?.[Stat.FarmingFortune]).toMatchObject({ current: 0, max: 11 });
+
+	const resolved = resolveProfitAwareProgress(rawProgress, (upgrade) =>
+		upgrade.title === 'Reforge to Buzzing' ? { complete: true, coinsPerHour: -1 } : undefined
+	);
+	const resolvedReforge = resolved.find((progress) => progress.name === 'Reforge Stats');
+	expect(resolvedReforge?.stats?.[Stat.FarmingFortune]).toBeUndefined();
+	expect(resolvedReforge?.stats?.[Stat.PestKillFortune]).toMatchObject({ current: 100, max: 100, ratio: 1 });
 });
 
 test('Bug Blender contributes pest kill fortune without inflating normal farming fortune', () => {

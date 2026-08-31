@@ -3,7 +3,13 @@
 	import { getLargestImageSourceUrl } from '$lib/guides/responsive-images';
 	import type { GuideAssetDto } from '$lib/guides/types';
 	import { isImageAsset, isLitematicAsset } from '$lib/guides/types';
-	import { deleteGuideAssetCommand, uploadGuideImageForm, uploadGuideLitematicForm } from '$lib/remote/guides.remote';
+	import type { SchematicViewerStatusDto } from '$lib/api/schemas';
+	import {
+		deleteGuideAssetCommand,
+		retryGuideSchematicViewerCommand,
+		uploadGuideImageForm,
+		uploadGuideLitematicForm,
+	} from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
@@ -16,6 +22,7 @@
 	import ImageIcon from '@lucide/svelte/icons/image';
 	import LinkIcon from '@lucide/svelte/icons/link';
 	import Loader2 from '@lucide/svelte/icons/loader-2';
+	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import Upload from '@lucide/svelte/icons/upload';
 	import type { Editor } from '@tiptap/core';
@@ -39,6 +46,7 @@
 	let isWorking = $state(false);
 	let errorMessage = $state('');
 	let uploadStatus = $state('');
+	let retryingAssetId = $state<string | null>(null);
 	let localAssets = $derived(assets ?? []);
 	let imageFileInput = $state<HTMLInputElement | null>(null);
 	let urlImageFileInput = $state<HTMLInputElement | null>(null);
@@ -269,6 +277,31 @@
 		} catch (err) {
 			errorMessage = err instanceof Error ? err.message : 'Failed to delete asset';
 		} finally {
+			isWorking = false;
+		}
+	}
+
+	function updateViewerStatus(assetId: string, viewer: SchematicViewerStatusDto) {
+		localAssets = localAssets.map((asset) =>
+			asset.id === assetId && asset.litematic ? { ...asset, litematic: { ...asset.litematic, viewer } } : asset
+		);
+	}
+
+	async function retryViewer(asset: GuideAssetDto) {
+		if (!guideId || !asset.litematic || isWorking) return;
+		errorMessage = '';
+		isWorking = true;
+		retryingAssetId = asset.id;
+
+		try {
+			const result = await retryGuideSchematicViewerCommand({ guideId, assetId: asset.id });
+			if (result.error || !result.viewer) throw new Error(result.error || 'Failed to retry the 3D viewer');
+			updateViewerStatus(asset.id, result.viewer);
+			onAssetsChanged?.();
+		} catch (err) {
+			errorMessage = err instanceof Error ? err.message : 'Failed to retry the 3D viewer';
+		} finally {
+			retryingAssetId = null;
 			isWorking = false;
 		}
 	}
@@ -579,6 +612,7 @@
 				<div class="grid gap-3">
 					{#each litematicAssets as asset (asset.id)}
 						{@const isReferenced = isAssetReferenced(asset.id)}
+						{@const viewer = asset.litematic?.viewer}
 						<div
 							class="flex flex-col gap-3 rounded-md border p-3 sm:flex-row sm:items-center sm:justify-between"
 						>
@@ -594,18 +628,71 @@
 											>
 										{/if}
 										<Badge variant="secondary">{asset.litematic?.regionCount ?? 0} regions</Badge>
+										{#if viewer?.status === 'ready'}
+											<Badge variant="outline">3D ready</Badge>
+										{:else if viewer?.status === 'queued' || viewer?.status === 'processing'}
+											<Badge variant="secondary">
+												<Loader2 class="mr-1 size-3 animate-spin" />3D generating
+											</Badge>
+										{:else if viewer?.status === 'failed'}
+											<Badge variant="destructive">3D failed</Badge>
+										{/if}
 										{#if isReferenced}
 											<Badge variant="secondary">In use</Badge>
 										{/if}
 									</div>
+									{#if viewer?.status === 'ready' && (viewer.blockCount || viewer.layerCount)}
+										<p class="mt-2 text-xs text-muted-foreground">
+											{viewer.blockCount?.toLocaleString() ?? 0} blocks · {viewer.layerCount ?? 0} visible
+											Y levels
+										</p>
+									{/if}
+									{#if viewer?.status === 'failed'}
+										<p class="mt-2 text-xs text-destructive">
+											{viewer.errorMessage ?? 'The 3D viewer could not be generated.'}
+										</p>
+									{/if}
+									{#if viewer?.warnings?.length}
+										<details class="mt-2 text-xs text-muted-foreground">
+											<summary class="cursor-pointer"
+												>{viewer.warnings.length} renderer warning{viewer.warnings.length === 1
+													? ''
+													: 's'}</summary
+											>
+											<ul class="mt-1 list-disc space-y-1 pl-4">
+												{#each viewer.warnings.slice(0, 5) as warning (warning)}
+													<li>{warning}</li>
+												{/each}
+											</ul>
+										</details>
+									{/if}
 								</div>
 							</div>
 							<div class="flex gap-2">
-								<a href={asset.litematic?.downloadUrl} download={asset.fileName}>
-									<Button size="icon" variant="ghost" aria-label="Download litematic">
-										<Download class="size-4" />
+								{#if viewer?.status === 'failed'}
+									<Button
+										size="sm"
+										variant="outline"
+										disabled={isWorking}
+										onclick={() => retryViewer(asset)}
+									>
+										{#if retryingAssetId === asset.id}
+											<Loader2 class="mr-2 size-4 animate-spin" />
+										{:else}
+											<RotateCcw class="mr-2 size-4" />
+										{/if}
+										Retry 3D
 									</Button>
-								</a>
+								{/if}
+								<Button
+									href={asset.litematic?.downloadUrl}
+									download={asset.fileName}
+									size="icon"
+									variant="ghost"
+									aria-label="Download litematic"
+								>
+									<Download class="size-4" />
+								</Button>
 								<Button size="sm" variant="outline" onclick={() => insertLitematic(asset)}
 									>Insert</Button
 								>

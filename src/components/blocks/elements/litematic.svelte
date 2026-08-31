@@ -2,6 +2,7 @@
 	import { cn } from '$lib/utils';
 	import { Badge } from '$ui/badge';
 	import { buttonVariants } from '$ui/button';
+	import SchematicViewer from '$comp/schematics/schematic-viewer.svelte';
 	import Download from '@lucide/svelte/icons/download';
 	import FileArchive from '@lucide/svelte/icons/file-archive';
 	import type { LitematicProps } from '../blocks';
@@ -51,5 +52,8 @@
 				>.
 			</p>
 		</div>
+	</div>
+	<div class="mt-3">
+		<SchematicViewer assetId={node.assetId} />
 	</div>
 </div>

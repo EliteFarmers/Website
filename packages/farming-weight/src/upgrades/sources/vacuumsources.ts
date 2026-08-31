@@ -14,7 +14,12 @@ import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.j
 import { GemRarity } from '../../fortune/item.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
-import { getCurrentReforgeEffectSummaries, getReforgeEffectSummaries, getUpgradeableGems } from '../upgrades.js';
+import {
+	getCurrentReforgeEffectSummaries,
+	getReforgeEffectSummaries,
+	getUpgradeableGems,
+	getUpgradeableReforges,
+} from '../upgrades.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 const VACUUM_STATS = [Stat.Damage, Stat.FarmingFortune, Stat.PestKillFortune] as const;
@@ -68,6 +73,7 @@ export const VACUUM_FORTUNE_SOURCES: DynamicFortuneSource<Vacuum>[] = [
 		},
 		currentStat: (vacuum, stat) => vacuum.reforgeStats?.stats?.[stat] ?? 0,
 		effects: getCurrentReforgeEffectSummaries,
+		completionUpgrades: (vacuum) => getUpgradeableReforges(vacuum, Object.values(Stat)),
 		upgrades: (vacuum, stats) => {
 			const requestedStats = stats && stats.length > 0 ? stats : [Stat.PestKillFortune];
 			const currentStats = vacuum.reforgeStats?.stats ?? {};

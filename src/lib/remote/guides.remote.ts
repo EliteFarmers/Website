@@ -6,6 +6,7 @@ import {
 	deleteGuideAsset,
 	getAccount,
 	getGuide,
+	getGuideSchematicViewer,
 	getUserBookmarks,
 	getUserGuides,
 	listGuideAssets,
@@ -13,6 +14,7 @@ import {
 	listGuides,
 	listTags,
 	replaceGuideAuthors,
+	retryGuideSchematicViewer,
 	restoreGuideVersion,
 	submitGuideForApproval,
 	unbookmarkGuide,
@@ -218,6 +220,33 @@ export const GetGuideAssets = query(z.number(), async (guideId) => {
 	}
 	return result.data ?? [];
 });
+
+/** Command: refresh an embedded litematic's viewer generation status without query caching. */
+export const PollGuideSchematicViewer = command(z.string().regex(/^[0-9a-f]{32}$/i), async (assetId) => {
+	const result = await getGuideSchematicViewer(assetId);
+	if (!result.ok) return null;
+	return result.data;
+});
+
+/** Command: retry a failed schematic viewer generation for a guide author or moderator. */
+export const retryGuideSchematicViewerCommand = command(
+	z.object({
+		guideId: z.number().int().positive(),
+		assetId: z.string().regex(/^[0-9a-f]{32}$/i),
+	}),
+	async ({ guideId, assetId }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) return { error: 'Unauthorized', viewer: null };
+
+		const result = await retryGuideSchematicViewer(guideId, assetId);
+		if (result.response.status === 401) return { error: 'Unauthorized', viewer: null };
+		if (!result.ok) {
+			return { error: apiErrorMessage(result.data, 'Failed to retry the 3D viewer'), viewer: null };
+		}
+
+		return { error: null, viewer: result.data };
+	}
+);
 
 /**
  * Query: List guide save history for editors

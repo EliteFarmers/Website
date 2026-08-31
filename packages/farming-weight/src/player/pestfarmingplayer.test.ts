@@ -13,7 +13,12 @@ import { GearSlot } from '../items/definitions.js';
 import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { FarmingPets, type FarmingPetType } from '../items/pets.js';
 import { FARMING_TOOLS } from '../items/tools.js';
-import { PEST_FARMING_PHASE_STATS, PestFarmingPhase, PestFarmingPlayer } from './pestfarmingplayer.js';
+import {
+	PEST_FARMING_PHASES,
+	PEST_FARMING_PHASE_STATS,
+	PestFarmingPhase,
+	PestFarmingPlayer,
+} from './pestfarmingplayer.js';
 
 function armor(id: keyof typeof FARMING_ARMOR_INFO, uuid: string, slot?: string) {
 	const item = FarmingArmor.fakeItem(FARMING_ARMOR_INFO[id]!)!;
@@ -571,6 +576,28 @@ test('phase pet changes update only the selected phase loadout', () => {
 	expect(player.getPhasePlayer(PestFarmingPhase.Spawn)).toBe(currentSpawn);
 });
 
+test('held item upgrades update every phase that shares the physical pet', () => {
+	const player = new PestFarmingPlayer({
+		pets: [pet(FarmingPets.MooshroomCow, 'mooshroom', 'GREEN_BANDANA')],
+		bestiaryKills: { pest_fly_1: 250 },
+		phaseLoadouts: {
+			[PestFarmingPhase.Farm]: { petId: 'mooshroom' },
+			[PestFarmingPhase.Spawn]: { petId: 'mooshroom' },
+			[PestFarmingPhase.Kill]: { petId: 'mooshroom' },
+		},
+	});
+	const brownBandana = player
+		.getPhaseUpgrades(PestFarmingPhase.Spawn, { stat: Stat.BonusPestChance })
+		.find((upgrade) => upgrade.meta?.type === 'pet_item' && upgrade.meta.id === 'BROWN_BANDANA');
+
+	expect(brownBandana).toBeDefined();
+	player.applyPhaseUpgrade(PestFarmingPhase.Spawn, brownBandana!);
+
+	for (const phase of PEST_FARMING_PHASES) {
+		expect(player.getPhasePlayer(phase).selectedPet?.pet.heldItem).toBe('BROWN_BANDANA');
+	}
+});
+
 test('one armor set can be reused by every phase', () => {
 	const player = new PestFarmingPlayer({
 		armor: [armor('HELIANTHUS_HELMET', 'main-helmet')],
@@ -818,6 +845,21 @@ test('cloning preserves the selected vacuum without sharing its model', () => {
 	expect(cloned.selectedVacuum?.item.uuid).toBe(player.selectedVacuum?.item.uuid);
 	expect(cloned.selectedVacuum).not.toBe(player.selectedVacuum);
 	expect(cloned.selectedVacuum?.item).not.toBe(player.selectedVacuum?.item);
+});
+
+test('phase tool upgrades survive cloning the pest player', () => {
+	const player = new PestFarmingPlayer({
+		selectedCrop: Crop.Wheat,
+		tools: [tool('THEORETICAL_HOE_WHEAT_1', 'wheat-tool', { enchantments: { turbo_wheat: 5 } })],
+	});
+	const upgrade = player.getPhaseUpgrades(PestFarmingPhase.Farm).find((entry) => entry.title === 'Turbo-Wheat 6');
+	expect(upgrade).toBeDefined();
+
+	player.applyPhaseUpgrade(PestFarmingPhase.Farm, upgrade!);
+	const cloned = player.clone();
+
+	expect(player.crop.tools.find((entry) => entry.item.uuid === 'wheat-tool')?.item.enchantments?.turbo_wheat).toBe(6);
+	expect(cloned.crop.tools.find((entry) => entry.item.uuid === 'wheat-tool')?.item.enchantments?.turbo_wheat).toBe(6);
 });
 
 test('Praying Mantis Shard affects kill-phase vacuum damage', () => {

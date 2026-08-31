@@ -21,6 +21,7 @@
 
 	let tree = $state<UpgradeTreeNode | null>(null);
 	let treeKey = $state('');
+	const isMultiItemBundle = $derived(upgrade.group?.atomic === true && (upgrade.groupedUpgrades?.length ?? 0) > 1);
 
 	function flattenTree(node: UpgradeTreeNode): FortuneUpgrade[] {
 		const upgrades: FortuneUpgrade[] = [];
@@ -75,9 +76,10 @@
 				node={child}
 				{items}
 				{costFn}
-				{applyUpgrade}
+				applyUpgrade={isMultiItemBundle ? undefined : applyUpgrade}
 				{referenceOnlyPrices}
 				defaultOpen={tree.children.length === 1}
+				includedInBundle={isMultiItemBundle && upgrade.group?.kind === 'pet-purchase'}
 			/>
 		{/each}
 	{:else}

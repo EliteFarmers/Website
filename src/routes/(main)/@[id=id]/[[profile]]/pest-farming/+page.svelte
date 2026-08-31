@@ -17,6 +17,7 @@
 	import * as Dialog from '$ui/dialog';
 	import { Skeleton } from '$ui/skeleton';
 	import * as Tabs from '$ui/tabs';
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import Settings from '@lucide/svelte/icons/settings';
 	import Sprout from '@lucide/svelte/icons/sprout';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
@@ -66,6 +67,7 @@
 				result={pest.pestRateResult}
 				priceBook={pest.pestRatePriceBook}
 				items={pest.itemsData}
+				processing={pest.calculationsRunning}
 				referenceOnlyPrices={ctx.isNonClassicProfile}
 				{openSettings}
 			/>
@@ -160,22 +162,56 @@
 							>.
 						</p>
 					</div>
-					<UpgradeList
-						upgrades={pest.activePhaseUpgrades}
-						items={pest.itemsData}
-						costFn={getUpgradeCost}
-						applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
-						expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
-						hasUpgradePath={(upgrade) => pest.hasActivePhaseUpgradePath(upgrade)}
-						rateImpactFn={(upgrade) => pest.getPestRateImpact(upgrade)}
-						rateImpactUnavailableLabel="Loading Rates"
-						costPerValueFn={(upgrade) => pest.getPestRateImpactValue(upgrade) / 1000}
-						costPerHeader="Cost / 1k Coins/hr"
-						initialSorting={ctx.isNonClassicProfile ? [{ id: 'rateImpact', desc: true }] : undefined}
-						referenceOnlyPrices={ctx.isNonClassicProfile}
-						version={pest.pestRateVersion}
-						pathVersion={pest.pestRatePathVersion}
-					/>
+					{#if !pest.calculationsSettled}
+						<div
+							class="flex min-h-96 items-start justify-center rounded-md border bg-card/20 pt-8"
+							aria-busy="true"
+						>
+							<div
+								class="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-sm shadow-sm"
+							>
+								<LoaderCircle class="size-4 animate-spin" />
+								Calculating upgrade recommendations
+							</div>
+						</div>
+					{:else}
+						<div class="relative" aria-busy={pest.calculationsRunning}>
+							<div
+								class:opacity-50={pest.calculationsRunning}
+								class:pointer-events-none={pest.calculationsRunning}
+								class="transition-opacity"
+							>
+								<UpgradeList
+									upgrades={pest.displayedActivePhaseUpgrades}
+									items={pest.itemsData}
+									costFn={getUpgradeCost}
+									applyUpgrade={(upgrade) => pest.applyActivePhaseUpgrade(upgrade)}
+									expandUpgrade={(upgrade) => pest.expandActivePhaseUpgrade(upgrade)}
+									hasUpgradePath={(upgrade) => pest.hasActivePhaseUpgradePath(upgrade)}
+									rateImpactFn={(upgrade) => pest.getPestRateImpact(upgrade)}
+									rateImpactUnavailableLabel="Loading Rates"
+									costPerValueFn={(upgrade) => pest.getPestRateImpactValue(upgrade) / 1000}
+									costPerHeader="Cost / 1k Coins/hr"
+									initialSorting={ctx.isNonClassicProfile
+										? [{ id: 'rateImpact', desc: true }]
+										: undefined}
+									referenceOnlyPrices={ctx.isNonClassicProfile}
+									version={pest.pestRateVersion}
+									pathVersion={pest.pestRatePathVersion}
+								/>
+							</div>
+							{#if pest.calculationsRunning}
+								<div class="pointer-events-none absolute inset-x-0 top-6 z-10 flex justify-center">
+									<div
+										class="flex items-center gap-2 rounded-full border bg-background/95 px-3 py-1.5 text-sm shadow-sm"
+									>
+										<LoaderCircle class="size-4 animate-spin" />
+										Updating upgrade rates
+									</div>
+								</div>
+							{/if}
+						</div>
+					{/if}
 				</section>
 			</section>
 		</div>

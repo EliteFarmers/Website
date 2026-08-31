@@ -8,6 +8,7 @@ import { Stat } from '../constants/stats.js';
 import { resolveDropEffects } from '../effects/resolver.js';
 import type { DropTag } from '../effects/types.js';
 import { PestFarmingPhase, type PestFarmingPlayer } from '../player/pestfarmingplayer.js';
+import { getRateCalculationStateKey } from '../player/rate-state-key.js';
 import type { DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
 import { getFortuneUpgradeIdentity } from '../util/upgrade-identity.js';
 import {
@@ -284,6 +285,14 @@ export class PestFarmingRateCalculator {
 		return stableValueKey({
 			options: this.options,
 			phaseStats,
+			phaseState: player.phases
+				? Object.fromEntries(
+						Object.values(PestFarmingPhase).map((phase) => [
+							phase,
+							getRateCalculationStateKey(player.phases[phase], this.options.crop),
+						])
+					)
+				: undefined,
 			phaseLoadouts: this.player.phaseLoadouts,
 			effectivePhaseLoadouts: player.phaseLoadouts,
 			armorSets: this.player.armorSetLoadouts,

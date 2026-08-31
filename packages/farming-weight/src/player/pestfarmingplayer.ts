@@ -861,6 +861,7 @@ export class PestFarmingPlayer {
 		const phaseOptions = getPhaseQueryOptions(phase, queryStats, options);
 		const player = this.phases[phase];
 		const upgrades = [...player.getUpgrades(phaseOptions)];
+		if (player.selectedPet) upgrades.push(...player.selectedPet.getUpgrades(phaseOptions, player));
 
 		if (phase === PestFarmingPhase.Farm && this.options.selectedCrop) {
 			upgrades.push(...player.getCropUpgrades(this.options.selectedCrop));
@@ -892,6 +893,18 @@ export class PestFarmingPlayer {
 		}
 
 		if (phase === PestFarmingPhase.Kill && this.applyVacuumUpgrade(upgrade)) return;
+
+		if (upgrade.meta?.type === 'buy_pet' && upgrade.meta.itemUuid) {
+			this.inventory.applyUpgrade(upgrade);
+			for (const phaseKey of PEST_FARMING_PHASES) this.rebuildPhasePlayer(phaseKey);
+			for (const assignedPhase of upgrade.meta.phases ?? []) {
+				if (PEST_FARMING_PHASES.includes(assignedPhase as PestFarmingPhase)) {
+					this.setPhasePet(assignedPhase as PestFarmingPhase, upgrade.meta.itemUuid);
+				}
+			}
+			this.refreshPhaseAliases();
+			return;
+		}
 
 		const itemUuid = upgrade.meta?.itemUuid;
 		const equipmentSetIds = itemUuid ? this.getEquipmentSetIdsForUuid(itemUuid) : [];
@@ -943,7 +956,11 @@ export class PestFarmingPlayer {
 			return;
 		}
 
-		this.phases[phase].applyUpgrade(upgrade);
+		// Tools, accessories, and any other loose inventory items are shared source
+		// data for every phase. Applying the upgrade only to a phase copy makes it
+		// disappear as soon as the pest player is cloned or a loadout is changed.
+		this.inventory.applyUpgrade(upgrade);
+		for (const phaseKey of PEST_FARMING_PHASES) this.rebuildPhasePlayer(phaseKey);
 		this.refreshPhaseAliases();
 	}
 
@@ -1061,9 +1078,9 @@ export class PestFarmingPlayer {
 		}
 	}
 
-	clone(): PestFarmingPlayer {
+	getOptionsSnapshot(): PestFarmingPlayerOptions {
 		const selectedVacuumId = this.selectedVacuum?.item.uuid ?? undefined;
-		return new PestFarmingPlayer({
+		return {
 			...clonePlayerOptions(this.options),
 			tools: cloneItems(this.inventory.tools),
 			armor: cloneItems(this.inventory.armor),
@@ -1081,7 +1098,11 @@ export class PestFarmingPlayer {
 			loadoutPresets: this.loadoutPresets.map((preset) => ({ ...preset })),
 			phasePresetIds: { ...this.phasePresetIds },
 			phaseLoadouts: undefined,
-		});
+		};
+	}
+
+	clone(): PestFarmingPlayer {
+		return new PestFarmingPlayer(this.getOptionsSnapshot());
 	}
 }
 
