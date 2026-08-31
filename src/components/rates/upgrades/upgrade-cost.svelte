@@ -29,20 +29,33 @@
 	const totalCostClass = $derived(
 		referenceOnlyPrices && hasItemCost ? 'text-muted-foreground' : 'dark:text-completed'
 	);
+	const isPetPurchase = $derived(upgrade.meta?.type === 'buy_pet' && !!upgrade.meta.id);
+	const groupedPetPurchase = $derived(
+		upgrade.group?.kind === 'pet-purchase'
+			? upgrade.groupedUpgrades?.find((member) => member.meta?.type === 'buy_pet')
+			: undefined
+	);
 </script>
 
 <div class={cn('flex w-full min-w-0 flex-col items-start justify-center sm:min-w-72 sm:items-end', className)}>
+	{#if groupedPetPurchase?.meta?.id && groupedPetPurchase.cost?.coins}
+		{@render petCost(groupedPetPurchase)}
+	{/if}
 	{#each Object.entries(upgrade.cost?.items ?? {}) as [item, amount] (item)}
 		{@render itemCost(item, amount)}
 	{/each}
 	{#each Object.entries(upgrade.cost?.applyCost?.items ?? {}) as [item, amount] (item)}
 		{@render itemCost(item, amount)}
 	{/each}
-	{#if upgrade.cost?.coins}
-		<p class="text-sm text-muted-foreground">
-			+ <span class="text-primary dark:text-completed">{upgrade.cost?.coins?.toLocaleString()}</span>
-			<span class="text-muted-foreground">coins</span>
-		</p>
+	{#if upgrade.cost?.coins && !groupedPetPurchase}
+		{#if isPetPurchase && upgrade.meta?.id}
+			{@render petCost(upgrade)}
+		{:else}
+			<p class="text-sm text-muted-foreground">
+				+ <span class="text-primary dark:text-completed">{upgrade.cost.coins.toLocaleString()}</span>
+				<span class="text-muted-foreground">coins</span>
+			</p>
+		{/if}
 	{/if}
 	{#if upgrade.cost?.applyCost?.coins}
 		<p class="text-sm text-muted-foreground">
@@ -91,6 +104,24 @@
 		{/if}
 	{/if}
 </div>
+
+{#snippet petCost(petUpgrade: FortuneUpgrade)}
+	{#if petUpgrade.meta?.id && petUpgrade.cost?.coins}
+		<div class="flex max-w-80 min-w-0 flex-row items-center gap-1">
+			<span class="shrink-0 text-sm font-semibold">1x</span>
+			<div class="flex min-w-0 items-center gap-1 rounded-sm border bg-background px-1">
+				<ItemRender skyblockId={petUpgrade.meta.id} pet class="size-6 shrink-0" />
+				<ScrollingName class="min-w-0 text-sm" title={petUpgrade.title}>
+					<ItemName name={petUpgrade.title} />
+				</ScrollingName>
+			</div>
+			<span class="ml-1 shrink-0 text-sm whitespace-nowrap text-primary dark:text-completed">
+				{Math.round(petUpgrade.cost.coins).toLocaleString()}
+			</span>
+			<span class="shrink-0 whitespace-nowrap text-muted-foreground">coins</span>
+		</div>
+	{/if}
+{/snippet}
 
 {#snippet itemCost(item: string, amount: number)}
 	{@const sbItem = items?.[item]}

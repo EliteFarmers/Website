@@ -18,6 +18,7 @@ const PROFIT_SENSITIVE_STATS = new Set<Stat>([
 ]);
 
 const PROFIT_EPSILON = 0.01;
+const STAT_EPSILON = 1e-9;
 
 export function getCompletionUpgradeKey(upgrade: FortuneUpgrade): string {
 	return [
@@ -72,20 +73,26 @@ function resolveEntry(
 		if (!value) continue;
 		const reduction = childStatReductions[stat] ?? 0;
 		const nextMax = reduction > 0 ? Math.max(value.current, value.max - reduction) : value.max;
-		stats![stat] = {
-			...value,
-			max: nextMax,
-			ratio: reduction === 0 ? value.ratio : nextMax === value.current ? 1 : getRatio(value.current, nextMax),
-		};
+		if (nextMax <= STAT_EPSILON && value.current <= STAT_EPSILON) {
+			delete stats![stat];
+		} else {
+			stats![stat] = {
+				...value,
+				max: nextMax,
+				ratio: reduction === 0 ? value.ratio : nextMax === value.current ? 1 : getRatio(value.current, nextMax),
+			};
+		}
 	}
 
 	const profitSensitiveGroups = getProfitSensitiveGroups(getSourceCompletionUpgrades(entry));
 	const effectivelyComplete = profitSensitiveGroups.every((group) => {
 		if (group.length === 0) return true;
 		const comparisons = group.map(compare);
-		return (
-			comparisons.every((result) => result?.complete === true) &&
-			comparisons.every((result) => (result?.coinsPerHour ?? Number.POSITIVE_INFINITY) <= PROFIT_EPSILON)
+		return comparisons.every(
+			(result) =>
+				result !== undefined &&
+				result.coinsPerHour <= PROFIT_EPSILON &&
+				(result.complete || result.coinsPerHour < -PROFIT_EPSILON)
 		);
 	});
 	const hasSensitiveGroup = profitSensitiveGroups.length > 0;
@@ -96,7 +103,8 @@ function resolveEntry(
 			NonNullable<FortuneSourceProgress['stats']>[Stat],
 		][]) {
 			if (!value) continue;
-			stats![stat] = { ...value, max: value.current, ratio: 1 };
+			if (value.current <= STAT_EPSILON) delete stats![stat];
+			else stats![stat] = { ...value, max: value.current, ratio: 1 };
 		}
 	}
 
@@ -106,9 +114,8 @@ function resolveEntry(
 		Stat,
 		NonNullable<FortuneSourceProgress['stats']>[Stat],
 	][]) {
-		const resolved = stats?.[stat];
-		if (!original || !resolved) continue;
-		const reduction = original.max - resolved.max;
+		if (!original) continue;
+		const reduction = original.max - (stats?.[stat]?.max ?? 0);
 		if (reduction > 0) statReductions[stat] = reduction;
 	}
 

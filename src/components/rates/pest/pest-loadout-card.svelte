@@ -3,6 +3,7 @@
 	import ItemRender from '$comp/items/item-render.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import { getUpgradeCost } from '$lib/items';
+	import { getProgressCompletion } from '$lib/rates/progress-completion';
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 	import { Progress } from '$ui/progress';
@@ -13,12 +14,13 @@
 	import PawPrint from '@lucide/svelte/icons/paw-print';
 	import Shield from '@lucide/svelte/icons/shield';
 	import SprayCan from '@lucide/svelte/icons/spray-can';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import WandSparkles from '@lucide/svelte/icons/wand-sparkles';
 	import {
 		PEST_ARMOR_SLOTS,
 		PEST_EQUIPMENT_SLOTS,
+		getFarmingPetId,
 		PestFarmingPhase,
-		type FortuneSourceProgress,
 		type GearSlot,
 	} from 'farming-weight';
 	import type { PestFarmingPageContext } from '../../../routes/(main)/@[id=id]/[[profile]]/pest-farming/pest-farming-context.svelte';
@@ -29,12 +31,6 @@
 	interface Props {
 		pest: PestFarmingPageContext;
 	}
-
-	type Completion = {
-		percentage: number;
-		maxed: boolean;
-		label: string;
-	};
 
 	let { pest }: Props = $props();
 
@@ -55,42 +51,18 @@
 		{ value: '', label: 'No pet', pet: undefined },
 		...pest.activePhasePlayer.pets
 			.map((pet) => ({
-				value: pet.pet.uuid || pet.pet.localId || '',
+				value: getFarmingPetId(pet) ?? '',
 				label: pet.getFormattedName(),
 				pet,
 			}))
 			.filter((option) => option.value),
 	]);
-	const armorCompletion = $derived(getCompletion(pest.activeArmorSetProgress, !!pest.activeArmorSet));
-	const equipmentCompletion = $derived(getCompletion(pest.activeEquipmentSetProgress, !!pest.activeEquipmentSet));
-	const petCompletion = $derived(getCompletion(petProgress, !!pest.activePhasePet));
-	const vacuumCompletion = $derived(getCompletion(pest.vacuumProgress, !!pest.selectedVacuum));
-
-	function getCompletion(progress: FortuneSourceProgress[], configured: boolean): Completion {
-		const ratios: number[] = [];
-		const collect = (entry: FortuneSourceProgress) => {
-			if (entry.progress?.length) {
-				entry.progress.forEach(collect);
-				return;
-			}
-			const statRatios = Object.values(entry.stats ?? {})
-				.filter((stat) => stat.max > 0)
-				.map((stat) => stat.ratio);
-			if (statRatios.length) ratios.push(...statRatios);
-			else if (entry.max > 0) ratios.push(entry.ratio);
-		};
-		progress.forEach(collect);
-
-		if (!configured) return { percentage: 0, maxed: false, label: 'Not configured' };
-		if (!ratios.length) return { percentage: 0, maxed: false, label: 'No tracked progress' };
-
-		const normalized = ratios.map((ratio) => Math.min(Math.max(ratio, 0), 1));
-		const percentage = Math.round(
-			(normalized.reduce((total, ratio) => total + ratio, 0) / normalized.length) * 100
-		);
-		const maxed = normalized.every((ratio) => ratio >= 1);
-		return { percentage, maxed, label: maxed ? 'Maxed' : `${percentage}% complete` };
-	}
+	const armorCompletion = $derived(getProgressCompletion(pest.activeArmorSetProgress, !!pest.activeArmorSet));
+	const equipmentCompletion = $derived(
+		getProgressCompletion(pest.activeEquipmentSetProgress, !!pest.activeEquipmentSet)
+	);
+	const petCompletion = $derived(getProgressCompletion(petProgress, !!pest.activePhasePet));
+	const vacuumCompletion = $derived(getProgressCompletion(pest.vacuumProgress, !!pest.selectedVacuum));
 
 	function requestEdit(kind: 'armor' | 'equipment', slot: GearSlot, uuid?: string) {
 		const setId = kind === 'armor' ? pest.prepareActiveArmorSetForEdit() : pest.prepareActiveEquipmentSetForEdit();
@@ -115,10 +87,23 @@
 					<LoaderCircle class="size-4 animate-spin" />
 					Cancel · {pest.optimizationEvaluated.toLocaleString()}
 				</Button>
+			{:else if pest.itemPriceLoadFailed}
+				<Button variant="outline" onclick={() => pest.retryItemPrices()}>
+					<TriangleAlert class="size-4 text-destructive" />
+					Retry prices
+				</Button>
 			{:else}
-				<Button onclick={() => void pest.optimizeLoadouts()} disabled={!pest.loadoutState}>
-					<WandSparkles class="size-4" />
-					Optimize
+				<Button
+					onclick={() => void pest.optimizeLoadouts()}
+					disabled={!pest.loadoutState || !pest.itemPricesReady}
+				>
+					{#if pest.itemPricesReady}
+						<WandSparkles class="size-4" />
+						Optimize
+					{:else}
+						<LoaderCircle class="size-4 animate-spin" />
+						Loading prices
+					{/if}
 				</Button>
 			{/if}
 		</div>
@@ -140,8 +125,13 @@
 					<div class="flex min-w-36 flex-1 items-center gap-1.5">
 						{#each armorPieces as { slot, piece } (slot)}
 							{#if piece}
+								{@const conflict = pest.getArmorPieceConflict(
+									pest.activePhaseLoadout.armorSetId,
+									piece.item.uuid
+								)}
 								<div
-									class="flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5"
+									class="relative flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5"
+									class:border-destructive={!!conflict}
 									title={piece.item.name ?? slot}
 								>
 									<ItemRender
@@ -149,6 +139,14 @@
 										inline={false}
 										class="size-full [&>img]:p-0.5"
 									/>
+									{#if conflict}
+										<span
+											class="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground ring-2 ring-card"
+											aria-label="Requires a second copy"
+										>
+											<TriangleAlert class="size-2.5" />
+										</span>
+									{/if}
 								</div>
 							{:else}
 								<div
@@ -183,6 +181,8 @@
 						clearPiece={(slot) => requestEdit('armor', slot)}
 						getPieceBreakdown={(piece) => pest.getPhasePieceBreakdown(piece)}
 						getPieceRateImpact={(piece) => pest.getPhasePieceRateImpact(piece)}
+						getPieceConflict={(piece) =>
+							pest.getArmorPieceConflict(pest.activePhaseLoadout.armorSetId, piece.item.uuid)}
 					>
 						<CategoryProgress
 							name="Armor Progress"
@@ -221,8 +221,13 @@
 					<div class="flex min-w-36 flex-1 items-center gap-1.5">
 						{#each equipmentPieces as { slot, piece } (slot)}
 							{#if piece}
+								{@const conflict = pest.getEquipmentPieceConflict(
+									pest.activePhaseLoadout.equipmentSetId,
+									piece.item.uuid
+								)}
 								<div
-									class="flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5"
+									class="relative flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5"
+									class:border-destructive={!!conflict}
 									title={piece.item.name ?? slot}
 								>
 									<ItemRender
@@ -230,6 +235,14 @@
 										inline={false}
 										class="size-full [&>img]:p-0.5"
 									/>
+									{#if conflict}
+										<span
+											class="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground ring-2 ring-card"
+											aria-label="Requires a second copy"
+										>
+											<TriangleAlert class="size-2.5" />
+										</span>
+									{/if}
 								</div>
 							{:else}
 								<div
@@ -264,6 +277,8 @@
 						clearPiece={(slot) => requestEdit('equipment', slot)}
 						getPieceBreakdown={(piece) => pest.getActiveEquipmentPieceBreakdown(piece)}
 						getPieceRateImpact={(piece) => pest.getActiveEquipmentPieceRateImpact(piece)}
+						getPieceConflict={(piece) =>
+							pest.getEquipmentPieceConflict(pest.activePhaseLoadout.equipmentSetId, piece.item.uuid)}
 					>
 						<CategoryProgress
 							name="Equipment Progress"

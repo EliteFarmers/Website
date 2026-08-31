@@ -195,7 +195,10 @@ export interface UpgradeGroupDefinition {
 	id: string;
 	label: string;
 	strategy: 'available-pieces';
+	kind?: 'loadout' | 'pet-purchase';
 	warning?: string;
+	/** One group of needed upgrades at once */
+	atomic?: boolean;
 }
 
 export interface FortuneUpgradeGroupMeta extends UpgradeGroupDefinition {
@@ -244,12 +247,15 @@ export interface UpgradeMeta {
 		| 'chip_rarity'
 		| 'pet_item'
 		| 'pet_level'
+		| 'buy_pet'
 		| 'setting'
 		| 'unlock'
 		| 'upgrade_group'
 		| 'buy_item';
 	key?: string; // For enchants/stats keys
 	value?: number | string; // New value/level
+	selected?: boolean; // Whether a purchased pet should become the active pet
+	phases?: string[]; // Pest farming phases that should use a purchased pet
 	slotIndex?: number; // For gems
 	slot?: string; // For gems
 }

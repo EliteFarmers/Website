@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { Button } from '$ui/button';
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import Settings from '@lucide/svelte/icons/settings';
 	import type { PestFarmingRateResult, PestRatePriceBook } from 'farming-weight';
 	import PestCooldownDetailsDialog from './pest-cooldown-details-dialog.svelte';
@@ -12,10 +13,11 @@
 		priceBook: PestRatePriceBook;
 		items: RatesItemPriceData;
 		openSettings: () => void;
+		processing?: boolean;
 		referenceOnlyPrices?: boolean;
 	}
 
-	let { result, priceBook, items, openSettings, referenceOnlyPrices = false }: Props = $props();
+	let { result, priceBook, items, openSettings, processing = false, referenceOnlyPrices = false }: Props = $props();
 
 	function formatNumber(value: number, maximumFractionDigits = 0) {
 		return value.toLocaleString(undefined, { maximumFractionDigits });
@@ -72,9 +74,16 @@
 		<div class="flex flex-col gap-3">
 			<div class="rounded-lg border bg-card px-4 py-3 {referenceOnlyPrices ? 'opacity-60' : ''}">
 				<p class="text-xs font-medium text-muted-foreground">Total Coins</p>
-				<p class="font-mono text-2xl leading-tight font-semibold tabular-nums">
-					{formatRate(result.valuation.coinsPerHour)}
-				</p>
+				<div class="flex items-center gap-2">
+					<p class="font-mono text-2xl leading-tight font-semibold tabular-nums">
+						{formatRate(result.valuation.coinsPerHour)}
+					</p>
+					{#if processing}
+						<span role="status" aria-label="Calculating rates" class="text-muted-foreground">
+							<LoaderCircle class="size-5 animate-spin" aria-hidden="true" />
+						</span>
+					{/if}
+				</div>
 			</div>
 
 			<div class="h-fit overflow-hidden rounded-lg border bg-card">

@@ -31,7 +31,7 @@
 
 	<div class="m-0 flex-1 p-0">
 		<Sidebar.Inset>
-			<Header />
+			<Header contests={data.cache?.contests} harvestFeast={data.cache?.harvestfeast} />
 			<Announcements />
 
 			<Content>

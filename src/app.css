@@ -8,6 +8,7 @@
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant fullscreen (&:fullscreen, :fullscreen &);
 
 @layer base {
 	:root {

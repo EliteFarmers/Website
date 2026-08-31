@@ -70,7 +70,7 @@ export const GREENHOUSE_MUTATION_RENDER_MAPPINGS: Record<string, GreenhouseMutat
 		surface: 'FARMLAND',
 	},
 	FIRE: {
-		itemId: 'FLINT_AND_STEEL',
+		itemId: 'FIRE',
 		surface: 'NETHERRACK',
 	},
 	COCOA_BEANS: {

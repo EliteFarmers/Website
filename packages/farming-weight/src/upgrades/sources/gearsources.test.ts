@@ -6,6 +6,7 @@ import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingArmor } from '../../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import { getSourceCompletionUpgrades } from '../getsourceprogress.js';
+import { resolveProfitAwareProgress } from '../profit-aware-progress.js';
 
 const MAX_UNIQUE_VISITORS = Object.keys(GARDEN_VISITORS).length;
 const MAX_GREEN_THUMB_FORTUNE = MAX_UNIQUE_VISITORS * 0.25;
@@ -441,6 +442,16 @@ test('Mantid progress retains Mossy as a completion comparison', () => {
 		reforgeProgress &&
 			getSourceCompletionUpgrades(reforgeProgress).find((upgrade) => upgrade.title === 'Reforge to Mossy')
 	).toBeDefined();
+
+	const resolved = resolveProfitAwareProgress(item.getProgress([Stat.FarmingFortune, Stat.BonusPestChance]), () => ({
+		complete: true,
+		coinsPerHour: -1,
+	}));
+	const resolvedReforge = resolved.find((progress) => progress.name === 'Reforge Stats');
+	expect(resolvedReforge?.stats?.[Stat.FarmingFortune]).toMatchObject({
+		current: resolvedReforge?.stats?.[Stat.FarmingFortune]?.max,
+		ratio: 1,
+	});
 });
 
 test('recombobulated armor gemstone progress already uses the current rarity', () => {

@@ -735,6 +735,8 @@ export * from './ResourcePackReloadResult';
 export * from './RiftSecuredTrophyDto';
 export * from './RiftStatsDto';
 export * from './SaveSuggestionRequest';
+export * from './SchematicViewerStatus';
+export * from './SchematicViewerStatusDto';
 export * from './SearchAccountsParams';
 export * from './SearchHypixelGuildsParams';
 export * from './SearchHypixelGuildsResponse';

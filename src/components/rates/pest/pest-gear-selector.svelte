@@ -22,6 +22,7 @@
 	} from 'farming-weight';
 
 	type PestGearLoadout = ArmorSet | ArmorLoadout | EquipmentLoadout;
+	type PestGearPieceConflict = { setNames: string[] };
 
 	interface Props {
 		title?: string;
@@ -31,6 +32,7 @@
 		clearPiece?: (slot: GearSlot) => void;
 		getPieceBreakdown: (piece: FarmingArmor | FarmingEquipment) => StatBreakdown;
 		getPieceRateImpact: (piece: FarmingArmor | FarmingEquipment) => number | undefined;
+		getPieceConflict?: (piece: FarmingArmor | FarmingEquipment) => PestGearPieceConflict | undefined;
 		overallBreakdown?: Record<string, { value: number; stat: Stat }>;
 		slots?: readonly GearSlot[];
 		embedded?: boolean;
@@ -46,6 +48,7 @@
 		clearPiece,
 		getPieceBreakdown,
 		getPieceRateImpact,
+		getPieceConflict,
 		overallBreakdown,
 		slots,
 		embedded = false,
@@ -63,6 +66,12 @@
 		return value.toLocaleString(undefined, {
 			maximumFractionDigits: 0,
 		});
+	}
+
+	function formatSetNames(names: string[]): string {
+		if (names.length <= 1) return names[0] ?? 'another set';
+		if (names.length === 2) return `${names[0]} and ${names[1]}`;
+		return `${names.slice(0, -1).join(', ')}, and ${names.at(-1)}`;
 	}
 </script>
 
@@ -97,8 +106,12 @@
 					(getPieceRateImpact(b) ?? Number.NEGATIVE_INFINITY) -
 					(getPieceRateImpact(a) ?? Number.NEGATIVE_INFINITY)
 			)}
+			{@const selectableOptions = sortedOptions.flatMap((option) =>
+				option.item.uuid ? [{ option, uuid: option.item.uuid }] : []
+			)}
 			{@const bestRateDelta = options.reduce((max, p) => Math.max(max, getPieceRateImpact(p) ?? 0), 0)}
 			{@const hasBetterRateOption = piece && bestRateDelta > 0}
+			{@const pieceConflict = piece ? getPieceConflict?.(piece) : undefined}
 
 			<div
 				class="flex w-full items-center justify-between gap-2 rounded-md py-2 transition-colors hover:bg-muted/30"
@@ -119,28 +132,30 @@
 									value={piece?.item.uuid ?? ''}
 									onValueChange={(value) => value && selectPiece(slot, value)}
 								>
-									{#each sortedOptions as option, i (option.item.uuid ?? i)}
-										{#if option.item.uuid}
-											{@const rateDelta = getPieceRateImpact(option)}
-											<DropdownMenu.RadioItem value={option.item.uuid}>
-												<div class="flex flex-row items-center gap-2">
-													<ItemRender
-														skyblockId={option.item.skyblockId ?? ''}
-														class="size-6"
+									{#each selectableOptions as { option, uuid } (uuid)}
+										{@const rateDelta = getPieceRateImpact(option)}
+										{@const optionConflict = getPieceConflict?.(option)}
+										<DropdownMenu.RadioItem value={uuid}>
+											<div class="flex flex-row items-center gap-2">
+												<ItemRender skyblockId={option.item.skyblockId ?? ''} class="size-6" />
+												<ItemName name={option.item.name ?? ''} />
+												{#if optionConflict}
+													<TriangleAlert
+														class="size-4 shrink-0 text-destructive"
+														aria-label="Requires a second copy"
 													/>
-													<ItemName name={option.item.name ?? ''} />
-													{#if rateDelta !== undefined && rateDelta !== 0}
-														<span
-															class="{rateDelta > 0
-																? 'dark:text-completed'
-																: 'text-muted-foreground'} ml-auto text-xs whitespace-nowrap tabular-nums"
-														>
-															{rateDelta > 0 ? '+' : ''}{formatRate(rateDelta)}/hr
-														</span>
-													{/if}
-												</div>
-											</DropdownMenu.RadioItem>
-										{/if}
+												{/if}
+												{#if rateDelta !== undefined && rateDelta !== 0}
+													<span
+														class="{rateDelta > 0
+															? 'dark:text-completed'
+															: 'text-muted-foreground'} ml-auto text-xs whitespace-nowrap tabular-nums"
+													>
+														{rateDelta > 0 ? '+' : ''}{formatRate(rateDelta)}/hr
+													</span>
+												{/if}
+											</div>
+										</DropdownMenu.RadioItem>
 									{/each}
 								</DropdownMenu.RadioGroup>
 								{#if clearPiece && piece}
@@ -157,8 +172,15 @@
 					{/if}
 					{#if piece}
 						<ItemRender skyblockId={piece.item.skyblockId ?? ''} class="size-10" />
-						<div class="min-w-0 truncate text-base font-semibold">
-							<ItemName name={piece.item.name ?? ''} />
+						<div class="min-w-0">
+							<div class="truncate text-base font-semibold">
+								<ItemName name={piece.item.name ?? ''} />
+							</div>
+							{#if pieceConflict}
+								<p class="mt-0.5 text-xs leading-snug text-destructive">
+									Also used by {formatSetNames(pieceConflict.setNames)}. A second copy is required.
+								</p>
+							{/if}
 						</div>
 					{:else}
 						<div class="flex size-10 items-center justify-center rounded-md bg-muted/40">

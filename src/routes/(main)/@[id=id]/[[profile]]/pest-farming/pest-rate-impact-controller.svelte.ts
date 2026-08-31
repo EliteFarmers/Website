@@ -7,23 +7,15 @@ import type {
 	PestFarmingRateCalculator,
 	PestFarmingRateResult,
 	PestFarmingUpgradeRateImpact,
+	PestRateComparison,
+	PestRateComparisonTask,
 	PestRatePriceBook,
 } from 'farming-weight';
+import { getFortuneUpgradeIdentity } from 'farming-weight';
 
 const FRAME_BUDGET_MS = 8;
 const PRICE_CACHE_TTL_MS = 60_000;
 const MAX_MEMO_ENTRIES = 1_000;
-
-interface PestRateComparison {
-	before: PestFarmingRateResult;
-	after: PestFarmingRateResult;
-}
-
-export interface PestRateComparisonTask {
-	key: string;
-	type: 'gear' | 'pet';
-	calculate: () => PestRateComparison;
-}
 
 interface RestartInput {
 	calculator: PestFarmingRateCalculator;
@@ -40,13 +32,6 @@ interface CachedPrice {
 
 // Module lifetime intentionally spans child-route navigation within this browser session.
 const priceCache = new Map<string, CachedPrice>();
-
-export function getPestUpgradeIdentity(upgrade: FortuneUpgrade): string {
-	return (
-		upgrade.conflictKey ??
-		`${upgrade.title}:${upgrade.action}:${upgrade.meta?.type ?? ''}:${upgrade.meta?.id ?? upgrade.meta?.key ?? ''}`
-	);
-}
 
 export function readCachedPestPrices(itemIds: readonly string[]): {
 	cached: RatesItemPriceData;
@@ -89,24 +74,27 @@ export class PestRateImpactController {
 	#activeUpgradeMechanics = new Map<string, PestFarmingUpgradeRateImpact>();
 	#activeGearMechanics = new Map<string, PestRateComparison>();
 	#activePetMechanics = new Map<string, PestRateComparison>();
+	#requestKey = '';
 
 	restart(input: RestartInput): void {
+		const upgrades = dedupeUpgrades(input.upgrades);
+		const comparisons = dedupeComparisons(input.comparisons);
+		const requestKey = getRequestKey(input, upgrades, comparisons);
+		if (requestKey === this.#requestKey) return;
+		this.#requestKey = requestKey;
+
 		const generation = ++this.#generation;
 		this.ready = false;
-		this.requiredItemIds = [];
-		this.upgradeImpacts = new Map();
-		this.gearImpacts = new Map();
-		this.petImpacts = new Map();
-		this.displayRevision++;
 		if (!browser) return;
 
 		requestAnimationFrame(() => {
-			void this.#build(generation, input);
+			void this.#build(generation, { ...input, upgrades, comparisons });
 		});
 	}
 
 	cancel(): void {
 		this.#generation++;
+		this.#requestKey = '';
 	}
 
 	revalue(calculator: PestFarmingRateCalculator, priceBook: PestRatePriceBook): void {
@@ -126,16 +114,14 @@ export class PestRateImpactController {
 		await nextFrame();
 		if (generation !== this.#generation) return;
 
-		const upgrades = dedupeUpgrades(input.upgrades);
-		const comparisons = dedupeComparisons(input.comparisons);
 		const upgradeMechanics = new Map<string, PestFarmingUpgradeRateImpact>();
 		const gearMechanics = new Map<string, PestRateComparison>();
 		const petMechanics = new Map<string, PestRateComparison>();
 		const requiredItemIds = new Set<string>();
 		let chunkStarted = performance.now();
 
-		for (const upgrade of upgrades) {
-			const upgradeKey = getPestUpgradeIdentity(upgrade);
+		for (const upgrade of input.upgrades) {
+			const upgradeKey = getFortuneUpgradeIdentity(upgrade);
 			const memoKey = `${input.before.mechanicsKey}:${input.phase}:${upgradeKey}`;
 			let impact = this.#upgradeMemo.get(memoKey);
 			if (!impact) {
@@ -155,7 +141,7 @@ export class PestRateImpactController {
 			}
 		}
 
-		for (const task of comparisons) {
+		for (const task of input.comparisons) {
 			const memoKey = `${input.before.mechanicsKey}:${task.key}`;
 			let comparison = this.#comparisonMemo.get(memoKey);
 			if (!comparison) {
@@ -209,7 +195,7 @@ export class PestRateImpactController {
 function dedupeUpgrades(upgrades: readonly FortuneUpgrade[]): FortuneUpgrade[] {
 	const unique = new Map<string, FortuneUpgrade>();
 	for (const upgrade of upgrades) {
-		const key = getPestUpgradeIdentity(upgrade);
+		const key = getFortuneUpgradeIdentity(upgrade);
 		if (!unique.has(key)) unique.set(key, upgrade);
 	}
 	return [...unique.values()];
@@ -217,6 +203,19 @@ function dedupeUpgrades(upgrades: readonly FortuneUpgrade[]): FortuneUpgrade[] {
 
 function dedupeComparisons(comparisons: readonly PestRateComparisonTask[]): PestRateComparisonTask[] {
 	return [...new Map(comparisons.map((comparison) => [comparison.key, comparison])).values()];
+}
+
+function getRequestKey(
+	input: Pick<RestartInput, 'before' | 'phase'>,
+	upgrades: readonly FortuneUpgrade[],
+	comparisons: readonly PestRateComparisonTask[]
+): string {
+	return JSON.stringify([
+		input.before.mechanicsKey,
+		input.phase,
+		upgrades.map(getFortuneUpgradeIdentity).sort(),
+		comparisons.map((comparison) => comparison.key).sort(),
+	]);
 }
 
 function collectImpactItemIds(items: Set<string>, impact: PestFarmingUpgradeRateImpact): void {

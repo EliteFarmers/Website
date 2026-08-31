@@ -7,6 +7,7 @@
  * Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { SchematicViewerStatusDto } from './SchematicViewerStatusDto';
 
 export interface GuideLitematicDto {
 	downloadUrl: string;
@@ -21,4 +22,5 @@ export interface GuideLitematicDto {
 	/** @nullable */
 	length?: number | null;
 	regionCount: number;
+	viewer?: SchematicViewerStatusDto | null;
 }

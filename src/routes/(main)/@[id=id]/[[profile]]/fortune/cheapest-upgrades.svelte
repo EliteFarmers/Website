@@ -5,6 +5,8 @@
 	import { trackAnalytics } from '$lib/analytics';
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
+	import { findFortunePetPurchaseRecommendations } from '$lib/rates/pet-purchase';
+	import { getRateImpactCoinValue } from '$lib/rates/upgrade-rate-value';
 	import { getItem, getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
@@ -14,6 +16,7 @@
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import {
 		Crop,
+		FARMING_PET_ITEMS,
 		Stat,
 		getRateCalculationStateKey,
 		type FarmingPlayer,
@@ -38,20 +41,43 @@
 	}
 
 	let { player, crop, blocksPerHour = 72_000 }: Props = $props();
+	let itemsData = $state<RatesItemPriceData>({});
+	let itemsVersion = $state(0);
+	let isInitialLoad = $state(true);
+	let isLoadingItems = $state(true);
+	let itemLoadError = $state<unknown>(null);
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const requestedFallbackItems = new Set<string>();
 
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const rateImpactMemo = new Map<string, UpgradeRateImpact>();
 	const maxRateImpactMemoEntries = 2_500;
 
-	const upgrades = $derived.by(() => mergeUpgrades($player, crop));
+	const petPurchaseRecommendations = $derived.by(() => {
+		void itemsVersion;
+		return findFortunePetPurchaseRecommendations({
+			player: $player,
+			crop,
+			blocksPerHour,
+			items: itemsData,
+		});
+	});
+	const upgrades = $derived.by(() => [
+		...mergeUpgrades($player, crop),
+		...petPurchaseRecommendations.map((recommendation) => recommendation.upgrade),
+	]);
 	const playerRateStateKey = $derived.by(() => getRateCalculationStateKey($player, crop));
 	const rateImpactCache = $derived.by(() =>
 		buildRateImpactCache($player, upgrades, crop, blocksPerHour, playerRateStateKey)
+	);
+	const displayedUpgrades = $derived(
+		upgrades.filter((upgrade) => getRateImpactCoinValue(getRateImpact(upgrade), itemsData, crop) >= -0.01)
 	);
 
 	function mergeUpgrades(p: FarmingPlayer, c: Crop) {
 		const all = [
 			...p.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom], includeUpgradeGroups: true }),
+			...(p.selectedPet?.getUpgrades({ stats: [Stat.FarmingFortune, Stat.Overbloom] }, p) ?? []),
 			...p.getCropUpgrades(c),
 		];
 		const seen: Record<string, boolean> = {};
@@ -168,18 +194,16 @@
 	}
 
 	const neededItems = $derived([
-		...new Set([...getItemsFromUpgrades(upgrades), ...getRateImpactItems(rateImpactCache)]),
+		...new Set([
+			'PET',
+			crop,
+			...Object.keys(FARMING_PET_ITEMS),
+			...getItemsFromUpgrades(upgrades),
+			...getRateImpactItems(rateImpactCache),
+		]),
 	]);
 
 	const debouncedItems = new Debounced(() => neededItems, 500);
-
-	let itemsData = $state<RatesItemPriceData>({});
-	let itemsVersion = $state(0);
-	let isInitialLoad = $state(true);
-	let isLoadingItems = $state(true);
-	let itemLoadError = $state<unknown>(null);
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
-	const requestedFallbackItems = new Set<string>();
 
 	$effect(() => {
 		if (!isInitialLoad) return;
@@ -262,7 +286,7 @@
 		</p>
 	{:else}
 		<UpgradeList
-			{upgrades}
+			upgrades={displayedUpgrades}
 			items={itemsData}
 			version="{itemsVersion}:{rateImpactCache.version}"
 			costFn={getUpgradeCost}
@@ -288,7 +312,7 @@
 			further upgrades!
 		</p>
 
-		{#if upgrades.length > 0}
+		{#if displayedUpgrades.length > 0}
 			<p class="max-w-xl text-center">
 				{#if ctx.isNonClassicProfile}
 					Market prices are shown for reference on this game mode.

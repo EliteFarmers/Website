@@ -9,6 +9,7 @@ import {
 	getBadges,
 	getBazaarProducts,
 	getCategories,
+	getCurrentContests,
 	getHarvestFeastRotations,
 	getHypixelGuilds,
 	getLeaderboard,
@@ -39,6 +40,7 @@ import {
 	type ShopCategoryDto,
 	type SkyblockGemShopsResponse,
 	type WeightStyleListDto,
+	type YearlyContestsDto,
 } from './api';
 import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
@@ -214,6 +216,7 @@ const cacheEntries = {
 		},
 	},
 	harvestfeast: {
+		interval: 30,
 		data: {} as HarvestFeastRotationsDto,
 		update: async () => {
 			const { data } = await getHarvestFeastRotations();
@@ -226,6 +229,18 @@ const cacheEntries = {
 					isGrandFeast: false,
 				}
 			);
+		},
+	},
+	contests: {
+		data: {
+			year: SkyBlockTime.now.year,
+			count: 0,
+			complete: false,
+			contests: {},
+		} as YearlyContestsDto,
+		update: async () => {
+			const { data } = await getCurrentContests();
+			return data;
 		},
 	},
 };
@@ -290,6 +305,9 @@ export const cache = {
 	},
 	get harvestfeast() {
 		return cacheEntries.harvestfeast.data;
+	},
+	get contests() {
+		return cacheEntries.contests.data;
 	},
 };
 

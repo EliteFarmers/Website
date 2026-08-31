@@ -219,5 +219,5 @@
 
 {#snippet pestFarmingCrumb(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
 	<span class="max-w-28 truncate first-letter:capitalize">{crumb?.name}</span>
-	<span class="rounded-md border border-destructive bg-destructive/40 px-1 text-xs leading-snug"> v1 </span>
+	<span class="rounded-md border border-destructive bg-destructive/40 px-1 text-xs leading-snug"> v2 </span>
 {/snippet}

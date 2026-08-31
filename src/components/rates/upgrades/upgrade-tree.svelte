@@ -22,9 +22,18 @@
 		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		defaultOpen?: boolean;
 		referenceOnlyPrices?: boolean;
+		includedInBundle?: boolean;
 	}
 
-	let { node, items, costFn, applyUpgrade, defaultOpen = false, referenceOnlyPrices = false }: Props = $props();
+	let {
+		node,
+		items,
+		costFn,
+		applyUpgrade,
+		defaultOpen = false,
+		referenceOnlyPrices = false,
+		includedInBundle = false,
+	}: Props = $props();
 
 	let isOpen = $derived(defaultOpen);
 	const upgrade = $derived(node.upgrade);
@@ -82,6 +91,11 @@
 		cost > 0 || (upgrade.cost?.items && Object.keys(upgrade.cost.items).length > 0) || upgrade.action !== undefined
 	);
 	const isExpandable = $derived(hasChildren || hasDetails);
+	const groupedPetPurchase = $derived(
+		upgrade.group?.kind === 'pet-purchase'
+			? upgrade.groupedUpgrades?.find((member) => member.meta?.type === 'buy_pet')
+			: undefined
+	);
 
 	function getUpgradeKey(upgrade: FortuneUpgrade, index: number): string {
 		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
@@ -109,7 +123,11 @@
 
 		<div class="flex min-w-0 flex-row items-center gap-2">
 			<div class="flex h-8 w-8 shrink-0 items-center justify-center rounded border bg-muted/20">
-				{#if upgrade.purchase}
+				{#if groupedPetPurchase?.meta?.id}
+					<ItemRender skyblockId={groupedPetPurchase.meta.id} pet class="size-6" />
+				{:else if upgrade.meta?.type === 'buy_pet' && upgrade.meta.id}
+					<ItemRender skyblockId={upgrade.meta.id} pet class="size-6" />
+				{:else if upgrade.purchase}
 					<ItemRender skyblockId={upgrade.purchase} class="size-6" />
 				{:else if upgrade.onto?.newSkyblockId}
 					<ItemRender skyblockId={upgrade.onto.newSkyblockId} class="size-6" />
@@ -142,72 +160,80 @@
 			{/if}
 		</div>
 
-		<div class="hidden flex-row items-center gap-1 sm:flex">
-			<UpgradeFortune {upgrade} class="w-fit" />
-			{#if upgrade.api === false}
-				<Popover.Mobile>
-					{#snippet trigger()}
-						<TriangleAlert size={14} class="text-completed" />
-					{/snippet}
-					<p class="max-w-sm text-sm">
-						This fortune source is not available in the Hypixel API. Configure settings on this page to mark
-						it as complete.
-					</p>
-				</Popover.Mobile>
-			{/if}
-		</div>
+		{#if includedInBundle}
+			<div
+				class="col-start-2 row-start-2 text-xs text-muted-foreground sm:col-span-3 sm:col-start-4 sm:row-start-auto sm:text-right"
+			>
+				Included
+			</div>
+		{:else}
+			<div class="hidden flex-row items-center gap-1 sm:flex">
+				<UpgradeFortune {upgrade} class="w-fit" />
+				{#if upgrade.api === false}
+					<Popover.Mobile>
+						{#snippet trigger()}
+							<TriangleAlert size={14} class="text-completed" />
+						{/snippet}
+						<p class="max-w-sm text-sm">
+							This fortune source is not available in the Hypixel API. Configure settings on this page to
+							mark it as complete.
+						</p>
+					</Popover.Mobile>
+				{/if}
+			</div>
 
-		<div class="col-start-2 row-start-2 flex flex-row items-start gap-1 sm:hidden">
-			<UpgradeFortune {upgrade} class="w-fit" />
-			{#if upgrade.api === false}
-				<Popover.Mobile>
-					{#snippet trigger()}
-						<TriangleAlert size={14} class="text-completed" />
-					{/snippet}
-					<p class="max-w-sm text-sm">
-						This fortune source is not available in the Hypixel API. Configure settings on this page to mark
-						it as complete.
-					</p>
-				</Popover.Mobile>
-			{/if}
-		</div>
+			<div class="col-start-2 row-start-2 flex flex-row items-start gap-1 sm:hidden">
+				<UpgradeFortune {upgrade} class="w-fit" />
+				{#if upgrade.api === false}
+					<Popover.Mobile>
+						{#snippet trigger()}
+							<TriangleAlert size={14} class="text-completed" />
+						{/snippet}
+						<p class="max-w-sm text-sm">
+							This fortune source is not available in the Hypixel API. Configure settings on this page to
+							mark it as complete.
+						</p>
+					</Popover.Mobile>
+				{/if}
+			</div>
 
-		<div class="col-start-3 row-start-2 text-right tabular-nums sm:hidden">
-			{#if displayPerFF > 0}
-				<div>
+			<div class="col-start-3 row-start-2 text-right tabular-nums sm:hidden">
+				{#if displayPerFF > 0}
+					<div>
+						<span class="{coinValueClass} font-semibold">{formatCompact(displayPerFF)}</span>
+						<span class="text-sm text-muted-foreground">{displayUnit} per</span>
+					</div>
+				{:else}
+					<div class="text-sm text-muted-foreground">N/A</div>
+				{/if}
+				{#if displayTotal > 0}
+					<div>
+						<span class="{coinValueClass} font-semibold">{formatCompact(displayTotal)}</span>
+						<span class="text-sm text-muted-foreground">{displayUnit}</span>
+					</div>
+				{:else}
+					<div class="text-sm text-muted-foreground">N/A</div>
+				{/if}
+			</div>
+
+			<div class="hidden text-right tabular-nums sm:block">
+				{#if displayPerFF > 0}
 					<span class="{coinValueClass} font-semibold">{formatCompact(displayPerFF)}</span>
 					<span class="text-sm text-muted-foreground">{displayUnit} per</span>
-				</div>
-			{:else}
-				<div class="text-sm text-muted-foreground">N/A</div>
-			{/if}
-			{#if displayTotal > 0}
-				<div>
+				{:else}
+					<span class="text-sm text-muted-foreground">N/A</span>
+				{/if}
+			</div>
+
+			<div class="hidden text-right tabular-nums sm:block">
+				{#if displayTotal > 0}
 					<span class="{coinValueClass} font-semibold">{formatCompact(displayTotal)}</span>
 					<span class="text-sm text-muted-foreground">{displayUnit}</span>
-				</div>
-			{:else}
-				<div class="text-sm text-muted-foreground">N/A</div>
-			{/if}
-		</div>
-
-		<div class="hidden text-right tabular-nums sm:block">
-			{#if displayPerFF > 0}
-				<span class="{coinValueClass} font-semibold">{formatCompact(displayPerFF)}</span>
-				<span class="text-sm text-muted-foreground">{displayUnit} per</span>
-			{:else}
-				<span class="text-sm text-muted-foreground">N/A</span>
-			{/if}
-		</div>
-
-		<div class="hidden text-right tabular-nums sm:block">
-			{#if displayTotal > 0}
-				<span class="{coinValueClass} font-semibold">{formatCompact(displayTotal)}</span>
-				<span class="text-sm text-muted-foreground">{displayUnit}</span>
-			{:else}
-				<span class="text-sm text-muted-foreground">N/A</span>
-			{/if}
-		</div>
+				{:else}
+					<span class="text-sm text-muted-foreground">N/A</span>
+				{/if}
+			</div>
+		{/if}
 	</div>
 
 	{#if isExpandable}
@@ -227,7 +253,14 @@
 				{#if hasChildren}
 					<div class="flex flex-col gap-2 pr-0 pb-0 pl-2" class:pt-2={!hasDetails}>
 						{#each node.children as child, i (getUpgradeKey(child.upgrade, i))}
-							<UpgradeTree node={child} {items} {costFn} {applyUpgrade} {referenceOnlyPrices} />
+							<UpgradeTree
+								node={child}
+								{items}
+								{costFn}
+								{applyUpgrade}
+								{referenceOnlyPrices}
+								includedInBundle={upgrade.group?.kind === 'pet-purchase'}
+							/>
 						{/each}
 					</div>
 				{/if}
