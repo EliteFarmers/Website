@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Crop, MAX_CROP_FORTUNE } from '../constants/crops.js';
+import { FarmingMechanic } from '../constants/mechanics.js';
 import { Stat } from '../constants/stats.js';
 import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
 import type { Effect } from '../effects/types.js';
@@ -253,6 +254,51 @@ test('Tool Exp Capsules include seeds for wheat (average drops)', () => {
 	const wheat = cropResult(drops, Crop.Wheat);
 	expect(wheat.otherCollection['Seeds']).toBe(100_000);
 	expect(wheat.items['TOOL_EXP_CAPSULE']).toBe(1);
+});
+
+test('Tool Exp Capsules preserve progress across partial calculation intervals', () => {
+	const result = detailed({
+		crop: Crop.Wheat,
+		blocksBroken: 10_000,
+		farmingFortune: 0,
+		bountiful: false,
+		mooshroom: false,
+		maxTool: true,
+	});
+
+	expect(result.items['TOOL_EXP_CAPSULE']).toBeGreaterThan(0);
+	expect(result.items['TOOL_EXP_CAPSULE']).toBeLessThan(1);
+	expect(result.coinSources['Tool Exp Capsule']).toBe(result.items['TOOL_EXP_CAPSULE']! * 100_000);
+});
+
+test('Tool Exp Capsules consume multiplicative mechanic effects', () => {
+	const baseOptions = {
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		farmingFortune: 100,
+		bountiful: true,
+		maxTool: true,
+	} as const;
+	const baseline = detailed(baseOptions);
+	const result = detailed({
+		...baseOptions,
+		effects: [
+			{
+				source: 'Orchid Mantis',
+				op: 'mul-mechanic',
+				mechanic: FarmingMechanic.FarmingToolExperience,
+				value: 1.2,
+			},
+			{
+				source: 'Mechamind Chip',
+				op: 'mul-mechanic',
+				mechanic: FarmingMechanic.FarmingToolExperience,
+				value: 1.5,
+			},
+		],
+	});
+
+	expect(result.items['TOOL_EXP_CAPSULE']).toBeCloseTo(baseline.items['TOOL_EXP_CAPSULE']! * 1.2 * 1.5);
 });
 
 test('Warty RNG Drops', () => {

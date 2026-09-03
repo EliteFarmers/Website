@@ -53,8 +53,6 @@ export interface FarmingPetInfo {
 	perRarityLevelStats?: RarityRecord<StatsRecord<FarmingPetStatType, FarmingPet>>;
 	perStatStats?: StatsRecord<FarmingPetStatType>;
 	abilities?: FarmingPetAbility[];
-	/** Multiplicative Farming Tool XP contribution; 1 is the neutral multiplier. */
-	toolExperienceMultiplier?: (pet: FarmingPet) => number;
 }
 
 export interface FarmingPetItemStatModifier {

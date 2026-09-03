@@ -723,9 +723,6 @@ export class FarmingPlayer {
 			bountiful: tool?.bountiful ?? false,
 			mooshroom: this.selectedPet?.type === FarmingPets.MooshroomCow,
 			maxTool: tool?.getCurrentLevelProgress().maxed ?? false,
-			chips: this.options.chips,
-			chipRarities: this.options.chipRarities,
-			pet: this.selectedPet,
 			effects,
 			env,
 		});

@@ -6,6 +6,7 @@ import {
 	getChipLevel,
 	getChipRarity,
 } from '../../constants/chips.js';
+import { FarmingMechanic } from '../../constants/mechanics.js';
 import { Stat } from '../../constants/stats.js';
 import type { Effect, EffectEnvironment } from '../../effects/types.js';
 import type { FarmingPlayer } from '../../player/player.js';
@@ -29,21 +30,33 @@ export class GenericChipSource extends FortuneSource {
 		if (chipLevel <= 0) return [];
 
 		const info = GARDEN_CHIPS[this.chipId];
-		const stats =
-			info.statsPerRarity?.[
-				getChipRarity(chipLevel, getChipInputRarity(player.options.chipRarities, this.chipId))
-			];
-		if (!stats) return [];
-
+		const rarity = getChipRarity(chipLevel, getChipInputRarity(player.options.chipRarities, this.chipId));
+		const stats = info.statsPerRarity?.[rarity];
 		const out: Effect[] = [];
-		for (const [statKey, value] of Object.entries(stats) as [Stat, number][]) {
-			if (statKey === Stat.Overbloom) continue;
-			if (!value) continue;
+		if (stats) {
+			for (const [statKey, value] of Object.entries(stats) as [Stat, number][]) {
+				if (statKey === Stat.Overbloom) continue;
+				if (!value) continue;
+				out.push({
+					source: this.name,
+					op: 'add-stat',
+					stat: statKey,
+					value: value * chipLevel,
+				});
+			}
+		}
+
+		const toolExperienceBonus = info.toolExperienceBonusPerLevel?.[rarity];
+		if (toolExperienceBonus) {
 			out.push({
 				source: this.name,
-				op: 'add-stat',
-				stat: statKey,
-				value: value * chipLevel,
+				op: 'mul-mechanic',
+				mechanic: FarmingMechanic.FarmingToolExperience,
+				value: 1 + toolExperienceBonus * chipLevel,
+				meta: {
+					description: 'Farming Tool EXP',
+					valueDisplay: 'factor',
+				},
 			});
 		}
 		return out;

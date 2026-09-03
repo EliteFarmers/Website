@@ -17,5 +17,4 @@ export abstract class FarmingPetDefinition implements FarmingPetInfo {
 	perRarityLevelStats?: RarityRecord<StatsRecord<FarmingPetStatType, FarmingPet>>;
 	perStatStats?: StatsRecord<FarmingPetStatType>;
 	abilities?: FarmingPetAbility[];
-	toolExperienceMultiplier?: FarmingPetInfo['toolExperienceMultiplier'];
 }

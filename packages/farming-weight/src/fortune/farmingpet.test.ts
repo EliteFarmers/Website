@@ -1,7 +1,9 @@
 import { expect, test } from 'vitest';
+import { FarmingMechanic } from '../constants/mechanics.js';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
+import { resolveMechanicMultiplier } from '../effects/resolver.js';
 import { FarmingPlayer } from '../player/player.js';
 import { FarmingPet } from './farmingpet.js';
 
@@ -156,6 +158,15 @@ test('new farming pet drops and Orchid Mantis bonuses are exposed as effects', (
 		},
 		{ speed: 100 }
 	);
+	const commonMantis = new FarmingPet(
+		{
+			type: 'ORCHID_MANTIS',
+			exp: 30_000_000_000,
+			tier: 'COMMON',
+			heldItem: null,
+		},
+		{ speed: 400 }
+	);
 
 	expect(bee.getEffects(env)).toContainEqual(
 		expect.objectContaining({
@@ -181,7 +192,10 @@ test('new farming pet drops and Orchid Mantis bonuses are exposed as effects', (
 	expect(mantis.getFortune(Stat.FarmingFortune)).toBe(100);
 	expect(rareMantis.getFortune(Stat.FarmingFortune)).toBe(50);
 	expect(slowMantis.getFortune(Stat.FarmingFortune)).toBe(0);
-	expect(mantis.getToolExperienceMultiplier()).toBe(1.2);
+	expect(
+		resolveMechanicMultiplier(commonMantis.getEffects(env), FarmingMechanic.FarmingToolExperience, { env })
+	).toBe(1.1);
+	expect(resolveMechanicMultiplier(mantis.getEffects(env), FarmingMechanic.FarmingToolExperience, { env })).toBe(1.2);
 	expect(mantis.getEffects(env)).toEqual(
 		expect.arrayContaining([
 			expect.objectContaining({

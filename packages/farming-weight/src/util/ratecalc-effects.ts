@@ -1,17 +1,10 @@
-import {
-	getChipInputLevel,
-	getChipInputRarity,
-	getChipLevel,
-	getChipRarity,
-	normalizeChipLevels,
-	normalizeChipRarities,
-} from '../constants/chips.js';
-import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
+import { Crop, CROP_INFO, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
+import { FarmingMechanic } from '../constants/mechanics.js';
 import { Rarity, REFORGES } from '../constants/reforges.js';
 import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO, type SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
-import { produceAddedDrops, resolveDropEffects } from '../effects/resolver.js';
+import { produceAddedDrops, resolveDropEffects, resolveMechanicMultiplier } from '../effects/resolver.js';
 import type {
 	AppliedEffect,
 	DropContext,
@@ -20,7 +13,6 @@ import type {
 	EffectEnvironment,
 	EffectsBreakdown,
 } from '../effects/types.js';
-import type { FarmingPet } from '../fortune/farmingpet.js';
 import { BEST_FARMING_TOOLS } from '../items/tools.js';
 
 /**
@@ -35,9 +27,6 @@ export interface CalculateDetailedDropsFromEffectsOptions {
 	bountiful?: boolean;
 	mooshroom?: boolean;
 	maxTool?: boolean;
-	pet?: FarmingPet;
-	chips?: Record<string, number | null | undefined>;
-	chipRarities?: Record<string, string | Rarity | null | undefined>;
 	toolReforge?: string;
 	/** Effects collected via `FarmingPlayer.collectEffects(env)`. */
 	effects: readonly Effect[];
@@ -159,11 +148,7 @@ function aggregateEffectsBreakdown(target: EffectsBreakdown, applied: readonly A
 export function calculateDetailedDropsFromEffects(
 	options: CalculateDetailedDropsFromEffectsOptions
 ): DetailedDropsFromEffectsResult {
-	const calcOptions: CalculateDetailedDropsFromEffectsOptions = {
-		...options,
-		chips: normalizeChipLevels(options.chips ?? {}),
-		chipRarities: normalizeChipRarities(options.chipRarities ?? {}),
-	};
+	const calcOptions = options;
 	const { crop, blocksBroken, env, effects } = calcOptions;
 
 	const result: DetailedDropsFromEffectsResult = {
@@ -239,22 +224,13 @@ export function calculateDetailedDropsFromEffects(
 	}
 
 	if (calcOptions.maxTool) {
-		let multiplier = 1;
-		if (calcOptions.chips) {
-			const level = getChipLevel(getChipInputLevel(calcOptions.chips, 'mechamind'));
-			if (level > 0) {
-				const rarity = getChipRarity(level, getChipInputRarity(calcOptions.chipRarities, 'mechamind'));
-				let perLevel = 0.015;
-				if (rarity === Rarity.Epic) perLevel = 0.02;
-				else if (rarity === Rarity.Legendary) perLevel = 0.025;
-				multiplier = 1 + level * perLevel;
-			}
-		}
-		multiplier *= calcOptions.pet?.getToolExperienceMultiplier() ?? 1;
+		const multiplier = resolveMechanicMultiplier(effects, FarmingMechanic.FarmingToolExperience, {
+			env,
+			crop,
+		});
 		const toolXpFactor = cropInfo.toolXpFactor ?? 1;
-		const capsules = Math.floor(
-			((result.collection + (result.otherCollection['Seeds'] ?? 0)) * multiplier) / toolXpFactor / 200_000
-		);
+		const capsules =
+			((result.collection + (result.otherCollection['Seeds'] ?? 0)) * multiplier) / toolXpFactor / 200_000;
 		if (capsules > 0) {
 			result.items['TOOL_EXP_CAPSULE'] = capsules;
 			result.coinSources['Tool Exp Capsule'] = capsules * 100_000;

@@ -29,7 +29,7 @@ function resolveValue(effect: Effect, ctx: DropContext | StatContext): number {
  * Cropeetle/Deep-Fried delta-vs-factor mismatch class of bugs at the source.
  */
 export function assertValidEffect(effect: Effect): void {
-	if (effect.op === 'mul-rare' || effect.op === 'mul-drop') {
+	if (effect.op === 'mul-mechanic' || effect.op === 'mul-rare' || effect.op === 'mul-drop') {
 		const v = effect.value;
 		const numeric = typeof v === 'number' ? v : null;
 		if (numeric !== null && numeric < 0) {
@@ -42,8 +42,8 @@ export function assertValidEffect(effect: Effect): void {
 	if (effect.op === 'add-stat' && !effect.stat) {
 		throw new Error(`Invalid add-stat effect from "${effect.source}": missing 'stat' field.`);
 	}
-	if (effect.op === 'add-mechanic' && !effect.mechanic) {
-		throw new Error(`Invalid add-mechanic effect from "${effect.source}": missing 'mechanic' field.`);
+	if ((effect.op === 'add-mechanic' || effect.op === 'mul-mechanic') && !effect.mechanic) {
+		throw new Error(`Invalid ${effect.op} effect from "${effect.source}": missing 'mechanic' field.`);
 	}
 	if (effect.op === 'add-drop' && !effect.drop) {
 		throw new Error(`Invalid add-drop effect from "${effect.source}": missing 'drop' field.`);
@@ -67,6 +67,40 @@ export function resolveMechanicBreakdown(
 		if (!matchesScopeForStat(effect.scope, ctx)) continue;
 		const value = resolveValue(effect, ctx);
 		if (value !== 0) out[effect.source] = (out[effect.source] ?? 0) + value;
+	}
+	return out;
+}
+
+/** Multiply matching calculator-mechanic factors. */
+export function resolveMechanicMultiplier(
+	effects: readonly Effect[],
+	mechanic: FarmingMechanic,
+	ctx: StatContext
+): number {
+	return Object.values(resolveMechanicMultiplierBreakdown(effects, mechanic, ctx)).reduce(
+		(total, value) => total * value,
+		1
+	);
+}
+
+/** Per-source breakdown of multiplicative calculator mechanics. */
+export function resolveMechanicMultiplierBreakdown(
+	effects: readonly Effect[],
+	mechanic: FarmingMechanic,
+	ctx: StatContext
+): Record<string, number> {
+	const out: Record<string, number> = {};
+	for (const effect of effects) {
+		if (effect.op !== 'mul-mechanic' || effect.mechanic !== mechanic) continue;
+		if (!matchesScopeForStat(effect.scope, ctx)) continue;
+		const value = resolveValue(effect, ctx);
+		if (value < 0) {
+			throw new Error(
+				`Invalid mul-mechanic value ${value} from "${effect.source}" (must be >= 0; factor semantics).`
+			);
+		}
+		if (value === 1) continue;
+		out[effect.source] = (out[effect.source] ?? 1) * value;
 	}
 	return out;
 }
