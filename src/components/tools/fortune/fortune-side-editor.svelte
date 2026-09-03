@@ -4,7 +4,6 @@
 	import PetConfig from '$comp/tools/fortune/pet-config.svelte';
 	import ToolConfig from '$comp/tools/fortune/tool-config.svelte';
 	import * as Tabs from '$ui/tabs';
-	import type { FortuneSandboxPlayerGearSource } from '$lib/schemas/tool-settings/fortune-sandbox';
 	import {
 		LotusGear,
 		type Crop,
@@ -23,7 +22,6 @@
 		toolsByCrop: Record<string, FarmingTool>;
 		armor: FarmingArmor[];
 		equipment: InstanceType<typeof LotusGear>[];
-		playerGearSource: FortuneSandboxPlayerGearSource | null;
 	}
 
 	interface Props {

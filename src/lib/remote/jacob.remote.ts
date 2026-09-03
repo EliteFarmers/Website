@@ -1,10 +1,11 @@
-import { form, getRequestEvent } from '$app/server';
+import { form, getRequestEvent, query } from '$app/server';
 import {
 	addJacobLeaderboardExcludedTimespan,
 	banParticipationFromJacobLeaderboard,
 	banPlayerFromJacobLeaderboard,
 	createGuildJacobLeaderboard,
 	deleteGuildJacobLeaderboard,
+	getCurrentMedalBrackets,
 	getUserGuild,
 	removeJacobLeaderboardExcludedTimespan,
 	sendGuildJacobFeature,
@@ -34,6 +35,22 @@ async function getGuild(guildId: string, session?: App.Locals['session']) {
 
 	return guild;
 }
+
+export const getJacobMedalBrackets = query(
+	z.object({
+		months: z.number().int().min(1).max(12),
+	}),
+	async ({ months }) => {
+		const result = await getCurrentMedalBrackets({ months });
+		if (result.ok && result.data) {
+			return { data: result.data };
+		}
+
+		return {
+			error: 'Failed to fetch bracket data. Please try again later.',
+		};
+	}
+);
 
 const leaderboardSchema = z.object({
 	title: z.string().min(1).max(64),

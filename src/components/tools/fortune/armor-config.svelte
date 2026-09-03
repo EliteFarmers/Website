@@ -13,6 +13,7 @@
 		LotusGear,
 		Rarity,
 		REFORGES,
+		ReforgeTarget,
 		type EliteItemDto,
 		type PlayerOptions,
 	} from 'farming-weight';
@@ -41,10 +42,10 @@
 	const commonEquipmentEnchants = ['green_thumb'];
 
 	const armorReforgeOptions = Object.keys(REFORGES)
-		.filter((id) => REFORGES[id]?.appliesTo.includes('Armor' as any))
+		.filter((id) => REFORGES[id]?.appliesTo.includes(ReforgeTarget.Armor))
 		.map((id) => ({ value: id, label: REFORGES[id]?.name ?? id }));
 	const equipmentReforgeOptions = Object.keys(REFORGES)
-		.filter((id) => REFORGES[id]?.appliesTo.includes('Equipment' as any))
+		.filter((id) => REFORGES[id]?.appliesTo.includes(ReforgeTarget.Equipment))
 		.map((id) => ({ value: id, label: REFORGES[id]?.name ?? id }));
 	const armorReforgeStones = armorReforgeOptions
 		.map((option) => ({

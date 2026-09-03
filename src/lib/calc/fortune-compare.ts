@@ -12,6 +12,8 @@ import {
 	PET_RARITY_OFFSETS,
 	Rarity,
 	type DetailedDropsResult,
+	type EliteItemDto,
+	type PlayerOptions,
 } from 'farming-weight';
 
 export type FortuneCompareSideKey = 'A' | 'B';
@@ -201,7 +203,7 @@ function createOptionField(
 
 function getToolEnchantIdsForCrop(side: FortuneSandboxSideData, crop: Crop) {
 	const tool = ensureToolForCrop(side, crop);
-	const farmingTool = new FarmingTool(tool as any, {} as any);
+	const farmingTool = new FarmingTool(tool as EliteItemDto, side.options as PlayerOptions | undefined);
 	const base = ['harvesting', 'dedication', 'sunder'];
 	const turbo = Object.entries(FARMING_ENCHANTS)
 		.filter(([id, enchant]) => id.startsWith('turbo_') && !!enchant.cropSpecific)
@@ -422,6 +424,25 @@ export function getFortuneBreakEvenFields(side: FortuneSandboxSideData, crop: Cr
 	}
 
 	return fields;
+}
+
+const WHAT_IF_FIELD_IDS = new Set([
+	'pet.level',
+	'options.farmingLevel',
+	'options.gardenLevel',
+	'options.uniqueVisitors',
+	'options.plotsUnlocked',
+	'options.anitaBonus',
+]);
+
+/**
+ * Returns a curated subset of the most impactful and easy-to-understand
+ * what-if fields, plus the tool level for the current crop.
+ */
+export function getWhatIfFields(side: FortuneSandboxSideData, crop: Crop): FortuneCompareFieldDefinition[] {
+	const allFields = getFortuneBreakEvenFields(side, crop);
+	const toolLevelId = `tool.level.${String(crop)}`;
+	return allFields.filter((field) => WHAT_IF_FIELD_IDS.has(field.id) || field.id === toolLevelId);
 }
 
 function normalizedRange(range: FortuneCompareFieldRange) {

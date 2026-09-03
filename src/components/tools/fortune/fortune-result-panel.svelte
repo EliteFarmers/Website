@@ -2,7 +2,7 @@
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
 	import BazaarRates from '$comp/tools/fortune/bazaar-rates.svelte';
-	import { CROP_INFO, Stat, type Crop, type DetailedDropsResult } from 'farming-weight';
+	import { Crop, CROP_INFO, getCropDisplayName, Stat, type DetailedDropsResult } from 'farming-weight';
 
 	interface FortuneResultContext {
 		cropFortune: {
@@ -22,7 +22,6 @@
 	}
 
 	let { title, context, selectedCropKey, showFortuneBreakdown }: Props = $props();
-	const selectedCrop = $derived(String(selectedCropKey));
 
 	type BreakdownEntry = number | { value: number; stat: Stat };
 	type BreakdownRecord = Record<string, BreakdownEntry>;
@@ -59,7 +58,7 @@
 			: 'grid-cols-1'}"
 	>
 		<div class="flex flex-col items-center gap-2">
-			<span class="text-muted-foreground text-xs font-bold tracking-wider uppercase">Total Fortune</span>
+			<span class="text-muted-foreground text-xs font-bold">Total Fortune</span>
 			{#if showFortuneBreakdown}
 				<FortuneBreakdown
 					title="Total Fortune Breakdown"
@@ -72,11 +71,11 @@
 		</div>
 		{#if showFortuneBreakdown}
 			<div class="flex flex-col items-center gap-2">
-				<span class="text-muted-foreground text-xs font-bold tracking-wider uppercase"
-					>{selectedCrop} Fortune</span
+				<span class="text-muted-foreground text-xs font-bold"
+					>{getCropDisplayName(selectedCropKey ?? Crop.Wheat)} Fortune</span
 				>
 				<FortuneBreakdown
-					title="{selectedCrop} Fortune Breakdown"
+					title="{getCropDisplayName(selectedCropKey ?? Crop.Wheat)} Fortune Breakdown"
 					total={cropSpecificFortune}
 					breakdown={cropFortuneBreakdown}
 				/>
@@ -111,7 +110,11 @@
 					<div class="flex flex-col gap-1 text-sm">
 						{#each context.coinBreakdown as [name, value] (name)}
 							<div class="flex items-center justify-between">
-								<span>{name === 'Collection' ? selectedCrop : name}</span>
+								<span
+									>{name === 'Collection'
+										? getCropDisplayName(selectedCropKey ?? Crop.Wheat)
+										: name}</span
+								>
 								<CoinsBreakdown coins={value} />
 							</div>
 						{/each}
@@ -123,7 +126,11 @@
 					<div class="flex flex-col gap-1 text-sm">
 						{#each context.collectionBreakdown as [name, value] (name)}
 							<div class="flex items-center justify-between">
-								<span>{name === 'Normal' ? selectedCrop : name}</span>
+								<span
+									>{name === 'Normal'
+										? getCropDisplayName(selectedCropKey ?? Crop.Wheat)
+										: name}</span
+								>
 								<span>{value.toLocaleString()}</span>
 							</div>
 						{/each}

@@ -4,6 +4,7 @@ export * from './gifts.remote';
 export * from './graphs.remote';
 export * from './guilds.remote';
 export * from './info.remote';
+export * from './jacob.remote';
 export * from './leaderboards.remote';
 export * from './notifications.remote';
 export * from './payments.remote';
