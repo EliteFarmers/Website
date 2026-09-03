@@ -195,7 +195,7 @@ export interface UpgradeGroupDefinition {
 	id: string;
 	label: string;
 	strategy: 'available-pieces';
-	kind?: 'loadout' | 'pet-purchase';
+	kind?: 'loadout' | 'pet-purchase' | 'item-purchase';
 	warning?: string;
 	/** One group of needed upgrades at once */
 	atomic?: boolean;

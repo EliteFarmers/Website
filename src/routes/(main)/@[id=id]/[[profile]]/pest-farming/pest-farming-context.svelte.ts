@@ -523,8 +523,9 @@ export class PestFarmingPageContext {
 		const petPurchases = this.petPurchaseRecommendations
 			.filter((recommendation) => recommendation.primaryPhase === this.activePhase)
 			.map((recommendation) => recommendation.upgrade);
+		const recommendedPetConflicts = new Set(petPurchases.map((upgrade) => upgrade.conflictKey).filter(Boolean));
 		return [
-			...upgrades,
+			...upgrades.filter((upgrade) => !recommendedPetConflicts.has(upgrade.conflictKey)),
 			...(secondSet?.primaryPhase === this.activePhase ? [secondSet.upgrade] : []),
 			...petPurchases,
 		];

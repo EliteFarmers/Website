@@ -1046,7 +1046,9 @@ test('single eligible armor tier upgrades do not create grouped rows', () => {
 		includeUpgradeGroups: true,
 	});
 
-	expect(upgrades.find((u) => u.meta?.type === 'upgrade_group')).toBeUndefined();
+	expect(
+		upgrades.find((u) => u.meta?.type === 'upgrade_group' && u.group?.id.startsWith('armor-tier:'))
+	).toBeUndefined();
 	expect(upgrades.find((u) => u.title === 'Helianthus Helmet')).toBeDefined();
 });
 

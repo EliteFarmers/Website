@@ -66,6 +66,7 @@ test('builds one atomic second-set purchase with the configuration needed to imp
 
 	expect(recommendation).toBeDefined();
 	expect(recommendation?.upgrade.group?.atomic).toBe(true);
+	expect(recommendation?.upgrade.group?.warning).toMatch(/^For .+, with required upgrades\.$/);
 	expect(recommendation?.upgrade.groupedUpgrades?.slice(0, 4).map((upgrade) => upgrade.purchase)).toStrictEqual(
 		HELIANTHUS.map(([, skyblockId]) => skyblockId)
 	);

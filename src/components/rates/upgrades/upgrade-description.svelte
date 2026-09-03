@@ -109,7 +109,7 @@
 				</span>
 			{/if}
 		</p>
-	{:else if upgrade.meta?.type === 'upgrade_group'}
+	{:else if upgrade.meta?.type === 'upgrade_group' && upgrade.group?.kind !== 'item-purchase'}
 		<p class="text-xs text-muted-foreground">
 			<span class="rounded bg-muted px-1.5 py-0.5 text-xs leading-none text-muted-foreground">
 				{upgrade.group?.kind === 'loadout' ? 'Loadout Upgrade' : 'Set Upgrade'}
@@ -134,11 +134,7 @@
 	{#if upgrade.optional}
 		<p class="text-xs text-muted-foreground">Recommended for more profit despite lower fortune.</p>
 	{/if}
-	{#if upgrade.increase === 0 && upgrade.max && upgrade.max > 0 && (upgrade.effects?.length ?? 0) === 0}
-		{#if upgrade.stats}
-			<p class="text-xs text-muted-foreground">Gives no fortune right away, but has later upgrades.</p>
-		{:else}
-			<p class="text-xs text-muted-foreground">Shown for completion!</p>
-		{/if}
+	{#if upgrade.increase === 0 && upgrade.max && upgrade.max > 0 && !upgrade.stats && (upgrade.effects?.length ?? 0) === 0}
+		<p class="text-xs text-muted-foreground">Shown for completion!</p>
 	{/if}
 </div>
