@@ -83,7 +83,7 @@
 		"@types/d3-scale": "^4.0.9",
 		"@types/d3-time-format": "^4.0.3",
 		"@types/eslint": "^9.6.1",
-		"@types/node": "^24.13.3",
+		"@types/node": "^26.0.0",
 		"@types/qs": "^6.15.1",
 		"@types/three": "^0.185.4",
 		"@typeschema/class-validator": "^0.3.0",
