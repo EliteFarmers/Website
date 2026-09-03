@@ -68,6 +68,11 @@ export interface GardenChipInfo {
 	 */
 	tempMultiplierPerLevel?: RarityRecord<number>;
 	/**
+	 * Per-level Farming Tool EXP bonus, by rarity.
+	 * Emitted as a multiplicative mechanic effect by the chip source.
+	 */
+	toolExperienceBonusPerLevel?: RarityRecord<number>;
+	/**
 	 * Per-level fortune for the active crop.
 	 * Used by contest-dependent chips such as Overdrive.
 	 */
@@ -116,6 +121,11 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 		skyblockId: 'MECHAMIND_GARDEN_CHIP',
 		name: 'Mechamind Chip',
 		wiki: GARDEN_CHIP_WIKI,
+		toolExperienceBonusPerLevel: {
+			[Rarity.Rare]: 0.015,
+			[Rarity.Epic]: 0.02,
+			[Rarity.Legendary]: 0.025,
+		},
 	},
 	hypercharge: {
 		skyblockId: 'HYPERCHARGE_GARDEN_CHIP',

@@ -1337,9 +1337,9 @@ test('getRates includes Tool Exp Capsules for maxed crop tools', () => {
 
 	const rates = player.getRates(Crop.NetherWart, 100_000);
 
-	expect(rates.items['TOOL_EXP_CAPSULE']).toBe(1);
-	expect(rates.otherCollection['Tool Exp Capsule']).toBe(1);
-	expect(rates.coinSources['Tool Exp Capsule']).toBe(100_000);
+	expect(rates.items['TOOL_EXP_CAPSULE']).toBe(1.25);
+	expect(rates.otherCollection['Tool Exp Capsule']).toBe(1.25);
+	expect(rates.coinSources['Tool Exp Capsule']).toBe(125_000);
 });
 
 test('getRates uses the selected best crop tool instead of the first matching tool', () => {
@@ -1374,8 +1374,8 @@ test('getRates uses the selected best crop tool instead of the first matching to
 
 	const rates = player.getRates(Crop.NetherWart, 100_000);
 
-	expect(rates.items['TOOL_EXP_CAPSULE']).toBe(1);
-	expect(rates.coinSources['Tool Exp Capsule']).toBe(100_000);
+	expect(rates.items['TOOL_EXP_CAPSULE']).toBeCloseTo(1.25417, 5);
+	expect(rates.coinSources['Tool Exp Capsule']).toBeCloseTo(125_416.67, 2);
 	expect(rates.coinSources.Bountiful).toBeGreaterThan(0);
 });
 

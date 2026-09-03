@@ -8,6 +8,8 @@ import {
 	produceAddedDrops,
 	resolveDropEffects,
 	resolveMechanicBreakdown,
+	resolveMechanicMultiplier,
+	resolveMechanicMultiplierBreakdown,
 	resolveMechanicTotal,
 	resolveOverbloomBreakdown,
 	resolveOverbloomScalar,
@@ -227,6 +229,57 @@ describe('resolveMechanicTotal / resolveMechanicBreakdown', () => {
 			Other: 1,
 		});
 		expect(resolveMechanicTotal(effects, FarmingMechanic.PestCooldownReductionSeconds, ctx)).toBe(6);
+	});
+});
+
+describe('resolveMechanicMultiplier / resolveMechanicMultiplierBreakdown', () => {
+	const effects: Effect[] = [
+		{
+			source: 'Orchid Mantis',
+			op: 'mul-mechanic',
+			mechanic: FarmingMechanic.FarmingToolExperience,
+			value: 1.2,
+		},
+		{
+			source: 'Mechamind Chip',
+			op: 'mul-mechanic',
+			mechanic: FarmingMechanic.FarmingToolExperience,
+			value: 1.5,
+		},
+		{
+			source: 'Wrong Mechanic',
+			op: 'mul-mechanic',
+			mechanic: FarmingMechanic.CropGrowth,
+			value: 99,
+		},
+		{
+			source: 'Wrong Crop',
+			op: 'mul-mechanic',
+			mechanic: FarmingMechanic.FarmingToolExperience,
+			value: 99,
+			scope: { crops: [Crop.Carrot] },
+		},
+	];
+
+	test('multiplies matching mechanic factors and exposes them by source', () => {
+		const ctx = statCtx({ crop: Crop.Wheat });
+		expect(resolveMechanicMultiplierBreakdown(effects, FarmingMechanic.FarmingToolExperience, ctx)).toEqual({
+			'Orchid Mantis': 1.2,
+			'Mechamind Chip': 1.5,
+		});
+		expect(resolveMechanicMultiplier(effects, FarmingMechanic.FarmingToolExperience, ctx)).toBeCloseTo(1.8);
+	});
+
+	test('rejects negative factors', () => {
+		const bad: Effect = {
+			source: 'Bad',
+			op: 'mul-mechanic',
+			mechanic: FarmingMechanic.FarmingToolExperience,
+			value: -0.5,
+		};
+		expect(() => resolveMechanicMultiplier([bad], FarmingMechanic.FarmingToolExperience, statCtx())).toThrow(
+			/must be >= 0/
+		);
 	});
 });
 

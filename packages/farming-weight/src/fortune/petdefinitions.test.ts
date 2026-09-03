@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Rarity } from '../constants/reforges.js';
 import { Stat, type StatValue } from '../constants/stats.js';
-import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPetStatType, FarmingPets } from '../items/pets.js';
+import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPets, FarmingPetStatType } from '../items/pets.js';
 import { FarmingPet } from './farmingpet.js';
 
 function getPetInfo(id: FarmingPets): NonNullable<(typeof FARMING_PETS)[FarmingPets]> {
@@ -75,7 +75,11 @@ describe('Pet Definitions Integrity', () => {
 		expect(mantis.maxRarity).toBe(Rarity.Legendary);
 		expectStatValue(mantis.perLevelStats?.[Stat.Speed], 0.3);
 		expectStatValue(mantis.perLevelStats?.[Stat.Overbloom], 0.15);
-		expect(mantis.abilities?.map((ability) => ability.name)).toEqual(['Swift Sickles', 'Orchid Nectar']);
+		expect(mantis.abilities?.map((ability) => ability.name)).toEqual([
+			'Intelligent Specimen',
+			'Swift Sickles',
+			'Orchid Nectar',
+		]);
 	});
 
 	test('Bee pet has correct per-rarity stats', () => {

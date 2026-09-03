@@ -229,10 +229,6 @@ export class FarmingPet {
 		return effects;
 	}
 
-	getToolExperienceMultiplier(): number {
-		return Math.max(0, this.info.toolExperienceMultiplier?.(this) ?? 1);
-	}
-
 	getFullBreakdown(player?: FarmingPlayer): StatBreakdown {
 		const full: StatBreakdown = {};
 		let baseFortune = 0;

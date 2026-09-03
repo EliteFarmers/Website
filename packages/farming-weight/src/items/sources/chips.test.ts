@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { FarmingMechanic } from '../../constants/mechanics.js';
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { buildEffectEnvironment } from '../../effects/environment.js';
@@ -86,7 +87,7 @@ describe('garden chip source effects', () => {
 		]);
 	});
 
-	test('bespoke progress-only chips do not emit scalar effects', () => {
+	test('Mechamind emits its Tool EXP multiplier as a mechanic effect', () => {
 		const player = createFarmingPlayer({
 			chips: {
 				hypercharge: 20,
@@ -96,6 +97,17 @@ describe('garden chip source effects', () => {
 		const env = buildEffectEnvironment(player);
 
 		expect(GARDEN_CHIP_CLASSES.hypercharge.getEffects(player, env)).toEqual([]);
-		expect(GARDEN_CHIP_CLASSES.mechamind.getEffects(player, env)).toEqual([]);
+		expect(GARDEN_CHIP_CLASSES.mechamind.getEffects(player, env)).toEqual([
+			{
+				source: 'Mechamind Chip',
+				op: 'mul-mechanic',
+				mechanic: FarmingMechanic.FarmingToolExperience,
+				value: 1.5,
+				meta: {
+					description: 'Farming Tool EXP',
+					valueDisplay: 'factor',
+				},
+			},
+		]);
 	});
 });

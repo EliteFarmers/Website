@@ -1,3 +1,4 @@
+import { FarmingMechanic } from '../../constants/mechanics.js';
 import { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
 import { compareRarity, Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
@@ -33,9 +34,26 @@ export class OrchidMantisPet extends FarmingPetDefinition {
 		},
 	};
 
-	override toolExperienceMultiplier = (pet: { level: number }) => 1 + (0.2 * pet.level) / 100;
-
 	override abilities: FarmingPetAbility[] = [
+		{
+			name: 'Intelligent Specimen',
+			computed: () => ({}),
+			effects: (_, pet) => {
+				const maxBonus = pet.rarity === Rarity.Common ? 0.1 : 0.2;
+				return [
+					{
+						source: 'Intelligent Specimen',
+						op: 'mul-mechanic',
+						mechanic: FarmingMechanic.FarmingToolExperience,
+						value: 1 + (maxBonus * pet.level) / 100,
+						meta: {
+							description: 'Farming Tool EXP',
+							valueDisplay: 'factor',
+						},
+					},
+				];
+			},
+		},
 		{
 			name: 'Swift Sickles',
 			exists: (_, pet) => compareRarity(pet.rarity, Rarity.Rare) >= 0,
