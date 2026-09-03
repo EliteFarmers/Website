@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Countdown from '$comp/countdown.svelte';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getReadableSkyblockDate } from '$lib/format';
+	import { getHarvestFeastMaterialPrice } from '$lib/harvest-feast-prices';
 	import * as Popover from '$ui/popover';
+	import { Skeleton } from '$ui/skeleton';
+	import CircleDollarSign from '@lucide/svelte/icons/circle-dollar-sign';
 
 	interface Props {
 		current?: boolean;
@@ -12,9 +16,20 @@
 		end?: number;
 		crops: string[];
 		currentSeconds: number;
+		prices?: RatesItemPriceData;
+		pricesLoading?: boolean;
 	}
 
-	let { current = false, cropsUnknown = false, start, end, crops, currentSeconds }: Props = $props();
+	let {
+		current = false,
+		cropsUnknown = false,
+		start,
+		end,
+		crops,
+		currentSeconds,
+		prices,
+		pricesLoading = false,
+	}: Props = $props();
 
 	let hasStarted = $derived(start !== undefined && start <= currentSeconds);
 	let selected = $derived(start ? page.url.hash === `#${start}` : false);
@@ -87,18 +102,43 @@
 			</div>
 		{:else}
 			{#each crops as name (name)}
+				{@const material = getHarvestFeastMaterialPrice(name, prices)}
 				<Popover.Mobile>
 					{#snippet trigger()}
-						<div class="flex aspect-square w-16 items-center justify-center rounded-md bg-card text-center">
-							{#if PROPER_CROP_TO_IMG[name]}
-								<img class="pixelated w-12" src={PROPER_CROP_TO_IMG[name]} alt={name} />
+						<div class="flex min-w-20 flex-col items-center gap-1 text-center">
+							<div class="flex aspect-square w-16 items-center justify-center rounded-md bg-card">
+								{#if PROPER_CROP_TO_IMG[name]}
+									<img class="pixelated w-12" src={PROPER_CROP_TO_IMG[name]} alt={name} />
+								{:else}
+									<span class="px-2 text-xs text-muted-foreground">{name}</span>
+								{/if}
+							</div>
+							{#if pricesLoading}
+								<Skeleton class="h-5 w-16" />
+							{:else if material?.coins}
+								<div class="relative flex max-w-fit flex-row items-center gap-1.5">
+									<CircleDollarSign class="size-4" />
+									<span class="text-sm">
+										{Math.round(material.coins).toLocaleString()}
+									</span>
+								</div>
 							{:else}
-								<span class="px-2 text-xs text-muted-foreground">{name}</span>
+								<span class="text-xs whitespace-nowrap text-muted-foreground">Price unavailable</span>
 							{/if}
 						</div>
 					{/snippet}
-					<div class="mx-8 text-center">
-						{name}
+					<div class="mx-8 flex flex-col gap-1 text-center">
+						<p class="font-semibold">{name}</p>
+						{#if material}
+							<p>{material.name}</p>
+							{#if material.coins}
+								<p class="text-sm text-muted-foreground">
+									Instant sell: {Math.round(material.coins).toLocaleString()} coins
+								</p>
+							{:else if !pricesLoading}
+								<p class="text-sm text-muted-foreground">Bazaar instant-sell price unavailable</p>
+							{/if}
+						{/if}
 					</div>
 				</Popover.Mobile>
 			{/each}
