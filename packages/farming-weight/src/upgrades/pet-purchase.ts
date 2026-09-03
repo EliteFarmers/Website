@@ -174,29 +174,17 @@ export function findFortunePetPurchaseRecommendations(
 
 		const target = getPetPurchaseTarget(input.prices, type, ownedIds);
 		if (!target) continue;
-		const bareCandidates = [false, true].map((selected) =>
-			evaluateFortunePurchase(input, before, target, selected)
-		);
-		const bestBare = bareCandidates
-			.filter((candidate) => candidate.coinsPerHour > RATE_EPSILON)
-			.sort(comparePurchases)[0];
-		if (bestBare) {
-			recommendations.push(bestBare);
-			continue;
-		}
+		const candidates = [false, true].map((selected) => evaluateFortunePurchase(input, before, target, selected));
 
-		const heldItemCandidates: EvaluatedFortunePurchase[] = [];
 		for (const heldItemId of Object.keys(FARMING_PET_ITEMS).sort()) {
 			const itemCost = input.prices.heldItemPrices[heldItemId] ?? 0;
 			if (itemCost <= 0) continue;
 			for (const selected of [false, true]) {
 				const candidate = evaluateFortunePurchase(input, before, target, selected, heldItemId);
-				heldItemCandidates.push(candidate);
+				candidates.push(candidate);
 			}
 		}
-		const best = heldItemCandidates
-			.filter((candidate) => candidate.coinsPerHour > RATE_EPSILON)
-			.sort(comparePurchases)[0];
+		const best = candidates.filter((candidate) => candidate.coinsPerHour > RATE_EPSILON).sort(comparePurchases)[0];
 		if (best) recommendations.push(best);
 	}
 
@@ -255,8 +243,8 @@ function comparePurchases(a: EvaluatedFortunePurchase, b: EvaluatedFortunePurcha
 	const aRatio = a.totalCost / a.coinsPerHour;
 	const bRatio = b.totalCost / b.coinsPerHour;
 	return (
-		aRatio - bRatio ||
 		b.coinsPerHour - a.coinsPerHour ||
+		aRatio - bRatio ||
 		Number(a.selected) - Number(b.selected) ||
 		(a.heldItemId ?? '').localeCompare(b.heldItemId ?? '')
 	);

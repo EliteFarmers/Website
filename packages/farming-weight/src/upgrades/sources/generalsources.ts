@@ -48,7 +48,7 @@ import {
 	WRIGGLING_LARVA_SOURCE,
 } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
-import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import { mergeCost, type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { buildEffectEnvironment } from '../../effects/environment.js';
 import { effectsToSummaries } from '../../effects/summary.js';
 import type { Effect } from '../../effects/types.js';
@@ -523,9 +523,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					{
 						title: cropie.name,
 						increase: cropie.baseStats?.[Stat.FarmingFortune] ?? 0,
-						stats: {
-							[Stat.FarmingFortune]: cropie.baseStats?.[Stat.FarmingFortune] ?? 0,
-						},
+						stats: { ...cropie.baseStats },
 						action: UpgradeAction.Purchase,
 						item: 'CROPIE_TALISMAN',
 						category: UpgradeCategory.Item,
@@ -795,26 +793,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		upgrades: (player) => {
 			const accessory = player.accessories.find((a) => a.info.skyblockId === 'POWER_RELIC');
 
-			if (!accessory)
-				return [
-					{
-						title: 'Relic of Power',
-						increase: 0,
-						stats: {
-							[Stat.FarmingFortune]: 0,
-						},
-						action: UpgradeAction.Purchase,
-						purchase: 'POWER_RELIC',
-						category: UpgradeCategory.Item,
-						wiki: FARMING_ACCESSORIES_INFO.POWER_RELIC?.wiki,
-						cost: FARMING_ACCESSORIES_INFO.POWER_RELIC?.cost,
-						meta: {
-							type: 'buy_item',
-							id: 'POWER_RELIC',
-						},
-						conflictKey: 'accessory:POWER_RELIC',
-					},
-				];
+			if (!accessory) return createPowerRelicPurchaseUpgrade();
 
 			return accessory.getUpgrades();
 		},
@@ -1112,6 +1091,59 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	...createCarnivalHarvestFeastSources(),
 ];
+
+function createPowerRelicPurchaseUpgrade(): FortuneUpgrade[] {
+	const info = FARMING_ACCESSORIES_INFO.POWER_RELIC;
+	const accessory = info ? FarmingAccessory.fakeItem(info) : undefined;
+	const gemUpgrade = accessory
+		?.getUpgrades({ stats: [Stat.FarmingFortune] })
+		.find((upgrade) => upgrade.meta?.type === 'gem');
+	const itemUuid = accessory?.item.uuid;
+	if (!info || !accessory || !itemUuid || !gemUpgrade) return [];
+
+	const groupId = 'accessory:POWER_RELIC:purchase';
+	const purchase: FortuneUpgrade = {
+		title: info.name,
+		increase: 0,
+		stats: { [Stat.FarmingFortune]: 0 },
+		action: UpgradeAction.Purchase,
+		purchase: info.skyblockId,
+		category: UpgradeCategory.Item,
+		wiki: info.wiki,
+		cost: info.cost,
+		meta: {
+			type: 'buy_item',
+			id: info.skyblockId,
+			itemUuid,
+		},
+		conflictKey: `${groupId}:item`,
+	};
+
+	return [
+		{
+			title: info.name,
+			increase: gemUpgrade.increase,
+			stats: gemUpgrade.stats,
+			effects: gemUpgrade.effects,
+			action: UpgradeAction.Purchase,
+			purchase: info.skyblockId,
+			category: UpgradeCategory.Item,
+			wiki: info.wiki,
+			cost: mergeCost(info.cost ?? {}, gemUpgrade.cost ?? {}),
+			conflictKey: 'accessory:POWER_RELIC',
+			group: {
+				id: groupId,
+				label: 'Relic of Power',
+				strategy: 'available-pieces',
+				kind: 'item-purchase',
+				atomic: true,
+				memberCount: 2,
+			},
+			groupedUpgrades: [purchase, gemUpgrade],
+			meta: { type: 'upgrade_group', id: groupId },
+		},
+	];
+}
 
 interface CarnivalPerk {
 	key: string;

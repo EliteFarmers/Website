@@ -744,6 +744,26 @@ export class FarmingPlayer {
 		};
 	}
 
+	private addPurchasedItem(id: string, itemUuid?: string): void {
+		const item = getFakeItem(id);
+		if (!item) return;
+		if (itemUuid) item.item.uuid = itemUuid;
+
+		if (item instanceof FarmingTool) {
+			this.tools.push(item);
+		} else if (item instanceof FarmingArmor) {
+			this.armor.push(item);
+			this.armorSet.updateArmorSlot(item);
+		} else if (item instanceof FarmingEquipment) {
+			this.equipment.push(item);
+			this.armorSet.updateEquipmentSlot(item);
+		} else if (item instanceof FarmingAccessory) {
+			this.accessories.push(item);
+			this.syncActiveAccessories();
+		}
+		this.permFortune = this.getGeneralFortune();
+	}
+
 	getWeightCalc(info?: FarmingWeightInfo): ReturnType<typeof createFarmingWeightCalculator> {
 		return createFarmingWeightCalculator({
 			collection: this.options.collection,
@@ -1044,6 +1064,8 @@ export class FarmingPlayer {
 					this.syncActiveAccessories();
 				}
 				this.permFortune = this.getGeneralFortune();
+			} else if (type === 'buy_item' && id) {
+				this.addPurchasedItem(id, itemUuid);
 			}
 		} else if (type === 'skill') {
 			if (key === 'farmingLevel' && value) {
@@ -1114,89 +1136,7 @@ export class FarmingPlayer {
 			}
 			this.permFortune = this.getGeneralFortune();
 		} else if (type === 'buy_item' && id) {
-			const newItem = getFakeItem(id);
-			if (newItem) {
-				if (newItem instanceof FarmingTool) {
-					const oldIdx = itemUuid ? this.tools.findIndex((t) => t.item.uuid === itemUuid) : -1;
-					if (oldIdx >= 0) {
-						const oldItem = this.tools[oldIdx]!;
-						// Transfer enchantments, attributes, gems from old item
-						newItem.item.enchantments = {
-							...newItem.item.enchantments,
-							...oldItem.item.enchantments,
-						};
-						newItem.item.attributes = {
-							...newItem.item.attributes,
-							...oldItem.item.attributes,
-						};
-						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
-						// Re-instantiate to recalculate fortune with transferred properties
-						this.tools[oldIdx] = new FarmingTool(newItem.item, this.options);
-					} else {
-						this.tools.push(newItem);
-					}
-				} else if (newItem instanceof FarmingArmor) {
-					const oldIdx = itemUuid ? this.armor.findIndex((a) => a.item.uuid === itemUuid) : -1;
-					if (oldIdx >= 0) {
-						const oldItem = this.armor[oldIdx]!;
-						newItem.item.enchantments = {
-							...newItem.item.enchantments,
-							...oldItem.item.enchantments,
-						};
-						newItem.item.attributes = {
-							...newItem.item.attributes,
-							...oldItem.item.attributes,
-						};
-						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
-						this.armor[oldIdx] = new FarmingArmor(newItem.item, this.options);
-					} else {
-						const addedPiece = new FarmingArmor(newItem.item, this.options);
-						this.armor.push(addedPiece);
-						this.armorSet.updateArmorSlot(addedPiece);
-					}
-				} else if (newItem instanceof FarmingEquipment) {
-					const oldIdx = itemUuid ? this.equipment.findIndex((e) => e.item.uuid === itemUuid) : -1;
-					if (oldIdx >= 0) {
-						const oldItem = this.equipment[oldIdx]!;
-						newItem.item.enchantments = {
-							...newItem.item.enchantments,
-							...oldItem.item.enchantments,
-						};
-						newItem.item.attributes = {
-							...newItem.item.attributes,
-							...oldItem.item.attributes,
-						};
-						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
-						oldItem.applyTierUpgradeStateTo(newItem);
-						this.equipment[oldIdx] = new FarmingEquipment(newItem.item, this.options);
-					} else {
-						const addedPiece = new FarmingEquipment(newItem.item, this.options);
-						this.equipment.push(addedPiece);
-						this.armorSet.updateEquipmentSlot(addedPiece);
-					}
-				} else if (newItem instanceof FarmingAccessory) {
-					const oldIdx = itemUuid ? this.accessories.findIndex((a) => a.item.uuid === itemUuid) : -1;
-					if (oldIdx >= 0) {
-						const oldItem = this.accessories[oldIdx]!;
-						newItem.item.enchantments = {
-							...newItem.item.enchantments,
-							...oldItem.item.enchantments,
-						};
-						newItem.item.attributes = {
-							...newItem.item.attributes,
-							...oldItem.item.attributes,
-						};
-						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
-						this.accessories[oldIdx] = new FarmingAccessory(newItem.item, this.options);
-					} else {
-						this.accessories.push(newItem);
-					}
-				}
-				if (newItem instanceof FarmingAccessory) {
-					this.syncActiveAccessories();
-				}
-				this.permFortune = this.getGeneralFortune();
-			}
+			this.addPurchasedItem(id);
 		}
 	}
 

@@ -168,7 +168,7 @@ export async function findSecondHelianthusSetRecommendation(
 			strategy: 'available-pieces',
 			kind: 'loadout',
 			atomic: true,
-			warning: `Adds a separate set for ${phaseLabel}, starting from the current set's configuration and retaining the tested upgrades needed to improve full-cycle profit.`,
+			warning: `For ${phaseLabel}, with required upgrades.`,
 			memberCount: members.length,
 		},
 		groupedUpgrades: members,

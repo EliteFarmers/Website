@@ -177,7 +177,7 @@ describe('max-level pet purchases', () => {
 		expect(recommendations[0]?.upgrade.groupedUpgrades?.[1]?.purchase).toBe('YELLOW_BANDANA');
 	});
 
-	test('does not bundle a held item when the bare pet is already profitable', () => {
+	test('bundles the best held item even when the bare pet is already profitable', () => {
 		const items = {
 			PET: { auctions: [auction(FarmingPets.Elephant, Rarity.Mythic, 100, 100, 25)] },
 			[Crop.Wheat]: { item: { npc_sell_price: 6 } },
@@ -196,10 +196,12 @@ describe('max-level pet purchases', () => {
 		expect(recommendations).toHaveLength(1);
 		expect(recommendations[0]?.upgrade.groupedUpgrades?.map((upgrade) => upgrade.meta?.type)).toStrictEqual([
 			'buy_pet',
+			'pet_item',
 		]);
+		expect(recommendations[0]?.upgrade.groupedUpgrades?.[1]?.purchase).toBe('YELLOW_BANDANA');
 	});
 
-	test('focuses a starter fortune profile on a bare Mooshroom Cow when it is already profitable', () => {
+	test('focuses a starter fortune profile on a Mooshroom Cow with its best held item', () => {
 		const items = {
 			PET: {
 				auctions: [
@@ -225,16 +227,9 @@ describe('max-level pet purchases', () => {
 		expect(recommendations[0]?.upgrade.title).toBe('Buy Level 100 Legendary Mooshroom Cow');
 		expect(recommendations[0]?.upgrade.groupedUpgrades?.map((upgrade) => upgrade.meta?.type)).toStrictEqual([
 			'buy_pet',
+			'pet_item',
 		]);
-		const tree = player.expandUpgrade(recommendations[0]!.upgrade, {
-			stats: [Stat.FarmingFortune],
-			maxDepth: 1,
-		});
-		const heldItemUpgrade = tree.children.find(
-			(child) => child.upgrade.meta?.type === 'pet_item' && child.upgrade.purchase === 'YELLOW_BANDANA'
-		);
-		expect(heldItemUpgrade?.upgrade.purchase).toBe('YELLOW_BANDANA');
-		expect(heldItemUpgrade?.statsGained[Stat.FarmingFortune]).toBeGreaterThan(0);
+		expect(recommendations[0]?.upgrade.groupedUpgrades?.[1]?.purchase).toBe('YELLOW_BANDANA');
 	});
 
 	test('evaluates pest purchases against full-cycle profit and assigns profitable phases', async () => {
@@ -277,7 +272,7 @@ describe('max-level pet purchases', () => {
 		expect(recommendations[0]?.phases).toContain(PestFarmingPhase.Farm);
 	});
 
-	test('focuses a starter pest profile on one bare Mooshroom Cow when it is already profitable', async () => {
+	test('focuses a starter pest profile on one Mooshroom Cow with its best held item', async () => {
 		const items = {
 			PET: {
 				auctions: [
@@ -311,17 +306,9 @@ describe('max-level pet purchases', () => {
 		expect(recommendations[0]?.upgrade.title).toBe('Buy Level 100 Legendary Mooshroom Cow');
 		expect(recommendations[0]?.upgrade.groupedUpgrades?.map((upgrade) => upgrade.meta?.type)).toStrictEqual([
 			'buy_pet',
+			'pet_item',
 		]);
-		const tree = player.expandPhaseUpgrade(recommendations[0]!.primaryPhase, recommendations[0]!.upgrade, {
-			stats: [Stat.FarmingFortune],
-			crop: Crop.Wheat,
-			maxDepth: 1,
-		});
-		const heldItemUpgrade = tree.children.find(
-			(child) => child.upgrade.meta?.type === 'pet_item' && child.upgrade.purchase === 'YELLOW_BANDANA'
-		);
-		expect(heldItemUpgrade?.upgrade.purchase).toBe('YELLOW_BANDANA');
-		expect(heldItemUpgrade?.statsGained[Stat.FarmingFortune]).toBeGreaterThan(0);
+		expect(recommendations[0]?.upgrade.groupedUpgrades?.[1]?.purchase).toBe('YELLOW_BANDANA');
 	});
 
 	test('keeps better held items in the normal upgrade lists for owned pets', () => {
@@ -427,6 +414,62 @@ describe('max-level pet purchases', () => {
 		).toBe('GREEN_BANDANA');
 	});
 
+	test('uses a held-item upgrade instead of buying a duplicate pet assigned only to that phase', async () => {
+		const items = {
+			PET: { auctions: [auction(FarmingPets.Hedgehog, Rarity.Legendary, 100, 100, 25)] },
+			POIGNANT_LUCKY_CLOVER: {
+				item: { name: 'Poignant Lucky Clover' },
+				auctions: [auction(FarmingPets.Hedgehog, Rarity.Legendary, 1, 1, 10)],
+			},
+		} as unknown as RatesItemPriceData;
+		const hedgehog = getPetPurchaseTarget(items, FarmingPets.Hedgehog)!;
+		const player = createPestFarmingPlayer({
+			pets: [ownedRabbit, hedgehog.pet],
+			phaseLoadouts: {
+				[PestFarmingPhase.Farm]: { petId: ownedRabbit.uuid },
+				[PestFarmingPhase.Spawn]: { petId: ownedRabbit.uuid },
+				[PestFarmingPhase.Kill]: { petId: hedgehog.petId },
+			},
+		});
+		const options = { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS };
+		const priceBook = {
+			version: 'existing-kill-pet',
+			missingItemMode: 'zero' as const,
+			items: {
+				[Crop.Wheat]: { coins: 6, source: 'npc' as const },
+				'SLUG;4': { coins: 1_000_000_000, source: 'manual' as const },
+			},
+		};
+		const before = new PestFarmingRateCalculator({ player, options, priceBook }).calculate();
+		expect(player.kill.selectedPet?.type).toBe(FarmingPets.Hedgehog);
+		expect(player.kill.selectedPet?.pet.heldItem).toBeUndefined();
+		const directUpgrade = player.kill.selectedPet
+			?.getUpgrades({ stats: [Stat.Overbloom] }, player.kill)
+			.find((upgrade) => upgrade.meta?.type === 'pet_item' && upgrade.meta.id === 'POIGNANT_LUCKY_CLOVER');
+		expect(directUpgrade).toBeDefined();
+
+		const directPlayer = player.clone();
+		directPlayer.applyPhaseUpgrade(PestFarmingPhase.Kill, directUpgrade!);
+		const directResult = new PestFarmingRateCalculator({ player: directPlayer, options, priceBook }).calculate();
+		expect(directResult.valuation.coinsPerHour).toBeGreaterThan(before.valuation.coinsPerHour);
+
+		const recommendations = await findPestPetPurchaseRecommendations({
+			player,
+			options,
+			priceBook,
+			before,
+			items,
+		});
+
+		expect(recommendations).toHaveLength(1);
+		expect(recommendations[0]?.upgrade.meta?.type).toBe('pet_item');
+		expect(recommendations[0]?.upgrade.meta?.id).toBe('POIGNANT_LUCKY_CLOVER');
+		expect(recommendations[0]?.upgrade.title).toBe('Poignant Lucky Clover');
+		expect(recommendations[0]?.phases).toEqual([PestFarmingPhase.Kill]);
+		expect(recommendations[0]?.player.getOwnedPets()).toHaveLength(2);
+		expect(recommendations[0]?.player.kill.selectedPet?.pet.heldItem).toBe('POIGNANT_LUCKY_CLOVER');
+	});
+
 	test('assigns competing pet purchases to disjoint phases', async () => {
 		const items = {
 			PET: {
@@ -434,6 +477,10 @@ describe('max-level pet purchases', () => {
 					auction(FarmingPets.RoseDragon, Rarity.Legendary, 200, 200, 100),
 					auction(FarmingPets.Slug, Rarity.Legendary, 100, 100, 10),
 				],
+			},
+			GREEN_BANDANA: {
+				item: { name: 'Green Bandana' },
+				auctions: [auction(FarmingPets.RoseDragon, Rarity.Legendary, 1, 1, 1)],
 			},
 		} as unknown as RatesItemPriceData;
 		const player = createPestFarmingPlayer({
@@ -469,14 +516,9 @@ describe('max-level pet purchases', () => {
 		expect(roseDragon?.phases).toContain(PestFarmingPhase.Farm);
 		expect(roseDragon?.phases).not.toContain(PestFarmingPhase.Spawn);
 		expect(roseDragon).toBeDefined();
-		const roseDragonTree = player.expandPhaseUpgrade(roseDragon!.primaryPhase, roseDragon!.upgrade, {
-			stats: [Stat.FarmingFortune],
-			crop: Crop.Wheat,
-			maxDepth: 1,
-		});
 		expect(
-			roseDragonTree.children.some(
-				(child) => child.upgrade.meta?.type === 'pet_item' && child.upgrade.purchase === 'GREEN_BANDANA'
+			roseDragon?.upgrade.groupedUpgrades?.some(
+				(upgrade) => upgrade.meta?.type === 'pet_item' && upgrade.purchase === 'GREEN_BANDANA'
 			)
 		).toBe(true);
 		for (const [index, recommendation] of recommendations.entries()) {

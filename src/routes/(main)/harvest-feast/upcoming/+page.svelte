@@ -3,9 +3,11 @@
 	import Head from '$comp/seo/head.svelte';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
 	import type { HarvestFeastRotationDto } from '$lib/api';
+	import { getHarvestFeastMaterialIds } from '$lib/harvest-feast-prices';
 	import { selectHarvestFeastRotations } from '$lib/harvest-feast-rotations';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
+	import { getItems } from '$lib/remote/items.remote';
 	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getCropDisplayName, getCropFromName, SkyBlockTime } from 'farming-weight';
 	import { onMount } from 'svelte';
@@ -78,6 +80,14 @@
 	const feastWindow = $derived(getFeastWindow(seconds));
 	const fallbackWaveStarts = $derived(getFallbackWaveStarts(seconds));
 	const rotationSelection = $derived(selectHarvestFeastRotations(feast, seconds));
+	const priceMaterialIds = $derived.by(() => {
+		const rotations = [
+			...(rotationSelection.current ? [rotationSelection.current] : []),
+			...rotationSelection.upcoming,
+		];
+		return getHarvestFeastMaterialIds(rotations.flatMap((rotation) => rotation.crops));
+	});
+	const materialPriceQuery = $derived(priceMaterialIds.length > 0 ? getItems(priceMaterialIds) : undefined);
 	const currentRotation = $derived.by(() => {
 		if (!rotationSelection.current) return null;
 		return toDisplayRotation(rotationSelection.current);
@@ -159,6 +169,8 @@
 						end={currentRotation.end}
 						crops={currentRotation.crops}
 						currentSeconds={seconds}
+						prices={materialPriceQuery?.current}
+						pricesLoading={materialPriceQuery?.loading ?? false}
 					/>
 				{/if}
 
@@ -168,9 +180,19 @@
 						end={rotation.end}
 						crops={rotation.crops}
 						currentSeconds={seconds}
+						prices={materialPriceQuery?.current}
+						pricesLoading={materialPriceQuery?.loading ?? false}
 					/>
 				{/each}
 			</div>
 		{/if}
 	{/if}
+
+	<p class="max-w-2xl py-16 text-center text-muted-foreground">
+		This data is supplied by users of the mod <a
+			class="text-link underline"
+			href="https://github.com/hannibal002/SkyHanni/">SkyHanni</a
+		>. Open Ted at the start of a Feast rotation to share crop data with the website and other SkyHanni users! No
+		data is sent without your consent when using the mod.
+	</p>
 </div>

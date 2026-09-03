@@ -96,6 +96,9 @@
 			? upgrade.groupedUpgrades?.find((member) => member.meta?.type === 'buy_pet')
 			: undefined
 	);
+	const childrenAreIncluded = $derived(
+		upgrade.group?.kind === 'pet-purchase' || upgrade.group?.kind === 'item-purchase'
+	);
 
 	function getUpgradeKey(upgrade: FortuneUpgrade, index: number): string {
 		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
@@ -259,7 +262,7 @@
 								{costFn}
 								{applyUpgrade}
 								{referenceOnlyPrices}
-								includedInBundle={upgrade.group?.kind === 'pet-purchase'}
+								includedInBundle={childrenAreIncluded}
 							/>
 						{/each}
 					</div>

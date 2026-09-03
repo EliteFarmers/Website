@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import { GemRarity } from '../../fortune/item.js';
 import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
 import { FarmingPlayer } from '../../player/player.js';
 
@@ -290,7 +291,7 @@ test('Freshly Baked accessory tier-up costs use kernels currency', () => {
 	expect(FARMING_ACCESSORIES_INFO.FRESHLY_BAKED_RELIC?.upgrade?.cost?.kernels).toBe(1000);
 });
 
-test('zero-delta general upgrades remain visible for multi-stat fortune queries', () => {
+test('Relic of Power purchase includes its first fortune-granting gemstone', () => {
 	const player = new FarmingPlayer({});
 
 	const upgrades = player.getUpgrades({
@@ -299,8 +300,40 @@ test('zero-delta general upgrades remain visible for multi-stat fortune queries'
 	const relic = upgrades.find((u) => u.title === 'Relic of Power');
 
 	expect(relic).toBeDefined();
-	expect(relic?.increase).toBe(0);
-	expect(relic?.stats).toEqual({ [Stat.FarmingFortune]: 0 });
+	expect(relic?.increase).toBeGreaterThan(0);
+	expect(relic?.group?.kind).toBe('item-purchase');
+	expect(relic?.groupedUpgrades?.map((upgrade) => upgrade.meta?.type)).toStrictEqual(['buy_item', 'gem']);
+	expect(relic?.cost?.items?.FINE_PERIDOT_GEM).toBe(1);
+
+	player.applyUpgrade(relic!);
+	const purchased = player.accessories.find((accessory) => accessory.info.skyblockId === 'POWER_RELIC');
+	expect(purchased?.item.gems?.PERIDOT_0).toBe(GemRarity.Fine);
+	expect(purchased?.fortune).toBeGreaterThan(0);
+});
+
+test('Cropie Talisman purchase reports its crop fortune', () => {
+	const cropie = new FarmingPlayer({})
+		.getUpgrades({ stats: Object.values(Stat) })
+		.find((upgrade) => upgrade.title === 'Cropie Talisman');
+
+	expect(cropie?.stats?.[Stat.WheatFortune]).toBeGreaterThan(0);
+	expect(cropie?.stats?.[Stat.CarrotFortune]).toBeGreaterThan(0);
+});
+
+test('general upgrades do not rely on zero-stat progression subtitles', () => {
+	const upgrades = new FarmingPlayer({}).getUpgrades({
+		stats: Object.values(Stat),
+		includeUpgradeGroups: true,
+	});
+	const zeroStatUpgrades = upgrades.filter(
+		(upgrade) =>
+			upgrade.increase === 0 &&
+			(upgrade.max ?? 0) > 0 &&
+			(upgrade.effects?.length ?? 0) === 0 &&
+			!Object.values(upgrade.stats ?? {}).some((value) => value !== undefined && value !== 0)
+	);
+
+	expect(zeroStatUpgrades).toEqual([]);
 });
 
 test('Harvest Feast perk progress can be passed through explicit feast options', () => {

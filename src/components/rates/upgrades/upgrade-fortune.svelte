@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getStatColor } from '$lib/format';
 	import { cn } from '$lib/utils';
 	import * as Popover from '$ui/popover';
 	import PawPrint from '@lucide/svelte/icons/paw-print';
@@ -127,10 +128,16 @@
 	const isNegative = $derived(headerValue < 0);
 	const maxOnly = $derived(!hasEffects && headerValue === 0 && upgrade.max && upgrade.max > 0);
 	const forCompletion = $derived(!isAtomicUpgrade && upgrade.stats === undefined && !hasEffects && headerValue === 0);
-
-	const background = $derived(
-		maxOnly || forCompletion ? 'bg-progress/40' : isNegative ? 'bg-destructive/60' : 'bg-progress'
+	const statBackground = $derived(
+		getStatColor(primaryEffect?.relatedStats?.[0] ?? primaryStat.stat, 1) ?? 'bg-progress'
 	);
+
+	const background = $derived.by(() => {
+		if (maxOnly || forCompletion) return 'bg-progress/40';
+		if (isNegative) return 'bg-destructive/60';
+		if (isPetPurchase || isLoadoutUpgrade) return 'bg-progress';
+		return statBackground;
+	});
 </script>
 
 <Popover.Mobile>
@@ -230,11 +237,6 @@
 			</p>
 		{:else if forCompletion}
 			<p class="max-w-sm text-sm text-muted-foreground">This upgrade is shown for completion.</p>
-		{:else if maxOnly}
-			<p class="max-w-sm text-sm text-muted-foreground">
-				This upgrade gives no fortune right away, but maxes out at {(upgrade.max ?? 0).toLocaleString()} fortune as
-				you upgrade it later.
-			</p>
 		{/if}
 	</div>
 </Popover.Mobile>

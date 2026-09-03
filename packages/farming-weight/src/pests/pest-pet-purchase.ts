@@ -1,5 +1,6 @@
 import { FarmingPets } from '../constants/pets.js';
 import { compareRarity } from '../constants/reforge-types.js';
+import { Stat } from '../constants/stats.js';
 import type { FortuneUpgrade } from '../constants/upgrades.js';
 import { getFarmingPetId } from '../fortune/farmingpet.js';
 import { FARMING_PET_ITEMS } from '../items/pets.js';
@@ -44,6 +45,7 @@ interface EvaluatedPurchase {
 	upgrade: FortuneUpgrade;
 	player: PestFarmingPlayer;
 	result: PestFarmingRateResult;
+	petType: FarmingPets;
 	phases: PestFarmingPhase[];
 	phaseCoinsPerHour: Partial<Record<PestFarmingPhase, number>>;
 	heldItemId?: string;
@@ -69,16 +71,12 @@ export async function findPestPetPurchaseRecommendations(
 		const target = getPetPurchaseTarget(input.prices, type, ownedIds);
 		if (!target) continue;
 
+		const candidates: EvaluatedPurchase[] = [];
 		if (matchingOwnedPets.length === 0) {
-			const bare = await getBestAssignment(input, target, undefined);
+			candidates.push(await getBestAssignment(input, target, undefined));
 			if (input.shouldCancel?.()) return [];
-			if (bare.result.valuation.coinsPerHour > input.before.valuation.coinsPerHour + RATE_EPSILON) {
-				evaluatedPurchases.push(bare);
-				continue;
-			}
 		}
 
-		const candidates: EvaluatedPurchase[] = [];
 		for (const heldItemId of Object.keys(FARMING_PET_ITEMS).sort()) {
 			if (matchingOwnedPets.some((pet) => pet.pet.heldItem === heldItemId)) continue;
 			if ((input.prices.heldItemPrices[heldItemId] ?? 0) <= 0) continue;
@@ -123,6 +121,11 @@ export async function findPestPetPurchaseRecommendations(
 		comparePurchases(a, b, input.before.valuation.coinsPerHour)
 	)) {
 		if (selected.result.valuation.coinsPerHour <= input.before.valuation.coinsPerHour + RATE_EPSILON) continue;
+		const heldItemApplication = getHeldItemApplication(input, selected);
+		if (heldItemApplication) {
+			recommendations.push(heldItemApplication);
+			continue;
+		}
 
 		const primaryPhase = selected.phases[0] ?? PestFarmingPhase.Farm;
 		const phaseLabel = selected.phases.length > 0 ? formatNames(selected.phases.map(titleCasePhase)) : 'owned pets';
@@ -235,6 +238,7 @@ async function getBestAssignment(
 			upgrade,
 			player,
 			result,
+			petType: target.type,
 			phases,
 			phaseCoinsPerHour,
 			heldItemId,
@@ -253,6 +257,65 @@ async function getBestAssignment(
 		if (input.shouldCancel?.()) break;
 	}
 	return best!;
+}
+
+function getHeldItemApplication(
+	input: PestPetPurchaseRecommendationInput,
+	candidate: EvaluatedPurchase
+): PestPetPurchaseRecommendation | undefined {
+	if (!candidate.heldItemId || candidate.phases.length === 0) return undefined;
+
+	const targetLevel = getPetTargetLevel(candidate.petType);
+	const targetRarity = getPetTargetRarity(candidate.petType);
+	const pet = input.player.getOwnedPets().find((pet) => {
+		if (pet.type !== candidate.petType || pet.level < targetLevel || compareRarity(pet.rarity, targetRarity) < 0) {
+			return false;
+		}
+
+		const petId = getFarmingPetId(pet);
+		if (!petId) return false;
+		const assignedPhases = PEST_FARMING_PHASES.filter((phase) => input.player.phaseLoadouts[phase].petId === petId);
+		return (
+			assignedPhases.length === candidate.phases.length &&
+			assignedPhases.every((phase) => candidate.phases.includes(phase))
+		);
+	});
+	if (!pet) return undefined;
+
+	const primaryPhase = candidate.phases[0]!;
+	const upgrade = pet
+		.getUpgrades({ stats: Object.values(Stat), sourceTypes: ['pet'] }, input.player.phases[primaryPhase])
+		.find((upgrade) => upgrade.meta?.type === 'pet_item' && upgrade.meta.id === candidate.heldItemId);
+	if (!upgrade) return undefined;
+
+	const player = input.player.clone();
+	player.applyPhaseUpgrade(primaryPhase, upgrade);
+	const result = new PestFarmingRateCalculator({
+		player,
+		options: input.options,
+		priceBook: input.priceBook,
+	}).calculate();
+	if (result.valuation.coinsPerHour <= input.before.valuation.coinsPerHour + RATE_EPSILON) return undefined;
+
+	const totalCost = input.prices.heldItemPrices[candidate.heldItemId] ?? 0;
+	const calculator = new PestFarmingRateCalculator({
+		player: input.player,
+		options: input.options,
+		priceBook: input.priceBook,
+	});
+	return {
+		upgrade,
+		impact: calculator.compareResults(
+			input.before,
+			result,
+			primaryPhase,
+			upgrade.conflictKey ?? 'pet-item',
+			totalCost
+		),
+		player,
+		phases: candidate.phases,
+		primaryPhase,
+	};
 }
 
 function phaseKey(phases: readonly PestFarmingPhase[]): string {
