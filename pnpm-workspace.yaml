@@ -6,5 +6,5 @@ nodeLinker: hoisted
 packages:
     - packages/*
 overrides:
-    svelte>esrap: 2.3.5
-    prosemirror-changeset: 2.4.1
+    svelte>esrap: 2.3.7
+    prosemirror-changeset: 2.4.2
