@@ -1,4 +1,4 @@
-FROM node:24.15-alpine AS builder
+FROM node:24.20-alpine AS builder
 RUN npm install -g pnpm@11.22.0
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN pnpm run build
 RUN CI=true pnpm install --prod --frozen-lockfile --offline --ignore-scripts
 
 
-FROM node:24.15-alpine
+FROM node:24.20-alpine
 WORKDIR /app
 
 ARG PUBLIC_COMMIT_HASH
