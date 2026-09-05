@@ -1,3 +1,5 @@
+import { SIDEBAR_NAV } from '$content/sidebar';
+import { env } from '$env/dynamic/public';
 import {
 	getCategories,
 	getLeaderboards,
@@ -10,8 +12,7 @@ import {
 import { fetchArticlesPaginated } from '$lib/api/cms';
 import { parseLeaderboards } from '$lib/constants/leaderboards';
 import { listStreamers } from '$lib/stream-api';
-import { SIDEBAR_NAV } from '$content/sidebar';
-import { env } from '$env/dynamic/public';
+import { TOOL_PAGES } from '$lib/tools/pages';
 import { Readable } from 'node:stream';
 import { ErrorLevel, SitemapIndexStream, SitemapStream, streamToPromise, type SitemapItemLoose } from 'sitemap';
 
@@ -40,6 +41,8 @@ const STATIC_ROUTES = [
 	'/info/badges',
 	'/info/credits',
 	'/info/recap',
+	'/tools',
+	...TOOL_PAGES.map((tool) => tool.href),
 ] as const;
 
 export const SITEMAP_HEADERS = {

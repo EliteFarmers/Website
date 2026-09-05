@@ -1,51 +1,14 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import ToolPage from '$comp/tools/tool-page.svelte';
+	import { TOOL_PAGES } from '$lib/tools/pages';
 	import * as Card from '$ui/card';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import Coins from '@lucide/svelte/icons/coins';
-	import Recycle from '@lucide/svelte/icons/recycle';
-	import Medal from '@lucide/svelte/icons/medal';
-	import Sprout from '@lucide/svelte/icons/sprout';
-	import TrendingUp from '@lucide/svelte/icons/trending-up';
-
-	const tools = [
-		{
-			title: 'Rates Calculator',
-			description: 'Compare crop collection and profit for your farming setup.',
-			href: '/tools/rates',
-			icon: Coins,
-		},
-		{
-			title: 'Crop Gain Tracker',
-			description: 'Review daily crop gains, skill XP, and estimated playtime.',
-			href: '/tools/gain',
-			icon: TrendingUp,
-		},
-		{
-			title: 'Jacob Contest Fortune',
-			description: 'Find the farming fortune needed for each contest medal.',
-			href: '/tools/jacob-fortune',
-			icon: Medal,
-		},
-		{
-			title: 'Mutation Copper',
-			description: 'Compare mutation analysis costs per Copper.',
-			href: '/tools/mutations',
-			icon: Sprout,
-		},
-		{
-			title: 'Composter Calculator',
-			description: 'Compare inputs, upgrades, Compost output, and profit.',
-			href: '/tools/composter',
-			icon: Recycle,
-		},
-	] as const;
 </script>
 
 <ToolPage title="Farming Tools" description="Calculators and trackers for your Garden." overview>
 	<div class="grid gap-4 md:grid-cols-2">
-		{#each tools as tool (tool.href)}
+		{#each TOOL_PAGES as tool (tool.href)}
 			<a
 				href={resolve(tool.href)}
 				class="group rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
