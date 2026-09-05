@@ -27,6 +27,11 @@
 	let arrowEl = $state<HTMLElement | undefined>(undefined);
 
 	let actualPlacement = $state<'top' | 'bottom' | 'left' | 'right'>('bottom');
+	const titleId = `walkthrough-title-${crypto.randomUUID()}`;
+
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape') ctx.close();
+	}
 
 	function mountTooltip(element: HTMLElement) {
 		tooltipEl = element;
@@ -142,27 +147,37 @@
 <div
 	{@attach mountTooltip}
 	role="dialog"
+	aria-modal="true"
+	aria-labelledby={titleId}
+	onkeydown={handleKeydown}
+	tabindex="-1"
 	class="fixed top-0 left-0 z-9999 w-max max-w-[calc(100vw-0.75rem)] outline-none"
 	transition:fade={{ duration: 200 }}
 >
 	{#if contentSnippet}
 		{@render contentSnippet(ctx)}
 	{:else}
-		<div class="bg-popover text-popover-foreground relative w-87.5 rounded-lg border shadow-xl">
+		<div class="relative w-87.5 rounded-lg border bg-popover text-popover-foreground shadow-xl">
 			<div {@attach mountArrow} class={arrowClasses}></div>
 
 			<div class="p-4">
 				<div class="flex items-start justify-between gap-4">
 					<div class="space-y-1">
-						<h4 class="leading-none font-semibold">{ctx.currentStep()?.title}</h4>
-						<p class="text-muted-foreground text-sm">{ctx.currentStep()?.description}</p>
+						<h4 id={titleId} class="leading-none font-semibold">{ctx.currentStep()?.title}</h4>
+						<p class="text-sm text-muted-foreground">{ctx.currentStep()?.description}</p>
 					</div>
-					<Button variant="ghost" size="icon" class="-mt-1 -mr-2 h-6 w-6 shrink-0" onclick={ctx.close}>
+					<Button
+						variant="ghost"
+						size="icon"
+						class="-mt-1 -mr-2 h-6 w-6 shrink-0"
+						onclick={ctx.close}
+						aria-label="Close walkthrough"
+					>
 						<X class="h-4 w-4" />
 					</Button>
 				</div>
 				<div class="flex items-center justify-between pt-4">
-					<span class="text-muted-foreground text-xs">
+					<span class="text-xs text-muted-foreground">
 						Step {ctx.currentStepIndex() + 1}
 					</span>
 					<div class="flex gap-2">

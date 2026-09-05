@@ -191,7 +191,7 @@
 		<Button
 			type="button"
 			variant="default"
-			class="bg-primary/90 text-primary-foreground px-5 py-5 text-sm font-bold tracking-wide uppercase"
+			class="bg-primary/90 px-5 py-5 text-sm font-bold tracking-wide text-primary-foreground uppercase"
 			onclick={() => applyArmorPreset('HELIANTHUS')}
 		>
 			Full Helianthus Armor
@@ -199,7 +199,7 @@
 		<Button
 			type="button"
 			variant="default"
-			class="bg-primary/80 text-primary-foreground px-5 py-5 text-sm font-bold tracking-wide uppercase"
+			class="bg-primary/80 px-5 py-5 text-sm font-bold tracking-wide text-primary-foreground uppercase"
 			onclick={() => applyEquipmentPreset('BLOSSOM')}
 		>
 			Full Blossom Equipment
@@ -207,7 +207,7 @@
 		<Button
 			type="button"
 			variant="default"
-			class="bg-primary/70 text-primary-foreground px-5 py-5 text-sm font-bold tracking-wide uppercase"
+			class="bg-primary/70 px-5 py-5 text-sm font-bold tracking-wide text-primary-foreground uppercase"
 			onclick={() => applyEquipmentPreset('LOTUS')}
 		>
 			Full Lotus Equipment
@@ -221,7 +221,7 @@
 				{@const piece = armor.find((a) => a.slot === slot)}
 				{#if piece}
 					{@const armorId = piece.item.skyblockId ?? ''}
-					<div class="bg-muted/20 flex flex-col gap-3 rounded-lg border p-4">
+					<div class="flex flex-col gap-3 rounded-lg border bg-muted/20 p-4">
 						<div class="flex items-center gap-3">
 							<ItemRender
 								skyblockId={armorId}
@@ -317,7 +317,7 @@
 				{@const piece = equipment.find((e) => e.slot === slot)}
 				{#if piece}
 					{@const equipmentId = piece.item.skyblockId ?? ''}
-					<div class="bg-muted/20 flex flex-col gap-3 rounded-lg border p-4">
+					<div class="flex flex-col gap-3 rounded-lg border bg-muted/20 p-4">
 						<div class="flex items-center gap-3">
 							<ItemRender
 								skyblockId={equipmentId}

@@ -1,5 +1,5 @@
 import { query } from '$app/server';
-import { getCropGraphs, getPlayerData, getSkillGraphs } from '$lib/api';
+import { getAccount, getCropGraphs, getSkillGraphs } from '$lib/api';
 import { preprocessCropCharts, preprocessSkillCharts, preprocessWeightSeries } from '$lib/utils';
 import * as zod from 'zod';
 
@@ -66,13 +66,14 @@ export const getSkillSnapshots = query(zodGraphsRange, async ({ playerUuid, prof
 });
 
 export const getPlayerGuildData = query(zod.object({ playerUuid: zod.string() }), async ({ playerUuid }) => {
-	const result = await getPlayerData(playerUuid);
+	const result = await getAccount(playerUuid);
 
-	if (!result.ok || !result.data) return undefined;
+	if (!result.ok || !result.data?.playerData) return undefined;
+	const guildMember = result.data.playerData.guildMember;
 
 	return {
-		guildId: result.data.guildMember?.guild?.id ?? undefined,
-		guildName: result.data.guildMember?.guild?.name ?? undefined,
-		expHistory: (result.data.guildMember?.expHistory as Record<string, number> | undefined) ?? undefined,
+		guildId: guildMember?.guild?.id ?? undefined,
+		guildName: guildMember?.guild?.name ?? undefined,
+		expHistory: (guildMember?.expHistory as Record<string, number> | undefined) ?? undefined,
 	};
 });

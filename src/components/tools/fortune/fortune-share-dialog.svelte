@@ -67,7 +67,7 @@
 				/>
 			</div>
 			{#if compareMode}
-				<div class="text-muted-foreground text-sm">
+				<div class="text-sm text-muted-foreground">
 					<p class="font-medium">This saved setup includes:</p>
 					{#if sideAPlayerGear}
 						<p>
@@ -87,7 +87,7 @@
 					{/if}
 				</div>
 			{:else if sideAPlayerGear}
-				<p class="text-muted-foreground text-sm">
+				<p class="text-sm text-muted-foreground">
 					This saved setup includes loaded gear from player {sideAPlayerGear.playerName}
 					{#if sideAPlayerGear.profileName}
 						({sideAPlayerGear.profileName})
@@ -107,10 +107,10 @@
 				</div>
 			{/if}
 			{#if info}
-				<p class="text-muted-foreground text-sm">{info}</p>
+				<p class="text-sm text-muted-foreground">{info}</p>
 			{/if}
 			{#if error}
-				<p class="text-destructive text-sm">{error}</p>
+				<p class="text-sm text-destructive">{error}</p>
 			{/if}
 		</div>
 		<Dialog.Footer>

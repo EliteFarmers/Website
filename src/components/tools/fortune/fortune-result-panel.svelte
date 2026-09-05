@@ -2,14 +2,14 @@
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
 	import BazaarRates from '$comp/tools/fortune/bazaar-rates.svelte';
-	import { Crop, CROP_INFO, getCropDisplayName, Stat, type DetailedDropsResult } from 'farming-weight';
+	import { Crop, CROP_INFO, getCropDisplayName, Stat, type DetailedDropsFromEffectsResult } from 'farming-weight';
 
 	interface FortuneResultContext {
 		cropFortune: {
 			breakdown: unknown;
 		};
 		effectiveFortune: number;
-		result: DetailedDropsResult | null;
+		result: DetailedDropsFromEffectsResult | null;
 		coinBreakdown: [string, number][];
 		collectionBreakdown: [string, number][];
 	}
@@ -49,16 +49,16 @@
 	);
 </script>
 
-<section class="bg-card flex flex-col items-center gap-4 rounded-lg border p-6">
+<section class="flex flex-col items-center gap-4 rounded-lg border bg-card p-6">
 	<h2 class="text-2xl font-bold">{title}</h2>
 
 	<div
-		class="bg-muted/20 grid w-full gap-4 rounded-lg py-4 {showFortuneBreakdown
+		class="grid w-full gap-4 rounded-lg bg-muted/20 py-4 {showFortuneBreakdown
 			? 'grid-cols-1 md:grid-cols-2'
 			: 'grid-cols-1'}"
 	>
 		<div class="flex flex-col items-center gap-2">
-			<span class="text-muted-foreground text-xs font-bold">Total Fortune</span>
+			<span class="text-xs font-bold text-muted-foreground">Total Fortune</span>
 			{#if showFortuneBreakdown}
 				<FortuneBreakdown
 					title="Total Fortune Breakdown"
@@ -66,12 +66,12 @@
 					breakdown={totalFortuneBreakdown}
 				/>
 			{:else}
-				<span class="text-primary text-4xl font-black">{context.effectiveFortune.toFixed(0)}</span>
+				<span class="text-4xl font-black text-primary">{context.effectiveFortune.toFixed(0)}</span>
 			{/if}
 		</div>
 		{#if showFortuneBreakdown}
 			<div class="flex flex-col items-center gap-2">
-				<span class="text-muted-foreground text-xs font-bold"
+				<span class="text-xs font-bold text-muted-foreground"
 					>{getCropDisplayName(selectedCropKey ?? Crop.Wheat)} Fortune</span
 				>
 				<FortuneBreakdown
@@ -89,7 +89,7 @@
 		<h3 class="text-lg font-bold">Expected Rates</h3>
 		{#if context.result}
 			<div class="flex flex-col gap-3">
-				<div class="bg-muted/30 flex items-center justify-between rounded-md p-3">
+				<div class="flex items-center justify-between rounded-md bg-muted/30 p-3">
 					<span class="font-semibold">NPC Profit</span>
 					<CoinsBreakdown coins={context.result.npcCoins} />
 				</div>
@@ -100,12 +100,12 @@
 					otherCoins={context.result.npcCoins -
 						(context.result.items[selectedCropKey] ?? context.result.collection) * context.result.npcPrice}
 				/>
-				<div class="bg-muted/30 flex items-center justify-between rounded-md p-3">
+				<div class="flex items-center justify-between rounded-md bg-muted/30 p-3">
 					<span class="font-semibold">Collection</span>
 					<span class="text-xl font-bold">{context.result.collection.toLocaleString()}</span>
 				</div>
 
-				<div class="bg-muted/20 rounded-md p-3">
+				<div class="rounded-md bg-muted/20 p-3">
 					<p class="mb-2 text-sm font-semibold">Coin Sources</p>
 					<div class="flex flex-col gap-1 text-sm">
 						{#each context.coinBreakdown as [name, value] (name)}
@@ -121,7 +121,7 @@
 					</div>
 				</div>
 
-				<div class="bg-muted/20 rounded-md p-3">
+				<div class="rounded-md bg-muted/20 p-3">
 					<p class="mb-2 text-sm font-semibold">Collection Sources</p>
 					<div class="flex flex-col gap-1 text-sm">
 						{#each context.collectionBreakdown as [name, value] (name)}
@@ -138,18 +138,13 @@
 				</div>
 
 				{#if context.result.specialCropBonus > 0}
-					<div class="text-progress text-center text-xs">
+					<div class="text-center text-xs text-progress">
 						+{(context.result.specialCropBonus * 100).toFixed(1)}% Special Crop Bonus Active
-					</div>
-				{/if}
-				{#if context.result.rareItemBonus > 0}
-					<div class="text-completed text-center text-xs">
-						+{(context.result.rareItemBonus * 100).toFixed(1)}% Rare Drop Bonus Active
 					</div>
 				{/if}
 			</div>
 		{:else}
-			<p class="text-muted-foreground py-8 text-center italic">Select a crop to see rates</p>
+			<p class="py-8 text-center text-muted-foreground italic">Select a crop to see rates</p>
 		{/if}
 	</div>
 </section>

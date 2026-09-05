@@ -399,7 +399,9 @@ export function compareBreakdown(a: Record<string, number> | undefined, b: Recor
 		.sort((left, right) => Math.abs(right.delta) - Math.abs(left.delta));
 }
 
-export function collectBazaarItemIds(results: (import('farming-weight').DetailedDropsResult | null | undefined)[]) {
+export function collectBazaarItemIds(
+	results: (import('farming-weight').DetailedDropsFromEffectsResult | null | undefined)[]
+) {
 	const ids: Record<string, true> = {};
 	for (const result of results) {
 		if (!result) continue;

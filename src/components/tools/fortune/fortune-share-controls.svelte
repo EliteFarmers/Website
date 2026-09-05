@@ -123,7 +123,7 @@
 
 <div class="flex items-center gap-3">
 	{#if shareMessage}
-		<span class="text-muted-foreground text-sm">{shareMessage}</span>
+		<span class="text-sm text-muted-foreground">{shareMessage}</span>
 	{/if}
 	<Button onclick={openShareDialog}>Share Setup</Button>
 </div>

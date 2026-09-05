@@ -43,7 +43,7 @@
 	</Tabs.List>
 	<Tabs.Content value="items" class="mt-4 flex flex-col gap-6">
 		<section
-			class="bg-card rounded-lg border p-4"
+			class="rounded-lg border bg-card p-4"
 			role="group"
 			onpointerdown={(event) => {
 				void event;
@@ -66,7 +66,7 @@
 		</section>
 
 		<section
-			class="bg-card rounded-lg border p-4"
+			class="rounded-lg border bg-card p-4"
 			role="group"
 			onpointerdown={(event) => {
 				void event;
@@ -103,7 +103,7 @@
 			onSectionInteraction(sideKey, 'armorEquipment');
 		}}
 	>
-		<section class="bg-card rounded-lg border p-4">
+		<section class="rounded-lg border bg-card p-4">
 			<ArmorConfig
 				bind:armor={
 					() => side.armor,
@@ -133,7 +133,7 @@
 			onSectionInteraction(sideKey, 'stats');
 		}}
 	>
-		<section class="bg-card rounded-lg border p-4">
+		<section class="rounded-lg border bg-card p-4">
 			<GeneralConfig
 				bind:options={
 					() => side.options,

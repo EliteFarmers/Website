@@ -75,7 +75,7 @@
 		<ItemRender skyblockId={pet.type} pet={true} class="size-14 shrink-0 rounded-md border bg-black/20 p-1" />
 		<div>
 			<h3 class="text-lg font-semibold">{pet.info.name}</h3>
-			<p class="text-muted-foreground text-sm">Level {pet.level}</p>
+			<p class="text-sm text-muted-foreground">Level {pet.level}</p>
 		</div>
 	</div>
 
@@ -148,7 +148,7 @@
 						<ItemRender skyblockId={itemOption.value} class="size-9 rounded-sm p-0" />
 					{:else}
 						<div
-							class="bg-muted text-muted-foreground grid size-9 place-items-center rounded-sm text-xs font-semibold"
+							class="grid size-9 place-items-center rounded-sm bg-muted text-xs font-semibold text-muted-foreground"
 						>
 							None
 						</div>

@@ -1,4 +1,5 @@
 import type { RatesItemPriceData } from '$lib/api/elite';
+import { calculateCropBazaarProfit } from './crop-bazaar-profit';
 import type { FortuneSandboxSideData } from '$lib/schemas/tool-settings/fortune-sandbox';
 import {
 	Crop,
@@ -7,11 +8,10 @@ import {
 	FARMING_EQUIPMENT_INFO,
 	FarmingTool,
 	GearSlot,
-	getPossibleResultsFromCrops,
 	PET_LEVELS,
 	PET_RARITY_OFFSETS,
 	Rarity,
-	type DetailedDropsResult,
+	type DetailedDropsFromEffectsResult,
 	type EliteItemDto,
 	type PlayerOptions,
 } from 'farming-weight';
@@ -492,53 +492,11 @@ export function scanFortuneBreakEven(input: FortuneBreakEvenScanInput): FortuneB
 	return { status: 'not-found', lastMetrics };
 }
 
-function getSellPrice(bzData: RatesItemPriceData[string]['bazaar'] | undefined, mode: 'insta' | 'order') {
-	if (!bzData) return 0;
-	return mode === 'insta' ? (bzData.averageSell ?? 0) : (bzData.averageSellOrder ?? 0);
-}
-
 export function calculateBestBazaarProfit(
-	result: DetailedDropsResult | null | undefined,
+	result: DetailedDropsFromEffectsResult | null | undefined,
 	crop: Crop,
 	bazaarData: RatesItemPriceData | undefined,
 	bzMode: 'insta' | 'order'
 ): number | null {
-	if (!result) {
-		return null;
-	}
-	if (!bazaarData) {
-		return null;
-	}
-
-	const amount = result.items[crop] ?? result.collection;
-	const otherCoinsNpc = result.npcCoins - amount * result.npcPrice;
-	const results = getPossibleResultsFromCrops(crop, amount);
-
-	const otherItems = Object.entries(result.items ?? {}).filter(
-		([itemId, count]) => itemId !== crop && itemId !== Crop.Seeds && (count ?? 0) > 0
-	);
-	const sellToBazaarDelta = otherItems
-		.map(([itemId, items]) => {
-			const bzData = bazaarData[itemId]?.bazaar;
-			if (!bzData) return 0;
-			const npc = bzData.npc ?? 0;
-			const per = getSellPrice(bzData, bzMode);
-			if (per <= npc || per <= 0) return 0;
-			return items * (per - npc);
-		})
-		.reduce((sum, gain) => sum + gain, 0);
-	const otherCoinsTotal = otherCoinsNpc + sellToBazaarDelta;
-
-	const bestTotal = Object.entries(results)
-		.map(([itemId, craft]) => {
-			const bzData = bazaarData[itemId]?.bazaar;
-			if (!bzData || itemId === crop) return null;
-			const per = getSellPrice(bzData, bzMode);
-			const profit = per * craft.fractionalItems - craft.fractionalCost;
-			return profit + otherCoinsTotal;
-		})
-		.filter((value): value is number => value != null)
-		.sort((a, b) => b - a)[0];
-
-	return Math.floor(bestTotal ?? otherCoinsTotal);
+	return result ? calculateCropBazaarProfit(result, crop, bazaarData, bzMode).bazaarProfit : null;
 }

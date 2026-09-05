@@ -41,10 +41,10 @@
 	}: Props = $props();
 </script>
 
-<section class="bg-card flex flex-col gap-4 rounded-lg border p-5">
+<section class="flex flex-col gap-4 rounded-lg border bg-card p-5">
 	<div>
 		<h2 class="text-xl font-semibold">Comparison</h2>
-		<p class="text-muted-foreground text-sm">
+		<p class="text-sm text-muted-foreground">
 			See how {sideNameA} and {sideNameB} differ, or find the value needed to match a metric.
 		</p>
 	</div>
@@ -58,18 +58,18 @@
 			<div class="grid grid-cols-1 gap-2">
 				{#each compareSummaryRows as row (row.label)}
 					<div
-						class="bg-muted/20 grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 rounded-md border px-3 py-2 text-sm"
+						class="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 rounded-md border bg-muted/20 px-3 py-2 text-sm"
 					>
 						<span class="font-medium">{row.label}</span>
 						<span class="text-muted-foreground">{sideNameA}: {row.format(row.a)}</span>
 						<span class="text-muted-foreground">{sideNameB}: {row.format(row.b)}</span>
-						<span class={row.delta >= 0 ? 'text-progress font-semibold' : 'text-destructive font-semibold'}>
+						<span class={row.delta >= 0 ? 'font-semibold text-progress' : 'font-semibold text-destructive'}>
 							{formatSigned(row.delta)} ({row.percent})
 						</span>
 					</div>
 				{/each}
 			</div>
-			<p class="text-muted-foreground mt-2 text-xs">
+			<p class="mt-2 text-xs text-muted-foreground">
 				Delta values are calculated as {sideNameB} minus {sideNameA}.
 			</p>
 		</Tabs.Content>
@@ -79,7 +79,7 @@
 				<section class="rounded-md border p-3">
 					<h3 class="mb-2 text-sm font-semibold">Coin Source Deltas ({sideNameB} - {sideNameA})</h3>
 					{#if compareCoinSourceDiff.length === 0}
-						<p class="text-muted-foreground text-sm">No coin source differences.</p>
+						<p class="text-sm text-muted-foreground">No coin source differences.</p>
 					{:else}
 						<div class="flex flex-col gap-1 text-sm">
 							{#each compareCoinSourceDiff.slice(0, 14) as entry (entry.key)}
@@ -96,7 +96,7 @@
 				<section class="rounded-md border p-3">
 					<h3 class="mb-2 text-sm font-semibold">Collection Source Deltas ({sideNameB} - {sideNameA})</h3>
 					{#if compareCollectionSourceDiff.length === 0}
-						<p class="text-muted-foreground text-sm">No collection source differences.</p>
+						<p class="text-sm text-muted-foreground">No collection source differences.</p>
 					{:else}
 						<div class="flex flex-col gap-1 text-sm">
 							{#each compareCollectionSourceDiff.slice(0, 14) as entry (entry.key)}

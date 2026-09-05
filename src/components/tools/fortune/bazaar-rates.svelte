@@ -8,14 +8,14 @@
 	import * as Select from '$ui/select';
 	import { Skeleton } from '$ui/skeleton';
 	import Switch from '$ui/switch/switch.svelte';
-	import { Crop, getPossibleResultsFromCrops, type DetailedDropsResult } from 'farming-weight';
+	import { Crop, getPossibleResultsFromCrops, type DetailedDropsFromEffectsResult } from 'farming-weight';
 	import { watch } from 'runed';
 
 	interface Props {
 		crop: Crop;
 		amount: number;
 		otherCoins?: number;
-		result: DetailedDropsResult;
+		result: DetailedDropsFromEffectsResult;
 	}
 
 	const ratesData = getRatesData();
@@ -116,7 +116,7 @@
 		{@const best = craftList[0]}
 
 		<Accordion.Root type="single" class="w-full" value="bazaar">
-			<Accordion.Item value="bazaar" class="outline-border w-full rounded-md px-2 outline">
+			<Accordion.Item value="bazaar" class="w-full rounded-md px-2 outline outline-border">
 				<Accordion.Trigger class="py-2 hover:no-underline">
 					<div class="flex w-full items-center justify-between gap-2 pr-2">
 						<span class="text-xl font-semibold">Bazaar Profit</span>
@@ -139,14 +139,14 @@
 							/>
 							{#if result.rngItems}
 								<div class="flex flex-row items-center gap-2">
-									<span class="text-muted-foreground text-sm">Include RNG</span>
+									<span class="text-sm text-muted-foreground">Include RNG</span>
 									<Switch bind:checked={includeRng} />
 								</div>
 							{/if}
 						</div>
 
 						{#if craftList.length === 0}
-							<p class="text-muted-foreground text-sm">No bazaar conversions available.</p>
+							<p class="text-sm text-muted-foreground">No bazaar conversions available.</p>
 						{:else}
 							{#each craftList as craft, i (craft.id)}
 								{@const isBest = i === 0}
@@ -190,7 +190,7 @@
 						{/if}
 
 						{#if sellToBazaar.length > 0}
-							<p class="text-muted-foreground text-xs">
+							<p class="text-xs text-muted-foreground">
 								Other items = {Math.floor(otherCoinsTotal).toLocaleString()} ({Math.floor(
 									otherCoinsNpcRemaining
 								).toLocaleString()} to NPC, {Math.floor(sellToBazaarCoins).toLocaleString()} to BZ)

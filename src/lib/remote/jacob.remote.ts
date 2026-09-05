@@ -5,17 +5,20 @@ import {
 	banPlayerFromJacobLeaderboard,
 	createGuildJacobLeaderboard,
 	deleteGuildJacobLeaderboard,
-	getCurrentMedalBrackets,
+	getContestsInMonth,
 	getUserGuild,
 	removeJacobLeaderboardExcludedTimespan,
 	sendGuildJacobFeature,
 	unbanParticipationFromJacobLeaderboard,
 	unbanPlayerFromJacobLeaderboard,
 	updateGuildJacobLeaderboard,
+	type ContestBracketsDto,
+	type JacobContestDto,
 	type CropRecords,
 } from '$lib/api';
 import { CanManageGuild } from '$lib/utils';
 import { error } from '@sveltejs/kit';
+import { SkyBlockTime } from 'farming-weight';
 import { z } from 'zod';
 
 // Utility to get and check guild permissions
@@ -41,13 +44,69 @@ export const getJacobMedalBrackets = query(
 		months: z.number().int().min(1).max(12),
 	}),
 	async ({ months }) => {
-		const result = await getCurrentMedalBrackets({ months });
-		if (result.ok && result.data) {
-			return { data: result.data };
+		const current = SkyBlockTime.now;
+		const currentMonth = (current.year - 1) * 12 + (current.month - 1);
+		const responses = await Promise.allSettled(
+			Array.from({ length: months }, async (_, offset) => {
+				const absoluteMonth = currentMonth - offset;
+				const year = Math.floor(absoluteMonth / 12) + 1;
+				const month = (absoluteMonth % 12) + 1;
+				const response = await getContestsInMonth(year, month);
+				return response.ok ? response.data : undefined;
+			})
+		);
+
+		const successfulMonths = responses.flatMap((response) =>
+			response.status === 'fulfilled' && response.value ? [response.value] : []
+		);
+		if (successfulMonths.length === 0) {
+			return { error: 'Failed to fetch bracket data. Please try again later.' };
 		}
 
+		const medalKeys = ['bronze', 'silver', 'gold', 'platinum', 'diamond'] as const;
+		const totals = new Map<
+			string,
+			{ sums: ContestBracketsDto; counts: Record<(typeof medalKeys)[number], number> }
+		>();
+		let contestCount = 0;
+
+		for (const monthData of successfulMonths) {
+			for (const contests of Object.values(monthData)) {
+				for (const contest of contests as JacobContestDto[]) {
+					contestCount++;
+					const aggregate = totals.get(contest.crop) ?? {
+						sums: { bronze: 0, silver: 0, gold: 0, platinum: 0, diamond: 0 },
+						counts: { bronze: 0, silver: 0, gold: 0, platinum: 0, diamond: 0 },
+					};
+					for (const medal of medalKeys) {
+						const value = Number(contest.brackets[medal] ?? 0);
+						if (value <= 0) continue;
+						aggregate.sums[medal] += value;
+						aggregate.counts[medal]++;
+					}
+					totals.set(contest.crop, aggregate);
+				}
+			}
+		}
+
+		const brackets = Object.fromEntries(
+			[...totals.entries()].map(([crop, aggregate]) => [
+				crop,
+				Object.fromEntries(
+					medalKeys.map((medal) => [
+						medal,
+						aggregate.counts[medal] > 0 ? Math.round(aggregate.sums[medal] / aggregate.counts[medal]) : 0,
+					])
+				) as unknown as ContestBracketsDto,
+			])
+		);
+
 		return {
-			error: 'Failed to fetch bracket data. Please try again later.',
+			data: {
+				brackets,
+				contestCount,
+				monthsLoaded: successfulMonths.length,
+			},
 		};
 	}
 );

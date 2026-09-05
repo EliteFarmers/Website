@@ -43,11 +43,11 @@
 	});
 </script>
 
-<section class={`bg-card flex flex-col gap-3 rounded-lg border p-4 ${className}`.trim()}>
+<section class={`flex flex-col gap-3 rounded-lg border bg-card p-4 ${className}`.trim()}>
 	{#if showHeading}
 		<div class="flex flex-col gap-1">
 			<h3 class="text-base font-semibold">Import {displaySideName} from Player</h3>
-			<p class="text-muted-foreground text-sm">
+			<p class="text-sm text-muted-foreground">
 				Loading a player replaces this side's pet, tools, armor, equipment, and stats.
 			</p>
 		</div>

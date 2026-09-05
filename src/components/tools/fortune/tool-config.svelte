@@ -105,7 +105,7 @@
 		/>
 		<div>
 			<h3 class="text-lg font-semibold">{tool.info.name}</h3>
-			<p class="text-muted-foreground text-sm">Applies to {tool.crops.length} crop(s)</p>
+			<p class="text-sm text-muted-foreground">Applies to {tool.crops.length} crop(s)</p>
 		</div>
 	</div>
 
