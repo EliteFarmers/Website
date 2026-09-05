@@ -12,6 +12,9 @@ importers:
 
   .:
     dependencies:
+      '@floating-ui/dom':
+        specifier: ^1.7.5
+        version: 1.8.0
       '@napi-rs/canvas':
         specifier: ^1.0.7
         version: 1.0.7

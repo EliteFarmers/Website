@@ -7,12 +7,13 @@
 
 	interface Props {
 		radio?: boolean;
+		allowDeselect?: boolean;
 		href?: string;
 		id?: string;
 		analyticsEvent?: string;
 	}
 
-	let { radio = false, href = '', id = '', analyticsEvent }: Props = $props();
+	let { radio = false, allowDeselect = false, href = '', id = '', analyticsEvent }: Props = $props();
 
 	let scrollContainer = $state<HTMLElement | null>(null);
 
@@ -23,7 +24,7 @@
 		crop: string
 	) {
 		if (radio) {
-			selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [crop]: true });
+			selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [crop]: !(allowDeselect && $selectedCrops[crop]) });
 		} else {
 			selectedCrops.update((crops) => ({ ...crops, [crop]: !crops[crop] }));
 		}
@@ -77,6 +78,8 @@
 			{#each crops as [crop, src] (crop)}
 				<button
 					data-crop={crop}
+					aria-label={crop}
+					aria-pressed={$selectedCrops[crop] ?? false}
 					class="flex aspect-square w-16 flex-row items-center justify-center gap-2 rounded-md p-2 hover:bg-muted {$selectedCrops[
 						crop
 					]

@@ -2,7 +2,13 @@
 	import { cn } from '$lib/utils.js';
 	import { Slider as SliderPrimitive, type SliderSingleRootProps } from 'bits-ui';
 
-	let { value = $bindable(0), class: className, ...restProps }: Omit<SliderSingleRootProps, 'type'> = $props();
+	let {
+		value = $bindable(0),
+		class: className,
+		'aria-label': ariaLabel,
+		'aria-valuetext': ariaValueText,
+		...restProps
+	}: Omit<SliderSingleRootProps, 'type'> = $props();
 </script>
 
 <SliderPrimitive.Root
@@ -17,6 +23,8 @@
 		</span>
 		{#each thumbs as thumb, i (i)}
 			<SliderPrimitive.Thumb
+				aria-label={ariaLabel}
+				aria-valuetext={ariaValueText}
 				index={thumb}
 				class="block size-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
 			/>

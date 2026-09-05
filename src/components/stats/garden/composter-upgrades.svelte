@@ -1,5 +1,6 @@
 <script lang="ts">
 	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
+	import ComposterProfit from '$comp/stats/garden/composter-profit.svelte';
 	import { COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
 	import { getItemsFromCosts, getUpgradeCostBreakdown } from '$lib/items';
 	import { getItems } from '$lib/remote/items.remote';
@@ -41,7 +42,10 @@
 <div class="w-full max-w-7xl">
 	<div class="flex flex-col items-center gap-4 md:flex-row md:justify-center">
 		<div class="flex w-full max-w-2xl flex-1 flex-col gap-1">
-			<h3 class="mt-2 mb-4 text-xl leading-none font-semibold">Composter Upgrades</h3>
+			<div class="mt-2 mb-4 flex flex-wrap items-center gap-x-2 gap-y-1">
+				<h3 class="text-xl leading-none font-semibold">Composter Upgrades</h3>
+				<ComposterProfit />
+			</div>
 			{@render upgrade(ComposterUpgrade.Speed)}
 			{@render upgrade(ComposterUpgrade.MultiDrop)}
 			{@render upgrade(ComposterUpgrade.FuelCap)}

@@ -619,6 +619,19 @@
 		font-size: 0.8rem;
 	}
 
+	.lc-root-container {
+		/* Default marks color when not using explicit color or color scale */
+		--color-primary: var(--primary-foreground);
+
+		/* Progressively darker shades representing surfaces (backgrounds). */
+		--color-surface-100: var(--card);
+		--color-surface-200: var(--background);
+		--color-surface-300: var(--background);
+
+		/* Content (text) color */
+		--color-surface-content: var(--primary);
+	}
+
 	.markdown code:not(pre code) {
 		@apply relative rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[0.8rem] outline-none;
 	}
