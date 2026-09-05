@@ -43,7 +43,7 @@ export default ts.config(
 		],
 	},
 	{
-		files: ['**/*.svelte', '**/*.svelte.ts'],
+		files: ['**/*.svelte'],
 		rules: {
 			'no-undef': 'off', // TypeScript checks for this already
 			'no-restricted-imports': [

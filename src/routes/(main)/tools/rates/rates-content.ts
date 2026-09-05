@@ -1,4 +1,3 @@
-import * as Select from '$ui/select';
 import type { Step } from '$ui/walkthrough/ctx';
 
 export const TIME_OPTIONS = [

@@ -14,7 +14,6 @@
 		"**/*.mjs",
 		"**/*.d.ts",
 		"**/*.svelte",
-		"**/*.svelte.ts",
 		"build/**",
 		"dist/**",
 		".svelte-kit/**",
