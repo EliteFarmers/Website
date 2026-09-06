@@ -15,6 +15,18 @@ export interface GreenhouseEconomicsDto {
 	objective: string;
 	expectedScore: number;
 	mode: string;
+	/**
+	 * Zero-revenue time spent establishing the published settled-state layout
+	 *             before its productive lifecycle begins.
+	 */
+	setupDurationHours: number;
+	/**
+	 * For finite setups with an explicitly modeled pre-lifecycle phase,
+	 *             productive useful lifetime plus setup duration. Null when no such phase is
+	 *             modeled and for indefinitely self-sustaining layouts.
+	 * @nullable
+	 */
+	economicCycleHours?: number | null;
 	/** @nullable */
 	netProfitPerSetup?: number | null;
 	netProfitPerDay: number;
@@ -39,7 +51,12 @@ export interface GreenhouseEconomicsDto {
 	expectedBaseCropRevenue: number;
 	expectedRareDropRevenue: number;
 	expectedBonusDropRevenue: number;
+	expectedMobRewardRevenue: number;
+	expectedMobGuaranteedDropRevenue: number;
+	expectedMobShardRevenue: number;
 	expectedItems: DictionaryOfStringAndDouble;
 	expectedBonusDropItems: DictionaryOfStringAndDouble;
+	expectedMobGuaranteedDropItems: DictionaryOfStringAndDouble;
+	expectedMobShardItems: DictionaryOfStringAndDouble;
 	lifecycle: GreenhouseSetupLifecycleDto;
 }

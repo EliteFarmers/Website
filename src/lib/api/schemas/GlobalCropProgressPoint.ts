@@ -8,10 +8,17 @@
  * OpenAPI spec version: v1
  */
 import type { DictionaryOfStringAndDouble } from './DictionaryOfStringAndDouble';
+import type { DictionaryOfStringAndInt64 } from './DictionaryOfStringAndInt64';
+import type { GlobalProgressCoverage } from './GlobalProgressCoverage';
 
-export interface SkillsDataPointDto {
+export interface GlobalCropProgressPoint {
 	timestamp: bigint;
-	/** @nullable */
-	skillsApi?: boolean | null;
-	skills: DictionaryOfStringAndDouble;
+	updatedAt: bigint;
+	isPartial: boolean;
+	crops: DictionaryOfStringAndInt64;
+	npcPrices: DictionaryOfStringAndDouble;
+	npcValues: DictionaryOfStringAndDouble;
+	totalCropNpcValue: number;
+	npcPricesComplete: boolean;
+	coverage: GlobalProgressCoverage;
 }

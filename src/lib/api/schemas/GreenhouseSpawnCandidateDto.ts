@@ -18,6 +18,8 @@ export interface GreenhouseSpawnCandidateDto {
 	height: number;
 	spawnWeight: number;
 	effectiveSpawnWeight: number;
+	qualifyingSpawnCropCount: number;
+	contextualSpawnSupportFactor: number;
 	competingMutationWeight: number;
 	blankWeight: number;
 	selectionProbability: number;

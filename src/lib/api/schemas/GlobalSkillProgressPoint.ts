@@ -8,10 +8,12 @@
  * OpenAPI spec version: v1
  */
 import type { DictionaryOfStringAndDouble } from './DictionaryOfStringAndDouble';
+import type { GlobalProgressCoverage } from './GlobalProgressCoverage';
 
-export interface SkillsDataPointDto {
+export interface GlobalSkillProgressPoint {
 	timestamp: bigint;
-	/** @nullable */
-	skillsApi?: boolean | null;
+	updatedAt: bigint;
+	isPartial: boolean;
 	skills: DictionaryOfStringAndDouble;
+	coverage: GlobalProgressCoverage;
 }

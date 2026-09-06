@@ -12,6 +12,8 @@ import type { DictionaryOfStringAndInt64 } from './DictionaryOfStringAndInt64';
 
 export interface CropCollectionsDataPointDto {
 	timestamp: bigint;
+	/** @nullable */
+	collectionsApi?: boolean | null;
 	cropWeight: string;
 	crops: DictionaryOfStringAndInt64;
 	pests: DictionaryOfStringAndInt32;

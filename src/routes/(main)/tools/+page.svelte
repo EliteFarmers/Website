@@ -6,7 +6,11 @@
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 </script>
 
-<ToolPage title="Farming Tools" description="Calculators and trackers for your Garden." overview>
+<ToolPage
+	title="Farming Tools"
+	description="Various tools and utilities for farming and more in Hypixel SkyBlock."
+	overview
+>
 	<div class="grid gap-4 md:grid-cols-2">
 		{#each TOOL_PAGES as tool (tool.href)}
 			<a

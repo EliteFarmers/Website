@@ -76,6 +76,11 @@ import type {
 	GetCategoriesParams,
 	GetContestsAtTimestampParams,
 	GetCropGraphsParams,
+	GetGlobalCropsParams,
+	GetGlobalPestsParams,
+	GetGlobalProgressParams,
+	GetGlobalProgressSummaryParams,
+	GetGlobalSkillsParams,
 	GetGuideParams,
 	GetHypixelGuildMembersLeaderboardParams,
 	GetHypixelGuildResponse,
@@ -100,6 +105,7 @@ import type {
 	GetUpcomingEventsParams,
 	GetUserOrdersParams,
 	GetWebsiteSitemapProfilesParams,
+	GlobalProgressSummaryResponse,
 	GreenhouseAnalysisResponse,
 	GreenhouseApiError,
 	GreenhouseCatalogResponse,
@@ -139,6 +145,10 @@ import type {
 	ListOfEventTeamWithMembersDto,
 	ListOfFeedbackPostDto,
 	ListOfFeedbackTagDto,
+	ListOfGlobalCropProgressPoint,
+	ListOfGlobalPestProgressPoint,
+	ListOfGlobalProgressPoint,
+	ListOfGlobalSkillProgressPoint,
 	ListOfGuideAssetDto,
 	ListOfGuideDto,
 	ListOfGuideVersionDto,
@@ -3910,6 +3920,233 @@ export const getFeedback = async (slug: string, options?: RequestInit) => {
 	});
 };
 
+export type getGlobalProgressResponse200 = {
+	data: ListOfGlobalProgressPoint;
+	status: 200;
+};
+
+export type getGlobalProgressResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getGlobalProgressResponseSuccess = getGlobalProgressResponse200 & {
+	headers: Headers;
+};
+export type getGlobalProgressResponseError = getGlobalProgressResponse400 & {
+	headers: Headers;
+};
+
+export type getGlobalProgressResponse = getGlobalProgressResponseSuccess | getGlobalProgressResponseError;
+
+export const getGetGlobalProgressUrl = (params: GetGlobalProgressParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/graph/global?${stringifiedParams}`
+		: `${ELITE_API_URL}/graph/global`;
+};
+
+/**
+ * @summary Get combined global progress
+ */
+export const getGlobalProgress = async (params: GetGlobalProgressParams, options?: RequestInit) => {
+	return customFetch<getGlobalProgressResponse>(getGetGlobalProgressUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getGlobalCropsResponse200 = {
+	data: ListOfGlobalCropProgressPoint;
+	status: 200;
+};
+
+export type getGlobalCropsResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getGlobalCropsResponseSuccess = getGlobalCropsResponse200 & {
+	headers: Headers;
+};
+export type getGlobalCropsResponseError = getGlobalCropsResponse400 & {
+	headers: Headers;
+};
+
+export type getGlobalCropsResponse = getGlobalCropsResponseSuccess | getGlobalCropsResponseError;
+
+export const getGetGlobalCropsUrl = (params: GetGlobalCropsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/graph/global/crops?${stringifiedParams}`
+		: `${ELITE_API_URL}/graph/global/crops`;
+};
+
+/**
+ * @summary Get global crop progress
+ */
+export const getGlobalCrops = async (params: GetGlobalCropsParams, options?: RequestInit) => {
+	return customFetch<getGlobalCropsResponse>(getGetGlobalCropsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getGlobalPestsResponse200 = {
+	data: ListOfGlobalPestProgressPoint;
+	status: 200;
+};
+
+export type getGlobalPestsResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getGlobalPestsResponseSuccess = getGlobalPestsResponse200 & {
+	headers: Headers;
+};
+export type getGlobalPestsResponseError = getGlobalPestsResponse400 & {
+	headers: Headers;
+};
+
+export type getGlobalPestsResponse = getGlobalPestsResponseSuccess | getGlobalPestsResponseError;
+
+export const getGetGlobalPestsUrl = (params: GetGlobalPestsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/graph/global/pests?${stringifiedParams}`
+		: `${ELITE_API_URL}/graph/global/pests`;
+};
+
+/**
+ * @summary Get global pest progress
+ */
+export const getGlobalPests = async (params: GetGlobalPestsParams, options?: RequestInit) => {
+	return customFetch<getGlobalPestsResponse>(getGetGlobalPestsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getGlobalSkillsResponse200 = {
+	data: ListOfGlobalSkillProgressPoint;
+	status: 200;
+};
+
+export type getGlobalSkillsResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getGlobalSkillsResponseSuccess = getGlobalSkillsResponse200 & {
+	headers: Headers;
+};
+export type getGlobalSkillsResponseError = getGlobalSkillsResponse400 & {
+	headers: Headers;
+};
+
+export type getGlobalSkillsResponse = getGlobalSkillsResponseSuccess | getGlobalSkillsResponseError;
+
+export const getGetGlobalSkillsUrl = (params: GetGlobalSkillsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/graph/global/skills?${stringifiedParams}`
+		: `${ELITE_API_URL}/graph/global/skills`;
+};
+
+/**
+ * @summary Get global skill progress
+ */
+export const getGlobalSkills = async (params: GetGlobalSkillsParams, options?: RequestInit) => {
+	return customFetch<getGlobalSkillsResponse>(getGetGlobalSkillsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getGlobalProgressSummaryResponse200 = {
+	data: GlobalProgressSummaryResponse;
+	status: 200;
+};
+
+export type getGlobalProgressSummaryResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getGlobalProgressSummaryResponseSuccess = getGlobalProgressSummaryResponse200 & {
+	headers: Headers;
+};
+export type getGlobalProgressSummaryResponseError = getGlobalProgressSummaryResponse400 & {
+	headers: Headers;
+};
+
+export type getGlobalProgressSummaryResponse =
+	| getGlobalProgressSummaryResponseSuccess
+	| getGlobalProgressSummaryResponseError;
+
+export const getGetGlobalProgressSummaryUrl = (params?: GetGlobalProgressSummaryParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/graph/global/summary?${stringifiedParams}`
+		: `${ELITE_API_URL}/graph/global/summary`;
+};
+
+/**
+ * @summary Get global progress totals and previous comparison
+ */
+export const getGlobalProgressSummary = async (params?: GetGlobalProgressSummaryParams, options?: RequestInit) => {
+	return customFetch<getGlobalProgressSummaryResponse>(getGetGlobalProgressSummaryUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
 export type getCropGraphsResponse200 = {
 	data: ListOfCropCollectionsDataPointDto;
 	status: 200;
@@ -4690,7 +4927,7 @@ export const getGetGuideSchematicViewerUrl = (assetId: string) => {
 };
 
 /**
- * Returns generation status and the browser-ready model URL for a litematic asset.
+ * Returns generation status and the model URL for a litematic asset.
  * @summary Get guide schematic viewer status
  */
 export const getGuideSchematicViewer = async (assetId: string, options?: RequestInit) => {

@@ -18,6 +18,22 @@ export interface ListGreenhouseProfitsRequest {
 	harvestSetupCandidates: ListOfGreenhouseHarvestSetupInput;
 	market: GreenhouseMarketInput;
 	uniqueCropsPerPlot: number;
+	/**
+	 * Optional exact greenhouse-wide number of distinct unique-crop groups that every
+	 *             generated layout must physically contain. When supplied, this global domain
+	 *             replaces UniqueCropsPerPlot; omit it to preserve the literal
+	 *             per-plot requirement.
+	 * @nullable
+	 */
+	uniqueCropsGrown?: number | null;
+	/**
+	 * Optional number of greenhouse growth stages between complete player visits.
+	 *             A visit discharges every surviving Thunderling before waking sleeping plants,
+	 *             harvesting ready targets, and watering plants below the maintenance threshold.
+	 *             Omit to retain the legacy continuous/special-case ranking policy.
+	 * @nullable
+	 */
+	visitIntervalGrowthStages?: number | null;
 	chorusHarvestsPerDay: number;
 	chorusHarvestHours: ListOfDouble;
 }

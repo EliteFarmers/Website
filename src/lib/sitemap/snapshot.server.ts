@@ -144,7 +144,7 @@ async function buildSnapshot(): Promise<SitemapSnapshot> {
 async function getArticleItems(): Promise<SitemapItemLoose[]> {
 	const items: SitemapItemLoose[] = [];
 	let page = 1;
-	let pageCount = 1;
+	let pageCount: number;
 
 	do {
 		const response = await fetchArticlesPaginated(page, 100);

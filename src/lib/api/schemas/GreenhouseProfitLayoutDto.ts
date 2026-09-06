@@ -9,6 +9,7 @@
  */
 import type { GreenhouseEconomicsDto } from './GreenhouseEconomicsDto';
 import type { GreenhouseHarvestSetupDto } from './GreenhouseHarvestSetupDto';
+import type { GreenhouseMovingSupportSetupDto } from './GreenhouseMovingSupportSetupDto';
 import type { GreenhouseProfitCalculationStatus } from './GreenhouseProfitCalculationStatus';
 import type { GreenhouseShellfruitConversionDto } from './GreenhouseShellfruitConversionDto';
 import type { ListOfGreenhouseAssumptionDto } from './ListOfGreenhouseAssumptionDto';
@@ -41,5 +42,6 @@ export interface GreenhouseProfitLayoutDto {
 	warnings: ListOfString;
 	economics: GreenhouseEconomicsDto;
 	harvestSetup: GreenhouseHarvestSetupDto;
+	movingSupportSetup?: GreenhouseMovingSupportSetupDto | null;
 	shellfruitConversion?: GreenhouseShellfruitConversionDto | null;
 }

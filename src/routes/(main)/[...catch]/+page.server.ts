@@ -13,6 +13,7 @@ const urls: Partial<Record<string, string>> = {
 	store: '/shop',
 	wiki: 'https://wiki.elitebot.dev/',
 	premium: '/shop/1261795533916475578',
+	gems: '/tools/gems',
 };
 
 export const load = (async ({ params }) => {

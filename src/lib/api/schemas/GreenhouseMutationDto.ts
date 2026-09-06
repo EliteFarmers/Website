@@ -10,6 +10,7 @@
 import type { ListOfGreenhouseDropDto } from './ListOfGreenhouseDropDto';
 import type { ListOfGreenhouseEffectDto } from './ListOfGreenhouseEffectDto';
 import type { ListOfGreenhouseSpawnConditionDto } from './ListOfGreenhouseSpawnConditionDto';
+import type { ListOfString } from './ListOfString';
 
 export interface GreenhouseMutationDto {
 	id: string;
@@ -21,7 +22,11 @@ export interface GreenhouseMutationDto {
 	stages: number;
 	requiresWater: boolean;
 	spawnWeight: number;
+	/** Intrinsic catalog multiplier; actual ring-density factor is contextual. */
 	spawnSupportFactor: number;
+	fullSpawnSupportCropCount: number;
+	qualifyingSpawnSupportPlantIds: ListOfString;
+	spawnSupportPolicy: string;
 	/** @nullable */
 	decayHours?: number | null;
 	harvestableFromStage: number;
@@ -30,7 +35,29 @@ export interface GreenhouseMutationDto {
 	effects: ListOfGreenhouseEffectDto;
 	sowdust: number;
 	farmingExperience: number;
+	/**
+	 * Coarse product-level availability. This remains supported when a
+	 *             mutation is served by a specialized route instead of the standard static
+	 *             planner.
+	 */
 	planningCapability: string;
+	/**
+	 * Identifies whether planning uses the standard static solver, a specialized
+	 *             chronological profit solver, or is unavailable.
+	 */
+	planningMode: string;
+	/**
+	 * API route that accepts planning requests for this mutation.
+	 * @nullable
+	 */
+	planningRoute?: string | null;
+	/**
+	 * Capability of the ordinary fixed-target static planner, independently of
+	 *             any specialized product route.
+	 */
+	standardStaticPlanningCapability: string;
+	/** @nullable */
+	standardStaticPlanningUnsupportedReason?: string | null;
 	/** @nullable */
 	unsupportedReason?: string | null;
 }
