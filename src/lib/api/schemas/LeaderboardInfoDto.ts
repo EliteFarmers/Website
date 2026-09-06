@@ -7,6 +7,7 @@
  * Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { DictionaryOfStringAndInt32 } from './DictionaryOfStringAndInt32';
 import type { LeaderboardScoreDataType } from './LeaderboardScoreDataType';
 import type { LeaderboardType } from './LeaderboardType';
 
@@ -36,6 +37,12 @@ export interface LeaderboardInfoDto {
 	minimumScore: number;
 	/** Amount of top ranks cached in Redis for this leaderboard. */
 	cachedRankAmount: number;
+	/**
+	 * Maximum active entries visible in the unfiltered leaderboard. Null means uncapped.
+	 * @nullable
+	 */
+	entryCap?: number | null;
+	entryCaps?: DictionaryOfStringAndInt32 | null;
 	intervalType: LeaderboardType;
 	scoreDataType: LeaderboardScoreDataType;
 }

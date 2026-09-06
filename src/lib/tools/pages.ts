@@ -1,3 +1,4 @@
+import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined';
 import Coins from '@lucide/svelte/icons/coins';
 import Medal from '@lucide/svelte/icons/medal';
 import Recycle from '@lucide/svelte/icons/recycle';
@@ -5,6 +6,12 @@ import Sprout from '@lucide/svelte/icons/sprout';
 import TrendingUp from '@lucide/svelte/icons/trending-up';
 
 export const TOOL_PAGES = [
+	{
+		title: 'Global Stats',
+		description: 'Explore the impact of farming on the global skyblock economy.',
+		href: '/tools/global-stats',
+		icon: ChartNoAxesCombined,
+	},
 	{
 		title: 'Rates Calculator',
 		description: 'Compare crop collection and profit for your farming setup.',

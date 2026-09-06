@@ -11,6 +11,7 @@ import type { GreenhouseChorusLifecycleDto } from './GreenhouseChorusLifecycleDt
 import type { GreenhouseConfidenceDto } from './GreenhouseConfidenceDto';
 import type { GreenhouseEconomicsDto } from './GreenhouseEconomicsDto';
 import type { GreenhouseHarvestSetupDto } from './GreenhouseHarvestSetupDto';
+import type { GreenhouseMovingSupportSetupDto } from './GreenhouseMovingSupportSetupDto';
 import type { GreenhousePhaseTimingsDto } from './GreenhousePhaseTimingsDto';
 import type { GreenhouseSolverStrategy } from './GreenhouseSolverStrategy';
 import type { ListOfGreenhouseAssumptionDto } from './ListOfGreenhouseAssumptionDto';
@@ -48,5 +49,6 @@ export interface GreenhousePlanResultDto {
 	timings: GreenhousePhaseTimingsDto;
 	priceCapturedAt: string;
 	priceSnapshotHash: string;
+	movingSupportSetup?: GreenhouseMovingSupportSetupDto | null;
 	chorusLifecycle?: GreenhouseChorusLifecycleDto | null;
 }

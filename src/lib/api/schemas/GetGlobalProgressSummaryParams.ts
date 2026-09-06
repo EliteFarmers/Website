@@ -7,11 +7,14 @@
  * Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { DictionaryOfStringAndDouble } from './DictionaryOfStringAndDouble';
 
-export interface SkillsDataPointDto {
-	timestamp: bigint;
-	/** @nullable */
-	skillsApi?: boolean | null;
-	skills: DictionaryOfStringAndDouble;
-}
+export type GetGlobalProgressSummaryParams = {
+	/**
+	 * @nullable
+	 */
+	from?: bigint | null;
+	/**
+	 * @nullable
+	 */
+	to?: bigint | null;
+};

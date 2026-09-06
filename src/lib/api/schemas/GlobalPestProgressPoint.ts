@@ -8,10 +8,16 @@
  * OpenAPI spec version: v1
  */
 import type { DictionaryOfStringAndDouble } from './DictionaryOfStringAndDouble';
+import type { DictionaryOfStringAndInt64 } from './DictionaryOfStringAndInt64';
+import type { GlobalProgressCoverage } from './GlobalProgressCoverage';
 
-export interface SkillsDataPointDto {
+export interface GlobalPestProgressPoint {
 	timestamp: bigint;
-	/** @nullable */
-	skillsApi?: boolean | null;
-	skills: DictionaryOfStringAndDouble;
+	updatedAt: bigint;
+	isPartial: boolean;
+	pests: DictionaryOfStringAndInt64;
+	npcCoinsPerKill: number;
+	npcCoins: DictionaryOfStringAndDouble;
+	totalPestNpcCoins: number;
+	coverage: GlobalProgressCoverage;
 }

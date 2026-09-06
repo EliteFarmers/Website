@@ -23,4 +23,6 @@ export interface GreenhousePlantRuntimeStateInput {
 	distinctBlastHits?: number | null;
 	/** @nullable */
 	firstBlastberryInstanceId?: string | null;
+	/** @nullable */
+	charge?: number | null;
 }

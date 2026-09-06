@@ -918,6 +918,50 @@ export const zodGetFeedbackParams = zod.object({
 });
 
 /**
+ * @summary Get combined global progress
+ */
+export const zodGetGlobalProgressQueryParams = zod.object({
+	from: zod.int().nullish().describe('Inclusive lower UTC bucket, expressed as a Unix timestamp in seconds.'),
+	to: zod.int().nullish().describe('Inclusive upper UTC bucket, expressed as a Unix timestamp in seconds.'),
+	interval: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
+});
+
+/**
+ * @summary Get global crop progress
+ */
+export const zodGetGlobalCropsQueryParams = zod.object({
+	from: zod.int().nullish().describe('Inclusive lower UTC bucket, expressed as a Unix timestamp in seconds.'),
+	to: zod.int().nullish().describe('Inclusive upper UTC bucket, expressed as a Unix timestamp in seconds.'),
+	interval: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
+});
+
+/**
+ * @summary Get global pest progress
+ */
+export const zodGetGlobalPestsQueryParams = zod.object({
+	from: zod.int().nullish().describe('Inclusive lower UTC bucket, expressed as a Unix timestamp in seconds.'),
+	to: zod.int().nullish().describe('Inclusive upper UTC bucket, expressed as a Unix timestamp in seconds.'),
+	interval: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
+});
+
+/**
+ * @summary Get global skill progress
+ */
+export const zodGetGlobalSkillsQueryParams = zod.object({
+	from: zod.int().nullish().describe('Inclusive lower UTC bucket, expressed as a Unix timestamp in seconds.'),
+	to: zod.int().nullish().describe('Inclusive upper UTC bucket, expressed as a Unix timestamp in seconds.'),
+	interval: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
+});
+
+/**
+ * @summary Get global progress totals and previous comparison
+ */
+export const zodGetGlobalProgressSummaryQueryParams = zod.object({
+	from: zod.int().nullish(),
+	to: zod.int().nullish(),
+});
+
+/**
  * @summary Get Crop Collections Over Time
  */
 export const zodGetCropGraphsParams = zod.object({
@@ -1018,6 +1062,7 @@ export const zodAnalyzeGreenhouseBody = zod.object({
 								armed: zod.coerce.boolean<boolean>().nullish(),
 								distinctBlastHits: zod.int().nullish(),
 								firstBlastberryInstanceId: zod.string().nullish(),
+								charge: zod.int().nullish(),
 							})
 							.nullish(),
 						x: zod.int(),
@@ -1032,6 +1077,11 @@ export const zodAnalyzeGreenhouseBody = zod.object({
 			plotLimitUpgradeLevel: zod.int(),
 			cropGrowth: zod.number(),
 			miningFortune: zod.number(),
+			huntingFortune: zod
+				.number()
+				.describe(
+					'Caller-supplied effective Hunting Fortune per Pocket Black Hole capture. Include any applicable\n            conditional and Pocket Black Hole bonuses; the API cannot derive them from equipment or loadout.'
+				),
 			mutationChanceMultiplier: zod.number(),
 			farmingWisdom: zod.number(),
 			harvestSetup: zod.object({
@@ -1107,6 +1157,7 @@ export const zodCreateGreenhousePlanBody = zod.object({
 								armed: zod.coerce.boolean<boolean>().nullish(),
 								distinctBlastHits: zod.int().nullish(),
 								firstBlastberryInstanceId: zod.string().nullish(),
+								charge: zod.int().nullish(),
 							})
 							.nullish(),
 						x: zod.int(),
@@ -1121,6 +1172,11 @@ export const zodCreateGreenhousePlanBody = zod.object({
 			plotLimitUpgradeLevel: zod.int(),
 			cropGrowth: zod.number(),
 			miningFortune: zod.number(),
+			huntingFortune: zod
+				.number()
+				.describe(
+					'Caller-supplied effective Hunting Fortune per Pocket Black Hole capture. Include any applicable\n            conditional and Pocket Black Hole bonuses; the API cannot derive them from equipment or loadout.'
+				),
 			mutationChanceMultiplier: zod.number(),
 			farmingWisdom: zod.number(),
 			harvestSetup: zod.object({
@@ -1210,6 +1266,11 @@ export const zodListGreenhouseProfitsBody = zod.object({
 		plotLimitUpgradeLevel: zod.int(),
 		cropGrowth: zod.number(),
 		miningFortune: zod.number(),
+		huntingFortune: zod
+			.number()
+			.describe(
+				'Caller-supplied effective Hunting Fortune per Pocket Black Hole capture. Include any applicable\n            conditional and Pocket Black Hole bonuses; the API cannot derive them from equipment or loadout.'
+			),
 		mutationChanceMultiplier: zod.number(),
 		farmingWisdom: zod.number(),
 		harvestSetup: zod.object({
@@ -1251,6 +1312,18 @@ export const zodListGreenhouseProfitsBody = zod.object({
 		slippagePercent: zod.number(),
 	}),
 	uniqueCropsPerPlot: zod.int(),
+	uniqueCropsGrown: zod
+		.int()
+		.nullish()
+		.describe(
+			'Optional exact greenhouse-wide number of distinct unique-crop groups that every\n            generated layout must physically contain. When supplied, this global domain\n            replaces UniqueCropsPerPlot; omit it to preserve the literal\n            per-plot requirement.'
+		),
+	visitIntervalGrowthStages: zod
+		.number()
+		.nullish()
+		.describe(
+			'Optional number of greenhouse growth stages between complete player visits.\n            A visit discharges every surviving Thunderling before waking sleeping plants,\n            harvesting ready targets, and watering plants below the maintenance threshold.\n            Omit to retain the legacy continuous\/special-case ranking policy.'
+		),
 	chorusHarvestsPerDay: zod.number(),
 	chorusHarvestHours: zod.array(zod.number()),
 });
@@ -1270,6 +1343,11 @@ export const zodGetGreenhouseProfitDetailsBody = zod.object({
 		plotLimitUpgradeLevel: zod.int(),
 		cropGrowth: zod.number(),
 		miningFortune: zod.number(),
+		huntingFortune: zod
+			.number()
+			.describe(
+				'Caller-supplied effective Hunting Fortune per Pocket Black Hole capture. Include any applicable\n            conditional and Pocket Black Hole bonuses; the API cannot derive them from equipment or loadout.'
+			),
 		mutationChanceMultiplier: zod.number(),
 		farmingWisdom: zod.number(),
 		harvestSetup: zod.object({
@@ -1311,6 +1389,18 @@ export const zodGetGreenhouseProfitDetailsBody = zod.object({
 		slippagePercent: zod.number(),
 	}),
 	uniqueCropsPerPlot: zod.int(),
+	uniqueCropsGrown: zod
+		.int()
+		.nullish()
+		.describe(
+			'Optional exact greenhouse-wide number of distinct unique-crop groups that every\n            generated layout must physically contain. When supplied, this global domain\n            replaces UniqueCropsPerPlot; omit it to preserve the literal\n            per-plot requirement.'
+		),
+	visitIntervalGrowthStages: zod
+		.number()
+		.nullish()
+		.describe(
+			'Optional number of greenhouse growth stages between complete player visits.\n            A visit discharges every surviving Thunderling before waking sleeping plants,\n            harvesting ready targets, and watering plants below the maintenance threshold.\n            Omit to retain the legacy continuous\/special-case ranking policy.'
+		),
 	chorusHarvestsPerDay: zod.number(),
 	chorusHarvestHours: zod.array(zod.number()),
 });
@@ -1397,6 +1487,7 @@ export const zodCreateGreenhouseSimulationBody = zod.object({
 								armed: zod.coerce.boolean<boolean>().nullish(),
 								distinctBlastHits: zod.int().nullish(),
 								firstBlastberryInstanceId: zod.string().nullish(),
+								charge: zod.int().nullish(),
 							})
 							.nullish(),
 						x: zod.int(),
@@ -1411,6 +1502,11 @@ export const zodCreateGreenhouseSimulationBody = zod.object({
 			plotLimitUpgradeLevel: zod.int(),
 			cropGrowth: zod.number(),
 			miningFortune: zod.number(),
+			huntingFortune: zod
+				.number()
+				.describe(
+					'Caller-supplied effective Hunting Fortune per Pocket Black Hole capture. Include any applicable\n            conditional and Pocket Black Hole bonuses; the API cannot derive them from equipment or loadout.'
+				),
 			mutationChanceMultiplier: zod.number(),
 			farmingWisdom: zod.number(),
 			harvestSetup: zod.object({
@@ -1519,6 +1615,14 @@ export const zodGetGreenhouseSimulationEventsParams = zod.object({
 });
 
 /**
+ * Returns generation status and the model URL for a litematic asset.
+ * @summary Get guide schematic viewer status
+ */
+export const zodGetGuideSchematicViewerParams = zod.object({
+	assetId: zod.string(),
+});
+
+/**
  * Initializes a new empty guide draft for the user.
  * @summary Create a new guide draft
  */
@@ -1571,6 +1675,14 @@ export const zodListGuideAssetsParams = zod.object({
  * @summary Delete guide asset
  */
 export const zodDeleteGuideAssetParams = zod.object({
+	guideId: zod.int(),
+	assetId: zod.string(),
+});
+
+/**
+ * @summary Retry guide schematic viewer generation
+ */
+export const zodRetryGuideSchematicViewerParams = zod.object({
 	guideId: zod.int(),
 	assetId: zod.string(),
 });

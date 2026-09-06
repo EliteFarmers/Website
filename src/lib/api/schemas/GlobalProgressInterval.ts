@@ -7,11 +7,11 @@
  * Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { DictionaryOfStringAndDouble } from './DictionaryOfStringAndDouble';
 
-export interface SkillsDataPointDto {
-	timestamp: bigint;
-	/** @nullable */
-	skillsApi?: boolean | null;
-	skills: DictionaryOfStringAndDouble;
-}
+export type GlobalProgressInterval = (typeof GlobalProgressInterval)[keyof typeof GlobalProgressInterval];
+
+export const GlobalProgressInterval = {
+	Day: 0,
+	Hour: 1,
+	Week: 2,
+} as const;

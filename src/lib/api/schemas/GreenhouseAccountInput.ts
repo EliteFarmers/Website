@@ -18,6 +18,11 @@ export interface GreenhouseAccountInput {
 	plotLimitUpgradeLevel: number;
 	cropGrowth: number;
 	miningFortune: number;
+	/**
+	 * Caller-supplied effective Hunting Fortune per Pocket Black Hole capture. Include any applicable
+	 *             conditional and Pocket Black Hole bonuses; the API cannot derive them from equipment or loadout.
+	 */
+	huntingFortune: number;
 	mutationChanceMultiplier: number;
 	farmingWisdom: number;
 	harvestSetup: GreenhouseHarvestSetupInput;

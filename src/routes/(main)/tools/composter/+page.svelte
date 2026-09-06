@@ -1,22 +1,22 @@
 <script lang="ts">
-	import ItemRender from '$comp/items/item-render.svelte';
-	import ToolPage from '$comp/tools/tool-page.svelte';
-	import SliderField from '$comp/tools/slider-field.svelte';
-	import ToolStat from '$comp/tools/tool-stat.svelte';
-	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
-	import * as Card from '$ui/card';
-	import * as Select from '$ui/select';
-	import * as Table from '$ui/table';
+	import { page } from '$app/state';
 	import Faq from '$comp/faq.svelte';
+	import ItemRender from '$comp/items/item-render.svelte';
+	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
+	import SliderField from '$comp/tools/slider-field.svelte';
+	import ToolPage from '$comp/tools/tool-page.svelte';
+	import ToolStat from '$comp/tools/tool-stat.svelte';
 	import * as Alert from '$ui/alert';
 	import { Button } from '$ui/button';
+	import * as Card from '$ui/card';
 	import { Label } from '$ui/label';
+	import * as Select from '$ui/select';
+	import * as Table from '$ui/table';
 	import Loader2 from '@lucide/svelte/icons/loader-2';
 	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
 	import { type RankedComposterMaterial } from 'farming-weight';
-	import { page } from '$app/state';
 	import { ComposterCalculator } from './composter-calculator.svelte';
-	import { upgradeSettings, faqItems } from './composter-content';
+	import { faqItems, upgradeSettings } from './composter-content';
 
 	const calculator = new ComposterCalculator();
 	calculator.connect(() => page.url);
@@ -197,15 +197,7 @@
 	</section>
 
 	<Faq title="About this estimate" items={faqItems}>
-		<p class="mt-4 text-xs text-muted-foreground">
-			Mechanics and input values follow the
-			<a
-				class="text-link"
-				href="https://hypixelskyblock.minecraft.wiki/w/Composter"
-				target="_blank"
-				rel="noreferrer">Hypixel SkyBlock Wiki</a
-			>. Your actual profit may differ as market prices change.
-		</p>
+		<p class="mt-4 text-xs text-muted-foreground">Your actual profit may differ as market prices change.</p>
 	</Faq>
 </ToolPage>
 
