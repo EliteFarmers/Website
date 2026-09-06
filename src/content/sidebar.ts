@@ -1,5 +1,4 @@
 import BookOpen from '@lucide/svelte/icons/book-open';
-import Gem from '@lucide/svelte/icons/gem';
 import Handshake from '@lucide/svelte/icons/handshake';
 import Home from '@lucide/svelte/icons/home';
 import Info from '@lucide/svelte/icons/info';
@@ -8,6 +7,7 @@ import Radio from '@lucide/svelte/icons/radio';
 import TextSearch from '@lucide/svelte/icons/text-search';
 import Ticket from '@lucide/svelte/icons/ticket';
 import Trophy from '@lucide/svelte/icons/trophy';
+import Wrench from '@lucide/svelte/icons/wrench';
 import type { Component } from 'svelte';
 
 export const SIDEBAR_NAV = [
@@ -42,9 +42,10 @@ export const SIDEBAR_NAV = [
 		icon: TextSearch as unknown as Component,
 	},
 	{
-		title: 'Gems',
-		href: '/gems',
-		icon: Gem as unknown as Component,
+		title: 'Tools',
+		href: '/tools',
+		icon: Wrench as unknown as Component,
+		new: Date.UTC(2026, 9, 5) / 1000,
 	},
 	{
 		title: 'Articles',
@@ -60,6 +61,5 @@ export const SIDEBAR_NAV = [
 		title: 'Streamers',
 		href: '/streamers',
 		icon: Radio as unknown as Component,
-		new: Date.UTC(2026, 7, 1) / 1000,
 	},
 ];

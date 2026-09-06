@@ -2,7 +2,7 @@
 	import { cn } from '$lib/utils';
 	import { Separator } from '$ui/separator';
 	import Question from '@lucide/svelte/icons/circle-question-mark';
-	import { STORE_CODE } from '../../routes/(main)/gems/hypixel-store';
+	import { STORE_CODE } from '../../routes/(main)/tools/gems/hypixel-store';
 	import RailGroup from './rail-group.svelte';
 	import RailItem from './rail-item.svelte';
 
@@ -67,7 +67,7 @@
 			img="/images/creatorcode.webp"
 			name="Use code {STORE_CODE.code}"
 			alt="Hypixel Store Checkout"
-			href="/gems"
+			href="/tools/gems"
 			imgClass="object-top"
 		>
 			{#snippet absolute()}

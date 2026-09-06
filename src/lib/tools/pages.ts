@@ -1,5 +1,6 @@
 import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined';
 import Coins from '@lucide/svelte/icons/coins';
+import Gem from '@lucide/svelte/icons/gem';
 import Medal from '@lucide/svelte/icons/medal';
 import Recycle from '@lucide/svelte/icons/recycle';
 import Sprout from '@lucide/svelte/icons/sprout';
@@ -41,5 +42,11 @@ export const TOOL_PAGES = [
 		description: 'Compare inputs, upgrades, Compost output, and profit.',
 		href: '/tools/composter',
 		icon: Recycle,
+	},
+	{
+		title: 'Gems & Firesales',
+		description: 'Compare gem packages, Booster Cookie value, and current cosmetics.',
+		href: '/tools/gems',
+		icon: Gem,
 	},
 ] as const;

@@ -17,8 +17,12 @@
 
 	const crumbs = $derived<Crumb[]>([
 		{
+			name: 'Tools',
+			href: '/tools',
+		},
+		{
 			name: 'Gems',
-			href: '/gems',
+			href: '/tools/gems',
 		},
 	]);
 
