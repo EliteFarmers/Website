@@ -13,5 +13,7 @@ export interface EditUserBadgeDto {
 	/** @nullable */
 	visible?: boolean | null;
 	/** @nullable */
+	useAltImage?: boolean | null;
+	/** @nullable */
 	order?: number | null;
 }

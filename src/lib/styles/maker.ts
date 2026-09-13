@@ -171,12 +171,11 @@ export async function createFromData(
 	if (badge && data.elements.badge) {
 		const { x, y } = getPosition(canvas, data.elements.badge);
 		const badgeHeight = getHeight(canvas, data.elements.badge);
+		const badgeWidth = badgeHeight * (badge.width / badge.height);
 
 		ctx.save();
-		CreateRoundCornerPath(ctx, x, y, badgeHeight * 3, badgeHeight, 10);
-		ctx.clip();
 
-		ctx.drawImage(badge, x, y, badgeHeight * 3, badgeHeight);
+		ctx.drawImage(badge, x, y, badgeWidth, badgeHeight);
 		ctx.restore();
 		// debugDot(ctx, x, y);
 	}

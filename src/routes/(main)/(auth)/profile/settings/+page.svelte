@@ -69,7 +69,7 @@
 			.map((mc) => ({
 				name: mc.name,
 				uuid: mc.id,
-				badges: mc.badges?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+				badges: mc.badges?.toSorted((a, b) => (a.order ?? 0) - (b.order ?? 0)),
 			}));
 	}
 
@@ -124,6 +124,7 @@
 
 	let user = $derived(data.user || undefined);
 	let badges = $state(mapBadges(initialData.user?.minecraftAccounts ?? []));
+	let badgeMessages = $state<Record<string, { error: boolean; text: string }>>({});
 
 	let unlockedSettings = $derived({
 		styles:
@@ -568,12 +569,25 @@
 						class="flex flex-col gap-4"
 						use:enhance={() => {
 							loading = true;
+							delete badgeMessages[profile.uuid];
 							return async ({ result }) => {
-								// Wait for a bit so the user can see the loading state
-								await new Promise((r) => setTimeout(r, 500));
+								if (result.type === 'success') {
+									await invalidateAll();
+									const saved = data.user.minecraftAccounts?.find((mc) => mc.id === profile.uuid);
+									if (saved) profile.badges = saved.badges?.toSorted((a, b) => a.order - b.order);
+									badgeMessages[profile.uuid] = { error: false, text: 'Badges updated.' };
+								} else {
+									const detail = result.type === 'failure' ? result.data?.error : undefined;
+									badgeMessages[profile.uuid] = {
+										error: true,
+										text:
+											typeof detail === 'string'
+												? detail
+												: 'Unable to save badges. Your changes have been kept.',
+									};
+								}
 								loading = false;
-								await invalidateAll();
-								await applyAction(result);
+								if (result.type !== 'error') await applyAction(result);
 							};
 						}}
 					>
@@ -582,6 +596,16 @@
 						<BadgeConfig badges={profile.badges ?? []} />
 
 						<input type="hidden" name="uuid" value={profile.uuid} />
+						{#if badgeMessages[profile.uuid]}
+							<p
+								role="status"
+								class={badgeMessages[profile.uuid].error
+									? 'text-sm text-destructive'
+									: 'text-sm text-muted-foreground'}
+							>
+								{badgeMessages[profile.uuid].text}
+							</p>
+						{/if}
 						<Button type="submit" class="mx-auto max-w-fit" disabled={loading}>Update Badges</Button>
 					</form>
 				{/each}

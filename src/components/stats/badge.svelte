@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { BadgeDto, UserBadgeDto } from '$lib/api';
 	import * as Popover from '$ui/popover';
 
@@ -12,7 +13,13 @@
 <Popover.Root>
 	<Popover.Trigger>
 		{#if badge.image?.url}
-			<img src={badge.image.url} class="h-6 w-18 rounded-sm object-cover md:h-8 md:w-24" alt={badge.name} />
+			<img
+				src={badge.image.url}
+				class="size-12 shrink-0 object-contain"
+				alt={badge.name}
+				width="48"
+				height="48"
+			/>
 		{:else}
 			<p>{badge.name}</p>
 		{/if}
@@ -25,7 +32,7 @@
 				<p class="mt-1 font-semibold">Obtained</p>
 				<p>{new Date(+(badge.timestamp ?? 0) * 1000).toLocaleString()}</p>
 			{/if}
-			<a href="/info/badges" class="text-link">What is this?</a>
+			<a href={resolve('/info/badges')} class="text-link">What is this?</a>
 		</div>
 	</Popover.Content>
 </Popover.Root>
