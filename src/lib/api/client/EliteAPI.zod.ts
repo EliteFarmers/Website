@@ -170,6 +170,7 @@ export const zodUpdateBadgesParams = zod.object({
 export const zodUpdateBadgesBodyItem = zod.object({
 	badgeId: zod.int(),
 	visible: zod.coerce.boolean<boolean>().nullish(),
+	useAltImage: zod.coerce.boolean<boolean>().nullish(),
 	order: zod.int().nullish(),
 });
 export const zodUpdateBadgesBody = zod.array(zodUpdateBadgesBodyItem);

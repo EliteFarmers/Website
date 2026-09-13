@@ -116,7 +116,8 @@
 	);
 
 	const leadPreviewStyle = $derived.by(() => {
-		return productStyles[0] ?? null;
+		const style = productStyles[0];
+		return style?.styleFormatter === 'data' ? style : null;
 	});
 
 	let claimModalOpen = $state(false);
@@ -448,8 +449,18 @@
 							</div>
 							<div>
 								<p class="mb-0.5 leading-none font-medium">Profile Badge</p>
-								<div class="mt-1">
-									<Badge {badge} />
+								<div class="mt-1 flex gap-3">
+									<div class="flex flex-col items-center gap-1">
+										<Badge {badge} />
+										{#if badge.altImage}<span class="text-xs text-muted-foreground">Default</span
+											>{/if}
+									</div>
+									{#if badge.altImage?.url}
+										<div class="flex flex-col items-center gap-1">
+											<Badge badge={{ ...badge, image: badge.altImage }} />
+											<span class="text-xs text-muted-foreground">Alt</span>
+										</div>
+									{/if}
 								</div>
 							</div>
 						</div>

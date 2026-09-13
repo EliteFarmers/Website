@@ -23,7 +23,8 @@
 	const hasNameCardFrame = $derived(Boolean(style.frame?.nameCard?.imageUrl));
 	const hasPage = $derived(Boolean(style.page));
 	const hasPreview = $derived(
-		hasWeight || hasLeaderboard || hasLeaderboardFrame || hasNameCard || hasNameCardFrame || hasPage
+		style.styleFormatter === 'data' &&
+			(hasWeight || hasLeaderboard || hasLeaderboardFrame || hasNameCard || hasNameCardFrame || hasPage)
 	);
 </script>
 
@@ -98,5 +99,8 @@
 		{/if}
 	</div>
 {:else}
-	<p class="text-muted-foreground">{style.description ?? 'A preview is not available for this cosmetic.'}</p>
+	<p class="text-sm text-muted-foreground italic">Preview unavailable for this style</p>
+	{#if style.description}
+		<p class="mt-2 text-muted-foreground">{style.description}</p>
+	{/if}
 {/if}

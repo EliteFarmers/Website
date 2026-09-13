@@ -11,6 +11,13 @@
 
 	let items = $derived(badges.filter((badge) => badge.visible));
 	let hidden = $derived(badges.filter((badge) => !badge.visible));
+	let choices = $derived<Record<number, boolean>>(
+		Object.fromEntries(badges.map((badge) => [badge.id, !!badge.altImage && badge.useAltImage]))
+	);
+
+	function selectImage(id: number, useAltImage: boolean) {
+		choices = { ...choices, [id]: useAltImage };
+	}
 
 	function handle(e: CustomEvent<DndEvent<UserBadgeDto>>) {
 		items = e.detail.items;
@@ -31,7 +38,13 @@
 		class="flex min-h-16 flex-col rounded-md border-2 border-dashed p-2"
 	>
 		{#each items as badge, i (badge.id ?? i)}
-			<BadgeItem {badge} visible={true} order={i} />
+			<BadgeItem
+				{badge}
+				visible={true}
+				order={i}
+				useAltImage={choices[badge.id] ?? false}
+				onselect={selectImage}
+			/>
 		{/each}
 		{#if items.length === 0}
 			<div class="flex flex-1 flex-col items-center justify-center">
@@ -49,7 +62,13 @@
 		class="flex min-h-16 flex-col rounded-md border-2 border-dashed p-2"
 	>
 		{#each hidden as badge, i (badge.id ?? i)}
-			<BadgeItem {badge} visible={false} order={i + items.length} />
+			<BadgeItem
+				{badge}
+				visible={false}
+				order={i + items.length}
+				useAltImage={choices[badge.id] ?? false}
+				onselect={selectImage}
+			/>
 		{/each}
 		{#if hidden.length === 0}
 			<div class="flex flex-1 flex-col items-center justify-center">

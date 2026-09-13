@@ -69,6 +69,11 @@ export const actions: Actions = {
 				badge.visible = value === 'true';
 			}
 
+			if (setting === 'useAltImage') {
+				if (value !== 'true' && value !== 'false') return fail(400, { error: 'Invalid badge image choice.' });
+				badge.useAltImage = value === 'true';
+			}
+
 			if (setting === 'order') {
 				const num = Number(value);
 				if (isNaN(num)) continue;
@@ -82,7 +87,8 @@ export const actions: Actions = {
 
 		if (!response.ok || e) {
 			return fail(response.status, {
-				error: e || 'Failed to update badges!',
+				error:
+					(e?.errors && Object.values(e.errors).flat().join(' ')) || e?.message || 'Failed to update badges!',
 			});
 		}
 

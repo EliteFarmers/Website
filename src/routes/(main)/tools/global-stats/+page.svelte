@@ -292,7 +292,7 @@
 		items={[
 			{
 				question: 'What does NPC value measure?',
-				answer: 'NPC value combines the estimated NPC sell value of collected crops with NPC coin rewards from pests (each pest kill deposits 10,000 coins directly to your purse). Crop sell value is potential revenue. It does not confirm that crops were sold.',
+				answer: 'NPC value combines the estimated NPC sell value of collected crops with NPC coin rewards from pests. Field Mouse and Lunar Moth kills deposit 10,000 coins directly to your purse; all other pests deposit 1,000 coins. Crop sell value is potential revenue. It does not confirm that crops were sold.',
 			},
 			{
 				question: 'Whose progress is included?',

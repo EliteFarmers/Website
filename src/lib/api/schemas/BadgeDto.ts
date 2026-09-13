@@ -12,6 +12,7 @@ import type { ImageAttachmentDto } from './ImageAttachmentDto';
 export interface BadgeDto {
 	id: number;
 	image?: ImageAttachmentDto | null;
+	altImage?: ImageAttachmentDto | null;
 	name: string;
 	description: string;
 	requirements: string;
