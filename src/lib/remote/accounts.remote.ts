@@ -1,7 +1,6 @@
 import { command, getRequestEvent, query } from '$app/server';
 import {
 	getAccount,
-	getAuthAccount,
 	getPlayerRecap,
 	linkOwnAccount,
 	searchAccountsWithDiscord,
@@ -10,6 +9,7 @@ import {
 	zodGetAccountParams,
 } from '$lib/api';
 import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
+import { FetchDiscordUserData } from '$lib/api/auth';
 import { IsIGNOrUUID } from '$params/id';
 import * as z from 'zod';
 
@@ -18,8 +18,7 @@ export const GetAccount = query(zodGetAccountParams, async (params) => {
 });
 
 export const getAuthorizedAccount = query(async () => {
-	const { data: account } = await getAuthAccount();
-	return account;
+	return (await FetchDiscordUserData()) ?? undefined;
 });
 
 export const getAccountOptions = query(async () => {

@@ -1,6 +1,7 @@
 import { env } from '$env/dynamic/public';
 const { PUBLIC_DISCORD_REDIRECT_ROUTE } = env;
-import { getAcceptConfirmationUrl, login } from '$lib/api';
+import { acceptConfirmation as acceptLoginConfirmation, login } from '$lib/api';
+import { IsAuthTokenResponse, UpdateAuthCookies } from '$lib/api/auth';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -27,57 +28,30 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
 	const [, redirectTo = '', attemptCount = 0, acceptConfirmation = ''] = state.split('|');
 
-	const {
-		data: loginResponse,
-		response: r,
-		error: e,
-	} = await login({
+	const result = await login({
 		code: code,
 		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
-	});
+	}).catch(() => undefined);
 
-	if (!loginResponse) {
-		console.log(r);
-		console.log(e);
+	if (!result?.ok || result.response.status !== 200 || !IsAuthTokenResponse(result.data)) {
 		error(500, 'Failed to login user!');
 	}
-
-	const thirtyDays = 30 * 24 * 60 * 60;
-	const refreshTokenExpires = new Date(Date.now() + thirtyDays * 1000); // 30 days
+	const loginResponse = result.data;
+	UpdateAuthCookies(cookies, loginResponse);
 
 	if (
 		acceptConfirmation &&
 		loginResponse.pending_confirmation &&
 		loginResponse.pending_confirmation.id === +acceptConfirmation
 	) {
-		const response = await fetch(getAcceptConfirmationUrl(acceptConfirmation), {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${loginResponse.access_token}`,
-				'Content-Type': 'application/json',
-			},
-		}).then((res) => res.json());
-
-		if (!response.ok) {
-			console.error('Failed to accept confirmation automatically:', response);
-		} else {
+		const response = await acceptLoginConfirmation(acceptConfirmation, {
+			headers: { Authorization: `Bearer ${loginResponse.access_token}` },
+		}).catch(() => undefined);
+		if (response?.ok) {
 			// If successful, clear the pending confirmation so we don't redirect to it
 			loginResponse.pending_confirmation = null;
 		}
 	}
-
-	cookies.set('access_token', loginResponse.access_token, {
-		// The access token expires sooner, but we keep it to use with the refresh token
-		expires: refreshTokenExpires,
-		maxAge: thirtyDays,
-		path: '/',
-	});
-
-	cookies.set('refresh_token', loginResponse.refresh_token, {
-		expires: refreshTokenExpires,
-		maxAge: thirtyDays,
-		path: '/',
-	});
 
 	const first = loginResponse.first_login ? '&first=true' : '';
 

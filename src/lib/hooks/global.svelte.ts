@@ -1,4 +1,3 @@
-import { page } from '$app/state';
 import type {
 	AnnouncementDto,
 	AuthorizedAccountDto,
@@ -20,6 +19,7 @@ import { SvelteMap } from 'svelte/reactivity';
 type ConstructorData = {
 	user?: AuthorizedAccountDto | null;
 	session?: AuthSession | null;
+	persistSession?: boolean;
 	announcements?: AnnouncementDto[];
 	texturePacks?: ResourcePackDto[] | null;
 	previewPack?: LocalTexturePackOverride | null;
@@ -72,13 +72,11 @@ export class GlobalContext {
 		this.setValues(data);
 
 		$effect(() => {
+			const sessionId = this.session?.id;
 			tick().then(() => {
-				if (page.data.session || !page.data.persistSession) {
-					this.session = page.data.session as AuthSession | undefined;
-				}
 				this.#initialized = true;
 
-				if (this.authorized) {
+				if (sessionId && sessionId === this.session?.id) {
 					this.loadNotifications();
 					this.loadPendingGifts();
 					this.loadUser();
@@ -87,8 +85,18 @@ export class GlobalContext {
 		});
 	}
 
-	setValues({ user, session, announcements, texturePacks, previewPack, clearPreviewPackId }: ConstructorData) {
-		this.#session = session ?? undefined;
+	setValues({
+		user,
+		session,
+		persistSession,
+		announcements,
+		texturePacks,
+		previewPack,
+		clearPreviewPackId,
+	}: ConstructorData) {
+		if (session || !persistSession) {
+			this.session = session ?? undefined;
+		}
 		if (user !== undefined) {
 			this.user = user;
 		}
@@ -126,6 +134,7 @@ export class GlobalContext {
 	}
 
 	set user(user: AuthorizedAccountDto | undefined | null) {
+		if (!user) return;
 		this.#user = user ?? undefined;
 
 		if (this.#session?.id !== user?.id) {
@@ -406,10 +415,18 @@ export class GlobalContext {
 	}
 
 	async loadUser() {
-		if (!this.session?.id || this.session.id === this.user?.id) return;
-
-		this.#userQuery = getAuthorizedAccount();
-		this.user = await this.#userQuery;
+		const sessionId = this.session?.id;
+		if (!sessionId || sessionId === this.user?.id) return;
+		try {
+			this.#userQuery = getAuthorizedAccount();
+			const user = await this.#userQuery;
+			// Ignore unavailable results and responses for a session that has since changed or logged out.
+			if (user?.id === sessionId && this.session?.id === sessionId) {
+				this.user = user;
+			}
+		} catch {
+			// Preserve the session when an account lookup fails.
+		}
 	}
 }
 

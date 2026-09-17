@@ -30,6 +30,7 @@
 	initGlobalContext(
 		(() => ({
 			session: data.session,
+			persistSession: data.persistSession,
 			announcements: data.cache?.announcements ?? [],
 			texturePacks: data.cache?.texturepacks ?? [],
 			previewPack: data.previewPack,
@@ -49,6 +50,7 @@
 	$effect.pre(() => {
 		const newData = {
 			session: data.session,
+			persistSession: data.persistSession,
 			announcements: data.cache?.announcements ?? [],
 			texturePacks: data.cache?.texturepacks ?? [],
 			previewPack: data.previewPack,

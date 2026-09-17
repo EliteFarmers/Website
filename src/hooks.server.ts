@@ -21,12 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		!event.route.id?.includes('/shop') &&
 		!event.route.id?.startsWith('/profile');
 
-	if (locals.access_token) {
-		locals.persistSession = true;
-	}
-
-	// Skip getting the user session if the request is /api/
-	if (event.url.pathname.startsWith('/api/')) {
+	if (event.url.pathname.startsWith('/api/') || event.url.pathname === '/logout') {
 		return await ResolveWithSecurityHeaders(resolve, event);
 	}
 
@@ -35,11 +30,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 		try {
 			locals.session = await FetchUserSession(event.cookies);
 		} catch {
-			// Ignore errors fetching session
+			// Keep credentials and the last known client session when auth checks fail.
 		}
 		locals.access_token = cookies.get('access_token');
 		locals.refresh_token = cookies.get('refresh_token');
 	}
+	locals.persistSession = !!locals.access_token;
 
 	if (locals.session?.pending_confirmation && event.url.pathname !== '/login/confirm') {
 		redirect(
