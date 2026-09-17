@@ -395,6 +395,41 @@ test('Harvest Feast pest drops are calculated from the live in-season crop list'
 	expect(Object.values(mouseFeastDrops).reduce((sum, amount) => sum + amount, 0)).toBeCloseTo(expectedMice * 0.3, 8);
 });
 
+test.each([false, true])('feast drops stay within a four-crop rotation (grandFeast=%s)', (grandFeast) => {
+	const inSeasonCrops = [Crop.Wheat, Crop.Carrot, Crop.Melon, Crop.NetherWart];
+	const seasonalMaterials = inSeasonCrops.map((crop) => HARVEST_FEAST_MATERIALS[crop]!);
+	for (const active of [true, false]) {
+		const player = new PestFarmingPlayer({ harvestFeast: { active, grandFeast, inSeasonCrops } });
+		for (const pest of Object.values(Pest)) {
+			const result = new PestFarmingRateCalculator({
+				player,
+				options: {
+					crop: Crop.Wheat,
+					cycle: DEFAULT_PEST_CYCLE_SETTINGS,
+					attraction: {
+						includeSpecialPests: true,
+						excludedPests: Object.values(Pest).filter((candidate) => candidate !== pest),
+					},
+				},
+			}).calculate();
+			const drops = result.breakdown.economy.feastRareCrops.rngItems;
+			const feastDrop = PEST_DROP_DEFINITIONS[pest].feastRareDrop;
+			const expectedMaterials = !active
+				? []
+				: pest === Pest.Mouse
+					? seasonalMaterials
+					: feastDrop && inSeasonCrops.includes(feastDrop.crop)
+						? [feastDrop.itemId]
+						: [];
+			expect(Object.keys(drops).sort(), `${pest}, active=${active}`).toEqual([...expectedMaterials].sort());
+			if (active && pest === Pest.Mouse) {
+				const expectedMice = result.breakdown.pestDrops.byPest[pest]!.expectedPests;
+				for (const material of seasonalMaterials) expect(drops[material]).toBeCloseTo(expectedMice * 0.075, 8);
+			}
+		}
+	}
+});
+
 test('bonus pest chance controls expected pests per spawn', () => {
 	const player = new PestFarmingPlayer({});
 	const calculator = new PestFarmingRateCalculator({

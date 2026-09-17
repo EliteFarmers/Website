@@ -308,7 +308,24 @@ export async function optimizePestLoadouts(input: PestLoadoutOptimizerInput): Pr
 	let evaluated = 0;
 	let frameStarted = globalThis.performance?.now() ?? Date.now();
 	let pass = 0;
-	let rate = calculateRate(player, selections, input.options, input.priceBook);
+	// Candidate selections can recur across dimensions and optimization passes.
+	// This cache belongs to one run, so changing prices or player state cannot reuse stale rates.
+	const rates = new Map<string, number>();
+	const evaluate = (candidate: Record<PestFarmingPhase, PestLoadoutCandidate>): number => {
+		const key = JSON.stringify(
+			PEST_FARMING_PHASES.map((phase) => [
+				candidate[phase].armorSetId,
+				candidate[phase].equipmentSetId,
+				candidate[phase].petId,
+			])
+		);
+		const cached = rates.get(key);
+		if (cached !== undefined) return cached;
+		const result = calculateRate(player, candidate, input.options, input.priceBook);
+		rates.set(key, result);
+		return result;
+	};
+	let rate = evaluate(selections);
 	let improved = true;
 
 	while (improved) {
@@ -327,7 +344,7 @@ export async function optimizePestLoadouts(input: PestLoadoutOptimizerInput): Pr
 					}
 					const candidate = { ...current, [dimension.field]: value };
 					const next = { ...selections, [phase]: candidate };
-					const candidateRate = calculateRate(player, next, input.options, input.priceBook);
+					const candidateRate = evaluate(next);
 					evaluated++;
 					if (
 						candidateRate > bestRate + RATE_EPSILON ||
@@ -366,7 +383,7 @@ export async function optimizePestLoadouts(input: PestLoadoutOptimizerInput): Pr
 				const next = Object.fromEntries(
 					PEST_FARMING_PHASES.map((phase) => [phase, { ...selections[phase], [dimension.field]: value }])
 				) as Record<PestFarmingPhase, PestLoadoutCandidate>;
-				const candidateRate = calculateRate(player, next, input.options, input.priceBook);
+				const candidateRate = evaluate(next);
 				evaluated++;
 				const selectionOrder = PEST_FARMING_PHASES.map((phase) =>
 					compareCandidates(player, next[phase], selections[phase])
@@ -410,7 +427,7 @@ export async function optimizePestLoadouts(input: PestLoadoutOptimizerInput): Pr
 				[PestFarmingPhase.Spawn]: spawn,
 				[PestFarmingPhase.Kill]: kill,
 			};
-			const candidateRate = calculateRate(player, next, input.options, input.priceBook);
+			const candidateRate = evaluate(next);
 			evaluated++;
 			const pairOrder = compareCandidates(player, spawn, bestSpawn) || compareCandidates(player, kill, bestKill);
 			if (

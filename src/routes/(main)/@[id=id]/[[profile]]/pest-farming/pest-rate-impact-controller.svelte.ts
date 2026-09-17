@@ -99,14 +99,28 @@ export class PestRateImpactController {
 
 	revalue(calculator: PestFarmingRateCalculator, priceBook: PestRatePriceBook): void {
 		if (!this.ready) return;
+		const valuedCalculator = calculator.withPriceBook(priceBook);
+		const valuedResults = new Map<PestFarmingRateResult, PestFarmingRateResult>();
+		const revalueResult = (result: PestFarmingRateResult): PestFarmingRateResult => {
+			const cached = valuedResults.get(result);
+			if (cached) return cached;
+			const valued = valuedCalculator.revalueResult(result);
+			valuedResults.set(result, valued);
+			return valued;
+		};
 		this.upgradeImpacts = new Map(
 			[...this.#activeUpgradeMechanics].map(([key, impact]) => [
 				key,
-				calculator.revalueUpgradeImpact(impact, priceBook),
+				valuedCalculator.compareResults(
+					revalueResult(impact.before),
+					revalueResult(impact.after),
+					impact.phase,
+					impact.upgradeKey
+				),
 			])
 		);
-		this.gearImpacts = this.#valueComparisons(calculator, priceBook, this.#activeGearMechanics);
-		this.petImpacts = this.#valueComparisons(calculator, priceBook, this.#activePetMechanics);
+		this.gearImpacts = this.#valueComparisons(revalueResult, this.#activeGearMechanics);
+		this.petImpacts = this.#valueComparisons(revalueResult, this.#activePetMechanics);
 		this.displayRevision++;
 	}
 
@@ -168,14 +182,13 @@ export class PestRateImpactController {
 	}
 
 	#valueComparisons(
-		calculator: PestFarmingRateCalculator,
-		priceBook: PestRatePriceBook,
+		revalueResult: (result: PestFarmingRateResult) => PestFarmingRateResult,
 		comparisons: Map<string, PestRateComparison>
 	): Map<string, number> {
 		return new Map(
 			[...comparisons].map(([key, comparison]) => {
-				const before = calculator.revalueResult(comparison.before, priceBook).valuation.coinsPerHour;
-				const after = calculator.revalueResult(comparison.after, priceBook).valuation.coinsPerHour;
+				const before = revalueResult(comparison.before).valuation.coinsPerHour;
+				const after = revalueResult(comparison.after).valuation.coinsPerHour;
 				const delta = after - before;
 				return [key, Number.isFinite(delta) ? delta : 0];
 			})

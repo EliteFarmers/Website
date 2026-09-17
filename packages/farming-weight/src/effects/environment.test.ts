@@ -37,7 +37,7 @@ describe('buildEffectEnvironment', () => {
 		expect(buildEffectEnvironment(player).inSeason).toBe(false);
 	});
 
-	test('grandFeast forces inSeason true regardless of inSeasonCrops', () => {
+	test('grandFeast uses the current rotation for inSeason', () => {
 		const player = makePlayer({
 			harvestFeast: {
 				active: true,
@@ -45,8 +45,14 @@ describe('buildEffectEnvironment', () => {
 				inSeasonCrops: [Crop.Wheat],
 			},
 		});
-		expect(buildEffectEnvironment(player, Crop.Carrot).inSeason).toBe(true);
+		expect(buildEffectEnvironment(player, Crop.Carrot).inSeason).toBe(false);
 		expect(buildEffectEnvironment(player, Crop.Wheat).inSeason).toBe(true);
+		expect(buildEffectEnvironment(player).inSeason).toBe(false);
+	});
+
+	test('grandFeast without a rotation does not enable seasonal drops', () => {
+		const player = makePlayer({ harvestFeast: { active: true, grandFeast: true } });
+		expect(buildEffectEnvironment(player, Crop.Wheat).inSeason).toBe(false);
 	});
 
 	test('inactive feast keeps harvestFeast false', () => {

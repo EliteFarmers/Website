@@ -3,7 +3,7 @@ import type { RatesItemPriceData } from '$lib/api/elite';
 import { PROPER_CROP_TO_API_CROP } from '$lib/constants/crops';
 import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 import { getLevelProgress } from '$lib/format';
-import { getItemsFromUpgrades } from '$lib/items';
+import { getItemsFromCosts, getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
 import { getBestItemSellPrice, type ItemSellPrice } from '$lib/rates/item-sell-price';
 import {
 	clonePestLoadoutState,
@@ -15,6 +15,7 @@ import {
 } from '$lib/rates/pest-loadouts';
 import { findPestPetPurchaseRecommendations, type PestPetPurchaseRecommendation } from '$lib/rates/pest-pet-purchase';
 import { shouldDisplayPestUpgrade } from '$lib/rates/pest-upgrade-visibility';
+import { getPestStartupPriceItems } from '$lib/rates/pest-startup-prices';
 import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 import { getItems } from '$lib/remote/items.remote';
 import {
@@ -463,6 +464,7 @@ export class PestFarmingPageContext {
 
 	completionRateImpacts = $derived.by(() => {
 		const result = new Map<string, PestFarmingUpgradeRateImpact>();
+		if (!this.loadoutState || this.initialOptimizationPending || this.optimizationRunning) return result;
 		const before = this.pestRateMechanicsResult;
 		for (const upgrade of this.completionProgressUpgrades) {
 			result.set(
@@ -512,13 +514,17 @@ export class PestFarmingPageContext {
 		return resolveProfitAwareProgress(this.rawVacuumProgress, (upgrade) => this.#getCompletionComparison(upgrade));
 	});
 
-	activePhaseUpgrades = $derived.by(() => {
+	#baseActivePhaseUpgrades = $derived.by(() => {
 		this.trackPestVersion();
-		const upgrades = this.pestPlayer.getPhaseUpgrades(this.activePhase, {
+		return this.pestPlayer.getPhaseUpgrades(this.activePhase, {
 			stats: this.getPhaseStats(this.activePhase),
 			mechanics: PEST_FARMING_PHASE_MECHANICS[this.activePhase],
 			includeUpgradeGroups: true,
 		});
+	});
+
+	activePhaseUpgrades = $derived.by(() => {
+		const upgrades = this.#baseActivePhaseUpgrades;
 		const secondSet = this.secondHelianthusSetRecommendation;
 		const petPurchases = this.petPurchaseRecommendations
 			.filter((recommendation) => recommendation.primaryPhase === this.activePhase)
@@ -557,17 +563,29 @@ export class PestFarmingPageContext {
 
 	rateOutputItems = $derived.by(() => this.pestRateCalculator.getRequiredPriceItems(this.pestRateMechanicsResult));
 
-	neededItems = $derived([
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		...new Set([
-			'PET',
-			...Object.keys(FARMING_PET_ITEMS),
-			...getItemsFromUpgrades(this.neededItemUpgrades),
-			...this.rateOutputItems,
-			...this.completionRateItems,
-			...this.rateImpacts.requiredItemIds,
-		]),
-	]);
+	#startupPriceItems = $derived.by(() => {
+		this.trackPestVersion();
+		return [
+			...new Set([...getPestStartupPriceItems(this.pestPlayer, this.selectedCropKey), ...this.rateOutputItems]),
+		];
+	});
+
+	neededItems = $derived(
+		this.initialOptimizationPending
+			? this.#startupPriceItems
+			: [
+					// eslint-disable-next-line svelte/prefer-svelte-reactivity
+					...new Set([
+						'PET',
+						...Object.keys(FARMING_PET_ITEMS),
+						...getItemsFromUpgrades(this.neededItemUpgrades),
+						...(this.secondHelianthusSetRecommendation?.requiredItemIds ?? []),
+						...this.rateOutputItems,
+						...this.completionRateItems,
+						...this.rateImpacts.requiredItemIds,
+					]),
+				]
+	);
 
 	constructor() {
 		this.#commitCalculationPestRateSettings(this.pestRateSettings);
@@ -614,6 +632,11 @@ export class PestFarmingPageContext {
 
 	#resetSessionSelections(): void {
 		this.cancelLoadoutOptimization();
+		this.rateImpacts.cancel();
+		this.#itemPriceLoadRevision++;
+		this.#lastItemRequestKey = '';
+		this.itemPricesReady = false;
+		this.itemPriceLoadFailed = false;
 		this.#secondHelianthusSetGeneration++;
 		this.#secondHelianthusSetKey = '';
 		this.secondHelianthusSetRecommendation = undefined;
@@ -657,13 +680,11 @@ export class PestFarmingPageContext {
 
 	#syncInitialOptimization(): void {
 		void this.pestRatePriceBook.version;
-		void this.rateImpacts.ready;
 		void this.itemsVersion;
 		if (
 			!this.#needsInitialOptimization ||
 			this.optimizationRunning ||
 			!this.loadoutState ||
-			!this.rateImpacts.ready ||
 			!this.itemPricesReady
 		) {
 			return;
@@ -1170,6 +1191,10 @@ export class PestFarmingPageContext {
 
 	#scheduleRateImpacts(): void {
 		if (!this.ctx.ready) return;
+		if (!this.loadoutState || this.initialOptimizationPending || this.optimizationRunning) {
+			untrack(() => this.rateImpacts.cancel());
+			return;
+		}
 		const calculator = this.pestRateCalculator;
 		const before = this.pestRateMechanicsResult;
 		const phase = this.activePhase;
@@ -1198,7 +1223,8 @@ export class PestFarmingPageContext {
 	}
 
 	#scheduleSecondHelianthusSetRecommendation(): void {
-		const stateKey = this.#getRecommendationValuationKey();
+		if (this.initialOptimizationPending || !this.rateImpacts.ready) return;
+		const stateKey = this.#secondHelianthusSetRecommendationKey;
 		void this.itemPricesReady;
 		void this.optimizationRunning;
 		this.trackPestVersion();
@@ -1218,6 +1244,7 @@ export class PestFarmingPageContext {
 		};
 		const priceBook = this.pestRatePriceBook;
 		const before = this.pestRateResult;
+		const items = this.itemsData;
 		const yieldControl = createFrameBudgetYield();
 
 		untrack(() => {
@@ -1226,15 +1253,20 @@ export class PestFarmingPageContext {
 				options,
 				priceBook,
 				before,
+				getCost: (cost) => {
+					if (getItemsFromCosts([cost]).some((id) => !(getUpgradeCost({ items: { [id]: 1 } }, items) > 0)))
+						return undefined;
+					return getUpgradeCost(cost, items);
+				},
 				shouldCancel: () =>
 					generation !== this.#secondHelianthusSetGeneration ||
-					stateKey !== this.#getRecommendationValuationKey(),
+					stateKey !== this.#secondHelianthusSetRecommendationKey,
 				yieldControl,
 			})
 				.then((recommendation) => {
 					if (
 						generation !== this.#secondHelianthusSetGeneration ||
-						stateKey !== this.#getRecommendationValuationKey()
+						stateKey !== this.#secondHelianthusSetRecommendationKey
 					)
 						return;
 					this.secondHelianthusSetRecommendation = recommendation;
@@ -1243,7 +1275,7 @@ export class PestFarmingPageContext {
 				.catch(() => {
 					if (
 						generation !== this.#secondHelianthusSetGeneration ||
-						stateKey !== this.#getRecommendationValuationKey()
+						stateKey !== this.#secondHelianthusSetRecommendationKey
 					)
 						return;
 					this.secondHelianthusSetRecommendation = undefined;
@@ -1257,6 +1289,7 @@ export class PestFarmingPageContext {
 	}
 
 	#schedulePetPurchaseRecommendations(): void {
+		if (this.initialOptimizationPending || !this.rateImpacts.ready) return;
 		const stateKey = this.#getPetPurchaseRecommendationKey();
 		void this.itemPricesReady;
 		void this.optimizationRunning;
@@ -1315,20 +1348,32 @@ export class PestFarmingPageContext {
 		});
 	}
 
-	#getRecommendationValuationKey(): string {
+	#recommendationValuationKey = $derived.by(() => {
 		const itemIds = [...this.rateOutputItems].sort();
 		return JSON.stringify([
 			this.pestRateMechanicsKey,
 			itemIds.map((itemId) => [itemId, this.pestRatePriceBook.items?.[itemId] ?? null]),
 		]);
+	});
+
+	#getRecommendationValuationKey(): string {
+		return this.#recommendationValuationKey;
 	}
 
-	#getPetPurchaseRecommendationKey(): string {
+	#secondHelianthusSetRecommendationKey = $derived(
+		JSON.stringify([this.#recommendationValuationKey, this.itemsVersion])
+	);
+
+	#petPurchaseRecommendationKey = $derived.by(() => {
 		const purchaseItemIds = ['PET', ...Object.keys(FARMING_PET_ITEMS)].sort();
 		return JSON.stringify([
 			this.#getRecommendationValuationKey(),
 			purchaseItemIds.map((itemId) => [itemId, this.itemsData[itemId] ?? null]),
 		]);
+	});
+
+	#getPetPurchaseRecommendationKey(): string {
+		return this.#petPurchaseRecommendationKey;
 	}
 
 	#getPetPurchaseRecommendation(upgrade: FortuneUpgrade): PestPetPurchaseRecommendation | undefined {
@@ -1622,7 +1667,8 @@ export class PestFarmingPageContext {
 	}
 
 	#loadItemPrices(): void {
-		if (!this.rateImpacts.ready) return;
+		if (!this.ctx.ready || !this.loadoutState) return;
+		if (!this.initialOptimizationPending && !this.rateImpacts.ready) return;
 		const items = this.neededItems;
 		const requestKey = JSON.stringify([...items].sort());
 		if (requestKey === this.#lastItemRequestKey) return;
