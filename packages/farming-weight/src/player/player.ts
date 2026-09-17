@@ -26,6 +26,7 @@ import {
 	type UpgradeTreeNode,
 } from '../constants/upgrades.js';
 import { buildEffectEnvironment } from '../effects/environment.js';
+import { getCropFeverRateEffects } from '../crops/fever.js';
 import { resolveOverbloomBreakdown, resolveStatBreakdown } from '../effects/resolver.js';
 import { effectsToSummaries } from '../effects/summary.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';
@@ -35,7 +36,7 @@ import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FarmingPet, getFarmingPetId } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
-import { FarmingPets, type FarmingPetType } from '../items/pets.js';
+import { FarmingPets, type FarmingPetType, isPetItemCompatible } from '../items/pets.js';
 import { FARMING_ATTRIBUTE_SHARDS } from '../items/sources/attributes/index.js';
 import { GARDEN_CHIP_CLASSES } from '../items/sources/chips.js';
 import { FARMING_TOOLS } from '../items/tools.js';
@@ -105,6 +106,8 @@ export interface PlayerStatView {
 export interface UpgradeRateImpactOptions {
 	crop: Crop;
 	blocksBroken: number;
+	/** Farming speed, independent of the number of blocks in the requested interval. Defaults to 20. */
+	blocksPerSecond?: number;
 	before?: DetailedDropsFromEffectsResult;
 }
 
@@ -554,7 +557,12 @@ export class FarmingPlayer {
 		return Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 	}
 
-	getStatBreakdown(stat: Stat, targetCrop?: Crop, heldTool?: FarmingTool): StatBreakdown {
+	getStatBreakdown(
+		stat: Stat,
+		targetCrop?: Crop,
+		heldTool?: FarmingTool,
+		additionalEffects: readonly Effect[] = []
+	): StatBreakdown {
 		const breakdown: StatBreakdown = {};
 
 		const add = (name: string, value: number, stat: Stat) => {
@@ -568,7 +576,7 @@ export class FarmingPlayer {
 
 		const contributingStats = getContributoryStats(stat);
 		const env = this.buildEnvironment(targetCrop);
-		const effects = this.collectEffects(env, heldTool);
+		const effects = [...this.collectEffects(env, heldTool), ...additionalEffects];
 		const statContext = { env, crop: targetCrop };
 
 		for (const targetStat of contributingStats) {
@@ -707,13 +715,19 @@ export class FarmingPlayer {
 		);
 	}
 
-	getRates(crop: Crop, blocksBroken: number): DetailedDropsFromEffectsResult {
+	getRates(crop: Crop, blocksBroken: number, blocksPerSecond = 20): DetailedDropsFromEffectsResult {
 		const tool = this.getSelectedCropTool(crop);
-		const cropFortune = this.getCropFortune(crop, tool);
-		const fortune = cropFortune.fortune;
+		const feverEffects = getCropFeverRateEffects(
+			tool?.item.enchantments?.ultimate_crop_fever ?? 0,
+			crop,
+			blocksPerSecond,
+			this.options
+		);
+		const breakdown = this.getStatBreakdown(CROP_INFO[crop].fortuneType, crop, tool, feverEffects);
+		const fortune = Object.values(breakdown).reduce((sum, entry) => sum + entry.value, 0);
 
 		const env = this.buildEnvironment(crop);
-		const effects = this.collectEffects(env);
+		const effects = [...this.collectEffects(env), ...feverEffects];
 
 		return calculateDetailedDropsFromEffects({
 			crop,
@@ -729,10 +743,10 @@ export class FarmingPlayer {
 	}
 
 	getUpgradeRateImpact(upgrade: FortuneUpgrade, options: UpgradeRateImpactOptions): UpgradeRateImpact {
-		const before = options.before ?? this.getRates(options.crop, options.blocksBroken);
+		const before = options.before ?? this.getRates(options.crop, options.blocksBroken, options.blocksPerSecond);
 		const clonedPlayer = this.clone();
 		clonedPlayer.applyUpgrade(upgrade);
-		const after = clonedPlayer.getRates(options.crop, options.blocksBroken);
+		const after = clonedPlayer.getRates(options.crop, options.blocksBroken, options.blocksPerSecond);
 
 		return {
 			before,
@@ -819,6 +833,7 @@ export class FarmingPlayer {
 				if (type === 'pet_level' && value) {
 					nextPetData.exp = target.getXpForLevel(Number(value));
 				} else if (type === 'pet_item' && id) {
+					if (!isPetItemCompatible(id, target.type)) return;
 					nextPetData.heldItem = id;
 				}
 

@@ -4,6 +4,34 @@ import { Stat } from '../constants/stats.js';
 import { FarmingPlayer } from '../player/player.js';
 
 describe('ratecalc-effects: regression', () => {
+	test.each(Object.values(Crop).filter((crop) => crop !== Crop.Seeds))(
+		'Rarefinder Chip drops at 1 in 200,000 breaks for %s, without extra two-block rolls',
+		(crop) => {
+			const player = new FarmingPlayer({});
+			const rates = player.getRates(crop, 200_000);
+			expect(rates.rngItems?.RAREFINDER_GARDEN_CHIP).toBeCloseTo(1, 12);
+			expect(rates.items.RAREFINDER_GARDEN_CHIP).toBeUndefined();
+			expect(rates.coinSources.RAREFINDER_GARDEN_CHIP).toBeUndefined();
+		}
+	);
+
+	test('Rarefinder Chip uses normal Overbloom, including outside Harvest Feast', () => {
+		const player = new FarmingPlayer({ chips: { rarefinder: 20 }, attributes: { crop_bug: 999 } });
+		const rates = player.getRates(Crop.Cactus, 200_000);
+		expect(player.getStat(Stat.Overbloom)).toBe(60);
+		expect(rates.rngItems?.RAREFINDER_GARDEN_CHIP).toBeCloseTo(1.6, 12);
+		expect(rates.appliedEffects.RAREFINDER_GARDEN_CHIP).toEqual(
+			expect.arrayContaining([expect.objectContaining({ op: 'add-rare-pct' })])
+		);
+	});
+
+	test('seed output and zero crop breaks do not generate Rarefinder Chips', () => {
+		const player = new FarmingPlayer({});
+		expect(player.getRates(Crop.Seeds, 200_000).rngItems?.RAREFINDER_GARDEN_CHIP).toBeUndefined();
+		expect(player.getRates(Crop.Wheat, 0).rngItems?.RAREFINDER_GARDEN_CHIP).toBeUndefined();
+		expect(player.getRates(Crop.Wheat, 72_000).rngItems?.RAREFINDER_GARDEN_CHIP).toBeCloseTo(0.36, 12);
+	});
+
 	test('Harvest Feast Seasoning is reported as unpriced currency output', () => {
 		const activeFeast = new FarmingPlayer({
 			harvestFeast: {

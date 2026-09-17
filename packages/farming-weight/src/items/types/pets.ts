@@ -1,5 +1,5 @@
 import type { LateCalculationContext, LateCalculationResult } from '../../constants/latecalc.js';
-import type { FarmingPetStatType } from '../../constants/pets.js';
+import type { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
 import type { Rarity, RarityRecord } from '../../constants/reforges.js';
 import type { Skill } from '../../constants/skills.js';
 import type { StatsRecord } from '../../constants/stats.js';
@@ -66,6 +66,8 @@ export interface FarmingPetItemStatModifier {
 export interface FarmingPetItemInfo {
 	name: string;
 	wiki: string;
+	/** When present, only these pet types can hold this item. */
+	pets?: readonly FarmingPets[];
 	stats?: StatsRecord<PlayerOptions>;
 	modifiers?: FarmingPetItemStatModifier[];
 	skillReq?: Partial<Record<Skill, number>>;

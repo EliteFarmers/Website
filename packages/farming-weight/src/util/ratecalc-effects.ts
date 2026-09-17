@@ -238,7 +238,6 @@ export function calculateDetailedDropsFromEffects(
 		}
 	}
 
-	// Build candidate RNG drops: built-in `rng:` entries + `add-drop` payloads.
 	const candidates = buildBaseRngCandidates(cropInfo, env, blocksBroken);
 	appendAddedDropCandidates(candidates, effects, env, blocksBroken);
 

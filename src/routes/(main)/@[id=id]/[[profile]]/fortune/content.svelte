@@ -376,6 +376,7 @@
 	};
 
 	function formatEffectAmount(effect: AppliedEffect): string {
+		if (effect.valueDisplay === 'none') return '';
 		const amount = effect.amount.toLocaleString(undefined, { maximumFractionDigits: 2 });
 		if (effect.valueDisplay === 'stat') return amount;
 		if (effect.valueDisplay === 'percent') return `+${amount}%`;
@@ -393,6 +394,8 @@
 		const rows = new SvelteMap<string, DropEffectRow>();
 		for (const dropEffects of Object.values(info.appliedEffects)) {
 			for (const effect of dropEffects) {
+				// Produced quantities belong in the item drops, not the modifier list.
+				if (effect.op === 'add-drop') continue;
 				const key = `${effect.source}|${effect.op}|${effect.amount}|${effect.description ?? ''}|${JSON.stringify(effect.scope ?? {})}`;
 				const sortValue = effect.op === 'add-rare-pct' ? effect.amount : Math.abs(effect.amount - 1) * 100;
 				const row: DropEffectRow = {
@@ -438,13 +441,14 @@
 	const completionRateImpacts = $derived.by(() => {
 		const result = new SvelteMap<string, UpgradeRateImpact>();
 		if (!selectedCropKey || blocksPerHour <= 0) return result;
-		const before = $player.getRates(selectedCropKey, blocksPerHour);
+		const before = $player.getRates(selectedCropKey, blocksPerHour, bps);
 		for (const upgrade of completionUpgrades) {
 			result.set(
 				getCompletionUpgradeKey(upgrade),
 				$player.getUpgradeRateImpact(upgrade, {
 					crop: selectedCropKey,
 					blocksBroken: blocksPerHour,
+					blocksPerSecond: bps,
 					before,
 				})
 			);
@@ -532,7 +536,7 @@
 
 	const selected = $derived.by(() => {
 		if (!selectedCropKey || !$selectedCrops[selectedCrop]) return undefined;
-		return [selectedCropKey, $player.getRates(selectedCropKey, blocksActuallyBroken)] as const;
+		return [selectedCropKey, $player.getRates(selectedCropKey, blocksActuallyBroken, bps)] as const;
 	});
 
 	const weightGain = $derived.by(() => {

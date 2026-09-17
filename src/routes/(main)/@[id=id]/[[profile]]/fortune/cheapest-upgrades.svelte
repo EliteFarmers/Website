@@ -135,10 +135,11 @@
 				const key = getRateImpactKey(upgrade, activeCrop, activeBlocksPerHour, activePlayerStateKey);
 				let impact = rateImpactMemo.get(key);
 				if (!impact) {
-					beforeRates ??= p.getRates(activeCrop, activeBlocksPerHour);
+					beforeRates ??= p.getRates(activeCrop, activeBlocksPerHour, activeBlocksPerHour / 3600);
 					impact = p.getUpgradeRateImpact(upgrade, {
 						crop: activeCrop,
 						blocksBroken: activeBlocksPerHour,
+						blocksPerSecond: activeBlocksPerHour / 3600,
 						before: beforeRates,
 					});
 					rateImpactMemo.set(key, impact);

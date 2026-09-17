@@ -2,6 +2,7 @@
 	import { getStatColor } from '$lib/format';
 	import { cn } from '$lib/utils';
 	import * as Popover from '$ui/popover';
+	import Info from '@lucide/svelte/icons/info';
 	import PawPrint from '@lucide/svelte/icons/paw-print';
 	import {
 		FARMING_MECHANIC_INFO,
@@ -82,7 +83,7 @@
 		return primaryEffect?.mechanic ? FARMING_MECHANIC_INFO[primaryEffect.mechanic].name : 'Effect';
 	});
 	const primaryEffectValue = $derived.by(() => {
-		if (!primaryEffect || primaryEffect.value === undefined) return '';
+		if (!primaryEffect || primaryEffect.value === undefined || primaryEffect.valueDisplay === 'none') return '';
 		if (primaryEffect.op === 'mul-rare' || primaryEffect.op === 'mul-drop') {
 			const percent = (primaryEffect.value - 1) * 100;
 			return `${percent > 0 ? '+' : ''}${(+percent.toFixed(2)).toLocaleString()}%`;
@@ -125,6 +126,9 @@
 	const isAtomicUpgrade = $derived(upgrade.group?.atomic === true);
 	const isPetPurchase = $derived(upgrade.group?.kind === 'pet-purchase');
 	const isLoadoutUpgrade = $derived(upgrade.group?.kind === 'loadout');
+	const isInfoOnly = $derived(
+		primaryEffect?.valueDisplay === 'none' && headerValue === 0 && !isPetPurchase && !isLoadoutUpgrade
+	);
 	const isNegative = $derived(headerValue < 0);
 	const maxOnly = $derived(!hasEffects && headerValue === 0 && upgrade.max && upgrade.max > 0);
 	const forCompletion = $derived(!isAtomicUpgrade && upgrade.stats === undefined && !hasEffects && headerValue === 0);
@@ -133,6 +137,7 @@
 	);
 
 	const background = $derived.by(() => {
+		if (isInfoOnly) return 'text-muted-foreground hover:text-foreground';
 		if (maxOnly || forCompletion) return 'bg-progress/40';
 		if (isNegative) return 'bg-destructive/60';
 		if (isPetPurchase || isLoadoutUpgrade) return 'bg-progress';
@@ -142,40 +147,53 @@
 
 <Popover.Mobile>
 	{#snippet trigger()}
-		<div
-			class={cn(
-				'relative flex h-full min-h-4 flex-row items-center gap-1.5 rounded-md px-1',
-				background,
-				className
-			)}
-		>
-			{#if isPetPurchase}
-				<PawPrint class="size-4 shrink-0" aria-hidden="true" />
-			{:else}
-				<span
-					>{isLoadoutUpgrade
-						? 'Set'
-						: hasEffects
-							? primaryEffectIcon
-							: (STAT_ICONS[primaryStat.stat] ?? '?')}</span
-				>
-			{/if}
-			<span class="text-md relative z-10 pr-1 font-mono leading-none md:text-lg">
-				{#if isPetPurchase}
-					Pet
-				{:else if isLoadoutUpgrade}
-					Set
-				{:else if hasEffects && primaryEffectValue}
-					{primaryEffectValue}
-				{:else}
-					{headerValue !== 0 ? (+headerValue.toFixed(2)).toLocaleString() : '0'}
-				{/if}
+		{#if isInfoOnly}
+			<span class={cn('flex size-6 items-center justify-center', background, className)}>
+				<Info class="size-4" aria-hidden="true" />
+				<span class="sr-only">About {primaryEffect?.source}</span>
 			</span>
-		</div>
+		{:else}
+			<div
+				class={cn(
+					'relative flex h-full min-h-4 flex-row items-center gap-1.5 rounded-md px-1',
+					background,
+					className
+				)}
+			>
+				{#if isPetPurchase}
+					<PawPrint class="size-4 shrink-0" aria-hidden="true" />
+				{:else}
+					<span
+						>{isLoadoutUpgrade
+							? 'Set'
+							: hasEffects
+								? primaryEffectIcon
+								: (STAT_ICONS[primaryStat.stat] ?? '?')}</span
+					>
+				{/if}
+				<span class="text-md relative z-10 pr-1 font-mono leading-none md:text-lg">
+					{#if isPetPurchase}
+						Pet
+					{:else if isLoadoutUpgrade}
+						Set
+					{:else if hasEffects && primaryEffectValue}
+						{primaryEffectValue}
+					{:else}
+						{headerValue !== 0 ? (+headerValue.toFixed(2)).toLocaleString() : '0'}
+					{/if}
+				</span>
+			</div>
+		{/if}
 	{/snippet}
 	<div class="flex max-w-xs flex-col gap-2">
 		<p class="font-semibold">
-			{isPetPurchase ? 'Pet Purchase' : isLoadoutUpgrade ? 'Loadout Upgrade' : 'Upgrade Stats'}
+			{isInfoOnly
+				? primaryEffect?.source
+				: isPetPurchase
+					? 'Pet Purchase'
+					: isLoadoutUpgrade
+						? 'Loadout Upgrade'
+						: 'Upgrade Stats'}
 		</p>
 		{#if isPetPurchase}
 			<p class="text-sm text-muted-foreground">
@@ -188,7 +206,7 @@
 		{/if}
 
 		<div class="flex flex-col gap-1">
-			{#if primaryEffect}
+			{#if primaryEffect && primaryEffect.valueDisplay !== 'none'}
 				<div
 					class="flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none even:bg-card"
 				>

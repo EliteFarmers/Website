@@ -152,7 +152,7 @@ export interface Effect {
 	relatedStats?: readonly Stat[];
 	meta?: {
 		description?: string;
-		valueDisplay?: 'stat' | 'percent' | 'factor';
+		valueDisplay?: 'stat' | 'percent' | 'factor' | 'none';
 		valueStat?: Stat;
 	};
 }
@@ -170,7 +170,7 @@ export interface AppliedEffect {
 	relatedStats?: readonly Stat[];
 	scope?: Scope;
 	description?: string;
-	valueDisplay?: 'stat' | 'percent' | 'factor';
+	valueDisplay?: 'stat' | 'percent' | 'factor' | 'none';
 	valueStat?: Stat;
 }
 

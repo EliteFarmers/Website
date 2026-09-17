@@ -112,6 +112,17 @@ function harvestFeastDrops(crop: Crop): CropRngDrop[] {
 	return entries;
 }
 
+function cropRngDrops(crop: Crop): CropRngDrop[] {
+	return [
+		{
+			chance: 0.000005, // 1 in 200,000
+			drops: { RAREFINDER_GARDEN_CHIP: 1 },
+			tags: ['overbloom', 'rare-crop'],
+		},
+		...harvestFeastDrops(crop),
+	];
+}
+
 export const CROP_INFO: Record<Crop, CropInfo> = {
 	[Crop.Cactus]: {
 		name: 'Cactus',
@@ -137,7 +148,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.Cactus),
+		rng: cropRngDrops(Crop.Cactus),
 	},
 	[Crop.Carrot]: {
 		name: 'Carrot',
@@ -163,7 +174,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.Carrot),
+		rng: cropRngDrops(Crop.Carrot),
 	},
 	[Crop.CocoaBeans]: {
 		name: 'Cocoa Beans',
@@ -189,7 +200,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.CocoaBeans),
+		rng: cropRngDrops(Crop.CocoaBeans),
 	},
 	[Crop.Melon]: {
 		name: 'Melon',
@@ -208,7 +219,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.Melon),
+		rng: cropRngDrops(Crop.Melon),
 	},
 	[Crop.Mushroom]: {
 		name: 'Mushroom',
@@ -243,15 +254,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		],
 		rng: [
 			{
-				// Burrowing Spores rate buffed in Harvest Feast update from 1/250,000 to 1/350,000
-				// to compensate for it now being affected by RARE CROP chance (Overbloom).
 				chance: 1 / 350_000,
 				drops: {
 					BURROWING_SPORES: 1,
 				},
 				tags: ['overbloom', 'rare-crop'],
 			},
-			...harvestFeastDrops(Crop.Mushroom),
+			...cropRngDrops(Crop.Mushroom),
 		],
 	},
 	[Crop.NetherWart]: {
@@ -278,7 +287,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.NetherWart),
+		rng: cropRngDrops(Crop.NetherWart),
 	},
 	[Crop.Potato]: {
 		name: 'Potato',
@@ -298,7 +307,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.Potato),
+		rng: cropRngDrops(Crop.Potato),
 	},
 	[Crop.Pumpkin]: {
 		name: 'Pumpkin',
@@ -323,7 +332,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.Pumpkin),
+		rng: cropRngDrops(Crop.Pumpkin),
 	},
 	[Crop.SugarCane]: {
 		name: 'Sugar Cane',
@@ -343,7 +352,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.SugarCane),
+		rng: cropRngDrops(Crop.SugarCane),
 	},
 	[Crop.Wheat]: {
 		name: 'Wheat',
@@ -368,7 +377,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.Wheat),
+		rng: cropRngDrops(Crop.Wheat),
 	},
 	[Crop.Seeds]: {
 		name: 'Seeds',
@@ -407,7 +416,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.Sunflower),
+		rng: cropRngDrops(Crop.Sunflower),
 	},
 	[Crop.Moonflower]: {
 		name: 'Moonflower',
@@ -427,7 +436,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.Moonflower),
+		rng: cropRngDrops(Crop.Moonflower),
 	},
 	[Crop.WildRose]: {
 		name: 'Wild Rose',
@@ -453,7 +462,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
-		rng: harvestFeastDrops(Crop.WildRose),
+		rng: cropRngDrops(Crop.WildRose),
 	},
 };
 
