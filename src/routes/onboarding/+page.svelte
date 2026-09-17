@@ -248,8 +248,11 @@
 		</Card.Content>
 		<Card.Footer class="flex justify-between">
 			{#if step === 1}
-				<Button variant="ghost" href="/logout" onclick={() => trackAnalytics('onboarding.logout')}
-					>Logout</Button
+				<Button
+					variant="ghost"
+					href="/logout"
+					data-sveltekit-preload-data="off"
+					onclick={() => trackAnalytics('onboarding.logout')}>Logout</Button
 				>
 				<Button onclick={nextStep}>Continue</Button>
 			{:else if step === 2}

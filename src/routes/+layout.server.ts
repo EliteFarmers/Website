@@ -6,12 +6,13 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies, url }) =
 	await parent();
 
 	const sidebarState = cookies.get(SIDEBAR_COOKIE_NAME);
+	const searchParams = new URLSearchParams(url.search);
 
 	return {
 		session: locals.session,
 		persistSession: locals.persistSession ?? false,
-		previewPack: createPreviewPack(url.searchParams.get('previewPack')),
-		clearPreviewPackId: getPreviewPackId(url.searchParams.get('clearPreviewPack')),
+		previewPack: createPreviewPack(searchParams.get('previewPack')),
+		clearPreviewPackId: getPreviewPackId(searchParams.get('clearPreviewPack')),
 		cache: {
 			events: cache.events,
 			announcements: cache.announcements ?? [],

@@ -1,11 +1,11 @@
 import { env } from '$env/dynamic/public';
-import { getAuthAccount } from '$lib/api';
+import { FetchDiscordUserData } from '$lib/api/auth';
 import { error, redirect } from '@sveltejs/kit';
 import crypto from 'crypto';
 import type { PageServerLoad } from './$types';
 const { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } = env;
 
-export const load: PageServerLoad = async ({ cookies, url, locals }) => {
+export const load: PageServerLoad = async ({ cookies, url }) => {
 	const success = url.searchParams.get('success');
 	const redirectTo = url.searchParams.get('redirect');
 	const attemptCount = url.searchParams.get('attempt');
@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 			error(500, 'Login failed too many times! Please try again later.');
 		}
 
-		const { data: auth } = locals.access_token ? await getAuthAccount() : { data: null };
+		const auth = await FetchDiscordUserData();
 
 		if (redirectTo) {
 			return {

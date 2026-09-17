@@ -60,7 +60,7 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 		requestHeaders.set('X-Website-Secret', ELITE_API_TOKEN);
 	}
 
-	if (locals?.access_token) {
+	if (locals?.access_token && !requestHeaders.has('Authorization')) {
 		requestHeaders.set('Authorization', `Bearer ${locals.access_token}`);
 	}
 
