@@ -94,6 +94,7 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 	FLYING_PIG: {
 		name: 'Flying Pig',
 		wiki: 'https://w.elitesb.gg/Flying_Pig',
+		pets: [FarmingPets.Pig],
 		stats: {
 			[Stat.PotatoFortune]: {
 				name: 'Flying Pig Potato Fortune',
@@ -126,6 +127,11 @@ export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 		},
 	},
 };
+
+export function isPetItemCompatible(itemId: string, petType: FarmingPets): boolean {
+	const pets = FARMING_PET_ITEMS[itemId]?.pets;
+	return !pets || pets.includes(petType);
+}
 
 export const PET_RARITY_OFFSETS = {
 	[Rarity.Common]: 0,

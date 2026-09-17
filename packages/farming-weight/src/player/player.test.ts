@@ -1184,7 +1184,8 @@ test('getUpgradeRateImpact reports normal Overbloom RNG gains', () => {
 
 	expect(impact.delta.collection).toBe(0);
 	expect(impact.delta.rngItems.WARTY).toBeCloseTo(25, 2);
-	expect(impact.delta.totalItems).toBeCloseTo(25, 2);
+	expect(impact.delta.rngItems.RAREFINDER_GARDEN_CHIP).toBeCloseTo(0.25, 8);
+	expect(impact.delta.totalItems).toBeCloseTo(25.25, 2);
 });
 
 test('getUpgradeRateImpact reports Seasoning gains as currency-only output', () => {

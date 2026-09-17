@@ -26,6 +26,7 @@ import {
 	FarmingPetStatType,
 	type FarmingPets,
 	type FarmingPetType,
+	isPetItemCompatible,
 	PET_LEVELS,
 	PET_RARITY_OFFSETS,
 } from '../items/pets.js';
@@ -86,7 +87,8 @@ export class FarmingPet {
 		this.rarity = getRarityFromLore([pet.tier ?? '']) ?? Rarity.Common;
 		this.level = this.getLevel();
 
-		this.item = pet.heldItem ? FARMING_PET_ITEMS[pet.heldItem as keyof typeof FARMING_PET_ITEMS] : undefined;
+		this.item =
+			pet.heldItem && isPetItemCompatible(pet.heldItem, this.type) ? FARMING_PET_ITEMS[pet.heldItem] : undefined;
 
 		this.fortune = this.getFortune();
 	}
@@ -534,6 +536,7 @@ export class FarmingPet {
 		const currentItemId = this.item ? getPetItemId(this.item) : undefined;
 		for (const [itemId, item] of Object.entries(FARMING_PET_ITEMS)) {
 			if (itemId === currentItemId) continue;
+			if (!isPetItemCompatible(itemId, this.type)) continue;
 
 			const nextPet = this.withChanges({ heldItem: itemId });
 			const deltaStats = this.getDeltaStats(nextPet, player);

@@ -4,7 +4,7 @@ import { compareRarity } from '../constants/reforge-types.js';
 import { Rarity } from '../constants/reforges.js';
 import { mergeCost, UpgradeAction, UpgradeCategory, type FortuneUpgrade } from '../constants/upgrades.js';
 import { FarmingPet, getFarmingPetId } from '../fortune/farmingpet.js';
-import { FARMING_PET_ITEMS, FARMING_PETS } from '../items/pets.js';
+import { FARMING_PET_ITEMS, FARMING_PETS, isPetItemCompatible } from '../items/pets.js';
 import type { FarmingPetType } from '../items/types/pets.js';
 import type { FarmingPlayer, UpgradeRateImpact } from '../player/player.js';
 import { getRateImpactCoinValue } from '../util/rate-impact-value.js';
@@ -87,6 +87,9 @@ export function createPetPurchaseUpgrade(
 	target: PetPurchaseTarget,
 	options: { selected?: boolean; phases?: string[]; heldItemId?: string } = {}
 ): FortuneUpgrade {
+	if (options.heldItemId && !isPetItemCompatible(options.heldItemId, target.type)) {
+		throw new Error(`Pet item ${options.heldItemId} cannot be applied to ${target.type}`);
+	}
 	const selected = options.selected ?? false;
 	const phases = options.phases ?? [];
 	const petMember: FortuneUpgrade = {
@@ -155,7 +158,7 @@ export function findFortunePetPurchaseRecommendations(
 	input: FortunePetPurchaseRecommendationInput
 ): FortunePetPurchaseRecommendation[] {
 	if (!input.crop || input.blocksPerHour <= 0) return [];
-	const before = input.player.getRates(input.crop, input.blocksPerHour);
+	const before = input.player.getRates(input.crop, input.blocksPerHour, input.blocksPerHour / 3600);
 	const ownedIds = input.player.pets.map((pet) => getFarmingPetId(pet)).filter((id): id is string => !!id);
 	const recommendations: FortunePetPurchaseRecommendation[] = [];
 	const starterProfile = input.player.pets.length === 0;
@@ -177,6 +180,7 @@ export function findFortunePetPurchaseRecommendations(
 		const candidates = [false, true].map((selected) => evaluateFortunePurchase(input, before, target, selected));
 
 		for (const heldItemId of Object.keys(FARMING_PET_ITEMS).sort()) {
+			if (!isPetItemCompatible(heldItemId, type)) continue;
 			const itemCost = input.prices.heldItemPrices[heldItemId] ?? 0;
 			if (itemCost <= 0) continue;
 			for (const selected of [false, true]) {
@@ -202,6 +206,7 @@ function evaluateFortunePurchase(
 	const impact = input.player.getUpgradeRateImpact(upgrade, {
 		crop: input.crop,
 		blocksBroken: input.blocksPerHour,
+		blocksPerSecond: input.blocksPerHour / 3600,
 		before,
 	});
 	const coinsPerHour = getRateImpactCoinValue(

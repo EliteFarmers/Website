@@ -93,7 +93,7 @@ export interface EffectSummary {
 	mechanic?: FarmingMechanic;
 	scope?: Scope;
 	value?: number;
-	valueDisplay?: 'stat' | 'percent' | 'factor';
+	valueDisplay?: 'stat' | 'percent' | 'factor' | 'none';
 	valueStat?: Stat;
 }
 

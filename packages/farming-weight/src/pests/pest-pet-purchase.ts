@@ -3,7 +3,7 @@ import { compareRarity } from '../constants/reforge-types.js';
 import { Stat } from '../constants/stats.js';
 import type { FortuneUpgrade } from '../constants/upgrades.js';
 import { getFarmingPetId } from '../fortune/farmingpet.js';
-import { FARMING_PET_ITEMS } from '../items/pets.js';
+import { FARMING_PET_ITEMS, isPetItemCompatible } from '../items/pets.js';
 import { PEST_FARMING_PHASES, PestFarmingPhase, type PestFarmingPlayer } from '../player/pestfarmingplayer.js';
 import {
 	createPetPurchaseUpgrade,
@@ -78,6 +78,7 @@ export async function findPestPetPurchaseRecommendations(
 		}
 
 		for (const heldItemId of Object.keys(FARMING_PET_ITEMS).sort()) {
+			if (!isPetItemCompatible(heldItemId, type)) continue;
 			if (matchingOwnedPets.some((pet) => pet.pet.heldItem === heldItemId)) continue;
 			if ((input.prices.heldItemPrices[heldItemId] ?? 0) <= 0) continue;
 			const candidate = await getBestAssignment(input, target, heldItemId);

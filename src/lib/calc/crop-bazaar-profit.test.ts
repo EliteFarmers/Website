@@ -55,6 +55,20 @@ const prices: RatesItemPriceData = {
 };
 
 describe('crop Bazaar profit', () => {
+	test('values Crop Fever rewards separately even when one is also a normal crop craft', () => {
+		const result = { ...wheat, rngItems: { ENCHANTED_WHEAT: 2, ENCHANTED_HAY_BALE: 0.5 } };
+		const rewardPrices = { ...prices, ENCHANTED_HAY_BALE: market({ averageSellOrder: 100_000 }) };
+		const breakdown = calculateCropBazaarProfit(result, Crop.Wheat, rewardPrices, 'order');
+		expect(breakdown.bazaarProfit).toBe(53_050);
+		expect(breakdown.sellToBazaar).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ itemId: 'ENCHANTED_WHEAT', items: 2, per: 1000 }),
+				expect.objectContaining({ itemId: 'ENCHANTED_HAY_BALE', items: 0.5, per: 100_000 }),
+			])
+		);
+		expect(result.collection).toBe(wheat.collection);
+	});
+
 	test('includes the Bazaar premium for wheat seeds in the headline', () => {
 		expect(calculateBestBazaarProfit(wheat, Crop.Wheat, prices, 'order')).toBe(1050);
 		expect(calculateBestBazaarProfit(wheat, Crop.Wheat, prices, 'insta')).toBe(940);

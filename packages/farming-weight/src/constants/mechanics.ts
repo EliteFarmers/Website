@@ -5,6 +5,7 @@ export enum FarmingMechanic {
 	AtmosphericFilterEffect = 'atmospheric_filter_effect',
 	PestCooldownReductionSeconds = 'pest_cooldown_reduction_seconds',
 	FarmingToolExperience = 'farming_tool_experience',
+	CropFeverChance = 'crop_fever_chance',
 }
 
 export interface FarmingMechanicInfo {
@@ -13,6 +14,7 @@ export interface FarmingMechanicInfo {
 }
 
 export const FARMING_MECHANIC_INFO: Record<FarmingMechanic, FarmingMechanicInfo> = {
+	[FarmingMechanic.CropFeverChance]: { name: 'Crop Fever Chance', icon: '%' },
 	[FarmingMechanic.CropGrowth]: { name: 'Crop Growth', icon: '☀' },
 	[FarmingMechanic.SprayonatorMaterialChance]: {
 		name: 'Sprayonator Material Chance',

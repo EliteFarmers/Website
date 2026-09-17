@@ -25,9 +25,7 @@ import type { PlayerOptions } from '../../player/playeroptions.js';
  * `CactusFortune` are already crop-gated by the consumer, so no scope is
  * attached).
  *
- * Crop Fever (`ultimate_crop_fever`) emits no effects here - its mechanic is
- * bespoke (Tiered RNG bonus during Harvest Feast) and stays in the legacy
- * pipeline until it is migrated.
+ * Enchant definitions can also provide effects directly alongside tier stats.
  */
 export function enchantEffects(
 	enchantId: string,
@@ -48,7 +46,10 @@ export function enchantEffects(
 	}
 
 	const sourceName = `Enchant: ${enchant.name}`;
-	const out: Effect[] = [];
+	const out: Effect[] = (enchant.effects?.(level) ?? []).map((effect) => ({
+		...effect,
+		source: sourceName,
+	}));
 
 	const pushStat = (statKey: Stat, value: number) => {
 		if (!value) return;

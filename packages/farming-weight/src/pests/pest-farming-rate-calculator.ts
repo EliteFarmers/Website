@@ -125,8 +125,12 @@ export class PestFarmingRateCalculator {
 		const stateKey = getValuationStateKey(mechanicsKey, this.priceBook);
 		const spawnDistribution = this.getSpawnDistribution(phaseStats.spawnBonusPestChance);
 		const debug = this.getCycleDebug(phaseStats, spawnDistribution.expectedPestsPerSpawn);
-		const farmCrop = player.crop.getRates(this.options.crop, debug.farmBlocks);
-		const spawnCrop = player.spawn.getRates(this.options.crop, debug.spawnBlocks);
+		const farmCrop = player.crop.getRates(this.options.crop, debug.farmBlocks, this.options.cycle.blocksPerSecond);
+		const spawnCrop = player.spawn.getRates(
+			this.options.crop,
+			debug.spawnBlocks,
+			this.options.cycle.spawnBlocksPerSecond ?? this.options.cycle.blocksPerSecond
+		);
 		const cropBreaking = sumCropRateResults([farmCrop, spawnCrop]);
 		const pestDrops = this.calculatePestDrops(spawnDistribution, phaseStats, player);
 		const intervalScale = (this.options.intervalSeconds ?? DEFAULT_INTERVAL_SECONDS) / debug.cycleSeconds;

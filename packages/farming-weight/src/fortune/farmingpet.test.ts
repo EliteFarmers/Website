@@ -1,11 +1,40 @@
 import { expect, test } from 'vitest';
 import { FarmingMechanic } from '../constants/mechanics.js';
+import { FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
+import { UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { buildEffectEnvironmentFromOptions } from '../effects/environment.js';
 import { resolveMechanicMultiplier } from '../effects/resolver.js';
 import { FarmingPlayer } from '../player/player.js';
 import { FarmingPet } from './farmingpet.js';
+
+test.each(Object.values(FarmingPets))('Flying Pig compatibility for %s', (type) => {
+	const data = { uuid: `flying-pig-${type}`, type, tier: 'LEGENDARY', exp: 30_000_000_000 };
+	const base = new FarmingPet(data);
+	const equipped = new FarmingPet({ ...data, heldItem: 'FLYING_PIG' });
+	const compatible = type === FarmingPets.Pig;
+
+	expect(equipped.item?.name).toBe(compatible ? 'Flying Pig' : undefined);
+	expect(equipped.getFortune(Stat.PotatoFortune) - base.getFortune(Stat.PotatoFortune)).toBe(compatible ? 40 : 0);
+	expect(equipped.getFortune(Stat.Speed) - base.getFortune(Stat.Speed)).toBe(compatible ? 20 : 0);
+	expect(
+		base
+			.getUpgrades({ stats: [Stat.PotatoFortune, Stat.Speed] })
+			.some((upgrade) => upgrade.purchase === 'FLYING_PIG')
+	).toBe(compatible);
+
+	const player = new FarmingPlayer({ pets: [{ ...data, active: true, heldItem: 'YELLOW_BANDANA' }] });
+	player.applyUpgrade({
+		title: 'Flying Pig',
+		increase: 0,
+		action: UpgradeAction.Apply,
+		category: UpgradeCategory.Pet,
+		meta: { type: 'pet_item', id: 'FLYING_PIG', itemUuid: data.uuid },
+	});
+	expect(player.pets[0]?.pet.heldItem).toBe(compatible ? 'FLYING_PIG' : 'YELLOW_BANDANA');
+	expect(player.selectedPet?.pet.heldItem).toBe(compatible ? 'FLYING_PIG' : 'YELLOW_BANDANA');
+});
 
 test('Elephant fortune test', () => {
 	const elephant = {

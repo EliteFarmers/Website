@@ -1,8 +1,10 @@
+import type { Effect } from '../effects/types.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getCropFromName } from '../util/names.js';
 import { getCropInfo } from '../util/ratecalc.js';
-import { Crop } from './crops.js';
+import { Crop, CROP_INFO } from './crops.js';
 import { GARDEN_VISITORS } from './garden.js';
+import { FarmingMechanic } from './mechanics.js';
 import { ReforgeTarget } from './reforges.js';
 import { Stat } from './stats.js';
 import type { UpgradeCost } from './upgrades.js';
@@ -34,6 +36,7 @@ export interface FarmingEnchant {
 	cropSpecific?: Crop;
 	levels: Record<number, FarmingEnchantTier>;
 	computedLevels?: (opt: PlayerOptions) => Record<number, FarmingEnchantTier>;
+	effects?: (level: number) => Omit<Effect, 'source'>[];
 	maxStats?: Partial<Record<Stat, number>>;
 	levelRequirement?: number;
 }
@@ -555,6 +558,22 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		wiki: 'https://w.elitesb.gg/Crop_Fever',
 		minLevel: 1,
 		maxLevel: 5,
+		effects: (level) => [
+			{
+				op: 'add-mechanic',
+				mechanic: FarmingMechanic.CropFeverChance,
+				value: level * 0.001,
+				relatedStats: [
+					Stat.FarmingFortune,
+					Stat.Overbloom,
+					...new Set(Object.values(CROP_INFO).map((info) => info.fortuneType)),
+				],
+				meta: {
+					description: 'Rates account for the average time Crop Fever stays active.',
+					valueDisplay: 'none',
+				},
+			},
+		],
 		levels: {
 			1: {},
 			2: {},

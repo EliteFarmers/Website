@@ -13,7 +13,7 @@
 	let { effects = [], compact = false }: Props = $props();
 
 	function formatValue(effect: EffectSummary): string {
-		if (effect.value === undefined) return '';
+		if (effect.value === undefined || effect.valueDisplay === 'none') return '';
 		if (effect.op === 'mul-rare' || effect.op === 'mul-drop') {
 			const percent = (effect.value - 1) * 100;
 			return `${percent > 0 ? '+' : ''}${(+percent.toFixed(2)).toLocaleString()}%`;
@@ -72,13 +72,17 @@
 	<div class={compact ? 'flex flex-col gap-1' : 'flex w-full flex-col gap-1'}>
 		{#each effects as effect, index (effectKey(effect, index))}
 			<div class="flex w-full items-center gap-1">
-				<ProgressBar
-					percent={effectPercent(effect)}
-					readable={formatReadable(effect)}
-					expanded={formatExpanded(effect)}
-					fillClass={effectFillClass(effect)}
-					{compact}
-				/>
+				{#if effect.valueDisplay === 'none'}
+					<span class="text-sm">{effect.source}</span>
+				{:else}
+					<ProgressBar
+						percent={effectPercent(effect)}
+						readable={formatReadable(effect)}
+						expanded={formatExpanded(effect)}
+						fillClass={effectFillClass(effect)}
+						{compact}
+					/>
+				{/if}
 				{#if formatNote(effect)}
 					<TooltipSimple side="left">
 						{#snippet trigger()}
