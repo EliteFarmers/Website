@@ -16,16 +16,7 @@ export function buildEffectEnvironment(player: FarmingPlayer, crop?: Crop): Effe
 export function buildEffectEnvironmentFromOptions(opts: PlayerOptions | undefined, crop?: Crop): EffectEnvironment {
 	const harvestFeast = opts?.harvestFeast?.active === true;
 
-	let inSeason = false;
-	if (harvestFeast && crop !== undefined) {
-		const grand = opts?.harvestFeast?.grandFeast === true;
-		if (grand) {
-			inSeason = true;
-		} else {
-			const seasonList = opts?.harvestFeast?.inSeasonCrops;
-			inSeason = Array.isArray(seasonList) ? seasonList.includes(crop) : false;
-		}
-	}
+	const inSeason = harvestFeast && crop !== undefined && (opts?.harvestFeast?.inSeasonCrops?.includes(crop) ?? false);
 
 	const infestedPlot = typeof opts?.infestedPlotProbability === 'number' && opts.infestedPlotProbability > 0;
 

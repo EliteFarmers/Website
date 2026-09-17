@@ -154,6 +154,43 @@ test('optimizer searches loadout dimensions greedily instead of evaluating their
 	expect(Object.values(result.phasePresetIds)).toStrictEqual(PEST_FARMING_PHASES.map(() => 'local:current'));
 });
 
+test('optimizer evaluates repeated selections once per run and preserves deterministic ties', async () => {
+	const player = new PestFarmingPlayer({
+		armor: [armorItem('a'), armorItem('z')],
+		armorSets: ['a', 'z'].map((id) => ({ id, name: id, pieces: { [GearSlot.Helmet]: id } })),
+		equipmentSets: [],
+		loadoutPresets: ['a', 'z'].map((id) => ({ id, name: id, armorSetId: id })),
+		phasePresetIds: Object.fromEntries(PEST_FARMING_PHASES.map((phase) => [phase, 'z'])) as Record<
+			PestFarmingPhase,
+			string
+		>,
+	});
+	const calculate = vi.spyOn(PestFarmingRateCalculator.prototype, 'calculate');
+	try {
+		for (const version of ['first-prices', 'new-prices']) {
+			calculate.mockClear();
+			const result = await optimizePestLoadouts({
+				player,
+				options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+				priceBook: { ...emptyPriceBook, version },
+			});
+			const evaluatedSelections = calculate.mock.contexts.map((calculator) =>
+				JSON.stringify(
+					PEST_FARMING_PHASES.map(
+						(phase) => (calculator as PestFarmingRateCalculator).player.phaseLoadouts[phase]
+					)
+				)
+			);
+			expect(evaluatedSelections.length).toBeGreaterThan(0);
+			expect(new Set(evaluatedSelections).size).toBe(evaluatedSelections.length);
+			expect(evaluatedSelections.length).toBeLessThan(result.evaluated + 1);
+			expect(Object.values(result.phasePresetIds)).toEqual(['a', 'a', 'a']);
+		}
+	} finally {
+		calculate.mockRestore();
+	}
+});
+
 test('optimizer materializes a profitable pet instead of scoring it through the empty pet choice', async () => {
 	const player = new PestFarmingPlayer({
 		strength: 1600,

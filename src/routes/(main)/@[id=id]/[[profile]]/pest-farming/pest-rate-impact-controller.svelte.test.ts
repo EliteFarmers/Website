@@ -7,7 +7,14 @@ import type {
 	PestRateComparisonTask,
 	PestRatePriceBook,
 } from 'farming-weight';
-import { getFortuneUpgradeIdentity, PestFarmingPhase } from 'farming-weight';
+import {
+	createPestFarmingPlayer,
+	Crop,
+	DEFAULT_PEST_CYCLE_SETTINGS,
+	getFortuneUpgradeIdentity,
+	PestFarmingPhase,
+	PestFarmingRateCalculator as RateCalculator,
+} from 'farming-weight';
 import { PestRateImpactController } from './pest-rate-impact-controller.svelte';
 
 vi.mock('$app/environment', () => ({ browser: true }));
@@ -112,12 +119,11 @@ test('price-only revaluation does not repeat mechanical evaluations', async () =
 	const before = result('mechanics', 10);
 	const calculateUpgradeImpact = vi.fn(() => impact('upgrade', before, result('upgraded', 12)));
 	const calculateComparison = vi.fn(() => ({ before, after: result('gear', 15) }));
-	const revalueUpgradeImpact = vi.fn((value: PestFarmingUpgradeRateImpact) => value);
 	const revalueResult = vi.fn((value: PestFarmingRateResult, prices: PestRatePriceBook) => ({
 		...value,
 		stateKey: `${value.mechanicsKey}:${prices.version}`,
 	}));
-	const calculator = calculatorStub({ calculateUpgradeImpact, revalueUpgradeImpact, revalueResult });
+	const calculator = calculatorStub({ calculateUpgradeImpact, revalueResult });
 	const controller = new PestRateImpactController();
 
 	controller.restart({
@@ -133,8 +139,56 @@ test('price-only revaluation does not repeat mechanical evaluations', async () =
 
 	expect(calculateUpgradeImpact).toHaveBeenCalledTimes(1);
 	expect(calculateComparison).toHaveBeenCalledTimes(1);
-	expect(revalueUpgradeImpact).toHaveBeenCalledTimes(2);
-	expect(revalueResult).toHaveBeenCalledTimes(4);
+	expect(calculator.compareResults).toHaveBeenCalledTimes(2);
+	expect(revalueResult).toHaveBeenCalledTimes(6);
+	expect(revalueResult.mock.calls.filter(([value]) => value === before)).toHaveLength(2);
+});
+
+test('revalues each shared result once per price update without changing impacts', async () => {
+	const options = { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS };
+	const calculator = new RateCalculator({ player: createPestFarmingPlayer({}), options });
+	const before = calculator.calculate();
+	const after = [Crop.Carrot, Crop.Melon].map((crop) => calculator.withOptions({ ...options, crop }).calculate());
+	const impacts = after.map((result, index) =>
+		calculator.compareResults(before, result, PestFarmingPhase.Farm, `upgrade-${index}`)
+	);
+	vi.spyOn(calculator, 'calculateUpgradeImpact').mockImplementation(
+		({ upgrade }) => impacts[upgrade.title === 'upgrade-0' ? 0 : 1]!
+	);
+	const controller = new PestRateImpactController();
+	controller.restart({
+		calculator,
+		before,
+		phase: PestFarmingPhase.Farm,
+		upgrades: [upgrade('upgrade-0'), upgrade('upgrade-1')],
+		comparisons: [
+			comparison('gear', () => ({ before, after: after[0]! })),
+			{ key: 'pet', type: 'pet', calculate: () => ({ before, after: after[1]! }) },
+		],
+	});
+	await flushFrames();
+	for (const coins of [2, 5]) {
+		const prices: PestRatePriceBook = {
+			version: `prices-${coins}`,
+			missingItemMode: 'zero',
+			items: {
+				[Crop.Wheat]: { coins, source: 'manual' },
+				[Crop.Carrot]: { coins: coins * 2, source: 'manual' },
+				[Crop.Melon]: { coins: coins * 3, source: 'manual' },
+			},
+		};
+		const expected = impacts.map((value) => calculator.revalueUpgradeImpact(value, prices));
+		const revalue = vi.spyOn(RateCalculator.prototype, 'revalueResult');
+		try {
+			controller.revalue(calculator, prices);
+			expect([...controller.upgradeImpacts.values()]).toEqual(expected);
+			expect(controller.gearImpacts.get('gear')).toBe(expected[0]!.valuationDelta.coinsPerHour);
+			expect(controller.petImpacts.get('pet')).toBe(expected[1]!.valuationDelta.coinsPerHour);
+			expect(revalue).toHaveBeenCalledTimes(3);
+		} finally {
+			revalue.mockRestore();
+		}
+	}
 });
 
 test('an identical restart keeps completed impacts instead of rebuilding them', async () => {
@@ -239,13 +293,21 @@ function priceBook(version: string): PestRatePriceBook {
 }
 
 function calculatorStub(overrides: Partial<PestFarmingRateCalculator> = {}): PestFarmingRateCalculator {
-	return {
+	const calculator = {
 		calculateUpgradeImpact: vi.fn(),
 		getRequiredPriceItems: vi.fn(() => []),
-		revalueUpgradeImpact: vi.fn((value) => value),
 		revalueResult: vi.fn((value) => value),
+		compareResults: vi.fn((before, after, phase, key) => ({ ...impact(key, before, after), phase })),
 		...overrides,
 	} as unknown as PestFarmingRateCalculator;
+	calculator.withPriceBook = vi.fn(
+		(prices) =>
+			({
+				...calculator,
+				revalueResult: (value: PestFarmingRateResult) => calculator.revalueResult(value, prices),
+			}) as PestFarmingRateCalculator
+	);
+	return calculator;
 }
 
 async function flushFrames(): Promise<void> {
