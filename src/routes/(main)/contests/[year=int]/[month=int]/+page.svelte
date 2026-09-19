@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSkyblockMonth, getTimeStamp } from '$lib/format';
@@ -41,7 +42,11 @@
 	});
 </script>
 
-<Head title="Contests | {monthString}, Year {year}" description="View all known Jacob contests in this month!" />
+<Head
+	discordPreview={createPreview(data)}
+	title="Contests | {monthString}, Year {year}"
+	description="View all known Jacob contests in this month!"
+/>
 
 <div class="flex flex-col items-center justify-center px-2">
 	<div class="mt-16 mb-4 flex w-full flex-col gap-4 text-center font-semibold">

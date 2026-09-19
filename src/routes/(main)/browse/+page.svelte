@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Event from '$comp/discord/event.svelte';
 	import Serverbar from '$comp/discord/serverbar.svelte';
 	import Head from '$comp/seo/head.svelte';
@@ -17,7 +18,11 @@
 	let guilds = $derived((data.guilds ?? []).filter((g) => g.id !== PUBLIC_COMMUNITY_ID));
 </script>
 
-<Head title="Browse Servers" description="Browse Discord servers and Events available to join!" />
+<Head
+	discordPreview={createPreview()}
+	title="Browse Servers"
+	description="Browse Discord servers and Events available to join!"
+/>
 
 <div class="flex flex-col items-center justify-center text-center" data-sveltekit-preload-data="tap">
 	{#if events.length > 0}

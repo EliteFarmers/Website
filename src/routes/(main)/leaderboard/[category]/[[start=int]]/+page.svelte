@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { enhance } from '$app/forms';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
@@ -97,6 +98,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview({ settings: data.settings, lb }, page.url)}
 	{title}
 	{description}
 	imageUrl={data.leaderboard.icon}

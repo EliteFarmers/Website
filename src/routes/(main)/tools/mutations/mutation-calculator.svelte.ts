@@ -1,3 +1,4 @@
+import { readPreviewQuery } from './query';
 import type { RatesItemPriceData } from '$lib/api/elite';
 import {
 	calculateMutationCopperRatios,
@@ -11,7 +12,7 @@ import { getItems } from '$lib/remote/items.remote';
 import { GREENHOUSE_MUTATIONS } from 'farming-weight';
 import { onMount, onDestroy } from 'svelte';
 import { syncToolQuery } from '$lib/tools/query-state.svelte';
-import { nonDefault, readNumber, readChoice, type ToolQueryValues } from '$lib/tools/query-params';
+import { nonDefault, type ToolQueryValues } from '$lib/tools/query-params';
 
 const MUTATIONS = Object.values(GREENHOUSE_MUTATIONS);
 
@@ -87,10 +88,7 @@ export class MutationCalculator {
 	}
 
 	readQuery = (params: URLSearchParams) => {
-		this.synthesisLevel = readNumber(params, 'synthesis', 0, 0, 20, 1);
-		const rose = readNumber(params, 'rose', 0, 0, 200, 1);
-		this.roseDragonLevel = rose >= 100 ? rose : 0;
-		this.selectedType = readChoice(params, 'buy', ['instabuy', 'buyorder'] as const, 'instabuy');
+		Object.assign(this, readPreviewQuery(params));
 	};
 	writeQuery = (): ToolQueryValues => ({
 		synthesis: nonDefault(this.synthesisLevel, 0),

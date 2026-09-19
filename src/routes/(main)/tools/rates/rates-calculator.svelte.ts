@@ -1,3 +1,4 @@
+import { readPreviewQuery } from './query';
 import { browser } from '$app/environment';
 import type { RatesItemPriceData } from '$lib/api/elite';
 import { calculateCropBazaarProfit } from '$lib/calc/crop-bazaar-profit';
@@ -24,7 +25,7 @@ import { TIME_OPTIONS } from './rates-content';
 import { onDestroy, untrack } from 'svelte';
 import { fromStore } from 'svelte/store';
 import { syncToolQuery } from '$lib/tools/query-state.svelte';
-import { nonDefault, readNumber, readChoice, readBoolean, type ToolQueryValues } from '$lib/tools/query-params';
+import { nonDefault, type ToolQueryValues } from '$lib/tools/query-params';
 
 const ALL_CROPS = Object.values(Crop).filter((c) => c !== Crop.Seeds);
 
@@ -238,30 +239,9 @@ export class RatesCalculator {
 	}
 
 	readQuery = (params: URLSearchParams) => {
-		const fortune = readNumber(params, 'fortune', -1, 0, 5000);
-		this.fortuneInput = fortune < 0 ? undefined : fortune;
-		this.timeBlocks =
-			readChoice(
-				params,
-				'duration',
-				TIME_OPTIONS.map((option) => option.value / 1200),
-				60
-			) * 1200;
-		this.reforge = readChoice(params, 'reforge', ['bountiful', 'blessed'], 'bountiful');
-		this.pet = readChoice(params, 'pet', ['rose_dragon', 'mooshroom', 'elephant'], 'rose_dragon');
-		this.bps = readNumber(params, 'bps', 20, 10, 20, 0.5);
-		this.useMaxTool = readBoolean(params, 'maxTool', true);
-		this.useRarefinder = readBoolean(params, 'rarefinder', true);
-		this.useMechamind = readBoolean(params, 'mechamind', true);
-		this.useCropeetle = readBoolean(params, 'cropeetle', true);
-		this.useWartyBug = readBoolean(params, 'wartyBug', false);
-		this.bzMode = readChoice(params, 'sell', ['order', 'insta'] as const, 'order');
-		this.profitColumn =
-			readChoice(params, 'sort', ['npc', 'bazaar'], 'bazaar') === 'npc' ? 'npcProfit' : 'bazaarProfit';
-		this.profitDirection =
-			readChoice(params, 'direction', ['asc', 'desc'], 'desc') === 'asc' ? 'ascending' : 'descending';
-		const crop = getCropFromName(params.get('crop') ?? '');
-		if (crop && crop !== Crop.Seeds) this.selectCrop(crop);
+		const { selectedCrop, ...settings } = readPreviewQuery(params);
+		Object.assign(this, settings);
+		if (selectedCrop) this.selectCrop(selectedCrop);
 		else this.clearSelectedCrop();
 	};
 	writeQuery = (): ToolQueryValues => ({

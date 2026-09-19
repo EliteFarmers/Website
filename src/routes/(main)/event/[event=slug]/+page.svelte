@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { page } from '$app/state';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import EventData from '$comp/events/event-data.svelte';
@@ -117,6 +118,7 @@
 <svelte:document onvisibilitychange={visibilityChange} />
 
 <Head
+	discordPreview={createPreview(data, page.url)}
 	title={event.name || 'Farming Weight Event'}
 	{description}
 	imageUrl={data.guild?.icon?.url}

@@ -1,3 +1,4 @@
+import { readPreviewQuery } from './query';
 import type { RatesItemPriceData } from '$lib/api/elite';
 import {
 	COMPOSTER_PRICE_ITEM_IDS,
@@ -19,7 +20,7 @@ import {
 import { upgradeSettings } from './composter-content';
 import { onMount, onDestroy } from 'svelte';
 import { syncToolQuery } from '$lib/tools/query-state.svelte';
-import { nonDefault, readNumber, readChoice, type ToolQueryValues } from '$lib/tools/query-params';
+import { nonDefault, type ToolQueryValues } from '$lib/tools/query-params';
 
 type PriceStatus = 'loading' | 'ready' | 'error';
 
@@ -141,21 +142,7 @@ export class ComposterCalculator {
 	}
 
 	readQuery = (params: URLSearchParams) => {
-		for (const { key } of upgradeSettings) this.upgradeLevels[key] = readNumber(params, key, 0, 0, 25, 1);
-		this.purchaseMode = readChoice(params, 'buy', ['instabuy', 'buyorder'] as const, 'instabuy');
-		this.sellMode = readChoice(params, 'sell', ['instasell', 'sellorder'] as const, 'instasell');
-		this.selectedOrganicId = readChoice(
-			params,
-			'organic',
-			COMPOSTER_ORGANIC_MATTER_ITEMS.map((item) => item.itemId),
-			''
-		);
-		this.selectedFuelId = readChoice(
-			params,
-			'fuel',
-			COMPOSTER_FUELS.map((item) => item.itemId),
-			''
-		);
+		Object.assign(this, readPreviewQuery(params));
 	};
 	writeQuery = (): ToolQueryValues => ({
 		...Object.fromEntries(upgradeSettings.map(({ key }) => [key, nonDefault(this.upgradeLevels[key], 0)])),

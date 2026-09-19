@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import { SiYoutube as YoutubeIcon } from '@icons-pack/svelte-simple-icons';
 	import AlertCircle from '@lucide/svelte/icons/alert-circle';
@@ -28,6 +29,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview()}
 	title="Elite | Guide Block Dictionary"
 	description="A reference for every block and insert available in the Elite guide editor."
 	canonicalPath="/info/guides"

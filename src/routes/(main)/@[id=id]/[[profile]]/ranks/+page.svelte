@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createPreview } from '../discord-preview';
+	import { page } from '$app/state';
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import RanksList from '$comp/stats/ranks/ranks-list.svelte';
 	import { getLeaderboardList } from '$lib/remote/leaderboards.remote.js';
@@ -9,6 +11,10 @@
 </script>
 
 <StatsHead
+	discordPreview={createPreview(
+		{ account: ctx.account, profile: ctx.selectedProfile, member: ctx.member.current, ranks: ctx.allRanks },
+		page.url
+	)}
 	title="Ranks"
 	description="See this player's leaderboard ranks in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/ranks"

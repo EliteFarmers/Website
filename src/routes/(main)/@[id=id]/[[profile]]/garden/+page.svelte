@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from '../discord-preview';
 	import { page } from '$app/state';
 	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import StatsHead from '$comp/seo/stats-head.svelte';
@@ -52,6 +53,10 @@
 </script>
 
 <StatsHead
+	discordPreview={createPreview(
+		{ account: ctx.account, profile: ctx.selectedProfile, member: ctx.member.current, ranks: ctx.allRanks },
+		page.url
+	)}
 	title="Garden"
 	description="See this player's garden stats in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/garden"

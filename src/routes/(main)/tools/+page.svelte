@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { resolve } from '$app/paths';
 	import ToolPage from '$comp/tools/tool-page.svelte';
 	import { TOOL_PAGES } from '$lib/tools/pages';
@@ -7,6 +8,7 @@
 </script>
 
 <ToolPage
+	discordPreview={createPreview()}
 	title="Farming Tools"
 	description="Various tools and utilities for farming and more in Hypixel SkyBlock."
 	overview

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
+	import Head from '$comp/seo/head.svelte';
 	import Croprecords from '$comp/stats/contests/croprecords.svelte';
 	import type { PageData } from './$types';
 
@@ -31,6 +33,12 @@
 		}))
 	);
 </script>
+
+<Head
+	discordPreview={createPreview(data)}
+	title={`Record Contest Scores | Year ${data.year}`}
+	description="View the top scores of the Skyblock year!"
+/>
 
 {#if crops.length === 0}
 	<div class="mb-16 flex flex-col items-center justify-center space-y-2 p-4">

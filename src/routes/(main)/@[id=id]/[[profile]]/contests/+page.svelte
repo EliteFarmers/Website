@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createPreview } from '../discord-preview';
+	import { page } from '$app/state';
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import MedalCounts from '$comp/stats/jacob/medalcounts.svelte';
@@ -46,6 +48,10 @@
 </script>
 
 <StatsHead
+	discordPreview={createPreview(
+		{ account: ctx.account, profile: ctx.selectedProfile, member: ctx.member.current, ranks: ctx.allRanks },
+		page.url
+	)}
 	title="Jacob's Contests"
 	description="View all {contestsCount} Jacob's Contests participated in by {ctx.ignMeta ?? 'Unknown'}!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/contests"

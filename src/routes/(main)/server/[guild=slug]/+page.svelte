@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { page } from '$app/state';
 	import Event from '$comp/discord/event.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
@@ -46,6 +47,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data)}
 	title={guild.name ?? 'Server'}
 	description={`View all features and events happening in the Discord server: "${guild.name ?? 'Unknown'}"!`}
 	imageUrl={guild.icon?.url}

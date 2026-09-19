@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createPreview } from '../discord-preview';
+	import { page } from '$app/state';
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
@@ -48,6 +50,10 @@
 </script>
 
 <StatsHead
+	discordPreview={createPreview(
+		{ account: ctx.account, profile: ctx.selectedProfile, member: ctx.member.current, ranks: ctx.allRanks },
+		page.url
+	)}
 	title="Farming Fortune"
 	description="See missing fortune upgrades, overall progress, and your expected farming rates in Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/fortune"

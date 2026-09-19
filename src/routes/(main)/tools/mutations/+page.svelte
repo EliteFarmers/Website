@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import ToolPage from '$comp/tools/tool-page.svelte';
 	import SliderField from '$comp/tools/slider-field.svelte';
@@ -19,7 +20,11 @@
 	calculator.connect(() => page.url);
 </script>
 
-<ToolPage title="Mutation Copper" description="Find the cheapest mutations to analyze for Copper.">
+<ToolPage
+	discordPreview={createPreview()}
+	title="Mutation Copper"
+	description="Find the cheapest mutations to analyze for Copper."
+>
 	<Card.Root class="gap-4 rounded-md border-2 p-4 shadow-none">
 		<div class="flex flex-wrap items-baseline justify-between gap-2">
 			<h2 class="text-lg">Copper boosts</h2>

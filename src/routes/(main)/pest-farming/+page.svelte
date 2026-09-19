@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { goto } from '$app/navigation';
 	import PlayerSearch from '$comp/player-search.svelte';
 	import Head from '$comp/seo/head.svelte';
@@ -20,6 +21,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview()}
 	title="Pest Farming"
 	description="View pest farming stats, vacuum progress, and pest-focused upgrades for any Hypixel SkyBlock player."
 />

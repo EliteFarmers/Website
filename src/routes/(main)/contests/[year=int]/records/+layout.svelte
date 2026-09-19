@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Head from '$comp/seo/head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { getTimeStamp } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
@@ -33,8 +32,6 @@
 		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
-
-<Head title="Record Contest Scores | Year {year}" description="View the top scores of the Skyblock year!" />
 
 <div class="flex flex-col items-center justify-center">
 	<div class="mt-16 mb-4 flex w-full flex-col items-center gap-4 text-center font-semibold">

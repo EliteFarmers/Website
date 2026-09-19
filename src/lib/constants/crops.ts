@@ -181,6 +181,23 @@ export const CROP_UNICODE_EMOJIS: Record<Crop, string> = {
 	[Crop.WildRose]: '🌹',
 } as const;
 
+export const CROP_DISCORD_EMOJIS: Record<Crop, string> = {
+	[Crop.Cactus]: '<:cactus:1263608405939978404>',
+	[Crop.Carrot]: '<:carrot:1263608446335582280>',
+	[Crop.CocoaBeans]: '<:cocoa:1263608459618947186>',
+	[Crop.Melon]: '<:melon:1263608474743341098>',
+	[Crop.Mushroom]: '<:mushroom:1263608486609162301>',
+	[Crop.NetherWart]: '<:netherwart:1263608502564425788>',
+	[Crop.Potato]: '<:potato:1263608514639560725>',
+	[Crop.Pumpkin]: '<:pumpkin:1263608527918989403>',
+	[Crop.SugarCane]: '<:sugarcane:1263608539578892391>',
+	[Crop.Wheat]: '<:wheat:1263608553797849119>',
+	[Crop.Sunflower]: '<:sunflower:1450016131086684251>',
+	[Crop.Moonflower]: '<:moonflower:1450016129455099935>',
+	[Crop.WildRose]: '<:wild_rose:1450016132454027264>',
+	[Crop.Seeds]: '🌱',
+};
+
 export const PROPER_CROP_NAMES = Object.keys(PROPER_CROP_TO_MINION);
 
 export const CROP_UPGRADE_COSTS: Record<number, number> = {

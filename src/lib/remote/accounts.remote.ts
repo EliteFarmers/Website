@@ -85,6 +85,10 @@ export const getProfilesAccount = query(
 			return { code: 429, error: "You're opening too many profiles! Please slow down." };
 		}
 
+		if (!response.ok && response.status !== 404) {
+			return { code: 503, error: 'Unable to load player data. Please try again.' };
+		}
+
 		if (!account?.id || !account.name) {
 			return { code: 404, error: 'Player not found' };
 		}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import RenderMd from '$comp/markdown/render-md.svelte';
 	import Head from '$comp/seo/head.svelte';
@@ -52,6 +53,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data)}
 	title="{displayName} | SkyBlock Streamer"
 	description={liveStream?.title ?? streamer?.aboutMarkdown ?? `${displayName} on Elite Skyblock.`}
 	{imageUrl}

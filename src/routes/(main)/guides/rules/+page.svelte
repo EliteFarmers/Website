@@ -1,10 +1,15 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import { Button } from '$ui/button';
 	import { Separator } from '$ui/separator';
 </script>
 
-<Head title="Guide Rules" description="Community guide writing rules and review guidelines." />
+<Head
+	discordPreview={createPreview()}
+	title="Guide Rules"
+	description="Community guide writing rules and review guidelines."
+/>
 
 <main class="mx-auto my-12 flex max-w-3xl flex-col gap-8 px-4">
 	<header class="flex flex-col gap-3">

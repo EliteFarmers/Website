@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import ToolPage from '$comp/tools/tool-page.svelte';
 	import SliderField from '$comp/tools/slider-field.svelte';
 	import * as Card from '$ui/card';
@@ -25,6 +26,7 @@
 </script>
 
 <ToolPage
+	discordPreview={createPreview()}
 	title="Jacob Contest Fortune"
 	description="Estimate the farming fortune needed for each medal from recent contests."
 >

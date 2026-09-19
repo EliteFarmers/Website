@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import * as Accordion from '$ui/accordion';
@@ -24,6 +25,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data)}
 	title="SkyBlock Streamers | Elite Skyblock"
 	description="Browse live Hypixel SkyBlock streamers and featured community creators."
 	imageUrl={heroImage}

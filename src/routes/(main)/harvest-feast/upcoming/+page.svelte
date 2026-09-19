@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
+	import { page } from '$app/state';
 	import Countdown from '$comp/countdown.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
@@ -115,7 +117,11 @@
 	});
 </script>
 
-<Head title="Harvest Feast Upcoming Crops" description="Upcoming Harvest Feast crop seasons for Hypixel SkyBlock." />
+<Head
+	discordPreview={createPreview({ cache: { harvestfeast: feast ?? page.data.cache.harvestfeast } })}
+	title="Harvest Feast Upcoming Crops"
+	description="Upcoming Harvest Feast crop seasons for Hypixel SkyBlock."
+/>
 
 <div class="flex flex-col items-center justify-center px-4">
 	<div class="my-16 flex flex-col items-center gap-4">

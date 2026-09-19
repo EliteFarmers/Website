@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Serverbar from '$comp/discord/serverbar.svelte';
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import Head from '$comp/seo/head.svelte';
@@ -34,6 +35,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview()}
 	title="Skyblock Farming Weight"
 	description="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
 />
