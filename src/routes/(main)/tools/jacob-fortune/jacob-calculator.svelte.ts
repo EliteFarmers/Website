@@ -1,3 +1,4 @@
+import { readPreviewQuery } from './query';
 import type { ContestBracketsDto } from '$lib/api';
 import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 import { getReadableSkyblockDate, getSkyblockDate, getTimeStamp } from '$lib/format';
@@ -6,7 +7,7 @@ import { getCropDisplayName, getCropFromName, getFortuneRequiredForCollection } 
 import { MONTHS_OPTIONS, MEDAL_BRACKETS } from './jacob-fortune-content';
 import { onDestroy, untrack } from 'svelte';
 import { syncToolQuery } from '$lib/tools/query-state.svelte';
-import { nonDefault, readNumber, readChoice, readBoolean, type ToolQueryValues } from '$lib/tools/query-params';
+import { nonDefault, type ToolQueryValues } from '$lib/tools/query-params';
 
 interface MedalBracketEntry {
 	key: keyof ContestBracketsDto;
@@ -126,21 +127,7 @@ export class JacobCalculator {
 
 	activeMedal = $state('diamond');
 	readQuery = (params: URLSearchParams) => {
-		this.bps = readNumber(params, 'bps', 20, 10, 20, 0.5);
-		this.useMooshroom = readBoolean(params, 'mooshroom', true);
-		const months = readChoice(
-			params,
-			'months',
-			MONTHS_OPTIONS.map((option) => option.value),
-			4
-		);
-		this.monthsIndex = MONTHS_OPTIONS.findIndex((option) => option.value === months);
-		this.activeMedal = readChoice(
-			params,
-			'medal',
-			MEDAL_BRACKETS.map((medal) => medal.key),
-			'diamond'
-		);
+		Object.assign(this, readPreviewQuery(params));
 	};
 	writeQuery = (): ToolQueryValues => ({
 		bps: nonDefault(this.bps, 20),

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from '../discord-preview';
 	import { page } from '$app/state';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
@@ -87,6 +88,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data, page.url)}
 	title={(event.name || 'Farming Weight Event') + ' Leaderboard'}
 	{description}
 	imageUrl={guild?.icon?.url}

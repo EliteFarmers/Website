@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import type { LayoutProps } from './$types';
@@ -6,7 +7,11 @@
 	let { data, children }: LayoutProps = $props();
 </script>
 
-<Head title="Contact Us" description="Get in touch with us for any inquiries, support, or feedback." />
+<Head
+	discordPreview={createPreview()}
+	title="Contact Us"
+	description="Get in touch with us for any inquiries, support, or feedback."
+/>
 
 <div class="mt-8 mb-16 flex w-full flex-row items-center justify-center md:mt-16 md:mb-32">
 	<div class="mx-2 w-full max-w-4xl sm:mx-4">

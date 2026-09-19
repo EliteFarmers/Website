@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import ToolPage from '$comp/tools/tool-page.svelte';
@@ -33,6 +34,7 @@
 <Walkthrough bind:open={walkthroughOpen} steps={walkthroughSteps} padding={4} />
 
 <ToolPage
+	discordPreview={createPreview()}
 	title="Crop Gain Tracker"
 	description="Review daily collection, skill XP, and playtime across a nine-day window."
 >

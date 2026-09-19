@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import RenderMd from '$comp/markdown/render-md.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
 	import ResponsiveImage from '$comp/responsive-image.svelte';
@@ -36,6 +37,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data)}
 	title={`${heroTitle} | Elite Shop`}
 	description={seoDescription}
 	keywords={shopKeywords}

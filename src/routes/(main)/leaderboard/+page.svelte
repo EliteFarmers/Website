@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import type { PageData } from './$types';
 	import Category from './category.svelte';
@@ -11,6 +12,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview()}
 	title="Leaderboards"
 	description="View the various leaderboards available on the site!"
 	keywords="leaderboards, hypixel skyblock, level leaderboard, skills leaderboard, collection leaderboards"

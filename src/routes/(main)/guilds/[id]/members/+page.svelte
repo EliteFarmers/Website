@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from '../discord-preview';
 	import { browser } from '$app/environment';
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
@@ -199,6 +200,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data, page.url)}
 	title="{data.guild.name} Guild Members"
 	description="Browse and rank members of the {data.guild.name} guild on Elite across various leaderboards!"
 />

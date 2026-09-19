@@ -25,8 +25,8 @@ import {
 	UpgradeCategory,
 	type UpgradeTreeNode,
 } from '../constants/upgrades.js';
-import { buildEffectEnvironment } from '../effects/environment.js';
 import { getCropFeverRateEffects } from '../crops/fever.js';
+import { buildEffectEnvironment } from '../effects/environment.js';
 import { resolveOverbloomBreakdown, resolveStatBreakdown } from '../effects/resolver.js';
 import { effectsToSummaries } from '../effects/summary.js';
 import type { Effect, EffectEnvironment } from '../effects/types.js';

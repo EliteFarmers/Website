@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import type { PageData } from './$types';
@@ -13,7 +14,7 @@
 	const soldAt = $derived(auction.soldAt ? new Date(Number(auction.soldAt)).toLocaleString() : undefined);
 </script>
 
-<Head title={itemName} description="Auction details" />
+<Head discordPreview={createPreview(data)} title={itemName} description="Auction details" />
 
 <section class="mx-auto my-12 flex w-full max-w-3xl flex-col gap-6 px-4">
 	<div class="flex items-start gap-4">

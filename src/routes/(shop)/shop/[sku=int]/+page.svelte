@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
@@ -131,6 +132,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data)}
 	title={`${product.name ?? 'Product'} | Elite Shop`}
 	description={seoDescription}
 	keywords={shopKeywords}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { page } from '$app/state';
 	import Head from '$comp/seo/head.svelte';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
@@ -49,6 +50,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data)}
 	title="Contests | {getReadableSkyblockDate(timestamp ?? 0)}"
 	description="View all known participations of these Jacob contests!"
 />

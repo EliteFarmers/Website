@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import PlayerSearch from '$comp/player-search.svelte';
@@ -41,7 +42,11 @@
 	calculator.connect(() => page.url);
 </script>
 
-<ToolPage title="Rates Calculator" description="Compare crop collection and profit for your farming setup.">
+<ToolPage
+	discordPreview={createPreview()}
+	title="Rates Calculator"
+	description="Compare crop collection and profit for your farming setup."
+>
 	{#snippet actions()}
 		<Button variant="ghost" size="sm" onclick={() => (showWalkthrough = true)}>
 			<BookOpen class="size-4" aria-hidden="true" /> How to use

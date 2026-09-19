@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import { trackAnalytics } from '$lib/analytics';
@@ -59,7 +60,7 @@
 	}
 </script>
 
-<Head title="Guides" description="Discover community guides!" />
+<Head discordPreview={createPreview()} title="Guides" description="Discover community guides!" />
 
 <main class="@container flex flex-col items-center">
 	<div class="my-16 text-center">

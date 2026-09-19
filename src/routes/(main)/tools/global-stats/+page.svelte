@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { goto, invalidate } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { navigating } from '$app/state';
@@ -58,7 +59,11 @@
 	}
 </script>
 
-<ToolPage title="Global Stats" description="Collection, skill XP, and NPC value across players tracked by Elite.">
+<ToolPage
+	discordPreview={createPreview(data)}
+	title="Global Stats"
+	description="Collection, skill XP, and NPC value across players tracked by Elite."
+>
 	{#snippet actions()}
 		<Button variant="outline" size="sm" onclick={refresh} disabled={busy}>
 			<RefreshCw class={busy ? 'size-4 animate-spin' : 'size-4'} aria-hidden="true" /> Refresh

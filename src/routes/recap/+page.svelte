@@ -1,11 +1,16 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import { Button } from '$ui/button';
 	import Info from '@lucide/svelte/icons/info';
 	import X from '@lucide/svelte/icons/x';
 </script>
 
-<Head title="Elite Skyblock Recap" description="Check out your recap for the past year!" />
+<Head
+	discordPreview={createPreview()}
+	title="Elite Skyblock Recap"
+	description="Check out your recap for the past year!"
+/>
 
 <div
 	class="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-linear-to-b from-zinc-900 to-black p-8 text-white"

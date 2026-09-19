@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { Button } from '$ui/button';
@@ -10,6 +11,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data)}
 	title="{data.year} Recap - Select Account"
 	description="Select an account to view your {data.year} highlights on Elite."
 />

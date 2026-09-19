@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { goto } from '$app/navigation';
 	import PlayerSearch from '$comp/player-search.svelte';
 	import Head from '$comp/seo/head.svelte';
@@ -20,6 +21,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview()}
 	title="Fortune Stats"
 	description="View your fortune progress, profit calculations, and cheapest fortune upgrades for any Hypixel Skyblock player!"
 />

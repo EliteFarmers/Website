@@ -16,6 +16,7 @@
 	import { buildProfilePageLdJson } from '$lib/seo/profile-page';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
+	import { createPreview } from './discord-preview';
 
 	const ctx = getStatsContext();
 
@@ -89,6 +90,13 @@
 </script>
 
 <StatsHead
+	discordPreview={ctx.account
+		? createPreview(
+				{ account: ctx.account, profile: ctx.selectedProfile, member: ctx.member.current, ranks: ctx.allRanks },
+				page.url,
+				description
+			)
+		: undefined}
 	title="Stats"
 	{description}
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(profile?.profileName ?? '')}"

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Head from '$comp/seo/head.svelte';
+	import type { PreviewCard } from '$lib/discord-preview';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import type { Snippet } from 'svelte';
 
@@ -9,12 +10,14 @@
 		children,
 		actions,
 		overview = false,
+		discordPreview = null,
 	}: {
 		title: string;
 		description: string;
 		children: Snippet;
 		actions?: Snippet;
 		overview?: boolean;
+		discordPreview?: PreviewCard | null;
 	} = $props();
 
 	const pageCtx = getPageCtx();
@@ -23,7 +26,7 @@
 	});
 </script>
 
-<Head title="{title} | Elite" {description} />
+<Head title="{title} | Elite" {description} {discordPreview} />
 
 <div class="mx-auto flex w-full max-w-6xl min-w-0 flex-col gap-6 py-6 md:py-8">
 	<header class="flex flex-wrap items-start justify-between gap-3">

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createPreview } from '../discord-preview';
+	import { page } from '$app/state';
 	import CropGraph from '$comp/charts/crop-graph.svelte';
 	import SkillGraph from '$comp/charts/skill-graph.svelte';
 	import JumpLink from '$comp/jump-link.svelte';
@@ -260,6 +262,10 @@
 </script>
 
 <StatsHead
+	discordPreview={createPreview(
+		{ account: ctx.account, profile: ctx.selectedProfile, member: ctx.member.current, ranks: ctx.allRanks },
+		page.url
+	)}
 	title="Charts"
 	description="See crop collection charts for Hypixel Skyblock!"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/charts"

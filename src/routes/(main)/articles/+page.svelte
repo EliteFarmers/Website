@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { page } from '$app/state';
 	import Head from '$comp/seo/head.svelte';
 	import type { PageProps } from './$types';
@@ -12,6 +13,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview()}
 	title="Articles"
 	description="Browse articles on {page.url.hostname}! See Hypixel Skyblock Farming news, site updates, and more."
 />

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { page } from '$app/state';
 	import Faq from '$comp/faq.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
@@ -22,7 +23,11 @@
 	calculator.connect(() => page.url);
 </script>
 
-<ToolPage title="Composter Calculator" description="Compare inputs, upgrades, Compost output, and daily profit.">
+<ToolPage
+	discordPreview={createPreview()}
+	title="Composter Calculator"
+	description="Compare inputs, upgrades, Compost output, and daily profit."
+>
 	{#if calculator.priceStatus === 'error'}
 		<Alert.Root variant="destructive">
 			<Alert.Title>Market prices are unavailable</Alert.Title>

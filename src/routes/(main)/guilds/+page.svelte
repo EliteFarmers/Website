@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import GuildSearch from '$comp/guilds/guild-search.svelte';
 	import GuildsList from '$comp/guilds/guilds-list.svelte';
 	import Head from '$comp/seo/head.svelte';
@@ -20,7 +21,7 @@
 	});
 </script>
 
-<Head title="Hypixel Guilds" {description} />
+<Head discordPreview={createPreview()} title="Hypixel Guilds" {description} />
 
 <main class="flex w-full flex-col items-center gap-8">
 	<h1 class="mt-16 mb-12 text-4xl">Hypixel Guilds</h1>

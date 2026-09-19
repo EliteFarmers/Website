@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { page } from '$app/state';
 	import WrappedContainer from '$comp/replay/WrappedContainer.svelte';
 	import ActivitySlide from '$comp/replay/slides/ActivitySlide.svelte';
@@ -20,7 +21,11 @@
 	let { data }: { data: PageData } = $props();
 </script>
 
-<Head title="{data.ign}'s {data.year} Recap" description="View {data.ign}'s {data.year} highlights on Elite." />
+<Head
+	discordPreview={createPreview(data)}
+	title="{data.ign}'s {data.year} Recap"
+	description="View {data.ign}'s {data.year} highlights on Elite."
+/>
 
 <WrappedContainer
 	profileName={data.profileName}

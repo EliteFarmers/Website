@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import PremiumBanner from '$comp/monetization/premium-banner.svelte';
 	import ProductCard from '$comp/monetization/product-card.svelte';
 	import ResponsiveImage from '$comp/responsive-image.svelte';
@@ -49,6 +50,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview()}
 	title="Elite Shop | Cosmetics, Badges, and Premium Perks"
 	description={seoDescription}
 	keywords={shopKeywords}

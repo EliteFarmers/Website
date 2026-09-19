@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createPreview } from '../discord-preview';
+	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import FloatingButton from '$comp/floating-button.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
@@ -38,6 +40,10 @@
 </script>
 
 <StatsHead
+	discordPreview={createPreview(
+		{ account: ctx.account, profile: ctx.selectedProfile, member: ctx.member.current, ranks: ctx.allRanks },
+		page.url
+	)}
 	title="Pest Farming"
 	description="Track pest farming phases, loadouts, vacuum progress, and phase-scoped upgrades for Hypixel SkyBlock farming."
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/pest-farming"

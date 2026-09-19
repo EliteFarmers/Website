@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import { getRequestEvent } from '$app/server';
 import { env } from '$env/dynamic/private';
 const ELITE_API_TOKEN = env.ELITE_API_TOKEN;
@@ -50,6 +51,7 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 
 	if (request?.headers) {
 		for (const header of request.headers) {
+			if (dev && header[0] === 'cf-connecting-ip') continue;
 			if (header[0].startsWith('x-') || header[0].startsWith('cf-')) {
 				requestHeaders.set(header[0], header[1]);
 			}

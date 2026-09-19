@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
 	import type { RootNode } from '$comp/blocks/blocks';
@@ -63,6 +64,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview(data)}
 	title={article.metaTitle ?? article.title ?? 'Elite | Skyblock Farming Weight'}
 	description={article.metaDescription ?? article.summary ?? `Read this article on ${page.url.hostname}!`}
 	imageUrl={fullCoverUrl}

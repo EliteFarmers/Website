@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import { env } from '$env/dynamic/public';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
+	import { buildDiscordPreview, type PreviewCard } from '$lib/discord-preview';
 	import HeadLdJson from '../head-ld-json.svelte';
 
 	export interface Props {
@@ -14,6 +15,7 @@
 		twitterCardType?: 'summary' | 'summary_large_image' | 'app' | 'player' | undefined;
 		ldJson?: unknown;
 		noindex?: boolean;
+		discordPreview?: PreviewCard | null;
 	}
 
 	let {
@@ -26,11 +28,21 @@
 		canonicalPath,
 		ldJson = undefined,
 		noindex = false,
+		discordPreview = null,
 	}: Props = $props();
 
 	const pageCtx = getPageCtx();
 
 	const canonicalRoot = $derived(env.PUBLIC_CANONICAL_URL || env.PUBLIC_HOST_URL || page.url.origin);
+	const discordJson = $derived.by(() => {
+		if (!discordPreview || page.status !== 200) return null;
+		try {
+			const url = new URL(page.url.pathname + page.url.search, canonicalRoot);
+			return buildDiscordPreview(discordPreview, { url, path: url.pathname + url.search });
+		} catch {
+			return null;
+		}
+	});
 
 	const canonicalUrl = $derived.by(() => {
 		if (canonicalPath) {
@@ -91,6 +103,12 @@
 
 	{#if ldJson}
 		<HeadLdJson content={ldJson} />
+	{/if}
+
+	{#if discordJson}
+		<svelte:element this={"script"} id="discord:component-embed" type="application/json">
+			{discordJson}
+		</svelte:element>
 	{/if}
 
 	{@render children?.()}

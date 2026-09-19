@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import Head from '$comp/seo/head.svelte';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
@@ -59,7 +60,11 @@
 	});
 </script>
 
-<Head title="Upcoming Contests" description="Upcoming Jacob's Contests for Hypixel Skyblock." />
+<Head
+	discordPreview={createPreview(data)}
+	title="Upcoming Contests"
+	description="Upcoming Jacob's Contests for Hypixel Skyblock."
+/>
 
 <div class="flex flex-col items-center justify-center px-4">
 	<div class="my-16 flex flex-col items-center gap-4">

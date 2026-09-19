@@ -2,6 +2,7 @@
 	import { dev } from '$app/environment';
 	import TableOfContents from '$comp/posts/toc/toc.svelte';
 	import Head from '$comp/seo/head.svelte';
+	import { createPreview } from '$comp/markdown/discord-preview';
 	import { type PostData } from '$lib/posts';
 	import { ScrollArea } from '$ui/scroll-area/index.js';
 	import Construction from '@lucide/svelte/icons/construction';
@@ -9,7 +10,7 @@
 	let { component: Component, metadata }: PostData = $props();
 </script>
 
-<Head {...metadata} />
+<Head {...metadata} discordPreview={metadata.published ? createPreview(metadata) : null} />
 
 <main class="flex w-full flex-row justify-center gap-8 px-2 py-6 lg:px-2">
 	<div class="flex w-full max-w-5xl min-w-0 flex-1 flex-col">

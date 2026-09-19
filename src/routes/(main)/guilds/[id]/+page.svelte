@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
+	import { page } from '$app/state';
 	import GuildMembersTable from '$comp/guilds/guild-members-table.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import type { HypixelGuildDto } from '$lib/api';
@@ -21,7 +23,7 @@
 	});
 </script>
 
-<Head title={`${guild.name} Guild Overview`} {description} />
+<Head discordPreview={createPreview(data, page.url)} title={`${guild.name} Guild Overview`} {description} />
 
 <section class="flex flex-col gap-6">
 	<div class="flex flex-col gap-2">

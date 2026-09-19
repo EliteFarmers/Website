@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import Countdown from '$comp/countdown.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
@@ -56,6 +57,7 @@
 </script>
 
 <Head
+	discordPreview={createPreview()}
 	title="SkyBlock Gems & Firesales"
 	description="Use creator code {STORE_CODE.code} for 5% off the Hypixel Store! Creator codes are the only way to get discounts on SkyBlock Gems!"
 />

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createPreview } from './discord-preview';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
@@ -349,6 +350,7 @@
 	</div>
 {:else}
 	<Head
+		discordPreview={createPreview({ guide: guideData })}
 		title={guideData.title}
 		description={guideData.description}
 		imageUrl="/api/item/{guideData.iconSkyblockId}.webp"
