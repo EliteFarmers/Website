@@ -9,6 +9,9 @@
  */
 import type { DictionaryOfStringAndImageSourceDto } from './DictionaryOfStringAndImageSourceDto';
 
+/**
+ * The selected artwork, falling back to the default image.
+ */
 export interface ImageAttachmentDto {
 	/**
 	 * Image title

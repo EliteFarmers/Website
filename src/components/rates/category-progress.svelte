@@ -66,7 +66,7 @@
 			{#each visibleProgress as p, i (p.key ?? p.name + p.current + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item || p.upgrades?.length}
 					<button
-						class="w-full cursor-pointer rounded-md border bg-card px-1 hover:bg-card/40"
+						class="w-full cursor-pointer rounded-md border bg-card px-1 text-card-foreground hover:bg-card/40"
 						onclick={() => {
 							shownProgressIndex = i;
 							progressModal = true;

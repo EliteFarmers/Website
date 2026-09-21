@@ -119,6 +119,7 @@ import type {
 	GuildMembersLeaderboardDto,
 	HarvestFeastRotationsDto,
 	HoistCommentRequest,
+	HypixelApiStatus,
 	HypixelInventoryDto,
 	InventoryItemMetaResponse,
 	JoinEventParams,
@@ -223,8 +224,8 @@ import type {
 	YearlyRecapDto,
 } from '../schemas';
 
-import { customFetch } from '../custom-fetch';
 import { env } from '$env/dynamic/private';
+import { customFetch } from '../custom-fetch';
 const { ELITE_API_URL } = env;
 
 export type getAuthAccountResponse200 = {
@@ -7260,7 +7261,7 @@ export const getGetHarvestFeastRotationsUrl = () => {
 
 /**
  * Uses crowd-sourced data, which may not be accurate.
- * @summary Get Harvest Feast rotations for the current SkyBlock year
+ * @summary Get current Harvest Feast rotations
  */
 export const getHarvestFeastRotations = async (options?: RequestInit) => {
 	return customFetch<getHarvestFeastRotationsResponse>(getGetHarvestFeastRotationsUrl(), {
@@ -7430,6 +7431,32 @@ export const getHypixelGuildMembersLeaderboard = async (
 			method: 'GET',
 		}
 	);
+};
+
+export type getHypixelStatusResponse200 = {
+	data: HypixelApiStatus;
+	status: 200;
+};
+
+export type getHypixelStatusResponseSuccess = getHypixelStatusResponse200 & {
+	headers: Headers;
+};
+
+export type getHypixelStatusResponse = getHypixelStatusResponseSuccess;
+
+export const getGetHypixelStatusUrl = () => {
+	return `${ELITE_API_URL}/hypixel/status`;
+};
+
+/**
+ * Gets the current status of the Hypixel API.
+ * @summary Get Hypixel API status
+ */
+export const getHypixelStatus = async (options?: RequestInit) => {
+	return customFetch<getHypixelStatusResponse>(getGetHypixelStatusUrl(), {
+		...options,
+		method: 'GET',
+	});
 };
 
 export type getPlayerRank1Response200 = {

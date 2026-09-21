@@ -23,7 +23,7 @@
 </script>
 
 <div id="Medals" class="flex w-full max-w-4xl flex-col items-center md:items-start">
-	<h3 class="my-2 text-2xl">Jacob Contest Rankings</h3>
+	<h3 class="my-2 w-fit rounded-md bg-background px-3 py-2 text-2xl text-foreground">Jacob Contest Rankings</h3>
 	<div class="flex w-full flex-wrap justify-evenly gap-2 md:flex-row md:gap-4">
 		{#each earnedMedals.slice(0, 2) as [medal, count] (medal)}
 			<div class="flex-1 basis-48">
@@ -33,13 +33,13 @@
 						player={page.params.id}
 						profile={ctx.selectedProfile?.profileName}
 						rank={ranks[medal + 'medals']?.rank ?? -1}
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 hover:bg-muted"
+						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 text-card-foreground hover:bg-muted"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
 						<span class="text-2xl">{count.toLocaleString()}</span>
 
-						<span class="rounded-md bg-card px-1 py-0.5">
+						<span class="rounded-md bg-card px-1 py-0.5 text-card-foreground">
 							<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
 								>{ranks[medal + 'medals']?.rank}</span
 							>
@@ -47,7 +47,7 @@
 					</LeaderboardRankLink>
 				{:else}
 					<div
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2"
+						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 text-card-foreground"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
@@ -68,7 +68,7 @@
 						player={page.params.id}
 						profile={ctx.selectedProfile?.profileName}
 						rank={ranks[medal + 'medals']?.rank ?? -1}
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 hover:bg-muted"
+						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 text-card-foreground hover:bg-muted"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
@@ -77,7 +77,7 @@
 							<span class="text-2xl leading-none">{count.toLocaleString()}</span>
 						</div>
 
-						<span class="rounded-md bg-card px-1 py-0.5">
+						<span class="rounded-md bg-card px-1 py-0.5 text-card-foreground">
 							<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
 								>{ranks[medal + 'medals']?.rank}</span
 							>
@@ -85,7 +85,7 @@
 					</LeaderboardRankLink>
 				{:else}
 					<div
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2"
+						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 text-card-foreground"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 

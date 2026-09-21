@@ -58,7 +58,7 @@
 	}
 </script>
 
-<section class="flex w-full max-w-6xl flex-col gap-4 rounded-lg border-2 bg-card p-4">
+<section class="flex w-full max-w-6xl flex-col gap-4 rounded-lg border-2 bg-card p-4 text-card-foreground">
 	<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 		<div class="flex flex-col gap-2 sm:flex-row sm:items-center">
 			<h2 class="text-xl">Pet Fortune</h2>
@@ -100,7 +100,7 @@
 	{#if selectedPet && selectedProgress}
 		<div class="flex flex-col gap-4">
 			<div class="flex min-w-0 items-center gap-3">
-				<div class="rounded-md border bg-background p-1.5">
+				<div class="rounded-md border bg-background p-1.5 text-foreground">
 					<ItemRender skyblockId={selectedPet.type} pet class="size-10" />
 				</div>
 				<div class="min-w-0">
@@ -118,12 +118,12 @@
 				<div class="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
 					{#each selectedProgress.progress as progress (progress.name)}
 						<div class="rounded-md border px-2 py-1">
-							<FortuneProgress {progress} barBg="bg-card" />
+							<FortuneProgress {progress} barBg="bg-card text-card-foreground" />
 						</div>
 					{/each}
 				</div>
 			{:else if selectedProgress.stats || selectedProgress.effects?.length}
-				<FortuneProgress progress={selectedProgress} barBg="bg-card" useItemName={false} />
+				<FortuneProgress progress={selectedProgress} barBg="bg-card text-card-foreground" useItemName={false} />
 			{:else}
 				<p class="text-sm text-muted-foreground">
 					This pet does not currently add the selected fortune stats, but upgrades may still make it useful.

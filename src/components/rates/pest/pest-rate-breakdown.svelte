@@ -55,7 +55,9 @@
 </script>
 
 <section class="flex flex-col gap-4">
-	<header class="flex flex-col justify-between gap-3 border-b pb-3 md:flex-row md:items-end">
+	<header
+		class="flex flex-col justify-between gap-3 rounded-md border-b bg-background p-3 text-foreground md:flex-row md:items-end"
+	>
 		<div class="flex flex-col gap-1">
 			<h1 class="text-xl leading-tight font-semibold">Pest Farming Rates</h1>
 			<p class="text-sm text-muted-foreground tabular-nums">
@@ -72,7 +74,11 @@
 
 	<div class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
 		<div class="flex flex-col gap-3">
-			<div class="rounded-lg border bg-card px-4 py-3 {referenceOnlyPrices ? 'opacity-60' : ''}">
+			<div
+				class="rounded-lg border bg-card px-4 py-3 text-card-foreground {referenceOnlyPrices
+					? 'opacity-60'
+					: ''}"
+			>
 				<p class="text-xs font-medium text-muted-foreground">Total Coins</p>
 				<div class="flex items-center gap-2">
 					<p class="font-mono text-2xl leading-tight font-semibold tabular-nums">
@@ -86,7 +92,7 @@
 				</div>
 			</div>
 
-			<div class="h-fit overflow-hidden rounded-lg border bg-card">
+			<div class="h-fit overflow-hidden rounded-lg border bg-card text-card-foreground">
 				<div
 					class="grid grid-cols-[minmax(0,1fr)_8rem] gap-3 border-b bg-muted/30 px-4 py-3 text-xs font-semibold text-muted-foreground uppercase sm:grid-cols-[minmax(0,1fr)_8rem_5rem]"
 				>
@@ -147,7 +153,7 @@
 				</div>
 			</div>
 
-			<div class="rounded-lg border bg-card px-4 py-3">
+			<div class="rounded-lg border bg-card px-4 py-3 text-card-foreground">
 				<p class="text-sm text-muted-foreground">
 					Change
 					<button
@@ -162,7 +168,7 @@
 			</div>
 		</div>
 
-		<div class="h-fit rounded-lg border bg-card p-4">
+		<div class="h-fit rounded-lg border bg-card p-4 text-card-foreground">
 			<div class="divide-y">
 				{#each model.summary as metric (metric.label)}
 					<div class="flex items-start justify-between gap-3 py-2 first:pt-0 last:pb-0">

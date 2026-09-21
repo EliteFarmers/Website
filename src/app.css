@@ -7,11 +7,19 @@
 	font-display: swap;
 }
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *):not(:where([data-page-base-theme='light'], [data-page-base-theme='light'] *)), &:where([data-page-base-theme='light'] .dark, [data-page-base-theme='light'] .dark *));
 @custom-variant fullscreen (&:fullscreen, :fullscreen &);
 
 @layer base {
-	:root {
+	[data-page-base-theme='light'] {
+		color-scheme: light;
+	}
+	[data-page-base-theme='dark'] {
+		color-scheme: dark;
+	}
+
+	:root,
+	:where([data-page-base-theme]) {
 		font-family: 'Hypixel SkyBlock Glyphs', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 		--font-mono:
 			'Hypixel SkyBlock Glyphs', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
@@ -1072,192 +1080,194 @@
 	}
 
 	/* Retro Theme Styles - Minecraft wiki inspired */
-	:is(.retro-light, .retro-dark) {
-		/* Remove rounding, except Discord avatars */
-		*:not([data-discord-avatar]),
-		*:not([data-discord-avatar])::before,
-		*:not([data-discord-avatar])::after {
-			border-radius: 0 !important;
-		}
-
-		/* Add bevels to buttons with a bottom shadow to look 3D */
-		/* Excludes link, ghost, selectable (inline), and buttons without backgrounds */
-		[data-slot='button']:not([data-variant='link']):not([data-variant='ghost']),
-		.btn:not(.btn-link):not(.btn-ghost) {
-			border: none;
-			box-shadow:
-				inset 1px 1px 0 var(--bevel-highlight),
-				inset -1px -1px 0 var(--bevel-shadow),
-				0 3px 0 0 var(--button-depth);
-			transition:
-				box-shadow 0.05s,
-				transform 0.05s;
-			position: relative;
-
-			&:hover:not(:disabled):not([aria-disabled='true']) {
-				filter: brightness(1.05);
+	@scope (:is(.retro-light, .retro-dark)) to ([data-page-base-theme]) {
+		:scope {
+			/* Remove rounding, except Discord avatars */
+			*:not([data-discord-avatar]),
+			*:not([data-discord-avatar])::before,
+			*:not([data-discord-avatar])::after {
+				border-radius: 0 !important;
 			}
 
-			&:active:not(:disabled):not([aria-disabled='true']),
-			&[data-state='open'] {
+			/* Add bevels to buttons with a bottom shadow to look 3D */
+			/* Excludes link, ghost, selectable (inline), and buttons without backgrounds */
+			[data-slot='button']:not([data-variant='link']):not([data-variant='ghost']),
+			.btn:not(.btn-link):not(.btn-ghost) {
+				border: none;
+				box-shadow:
+					inset 1px 1px 0 var(--bevel-highlight),
+					inset -1px -1px 0 var(--bevel-shadow),
+					0 3px 0 0 var(--button-depth);
+				transition:
+					box-shadow 0.05s,
+					transform 0.05s;
+				position: relative;
+
+				&:hover:not(:disabled):not([aria-disabled='true']) {
+					filter: brightness(1.05);
+				}
+
+				&:active:not(:disabled):not([aria-disabled='true']),
+				&[data-state='open'] {
+					box-shadow:
+						inset -1px -1px 0 var(--bevel-highlight),
+						inset 1px 1px 0 var(--bevel-shadow),
+						0 1px 0 0 var(--button-depth);
+					transform: translateY(2px);
+				}
+			}
+
+			/* Keep these button variants simple without 3D effects */
+			[data-slot='button'][data-variant='link'],
+			[data-slot='button'][data-variant='ghost'],
+			button[data-variant='link'],
+			button[data-variant='ghost'] {
+				border: none !important;
+				box-shadow: none !important;
+				transform: none !important;
+			}
+
+			[data-slot='card'],
+			[data-slot='dialog-content'],
+			[data-slot='popover-content'],
+			[data-slot='dropdown-menu-content'],
+			.card,
+			.panel {
+				border: none;
+				box-shadow:
+					inset 1px 1px 0 var(--bevel-shadow),
+					inset -1px -1px 0 var(--bevel-highlight);
+			}
+
+			/* Sidebar */
+			[data-sidebar='sidebar'] {
+				border: none;
+				box-shadow:
+					inset -1px 0 0 var(--bevel-shadow),
+					inset 1px 0 0 var(--bevel-highlight);
+			}
+
+			[data-slot='sidebar-inner'] {
+				border: none;
+				box-shadow: none;
+			}
+
+			/* Sidebar collapsible/accordion styling */
+			[data-sidebar='sidebar'] [data-slot='sidebar-menu-button'] {
+				border: none;
+				box-shadow: none;
+				position: relative;
+			}
+			[data-sidebar='sidebar'] [data-slot='sidebar-group'] {
+				background: transparent;
+				margin: 0.25rem 0;
+				padding: 0;
+				box-shadow: none;
+			}
+
+			/* Collapsible trigger */
+			[data-sidebar='sidebar'] .group\/collapsible [data-collapsible-trigger][data-sidebar='menu-button'] {
+				background: var(--sidebar-accent);
+				margin: 0;
+				box-shadow:
+					inset 1px 1px 0 var(--bevel-highlight),
+					inset -1px -1px 0 var(--bevel-shadow),
+					0 3px 0 0 var(--button-depth);
+				font-weight: 600;
+				transition:
+					box-shadow 0.05s,
+					transform 0.05s;
+			}
+			[data-sidebar='sidebar']
+				.group\/collapsible[data-state='open']
+				[data-collapsible-trigger][data-sidebar='menu-button'] {
 				box-shadow:
 					inset -1px -1px 0 var(--bevel-highlight),
 					inset 1px 1px 0 var(--bevel-shadow),
 					0 1px 0 0 var(--button-depth);
 				transform: translateY(2px);
 			}
-		}
 
-		/* Keep these button variants simple without 3D effects */
-		[data-slot='button'][data-variant='link'],
-		[data-slot='button'][data-variant='ghost'],
-		button[data-variant='link'],
-		button[data-variant='ghost'] {
-			border: none !important;
-			box-shadow: none !important;
-			transform: none !important;
-		}
+			/* Collapsed sidebar */
+			[data-sidebar='sidebar'][data-collapsible='icon'] [data-collapsible-trigger][data-sidebar='menu-button'] {
+				box-shadow: none;
+				background: transparent;
+			}
 
-		[data-slot='card'],
-		[data-slot='dialog-content'],
-		[data-slot='popover-content'],
-		[data-slot='dropdown-menu-content'],
-		.card,
-		.panel {
-			border: none;
-			box-shadow:
-				inset 1px 1px 0 var(--bevel-shadow),
-				inset -1px -1px 0 var(--bevel-highlight);
-		}
+			/* Nested headers */
+			[data-sidebar='sidebar'] .group\/subcollapsible [data-collapsible-trigger][data-sidebar='menu-button'] {
+				background: var(--sidebar-accent);
+				box-shadow:
+					inset 1px 1px 0 var(--bevel-highlight),
+					inset -1px -1px 0 var(--bevel-shadow),
+					0 2px 0 0 var(--button-depth);
+				font-weight: 500;
+				transition:
+					box-shadow 0.05s,
+					transform 0.05s;
+			}
 
-		/* Sidebar */
-		[data-sidebar='sidebar'] {
-			border: none;
-			box-shadow:
-				inset -1px 0 0 var(--bevel-shadow),
-				inset 1px 0 0 var(--bevel-highlight);
-		}
+			[data-sidebar='sidebar']
+				.group\/subcollapsible[data-state='open']
+				[data-collapsible-trigger][data-sidebar='menu-button'] {
+				box-shadow:
+					inset -1px -1px 0 var(--bevel-highlight),
+					inset 1px 1px 0 var(--bevel-shadow),
+					0 0 0 0 var(--button-depth);
+				transform: translateY(2px);
+			}
 
-		[data-slot='sidebar-inner'] {
-			border: none;
-			box-shadow: none;
-		}
+			/* Content area inside collapsible */
+			[data-sidebar='sidebar'] [data-slot='collapsible-content'] {
+				background: rgba(0, 0, 0, 0.15);
+				box-shadow:
+					inset 1px 1px 0 var(--bevel-shadow),
+					inset -1px -1px 0 var(--bevel-highlight);
+			}
 
-		/* Sidebar collapsible/accordion styling */
-		[data-sidebar='sidebar'] [data-slot='sidebar-menu-button'] {
-			border: none;
-			box-shadow: none;
-			position: relative;
-		}
-		[data-sidebar='sidebar'] [data-slot='sidebar-group'] {
-			background: transparent;
-			margin: 0.25rem 0;
-			padding: 0;
-			box-shadow: none;
-		}
+			/* Submenu items */
+			[data-sidebar='sidebar'] [data-slot='sidebar-menu-sub'] {
+				border-left: 2px solid var(--sidebar-border);
+				margin-left: 0.75rem;
+				padding-left: 0.5rem;
+			}
 
-		/* Collapsible trigger */
-		[data-sidebar='sidebar'] .group\/collapsible [data-collapsible-trigger][data-sidebar='menu-button'] {
-			background: var(--sidebar-accent);
-			margin: 0;
-			box-shadow:
-				inset 1px 1px 0 var(--bevel-highlight),
-				inset -1px -1px 0 var(--bevel-shadow),
-				0 3px 0 0 var(--button-depth);
-			font-weight: 600;
-			transition:
-				box-shadow 0.05s,
-				transform 0.05s;
-		}
-		[data-sidebar='sidebar']
-			.group\/collapsible[data-state='open']
-			[data-collapsible-trigger][data-sidebar='menu-button'] {
-			box-shadow:
-				inset -1px -1px 0 var(--bevel-highlight),
-				inset 1px 1px 0 var(--bevel-shadow),
-				0 1px 0 0 var(--button-depth);
-			transform: translateY(2px);
-		}
+			/* Active/hovered sidebar items */
+			[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button']:hover,
+			[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button'][data-active='true'],
+			[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button']:active {
+				box-shadow:
+					inset 1px 1px 0 var(--bevel-shadow),
+					inset -1px -1px 0 var(--bevel-highlight);
+			}
 
-		/* Collapsed sidebar */
-		[data-sidebar='sidebar'][data-collapsible='icon'] [data-collapsible-trigger][data-sidebar='menu-button'] {
-			box-shadow: none;
-			background: transparent;
-		}
+			/* Scrollbar styling */
+			::-webkit-scrollbar {
+				width: 14px;
+				height: 14px;
+			}
 
-		/* Nested headers */
-		[data-sidebar='sidebar'] .group\/subcollapsible [data-collapsible-trigger][data-sidebar='menu-button'] {
-			background: var(--sidebar-accent);
-			box-shadow:
-				inset 1px 1px 0 var(--bevel-highlight),
-				inset -1px -1px 0 var(--bevel-shadow),
-				0 2px 0 0 var(--button-depth);
-			font-weight: 500;
-			transition:
-				box-shadow 0.05s,
-				transform 0.05s;
-		}
+			::-webkit-scrollbar-track {
+				background: var(--muted);
+				box-shadow:
+					inset 1px 1px 0 var(--bevel-shadow),
+					inset -1px -1px 0 var(--bevel-highlight);
+			}
 
-		[data-sidebar='sidebar']
-			.group\/subcollapsible[data-state='open']
-			[data-collapsible-trigger][data-sidebar='menu-button'] {
-			box-shadow:
-				inset -1px -1px 0 var(--bevel-highlight),
-				inset 1px 1px 0 var(--bevel-shadow),
-				0 0 0 0 var(--button-depth);
-			transform: translateY(2px);
-		}
+			::-webkit-scrollbar-thumb {
+				background: var(--secondary);
+				box-shadow:
+					inset 1px 1px 0 var(--bevel-highlight),
+					inset -1px -1px 0 var(--bevel-shadow);
+			}
 
-		/* Content area inside collapsible */
-		[data-sidebar='sidebar'] [data-slot='collapsible-content'] {
-			background: rgba(0, 0, 0, 0.15);
-			box-shadow:
-				inset 1px 1px 0 var(--bevel-shadow),
-				inset -1px -1px 0 var(--bevel-highlight);
-		}
+			::-webkit-scrollbar-thumb:hover {
+				background: var(--muted-variant);
+			}
 
-		/* Submenu items */
-		[data-sidebar='sidebar'] [data-slot='sidebar-menu-sub'] {
-			border-left: 2px solid var(--sidebar-border);
-			margin-left: 0.75rem;
-			padding-left: 0.5rem;
-		}
-
-		/* Active/hovered sidebar items */
-		[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button']:hover,
-		[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button'][data-active='true'],
-		[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button']:active {
-			box-shadow:
-				inset 1px 1px 0 var(--bevel-shadow),
-				inset -1px -1px 0 var(--bevel-highlight);
-		}
-
-		/* Scrollbar styling */
-		::-webkit-scrollbar {
-			width: 14px;
-			height: 14px;
-		}
-
-		::-webkit-scrollbar-track {
-			background: var(--muted);
-			box-shadow:
-				inset 1px 1px 0 var(--bevel-shadow),
-				inset -1px -1px 0 var(--bevel-highlight);
-		}
-
-		::-webkit-scrollbar-thumb {
-			background: var(--secondary);
-			box-shadow:
-				inset 1px 1px 0 var(--bevel-highlight),
-				inset -1px -1px 0 var(--bevel-shadow);
-		}
-
-		::-webkit-scrollbar-thumb:hover {
-			background: var(--muted-variant);
-		}
-
-		::-webkit-scrollbar-corner {
-			background: var(--muted);
+			::-webkit-scrollbar-corner {
+				background: var(--muted);
+			}
 		}
 	}
 }

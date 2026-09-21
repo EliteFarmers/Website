@@ -13,12 +13,12 @@
 </script>
 
 <div class="flex flex-col gap-4 pt-6">
-	<FortuneProgress {progress} barBg="bg-card" />
+	<FortuneProgress {progress} barBg="bg-card text-card-foreground" />
 
 	{#if progress?.progress?.length}
 		<div class="grid gap-2 md:grid-cols-2">
 			{#each progress.progress as p (p.name + p.current + (progress?.item?.uuid ?? ''))}
-				<FortuneProgress progress={p} barBg="bg-card" />
+				<FortuneProgress progress={p} barBg="bg-card text-card-foreground" />
 			{/each}
 		</div>
 	{/if}

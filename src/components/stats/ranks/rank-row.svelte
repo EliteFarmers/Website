@@ -23,7 +23,7 @@
 
 <div
 	{...rest}
-	class="flex flex-1 flex-row rounded-md border-2 px-2 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+	class="flex flex-1 flex-row rounded-md border-2 bg-background px-2 text-foreground transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
 >
 	<div class="flex h-20 w-full flex-row items-center justify-between gap-2 sm:h-16">
 		<div class="flex flex-col justify-center">

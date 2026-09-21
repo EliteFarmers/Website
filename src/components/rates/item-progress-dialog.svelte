@@ -92,7 +92,7 @@
 		<div class="flex flex-col gap-4 border-b bg-card/80 p-4 sm:flex-row sm:items-start sm:justify-between sm:p-6">
 			<div class="flex min-w-0 items-center gap-4">
 				{#if progress?.item?.skyblockId}
-					<div class="rounded-lg border bg-background p-2">
+					<div class="rounded-lg border bg-background p-2 text-foreground">
 						<ItemRender
 							skyblockId={progress.item.skyblockId}
 							pet={progress.item.attributes?.pet === 'true'}
@@ -160,12 +160,12 @@
 		<div class="space-y-6 p-4 sm:p-6">
 			<!-- Details Section (Primary) -->
 			{#if progress}
-				<FortuneProgress {progress} barBg="bg-card" useItemName={false} showEffects />
+				<FortuneProgress {progress} barBg="bg-card text-card-foreground" useItemName={false} showEffects />
 
 				{#if progress.progress?.length}
 					<div class="grid gap-2 md:grid-cols-2">
 						{#each progress.progress as p, i (i)}
-							<FortuneProgress progress={p} barBg="bg-card" showEffects />
+							<FortuneProgress progress={p} barBg="bg-card text-card-foreground" showEffects />
 						{/each}
 					</div>
 				{/if}

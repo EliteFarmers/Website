@@ -483,7 +483,7 @@
 	{#if owned || ctx.fortuneSettings}
 		<div class="h-16"></div>
 		<div
-			class="fixed right-0 bottom-0 left-0 z-50 flex w-full max-w-2xl flex-col items-center justify-center gap-2 border-t bg-background p-4"
+			class="fixed right-0 bottom-0 left-0 z-50 flex w-full max-w-2xl flex-col items-center justify-center gap-2 border-t bg-background p-4 text-foreground"
 		>
 			{#if ctx.fortuneSettings && !owned}
 				<p class="px-1 text-sm text-muted-foreground">

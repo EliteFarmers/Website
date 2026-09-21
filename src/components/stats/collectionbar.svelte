@@ -56,7 +56,9 @@
 </script>
 
 {#if sidebar.size.tiny}
-	<div class="flex max-h-30 w-full flex-row items-center gap-2 rounded-lg bg-card p-1 align-middle">
+	<div
+		class="flex max-h-30 w-full flex-row items-center gap-2 rounded-lg bg-card p-1 align-middle text-card-foreground"
+	>
 		<div class="flex flex-col items-center justify-evenly gap-1">
 			{@render cropIcon()}
 			<img
@@ -74,7 +76,7 @@
 							player={page.params.id}
 							profile={page.params.profile}
 							{rank}
-							class="rounded-md bg-card px-1.5 hover:bg-muted"
+							class="rounded-md bg-card px-1.5 text-card-foreground hover:bg-muted"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{rank}</span
@@ -94,7 +96,7 @@
 						player={page.params.id}
 						profile={page.params.profile}
 						rank={pestRank}
-						class="rounded-md bg-card px-1 hover:bg-muted"
+						class="rounded-md bg-card px-1 text-card-foreground hover:bg-muted"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{pestRank}</span
@@ -136,7 +138,9 @@
 	</div>
 {:else}
 	<div class="flex w-full flex-row items-center gap-2 align-middle">
-		<div class="flex max-h-30 w-full flex-1 items-center justify-start gap-1 rounded-lg bg-card p-1 align-middle">
+		<div
+			class="flex max-h-30 w-full flex-1 items-center justify-start gap-1 rounded-lg bg-card p-1 align-middle text-card-foreground"
+		>
 			{@render cropIcon('hidden sm:flex')}
 			<div class="flex grow flex-col justify-center gap-1 pr-2">
 				<div class="flex flex-row items-center justify-between gap-2">
@@ -148,7 +152,7 @@
 								player={page.params.id}
 								profile={page.params.profile}
 								{rank}
-								class="rounded-md bg-card px-1.5 hover:bg-muted"
+								class="rounded-md bg-card px-1.5 text-card-foreground hover:bg-muted"
 							>
 								<span class="xs:text-md text-sm sm:text-lg">#</span><span
 									class="text-md xs:text-lg sm:text-xl">{rank}</span
@@ -176,7 +180,7 @@
 								player={page.params.id}
 								profile={page.params.profile}
 								rank={pestRank}
-								class="rounded-md bg-card px-1 hover:bg-muted"
+								class="rounded-md bg-card px-1 text-card-foreground hover:bg-muted"
 							>
 								<span class="xs:text-md text-sm sm:text-lg">#</span><span
 									class="text-md xs:text-lg sm:text-xl">{pestRank}</span

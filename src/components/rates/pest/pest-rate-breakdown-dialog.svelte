@@ -141,7 +141,7 @@
 										<div class="flex min-w-0 items-center gap-3">
 											{#if line.itemId}
 												<div
-													class="flex size-8 shrink-0 items-center justify-center rounded-md border bg-background"
+													class="flex size-8 shrink-0 items-center justify-center rounded-md border bg-background text-foreground"
 												>
 													<ItemRender skyblockId={line.itemId} class="size-8" />
 												</div>

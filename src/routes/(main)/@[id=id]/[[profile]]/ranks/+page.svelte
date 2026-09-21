@@ -21,13 +21,17 @@
 />
 
 <div class="mb-16 flex flex-col items-center gap-8">
-	<h1 class="mt-4 max-w-2xl self-center text-center text-4xl">Leaderboard Ranks</h1>
+	<h1
+		class="mt-4 w-fit max-w-2xl self-center rounded-md bg-background px-3 py-2 text-center text-4xl text-foreground"
+	>
+		Leaderboard Ranks
+	</h1>
 	{#await leaderboards}
-		<p>Loading leaderboards...</p>
+		<p class="w-fit rounded-md bg-background p-3 text-foreground">Loading leaderboards...</p>
 	{:then loaded}
 		<RanksList leaderboards={loaded} />
 	{/await}
-	<p class="max-w-lg text-center text-muted-foreground">
+	<p class="w-fit max-w-lg rounded-md bg-background p-3 text-center text-foreground">
 		Only leaderboards where this player has reached the minimum required score and is within the top {(50000).toLocaleString()}
 		players will be shown. If you want to see all leaderboards, you can check out the
 		<a href="/leaderboard" class="text-link hover:underline">leaderboard</a>

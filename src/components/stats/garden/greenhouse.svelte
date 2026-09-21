@@ -163,7 +163,7 @@
 </script>
 
 <div class="flex w-full max-w-7xl flex-col items-center gap-8">
-	<div class="flex w-full max-w-4xl flex-1 flex-col gap-1">
+	<div class="flex w-full max-w-4xl flex-1 flex-col gap-1 rounded-md bg-background p-3 text-foreground">
 		<h3 class="mt-2 mb-4 text-xl leading-none font-semibold">Greenhouse Upgrades</h3>
 		<div class="flex flex-col items-center justify-center gap-6 md:flex-row">
 			<div class="flex flex-col gap-2">
@@ -196,7 +196,7 @@
 								class="text-primary"
 								percent={((profileGarden?.gardenUpgrades?.greenhouseGrowthSpeed ?? 0) / 9) * 100}
 								readable="{profileGarden?.gardenUpgrades?.greenhouseGrowthSpeed ?? 0} / 9"
-								barBg="bg-card"
+								barBg="bg-card text-card-foreground"
 							/></Item.Description
 						>
 					</Item.Content>
@@ -210,7 +210,7 @@
 								class="text-primary"
 								percent={((profileGarden?.gardenUpgrades?.greenhouseYield ?? 0) / 9) * 100}
 								readable="{profileGarden?.gardenUpgrades?.greenhouseYield ?? 0} / 9"
-								barBg="bg-card"
+								barBg="bg-card text-card-foreground"
 							/></Item.Description
 						>
 					</Item.Content>
@@ -224,7 +224,7 @@
 								class="text-primary"
 								percent={((profileGarden?.gardenUpgrades?.greenhousePlotLimit ?? 0) / 2) * 100}
 								readable="{profileGarden?.gardenUpgrades?.greenhousePlotLimit ?? 0} / 2"
-								barBg="bg-card"
+								barBg="bg-card text-card-foreground"
 							/></Item.Description
 						>
 					</Item.Content>
@@ -232,7 +232,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex w-full max-w-4xl flex-1 flex-col gap-1">
+	<div class="flex w-full max-w-4xl flex-1 flex-col gap-1 rounded-md bg-background p-3 text-foreground">
 		<h3 class="mt-2 mb-4 text-xl leading-none font-semibold">Mutations</h3>
 		<div class="flex flex-col gap-5">
 			{#each groupedMutations as [rarity, mutations] (rarity)}

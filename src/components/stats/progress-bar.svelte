@@ -19,7 +19,7 @@
 		expanded = undefined,
 		maxed = false,
 		compact = false,
-		barBg = 'bg-background',
+		barBg = 'bg-background text-foreground',
 		disabled = false,
 		fillClass = undefined,
 		class: classNameProp = undefined,

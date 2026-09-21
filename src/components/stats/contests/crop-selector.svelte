@@ -67,7 +67,7 @@
 	this={href ? 'a' : 'div'}
 	{href}
 	id={id ? id : undefined}
-	class="max-w-full scroll-mt-32 overflow-hidden"
+	class="mx-auto w-fit max-w-full scroll-mt-32 overflow-hidden rounded-md bg-background px-2 text-foreground"
 >
 	<ScrollArea
 		bind:viewRef={scrollContainer}

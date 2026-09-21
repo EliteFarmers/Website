@@ -63,9 +63,19 @@
 			{/each}
 		{/if}
 		{#if currentShown < ctx.tools.length}
-			<Button variant="outline" size="sm" onclick={() => (currentShown = ctx.tools.length)}>Show All</Button>
+			<Button
+				class="bg-background text-foreground"
+				variant="outline"
+				size="sm"
+				onclick={() => (currentShown = ctx.tools.length)}>Show All</Button
+			>
 		{:else if ctx.tools.length > shown}
-			<Button variant="outline" size="sm" onclick={() => (currentShown = shown)}>Show Less</Button>
+			<Button
+				class="bg-background text-foreground"
+				variant="outline"
+				size="sm"
+				onclick={() => (currentShown = shown)}>Show Less</Button
+			>
 		{/if}
 	</div>
 {/if}

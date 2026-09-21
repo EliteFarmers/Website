@@ -60,12 +60,12 @@
 	href="/contest/{timestamp}"
 	data-sveltekit-preload-data="off"
 	class={cn(
-		`flex min-w-52 flex-col gap-1 rounded-md border-l-4 bg-card p-2 hover:bg-muted hover:shadow-lg ${borderColor}`,
+		`flex min-w-52 flex-col gap-1 rounded-md border-l-4 bg-card p-2 text-card-foreground hover:bg-muted hover:shadow-lg ${borderColor}`,
 		classes
 	)}
 >
 	<p class="text-sm first-letter:uppercase">
-		<span class="rounded-md bg-card p-0.5 px-1.5">{cropName}</span>
+		<span class="rounded-md bg-card p-0.5 px-1.5 text-card-foreground">{cropName}</span>
 		{#if ghost}
 			<span class="text-sm font-semibold">Not Claimable</span>
 		{:else}

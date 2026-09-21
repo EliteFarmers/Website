@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
 	import { Button } from 'bits-ui';
-	import { createEventDispatcher } from 'svelte';
 	const { PUBLIC_COMMUNITY_INVITE, PUBLIC_WEIGHT_REQ } = env;
 
-	const dispatch = createEventDispatcher();
+	let { closeToast }: { closeToast: () => void } = $props();
 
-	function closeToast() {
-		dispatch('closeToast');
+	function dismiss() {
+		closeToast();
 		localStorage.setItem('join-elite-toast', '{"state": "closed"}');
 	}
 </script>
@@ -22,6 +21,6 @@
 	<span class="-mt-1 text-xs leading-none text-muted-foreground">Application not guaranteed to be accepted.</span>
 	<Button.Root
 		class="w-full rounded-md bg-muted py-2 transition-opacity duration-200 hover:opacity-70"
-		onclick={closeToast}>Close</Button.Root
+		onclick={dismiss}>Close</Button.Root
 	>
 </div>

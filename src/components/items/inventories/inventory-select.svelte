@@ -66,7 +66,11 @@
 		class="my-16 flex w-full flex-col items-center gap-5 px-2 transition-transform duration-400"
 	>
 		<div class="flex w-full max-w-5xl flex-col items-center justify-center gap-4">
-			<h2 class="flex flex-row items-center gap-2 text-3xl font-semibold">Inventories</h2>
+			<h2
+				class="flex w-fit max-w-full flex-row items-center gap-2 rounded-md bg-background px-3 py-2 text-3xl font-semibold text-foreground"
+			>
+				Inventories
+			</h2>
 
 			<Tabs.Root bind:value={selectedInventoryId} class="w-full min-w-0 items-center gap-0">
 				<ScrollArea class="w-full min-w-0 px-1 pb-3" orientation="horizontal" type="always">

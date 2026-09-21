@@ -91,7 +91,9 @@
 	id="sacks"
 	class="my-16 flex w-full flex-col items-center-safe justify-center-safe align-middle transition-transform duration-400"
 >
-	<div class="flex w-full max-w-120 flex-col items-center-safe justify-between gap-2">
+	<div
+		class="flex w-full max-w-120 flex-col items-center-safe justify-between gap-2 rounded-md bg-background p-3 text-foreground"
+	>
 		<div class="flex w-full flex-row justify-between">
 			<h2 class="w-full text-left text-2xl font-semibold">Sack Items</h2>
 			<CoinsBreakdown
