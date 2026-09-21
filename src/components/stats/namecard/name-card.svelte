@@ -2,7 +2,8 @@
 	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
-	import type { ImageAttachmentDto, WeightStyleElement } from '$lib/api';
+	import ResponsiveNameCard from '$comp/name-card/responsive-name-card.svelte';
+	import type { ImageAttachmentDto } from '$lib/api';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { drawBackgroundCanvas } from '$lib/styles/maker';
 	import { isValidWeightStyle } from '$lib/styles/style';
@@ -26,17 +27,6 @@
 	);
 	const frame = $derived(ctx.nameCardFrame?.frame?.nameCard);
 	const frameImage = $derived(frame?.imageUrl ? ctx.nameCardFrame?.imageRefs?.[frame.imageUrl] : undefined);
-	const avatar = $derived(nameCard?.elements.avatar);
-
-	function coordinate(value: number, size: number) {
-		if (value >= -1 && value <= 1) return value < 0 ? size + value * size : value * size;
-		return value < -1 ? size + value : value;
-	}
-
-	function colorWithOpacity(color: string, opacity = 1) {
-		return `color-mix(in srgb, ${color} ${Math.round(Math.min(1, Math.max(0, opacity)) * 100)}%, transparent)`;
-	}
-
 	function frameTransform(scale: number | undefined) {
 		const heightScale = scale ?? 1;
 		const widthScale = 1 + (heightScale - 1) / 4.8;
@@ -51,36 +41,6 @@
 			.join(', ');
 	}
 
-	function positionStyle(element: WeightStyleElement | null | undefined) {
-		if (!element) return 'display:none';
-		return `left:${(coordinate(element.position.x, 1920) / 19.2).toFixed(4)}cqw;top:${(coordinate(element.position.y, 400) / 19.2).toFixed(4)}cqw;`;
-	}
-
-	function boxStyle(element: WeightStyleElement | null | undefined, positioned = true) {
-		if (!element) return 'display:none';
-		let result = positioned ? positionStyle(element) : '';
-		result += `font-size:${((element.fontSize ?? 48) / 19.2).toFixed(4)}cqw;font-family:${element.font ?? 'inherit'};color:${element.fill ?? 'inherit'};`;
-		if (element.maxWidth)
-			result += `max-width:${(coordinate(element.maxWidth, 1920) / 19.2).toFixed(4)}cqw;overflow:hidden;`;
-		if (element.maxHeight)
-			result += `max-height:${(coordinate(element.maxHeight, 400) / 19.2).toFixed(4)}cqw;overflow:hidden;`;
-		if (element.background) {
-			result += `background:${colorWithOpacity(element.background.fill ?? '#000000', element.background.opacity ?? 1)};padding:${((element.background.padding ?? 0) / 19.2).toFixed(4)}cqw;border-radius:${((element.background.radius ?? 0) / 19.2).toFixed(4)}cqw;`;
-		}
-		if (element.outline?.width) {
-			const width = (element.outline.width / 19.2).toFixed(4);
-			const color = colorWithOpacity(element.outline.fill ?? '#000000', element.outline.opacity ?? 1);
-			result += `-webkit-text-stroke:${width}cqw ${color};paint-order:stroke fill;`;
-		}
-		if (element.glass) {
-			const glass = element.glass;
-			const tint = colorWithOpacity(glass.tintColor ?? '#ffffff', glass.tintOpacity ?? 0.2);
-			const highlight = colorWithOpacity(glass.highlightColor ?? '#ffffff', glass.highlightOpacity ?? 0.8);
-			result += `color:transparent;background-clip:text;-webkit-background-clip:text;background-image:linear-gradient(${glass.highlightAngle ?? -20}deg,${tint} ${Math.round((glass.highlightPosition ?? 0.25) * 100)}%,${highlight} ${Math.round(((glass.highlightPosition ?? 0.25) + (glass.highlightSize ?? 0.35)) * 100)}%,${tint} 100%);-webkit-text-stroke:${glass.rimWidth ?? 0.04}em ${colorWithOpacity(glass.rimColor ?? '#ffffff', glass.rimOpacity ?? 0.55)};filter:drop-shadow(${glass.shadowOffsetX ?? 0}em ${glass.shadowOffsetY ?? 0.06}em ${glass.shadowBlur ?? 0.12}em ${colorWithOpacity(glass.shadowColor ?? '#000000', glass.shadowOpacity ?? 0.35)});`;
-		}
-		return result;
-	}
-
 	const bg = $derived(
 		style?.elements?.name?.outline
 			? (style.elements.name.outline.fill ?? '#000000') +
@@ -89,70 +49,57 @@
 	);
 </script>
 
-<div
-	class="[container-type:inline-size] relative mx-auto mt-4 aspect-[4.8/1] w-full max-w-5xl overflow-visible lg:mt-16 @md:mt-8"
->
-	<div
-		class="bg-background {nameCard || style
-			? 'dark text-primary'
-			: ''} absolute inset-0 overflow-clip rounded-xl border-2 bg-no-repeat"
-	>
-		<canvas
-			{@attach (element) => {
-				if (element) {
-					drawBackgroundCanvas(
-						element,
-						backgroundStyle as Parameters<typeof drawBackgroundCanvas>[1],
-						ctx.style?.imageRefs
-					);
-				}
-			}}
-			width="1920"
-			height="400"
-			class="absolute inset-0 z-0 h-full w-full bg-no-repeat"
+{#if nameCard}
+	<div class="relative mx-auto mt-4 w-full max-w-5xl lg:mt-16 @md:mt-8">
+		<ResponsiveNameCard
+			card={nameCard}
+			ign={ctx.ignMeta}
+			uuid={ctx.uuid}
+			{rank}
+			weight={ctx.member.current?.farmingWeight?.totalWeight ??
+				ctx.selectedProfile?.members.find((m) => m.uuid === ctx.uuid)?.farmingWeight ??
+				0}
+			imageRefs={ctx.style?.imageRefs}
+			{frame}
+			frameImageRefs={ctx.nameCardFrame?.imageRefs}
 		>
-		</canvas>
-		{#if nameCard}
-			{#if avatar}
-				<img
-					class="absolute z-10 object-contain"
-					src={avatar.mode === 'head'
-						? `https://mc-heads.net/avatar/${ctx.uuid}/256`
-						: `https://skins.mcstats.com/body/front/${ctx.uuid}`}
-					alt="User's Minecraft appearance"
-					style="left:{coordinate(avatar.position.x, 1920) / 19.2}cqw;top:{coordinate(
-						avatar.position.y,
-						400
-					) / 19.2}cqw;width:{(avatar.width ?? 240) / 19.2}cqw;height:{(avatar.height ?? 360) /
-						19.2}cqw;opacity:{avatar.opacity ?? 1};"
-				/>
-			{/if}
-			{#if nameCard.rankAnchor && nameCard.elements.name}
-				<div
-					class="absolute z-10 flex items-start whitespace-nowrap"
-					style={positionStyle(nameCard.elements.name)}
+			{#snippet nameContent()}<PlayerName responsive />{/snippet}
+			{#snippet rankContent()}
+				<LeaderboardRankLink
+					category="farmingweight"
+					player={ctx.ign}
+					profile={ctx.selectedProfile?.profileName}
+					{rank}
+					class="rounded-sm hover:bg-muted focus-visible:outline-2"
+					>#{rank.toLocaleString('en-US')}</LeaderboardRankLink
 				>
-					<div style={boxStyle(nameCard.elements.name, false)}><PlayerName /></div>
-					{#if rankText && nameCard.elements.rank}<div
-							style="margin-left:{nameCard.rankAnchor.margin / 19.2}cqw;{boxStyle(
-								nameCard.elements.rank,
-								false
-							)}"
-						>
-							{@render rankLink()}
-						</div>{/if}
-				</div>
-			{:else}
-				<div class="absolute z-10 whitespace-nowrap" style={boxStyle(nameCard.elements.name)}>
-					<PlayerName />
-				</div>
-				{#if rankText}<div class="absolute z-10 whitespace-nowrap" style={boxStyle(nameCard.elements.rank)}>
-						{@render rankLink()}
-					</div>{/if}
-			{/if}
-			<div class="absolute z-10 whitespace-nowrap" style={boxStyle(nameCard.elements.weight)}><WeightNum /></div>
-			<div class="absolute z-10 whitespace-nowrap" style={boxStyle(nameCard.elements.label)}>Farming Weight</div>
-		{:else}
+			{/snippet}
+		</ResponsiveNameCard>
+	</div>
+{:else}
+	<div
+		class="[container-type:inline-size] relative mx-auto mt-4 aspect-[4.8/1] w-full max-w-5xl overflow-visible lg:mt-16 @md:mt-8"
+	>
+		<div
+			class="bg-background {nameCard || style
+				? 'dark text-primary'
+				: 'text-foreground'} absolute inset-0 overflow-clip rounded-xl border-2 bg-no-repeat"
+		>
+			<canvas
+				{@attach (element) => {
+					if (element) {
+						drawBackgroundCanvas(
+							element,
+							backgroundStyle as Parameters<typeof drawBackgroundCanvas>[1],
+							ctx.style?.imageRefs
+						);
+					}
+				}}
+				width="1920"
+				height="400"
+				class="absolute inset-0 z-0 h-full w-full bg-no-repeat"
+			>
+			</canvas>
 			<div class="absolute inset-0 z-10 flex h-full flex-row items-center justify-between p-4">
 				<div
 					class="flex h-full w-full flex-row items-center justify-center gap-4 @md:gap-8 {style
@@ -207,39 +154,42 @@
 				</div>
 				<div class="hidden flex-1 @md:block"></div>
 			</div>
+		</div>
+		{#if frame?.imageUrl}
+			<!-- Match the frame editor's positioning inside the card's 2px border. -->
+			<picture
+				class="pointer-events-none absolute inset-[2px] z-20 origin-center"
+				style:transform={frameTransform(frame.scale)}
+			>
+				{#if frameImage?.posterUrl}<source
+						media="(prefers-reduced-motion: reduce)"
+						srcset={imageSrcset(frameImage, true) ?? frameImage.posterUrl}
+						sizes="(max-width: 1024px) 100vw, 1024px"
+					/>{/if}
+				<img
+					src={frameImage?.url ?? frame.imageUrl}
+					srcset={imageSrcset(frameImage)}
+					sizes="(max-width: 1024px) 100vw, 1024px"
+					alt=""
+					aria-hidden="true"
+					class="h-full w-full"
+					style:opacity={frame.opacity ?? 1}
+				/>
+			</picture>
 		{/if}
 	</div>
-	{#if frame?.imageUrl}
-		<picture
-			class="pointer-events-none absolute inset-0 z-20 origin-center"
-			style:transform={frameTransform(frame.scale)}
-		>
-			{#if frameImage?.posterUrl}<source
-					media="(prefers-reduced-motion: reduce)"
-					srcset={imageSrcset(frameImage, true) ?? frameImage.posterUrl}
-					sizes="(max-width: 1024px) 100vw, 1024px"
-				/>{/if}
-			<img
-				src={frameImage?.url ?? frame.imageUrl}
-				srcset={imageSrcset(frameImage)}
-				sizes="(max-width: 1024px) 100vw, 1024px"
-				alt=""
-				aria-hidden="true"
-				class="h-full w-full"
-				style:opacity={frame.opacity ?? 1}
-			/>
-		</picture>
-	{/if}
-</div>
+{/if}
 
 <StatElements>
-	<div class="block @md:hidden">
-		<PlayerName />
-	</div>
-	{#if rankText}
-		<div class="block rounded-md border @md:hidden">
-			{@render rankLink(true)}
+	{#if !nameCard}
+		<div class="block @md:hidden">
+			<PlayerName />
 		</div>
+		{#if rankText}
+			<div class="block rounded-md border @md:hidden">
+				{@render rankLink(true)}
+			</div>
+		{/if}
 	{/if}
 </StatElements>
 

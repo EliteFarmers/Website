@@ -41,6 +41,7 @@ export function createPreview(
 	const base = '/@' + data.account.id + '/' + profile.profileId;
 	const weight = member?.farmingWeight;
 	const ranks = data.ranks;
+
 	const rankLink: RankLink = (category, rank, label = rank.toLocaleString()) => {
 		if (!Number.isFinite(rank) || rank <= 0) return `#${label}`;
 		const href = new URL(
@@ -49,6 +50,7 @@ export function createPreview(
 		);
 		return `[#${label}](<${href.href}>)`;
 	};
+
 	const rankedStat: RankedStat = (label, value, category) => {
 		const formatted = previewNumber(value);
 		if (formatted === undefined) return '';
@@ -56,6 +58,7 @@ export function createPreview(
 		return `${label} - **${formatted}**${category && rank && rank > 0 ? ` (${rankLink(category, rank)})` : ''}`;
 	};
 	const totalWeight = weight?.totalWeight ?? profile.members.find((m) => m.uuid === data.account.id)?.farmingWeight;
+
 	const headerLines = [
 		rankedStat(
 			'<:ff:1450022749631287330> Farming Weight',
@@ -64,10 +67,12 @@ export function createPreview(
 		),
 		rankedStat('⭐ Skyblock Level', member ? member.skyblockXp / 100 : undefined, 'skyblockxp'),
 	].filter(Boolean);
+
 	const summary = statsDescription
 		? formatStatsDescription(statsDescription, ranks, rankLink).split('\n')
 		: undefined;
 	const isHeaderStat = (line: string) => line.includes(' Farming Weight - ') || line.includes(' Skyblock Level - ');
+
 	const lines = summary
 		? [
 				summary
@@ -77,9 +82,9 @@ export function createPreview(
 					.trim(),
 			]
 		: subpageLines(tab, member, ranks, rankedStat, rankLink);
+
 	return {
-		title: `${data.account.name} (${profile.profileName})`,
-		description: profile.gameMode,
+		title: `${data.account.name} (${profile.profileName}) `,
 		headerLines,
 		image: 'https://skins.mcstats.com/bust/' + data.account.id,
 		lines,

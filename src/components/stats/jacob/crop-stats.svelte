@@ -115,16 +115,16 @@
 	<CropSelector />
 
 	<div class="flex flex-col items-center justify-center gap-4">
-		<div class="flex flex-col items-center gap-2">
+		<div class="flex w-fit max-w-full flex-col items-center gap-2 rounded-md bg-background p-2 text-foreground">
 			<CropMedalCounts stats={selectedCropsStats} />
 			<div class="flex flex-wrap justify-center gap-2 md:flex-row">
-				<div class="flex flex-col items-center rounded-md bg-card p-2">
+				<div class="flex flex-col items-center rounded-md bg-card p-2 text-card-foreground">
 					<span
 						><span class="text-lg font-semibold">{selectedCropsStats.participations?.toLocaleString()}</span
 						> Participations</span
 					>
 				</div>
-				<div class="flex flex-col items-center rounded-md bg-card p-2">
+				<div class="flex flex-col items-center rounded-md bg-card p-2 text-card-foreground">
 					<span
 						><span class="text-lg font-semibold"
 							>{selectedCropsStats.firstPlaceScores?.toLocaleString()}</span
@@ -133,7 +133,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="w-full px-9">
+		<div class="w-fit max-w-full rounded-md bg-background p-3 text-foreground">
 			<p class="mb-1.5 text-sm leading-none">Sort By</p>
 			<Select.Simple
 				class="md:w-48"

@@ -19,7 +19,7 @@
 		<FileText size={20} />
 		<span class="sr-only">View Item Details</span>
 	</Dialog.Trigger>
-	<Dialog.ScrollContent class="dark border-border bg-background text-primary">
+	<Dialog.ScrollContent class="border-border bg-background text-foreground">
 		<ItemLore {item}>
 			{@render children?.()}
 		</ItemLore>

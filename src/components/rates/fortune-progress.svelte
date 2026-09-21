@@ -17,7 +17,12 @@
 		showEffects?: boolean;
 	}
 
-	let { progress: p, barBg = 'bg-background', useItemName = true, showEffects = false }: Props = $props();
+	let {
+		progress: p,
+		barBg = 'bg-background text-foreground',
+		useItemName = true,
+		showEffects = false,
+	}: Props = $props();
 
 	let progress = $derived.by(() => {
 		if (p.active?.active !== false) return p;

@@ -57,9 +57,11 @@
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/contests"
 />
 
-<section class="flex w-full flex-col items-center justify-center">
+<section
+	class="flex w-fit max-w-full flex-col items-center justify-center rounded-md bg-background p-3 text-foreground"
+>
 	<div class="mx-4 flex flex-col items-center justify-center sm:w-full md:w-[90%] lg:w-[80%]">
-		<div class="my-8 flex flex-col items-center">
+		<div class="my-8 flex w-fit max-w-full flex-col items-center rounded-md bg-background p-3 text-foreground">
 			<MedalCounts
 				participations={contestsCount}
 				medals={{
@@ -84,7 +86,7 @@
 
 		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center" value={accordionValues}>
 			{#each Object.entries(years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
-				<Accordion.Item value="year-{year}">
+				<Accordion.Item value="year-{year}" class="rounded-md bg-background px-3 text-foreground">
 					<Accordion.Trigger class="flex justify-center hover:no-underline">
 						<div class="mr-4 flex flex-col items-center justify-center gap-2">
 							<div class="flex w-full flex-row items-center justify-between">
@@ -123,7 +125,9 @@
 		</Accordion.Root>
 
 		{#if contestsCount === 0}
-			<div class="flex w-full flex-col items-center justify-center">
+			<div
+				class="flex w-fit max-w-full flex-col items-center justify-center rounded-md bg-background p-3 text-foreground"
+			>
 				<p class="text-2xl font-bold">No Contests</p>
 				<p class="text-lg">This player has not participated in any contests.</p>
 			</div>

@@ -109,7 +109,9 @@
 <div class="flex flex-col items-start gap-2">
 	<div class="flex w-full flex-col items-center">
 		{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
-			<div class="flex w-full flex-col gap-2 rounded-md border-2 bg-card p-2 md:flex-row md:items-center">
+			<div
+				class="flex w-full flex-col gap-2 rounded-md border-2 bg-card p-2 text-card-foreground md:flex-row md:items-center"
+			>
 				<div class="flex flex-1">
 					<DataTableToolbar {table} />
 				</div>
@@ -136,7 +138,7 @@
 			{:else}
 				<div
 					data-state={row.getIsSelected() && 'selected'}
-					class="flex flex-1 flex-row rounded-md border-2 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+					class="flex flex-1 flex-row rounded-md border-2 bg-background text-foreground transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
 				>
 					{#each row.getVisibleCells() as cell (cell.id)}
 						<div class="min-w-fit flex-1 p-2">
@@ -146,7 +148,9 @@
 				</div>
 			{/if}
 		{:else}
-			<div class="flex h-24 w-full flex-col items-center justify-center rounded-md border-2 p-4">
+			<div
+				class="flex h-24 w-full flex-col items-center justify-center rounded-md border-2 bg-background p-4 text-foreground"
+			>
 				<div class="text-center">No leaderboard ranks found!</div>
 			</div>
 		{/each}

@@ -18,7 +18,7 @@
 </script>
 
 <div class="flex w-full max-w-7xl flex-row justify-center">
-	<div class="flex w-full max-w-4xl flex-1 flex-col gap-1">
+	<div class="flex w-full max-w-4xl flex-1 flex-col gap-1 rounded-md bg-background p-3 text-foreground">
 		<h3 class="mt-2 mb-4 text-xl leading-none font-semibold">Garden Chips</h3>
 		<div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
 			{#each Object.entries(GARDEN_CHIPS) as [id, chip] (id)}
@@ -32,7 +32,7 @@
 								class="text-primary"
 								percent={(count / 20) * 100}
 								readable="{count} / 20"
-								barBg="bg-card"
+								barBg="bg-card text-card-foreground"
 							/></Item.Description
 						>
 					</Item.Content>

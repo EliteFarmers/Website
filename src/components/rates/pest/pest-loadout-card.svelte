@@ -75,7 +75,10 @@
 	}
 </script>
 
-<section class="overflow-hidden rounded-lg border bg-card" aria-labelledby="optimized-layout-title">
+<section
+	class="overflow-hidden rounded-lg border bg-card text-card-foreground"
+	aria-labelledby="optimized-layout-title"
+>
 	<header class="flex flex-row items-center justify-between gap-3 border-b p-4 md:px-5">
 		<div class="min-w-0 flex-1">
 			<h2 id="optimized-layout-title" class="text-xl leading-tight font-semibold">Optimized Layout</h2>
@@ -130,7 +133,7 @@
 									piece.item.uuid
 								)}
 								<div
-									class="relative flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5"
+									class="relative flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5 text-foreground"
 									class:border-destructive={!!conflict}
 									title={piece.item.name ?? slot}
 								>
@@ -226,7 +229,7 @@
 									piece.item.uuid
 								)}
 								<div
-									class="relative flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5"
+									class="relative flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5 text-foreground"
 									class:border-destructive={!!conflict}
 									title={piece.item.name ?? slot}
 								>
@@ -321,7 +324,7 @@
 					<div class="flex min-w-36 flex-1 items-center">
 						{#if pest.activePhasePet}
 							<div
-								class="flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5"
+								class="flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5 text-foreground"
 							>
 								<ItemRender
 									skyblockId={pest.activePhasePet.pet.type ?? ''}
@@ -369,7 +372,7 @@
 				{#if pest.activePhasePet}
 					<div class="flex flex-col gap-4">
 						<div class="flex items-center gap-3">
-							<div class="rounded-md border bg-background p-1.5">
+							<div class="rounded-md border bg-background p-1.5 text-foreground">
 								<ItemRender
 									skyblockId={pest.activePhasePet.pet.type ?? ''}
 									pet
@@ -427,7 +430,7 @@
 						<div class="flex min-w-36 flex-1 items-center">
 							{#if pest.selectedVacuum}
 								<div
-									class="flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5"
+									class="flex size-9 shrink-0 items-center justify-center rounded-md border bg-background p-0.5 text-foreground"
 								>
 									<ItemRender
 										skyblockId={pest.selectedVacuum.item.skyblockId ?? ''}

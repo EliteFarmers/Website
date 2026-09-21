@@ -14,7 +14,9 @@
 	let { table }: { table: Table<TData> } = $props();
 </script>
 
-<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md border-2 bg-card p-2 md:flex-row">
+<div
+	class="flex w-full flex-col items-center justify-between gap-2 rounded-md border-2 bg-card p-2 text-card-foreground md:flex-row"
+>
 	<div class="flex-1 text-sm text-muted-foreground">
 		<!-- {table.getFilteredSelectedRowModel().rows.length} of -->
 		Showing {table.getFilteredRowModel().rows.length} of {table.getCoreRowModel().rows.length} ranks

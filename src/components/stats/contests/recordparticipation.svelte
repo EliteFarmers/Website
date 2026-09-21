@@ -66,14 +66,14 @@
 					>
 				</p>
 				<p class="text-center font-mono text-sm font-light">
-					<span class="rounded-md bg-card p-1 whitespace-nowrap">
+					<span class="rounded-md bg-card p-1 whitespace-nowrap text-card-foreground">
 						{new Date(Number(entry.timestamp ?? 0) * 1000).toLocaleString(undefined, {
 							timeStyle: 'short',
 							dateStyle: 'short',
 							timeZone: 'UTC',
 						})}
 					</span>
-					<span class="rounded-md bg-card p-1 whitespace-nowrap">
+					<span class="rounded-md bg-card p-1 whitespace-nowrap text-card-foreground">
 						{getReadableSkyblockMonthDay(Number(entry.timestamp ?? 0))}
 					</span>
 				</p>

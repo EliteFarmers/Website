@@ -82,6 +82,7 @@ import type {
 	GetGlobalProgressSummaryParams,
 	GetGlobalSkillsParams,
 	GetGuideParams,
+	GetGuideRatingsResponse,
 	GetHypixelGuildMembersLeaderboardParams,
 	GetHypixelGuildResponse,
 	GetHypixelGuildsParams,
@@ -119,6 +120,7 @@ import type {
 	GuildMembersLeaderboardDto,
 	HarvestFeastRotationsDto,
 	HoistCommentRequest,
+	HypixelApiStatus,
 	HypixelInventoryDto,
 	InventoryItemMetaResponse,
 	JoinEventParams,
@@ -150,7 +152,9 @@ import type {
 	ListOfGlobalProgressPoint,
 	ListOfGlobalSkillProgressPoint,
 	ListOfGuideAssetDto,
+	ListOfGuideCategoryDto,
 	ListOfGuideDto,
+	ListOfGuideRatingDimensionDto,
 	ListOfGuideVersionDto,
 	ListOfGuildDetailsDto,
 	ListOfGuildMemberDto,
@@ -188,6 +192,7 @@ import type {
 	SearchHypixelGuildsParams,
 	SearchHypixelGuildsResponse,
 	SetEventFeatureParams,
+	SetGuideRatingRequest,
 	SetGuildPublicParams,
 	SetJacobFeatureParams,
 	SetTeamOwnerRequest,
@@ -4988,11 +4993,19 @@ export type listGuidesResponse200 = {
 	status: 200;
 };
 
+export type listGuidesResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
 export type listGuidesResponseSuccess = listGuidesResponse200 & {
 	headers: Headers;
 };
+export type listGuidesResponseError = listGuidesResponse400 & {
+	headers: Headers;
+};
 
-export type listGuidesResponse = listGuidesResponseSuccess;
+export type listGuidesResponse = listGuidesResponseSuccess | listGuidesResponseError;
 
 export const getListGuidesUrl = (params: ListGuidesParams) => {
 	const normalizedParams = new URLSearchParams();
@@ -5014,6 +5027,56 @@ export const getListGuidesUrl = (params: ListGuidesParams) => {
  */
 export const listGuides = async (params: ListGuidesParams, options?: RequestInit) => {
 	return customFetch<listGuidesResponse>(getListGuidesUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type listGuideCategoriesResponse200 = {
+	data: ListOfGuideCategoryDto;
+	status: 200;
+};
+
+export type listGuideCategoriesResponseSuccess = listGuideCategoriesResponse200 & {
+	headers: Headers;
+};
+
+export type listGuideCategoriesResponse = listGuideCategoriesResponseSuccess;
+
+export const getListGuideCategoriesUrl = () => {
+	return `${ELITE_API_URL}/guides/categories`;
+};
+
+/**
+ * @summary List guide categories
+ */
+export const listGuideCategories = async (options?: RequestInit) => {
+	return customFetch<listGuideCategoriesResponse>(getListGuideCategoriesUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type listGuideRatingDimensionsResponse200 = {
+	data: ListOfGuideRatingDimensionDto;
+	status: 200;
+};
+
+export type listGuideRatingDimensionsResponseSuccess = listGuideRatingDimensionsResponse200 & {
+	headers: Headers;
+};
+
+export type listGuideRatingDimensionsResponse = listGuideRatingDimensionsResponseSuccess;
+
+export const getListGuideRatingDimensionsUrl = () => {
+	return `${ELITE_API_URL}/guides/rating-dimensions`;
+};
+
+/**
+ * @summary List active farm design rating dimensions
+ */
+export const listGuideRatingDimensions = async (options?: RequestInit) => {
+	return customFetch<listGuideRatingDimensionsResponse>(getListGuideRatingDimensionsUrl(), {
 		...options,
 		method: 'GET',
 	});
@@ -5541,6 +5604,113 @@ export const uploadGuideLitematic = async (
 		...options,
 		method: 'POST',
 		body: formData,
+	});
+};
+
+export type getGuideRatingsResponse200 = {
+	data: GetGuideRatingsResponse;
+	status: 200;
+};
+
+export type getGuideRatingsResponseSuccess = getGuideRatingsResponse200 & {
+	headers: Headers;
+};
+
+export type getGuideRatingsResponse = getGuideRatingsResponseSuccess;
+
+export const getGetGuideRatingsUrl = (guideId: string | number) => {
+	return `${ELITE_API_URL}/guides/${guideId}/ratings`;
+};
+
+/**
+ * @summary Get farm design quality ratings
+ */
+export const getGuideRatings = async (guideId: string | number, options?: RequestInit) => {
+	return customFetch<getGuideRatingsResponse>(getGetGuideRatingsUrl(guideId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type deleteGuideRatingResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteGuideRatingResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteGuideRatingResponseSuccess = deleteGuideRatingResponse204 & {
+	headers: Headers;
+};
+export type deleteGuideRatingResponseError = deleteGuideRatingResponse401 & {
+	headers: Headers;
+};
+
+export type deleteGuideRatingResponse = deleteGuideRatingResponseSuccess | deleteGuideRatingResponseError;
+
+export const getDeleteGuideRatingUrl = (guideId: string | number, dimensionId: string | number) => {
+	return `${ELITE_API_URL}/guides/${guideId}/ratings/${dimensionId}`;
+};
+
+/**
+ * @summary Clear your rating for one farm design quality dimension
+ */
+export const deleteGuideRating = async (
+	guideId: string | number,
+	dimensionId: string | number,
+	options?: RequestInit
+) => {
+	return customFetch<deleteGuideRatingResponse>(getDeleteGuideRatingUrl(guideId, dimensionId), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+export type setGuideRatingResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type setGuideRatingResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type setGuideRatingResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type setGuideRatingResponseSuccess = setGuideRatingResponse204 & {
+	headers: Headers;
+};
+export type setGuideRatingResponseError = (setGuideRatingResponse400 | setGuideRatingResponse401) & {
+	headers: Headers;
+};
+
+export type setGuideRatingResponse = setGuideRatingResponseSuccess | setGuideRatingResponseError;
+
+export const getSetGuideRatingUrl = (guideId: string | number, dimensionId: string | number) => {
+	return `${ELITE_API_URL}/guides/${guideId}/ratings/${dimensionId}`;
+};
+
+/**
+ * @summary Set your rating for one farm design quality dimension
+ */
+export const setGuideRating = async (
+	guideId: string | number,
+	dimensionId: string | number,
+	setGuideRatingRequest: SetGuideRatingRequest,
+	options?: RequestInit
+) => {
+	return customFetch<setGuideRatingResponse>(getSetGuideRatingUrl(guideId, dimensionId), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(setGuideRatingRequest),
 	});
 };
 
@@ -7260,7 +7430,7 @@ export const getGetHarvestFeastRotationsUrl = () => {
 
 /**
  * Uses crowd-sourced data, which may not be accurate.
- * @summary Get Harvest Feast rotations for the current SkyBlock year
+ * @summary Get current Harvest Feast rotations
  */
 export const getHarvestFeastRotations = async (options?: RequestInit) => {
 	return customFetch<getHarvestFeastRotationsResponse>(getGetHarvestFeastRotationsUrl(), {
@@ -7430,6 +7600,32 @@ export const getHypixelGuildMembersLeaderboard = async (
 			method: 'GET',
 		}
 	);
+};
+
+export type getHypixelStatusResponse200 = {
+	data: HypixelApiStatus;
+	status: 200;
+};
+
+export type getHypixelStatusResponseSuccess = getHypixelStatusResponse200 & {
+	headers: Headers;
+};
+
+export type getHypixelStatusResponse = getHypixelStatusResponseSuccess;
+
+export const getGetHypixelStatusUrl = () => {
+	return `${ELITE_API_URL}/hypixel/status`;
+};
+
+/**
+ * Gets the current status of the Hypixel API.
+ * @summary Get Hypixel API status
+ */
+export const getHypixelStatus = async (options?: RequestInit) => {
+	return customFetch<getHypixelStatusResponse>(getGetHypixelStatusUrl(), {
+		...options,
+		method: 'GET',
+	});
 };
 
 export type getPlayerRank1Response200 = {

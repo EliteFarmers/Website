@@ -41,7 +41,7 @@
 
 <div class="w-full max-w-7xl">
 	<div class="flex flex-col items-center gap-4 md:flex-row md:justify-center">
-		<div class="flex w-full max-w-2xl flex-1 flex-col gap-1">
+		<div class="flex w-full max-w-2xl flex-1 flex-col gap-1 rounded-md bg-background p-3 text-foreground">
 			<div class="mt-2 mb-4 flex flex-wrap items-center gap-x-2 gap-y-1">
 				<h3 class="text-xl leading-none font-semibold">Composter Upgrades</h3>
 				<ComposterProfit />
@@ -61,7 +61,7 @@
 			{/if}
 		</div>
 		{#if !allMaxed}
-			<div class="flex flex-1 flex-col gap-2 rounded-md">
+			<div class="flex flex-1 flex-col gap-2 rounded-md bg-background p-3 text-foreground">
 				{#if selectedProgress}
 					<h3 class="mt-2 mb-4 flex flex-row items-center gap-1 text-xl leading-none font-semibold">
 						{selectedProgress.name}

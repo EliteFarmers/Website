@@ -34,7 +34,7 @@
 							rank={ranks?.farming?.rank}
 							progress={getLevelProgress('farming', skills?.farming ?? 0, 50 + (levelCaps?.farming ?? 0))}
 						/>
-						<Button variant="outline" class="-mb-1 hidden w-10 p-0 md:flex" {...props}>
+						<Button variant="outline" class="-mb-1 hidden w-10 bg-background! p-0 md:flex" {...props}>
 							<ChevronsUpDown class="h-4 w-4" />
 							<span class="sr-only">Skill Toggle</span>
 						</Button>
@@ -46,7 +46,7 @@
 						/>
 					</div>
 					<div class="md:hidden">
-						<Button variant="outline" class="-mb-1 w-10 p-0" {...props}>
+						<Button variant="outline" class="-mb-1 w-10 bg-background! p-0" {...props}>
 							<ChevronsUpDown class="h-4 w-4" />
 							<span class="sr-only">Toggle</span>
 						</Button>

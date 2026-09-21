@@ -45,7 +45,7 @@
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.ScrollContent class="dark border-border bg-background text-primary">
+	<Dialog.ScrollContent class="border-border bg-background text-foreground">
 		{#if selectedItem}
 			<ItemLore
 				item={selectedItem}
@@ -70,7 +70,10 @@
 				{:else if deletorCompactorItems.length > 0}
 					<div class="my-4 grid w-fit grid-cols-9 items-center justify-center gap-1">
 						{#each deletorCompactorItems as [key, itemId] (key)}
-							<ItemRender skyblockId={itemId} class="size-12 rounded-sm border bg-card" />
+							<ItemRender
+								skyblockId={itemId}
+								class="size-12 rounded-sm border bg-card text-card-foreground"
+							/>
 						{/each}
 					</div>
 				{/if}

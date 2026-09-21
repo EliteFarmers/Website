@@ -20,7 +20,11 @@
 	const selectableVacuums = $derived(vacuums.filter((vacuum) => !!vacuum.item.uuid));
 </script>
 
-<section class={embedded ? 'flex flex-col gap-4' : 'flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6'}>
+<section
+	class={embedded
+		? 'flex flex-col gap-4'
+		: 'flex flex-col gap-4 rounded-lg border bg-card p-4 text-card-foreground md:p-6'}
+>
 	{#if !embedded}
 		<header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 			<div class="flex items-center gap-3">

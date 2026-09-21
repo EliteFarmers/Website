@@ -1627,17 +1627,11 @@ export const zodGetGuideSchematicViewerParams = zod.object({
  * Initializes a new empty guide draft for the user.
  * @summary Create a new guide draft
  */
+export const zodCreateGuideBodyCategoryIdExclusiveMin = 0;
+
 export const zodCreateGuideBody = zod.object({
-	type: zod.union([
-		zod.literal(0),
-		zod.literal(1),
-		zod.literal(2),
-		zod.literal(3),
-		zod.literal(4),
-		zod.literal(5),
-		zod.literal(6),
-		zod.literal(7),
-	]),
+	categoryId: zod.int().gt(zodCreateGuideBodyCategoryIdExclusiveMin).nullish(),
+	mainSection: zod.enum(['none', 'farmDesign']),
 });
 
 /**
@@ -1646,19 +1640,10 @@ export const zodCreateGuideBody = zod.object({
  */
 export const zodListGuidesQueryParams = zod.object({
 	query: zod.string().nullish(),
-	type: zod
-		.union([
-			zod.literal(0),
-			zod.literal(1),
-			zod.literal(2),
-			zod.literal(3),
-			zod.literal(4),
-			zod.literal(5),
-			zod.literal(6),
-			zod.literal(7),
-		])
-		.optional(),
+	categoryId: zod.int().nullish(),
+	mainSection: zod.enum(['none', 'farmDesign']).optional(),
 	tags: zod.array(zod.int()).nullish(),
+	crops: zod.array(zod.string()).nullish(),
 	sort: zod.enum(['newest', 'topRated', 'trending']),
 	page: zod.int(),
 	pageSize: zod.int(),
@@ -1813,6 +1798,35 @@ export const zodUploadGuideLitematicBody = zod.object({
 });
 
 /**
+ * @summary Get farm design quality ratings
+ */
+export const zodGetGuideRatingsParams = zod.object({
+	guideId: zod.int(),
+});
+
+/**
+ * @summary Clear your rating for one farm design quality dimension
+ */
+export const zodDeleteGuideRatingParams = zod.object({
+	guideId: zod.int(),
+	dimensionId: zod.int(),
+});
+
+/**
+ * @summary Set your rating for one farm design quality dimension
+ */
+export const zodSetGuideRatingParams = zod.object({
+	guideId: zod.int(),
+	dimensionId: zod.int(),
+});
+
+export const zodSetGuideRatingBodyScoreMax = 5;
+
+export const zodSetGuideRatingBody = zod.object({
+	score: zod.int().min(1).max(zodSetGuideRatingBodyScoreMax),
+});
+
+/**
  * Submit a draft guide for admin review.
  * @summary Submit guide for approval
  */
@@ -1856,10 +1870,52 @@ export const zodUpdateGuideParams = zod.object({
 	id: zod.int(),
 });
 
+export const zodUpdateGuideBodyCategoryIdMax = 2147483647;
+
+export const zodUpdateGuideBodyTitleMax = 128;
+
+export const zodUpdateGuideBodyDescriptionMax = 512;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSchematicsItemAssetIdMax = 48;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSchematicsMax = 10;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneScreenshotsItemAssetIdMax = 48;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneScreenshotsItemCaptionMax = 500;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneScreenshotsMax = 20;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemIdMax = 64;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemIdRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemNameMax = 100;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemInstructionsMax = 5000;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemBpsMin = 0;
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemBpsMax = 1000;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemSpeedMin = 0;
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemSpeedMax = 1000;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemKeysMax = 500;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemYawMin = -180;
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemYawMax = 180;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemPitchMin = -90;
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemPitchMax = 90;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemNotesMax = 2000;
+
+export const zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsMax = 30;
+
 export const zodUpdateGuideBody = zod.object({
-	title: zod.string(),
+	categoryId: zod.int().min(1).max(zodUpdateGuideBodyCategoryIdMax).nullish(),
+	title: zod.string().max(zodUpdateGuideBodyTitleMax),
 	iconSkyblockId: zod.string().nullish(),
-	description: zod.string(),
+	description: zod.string().max(zodUpdateGuideBodyDescriptionMax),
 	markdownContent: zod.string(),
 	tags: zod.array(zod.string()).describe('Name of weight style to unlock.').nullish(),
 	richBlocks: zod
@@ -1874,6 +1930,78 @@ export const zodUpdateGuideBody = zod.object({
 							backgroundTexture: zod.string().nullish(),
 						})
 					),
+				})
+				.nullish(),
+			farmDesign: zod
+				.object({
+					schematics: zod
+						.array(
+							zod.object({
+								assetId: zod
+									.string()
+									.min(1)
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSchematicsItemAssetIdMax),
+							})
+						)
+						.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSchematicsMax),
+					screenshots: zod
+						.array(
+							zod.object({
+								assetId: zod
+									.string()
+									.min(1)
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneScreenshotsItemAssetIdMax),
+								caption: zod
+									.string()
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneScreenshotsItemCaptionMax)
+									.nullish(),
+							})
+						)
+						.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneScreenshotsMax),
+					setups: zod
+						.array(
+							zod.object({
+								id: zod
+									.string()
+									.min(1)
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemIdMax)
+									.regex(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemIdRegExp),
+								name: zod.string().max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemNameMax),
+								crops: zod.array(zod.string()).describe('Name of weight style to unlock.'),
+								instructions: zod
+									.string()
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemInstructionsMax),
+								bps: zod
+									.number()
+									.min(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemBpsMin)
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemBpsMax)
+									.nullish(),
+								speed: zod
+									.number()
+									.min(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemSpeedMin)
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemSpeedMax)
+									.nullish(),
+								keys: zod
+									.string()
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemKeysMax)
+									.nullish(),
+								yaw: zod
+									.number()
+									.min(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemYawMin)
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemYawMax)
+									.nullish(),
+								pitch: zod
+									.number()
+									.min(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemPitchMin)
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemPitchMax)
+									.nullish(),
+								notes: zod
+									.string()
+									.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsItemNotesMax)
+									.nullish(),
+							})
+						)
+						.max(zodUpdateGuideBodyRichBlocksOneFarmDesignOneSetupsMax),
 				})
 				.nullish(),
 		})

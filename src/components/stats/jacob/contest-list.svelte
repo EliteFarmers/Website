@@ -21,7 +21,9 @@
 		{/each}
 	</div>
 	{#if remaining > 0}
-		<div class="mt-4 flex flex-col items-center justify-center gap-2">
+		<div
+			class="mx-auto mt-4 flex w-fit max-w-full flex-col items-center justify-center gap-2 rounded-md bg-background p-3 text-foreground"
+		>
 			<p>
 				<span class="text-lg font-semibold">{remaining.toLocaleString()}</span>
 				<span>not shown</span>

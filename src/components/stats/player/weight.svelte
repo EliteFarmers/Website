@@ -15,7 +15,7 @@
 	<div class="z-10 flex items-center gap-2">
 		{#if rank !== -1}
 			<LeaderboardRankLink
-				class="max-w-fit rounded-md bg-card p-1 hover:bg-muted lg:p-1"
+				class="max-w-fit rounded-md bg-card p-1 text-card-foreground hover:bg-muted lg:p-1"
 				category="farmingweight"
 				player={ctx.ign}
 				profile={ctx.selectedProfile?.profileName}
@@ -26,7 +26,7 @@
 				</span>
 			</LeaderboardRankLink>
 		{:else}
-			<div class="max-w-fit rounded-md bg-card p-1 lg:p-2">
+			<div class="max-w-fit rounded-md bg-card p-1 text-card-foreground lg:p-2">
 				<span class="text-md mx-1 font-semibold md:text-lg">
 					{rankText}
 				</span>

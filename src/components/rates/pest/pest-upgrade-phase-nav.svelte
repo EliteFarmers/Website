@@ -12,7 +12,7 @@
 	] as const;
 </script>
 
-<div class="flex flex-col gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3 md:p-4">
+<div class="flex flex-col gap-3 rounded-lg border border-primary/30 bg-background p-3 text-foreground md:p-4">
 	<div class="flex items-start gap-2.5">
 		<ListChecks class="mt-0.5 size-5 shrink-0 text-primary" />
 		<div class="flex flex-col gap-1">
@@ -30,7 +30,7 @@
 				{#each phases as item (item.value)}
 					<Tabs.Trigger
 						value={item.value}
-						class="rounded-md border border-transparent px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+						class="rounded-md border border-transparent px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:text-card-foreground data-[state=active]:shadow-sm"
 					>
 						{item.label}
 					</Tabs.Trigger>

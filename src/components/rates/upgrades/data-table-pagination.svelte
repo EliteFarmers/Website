@@ -14,7 +14,9 @@
 	let { table }: { table: Table<TData> } = $props();
 </script>
 
-<div class="flex flex-col items-center justify-between gap-2 px-2 md:flex-row">
+<div
+	class="flex flex-col items-center justify-between gap-2 rounded-md bg-background px-2 py-2 text-foreground md:flex-row"
+>
 	<div class="flex-1 text-sm text-muted-foreground">
 		<!-- {table.getFilteredSelectedRowModel().rows.length} of -->
 		Showing {table.getFilteredRowModel().rows.length} of {table.getCoreRowModel().rows.length} upgrade(s)

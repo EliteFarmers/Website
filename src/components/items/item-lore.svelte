@@ -17,7 +17,7 @@
 	let showDebugInfo = $state(false);
 </script>
 
-<div class="dark relative flex flex-col gap-2 rounded-md bg-background p-2">
+<div class="dark relative flex flex-col gap-2 rounded-md bg-background p-2 text-foreground">
 	{#if title}
 		<span class="font-mono text-lg">
 			<FormattedText text={item.name ?? 'Unknown Item'} />

@@ -26,7 +26,7 @@
 	const item = $derived(tool.item as ItemDto);
 </script>
 
-<div class="flex max-h-30 w-full basis-20 flex-row justify-between gap-2 rounded-md bg-card p-1">
+<div class="flex max-h-30 w-full basis-20 flex-row justify-between gap-2 rounded-md bg-card p-1 text-card-foreground">
 	<div class="flex w-full flex-row items-center gap-2">
 		<InventorySlot {item} class="size-12 border-none shadow-none md:m-2 md:size-16" />
 		<div class="flex w-full flex-col items-start">

@@ -38,7 +38,9 @@
 	});
 </script>
 
-<div class="flex w-full max-w-2xl flex-1 flex-col items-start justify-center gap-1">
+<div
+	class="flex w-full max-w-2xl flex-1 flex-col items-start justify-center gap-1 rounded-md bg-background p-2 text-foreground"
+>
 	<div class="flex flex-row items-center gap-2">
 		{#if rank >= 0}
 			<LeaderboardRankLink
@@ -63,7 +65,7 @@
 		</div>
 	</div>
 	<div
-		class="relative h-8 w-full rounded-lg bg-card"
+		class="relative h-8 w-full rounded-lg bg-card text-card-foreground"
 		onmouseenter={() => (hovering = true)}
 		onmouseleave={() => (hovering = false)}
 		role="none"

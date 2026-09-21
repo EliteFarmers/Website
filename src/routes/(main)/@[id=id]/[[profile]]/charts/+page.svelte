@@ -273,7 +273,9 @@
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
 	<div class="flex flex-row justify-center">
-		<div class="mb-4 flex max-w-fit flex-wrap justify-center rounded-md border border-solid p-1 sm:flex-row">
+		<div
+			class="mb-4 flex max-w-fit flex-wrap justify-center rounded-md border border-solid bg-background p-1 text-foreground sm:flex-row"
+		>
 			<Button
 				variant="ghost"
 				size="sm"
@@ -301,7 +303,7 @@
 	{#if view === 'crops'}
 		<Cropselector />
 	{/if}
-	<div class="flex flex-col items-center gap-2">
+	<div class="flex w-fit max-w-full flex-col items-center gap-2 rounded-md bg-background p-3 text-foreground">
 		<div class="flex flex-col items-center gap-2">
 			<div class="flex flex-row items-center gap-2">
 				<Button onclick={back} variant="outline" disabled={backEnabled}>
@@ -364,7 +366,9 @@
 	</div>
 
 	{#if showNoData}
-		<div class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 p-4 text-center">
+		<div
+			class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 rounded-md bg-background p-4 text-center text-foreground"
+		>
 			<h2 class="text-center text-3xl font-semibold">No Data Found</h2>
 			<h4>Try a different time!</h4>
 			<p>
@@ -377,15 +381,15 @@
 	{#if view === 'crops'}
 		{#if collectionsPromise}
 			{#await collectionsPromise}
-				<div class="w-full max-w-7xl flex-1 flex-col gap-1 p-2">
+				<div class="w-full max-w-7xl flex-1 flex-col gap-1 rounded-md bg-background p-2 text-foreground">
 					<div class="ml-4 flex flex-row items-center gap-2">
 						<Skeleton class="h-8 w-56" />
 					</div>
 					<Skeleton class="h-80 w-full rounded-md" />
 				</div>
-				<div class="flex w-full max-w-7xl flex-wrap justify-center">
+				<div class="flex w-full max-w-7xl flex-wrap justify-center gap-4">
 					{#each skeletonCards as i (i)}
-						<div class="flex basis-150 flex-col gap-1 p-2">
+						<div class="flex min-w-0 basis-150 flex-col gap-1 rounded-md bg-background p-2 text-foreground">
 							<div class="ml-4 flex flex-row items-center gap-2">
 								<Skeleton class="size-8 rounded-md" />
 								<Skeleton class="h-8 w-40" />
@@ -395,14 +399,16 @@
 					{/each}
 				</div>
 			{:catch}
-				<div class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 p-4 text-center">
+				<div
+					class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 rounded-md bg-background p-4 text-center text-foreground"
+				>
 					<h2 class="text-center text-3xl font-semibold">Failed to load graphs</h2>
 					<p class="text-sm text-muted-foreground">{String(collectionsError ?? 'Unknown error')}</p>
 				</div>
 			{/await}
 		{:else}
 			{#if weightPoints.length > 0 && !$anySelected}
-				<div class="w-full max-w-7xl flex-1 flex-col gap-1 p-2">
+				<div class="w-full max-w-7xl flex-1 flex-col gap-1 rounded-md bg-background p-2 text-foreground">
 					<div class="ml-4 flex flex-row items-center gap-1">
 						<h3 class="text-2xl">Farming Weight</h3>
 						<JumpLink id="FarmingWeight" />
@@ -411,11 +417,13 @@
 				</div>
 			{/if}
 
-			<div class="flex {fewSelected ? 'flex-col' : 'flex-wrap'} w-full max-w-7xl justify-center gap-y-4">
+			<div class="flex {fewSelected ? 'flex-col' : 'flex-wrap'} w-full max-w-7xl justify-center gap-4">
 				{#each cropEntries as { name, crop, data } (crop)}
 					{#if selected(name)}
 						{#if !fewSelected}
-							<div class="flex basis-150 flex-col gap-1 p-2">
+							<div
+								class="flex min-w-0 basis-150 flex-col gap-1 rounded-md bg-background p-2 text-foreground"
+							>
 								<div class="ml-4 flex flex-row gap-1">
 									<img
 										src={PROPER_CROP_TO_IMG[name]}
@@ -433,7 +441,7 @@
 								/>
 							</div>
 						{:else}
-							<div class="max-w-7xl flex-1 flex-col gap-1 p-2">
+							<div class="max-w-7xl flex-1 flex-col gap-1 rounded-md bg-background p-2 text-foreground">
 								<div class="ml-4 flex flex-row items-center gap-1">
 									<img
 										src={PROPER_CROP_TO_IMG[name]}
@@ -452,9 +460,9 @@
 		{/if}
 	{:else if skillsPromise}
 		{#await skillsPromise}
-			<div class="flex w-full max-w-7xl flex-wrap justify-center">
+			<div class="flex w-full max-w-7xl flex-wrap justify-center gap-4">
 				{#each skeletonCards as i (i)}
-					<div class="flex basis-150 flex-col gap-1 p-2">
+					<div class="flex min-w-0 basis-150 flex-col gap-1 rounded-md bg-background p-2 text-foreground">
 						<div class="ml-4 flex flex-row items-center gap-2">
 							<Skeleton class="h-8 w-40" />
 						</div>
@@ -463,15 +471,17 @@
 				{/each}
 			</div>
 		{:catch}
-			<div class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 p-4 text-center">
+			<div
+				class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 rounded-md bg-background p-4 text-center text-foreground"
+			>
 				<h2 class="text-center text-3xl font-semibold">Failed to load graphs</h2>
 				<p class="text-sm text-muted-foreground">{String(skillsError ?? 'Unknown error')}</p>
 			</div>
 		{/await}
 	{:else}
-		<div class="flex w-full max-w-7xl flex-wrap justify-center gap-y-4">
+		<div class="flex w-full max-w-7xl flex-wrap justify-center gap-4">
 			{#each skillEntries as { skill, data } (skill)}
-				<div class="flex basis-150 flex-col gap-1 p-2">
+				<div class="flex min-w-0 basis-150 flex-col gap-1 rounded-md bg-background p-2 text-foreground">
 					<div class="ml-4 flex flex-row gap-1">
 						<h3 class="text-2xl first-letter:capitalize">{skill}</h3>
 						<JumpLink id={skill} />
@@ -482,7 +492,9 @@
 		</div>
 	{/if}
 
-	<div class="mx-4 mt-16 flex max-w-lg flex-col justify-center gap-1">
+	<div
+		class="mx-4 mt-16 flex w-fit max-w-lg flex-col justify-center gap-1 rounded-md bg-background p-3 text-foreground"
+	>
 		<h5 class="text-center text-lg font-semibold">How is this data obtained?</h5>
 		<p class="text-left">
 			Your collections and skills are only stored when they're requested. This may result in missing data,

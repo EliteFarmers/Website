@@ -78,7 +78,9 @@
 				{openSettings}
 			/>
 
-			<section class="pest-deferred-section flex flex-col gap-4 rounded-lg border bg-card p-4 md:p-6">
+			<section
+				class="pest-deferred-section flex flex-col gap-4 rounded-lg border bg-card p-4 text-card-foreground md:p-6"
+			>
 				<header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 					<div class="flex flex-col gap-1">
 						<h2 class="text-xl leading-tight font-semibold">
@@ -107,14 +109,14 @@
 
 			<section class="pest-deferred-section pest-deferred-section--large flex flex-col gap-5">
 				<header
-					class="sticky top-16 z-20 -mx-2 flex flex-col gap-2 border-b bg-background/95 px-2 py-3 backdrop-blur supports-backdrop-filter:bg-background/80"
+					class="sticky top-16 z-20 flex flex-col gap-2 rounded-lg border bg-card p-4 text-card-foreground"
 				>
 					<div class="flex flex-wrap items-center justify-between gap-3">
 						<div class="flex flex-col gap-1">
 							<h2 class="text-2xl leading-tight font-semibold">{pest.activePhaseConfig.title}</h2>
 							<p class="text-sm text-muted-foreground">{pest.activePhaseConfig.description}</p>
 						</div>
-						<div class="flex items-center gap-2">
+						<div class="flex flex-wrap items-center gap-2">
 							<Button variant="outline" size="sm" onclick={openSettings}>
 								<Settings class="size-4" />
 								Settings
@@ -124,7 +126,7 @@
 									{#each PHASE_CONFIG as config (config.phase)}
 										<Tabs.Trigger
 											value={config.phase}
-											class="rounded-md border border-transparent px-5 py-2 text-sm font-semibold text-muted-foreground transition-colors data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+											class="rounded-md border border-transparent px-5 py-2 text-sm font-semibold text-muted-foreground transition-colors data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:text-card-foreground data-[state=active]:shadow-sm"
 										>
 											{config.label}
 										</Tabs.Trigger>
@@ -139,7 +141,7 @@
 
 				<PestLoadoutCard {pest} />
 
-				<section class="flex flex-col gap-3 rounded-lg border bg-card p-4 md:p-6">
+				<section class="flex flex-col gap-3 rounded-lg border bg-card p-4 text-card-foreground md:p-6">
 					<header class="flex items-center justify-between gap-3">
 						<h2 class="text-xl leading-tight font-semibold">{pest.activePhaseConfig.progress}</h2>
 					</header>
@@ -156,9 +158,15 @@
 				</section>
 
 				<section class="flex flex-col gap-4">
-					<h2 class="text-2xl leading-tight font-semibold">{pest.activePhaseConfig.label} Upgrades</h2>
+					<h2
+						class="w-fit max-w-full rounded-md bg-background px-3 py-2 text-2xl leading-tight font-semibold text-foreground"
+					>
+						{pest.activePhaseConfig.label} Upgrades
+					</h2>
 					<PestUpgradePhaseNav bind:phase={pest.activePhase} />
-					<div class="flex items-start gap-2 text-sm text-muted-foreground">
+					<div
+						class="flex w-fit max-w-full items-start gap-2 rounded-md bg-background p-3 text-sm text-foreground"
+					>
 						<TriangleAlert class="mt-0.5 size-4 shrink-0" />
 						<p>
 							These upgrade suggestions are a work in progress. Please report issues or feedback on our
@@ -170,11 +178,11 @@
 					</div>
 					{#if !pest.calculationsSettled}
 						<div
-							class="flex min-h-96 items-start justify-center rounded-md border bg-card/20 pt-8"
+							class="flex min-h-96 items-start justify-center rounded-md border bg-background pt-8 text-foreground"
 							aria-busy="true"
 						>
 							<div
-								class="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-sm shadow-sm"
+								class="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-sm text-foreground shadow-sm"
 							>
 								<LoaderCircle class="size-4 animate-spin" />
 								Calculating upgrade recommendations

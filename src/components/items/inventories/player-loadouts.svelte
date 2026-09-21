@@ -116,7 +116,7 @@
 	<div class="my-4 flex max-w-7xl flex-wrap gap-4 px-2">
 		{#each loadouts as loadout (loadout.id)}
 			{@const pet = loadout.petLocalId ? petsByLocalId[loadout.petLocalId] : undefined}
-			<article class="flex min-w-0 flex-col gap-4 rounded-lg border bg-card p-4 shadow-sm">
+			<article class="flex min-w-0 flex-col gap-4 rounded-lg border bg-card p-4 text-card-foreground shadow-sm">
 				<div class="flex items-center gap-3">
 					<h3 class="text-lg font-semibold">Loadout {loadout.id}</h3>
 				</div>

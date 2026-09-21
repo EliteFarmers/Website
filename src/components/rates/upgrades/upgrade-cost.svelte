@@ -109,7 +109,7 @@
 	{#if petUpgrade.meta?.id && petUpgrade.cost?.coins}
 		<div class="flex max-w-80 min-w-0 flex-row items-center gap-1">
 			<span class="shrink-0 text-sm font-semibold">1x</span>
-			<div class="flex min-w-0 items-center gap-1 rounded-sm border bg-background px-1">
+			<div class="flex min-w-0 items-center gap-1 rounded-sm border bg-background px-1 text-foreground">
 				<ItemRender skyblockId={petUpgrade.meta.id} pet class="size-6 shrink-0" />
 				<ScrollingName class="min-w-0 text-sm" title={petUpgrade.title}>
 					<ItemName name={petUpgrade.title} />
@@ -130,7 +130,7 @@
 
 	<div class="flex max-w-80 min-w-0 flex-row items-center gap-1">
 		<span class="shrink-0 text-sm font-semibold">{amount}x</span>
-		<div class="w-fit max-w-full min-w-0 rounded-sm border bg-background px-1">
+		<div class="w-fit max-w-full min-w-0 rounded-sm border bg-background px-1 text-foreground">
 			{#if sbItem?.item?.name}
 				{@const itemDisplayName = sbItem.item.name
 					.replace('Enchantment Ultimate', '')

@@ -11,6 +11,11 @@ import type { DictionaryOfStringAndString } from './DictionaryOfStringAndString'
 import type { PageStyleBackgroundDto } from './PageStyleBackgroundDto';
 
 export interface PageStyleDataDto {
+	/**
+	 * @nullable
+	 * @pattern ^(inherit|light|dark)$
+	 */
+	baseTheme?: string | null;
 	properties: DictionaryOfStringAndString;
 	background?: PageStyleBackgroundDto | null;
 }

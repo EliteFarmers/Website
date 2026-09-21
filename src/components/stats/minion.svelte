@@ -87,7 +87,7 @@
 						? maxed
 							? 'bg-completed'
 							: 'bg-progress'
-						: 'bg-card'}"
+						: 'bg-card text-card-foreground'}"
 				>
 					<p>{i + 1}</p>
 				</div>

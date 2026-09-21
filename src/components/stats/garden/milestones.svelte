@@ -43,13 +43,15 @@
 </script>
 
 <div class="flex max-w-4xl flex-1 flex-col gap-2">
-	<div class="flex flex-row items-center justify-between gap-2">
+	<div class="flex flex-wrap items-center justify-between gap-2 rounded-md bg-background p-2 text-foreground">
 		<div class="flex flex-row items-center gap-2">
-			<button class="w-24 rounded-md bg-card py-1 text-sm whitespace-nowrap hover:bg-muted" onclick={swap}
-				>{highestSort ? 'Milestone ↓' : 'A-Z ↓'}</button
+			<button
+				class="w-24 rounded-md bg-card py-1 text-sm whitespace-nowrap text-card-foreground hover:bg-muted"
+				onclick={swap}>{highestSort ? 'Milestone ↓' : 'A-Z ↓'}</button
 			>
-			<button class="w-20 rounded-md bg-card py-1 text-sm whitespace-nowrap hover:bg-muted" onclick={swapOverflow}
-				>{overflow ? 'Overflow' : 'Normal'}</button
+			<button
+				class="w-20 rounded-md bg-card py-1 text-sm whitespace-nowrap text-card-foreground hover:bg-muted"
+				onclick={swapOverflow}>{overflow ? 'Overflow' : 'Normal'}</button
 			>
 		</div>
 		<h3 class="mt-1.5 text-lg leading-none font-semibold">Crop Milestones</h3>

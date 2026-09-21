@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createPreview } from '../discord-preview';
 	import { page } from '$app/state';
 	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import StatsHead from '$comp/seo/stats-head.svelte';
@@ -18,6 +17,7 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 	import { Crop, GARDEN_VISITORS, getCropDisplayName, getCropUpgrades, getGardenLevel } from 'farming-weight';
+	import { createPreview } from '../discord-preview';
 
 	let overflow = $state(true);
 
@@ -50,6 +50,10 @@
 	let totalCopperSpent = $derived.by(() =>
 		crops.reduce((sum, { level }) => sum + getCopperSpentCropUpgrades(level), 0)
 	);
+
+	const analyzedMutations = $derived(
+		Object.values(ctx.member.current?.memberData?.garden?.mutations ?? {}).filter((a) => a.analyzed).length
+	);
 </script>
 
 <StatsHead
@@ -75,12 +79,35 @@
 		<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-12 align-middle md:gap-8 lg:flex-row">
 			<Milestones {garden} bind:overflow {ranks} />
 			<div class="flex flex-1 flex-col items-center gap-4 md:items-start">
-				<div class="mt-2 flex flex-row gap-6">
-					<div class="flex flex-col gap-2">
-						<h3 class="text-lg leading-none font-semibold">Unlocked Plots</h3>
-						<Plots plots={garden.plots} />
+				<div class="mt-2 flex max-w-full flex-wrap gap-6">
+					<div class="flex flex-row gap-2">
+						<div class="flex w-fit flex-col gap-2 rounded-md bg-background p-3 text-foreground">
+							<h3 class="text-lg leading-none font-semibold">Unlocked Plots</h3>
+							<Plots plots={garden.plots} />
+						</div>
+						<div class="flex w-fit flex-col gap-2 rounded-md bg-background p-3 text-foreground">
+							<h3 class="text-lg leading-none font-semibold">Stats</h3>
+							<div
+								class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground"
+							>
+								Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
+							</div>
+							<div
+								class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground"
+							>
+								DNA Analysis Milestone • <span class="font-semibold"
+									>{ctx.member.current?.unparsed?.dnaMilestone ?? 0}
+								</span>
+							</div>
+							<div
+								class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground"
+							>
+								Analyzed Mutations • <span class="font-semibold">{analyzedMutations}</span>
+							</div>
+						</div>
 					</div>
-					<div class="-mt-0.5 flex flex-col">
+
+					<div class="-mt-0.5 flex w-fit flex-col rounded-md bg-background p-3 text-foreground">
 						<Popover.Mobile triggerClass="inline-block w-fit">
 							{#snippet trigger()}
 								<h3 class="text-lg leading-none font-semibold">Crop Upgrades</h3>
@@ -102,35 +129,24 @@
 					</div>
 				</div>
 
-				<div class="flex flex-wrap gap-2 text-lg">
-					<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
-						Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
-					</div>
-					<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
-						DNA Analysis Milestone • <span class="font-semibold"
-							>{ctx.member.current?.unparsed?.dnaMilestone ?? 0} / 6</span
-						>
-					</div>
-				</div>
-
-				<div class="flex w-full flex-col gap-2">
+				<div class="flex w-full flex-col gap-2 rounded-md bg-background p-3 text-foreground">
 					<h3 class="text-xl leading-none font-semibold">Visitors</h3>
 					<div class="flex max-w-lg flex-wrap gap-2 text-lg sm:flex-row">
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
 							Unique • <span class="font-semibold">{(garden.uniqueVisitors ?? 0).toLocaleString()}</span
 							>/{maxVisitors}
 						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
 							Total Visits • <span class="font-semibold">{totalVisits.toLocaleString()}</span>
 						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
 							{#if ranks['visitors-accepted']?.rank > 0}
 								<LeaderboardRankLink
 									category="visitors-accepted"
 									player={page.params.id}
 									profile={page.params.profile}
 									rank={ranks['visitors-accepted']?.rank ?? -1}
-									class="rounded-md bg-card px-1.5 hover:bg-muted"
+									class="rounded-md bg-card px-1.5 text-card-foreground hover:bg-muted"
 								>
 									<span class="text-sm">#</span><span class="text-md"
 										>{ranks['visitors-accepted']?.rank}</span
@@ -139,10 +155,10 @@
 							{/if}
 							Accepted • <span class="font-semibold">{accepted.toLocaleString()}</span>
 						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
 							Rejected • <span class="font-semibold">{rejected.toLocaleString()}</span>
 						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
 							Acceptance Rate • <span class="font-semibold">{rate}%</span>
 						</div>
 					</div>
@@ -150,7 +166,7 @@
 				</div>
 
 				{#if (garden.uniqueVisitors ?? 0) < maxVisitors}
-					<div class="flex w-full flex-col gap-2">
+					<div class="flex w-full flex-col gap-2 rounded-md bg-background p-3 text-foreground">
 						<h3 class="text-xl leading-none font-semibold">Missing Visitors</h3>
 						<MissingVisitors {garden} />
 					</div>
@@ -165,7 +181,7 @@
 
 	<ComposterUpgrades />
 
-	<div class="mx-4 mt-16 flex max-w-lg flex-col justify-center gap-1">
+	<div class="mx-4 mt-16 flex max-w-lg flex-col justify-center gap-1 rounded-md bg-background p-3 text-foreground">
 		<h5 class="text-center text-lg font-semibold">Garden Disclaimer</h5>
 		<p class="text-left">
 			All garden data besides copper is shared between profile members due to how Hypixel made the system. This

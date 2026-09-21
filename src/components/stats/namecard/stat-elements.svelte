@@ -9,7 +9,9 @@
 	let { children }: { children?: Snippet } = $props();
 </script>
 
-<div class="my-4 flex flex-wrap items-center justify-center gap-3">
+<div
+	class="mx-auto my-4 flex w-fit max-w-full flex-wrap items-center justify-center gap-3 rounded-md bg-background p-1 text-foreground"
+>
 	{@render children?.()}
 	<Profiles />
 	<Skyblocklevel />

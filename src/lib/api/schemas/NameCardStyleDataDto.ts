@@ -8,12 +8,14 @@
  * OpenAPI spec version: v1
  */
 import type { ListOfWeightStyleGradientDto } from './ListOfWeightStyleGradientDto';
+import type { NameCardLayout } from './NameCardLayout';
 import type { NameCardRankAnchorDto } from './NameCardRankAnchorDto';
 import type { NameCardStyleElementsDto } from './NameCardStyleElementsDto';
 import type { WeightStyleBackgroundDto } from './WeightStyleBackgroundDto';
 import type { WeightStyleDecalDto } from './WeightStyleDecalDto';
 
 export interface NameCardStyleDataDto {
+	layout?: NameCardLayout | null;
 	decal?: WeightStyleDecalDto | null;
 	gradients?: ListOfWeightStyleGradientDto | null;
 	background: WeightStyleBackgroundDto;

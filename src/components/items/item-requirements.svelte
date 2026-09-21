@@ -70,7 +70,9 @@
 					.split(' ')
 					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 					.join(' ')}
-				<span class="mx-0.5 inline-flex items-center gap-1 rounded-sm border bg-background px-1">
+				<span
+					class="mx-0.5 inline-flex items-center gap-1 rounded-sm border bg-background px-1 text-foreground"
+				>
 					<span class="font-semibold">
 						{requirementName}
 						{#if requirement.skill}

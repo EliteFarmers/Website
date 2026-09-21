@@ -5,12 +5,13 @@
 	import * as Popover from '$ui/popover';
 
 	interface Props {
+		responsive?: boolean;
 		bgClass?: string;
 		bgStyle?: string;
 		class?: string;
 	}
 
-	let { bgClass = 'border', bgStyle = '', class: classes = '' }: Props = $props();
+	let { responsive = false, bgClass = 'border', bgStyle = '', class: classes = '' }: Props = $props();
 
 	const ctx = getStatsContext();
 	const ign = $derived(ctx.ignMeta);
@@ -20,10 +21,15 @@
 	const members = $derived((ctx.selectedProfile?.members ?? []).filter((m) => m.active && m.uuid !== ctx.account.id));
 </script>
 
-<Popover.Mobile hasContent={members.length > 0}>
+<Popover.Mobile hasContent={members.length > 0} triggerClass={responsive ? 'max-w-full min-w-0 text-left' : ''}>
 	{#snippet trigger()}
-		<div class="rounded-md p-1.5 px-3 {bgClass}" id="playerName" style={bgStyle}>
-			<h1 class="font-emoji text-xl @sm:text-2xl @lg:text-2xl @xl:text-3xl {classes} text-nowrap">
+		<div class={responsive ? 'max-w-full min-w-0' : `rounded-md p-1.5 px-3 ${bgClass}`} style={bgStyle}>
+			<h1
+				id={responsive ? undefined : 'playerName'}
+				class={responsive
+					? 'flex min-w-0 items-baseline gap-1 leading-none'
+					: `font-emoji text-xl @sm:text-2xl @lg:text-2xl @xl:text-3xl ${classes} text-nowrap`}
+			>
 				{#if ctx.rank?.raw}
 					<FormattedText text={ctx.rank.raw.replace(']', '').replace('[', '')} />
 				{:else if rank && plus}
@@ -31,7 +37,9 @@
 				{:else if rank}
 					<span style="color: {rank.color};">{rank?.tag}</span>
 				{/if}
-				{ign}
+				<span class={responsive ? 'min-w-0 truncate' : undefined} title={responsive ? ign : undefined}
+					>{ign}</span
+				>
 			</h1>
 		</div>
 	{/snippet}

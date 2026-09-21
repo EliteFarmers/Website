@@ -584,7 +584,9 @@
 	<Cropselector radio={true} analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-4 md:py-4">
+		<section
+			class="flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-4 text-card-foreground md:py-4"
+		>
 			<div class="flex w-full flex-row items-center justify-between">
 				<div class="hidden flex-1 sm:block"></div>
 				<div class="my-2 flex flex-3 flex-row items-center gap-2">
@@ -679,7 +681,7 @@
 				</div>
 			{/if}
 		</section>
-		<section class="w-full flex-1 rounded-md border-2 bg-card p-4">
+		<section class="w-full flex-1 rounded-md border-2 bg-card p-4 text-card-foreground">
 			<div class="flex h-full w-full max-w-lg flex-col gap-2 p-2">
 				{#if selected}
 					{@const [cropId, info] = selected}
@@ -852,7 +854,9 @@
 	<Cropselector radio={true} href="#fortune" id="fortune" analyticsEvent="fortune.crop_selected" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
+		<section
+			class="flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 bg-card p-4 text-card-foreground"
+		>
 			<div class="flex w-full flex-row items-center justify-center gap-1">
 				<div class="flex flex-1 flex-row justify-end">
 					<JumpLink id="fortune" self={false} />
@@ -923,7 +927,9 @@
 
 	<Cropselector radio={true} href="#upgrades" id="upgrades" analyticsEvent="fortune.crop_selected" />
 
-	<section class="flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
+	<section
+		class="flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 bg-card p-4 text-card-foreground"
+	>
 		<svelte:boundary>
 			<CheapestUpgrades {player} crop={selectedCropKey} {blocksPerHour} />
 			{#snippet failed(error, reset)}

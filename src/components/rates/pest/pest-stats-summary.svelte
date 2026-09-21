@@ -34,7 +34,7 @@
 				{#snippet trigger({ props })}
 					<button
 						{...props}
-						class="inline-flex min-h-9 items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-sm shadow-xs transition-colors hover:bg-muted/50"
+						class="inline-flex min-h-9 items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-sm text-card-foreground shadow-xs transition-colors hover:bg-muted/50"
 						aria-label="View {STAT_NAMES[entry.stat]} breakdown"
 					>
 						<span class={cn('size-2 rounded-full', accent)}></span>
@@ -46,7 +46,9 @@
 				{/snippet}
 			</StatBreakdownDialog>
 		{:else}
-			<div class="relative flex w-fit flex-col gap-3 overflow-hidden rounded-lg border bg-card p-4 md:flex-1">
+			<div
+				class="relative flex w-fit flex-col gap-3 overflow-hidden rounded-lg border bg-card p-4 text-card-foreground md:flex-1"
+			>
 				<div class={cn('absolute inset-x-0 top-0 h-1', accent)}></div>
 				<div class="flex items-center justify-between gap-2">
 					<div class="flex min-w-0 items-center gap-2">
