@@ -152,7 +152,7 @@ function subpageLines(
 					`**${previewNumber(garden.uniqueVisitors)}** unique visitors · **${garden.plots.length}** plots unlocked`,
 				].join('\n'),
 				milestones ? `\n**Highest Crop Milestones**\n${milestones}` : '',
-				`\n**${previewNumber(member.unparsed.copper)}** Copper · **${Object.values(garden.composter.upgrades).reduce((total, value) => total + value, 0)}** Composter upgrade levels`,
+				`\n**${previewNumber(member.unparsed.copper)}** Copper · **${Object.values(garden.composter?.upgrades ?? {}).reduce((total, value) => total + value, 0)}** Composter upgrade levels`,
 			];
 		}
 		case 'contests': {
