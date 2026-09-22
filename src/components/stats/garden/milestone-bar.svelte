@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import { API_CROP_TO_CROP } from '$lib/constants/crops';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import { toReadable } from '$lib/format';
 	import { Crop, getCropDisplayName, getCropFromName, type LevelingStats } from 'farming-weight';
@@ -7,12 +8,14 @@
 
 	interface Props {
 		crop: string;
-		key: string;
 		leveling: LevelingStats;
-		rank?: number;
 	}
 
-	let { crop, key, leveling, rank = -1 }: Props = $props();
+	let { crop, leveling }: Props = $props();
+
+	const ctx = getStatsContext();
+	const key = $derived(API_CROP_TO_CROP[crop as keyof typeof API_CROP_TO_CROP]);
+	const rank = $derived(ctx.ranks?.[key + '-milestone']?.rank ?? -1);
 
 	let displayName = $derived(getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat));
 
@@ -53,8 +56,8 @@
 					{#if rank > 0}
 						<LeaderboardRankLink
 							category="{key}-milestone"
-							player={page.params.id}
-							profile={page.params.profile}
+							player={ctx.ign}
+							profile={ctx.selectedProfile?.profileName}
 							{rank}
 							class="rounded-md bg-card px-1.5 text-card-foreground hover:bg-muted"
 						>

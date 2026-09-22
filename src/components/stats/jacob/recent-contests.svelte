@@ -1,14 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import type { JacobDataDto } from '$lib/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import ContestList from './contest-list.svelte';
 
-	interface Props {
-		contests: JacobDataDto['contests'];
-	}
-
-	let { contests }: Props = $props();
+	const ctx = getStatsContext();
+	const contests = $derived(ctx.member.current?.jacob?.contests);
 
 	let recentContests = $derived(
 		contests
@@ -25,7 +21,7 @@
 		<div class="flex flex-col items-center gap-2">
 			<ContestList contests={recentContests} showGhosts={false} />
 			<Button
-				href={page.url.pathname + '/contests'}
+				href="/@{ctx.ign}/{ctx.selectedProfile?.profileName}/contests"
 				data-sveltekit-preload-data="off"
 				class="w-48"
 				variant="outline"

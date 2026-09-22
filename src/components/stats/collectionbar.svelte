@@ -1,36 +1,24 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import * as Popover from '$comp/ui/popover';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Sidebar from '$ui/sidebar';
 	import { getCropFromName } from 'farming-weight';
 	import Minion from './minion.svelte';
 
-	interface Props {
-		name: string | undefined;
-		value: number;
-		weight: number;
-		pest: string;
-		pestKills: number;
-		pestRank?: number;
-		uncounted?: number;
-		minionTierField: number;
-		key: string;
-		rank?: number;
-	}
+	let { key }: { key: string } = $props();
 
-	let {
-		name,
-		value,
-		weight,
-		pest,
-		pestKills,
-		pestRank = -1,
-		uncounted = 0,
-		minionTierField,
-		key,
-		rank = -1,
-	}: Props = $props();
+	const ctx = getStatsContext();
+
+	const collection = $derived(ctx.collections.find((collection) => collection.key === key));
+	const name = $derived(collection?.name);
+	const value = $derived(collection?.value ?? 0);
+	const weight = $derived(collection?.weight ?? 0);
+	const pest = $derived(collection?.pest ?? '');
+	const pestKills = $derived(collection?.pestKills ?? 0);
+	const uncounted = $derived(collection?.uncounted ?? 0);
+	const rank = $derived(ctx.ranks?.[key]?.rank ?? -1);
+	const pestRank = $derived(ctx.ranks?.[pest]?.rank ?? -1);
 
 	let crop = $derived(name ? name : undefined);
 	let cropEnum = $derived(crop ? getCropFromName(crop) : undefined);
@@ -73,8 +61,8 @@
 					{#if rank > 0}
 						<LeaderboardRankLink
 							category={key}
-							player={page.params.id}
-							profile={page.params.profile}
+							player={ctx.ign}
+							profile={ctx.selectedProfile?.profileName}
 							{rank}
 							class="rounded-md bg-card px-1.5 text-card-foreground hover:bg-muted"
 						>
@@ -93,8 +81,8 @@
 				{#if pestRank > 0}
 					<LeaderboardRankLink
 						category={pest}
-						player={page.params.id}
-						profile={page.params.profile}
+						player={ctx.ign}
+						profile={ctx.selectedProfile?.profileName}
 						rank={pestRank}
 						class="rounded-md bg-card px-1 text-card-foreground hover:bg-muted"
 					>
@@ -132,7 +120,7 @@
 				{Math.floor(weight).toLocaleString()}
 			</p>
 			{#if cropEnum}
-				<Minion name={name ?? ''} crop={cropEnum} tierField={minionTierField} size="sm" />
+				<Minion crop={cropEnum} size="sm" />
 			{/if}
 		</div>
 	</div>
@@ -149,8 +137,8 @@
 						{#if rank > 0}
 							<LeaderboardRankLink
 								category={key}
-								player={page.params.id}
-								profile={page.params.profile}
+								player={ctx.ign}
+								profile={ctx.selectedProfile?.profileName}
 								{rank}
 								class="rounded-md bg-card px-1.5 text-card-foreground hover:bg-muted"
 							>
@@ -177,8 +165,8 @@
 						{#if pestRank > 0}
 							<LeaderboardRankLink
 								category={pest}
-								player={page.params.id}
-								profile={page.params.profile}
+								player={ctx.ign}
+								profile={ctx.selectedProfile?.profileName}
 								rank={pestRank}
 								class="rounded-md bg-card px-1 text-card-foreground hover:bg-muted"
 							>
@@ -219,7 +207,7 @@
 			</div>
 		</div>
 		{#if cropEnum}
-			<Minion name={name ?? ''} crop={cropEnum} tierField={minionTierField} />
+			<Minion crop={cropEnum} />
 		{/if}
 	</div>
 {/if}

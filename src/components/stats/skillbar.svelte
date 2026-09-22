@@ -1,22 +1,36 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
-	import { toReadable } from '$lib/format';
+	import { getLevelProgress, toReadable } from '$lib/format';
+	import type { Skill } from '$lib/skyblock';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Skeleton } from '$ui/skeleton';
+	import { getGardenLevel } from 'farming-weight';
 
 	interface Props {
-		name: string;
-		progress: {
-			level: number;
-			ratio: number;
-			progress: number;
-			goal?: number;
-		};
-		rank?: number;
-		loading?: boolean;
+		skill: Skill | 'garden' | 'coop-social';
+		overflow?: boolean;
 	}
 
-	let { name, progress, rank = -1, loading = false }: Props = $props();
+	let { skill, overflow = false }: Props = $props();
+
+	const ctx = getStatsContext();
+
+	const name = $derived(skill === 'coop-social' ? 'Co-op Social' : skill.charAt(0).toUpperCase() + skill.slice(1));
+	const rank = $derived(ctx.ranks?.[skill]?.rank ?? -1);
+	const loading = $derived(ctx.member.loading);
+
+	const progress = $derived.by(() => {
+		if (skill === 'garden') return getGardenLevel(Number(ctx.garden?.experience ?? 0), overflow);
+		if (skill === 'coop-social') return getLevelProgress('social', ctx.member.current?.socialXp ?? 0);
+
+		const level = ctx.member.current?.stats?.skills?.levels?.[skill];
+		return {
+			level: level?.level ?? 0,
+			ratio: level?.progress ?? 0,
+			progress: level?.xpCurrent ?? 0,
+			goal: level?.xpForNext ? level.xpForNext : undefined,
+		};
+	});
 
 	let percent = $derived(Math.round(progress.ratio * 100));
 	let readable = $state('');
@@ -44,9 +58,9 @@
 	<div class="flex flex-row items-center gap-2">
 		{#if rank >= 0}
 			<LeaderboardRankLink
-				category={name.toLowerCase()}
-				player={page.params.id}
-				profile={page.params.profile}
+				category={skill}
+				player={ctx.ign}
+				profile={ctx.selectedProfile?.profileName}
 				{rank}
 				class="rounded-md bg-card px-1.5 py-0.5 font-semibold text-completed hover:bg-muted"
 			>

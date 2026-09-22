@@ -1,152 +1,74 @@
 <script lang="ts">
-	import { getLevelProgress } from '$lib/format';
+	import { page } from '$app/state';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import * as Collapsible from '$ui/collapsible';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-	import { getGardenLevel } from 'farming-weight';
 	import { slide } from 'svelte/transition';
 	import Skillbar from './skillbar.svelte';
 
-	interface Props {
-		open?: boolean;
-	}
-
-	let { open = $bindable(false) }: Props = $props();
-
 	const ctx = getStatsContext();
+	let open = $state(page.url.href.includes('#Skills'));
 
-	const ranks = $derived(ctx.ranks);
-	const skills = $derived(ctx.member.current?.skills);
-	const levelCaps = $derived((ctx.member.current?.unparsed?.levelCaps ?? {}) as Record<string, number | undefined>);
-	const gardenXp = $derived(Number(ctx.garden?.experience ?? 0));
+	const skillColumns = [
+		['combat', 'mining', 'taming', 'alchemy', 'runecrafting', 'social'],
+		['fishing', 'foraging', 'enchanting', 'carpentry', 'hunting'],
+	] as const;
 </script>
 
-<Collapsible.Root bind:open class="mx-4 w-full">
-	<div class="flex flex-row items-center justify-center">
-		<Collapsible.Trigger>
-			{#snippet child({ props })}
-				<div class="flex w-full flex-row items-end justify-center gap-4">
-					<div class="flex w-full flex-1 flex-col items-end justify-center gap-4 md:flex-row">
-						<Skillbar
-							name="Farming"
-							loading={ctx.member.loading}
-							rank={ranks?.farming?.rank}
-							progress={getLevelProgress('farming', skills?.farming ?? 0, 50 + (levelCaps?.farming ?? 0))}
-						/>
-						<Button variant="outline" class="-mb-1 hidden w-10 bg-background! p-0 md:flex" {...props}>
-							<ChevronsUpDown class="h-4 w-4" />
-							<span class="sr-only">Skill Toggle</span>
-						</Button>
-						<Skillbar
-							name="Garden"
-							loading={ctx.member.loading}
-							rank={ctx.ranks?.garden?.rank}
-							progress={getGardenLevel(gardenXp)}
-						/>
-					</div>
-					<div class="md:hidden">
-						<Button variant="outline" class="-mb-1 w-10 bg-background! p-0" {...props}>
-							<ChevronsUpDown class="h-4 w-4" />
-							<span class="sr-only">Toggle</span>
-						</Button>
-					</div>
-				</div>
-			{/snippet}
-		</Collapsible.Trigger>
+<section class="my-2 mb-16 flex items-center justify-center" id="Skills">
+	<div class="flex w-full max-w-7xl flex-1">
+		<Collapsible.Root bind:open class="mx-4 w-full">
+			<div class="flex flex-row items-center justify-center">
+				<Collapsible.Trigger>
+					{#snippet child({ props })}
+						<div class="flex w-full flex-row items-end justify-center gap-4">
+							<div class="flex w-full flex-1 flex-col items-end justify-center gap-4 md:flex-row">
+								<Skillbar skill="farming" />
+								<Button
+									variant="outline"
+									class="-mb-1 hidden w-10 bg-background! p-0 md:flex"
+									{...props}
+								>
+									<ChevronsUpDown class="h-4 w-4" />
+									<span class="sr-only">Skill Toggle</span>
+								</Button>
+								<Skillbar skill="garden" />
+							</div>
+							<div class="md:hidden">
+								<Button variant="outline" class="-mb-1 w-10 bg-background! p-0" {...props}>
+									<ChevronsUpDown class="h-4 w-4" />
+									<span class="sr-only">Toggle</span>
+								</Button>
+							</div>
+						</div>
+					{/snippet}
+				</Collapsible.Trigger>
+			</div>
+			<Collapsible.Content forceMount>
+				{#snippet child({ props, open })}
+					{#if open}
+						<div {...props} transition:slide={{ duration: 150 }}>
+							<div class="my-8 flex flex-col justify-center gap-8 align-middle md:flex-row">
+								{#each skillColumns as skills, column (column)}
+									<div class="flex max-w-2xl flex-1 flex-col gap-2">
+										{#each skills as skill (skill)}
+											<Skillbar {skill} />
+										{/each}
+										{#if column === 1}
+											{#if (ctx.selectedProfile?.members?.length ?? 0) > 1}
+												<Skillbar skill="coop-social" />
+											{:else}
+												<div class="flex-1"></div>
+											{/if}
+										{/if}
+									</div>
+								{/each}
+							</div>
+						</div>
+					{/if}
+				{/snippet}
+			</Collapsible.Content>
+		</Collapsible.Root>
 	</div>
-	<Collapsible.Content forceMount>
-		{#snippet child({ props, open })}
-			{#if open}
-				<div {...props} transition:slide={{ duration: 150 }}>
-					<div class="my-8 flex flex-col justify-center gap-8 align-middle md:flex-row">
-						<div class="flex max-w-2xl flex-1 flex-col gap-2">
-							<Skillbar
-								name="Combat"
-								rank={ranks?.combat?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('combat', skills?.combat ?? 0)}
-							/>
-							<Skillbar
-								name="Mining"
-								loading={ctx.member.loading}
-								rank={ranks?.mining?.rank}
-								progress={getLevelProgress('mining', skills?.mining ?? 0)}
-							/>
-							<Skillbar
-								name="Taming"
-								rank={ranks?.taming?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress(
-									'taming',
-									skills?.taming ?? 0,
-									50 + (levelCaps?.taming ?? 0)
-								)}
-							/>
-							<Skillbar
-								name="Alchemy"
-								rank={ranks?.alchemy?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('alchemy', skills?.alchemy ?? 0)}
-							/>
-							<Skillbar
-								name="Runecrafting"
-								rank={ranks?.runecrafting?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('runecrafting', skills?.runecrafting ?? 0)}
-							/>
-							<Skillbar
-								name="Social"
-								rank={ranks?.social?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('social', skills?.social ?? 0)}
-							/>
-						</div>
-						<div class="flex max-w-2xl flex-1 flex-col gap-2">
-							<Skillbar
-								name="Fishing"
-								rank={ranks?.fishing?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('fishing', skills?.fishing ?? 0)}
-							/>
-							<Skillbar
-								name="Foraging"
-								rank={ranks?.foraging?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('foraging', skills?.foraging ?? 0)}
-							/>
-							<Skillbar
-								name="Enchanting"
-								rank={ranks?.enchanting?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('enchanting', skills?.enchanting ?? 0)}
-							/>
-							<Skillbar
-								name="Carpentry"
-								rank={ranks?.carpentry?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('carpentry', skills?.carpentry ?? 0)}
-							/>
-							<Skillbar
-								name="Hunting"
-								rank={ranks?.hunting?.rank}
-								loading={ctx.member.loading}
-								progress={getLevelProgress('hunting', skills?.hunting ?? 0)}
-							/>
-							{#if ctx.selectedProfile?.members?.length && ctx.selectedProfile.members.length > 1}
-								<Skillbar
-									name="Co-op Social"
-									rank={ranks?.['coop-social']?.rank}
-									loading={ctx.member.loading}
-									progress={getLevelProgress('social', ctx.member.current?.socialXp ?? 0)}
-								/>
-							{:else}
-								<div class="flex-1"></div>
-							{/if}
-						</div>
-					</div>
-				</div>
-			{/if}
-		{/snippet}
-	</Collapsible.Content>
-</Collapsible.Root>
+</section>

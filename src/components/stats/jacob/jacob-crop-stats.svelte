@@ -1,17 +1,19 @@
 <script lang="ts">
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import type { JacobDataDto } from '$lib/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import * as Popover from '$ui/popover';
 	import { fortuneFromPersonalBestContest, getCropFromName } from 'farming-weight';
 
 	interface Props {
-		jacob: JacobDataDto | undefined | null;
 		crop: string;
 		count: number;
 	}
 
-	let { jacob, crop, count }: Props = $props();
+	let { crop, count }: Props = $props();
+
+	const ctx = getStatsContext();
+	const jacob = $derived(ctx.member.current?.jacob);
 
 	function fortune(crop: string, collected: number) {
 		const c = getCropFromName(crop);

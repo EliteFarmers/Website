@@ -1,19 +1,20 @@
 <script lang="ts">
 	import type { ProfileEventMemberDto } from '$lib/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 
 	interface Props {
 		member: ProfileEventMemberDto;
-		memberUuid: string;
-		ign: string;
 	}
 
-	let { member, memberUuid, ign }: Props = $props();
+	let { member }: Props = $props();
+
+	const ctx = getStatsContext();
 </script>
 
 <a
 	class="flex w-full flex-row items-center justify-between gap-2 rounded-md bg-card px-6 py-[1.88rem] text-card-foreground"
-	href="/event/{member.eventId}/leaderboard#{memberUuid}"
+	href="/event/{member.eventId}/leaderboard#{ctx.uuid}"
 >
 	<div class="flex flex-row items-center justify-center gap-2 align-middle">
 		<p class="text-lg">{member.eventName}</p>
@@ -32,12 +33,12 @@
 				{#if member.status === 0}
 					<p class="text-lg font-semibold">Inactive Farmer</p>
 					<p class="max-w-xs">
-						{ign} has not increased their score since last checked.
+						{ctx.ign} has not increased their score since last checked.
 					</p>
 				{/if}
 				{#if member.status === 1}
 					<p class="text-lg font-semibold">Actively Farming!</p>
-					<p class="max-w-xs">{ign} has increased their score since last checked!</p>
+					<p class="max-w-xs">{ctx.ign} has increased their score since last checked!</p>
 				{/if}
 			</div>
 		</Popover.Mobile>
