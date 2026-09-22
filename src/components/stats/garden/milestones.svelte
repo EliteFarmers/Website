@@ -1,16 +1,17 @@
 <script lang="ts">
-	import type { GardenDto, LeaderboardRanksResponse } from '$lib/api';
-	import { API_CROP_TO_CROP } from '$lib/constants/crops';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { getCropMilestones, type LevelingStats } from 'farming-weight';
 	import MilestoneBar from './milestone-bar.svelte';
 
 	interface Props {
-		garden?: GardenDto | undefined;
-		ranks?: LeaderboardRanksResponse['ranks'] | undefined;
 		overflow?: boolean;
 	}
 
-	let { garden = undefined, ranks = undefined, overflow = $bindable(false) }: Props = $props();
+	let { overflow = $bindable(false) }: Props = $props();
+
+	const ctx = getStatsContext();
+
+	const garden = $derived(ctx.garden);
 	let highestSort = $state(true);
 
 	let milestones = $derived(
@@ -36,10 +37,6 @@
 		}
 		return b[1].level - a[1].level;
 	}
-
-	function getCropKey(crop: string) {
-		return API_CROP_TO_CROP[crop as keyof typeof API_CROP_TO_CROP];
-	}
 </script>
 
 <div class="flex max-w-4xl flex-1 flex-col gap-2">
@@ -58,8 +55,7 @@
 	</div>
 	<div class="flex w-full flex-col gap-2">
 		{#each milestones as [crop, leveling] (crop)}
-			{@const key = getCropKey(crop)}
-			<MilestoneBar {crop} {leveling} {key} rank={ranks?.[key + '-milestone']?.rank} />
+			<MilestoneBar {crop} {leveling} />
 		{/each}
 	</div>
 </div>

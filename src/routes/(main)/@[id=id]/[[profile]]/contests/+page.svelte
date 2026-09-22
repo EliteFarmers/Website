@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import Contest from '$comp/stats/jacob/contest.svelte';
+	import EarnedMedals from '$comp/stats/jacob/earned-medals.svelte';
 	import MedalCounts from '$comp/stats/jacob/medalcounts.svelte';
 	import type { ContestParticipationDto } from '$lib/api';
 	import { getSkyblockDate, getTimeStamp } from '$lib/format';
@@ -62,16 +63,7 @@
 >
 	<div class="mx-4 flex flex-col items-center justify-center sm:w-full md:w-[90%] lg:w-[80%]">
 		<div class="my-8 flex w-fit max-w-full flex-col items-center rounded-md bg-background p-3 text-foreground">
-			<MedalCounts
-				participations={contestsCount}
-				medals={{
-					diamond: member?.jacob?.earnedMedals?.diamond ?? 0,
-					platinum: member?.jacob?.earnedMedals?.platinum ?? 0,
-					gold: member?.jacob?.earnedMedals?.gold ?? 0,
-					silver: member?.jacob?.earnedMedals?.silver ?? 0,
-					bronze: member?.jacob?.earnedMedals?.bronze ?? 0,
-				}}
-			/>
+			<EarnedMedals />
 
 			<div class="my-2 mt-4 flex flex-row items-center gap-2">
 				<Switch bind:checked={timeType} />

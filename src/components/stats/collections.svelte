@@ -5,7 +5,6 @@
 
 	const ctx = getStatsContext();
 	const collections = $derived(ctx.collections);
-	const ranks = $derived(ctx.ranks);
 
 	let weightSort = $state(true);
 
@@ -29,7 +28,7 @@
 	>
 	<div class="flex w-full flex-col gap-2">
 		{#each list as item (item.key)}
-			<CollectionBar {...item} rank={ranks?.[item.key]?.rank} pestRank={ranks?.[item.pest]?.rank} />
+			<CollectionBar key={item.key} />
 		{/each}
 		{#if ctx.member.loading}
 			{#each { length: 10 }, i (i)}

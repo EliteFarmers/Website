@@ -26,16 +26,21 @@
 </script>
 
 <script lang="ts">
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { PROPER_CROP_TO_MINION } from '$lib/constants/crops';
+	import { getCropDisplayName } from 'farming-weight';
 	import * as Popover from '$ui/popover';
 
 	interface Props {
-		name: string;
 		crop: Crop;
-		tierField: number;
 		size?: 'sm' | 'md';
 	}
 
-	let { name, crop, tierField, size = 'md' }: Props = $props();
+	let { crop, size = 'md' }: Props = $props();
+
+	const ctx = getStatsContext();
+	const name = $derived(getCropDisplayName(crop));
+	const tierField = $derived(ctx.member.current?.craftedMinions?.[PROPER_CROP_TO_MINION[name] ?? 'no'] ?? 0);
 
 	let minionName = $derived(MinionIds[crop]);
 

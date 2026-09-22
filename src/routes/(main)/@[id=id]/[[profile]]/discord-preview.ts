@@ -1,7 +1,6 @@
 import type { ProfileMemberDto, LeaderboardRanksResponse, MinecraftAccountDto, ProfileDetailsDto } from '$lib/api';
 import { env } from '$env/dynamic/public';
 import { API_CROP_TO_CROP, CROP_DISCORD_EMOJIS, CROP_UNICODE_EMOJIS } from '$lib/constants/crops';
-import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 import {
 	getDiscordPestEmoji,
 	previewCrop,
@@ -10,7 +9,6 @@ import {
 	previewText,
 	type PreviewCard,
 } from '$lib/discord-preview';
-import { getLevelProgress } from '$lib/format';
 import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 type RankLink = (category: string, rank: number, label?: string) => string;
@@ -126,9 +124,7 @@ function subpageLines(
 	if (!member) return [];
 	const garden = member.garden;
 	const jacob = member.jacob;
-	const farmingLevel = member.api.skills
-		? getLevelProgress('farming', member.skills.farming, jacob.perks.levelCap + DEFAULT_SKILL_CAPS.farming).level
-		: undefined;
+	const farmingLevel = member.api.skills ? member.stats?.skills?.levels?.farming?.level : undefined;
 	const cropLevels = (values: Record<string, number>, label: string) =>
 		Object.entries(values)
 			.filter(([, value]) => value > 0)

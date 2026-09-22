@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import LeaderboardRankLink from '$comp/leaderboards/leaderboard-rank-link.svelte';
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
@@ -11,49 +10,13 @@
 	import Plots from '$comp/stats/garden/plots.svelte';
 	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
-	import type { GardenDto } from '$lib/api';
-	import { getCopperSpentCropUpgrades } from '$lib/calc/garden';
-	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import GardenStats from '$comp/stats/garden/garden-stats.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
-	import * as Popover from '$ui/popover';
-	import { Crop, GARDEN_VISITORS, getCropDisplayName, getCropUpgrades, getGardenLevel } from 'farming-weight';
 	import { createPreview } from '../discord-preview';
 
 	let overflow = $state(true);
 
 	const ctx = getStatsContext();
-	const garden = $derived((ctx.member.current?.garden ?? {}) as GardenDto);
-
-	const maxVisitors = $derived(Object.keys(GARDEN_VISITORS).length);
-	const totalVisits = $derived(
-		Object.values(garden.visitors ?? {}).reduce((acc, { visits = 0 }) => acc + visits, 0) ?? 0
-	);
-	const accepted = $derived(garden.completedVisitors ?? 0);
-	const rejected = $derived(totalVisits - accepted);
-	const rate = $derived(((accepted / totalVisits) * 100).toFixed(2));
-	const ranks = $derived(ctx.ranks);
-
-	const copper = $derived(ctx.member.current?.unparsed?.copper ?? 0);
-
-	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as unknown as Record<string, number>));
-	let crops = $derived(
-		Object.entries(upgrades)
-			.map(([crop, level]) => {
-				const name = getCropDisplayName(crop as Crop);
-				const img = PROPER_CROP_TO_IMG[name as keyof typeof PROPER_CROP_TO_IMG];
-
-				return { name, img, level };
-			})
-			.sort((a, b) => a.name.localeCompare(b.name))
-	);
-
-	let totalCopperSpent = $derived.by(() =>
-		crops.reduce((sum, { level }) => sum + getCopperSpentCropUpgrades(level), 0)
-	);
-
-	const analyzedMutations = $derived(
-		Object.values(ctx.member.current?.memberData?.garden?.mutations ?? {}).filter((a) => a.analyzed).length
-	);
 </script>
 
 <StatsHead
@@ -68,109 +31,25 @@
 
 <div class="flex w-full flex-col items-center justify-center gap-8">
 	<section class="flex w-full flex-row items-center justify-center gap-4 px-2">
-		<Skillbar
-			name="Garden"
-			progress={getGardenLevel(Number(garden.experience ?? 0), overflow)}
-			rank={ranks.garden?.rank}
-		/>
+		<Skillbar skill="garden" {overflow} />
 	</section>
 
 	<section class="flex w-full justify-center align-middle">
 		<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-12 align-middle md:gap-8 lg:flex-row">
-			<Milestones {garden} bind:overflow {ranks} />
+			<Milestones bind:overflow />
 			<div class="flex flex-1 flex-col items-center gap-4 md:items-start">
 				<div class="mt-2 flex max-w-full flex-wrap gap-6">
 					<div class="flex flex-row gap-2">
-						<div class="flex w-fit flex-col gap-2 rounded-md bg-background p-3 text-foreground">
-							<h3 class="text-lg leading-none font-semibold">Unlocked Plots</h3>
-							<Plots plots={garden.plots} />
-						</div>
-						<div class="flex w-fit flex-col gap-2 rounded-md bg-background p-3 text-foreground">
-							<h3 class="text-lg leading-none font-semibold">Stats</h3>
-							<div
-								class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground"
-							>
-								Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
-							</div>
-							<div
-								class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground"
-							>
-								DNA Analysis Milestone • <span class="font-semibold"
-									>{ctx.member.current?.unparsed?.dnaMilestone ?? 0}
-								</span>
-							</div>
-							<div
-								class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground"
-							>
-								Analyzed Mutations • <span class="font-semibold">{analyzedMutations}</span>
-							</div>
-						</div>
+						<Plots />
+						<GardenStats />
 					</div>
 
-					<div class="-mt-0.5 flex w-fit flex-col rounded-md bg-background p-3 text-foreground">
-						<Popover.Mobile triggerClass="inline-block w-fit">
-							{#snippet trigger()}
-								<h3 class="text-lg leading-none font-semibold">Crop Upgrades</h3>
-							{/snippet}
-							<div class="flex flex-col gap-1">
-								<p class="font-semibold">All Crops</p>
-								<p class="max-w-xs wrap-break-word whitespace-normal">
-									<span class="font-semibold">{totalCopperSpent.toLocaleString()}</span> Total Copper
-									Spent <br />
-								</p>
-								<p class="max-w-xs wrap-break-word whitespace-normal">
-									<span class="font-semibold"
-										>{(CROP_UPGRADES_MAX_COST - totalCopperSpent).toLocaleString()}</span
-									> Total Copper Until Max
-								</p>
-							</div>
-						</Popover.Mobile>
-						<CropUpgrades {garden} />
-					</div>
+					<CropUpgrades />
 				</div>
 
-				<div class="flex w-full flex-col gap-2 rounded-md bg-background p-3 text-foreground">
-					<h3 class="text-xl leading-none font-semibold">Visitors</h3>
-					<div class="flex max-w-lg flex-wrap gap-2 text-lg sm:flex-row">
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
-							Unique • <span class="font-semibold">{(garden.uniqueVisitors ?? 0).toLocaleString()}</span
-							>/{maxVisitors}
-						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
-							Total Visits • <span class="font-semibold">{totalVisits.toLocaleString()}</span>
-						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
-							{#if ranks['visitors-accepted']?.rank > 0}
-								<LeaderboardRankLink
-									category="visitors-accepted"
-									player={page.params.id}
-									profile={page.params.profile}
-									rank={ranks['visitors-accepted']?.rank ?? -1}
-									class="rounded-md bg-card px-1.5 text-card-foreground hover:bg-muted"
-								>
-									<span class="text-sm">#</span><span class="text-md"
-										>{ranks['visitors-accepted']?.rank}</span
-									>
-								</LeaderboardRankLink> •
-							{/if}
-							Accepted • <span class="font-semibold">{accepted.toLocaleString()}</span>
-						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
-							Rejected • <span class="font-semibold">{rejected.toLocaleString()}</span>
-						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2 text-card-foreground">
-							Acceptance Rate • <span class="font-semibold">{rate}%</span>
-						</div>
-					</div>
-					<VisitorList {garden} />
-				</div>
+				<VisitorList />
 
-				{#if (garden.uniqueVisitors ?? 0) < maxVisitors}
-					<div class="flex w-full flex-col gap-2 rounded-md bg-background p-3 text-foreground">
-						<h3 class="text-xl leading-none font-semibold">Missing Visitors</h3>
-						<MissingVisitors {garden} />
-					</div>
-				{/if}
+				<MissingVisitors />
 			</div>
 		</div>
 	</section>

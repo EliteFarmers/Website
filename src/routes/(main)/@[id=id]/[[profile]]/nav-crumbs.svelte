@@ -12,25 +12,23 @@
 	import { page } from '$app/state';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import Gamemode from '$comp/stats/player/gamemode.svelte';
-	import type { MinecraftAccountDto, ProfileDetailsDto } from '$lib/api';
-	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
+	import type { ProfileGameMode } from '$lib/api/elite';
 	import { formatIgn } from '$lib/format';
 	import { getPageCtx, type Crumb, type SidebarSectionGroup } from '$lib/hooks/page.svelte';
 	import { createSidebarSection } from '$lib/sidebar-sections';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { watch } from 'runed';
 	import { tick } from 'svelte';
 
-	interface Props {
-		account: MinecraftAccountDto;
-		profile: ProfileDetailsDto;
-		profiles: ProfileDetails[];
-	}
+	const ctx = getStatsContext();
 
-	let { account, profile, profiles }: Props = $props();
+	const account = $derived(ctx.account);
+	const profile = $derived(ctx.selectedProfile);
+	const profiles = $derived(ctx.profiles);
 
-	const thisMember = $derived(profile.members?.find((m) => m.uuid === account?.id) ?? null);
-	const otherMembers = $derived(profile.members?.filter((m) => m.uuid !== account?.id && m.active) ?? []);
+	const thisMember = $derived(profile?.members?.find((m) => m.uuid === account?.id) ?? null);
+	const otherMembers = $derived(profile?.members?.filter((m) => m.uuid !== account?.id && m.active) ?? []);
 	const otherProfiles = $derived(profiles?.filter((p) => p.id !== profile?.profileId) ?? []);
 
 	let path = $derived(`/@${account?.name}/${profile?.profileName}`);
@@ -108,7 +106,7 @@
 				snippet: profileDropdown,
 			})),
 			data: {
-				mode: profile.gameMode,
+				mode: profile?.gameMode,
 			},
 			snippet: profileDropdown,
 		},
@@ -152,7 +150,7 @@
 					href: path,
 					tooltip: 'Profile',
 					data: {
-						gameMode: profile.gameMode,
+						gameMode: profile?.gameMode,
 						popover: false,
 						class: 'size-4',
 						map: true,

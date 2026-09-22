@@ -98,7 +98,7 @@
 	portals
 	fixedBackground
 >
-	<NavCrumbs account={data.account} profile={data.profile} profiles={data.profiles} />
+	<NavCrumbs />
 	<JoinElitePopup />
 	<NameCard />
 	<BadgeList />

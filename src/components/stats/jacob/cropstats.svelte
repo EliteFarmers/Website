@@ -29,6 +29,6 @@
 
 <div class={cn('flex max-w-6xl flex-wrap items-center justify-center gap-4', className)}>
 	{#each highest as [crop, amount] (crop)}
-		<JacobCropStats {jacob} {crop} count={amount} />
+		<JacobCropStats {crop} count={amount} />
 	{/each}
 </div>
