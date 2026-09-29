@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import InventorySelect from '$comp/items/inventories/inventory-select.svelte';
+	import ProfilePets from '$comp/items/profile-pets.svelte';
 	import SackContents from '$comp/items/sack-contents.svelte';
 	import FarmingToolsAndEvents from '$comp/stats/farming-tools-and-events.svelte';
 	import StatsHead from '$comp/seo/stats-head.svelte';
@@ -100,6 +101,7 @@
 </section>
 
 <InventorySelect />
+<ProfilePets />
 <SackContents />
 <JacobInfo />
 <Breakdown />
