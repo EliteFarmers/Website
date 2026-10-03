@@ -1,5 +1,6 @@
 import type { FarmingAttributeShard } from './attribute-shard.js';
 import {
+	CocoaleechShard,
 	CricketShard,
 	CropeetleShard,
 	DragonflyShard,
@@ -40,6 +41,7 @@ export const FARMING_ATTRIBUTE_SHARDS = defineAttributeShards({
 	pest_cooldown: new MothShard(),
 	bonus_pest_chance: new KeeledSlugShard(),
 	wart_eater: new WartyBugShard(),
+	groovy_radar: new CocoaleechShard(),
 	garden_wisdom: new DragonflyShard(),
 	solar_power: new FireflyShard(),
 	lunar_power: new LunarMothShard(),
