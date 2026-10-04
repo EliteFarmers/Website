@@ -46,12 +46,22 @@ export function parseLeaderboards(response?: LeaderboardsResponse): {
 
 			if (leaderboards[`${key}-weekly`]) {
 				data.intervals.push('weekly');
-				lookup[`${key}-weekly`] = { ...data, id: `${key}-weekly`, suffix: ' Weekly' };
+				lookup[`${key}-weekly`] = {
+					...data,
+					...leaderboards[`${key}-weekly`],
+					id: `${key}-weekly`,
+					suffix: ' Weekly',
+				};
 			}
 
 			if (leaderboards[`${key}-monthly`]) {
 				data.intervals.push('monthly');
-				lookup[`${key}-monthly`] = { ...data, id: `${key}-monthly`, suffix: ' Monthly' };
+				lookup[`${key}-monthly`] = {
+					...data,
+					...leaderboards[`${key}-monthly`],
+					id: `${key}-monthly`,
+					suffix: ' Monthly',
+				};
 			}
 
 			if (data.itemId && !data.icon) {

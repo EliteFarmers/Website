@@ -45,7 +45,7 @@
 		<div class="flex flex-row items-center justify-center gap-2">
 			<div class="flex items-center justify-center text-sm font-medium whitespace-nowrap">
 				Page {table.atoms.pagination.get().pageIndex + 1} of
-				{table.getPageCount()}
+				{Math.max(1, table.getPageCount())}
 			</div>
 			<div class="flex items-center space-x-2">
 				<Button

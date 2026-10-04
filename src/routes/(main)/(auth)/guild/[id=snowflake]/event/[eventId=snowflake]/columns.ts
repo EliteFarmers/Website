@@ -1,5 +1,6 @@
 import type { AdminEventMemberDto, EventTeamWithMembersDto } from '$lib/api';
 import { renderComponent, renderSnippet } from '$ui/data-table';
+import { filterFn_includesString, sortFn_alphanumeric, sortFn_basic } from '@tanstack/svelte-table';
 import Activity from '@lucide/svelte/icons/activity';
 import CircleOff from '@lucide/svelte/icons/circle-off';
 import LogOut from '@lucide/svelte/icons/log-out';
@@ -43,12 +44,14 @@ export const getColumns = (
 			id: 'playerName',
 			accessorKey: 'playerName',
 			header: 'Name',
+			filterFn: filterFn_includesString,
 			cell: ({ row }) => {
 				return renderComponent(MemberRow, { member: row.original });
 			},
 		},
 		{
 			accessorKey: 'status',
+			sortFn: sortFn_basic,
 			header: ({ column }) =>
 				renderComponent(DataTableColumnHeader<AdminEventMember, unknown>, {
 					column,
@@ -63,6 +66,7 @@ export const getColumns = (
 		},
 		{
 			accessorKey: 'teamId',
+			sortFn: sortFn_alphanumeric,
 			header: ({ column }) =>
 				renderComponent(DataTableColumnHeader<AdminEventMember, unknown>, {
 					column,
@@ -86,7 +90,9 @@ export const getColumns = (
 			})),
 		},
 		{
-			accessorKey: 'score',
+			id: 'score',
+			accessorFn: (member) => Number(member.score ?? 0),
+			sortFn: sortFn_basic,
 			header: ({ column }) =>
 				renderComponent(DataTableColumnHeader<AdminEventMember, unknown>, {
 					column,
@@ -94,7 +100,7 @@ export const getColumns = (
 					class: 'justify-end',
 				}),
 			cell: ({ row }) => {
-				return renderSnippet(amountCellSnippet, parseFloat(row.getValue('score')).toLocaleString());
+				return renderSnippet(amountCellSnippet, row.getValue<number>('score').toLocaleString());
 			},
 			enableSorting: true,
 		},

@@ -5,13 +5,11 @@
 		FlexRender,
 		type AnyColumnDef,
 		type ColumnFiltersState,
-		type PaginationState,
 		type RowData,
-		type RowSelectionState,
 		type SortingState,
 		type VisibilityState,
 	} from '$ui/data-table/index.js';
-	import type { Component } from 'svelte';
+	import { untrack, type Component } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import DataTablePagination from './data-table-pagination.svelte';
 	import DataTableToolbar from './data-table-toolbar.svelte';
@@ -36,73 +34,21 @@
 		extra,
 	}: DataTableProps<TData> = $props();
 
-	let rowSelection = $state<RowSelectionState>({});
-	let columnVisibility = $derived<VisibilityState>(initialVisibility);
-	let columnFilters = $derived<ColumnFiltersState>(initialFilters);
-	let sorting = $derived<SortingState>(initialSorting);
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
-
 	const table = createTable({
 		features: dataTableFeatures,
 		get data() {
 			return data;
 		},
-		state: {
-			get sorting() {
-				return sorting;
-			},
-			get columnVisibility() {
-				return columnVisibility;
-			},
-			get rowSelection() {
-				return rowSelection;
-			},
-			get columnFilters() {
-				return columnFilters;
-			},
-			get pagination() {
-				return pagination;
-			},
-		},
+		initialState: untrack(() => ({
+			sorting: initialSorting,
+			columnVisibility: initialVisibility,
+			columnFilters: initialFilters,
+			pagination: { pageIndex: 0, pageSize: 10 },
+		})),
 		get columns() {
 			return columns;
 		},
 		enableRowSelection: true,
-		onRowSelectionChange: (updater) => {
-			if (typeof updater === 'function') {
-				rowSelection = updater(rowSelection);
-			} else {
-				rowSelection = updater;
-			}
-		},
-		onSortingChange: (updater) => {
-			if (typeof updater === 'function') {
-				sorting = updater(sorting);
-			} else {
-				sorting = updater;
-			}
-		},
-		onColumnFiltersChange: (updater) => {
-			if (typeof updater === 'function') {
-				columnFilters = updater(columnFilters);
-			} else {
-				columnFilters = updater;
-			}
-		},
-		onColumnVisibilityChange: (updater) => {
-			if (typeof updater === 'function') {
-				columnVisibility = updater(columnVisibility);
-			} else {
-				columnVisibility = updater;
-			}
-		},
-		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
-		},
 	});
 </script>
 

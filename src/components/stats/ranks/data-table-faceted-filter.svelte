@@ -10,9 +10,11 @@
 	import * as Command from '$ui/command';
 	import type { Column } from '$ui/data-table';
 	import * as Popover from '$ui/popover';
+	import type { IconProps } from '@lucide/svelte';
 	import Check from '@lucide/svelte/icons/check';
 	import CircleMinus from '@lucide/svelte/icons/circle-minus';
 	import Funnel from '@lucide/svelte/icons/funnel';
+	import type { Component } from 'svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 
 	type Props<TData, TValue> = {
@@ -22,16 +24,14 @@
 		options: {
 			label: string;
 			value: string;
-			// This should be `Component` after @lucide/svelte updates types
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			icon?: any;
+			icon?: Component<IconProps>;
 		}[];
 	};
 
 	let { column, title, options, radio }: Props<TData, TValue> = $props();
 
 	const facets = $derived(column?.getFacetedUniqueValues());
-	const optionsSorted = $derived(options.sort((a, b) => (facets.get(b.value) ?? 0) - (facets.get(a.value) ?? 0)));
+	const optionsSorted = $derived(options.toSorted((a, b) => (facets.get(b.value) ?? 0) - (facets.get(a.value) ?? 0)));
 	const selectedValues = $derived(new SvelteSet(column?.getFilterValue() as string[]));
 </script>
 
@@ -81,19 +81,20 @@
 						{@const isSelected = selectedValues.has(option.value)}
 						<Command.Item
 							onSelect={() => {
+								const nextValues = new SvelteSet(selectedValues);
 								if (isSelected) {
 									if (radio) {
-										selectedValues.clear();
+										nextValues.clear();
 									} else {
-										selectedValues.delete(option.value);
+										nextValues.delete(option.value);
 									}
 								} else {
 									if (radio) {
-										selectedValues.clear();
+										nextValues.clear();
 									}
-									selectedValues.add(option.value);
+									nextValues.add(option.value);
 								}
-								const filterValues = Array.from(selectedValues);
+								const filterValues = Array.from(nextValues);
 								column?.setFilterValue(filterValues.length ? filterValues : undefined);
 							}}
 						>

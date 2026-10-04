@@ -4,6 +4,7 @@ import Calendar from '@lucide/svelte/icons/calendar';
 import Hourglass from '@lucide/svelte/icons/hourglass';
 import SquareActivity from '@lucide/svelte/icons/square-activity';
 import type { ColumnDef } from '$ui/data-table';
+import { filterFn_includesString } from '@tanstack/svelte-table';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 
 export type LbRanking = LeaderboardRanksResponse['ranks'][number] & {
@@ -24,6 +25,7 @@ export const getColumns = (leaderboards?: LbList) => {
 			id: 'title',
 			accessorKey: 'title',
 			header: null,
+			filterFn: filterFn_includesString,
 		},
 		{
 			id: 'amount',
@@ -56,6 +58,7 @@ export const getColumns = (leaderboards?: LbList) => {
 			accessorKey: 'interval',
 			header: null,
 			enableSorting: true,
+			filterFn: (row, id, value: string[]) => value.includes(row.getValue<string>(id)),
 		},
 		{
 			id: 'category',

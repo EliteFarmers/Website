@@ -11,8 +11,10 @@
 	import type { Column } from '$ui/data-table';
 	import * as Popover from '$ui/popover';
 	import { Separator } from '$ui/separator';
+	import type { IconProps } from '@lucide/svelte';
 	import Check from '@lucide/svelte/icons/check';
 	import Funnel from '@lucide/svelte/icons/funnel';
+	import type { Component } from 'svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 
 	type Props<TData, TValue> = {
@@ -21,9 +23,7 @@
 		options: {
 			label: string;
 			value: string;
-			// This should be `Component` after @lucide/svelte updates types
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			icon?: any;
+			icon?: Component<IconProps>;
 		}[];
 	};
 
@@ -71,12 +71,13 @@
 						{@const isSelected = selectedValues.has(option.value)}
 						<Command.Item
 							onSelect={() => {
+								const nextSelectedValues = new SvelteSet(selectedValues);
 								if (isSelected) {
-									selectedValues.delete(option.value);
+									nextSelectedValues.delete(option.value);
 								} else {
-									selectedValues.add(option.value);
+									nextSelectedValues.add(option.value);
 								}
-								const filterValues = Array.from(selectedValues);
+								const filterValues = Array.from(nextSelectedValues);
 								column?.setFilterValue(filterValues.length ? filterValues : undefined);
 							}}
 						>
