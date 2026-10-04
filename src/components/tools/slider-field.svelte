@@ -84,5 +84,7 @@
 			class="w-16 shrink-0 [appearance:textfield] text-center tabular-nums [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
 		/>
 	</div>
-	{#if description}<p class="text-xs text-muted-foreground">{description}</p>{/if}
+	{#if description}
+		<p class="text-xs text-muted-foreground">{description}</p>
+	{/if}
 </div>

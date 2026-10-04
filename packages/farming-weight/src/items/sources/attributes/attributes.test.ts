@@ -6,8 +6,11 @@ import { Stat } from '../../../constants/stats.js';
 import { buildEffectEnvironment } from '../../../effects/environment.js';
 import { produceAddedDrops, resolveDropEffects } from '../../../effects/resolver.js';
 import type { DropContext } from '../../../effects/types.js';
+import { DEFAULT_PEST_CYCLE_SETTINGS, PestFarmingRateCalculator } from '../../../pests/pest-farming-rate-calculator.js';
+import { PestFarmingPlayer } from '../../../player/pestfarmingplayer.js';
 import { createFarmingPlayer } from '../../../player/player.js';
 import {
+	CocoaleechShard,
 	CricketShard,
 	CropeetleShard,
 	DragonflyShard,
@@ -99,6 +102,40 @@ function dropCtx(overrides: Partial<DropContext>): DropContext {
 		...overrides,
 	};
 }
+
+describe('CocoaleechShard', () => {
+	test.each([
+		['groovy_radar', 0, 1],
+		['groovy_radar', 1, 1.025],
+		['groovy_radar', 24, 1.25],
+		['SHARD_COCOALEECH', 24, 1.25],
+	] as const)('scales only pest Vinyl drops with %s at %i shards', (attribute, amount, multiplier) => {
+		const calculate = (attributes: Record<string, number>) =>
+			new PestFarmingRateCalculator({
+				player: new PestFarmingPlayer({ attributes: { crop_bug: 999, pest_luck: 999, ...attributes } }),
+				options: { crop: Crop.Wheat, cycle: DEFAULT_PEST_CYCLE_SETTINGS },
+			}).calculate();
+		const baseline = calculate({});
+		const result = calculate({ [attribute]: amount });
+		let vinyls = 0;
+		for (const [pest, drops] of Object.entries(baseline.breakdown.pestDrops.byPest)) {
+			const actual = result.breakdown.pestDrops.byPest[pest as keyof typeof result.breakdown.pestDrops.byPest]!;
+			expect(actual.items).toEqual(drops.items);
+			for (const [itemId, quantity] of Object.entries(drops.rngItems)) {
+				const isVinyl = itemId.startsWith('VINYL_');
+				if (isVinyl) vinyls++;
+				expect(actual.rngItems[itemId], itemId).toBeCloseTo(quantity * (isVinyl ? multiplier : 1), 10);
+			}
+		}
+		expect(vinyls).toBeGreaterThan(0);
+	});
+
+	test('does not affect Vinyl drops outside pest drops', () => {
+		const player = createFarmingPlayer({ attributes: { groovy_radar: 24 } });
+		const effects = new CocoaleechShard().getEffects(player, buildEffectEnvironment(player));
+		expect(resolveDropEffects(effects, dropCtx({ itemId: 'VINYL_PRETTY_FLY' })).mulDrop).toBe(1);
+	});
+});
 
 describe('CropeetleShard', () => {
 	test('emits no effect at level 0', () => {
@@ -382,6 +419,7 @@ describe('FARMING_ATTRIBUTE_SHARDS registry', () => {
 			'pest_cooldown',
 			'bonus_pest_chance',
 			'wart_eater',
+			'groovy_radar',
 			'garden_wisdom',
 			'solar_power',
 			'lunar_power',

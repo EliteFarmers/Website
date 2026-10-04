@@ -35,7 +35,9 @@
 			class="shape"
 			style="{boundsStyle(card.decal.start, card.decal.end)}background:{card.decal.fill ?? 'transparent'};"
 		>
-			{#if card.decal.imageUrl}{@render picture(card.decal.imageUrl, 'fill')}{/if}
+			{#if card.decal.imageUrl}
+				{@render picture(card.decal.imageUrl, 'fill')}
+			{/if}
 		</div>
 	{/if}
 	{#each card.gradients ?? [] as gradient, i (i)}
@@ -55,10 +57,9 @@
 					x2={coordinate(gradient.direction.end.x, 1920)}
 					y2={coordinate(gradient.direction.end.y, 400)}
 				>
-					{#each gradient.stops ?? [] as stop, j (j)}<stop
-							offset={stop.position}
-							stop-color={stop.fill}
-						/>{/each}
+					{#each gradient.stops ?? [] as stop, j (j)}
+						<stop offset={stop.position} stop-color={stop.fill} />
+					{/each}
 				</linearGradient>
 			</defs>
 			<rect
@@ -75,10 +76,9 @@
 {#snippet picture(reference: string, fit: 'cover' | 'fill', position = 'center')}
 	{@const attachment = imageRefs[reference]}
 	<picture>
-		{#if attachment?.posterUrl}<source
-				media="(prefers-reduced-motion: reduce)"
-				srcset={attachment.posterUrl}
-			/>{/if}
+		{#if attachment?.posterUrl}
+			<source media="(prefers-reduced-motion: reduce)" srcset={attachment.posterUrl} />
+		{/if}
 		<img
 			src={attachment?.url ?? reference}
 			srcset={attachment?.sources

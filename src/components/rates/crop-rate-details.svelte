@@ -48,7 +48,9 @@
 <Card.Root class="min-w-0 gap-5 rounded-md border-2 p-4 shadow-none sm:p-5">
 	<div class="flex flex-wrap items-center justify-between gap-3">
 		<div class="flex items-center gap-3">
-			{#if detail.img}<img src={detail.img} alt="" class="pixelated size-8 shrink-0" />{/if}
+			{#if detail.img}
+				<img src={detail.img} alt="" class="pixelated size-8 shrink-0" />
+			{/if}
 			<div>
 				<h2 class="text-xl">{detail.displayName} rates</h2>
 				<p class="text-xs text-muted-foreground">{timeName} · 4/4 Helianthus Armor</p>
@@ -64,7 +66,9 @@
 		<ToolStat label="Best Bazaar profit">
 			{#if detail.bazaarProfit !== null}
 				<CoinsBreakdown coins={detail.bazaarProfit} />
-			{:else}<span class="text-sm text-muted-foreground">{loadingPrices ? 'Loading…' : 'Unavailable'}</span>{/if}
+			{:else}
+				<span class="text-sm text-muted-foreground">{loadingPrices ? 'Loading…' : 'Unavailable'}</span>
+			{/if}
 		</ToolStat>
 		<ToolStat label="Farming fortune"><FortuneBreakdown total={detail.fortune} /></ToolStat>
 		<ToolStat label="Collection" value={number(detail.collection)} />
@@ -137,16 +141,19 @@
 									<Table.Row>
 										<Table.Cell class="whitespace-normal">
 											<p class="font-medium">
-												{option.name}{#if i === 0}<span class="ml-2 text-xs text-progress"
-														>Best</span
-													>{/if}
+												{option.name}
+												{#if i === 0}
+													<span class="ml-2 text-xs text-progress">Best</span>
+												{/if}
 											</p>
 											<p class="text-xs text-muted-foreground">
 												{number(option.items, 2)} × {number(option.per, 2)} coins
 											</p>
-											{#if option.cost > 0}<p class="text-xs text-muted-foreground">
+											{#if option.cost > 0}
+												<p class="text-xs text-muted-foreground">
 													{number(option.cost)} coins in crafting costs
-												</p>{/if}
+												</p>
+											{/if}
 										</Table.Cell>
 										<Table.Cell class="hidden text-right tabular-nums sm:table-cell"
 											>{number(option.profit)}</Table.Cell
@@ -161,9 +168,11 @@
 								{/each}
 							</Table.Body>
 						</Table.Root>
-					{:else}<p class="text-sm text-muted-foreground">
+					{:else}
+						<p class="text-sm text-muted-foreground">
 							No priced Bazaar crafts are available for this crop.
-						</p>{/if}
+						</p>
+					{/if}
 				</div>
 
 				{#if detail.sellToBazaar.length > 0}

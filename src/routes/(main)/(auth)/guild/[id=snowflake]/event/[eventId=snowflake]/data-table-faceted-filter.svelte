@@ -8,12 +8,12 @@
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
 	import * as Command from '$ui/command';
+	import type { Column } from '$ui/data-table';
 	import * as Popover from '$ui/popover';
 	import { Separator } from '$ui/separator';
+	import type { IconProps } from '@lucide/svelte';
 	import Check from '@lucide/svelte/icons/check';
 	import Funnel from '@lucide/svelte/icons/funnel';
-	import type { Column } from '$ui/data-table';
-	import type { IconProps } from '@lucide/svelte';
 	import type { Component } from 'svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 

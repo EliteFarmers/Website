@@ -63,7 +63,9 @@
 			{frame}
 			frameImageRefs={ctx.nameCardFrame?.imageRefs}
 		>
-			{#snippet nameContent()}<PlayerName responsive />{/snippet}
+			{#snippet nameContent()}
+				<PlayerName responsive />
+			{/snippet}
 			{#snippet rankContent()}
 				<LeaderboardRankLink
 					category="farmingweight"
@@ -161,11 +163,13 @@
 				class="pointer-events-none absolute inset-[2px] z-20 origin-center"
 				style:transform={frameTransform(frame.scale)}
 			>
-				{#if frameImage?.posterUrl}<source
+				{#if frameImage?.posterUrl}
+					<source
 						media="(prefers-reduced-motion: reduce)"
 						srcset={imageSrcset(frameImage, true) ?? frameImage.posterUrl}
 						sizes="(max-width: 1024px) 100vw, 1024px"
-					/>{/if}
+					/>
+				{/if}
 				<img
 					src={frameImage?.url ?? frame.imageUrl}
 					srcset={imageSrcset(frameImage)}

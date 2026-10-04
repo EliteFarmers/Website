@@ -119,11 +119,13 @@
 		{#if style?.background?.imageUrl || entry.meta?.leaderboard?.styleId}
 			{#if imageRef}
 				<picture>
-					{#if imageRef.posterUrl}<source
+					{#if imageRef.posterUrl}
+						<source
 							media="(prefers-reduced-motion: reduce)"
 							srcset={srcset(imageRef, true) ?? imageRef.posterUrl}
 							sizes="(max-width: 576px) 100vw, 576px"
-						/>{/if}
+						/>
+					{/if}
 					<img
 						loading="lazy"
 						src={imageRef.url}
@@ -166,11 +168,13 @@
 		{/if}
 		{#if style?.overlay?.imageUrl}
 			<picture>
-				{#if overlayRef?.posterUrl}<source
+				{#if overlayRef?.posterUrl}
+					<source
 						media="(prefers-reduced-motion: reduce)"
 						srcset={srcset(overlayRef, true) ?? overlayRef.posterUrl}
 						sizes="(max-width: 576px) 100vw, 576px"
-					/>{/if}
+					/>
+				{/if}
 				<img
 					src={overlayRef?.url ?? style.overlay.imageUrl}
 					srcset={srcset(overlayRef)}
@@ -267,11 +271,13 @@
 			class="pointer-events-none absolute inset-0 z-20 origin-center"
 			style:transform={frameTransform(entry.frame.scale)}
 		>
-			{#if frameRef?.posterUrl}<source
+			{#if frameRef?.posterUrl}
+				<source
 					media="(prefers-reduced-motion: reduce)"
 					srcset={srcset(frameRef, true) ?? frameRef.posterUrl}
 					sizes="(max-width: 576px) 100vw, 576px"
-				/>{/if}
+				/>
+			{/if}
 			<img
 				src={frameRef?.url ?? entry.frame.imageUrl}
 				srcset={srcset(frameRef)}
