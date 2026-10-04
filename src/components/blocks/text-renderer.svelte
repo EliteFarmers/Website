@@ -9,6 +9,8 @@
 </script>
 
 {#each parts as part, i (`${part}-${i}`)}
-	<ModifierWrapper text={part} mods={activeMods} {modifiers} {renderTextAsHtml} />{#if i < parts.length - 1}<br
-		/>{/if}
+	<ModifierWrapper text={part} mods={activeMods} {modifiers} {renderTextAsHtml} />
+	{#if i < parts.length - 1}
+		<br />
+	{/if}
 {/each}

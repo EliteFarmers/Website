@@ -17,7 +17,8 @@
 		Free
 	{:else}
 		<span class="leading-none whitespace-nowrap">{dollars} USD</span>
-		{#if product.isSubscription}<br />
+		{#if product.isSubscription}
+			<br />
 			<span class="text-xs leading-none whitespace-nowrap">per month</span>
 		{/if}
 	{/if}

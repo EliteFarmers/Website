@@ -239,9 +239,9 @@
 										<p class="text-xs text-muted-foreground">
 											{calculator.formatNumber(item.coinsPerValue, 3)} coins / unit
 										</p>
-										{#if !item.fitsCapacity}<p class="text-xs text-muted-foreground">
-												Needs more capacity
-											</p>{/if}
+										{#if !item.fitsCapacity}
+											<p class="text-xs text-muted-foreground">Needs more capacity</p>
+										{/if}
 									</div>
 								</div>
 							</Table.Cell>

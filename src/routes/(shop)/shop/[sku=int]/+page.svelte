@@ -454,8 +454,9 @@
 								<div class="mt-1 flex gap-3">
 									<div class="flex flex-col items-center gap-1">
 										<Badge {badge} />
-										{#if badge.altImage}<span class="text-xs text-muted-foreground">Default</span
-											>{/if}
+										{#if badge.altImage}
+											<span class="text-xs text-muted-foreground">Default</span>
+										{/if}
 									</div>
 									{#if badge.altImage?.url}
 										<div class="flex flex-col items-center gap-1">

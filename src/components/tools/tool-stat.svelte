@@ -6,6 +6,10 @@
 <div class="min-w-0 space-y-1">
 	<dt class="text-sm text-muted-foreground">{label}</dt>
 	<dd class="text-lg font-medium tabular-nums">
-		{#if children}{@render children()}{:else}{value}{/if}
+		{#if children}
+			{@render children()}
+		{:else}
+			{value}
+		{/if}
 	</dd>
 </div>

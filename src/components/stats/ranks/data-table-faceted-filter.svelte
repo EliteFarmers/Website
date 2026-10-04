@@ -8,11 +8,11 @@
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
 	import * as Command from '$ui/command';
+	import type { Column } from '$ui/data-table';
 	import * as Popover from '$ui/popover';
 	import Check from '@lucide/svelte/icons/check';
 	import CircleMinus from '@lucide/svelte/icons/circle-minus';
 	import Funnel from '@lucide/svelte/icons/funnel';
-	import type { Column } from '$ui/data-table';
 	import { SvelteSet } from 'svelte/reactivity';
 
 	type Props<TData, TValue> = {

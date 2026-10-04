@@ -315,9 +315,11 @@
 						<div class="min-w-0">
 							<p class="font-semibold">Pet</p>
 							<p class="truncate text-xs font-normal text-muted-foreground">
-								{#if pest.activePhasePet}<ItemName
-										name={pest.activePhasePet.getFormattedName()}
-									/>{:else}No pet{/if}
+								{#if pest.activePhasePet}
+									<ItemName name={pest.activePhasePet.getFormattedName()} />
+								{:else}
+									No pet
+								{/if}
 							</p>
 						</div>
 					</div>
@@ -422,8 +424,11 @@
 							<div class="min-w-0">
 								<p class="font-semibold">Vacuum</p>
 								<p class="truncate text-xs font-normal text-muted-foreground">
-									{#if pest.selectedVacuum}<ItemName name={pest.selectedVacuum.name} />{:else}No
-										vacuum{/if}
+									{#if pest.selectedVacuum}
+										<ItemName name={pest.selectedVacuum.name} />
+									{:else}
+										No vacuum
+									{/if}
 								</p>
 							</div>
 						</div>
