@@ -155,7 +155,7 @@
 			}
 			if (nextStatus.status === 'ready' && nextStatus.modelUrl) {
 				stopPolling();
-				await loadModel(nextStatus.modelUrl, session, requestedAssetId);
+				await loadModel(nextStatus.modelUrl, session, requestedAssetId, nextStatus.sizeBytes);
 			} else if (nextStatus.status === 'queued' || nextStatus.status === 'processing') {
 				schedulePoll(2500, session, requestedAssetId);
 			}
@@ -185,7 +185,12 @@
 		pollTimer = null;
 	}
 
-	async function loadModel(modelUrl: string, session: number, requestedAssetId: string) {
+	async function loadModel(
+		modelUrl: string,
+		session: number,
+		requestedAssetId: string,
+		expectedModelBytes: bigint | null | undefined
+	) {
 		if (
 			!viewerCanvas ||
 			!viewport ||
@@ -248,7 +253,7 @@
 
 			requestController = new AbortController();
 			modelAbortController = requestController;
-			const modelBuffer = await downloadModel(modelUrl, requestController.signal);
+			const modelBuffer = await downloadModel(modelUrl, requestController.signal, expectedModelBytes);
 			const resourcePath = new URL('.', new URL(modelUrl, window.location.href)).href;
 			const gltf = await new GLTFLoader().parseAsync(modelBuffer, resourcePath);
 			if (!isCurrentViewer(session, requestedAssetId)) {
@@ -376,16 +381,15 @@
 		}
 	}
 
-	async function downloadModel(modelUrl: string, signal: AbortSignal) {
+	async function downloadModel(modelUrl: string, signal: AbortSignal, expectedModelBytes: bigint | null | undefined) {
 		const response = await fetch(modelUrl, { credentials: 'omit', mode: 'cors', signal });
 		if (!response.ok) throw new Error('The 3D model could not be downloaded.');
 
-		const contentLengthHeader = response.headers.get('content-length');
-		const declaredLength = contentLengthHeader === null ? Number.NaN : Number(contentLengthHeader);
-		if (Number.isFinite(declaredLength) && declaredLength > maximumModelBytes) {
-			await response.body?.cancel();
-			throw new Error('This 3D model is too large to open in the browser.');
-		}
+		const expectedDecodedBytes = Number(expectedModelBytes);
+		const hasExpectedDecodedBytes =
+			Number.isSafeInteger(expectedDecodedBytes) &&
+			expectedDecodedBytes > 0 &&
+			expectedDecodedBytes <= maximumModelBytes;
 
 		if (!response.body) {
 			const buffer = await response.arrayBuffer();
@@ -396,8 +400,6 @@
 		}
 
 		const reader = response.body.getReader();
-		const hasDeclaredLength = Number.isSafeInteger(declaredLength) && declaredLength >= 0;
-		const declaredBytes = hasDeclaredLength ? new Uint8Array(declaredLength) : null;
 		const chunks: Uint8Array[] = [];
 		let downloadedBytes = 0;
 		while (true) {
@@ -410,26 +412,10 @@
 				throw new Error('This 3D model is too large to open in the browser.');
 			}
 
-			if (declaredBytes) {
-				if (downloadedBytes > declaredBytes.byteLength) {
-					await reader.cancel();
-					throw new Error('The 3D model response has an invalid size.');
-				}
-				declaredBytes.set(value, downloadedBytes - value.byteLength);
-			} else {
-				chunks.push(value);
+			chunks.push(value);
+			if (hasExpectedDecodedBytes) {
+				modelLoadProgress = Math.min(99, Math.round((downloadedBytes / expectedDecodedBytes) * 100));
 			}
-			if (Number.isFinite(declaredLength) && declaredLength > 0) {
-				modelLoadProgress = Math.min(99, Math.round((downloadedBytes / declaredLength) * 100));
-			}
-		}
-
-		if (declaredBytes) {
-			if (downloadedBytes !== declaredBytes.byteLength) {
-				throw new Error('The 3D model response ended before it was complete.');
-			}
-			modelLoadProgress = 100;
-			return declaredBytes.buffer;
 		}
 
 		const bytes = new Uint8Array(downloadedBytes);
