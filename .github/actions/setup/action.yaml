@@ -10,7 +10,7 @@ runs:
           with:
               node-version: 24.15.0
 
-        - uses: pnpm/action-setup@v4
+        - uses: pnpm/action-setup@v6
           name: Install pnpm
 
         - name: Get pnpm store directory
