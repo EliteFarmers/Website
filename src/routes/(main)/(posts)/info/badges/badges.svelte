@@ -18,7 +18,9 @@
 								width="48"
 								height="48"
 							/>
-							{#if badge.altImage}<span class="text-xs text-muted-foreground">{option.label}</span>{/if}
+							{#if badge.altImage}
+								<span class="text-xs text-muted-foreground">{option.label}</span>
+							{/if}
 						</div>
 					{/if}
 				{/each}

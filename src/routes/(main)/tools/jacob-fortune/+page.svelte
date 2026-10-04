@@ -75,8 +75,12 @@
 		</div>
 		<p class="text-xs text-muted-foreground">
 			Contests since {calculator.lookbackStartLabel}.
-			{#if calculator.brackets}{calculator.brackets.contestCount.toLocaleString()} contests across {calculator
-					.brackets.monthsLoaded} month{calculator.brackets.monthsLoaded === 1 ? '' : 's'}.{/if}
+			{#if calculator.brackets}
+				{calculator.brackets.contestCount.toLocaleString()} contests across {calculator.brackets.monthsLoaded} month{calculator
+					.brackets.monthsLoaded === 1
+					? ''
+					: 's'}.
+			{/if}
 		</p>
 	</Card.Root>
 

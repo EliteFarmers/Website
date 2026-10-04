@@ -71,15 +71,17 @@
 				{/if}
 				<div class="details">
 					<div class="identity desktop-identity">{@render identity(false)}</div>
-					{#if card.elements.weight}<div class="weight" style={textStyle(card.elements.weight)}>
+					{#if card.elements.weight}
+						<div class="weight" style={textStyle(card.elements.weight)}>
 							<FittedText
 								text={weightText(weight)}
 								appearance={`${layout.weightScale}:${textStyle(card.elements.weight)}`}
 							/>
-						</div>{/if}
-					{#if card.elements.label}<div class="label" style={textStyle(card.elements.label)}>
-							Farming Weight
-						</div>{/if}
+						</div>
+					{/if}
+					{#if card.elements.label}
+						<div class="label" style={textStyle(card.elements.label)}>Farming Weight</div>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -89,10 +91,9 @@
 				style:opacity={frame.opacity ?? 1}
 				style:transform="scaleX({1 + ((frame.scale ?? 1) - 1) / 4.8}) scaleY({frame.scale ?? 1})"
 			>
-				{#if frameImage?.posterUrl}<source
-						media="(prefers-reduced-motion: reduce)"
-						srcset={frameImage.posterUrl}
-					/>{/if}
+				{#if frameImage?.posterUrl}
+					<source media="(prefers-reduced-motion: reduce)" srcset={frameImage.posterUrl} />
+				{/if}
 				<img src={frameImage?.url ?? frame.imageUrl} alt="" />
 			</picture>
 		{/if}
@@ -102,19 +103,28 @@
 </div>
 
 {#snippet identity(compact: boolean)}
-	{#if card.elements.name}<div class="player-name" style={compact ? undefined : textStyle(card.elements.name)}>
-			{#if nameContent}{@render nameContent()}{:else}<span class="plain-name" title={ign}
-					>{#if prefix}<span class="prefix"><FormattedText text={prefix} /></span>{/if}<span class="username"
-						>{ign}</span
-					></span
-				>{/if}
-		</div>{/if}
-	{#if card.elements.rank && rankText(rank)}<div
-			class="rank"
-			style={compact ? undefined : textStyle(card.elements.rank)}
-		>
-			{#if rankContent}{@render rankContent()}{:else}{rankText(rank)}{/if}
-		</div>{/if}
+	{#if card.elements.name}
+		<div class="player-name" style={compact ? undefined : textStyle(card.elements.name)}>
+			{#if nameContent}
+				{@render nameContent()}
+			{:else}
+				<span class="plain-name" title={ign}>
+					{#if prefix}
+						<span class="prefix"><FormattedText text={prefix} /></span>
+					{/if}<span class="username">{ign}</span></span
+				>
+			{/if}
+		</div>
+	{/if}
+	{#if card.elements.rank && rankText(rank)}
+		<div class="rank" style={compact ? undefined : textStyle(card.elements.rank)}>
+			{#if rankContent}
+				{@render rankContent()}
+			{:else}
+				{rankText(rank)}
+			{/if}
+		</div>
+	{/if}
 {/snippet}
 
 <style>

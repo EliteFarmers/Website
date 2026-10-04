@@ -46,6 +46,7 @@
 	let isInitialLoad = $state(true);
 	let isLoadingItems = $state(true);
 	let itemLoadError = $state<unknown>(null);
+
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const requestedFallbackItems = new Set<string>();
 
@@ -124,6 +125,7 @@
 	) {
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const values = new Map<string, UpgradeRateImpact>();
+
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const activeKeys = new Set<string>();
 		let version = rows.length + activeBlocksPerHour + hashKey(activePlayerStateKey);

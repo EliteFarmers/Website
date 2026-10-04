@@ -9,6 +9,7 @@
 	};
 
 	const targetOwners = new WeakMap<Element, OverflowEntry>();
+
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const pending = new Set<OverflowEntry>();
 	let resizeObserver: ResizeObserver | undefined;

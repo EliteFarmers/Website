@@ -197,19 +197,16 @@
 										aria-label={`Sort by ${column.label}, ${calculator.profitColumn === column.key && calculator.profitDirection === 'descending' ? 'lowest' : 'highest'} first`}
 									>
 										<span>{column.label}</span>
-										{#if calculator.profitColumn !== column.key}<ArrowUpDown
-												class="size-3.5"
-												aria-hidden="true"
-											/>
-										{:else if calculator.profitDirection === 'descending'}<ArrowDown
-												class="size-3.5"
-												aria-hidden="true"
-											/>
-										{:else}<ArrowUp class="size-3.5" aria-hidden="true" />{/if}
-										{#if column.key === 'bazaarProfit' && calculator.bazaarStatus === 'loading'}<Loader2
-												class="size-3 animate-spin"
-												aria-hidden="true"
-											/>{/if}
+										{#if calculator.profitColumn !== column.key}
+											<ArrowUpDown class="size-3.5" aria-hidden="true" />
+										{:else if calculator.profitDirection === 'descending'}
+											<ArrowDown class="size-3.5" aria-hidden="true" />
+										{:else}
+											<ArrowUp class="size-3.5" aria-hidden="true" />
+										{/if}
+										{#if column.key === 'bazaarProfit' && calculator.bazaarStatus === 'loading'}
+											<Loader2 class="size-3 animate-spin" aria-hidden="true" />
+										{/if}
 									</Button>
 								</Table.Head>
 							{/each}

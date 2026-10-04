@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createPreview } from './discord-preview';
 	import { goto, invalidate } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { navigating } from '$app/state';
@@ -24,6 +23,7 @@
 	import { parseDate } from '@internationalized/date';
 	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import type { PageData } from './$types';
+	import { createPreview } from './discord-preview';
 
 	let { data }: { data: PageData } = $props();
 	let refreshing = $state(false);
@@ -111,9 +111,13 @@
 				}
 			/>
 			<p class="text-xs text-muted-foreground" aria-live="polite">
-				{#if busy}Loading stats…{:else if from !== undefined}{fullDate(from)}{from !== data.to
-						? ` - ${fullDate(data.to)}`
-						: ''}{:else}All recorded days{/if}
+				{#if busy}
+					Loading stats...
+				{:else if from !== undefined}
+					{fullDate(from)}{from !== data.to ? ` - ${fullDate(data.to)}` : ''}
+				{:else}
+					All recorded days
+				{/if}
 			</p>
 		</div>
 	</div>
@@ -152,7 +156,8 @@
 								{compact(value)}
 							</dd>
 							<dd class="text-xs text-muted-foreground">{metric.unit}</dd>
-							{#if change}<dd class="pt-1 text-xs">
+							{#if change}
+								<dd class="pt-1 text-xs">
 									<span class="font-medium tabular-nums">{change}</span>
 									<span class="text-muted-foreground"
 										>{data.range === 'today'
@@ -161,20 +166,23 @@
 												: 'vs previous day'
 											: 'vs previous period'}</span
 									>
-								</dd>{/if}
+								</dd>
+							{/if}
 						</div>
 					{/each}
 				</dl>
 			{/if}
 
 			<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
-				{#if updatedAt > 0}<span
+				{#if updatedAt > 0}
+					<span
 						>Updated {new Intl.DateTimeFormat('en', {
 							dateStyle: 'medium',
 							timeStyle: 'short',
 							timeZone: 'UTC',
 						}).format(updatedAt * 1000)} UTC</span
-					>{/if}
+					>
+				{/if}
 				<span
 					>{data.interval === 'week'
 						? 'Weekly totals'
@@ -207,10 +215,8 @@
 					<div>
 						<h2 class="text-lg">Generated NPC Value Breakdown</h2>
 					</div>
-					{#if current.totalNpcValue > 0}<div
-							class="flex h-3 overflow-hidden rounded-xs bg-muted"
-							aria-hidden="true"
-						>
+					{#if current.totalNpcValue > 0}
+						<div class="flex h-3 overflow-hidden rounded-xs bg-muted" aria-hidden="true">
 							<div
 								class="bg-wheat"
 								style:width={`${(current.totalCropNpcValue / current.totalNpcValue) * 100}%`}
@@ -219,7 +225,8 @@
 								class="bg-progress"
 								style:width={`${(current.totalPestNpcCoins / current.totalNpcValue) * 100}%`}
 							></div>
-						</div>{/if}
+						</div>
+					{/if}
 					<dl class="grid gap-4 sm:grid-cols-2">
 						<div>
 							<dt class="flex items-center gap-2 text-sm text-muted-foreground">

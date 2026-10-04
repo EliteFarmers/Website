@@ -19,11 +19,13 @@
 
 	function createContainer() {
 		if (!wrapper || !createDiv) return;
+
 		// eslint-disable-next-line svelte/no-dom-manipulating
 		wrapper.innerHTML = '';
 
 		const el = document.createElement('div');
 		el.id = slotId;
+
 		// eslint-disable-next-line svelte/no-dom-manipulating
 		wrapper.appendChild(el);
 		onCreated(el);

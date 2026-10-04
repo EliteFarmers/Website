@@ -34,7 +34,9 @@
 			<h1 class="text-2xl md:text-3xl">{title}</h1>
 			<p class="max-w-2xl text-sm text-muted-foreground">{description}</p>
 		</div>
-		{#if actions}<div class="shrink-0">{@render actions()}</div>{/if}
+		{#if actions}
+			<div class="shrink-0">{@render actions()}</div>
+		{/if}
 	</header>
 	{@render children()}
 </div>
