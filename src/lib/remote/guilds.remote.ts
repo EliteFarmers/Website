@@ -9,6 +9,7 @@ import {
 } from '$lib/api';
 import type { GuildMembersLeaderboard } from '$lib/api/elite';
 import { cache } from '$lib/servercache';
+import { applyLeaderboardStyles } from '$lib/leaderboards/styles';
 import * as z from 'zod';
 
 const SORT_VALUES = [
@@ -91,19 +92,7 @@ export const getGuildMembersLeaderboard = query(
 
 		return {
 			...data,
-			entries: data.entries.map((entry) => {
-				const styleId = entry.meta?.leaderboard?.styleId;
-				const frameId = entry.meta?.leaderboard?.frameId;
-				const cosmetic = styleId ? cache.styleLookup[styleId] : undefined;
-				const frameCosmetic = frameId ? cache.styleLookup[frameId] : undefined;
-				return {
-					...entry,
-					style: cosmetic?.leaderboard,
-					imageRefs: cosmetic?.imageRefs,
-					frame: frameCosmetic?.frame?.leaderboard,
-					frameImageRefs: frameCosmetic?.imageRefs,
-				};
-			}),
+			entries: applyLeaderboardStyles(data.entries, cache.styleLookup),
 		};
 	}
 );

@@ -44,6 +44,7 @@ import {
 } from './api';
 import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
+import { applyLeaderboardStyles, type StyledLeaderboard } from './leaderboards/styles';
 import { mdToHtml } from './md';
 const { ELITE_API_URL, ELITE_API_TOKEN } = env;
 const { PUBLIC_COMMUNITY_ID } = publicEnv;
@@ -109,7 +110,10 @@ const cacheEntries = {
 	},
 	homepageLeaderboard: {
 		interval: 900, // 15 minutes
-		data: null as LeaderboardDto | null,
+		lateUpdate: true,
+		data: null as StyledLeaderboard | null,
+		transform: (data: LeaderboardDto | null): StyledLeaderboard | null =>
+			data ? { ...data, entries: applyLeaderboardStyles(data.entries, cacheEntries.styles.data.lookup) } : null,
 		update: async () => {
 			const { data } = await getLeaderboard('farmingweight', { offset: 0, limit: 10 }).catch(() => ({
 				data: null,
@@ -318,15 +322,20 @@ let remoteReloadCheckInFlight: Promise<void> | undefined;
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
 	try {
-		await Promise.allSettled(
-			Object.values(cacheEntries).map(async (item) => {
-				try {
-					await refreshCacheItem(item);
-				} catch (error) {
-					console.error('Error refreshing cache item:', error);
-				}
-			})
-		);
+		// Entries that depend on other cached data refresh in the second pass.
+		for (const lateUpdate of [false, true]) {
+			await Promise.allSettled(
+				Object.values(cacheEntries)
+					.filter((item) => ('lateUpdate' in item && item.lateUpdate) === lateUpdate)
+					.map(async (item) => {
+						try {
+							await refreshCacheItem(item);
+						} catch (error) {
+							console.error('Error refreshing cache item:', error);
+						}
+					})
+			);
+		}
 
 		console.log('Cached items updated successfully.');
 	} catch (error) {
@@ -428,7 +437,7 @@ async function refreshCacheItem(item: (typeof cacheEntries)[keyof typeof cacheEn
 				const cached = JSON.parse(fileData);
 				const cacheTime = 1000 * 60 * 10;
 				if (Date.now() - cached.lastUpdated < cacheTime) {
-					item.data = cached.data;
+					item.data = 'transform' in item ? item.transform(cached.data) : cached.data;
 					return;
 				}
 			} catch {
@@ -436,7 +445,7 @@ async function refreshCacheItem(item: (typeof cacheEntries)[keyof typeof cacheEn
 			}
 		}
 
-		const result = await item.update();
+		const result = 'transform' in item ? item.transform(await item.update()) : await item.update();
 		item.data = result ?? item.data;
 
 		if (dev) {
