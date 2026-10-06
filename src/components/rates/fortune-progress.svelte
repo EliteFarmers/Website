@@ -6,7 +6,7 @@
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import Info from '@lucide/svelte/icons/info';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Stat, STAT_ICONS, STAT_NAMES, type FortuneSourceProgress } from 'farming-weight';
+	import { Stat, STAT_ICONS_UNICODE as STAT_ICONS, STAT_NAMES, type FortuneSourceProgress } from 'farming-weight';
 	import EffectSummaryList from './effect-summary-list.svelte';
 	import FortuneActiveNote from './fortune-active-note.svelte';
 

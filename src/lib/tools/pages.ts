@@ -1,4 +1,5 @@
 import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined';
+import CloudRain from '@lucide/svelte/icons/cloud-rain';
 import Coins from '@lucide/svelte/icons/coins';
 import Gem from '@lucide/svelte/icons/gem';
 import Medal from '@lucide/svelte/icons/medal';
@@ -36,6 +37,12 @@ export const TOOL_PAGES = [
 		description: 'Compare mutation analysis costs per Copper.',
 		href: '/tools/mutations',
 		icon: Sprout,
+	},
+	{
+		title: 'Weather',
+		description: 'Weather forecasts and island bonuses.',
+		href: '/tools/weather',
+		icon: CloudRain,
 	},
 	{
 		title: 'Composter Calculator',

@@ -50,7 +50,7 @@
 		LotusGear,
 		resolveProfitAwareProgress,
 		Stat,
-		STAT_ICONS,
+		STAT_ICONS_UNICODE as STAT_ICONS,
 		Vacuum,
 		type AppliedEffect,
 		type DetailedDropsFromEffectsResult,

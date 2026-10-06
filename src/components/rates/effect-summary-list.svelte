@@ -3,7 +3,7 @@
 	import { getStatColor } from '$lib/format';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import Info from '@lucide/svelte/icons/info';
-	import { FARMING_MECHANIC_INFO, STAT_ICONS, type EffectSummary } from 'farming-weight';
+	import { FARMING_MECHANIC_INFO, STAT_ICONS_UNICODE as STAT_ICONS, type EffectSummary } from 'farming-weight';
 
 	interface Props {
 		effects?: readonly EffectSummary[];
