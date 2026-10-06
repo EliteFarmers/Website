@@ -5,7 +5,7 @@
 	import { ScrollArea } from '$ui/scroll-area';
 	import * as Tooltip from '$ui/tooltip';
 	import Info from '@lucide/svelte/icons/info';
-	import { STAT_ICONS, STAT_NAMES, Stat, type StatBreakdown } from 'farming-weight';
+	import { STAT_ICONS_UNICODE as STAT_ICONS, STAT_NAMES, Stat, type StatBreakdown } from 'farming-weight';
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 

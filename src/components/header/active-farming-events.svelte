@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import Countdown from '$comp/countdown.svelte';
 	import { trackAnalytics } from '$lib/analytics';
 	import type { HarvestFeastRotationDto, HarvestFeastRotationsDto, YearlyContestsDto } from '$lib/api';
@@ -7,8 +8,17 @@
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
 	import ChefHat from '@lucide/svelte/icons/chef-hat';
+	import CloudRain from '@lucide/svelte/icons/cloud-rain';
+	import Flower2 from '@lucide/svelte/icons/flower-2';
 	import Ticket from '@lucide/svelte/icons/ticket';
-	import { getCropDisplayName, getCropFromName } from 'farming-weight';
+	import {
+		GARDEN_WEATHER,
+		getWeatherForecast,
+		getCropDisplayName,
+		getCropFromName,
+		STAT_ICONS_UNICODE as STAT_ICONS,
+		STAT_NAMES,
+	} from 'farming-weight';
 	import { onMount } from 'svelte';
 
 	interface Props {
@@ -84,6 +94,9 @@
 	}
 
 	const jacobContest = $derived(findJacobContest(seconds));
+	const weather = $derived(getWeatherForecast(seconds));
+	const weatherEvent = $derived(weather.current ?? weather.next);
+	const weatherDetails = $derived(GARDEN_WEATHER[weatherEvent.type]);
 	const harvestFeastSelection = $derived(selectHarvestFeastRotations(harvestFeast, seconds));
 	const harvestFeastEvent = $derived.by(() => {
 		const current = normalizeHarvestFeastRotation(harvestFeastSelection.current, true);
@@ -101,6 +114,7 @@
 	});
 	const triggerLabel = $derived(
 		[
+			weather.current ? `Garden: ${weatherDetails.name}` : null,
 			jacobContest
 				? `${jacobContest.active ? 'Active' : 'Next'} Jacob's Contest: ${jacobContest.crops.join(', ')}`
 				: null,
@@ -183,6 +197,21 @@
 								{/each}
 							</div>
 						{/if}
+						{#if weather.current}
+							{#if jacobContest || harvestFeastEvent.crops.length > 0}
+								<div class="h-5 border-l" aria-hidden="true"></div>
+							{/if}
+							<div
+								class="flex items-center rounded-sm border border-active px-1 py-0.5"
+								aria-hidden="true"
+							>
+								{#if weatherEvent.type === 'extreme'}
+									<Flower2 class="size-4 text-primary" />
+								{:else}
+									<CloudRain class="size-4 text-primary" />
+								{/if}
+							</div>
+						{/if}
 					</Button>
 				{/snippet}
 			</Popover.Trigger>
@@ -190,7 +219,7 @@
 			<Popover.Content class="w-88 p-0" align="end" sideOffset={8}>
 				<div class="border-b px-4 py-3">
 					<p class="font-semibold">Farming events</p>
-					<p class="text-xs text-muted-foreground">Current and upcoming crops</p>
+					<p class="text-xs text-muted-foreground">Current and upcoming crops and weather</p>
 				</div>
 
 				<div class="flex flex-col gap-4 p-2">
@@ -252,6 +281,44 @@
 						{:else}
 							<p class="text-xs text-muted-foreground">Crops have not been reported yet.</p>
 						{/if}
+					</a>
+					<a
+						href={resolve('/tools/weather')}
+						aria-labelledby="weather-event-title"
+						class="flex flex-col gap-3 rounded-md border p-3 {weather.current
+							? 'border-active'
+							: 'border-transparent'}"
+					>
+						<div class="flex items-center gap-2">
+							{#if weatherEvent.type === 'extreme'}
+								<Flower2 class="size-4 text-primary" />
+							{:else}
+								<CloudRain class="size-4 text-primary" />
+							{/if}
+							<h2 id="weather-event-title" class="text-sm font-semibold">Garden Weather</h2>
+							<span class="ml-auto text-xs text-muted-foreground"
+								>{weather.current ? 'Ends in' : 'Starts in'}</span
+							>
+							<Countdown
+								start={weatherEvent.start * 1000}
+								end={weatherEvent.end * 1000}
+								class="w-20 text-xs"
+							/>
+						</div>
+						<p class="text-sm">
+							{weather.current ? weatherDetails.name : `Clear · Next: ${weatherDetails.name}`}
+						</p>
+						<ul class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+							{#each weatherDetails.bonuses as bonus (bonus.stat)}
+								<li>
+									+{bonus.value} <span aria-hidden="true">{STAT_ICONS[bonus.stat]}</span>
+									{STAT_NAMES[bonus.stat]}
+								</li>
+							{/each}
+							{#if weatherDetails.specialEffect}
+								<li>{weatherDetails.specialEffect}</li>
+							{/if}
+						</ul>
 					</a>
 				</div>
 			</Popover.Content>

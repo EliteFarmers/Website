@@ -2,7 +2,7 @@
 	import StatBreakdownDialog from '$comp/rates/stat-breakdown-dialog.svelte';
 	import { getStatColor } from '$lib/format';
 	import { cn } from '$lib/utils';
-	import { STAT_ICONS, Stat } from 'farming-weight';
+	import { STAT_ICONS_UNICODE as STAT_ICONS, Stat } from 'farming-weight';
 	import { SvelteMap } from 'svelte/reactivity';
 
 	interface Props {

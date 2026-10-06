@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { WeightsDto } from '$lib/api';
 	import { getWeights } from '$lib/remote';
-	import { STAT_ICONS, Stat } from 'farming-weight';
+	import { STAT_ICONS_UNICODE as STAT_ICONS, Stat } from 'farming-weight';
 
 	const weights = getWeights();
 
@@ -11,7 +11,7 @@
 </script>
 
 <div class="flex w-full scrollbar-none overflow-x-auto">
-	<table class="w-full max-w-4xl min-w-3xl flex-grow-1">
+	<table class="w-full max-w-4xl min-w-3xl grow">
 		<thead>
 			<tr class="bg-muted-variant">
 				<th class="text-left">Pest Brackets</th>

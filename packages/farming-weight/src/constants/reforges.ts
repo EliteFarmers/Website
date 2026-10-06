@@ -4,16 +4,15 @@ import { Stat } from './stats.js';
 
 export * from './reforge-types.js';
 
-/**
- * Compatibility registry for existing callers. Reforge definitions now live as
- * class instances under `items/reforges/`; this export keeps the old constants
- * import path stable.
- */
 export const REFORGES: Record<string, Reforge> = REFORGE_SOURCES;
 
 export const STAT_ICONS: Record<Stat, string> = {
 	[Stat.Damage]: '❁',
 	[Stat.FishingSpeed]: '☂',
+	[Stat.CombatWisdom]: '☯',
+	[Stat.TrophyChance]: '\uE02A',
+	[Stat.TreasureChance]: '\uE025',
+	[Stat.Tracking]: '\uE077',
 	[Stat.Strength]: '❁',
 	[Stat.Health]: '❤',
 	[Stat.Defense]: '❈',
@@ -53,6 +52,59 @@ export const STAT_ICONS: Record<Stat, string> = {
 	[Stat.SunflowerFortune]: '☘',
 	[Stat.MoonflowerFortune]: '☘',
 	[Stat.WildRoseFortune]: '☘',
+};
+
+/**
+ * Stat glyphs for the Hypixel SkyBlock resource-pack font.
+ * Requires that font to render the private-use Unicode characters.
+ * @see https://hypixelskyblock.minecraft.wiki/w/Stats
+ */
+export const STAT_ICONS_UNICODE: Record<Stat, string> = {
+	[Stat.Damage]: '\uE050',
+	[Stat.Strength]: '\uE00D',
+	[Stat.Health]: '\uE010',
+	[Stat.Defense]: '\uE008',
+	[Stat.Speed]: '\uE022',
+	[Stat.Intelligence]: '\uE003',
+	[Stat.CritChance]: '\uE02C',
+	[Stat.CritDamage]: '\uE007',
+	[Stat.AttackSpeed]: '\uE001',
+	[Stat.AbilityDamage]: '\uE002',
+	[Stat.MagicFind]: '\uE01A',
+	[Stat.PetLuck]: '\uE013',
+	[Stat.TrueDefense]: '\uE027',
+	[Stat.SeaCreatureChance]: '\uE021',
+	[Stat.Ferocity]: '\uE00B',
+	[Stat.MiningSpeed]: '\uE015',
+	[Stat.MiningFortune]: '\uE053',
+	[Stat.FarmingFortune]: '\uE051',
+	[Stat.CactusFortune]: '\uE051',
+	[Stat.CarrotFortune]: '\uE051',
+	[Stat.CocoaBeanFortune]: '\uE051',
+	[Stat.MelonFortune]: '\uE051',
+	[Stat.MushroomFortune]: '\uE051',
+	[Stat.NetherWartFortune]: '\uE051',
+	[Stat.PotatoFortune]: '\uE051',
+	[Stat.PumpkinFortune]: '\uE051',
+	[Stat.SugarCaneFortune]: '\uE051',
+	[Stat.WheatFortune]: '\uE051',
+	[Stat.SunflowerFortune]: '\uE051',
+	[Stat.MoonflowerFortune]: '\uE051',
+	[Stat.WildRoseFortune]: '\uE051',
+	[Stat.PestKillFortune]: '\uE051',
+	[Stat.PestCooldownReduction]: '\uE019',
+	[Stat.ForagingFortune]: '\uE054',
+	[Stat.MiningWisdom]: '\u262F',
+	[Stat.FarmingWisdom]: '\u262F',
+	[Stat.ForagingWisdom]: '\u262F',
+	[Stat.Pristine]: '\uE01C',
+	[Stat.BonusPestChance]: '\uE019',
+	[Stat.Overbloom]: '\uE02B',
+	[Stat.FishingSpeed]: '\uE00C',
+	[Stat.CombatWisdom]: '\u262F',
+	[Stat.TrophyChance]: '\uE02A',
+	[Stat.TreasureChance]: '\uE025',
+	[Stat.Tracking]: '\uE077',
 };
 
 export const RARITY_COLORS: Record<Rarity, string> = {

@@ -62,4 +62,5 @@ export * from './util/ratecalc.js';
 export * from './util/ratecalc-effects.js';
 export * from './util/skyblocktime.js';
 export * from './util/upgrade-identity.js';
+export * from './util/weather.js';
 export * from './weight/weightcalc.js';

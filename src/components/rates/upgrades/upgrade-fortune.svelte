@@ -6,7 +6,7 @@
 	import PawPrint from '@lucide/svelte/icons/paw-print';
 	import {
 		FARMING_MECHANIC_INFO,
-		STAT_ICONS,
+		STAT_ICONS_UNICODE as STAT_ICONS,
 		STAT_NAMES,
 		Stat,
 		type EffectSummary,

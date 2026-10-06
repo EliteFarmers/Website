@@ -3,7 +3,7 @@
 	import { getStatColor } from '$lib/format';
 	import { cn } from '$lib/utils';
 	import Info from '@lucide/svelte/icons/info';
-	import { STAT_ICONS, STAT_NAMES, Stat, type StatBreakdown } from 'farming-weight';
+	import { STAT_ICONS_UNICODE as STAT_ICONS, STAT_NAMES, Stat, type StatBreakdown } from 'farming-weight';
 
 	interface Entry {
 		stat: Stat;
