@@ -10,7 +10,7 @@ export class TermiteShard extends FarmingAttributeShard {
 	readonly name = 'Earthworm Shard';
 	readonly skyblockId = 'SHARD_TERMITE';
 	readonly rarity = Rarity.Uncommon;
-	readonly wiki = 'https://w.elitesb.gg/Termite_Shard';
+	readonly wiki = 'https://w.elitesb.gg/Earthworm_Shard';
 	readonly statsPerLevel = { [Stat.FarmingFortune]: 3 };
 	readonly effectSource = ATTRIBUTE_SHARDS_STAT_SOURCE;
 

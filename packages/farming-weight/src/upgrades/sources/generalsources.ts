@@ -1399,7 +1399,7 @@ function mapShardSource(shard: FarmingAttributeShard): DynamicFortuneSource<Farm
 					effects: effects.length > 0 ? effects : undefined,
 					action: UpgradeAction.LevelUp,
 					category: UpgradeCategory.Attribute,
-					// wiki: shard.wiki, // Wiki page doesn't exist yet
+					wiki: shard.wiki,
 					cost: {
 						items: {
 							[shard.skyblockId]: nextCost,
