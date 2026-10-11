@@ -56,4 +56,14 @@ export interface ItemDto {
 	 * @nullable
 	 */
 	slot?: string | null;
+	/**
+	 * Inventory the item is stored in, set when items from multiple inventories are combined
+	 * @nullable
+	 */
+	inventoryId?: string | null;
+	/**
+	 * Slot of the item within its inventory, set alongside InventoryId
+	 * @nullable
+	 */
+	inventorySlot?: string | null;
 }

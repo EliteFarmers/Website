@@ -35,6 +35,7 @@ import type {
 	UpdateGuideRequest,
 	VoteGuideRequest,
 } from '$lib/api/schemas';
+import { GuideMainSectionType } from '$lib/api/schemas';
 import { renderGuideContentForDisplay } from '$lib/guides/render-content.server';
 import { error } from '@sveltejs/kit';
 import * as z from 'zod';
@@ -273,13 +274,13 @@ export const GetGuideHistory = query(z.number(), async (guideId) => {
 /**
  * Command: Create a new guide draft
  */
-export const createGuideCommand = command(z.string(), async (type: string) => {
+export const createGuideCommand = command(async () => {
 	const event = getRequestEvent();
 	if (!event.locals.access_token) {
 		return { error: 'Unauthorized', guide: null };
 	}
 
-	const request: CreateGuideRequest = { type: Number(type) as GuideType };
+	const request: CreateGuideRequest = { mainSection: GuideMainSectionType.none };
 	const result = await createGuide(request);
 
 	if (result.response.status === 401) {

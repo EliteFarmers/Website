@@ -25,6 +25,7 @@
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { PestFarmingPhase } from 'farming-weight';
 	import { PestFarmingPageContext, PHASE_CONFIG } from './pest-farming-context.svelte';
+	import RatesSettings from '../fortune/rates-settings.svelte';
 	import PestSettings from './pest-settings.svelte';
 
 	const pest = new PestFarmingPageContext();
@@ -231,8 +232,11 @@
 		</div>
 
 		<Dialog.Root bind:open={$ratesData.settings}>
-			<Dialog.ScrollContent parentClass="max-w-2xl">
-				<PestSettings {pest} />
+			<Dialog.ScrollContent parentClass="max-w-2xl lg:max-w-6xl">
+				<div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-6">
+					<PestSettings {pest} />
+					<RatesSettings pestFarmingPopup />
+				</div>
 			</Dialog.ScrollContent>
 		</Dialog.Root>
 	{/if}

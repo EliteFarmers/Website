@@ -6,6 +6,7 @@
 	import MainSearch from '$comp/stats/main-search.svelte';
 	import { env } from '$env/dynamic/public';
 	import { trackAnalytics } from '$lib/analytics';
+	import { ELITE_FARMER_GOLD_MEDAL_REQ, ELITE_FARMER_WEIGHT_REQ } from '$lib/constants/data';
 	import { getArticlesPaginated } from '$lib/remote/articles.remote';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
@@ -17,7 +18,7 @@
 	import type { PageData } from './$types';
 	import ArticlePill from './articles/article-pill.svelte';
 	import ArticleSkeleton from './articles/article-skeleton.svelte';
-	const { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } = env;
+	const { PUBLIC_DONATION_URL } = env;
 
 	interface Props {
 		data: PageData;
@@ -131,111 +132,105 @@
 			</a>
 		</div>
 
-		<div class="flex flex-col items-center justify-center gap-4 md:flex-row">
-			<div class="flex flex-col items-center gap-4">
-				<Card.Root class="max-w-md">
-					<Card.Header>
-						<Card.Title class="text-xl">Join The Discord</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<p class="mb-6 w-full text-lg">
-							Full membership unlocked after reaching {(+PUBLIC_WEIGHT_REQ).toLocaleString()}
-							farming weight. Also, join the support server for suggestions and bug reports!
-						</p>
-						<div class="flex flex-col justify-center gap-2 md:flex-row">
-							<Button
-								href="/discord"
-								class="w-fit font-semibold"
-								variant="secondary"
-								target="_blank"
-								rel="noopener noreferrer nofollow"
-								onclick={() => trackHomeCta('discord')}
-							>
-								Elite Farmers
-								<ExternalLink class="ml-2" size={20} />
-							</Button>
-							<Button
-								href="/support"
-								class="w-fit font-semibold"
-								variant="secondary"
-								target="_blank"
-								rel="noopener noreferrer nofollow"
-								onclick={() => trackHomeCta('support')}
-							>
-								Support Server
-								<ExternalLink class="ml-2" size={20} />
-							</Button>
-						</div>
-					</Card.Content>
-				</Card.Root>
-				<Card.Root class="max-w-md">
-					<Card.Header>
-						<Card.Title class="text-xl">Support Development!</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<p class="mb-6 w-full text-lg">
-							Donate on Ko-Fi to support the development of Elite! Also check Server Subscriptions on the
-							development server to unlock some perks!
-						</p>
-						<div class="flex justify-center">
-							<Button
-								href={PUBLIC_DONATION_URL}
-								class="w-fit font-semibold"
-								target="_blank"
-								variant="secondary"
-								rel="noopener noreferrer nofollow"
-								onclick={() => trackHomeCta('kofi')}
-							>
-								Donate on Ko-Fi
-								<ExternalLink class="ml-2" size={20} />
-							</Button>
-						</div>
-					</Card.Content>
-				</Card.Root>
-			</div>
-			<div class="flex flex-col items-center gap-4">
-				<Card.Root class="max-w-md">
-					<Card.Header>
-						<Card.Title class="text-xl">Add To Discord</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<p class="mb-6 w-full text-lg">
-							Quickly access stats and leaderboards in Discord! Try out commands like <strong
-								>/weight</strong
-							>, <strong>/rates</strong>, and <strong>/leaderboard</strong>!
-						</p>
-						<div class="flex justify-center">
-							<Button
-								href="/invite"
-								class="w-fit font-semibold"
-								target="_blank"
-								variant="secondary"
-								rel="noopener noreferrer nofollow"
-								onclick={() => trackHomeCta('bot_invite')}
-							>
-								Invite Elite Bot
-								<ExternalLink class="ml-2" size={20} />
-							</Button>
-						</div>
-					</Card.Content>
-				</Card.Root>
-				<Card.Root class="max-w-md">
-					<Card.Header>
-						<Card.Title class="text-xl">Get Profile Badges!</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<p class="mb-6 w-full text-lg">
-							Check out and collect the different badges available on the website! These show up on your
-							stats page!
-						</p>
-						<div class="flex justify-center">
-							<Button href="/info/badges" class="w-fit font-semibold" variant="secondary">
-								View Badges
-							</Button>
-						</div>
-					</Card.Content>
-				</Card.Root>
-			</div>
+		<div class="grid grid-cols-1 justify-items-center gap-4 md:grid-cols-2">
+			<Card.Root class="w-full max-w-md gap-3">
+				<Card.Header>
+					<Card.Title class="text-xl">Join The Discord</Card.Title>
+				</Card.Header>
+				<Card.Content class="flex flex-1 flex-col">
+					<p class="mb-6 w-full flex-1 text-base">
+						Full membership unlocked after reaching {ELITE_FARMER_WEIGHT_REQ.toLocaleString()}
+						farming weight and earning {ELITE_FARMER_GOLD_MEDAL_REQ.toLocaleString()} gold or better contest medals.
+						Also, join the support server for suggestions and bug reports!
+					</p>
+					<div class="flex flex-col justify-center gap-2 md:flex-row">
+						<Button
+							href="/discord"
+							class="w-fit font-semibold"
+							variant="secondary"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+							onclick={() => trackHomeCta('discord')}
+						>
+							Elite Farmers
+							<ExternalLink class="ml-2" size={20} />
+						</Button>
+						<Button
+							href="/support"
+							class="w-fit font-semibold"
+							variant="secondary"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+							onclick={() => trackHomeCta('support')}
+						>
+							Support Server
+							<ExternalLink class="ml-2" size={20} />
+						</Button>
+					</div>
+				</Card.Content>
+			</Card.Root>
+			<Card.Root class="w-full max-w-md gap-3">
+				<Card.Header>
+					<Card.Title class="text-xl">Add To Discord</Card.Title>
+				</Card.Header>
+				<Card.Content class="flex flex-1 flex-col">
+					<p class="mb-6 w-full flex-1 text-base">
+						Quickly access stats and leaderboards in Discord! Try out commands like <strong>/weight</strong
+						>, <strong>/rates</strong>, and <strong>/leaderboard</strong>!
+					</p>
+					<div class="flex justify-center">
+						<Button
+							href="/invite"
+							class="w-fit font-semibold"
+							target="_blank"
+							variant="secondary"
+							rel="noopener noreferrer nofollow"
+							onclick={() => trackHomeCta('bot_invite')}
+						>
+							Invite Elite Bot
+							<ExternalLink class="ml-2" size={20} />
+						</Button>
+					</div>
+				</Card.Content>
+			</Card.Root>
+			<Card.Root class="w-full max-w-md gap-3">
+				<Card.Header>
+					<Card.Title class="text-xl">Support Development!</Card.Title>
+				</Card.Header>
+				<Card.Content class="flex flex-1 flex-col">
+					<p class="mb-6 w-full flex-1 text-base">
+						Donate on Ko-Fi to support the development of Elite! Also check Server Subscriptions on the
+						development server to unlock some perks!
+					</p>
+					<div class="flex justify-center">
+						<Button
+							href={PUBLIC_DONATION_URL}
+							class="w-fit font-semibold"
+							target="_blank"
+							variant="secondary"
+							rel="noopener noreferrer nofollow"
+							onclick={() => trackHomeCta('kofi')}
+						>
+							Donate on Ko-Fi
+							<ExternalLink class="ml-2" size={20} />
+						</Button>
+					</div>
+				</Card.Content>
+			</Card.Root>
+			<Card.Root class="w-full max-w-md gap-3">
+				<Card.Header>
+					<Card.Title class="text-xl">Get Profile Badges!</Card.Title>
+				</Card.Header>
+				<Card.Content class="flex flex-1 flex-col">
+					<p class="mb-6 w-full flex-1 text-base">
+						Check out and collect the different badges available on the website! These show up on your stats
+						page!
+					</p>
+					<div class="flex justify-center">
+						<Button href="/info/badges" class="w-fit font-semibold" variant="secondary">View Badges</Button>
+					</div>
+				</Card.Content>
+			</Card.Root>
 		</div>
 	</div>
 

@@ -8,6 +8,9 @@
  * OpenAPI spec version: v1
  */
 import type { AuthorDto } from './AuthorDto';
+import type { GuideCategoryDto } from './GuideCategoryDto';
+import type { GuideMainSectionType } from './GuideMainSectionType';
+import type { GuideRichData } from './GuideRichData';
 import type { ListOfGuideAssetDto } from './ListOfGuideAssetDto';
 import type { ListOfGuideAuthorDto } from './ListOfGuideAuthorDto';
 import type { ListOfInt32 } from './ListOfInt32';
@@ -21,6 +24,9 @@ export interface FullGuideDto {
 	iconSkyblockId?: string | null;
 	description: string;
 	content: string;
+	category?: GuideCategoryDto | null;
+	mainSection: GuideMainSectionType;
+	richBlocks?: GuideRichData | null;
 	author: AuthorDto;
 	authors: ListOfGuideAuthorDto;
 	createdAt: string;

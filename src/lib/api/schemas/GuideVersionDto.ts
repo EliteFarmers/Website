@@ -7,6 +7,8 @@
  * Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { GuideMainSectionType } from './GuideMainSectionType';
+import type { GuideRichData } from './GuideRichData';
 
 export interface GuideVersionDto {
 	id: number;
@@ -14,6 +16,8 @@ export interface GuideVersionDto {
 	title: string;
 	description: string;
 	content: string;
+	mainSection: GuideMainSectionType;
+	richBlocks?: GuideRichData | null;
 	createdAt: string;
 	/** @nullable */
 	createdById?: bigint | null;

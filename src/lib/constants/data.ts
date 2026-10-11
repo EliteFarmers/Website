@@ -5,6 +5,11 @@ export const LEADERBOARD_UPDATE_INTERVAL = 1000 * 60 * 5; // 5 minutes
 export const PLAYER_UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
 export const ACCOUNT_UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
 
+// Requirements to apply for Elite Farmer
+export const ELITE_FARMER_WEIGHT_REQ = 20_000;
+// Earned gold, platinum, and diamond contest medals
+export const ELITE_FARMER_GOLD_MEDAL_REQ = 350;
+
 interface RankDefault {
 	color: string;
 	tag: string;

@@ -106,13 +106,6 @@
 		return Math.max(1, Math.floor(value ?? 1));
 	}
 
-	function getOverlayItemClass(width: number, height: number): string {
-		const largestDimension = Math.max(width, height);
-		if (largestDimension >= 3) return 'size-14 sm:size-16 md:size-24';
-		if (largestDimension === 2) return 'size-10 sm:size-12 md:size-16';
-		return 'size-8 sm:size-10 md:size-12';
-	}
-
 	function buildRingSlots(targetWidth: number, targetHeight: number): GridPosition[] {
 		const slots: GridPosition[] = [];
 
@@ -535,9 +528,7 @@
 
 	const smallItemClass = 'w-full drop-shadow-md sm:size-6 md:size-10 brightness-150';
 
-	function largeItemClass(overlay: GridOverlay): string {
-		return `${getOverlayItemClass(overlay.width, overlay.height)} drop-shadow-md brightness-150`;
-	}
+	const largeItemClass = 'size-full drop-shadow-md brightness-150';
 
 	function getOverlayGridStyle(overlay: GridOverlay): string {
 		return `grid-row: ${overlay.y - bounds.minY + 1} / span ${overlay.height}; grid-column: ${overlay.x - bounds.minX + 1} / span ${overlay.width};`;
@@ -546,14 +537,14 @@
 
 <div class="my-2 flex w-full justify-center">
 	<div
-		class="relative inline-grid w-fit gap-[0.5px] md:gap-0.5"
-		style="grid-template-columns: repeat({bounds.cols}, 1fr);"
+		class="mutation-grid relative inline-grid w-fit gap-[0.5px] md:gap-0.5"
+		style="--mutation-grid-columns: {bounds.cols};"
 	>
 		{#each cells as row, rowIdx (rowIdx)}
 			{#each row as cell, colIdx (colIdx)}
 				<div
 					style="grid-row: {rowIdx + 1}; grid-column: {colIdx + 1};"
-					class={`relative flex aspect-square w-full max-w-8 items-center justify-center overflow-hidden border sm:size-8 md:size-12 md:max-w-12 ${cell.isTarget ? 'ring-1 ring-primary/50' : ''}`}
+					class={`relative flex size-full items-center justify-center overflow-hidden border ${cell.isTarget ? 'ring-1 ring-primary/50' : ''}`}
 				>
 					{#if cell.blockName}
 						<img
@@ -585,16 +576,30 @@
 				{#if overlay.mutationId}
 					<button
 						type="button"
-						class="pointer-events-auto cursor-pointer"
+						class="pointer-events-auto size-full cursor-pointer"
 						onclick={() => selectMutation(overlay.mutationId)}
 						aria-label="View {overlay.mutationId} mutation"
 					>
-						<ItemRender skyblockId={overlay.skyblockId} class={largeItemClass(overlay)} />
+						<ItemRender skyblockId={overlay.skyblockId} class={largeItemClass} />
 					</button>
 				{:else}
-					<ItemRender skyblockId={overlay.skyblockId} class={largeItemClass(overlay)} />
+					<ItemRender skyblockId={overlay.skyblockId} class={largeItemClass} />
 				{/if}
 			</div>
 		{/each}
 	</div>
 </div>
+
+<style>
+	.mutation-grid {
+		--mutation-cell-size: 2rem;
+		grid-template-columns: repeat(var(--mutation-grid-columns), var(--mutation-cell-size));
+		grid-auto-rows: var(--mutation-cell-size);
+	}
+
+	@media (min-width: 48rem) {
+		.mutation-grid {
+			--mutation-cell-size: 3rem;
+		}
+	}
+</style>

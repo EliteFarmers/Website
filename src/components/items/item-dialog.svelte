@@ -17,6 +17,8 @@
 		selectedItem: ItemDto | null;
 		itemDetails?: ReturnType<typeof getInventoryItemDetails> | null;
 		subInventory?: Snippet;
+		/** Extra details shown after the item lore */
+		children?: Snippet;
 	}
 
 	const gbl = getGlobalContext();
@@ -34,6 +36,7 @@
 		selectedItem = $bindable(null),
 		itemDetails = null,
 		subInventory = undefined,
+		children = undefined,
 	}: Props = $props();
 
 	const deletorCompactorItems = $derived(
@@ -51,6 +54,7 @@
 				item={selectedItem}
 				otherDebugData={itemDetails?.ready ? itemDetails.current.meta?.networth : undefined}
 			>
+				{@render children?.()}
 				{#if selectedItem.attributes?.inventory_data}
 					<div class="my-4 grid w-fit grid-cols-9 items-center justify-center gap-1">
 						{#if subInventory}

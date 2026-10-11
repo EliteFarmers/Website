@@ -3,13 +3,14 @@
 	import type { ItemDto } from '$lib/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { toReadable } from '$lib/format';
+	import { Button } from '$ui/button';
+	import FileText from '@lucide/svelte/icons/file-text';
 	import { getCropDisplayName, type FarmingTool as FT } from 'farming-weight';
 	import FormattedText from '../formatted-text.svelte';
 	import InventorySlot from '../inventories/inventory-slot.svelte';
-	import Lorebtn from '../lorebtn.svelte';
 	import FortuneBreakdown from './fortune-breakdown.svelte';
 
-	let { tool }: { tool: FT } = $props();
+	let { tool, onSelect }: { tool: FT; onSelect: (tool: FT) => void } = $props();
 
 	const crop = $derived(
 		tool.crop
@@ -28,7 +29,11 @@
 
 <div class="flex max-h-30 w-full basis-20 flex-row justify-between gap-2 rounded-md bg-card p-1 text-card-foreground">
 	<div class="flex w-full flex-row items-center gap-2">
-		<InventorySlot {item} class="size-12 border-none shadow-none md:m-2 md:size-16" />
+		<InventorySlot
+			{item}
+			onSelect={() => onSelect(tool)}
+			class="size-12 border-none shadow-none md:m-2 md:size-16"
+		/>
 		<div class="flex w-full flex-col items-start">
 			<div class="text-md font-semibold">
 				<FormattedText text={tool.item.name ?? 'Unknown Tool'} />
@@ -72,20 +77,10 @@
 		</div>
 	</div>
 	<div class="flex flex-row items-center justify-end gap-2">
-		<Lorebtn item={tool.item}>
-			{#if tool.cultivating}
-				<p>
-					<span class="font-semibold select-none">Cultivating:</span>
-					<span class="select-all">{tool.cultivating.toLocaleString()}</span>
-				</p>
-			{/if}
-			{#if tool.counter && tool.counter !== tool.cultivating}
-				<p>
-					<span class="font-semibold select-none">Counter:</span>
-					<span class="select-all">{tool.counter.toLocaleString()}</span>
-				</p>
-			{/if}
-		</Lorebtn>
+		<Button variant="ghost" size="sm" class="px-2" onclick={() => onSelect(tool)}>
+			<FileText size={20} />
+			<span class="sr-only">View Item Details</span>
+		</Button>
 		<div class="flex flex-col items-end justify-between gap-1 p-1">
 			<FortuneBreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown} />
 		</div>
