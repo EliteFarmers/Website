@@ -20,12 +20,12 @@
 		Spray,
 		SPRAY_NAMES,
 		SPRAY_TO_PESTS,
-		SprayonatorTier,
 		Stat,
 		TEMPORARY_FORTUNE,
 		type TemporaryFarmingFortune,
 	} from 'farming-weight';
 	import type { PestFarmingPageContext } from './pest-farming-context.svelte';
+	import PestSprayedPlotSetting from './pest-sprayed-plot-setting.svelte';
 
 	interface Props {
 		pest: PestFarmingPageContext;
@@ -53,19 +53,6 @@
 			label: targetedPests ? `${sprayName(sprayId)} (${targetedPests})` : sprayName(sprayId),
 		};
 	});
-	const sprayonatorTierOptions = [
-		{ value: SprayonatorTier.Regular, label: 'Sprayonator' },
-		{ value: SprayonatorTier.Juicy, label: 'Juicy Sprayonator' },
-		{ value: SprayonatorTier.Salty, label: 'Salty Sprayonator' },
-	];
-	const sprayonatorBonus = $derived(
-		25 *
-			(pest.rates.pestFarming.sprayonatorTier === SprayonatorTier.Salty
-				? 3
-				: pest.rates.pestFarming.sprayonatorTier === SprayonatorTier.Juicy
-					? 2
-					: 1)
-	);
 	type TemporaryFortuneToggleKey = Exclude<keyof TemporaryFarmingFortune, 'pestTurnIn'>;
 	const pestTurnInTitle = `${TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)`;
 	const temporaryFortuneSources = [
@@ -123,32 +110,7 @@
 	</SettingListItem>
 	<SettingSeperator />
 
-	<SettingListItem
-		title="Sprayed Plot"
-		description="If you're farming in a sprayed plot. Provides bonus pest chance."
-		wiki="https://w.elitesb.gg/Sprayonator"
-	>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown
-				breakdown={{ Sprayonator: { value: sprayonatorBonus, stat: Stat.BonusPestChance } }}
-				enabled={pest.rates.pestFarming.sprayedPlot}
-			/>
-			<Switch
-				checked={pest.rates.pestFarming.sprayedPlot}
-				onCheckedChange={(checked) => pest.setSprayedPlot(checked)}
-			/>
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
-
-	<SettingListItem title="Sprayer Tier" description="Juicy and Salty multiply the selected material's base effect.">
-		<Select.Simple
-			class="my-1 h-10 min-w-40"
-			value={pest.rates.pestFarming.sprayonatorTier}
-			change={(value) => pest.setSprayonatorTier(value ?? SprayonatorTier.Regular)}
-			options={sprayonatorTierOptions}
-		/>
-	</SettingListItem>
+	<PestSprayedPlotSetting {pest} />
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 font-normal">

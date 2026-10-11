@@ -9,12 +9,16 @@
 	import PestRateBreakdown from '$comp/rates/pest/pest-rate-breakdown.svelte';
 	import PestStatsSummary from '$comp/rates/pest/pest-stats-summary.svelte';
 	import PestUpgradePhaseNav from '$comp/rates/pest/pest-upgrade-phase-nav.svelte';
+	import FortuneSettingsSaveBar from '$comp/rates/settings/fortune-settings-save-bar.svelte';
+	import ManualSetting from '$comp/rates/settings/manual-setting.svelte';
+	import ManualSettingDialog from '$comp/rates/settings/manual-setting-dialog.svelte';
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { trackAnalytics } from '$lib/analytics';
+	import { setManualSettingContext } from '$lib/hooks/manual-setting';
 	import { getUpgradeCost } from '$lib/items';
-	import { getRatesData } from '$lib/stores/ratesData';
+	import { getRatesSettingsOpen } from '$lib/stores/ratesData';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import { Skeleton } from '$ui/skeleton';
@@ -23,19 +27,23 @@
 	import Settings from '@lucide/svelte/icons/settings';
 	import Sprout from '@lucide/svelte/icons/sprout';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { PestFarmingPhase } from 'farming-weight';
+	import { PestFarmingPhase, type ManualSettingId } from 'farming-weight';
 	import { PestFarmingPageContext, PHASE_CONFIG } from './pest-farming-context.svelte';
 	import RatesSettings from '../fortune/rates-settings.svelte';
 	import PestSettings from './pest-settings.svelte';
+	import PestSprayedPlotSetting from './pest-sprayed-plot-setting.svelte';
 
 	const pest = new PestFarmingPageContext();
 	const ctx = pest.ctx;
-	const ratesData = getRatesData();
+	const settingsOpen = getRatesSettingsOpen();
+
+	let manualSetting = $state<ManualSettingId | null>(null);
+	setManualSettingContext({ open: (setting) => (manualSetting = setting) });
 
 	const hasGardenData = $derived(!!ctx.member.current?.garden);
 
 	function openSettings() {
-		$ratesData.settings = true;
+		$settingsOpen = true;
 		trackAnalytics('pest_farming.settings_opened');
 	}
 </script>
@@ -231,14 +239,26 @@
 			</section>
 		</div>
 
-		<Dialog.Root bind:open={$ratesData.settings}>
+		<Dialog.Root bind:open={$settingsOpen}>
 			<Dialog.ScrollContent parentClass="max-w-2xl lg:max-w-6xl">
 				<div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-6">
 					<PestSettings {pest} />
 					<RatesSettings pestFarmingPopup />
 				</div>
+				<FortuneSettingsSaveBar />
 			</Dialog.ScrollContent>
 		</Dialog.Root>
+
+		<ManualSettingDialog bind:setting={manualSetting}>
+			{#snippet control(setting)}
+				<!-- Pest farming uses its own sprayed plot setting -->
+				{#if setting === 'sprayedPlot'}
+					<PestSprayedPlotSetting {pest} />
+				{:else}
+					<ManualSetting {setting} />
+				{/if}
+			{/snippet}
+		</ManualSettingDialog>
 	{/if}
 {:else}
 	<div class="mx-auto flex w-full max-w-6xl flex-col gap-6 px-2 py-4 md:py-6">

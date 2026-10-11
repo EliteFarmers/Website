@@ -2,11 +2,11 @@ import { browser } from '$app/environment';
 import {
 	DEFAULT_PEST_CYCLE_SETTINGS,
 	Pest,
-	type PestAttractionSettings,
 	Spray,
 	SprayonatorTier,
 	ZorroMode,
 	type FarmingTool,
+	type PestAttractionSettings,
 	type PestCycleSettings,
 	type TemporaryFarmingFortune,
 } from 'farming-weight';
@@ -29,7 +29,6 @@ export interface PestFarmingData {
 
 export interface RatesData {
 	v: number;
-	settings: boolean;
 	tool?: FarmingTool;
 	chipRarities: Record<string, string>;
 	communityCenter: number;
@@ -64,7 +63,6 @@ export const MissingRatesDataSchema = z.object({
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
 	v: 11,
-	settings: false,
 	chipRarities: {},
 	communityCenter: 0,
 	strength: 0,
@@ -168,7 +166,11 @@ export function initRatesData(data: PartialRatesData = defaultData) {
 		const savedRatesData = localStorage.getItem('ratesData');
 
 		if (savedRatesData) {
-			initialData = normalizeRatesData(JSON.parse(savedRatesData) as PartialRatesData);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { settings: _settings, ...saved } = JSON.parse(savedRatesData) as PartialRatesData & {
+				settings?: boolean;
+			};
+			initialData = normalizeRatesData(saved);
 		}
 	}
 
@@ -181,6 +183,7 @@ export function initRatesData(data: PartialRatesData = defaultData) {
 	});
 
 	setContext('ratesData', store);
+	setContext('ratesSettingsOpen', writable(false));
 }
 
 export function getRatesData() {
@@ -191,9 +194,16 @@ export function getRatesData() {
 		store = getContext<Writable<RatesData>>('ratesData');
 	}
 
-	store.update((rates) => {
-		return normalizeRatesData(rates);
-	});
+	return store;
+}
+
+export function getRatesSettingsOpen() {
+	let store = getContext<Writable<boolean>>('ratesSettingsOpen');
+
+	if (!store) {
+		initRatesData();
+		store = getContext<Writable<boolean>>('ratesSettingsOpen');
+	}
 
 	return store;
 }

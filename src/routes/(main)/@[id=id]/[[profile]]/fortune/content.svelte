@@ -8,6 +8,7 @@
 	import FarmingGear from '$comp/rates/farming-gear.svelte';
 	import PetFortuneProgress from '$comp/rates/pet-fortune-progress.svelte';
 	import PetSelector from '$comp/rates/pet-selector.svelte';
+	import ManualSettingDialog from '$comp/rates/settings/manual-setting-dialog.svelte';
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
@@ -16,11 +17,12 @@
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { formatBoundaryError, getLevelProgress } from '$lib/format';
+	import { setManualSettingContext } from '$lib/hooks/manual-setting';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
 	import { getRateImpactCoinValue } from '$lib/rates/upgrade-rate-value';
 	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { getItems } from '$lib/remote/items.remote';
-	import { getRatesData } from '$lib/stores/ratesData';
+	import { getRatesData, getRatesSettingsOpen } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
@@ -57,6 +59,7 @@
 		type EliteItemDto,
 		type FortuneSourceProgress,
 		type FortuneUpgrade,
+		type ManualSettingId,
 		type PlayerOptions,
 		type UpgradeRateImpact,
 		type UpgradeTreeNode,
@@ -70,10 +73,14 @@
 
 	const ctx = getStatsContext();
 
+	let manualSetting = $state<ManualSettingId | null>(null);
+	setManualSettingContext({ open: (setting) => (manualSetting = setting) });
+
 	let blocksBroken = $state(24_000 * 3);
 	let bps = $state(20);
 
 	const ratesData = getRatesData();
+	const settingsOpen = getRatesSettingsOpen();
 	const selectedCrops = getSelectedCrops();
 	const harvestFeast = getHarvestFeast();
 	const FORTUNE_QUERY_STATS = [Stat.FarmingFortune, Stat.Overbloom];
@@ -98,8 +105,8 @@
 	}
 
 	function toggleSettings() {
-		$ratesData.settings = !$ratesData.settings;
-		if ($ratesData.settings) {
+		$settingsOpen = !$settingsOpen;
+		if ($settingsOpen) {
 			trackAnalytics('fortune.settings_opened');
 		}
 	}
@@ -970,8 +977,10 @@
 	/>
 </div>
 
-<Dialog.Root bind:open={$ratesData.settings}>
+<Dialog.Root bind:open={$settingsOpen}>
 	<Dialog.ScrollContent parentClass="max-w-2xl">
 		<RatesSettings tempFortune={$player.tempFortune} tempFortuneBreakdown={$player.tempFortuneBreakdown} />
 	</Dialog.ScrollContent>
 </Dialog.Root>
+
+<ManualSettingDialog bind:setting={manualSetting} />

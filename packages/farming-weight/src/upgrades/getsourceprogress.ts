@@ -154,6 +154,10 @@ export function getSourceProgress<T extends object>(
 			progress.api = false;
 		}
 
+		if (source.setting) {
+			progress.setting = source.setting;
+		}
+
 		if (source.upgrades) {
 			const upgrades = source.upgrades(upgradeable, stats, mechanics);
 			for (const upgrade of upgrades) {

@@ -364,7 +364,8 @@ export const zodUpdateFortuneSettingsBody = zod.object({
 	strength: zod.int().describe('Amount of strength used for mooshroom fortune'),
 	communityCenter: zod.int().describe('Community center farming fortune level'),
 	rosewaterFlasks: zod.int().describe('Consumed Filled Rosewater Flasks'),
-	attributes: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+	speed: zod.int().describe("Total speed, used for the Orchid Mantis' Swift Sickles ability"),
+	feastBurgers: zod.int().describe('Consumed Feast Burgers with a Side of Deepfries'),
 	chipRarities: zod
 		.record(zod.string(), zod.string())
 		.describe('User-provided Garden Chip rarity assumptions. API data only exposes chip levels.'),
@@ -1268,7 +1269,7 @@ export const zodAnalyzeGreenhouseBody = zod.object({
 				effectiveFarmingFortune: zod.number(),
 				additionalCropFortune: zod.record(zod.string(), zod.number()),
 				overbloom: zod.number(),
-				rareCropArmorPieces: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+				rareCropArmorPieces: zod.record(zod.string(), zod.int()),
 				toolId: zod.string().nullish(),
 				petId: zod.string().nullish(),
 			}),
@@ -1279,7 +1280,7 @@ export const zodAnalyzeGreenhouseBody = zod.object({
 					level: zod.int(),
 				})
 			),
-			attributes: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+			attributes: zod.record(zod.string(), zod.int()),
 			customModifiers: zod.record(zod.string(), zod.number()),
 		}),
 		inventory: zod.record(zod.string(), zod.number()),
@@ -1363,7 +1364,7 @@ export const zodCreateGreenhousePlanBody = zod.object({
 				effectiveFarmingFortune: zod.number(),
 				additionalCropFortune: zod.record(zod.string(), zod.number()),
 				overbloom: zod.number(),
-				rareCropArmorPieces: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+				rareCropArmorPieces: zod.record(zod.string(), zod.int()),
 				toolId: zod.string().nullish(),
 				petId: zod.string().nullish(),
 			}),
@@ -1374,7 +1375,7 @@ export const zodCreateGreenhousePlanBody = zod.object({
 					level: zod.int(),
 				})
 			),
-			attributes: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+			attributes: zod.record(zod.string(), zod.int()),
 			customModifiers: zod.record(zod.string(), zod.number()),
 		}),
 		inventory: zod.record(zod.string(), zod.number()),
@@ -1393,7 +1394,7 @@ export const zodCreateGreenhousePlanBody = zod.object({
 			effectiveFarmingFortune: zod.number(),
 			additionalCropFortune: zod.record(zod.string(), zod.number()),
 			overbloom: zod.number(),
-			rareCropArmorPieces: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+			rareCropArmorPieces: zod.record(zod.string(), zod.int()),
 			toolId: zod.string().nullish(),
 			petId: zod.string().nullish(),
 		})
@@ -1457,7 +1458,7 @@ export const zodListGreenhouseProfitsBody = zod.object({
 			effectiveFarmingFortune: zod.number(),
 			additionalCropFortune: zod.record(zod.string(), zod.number()),
 			overbloom: zod.number(),
-			rareCropArmorPieces: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+			rareCropArmorPieces: zod.record(zod.string(), zod.int()),
 			toolId: zod.string().nullish(),
 			petId: zod.string().nullish(),
 		}),
@@ -1468,7 +1469,7 @@ export const zodListGreenhouseProfitsBody = zod.object({
 				level: zod.int(),
 			})
 		),
-		attributes: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+		attributes: zod.record(zod.string(), zod.int()),
 		customModifiers: zod.record(zod.string(), zod.number()),
 	}),
 	harvestSetupCandidates: zod.array(
@@ -1478,7 +1479,7 @@ export const zodListGreenhouseProfitsBody = zod.object({
 			effectiveFarmingFortune: zod.number(),
 			additionalCropFortune: zod.record(zod.string(), zod.number()),
 			overbloom: zod.number(),
-			rareCropArmorPieces: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+			rareCropArmorPieces: zod.record(zod.string(), zod.int()),
 			toolId: zod.string().nullish(),
 			petId: zod.string().nullish(),
 		})
@@ -1534,7 +1535,7 @@ export const zodGetGreenhouseProfitDetailsBody = zod.object({
 			effectiveFarmingFortune: zod.number(),
 			additionalCropFortune: zod.record(zod.string(), zod.number()),
 			overbloom: zod.number(),
-			rareCropArmorPieces: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+			rareCropArmorPieces: zod.record(zod.string(), zod.int()),
 			toolId: zod.string().nullish(),
 			petId: zod.string().nullish(),
 		}),
@@ -1545,7 +1546,7 @@ export const zodGetGreenhouseProfitDetailsBody = zod.object({
 				level: zod.int(),
 			})
 		),
-		attributes: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+		attributes: zod.record(zod.string(), zod.int()),
 		customModifiers: zod.record(zod.string(), zod.number()),
 	}),
 	harvestSetupCandidates: zod.array(
@@ -1555,7 +1556,7 @@ export const zodGetGreenhouseProfitDetailsBody = zod.object({
 			effectiveFarmingFortune: zod.number(),
 			additionalCropFortune: zod.record(zod.string(), zod.number()),
 			overbloom: zod.number(),
-			rareCropArmorPieces: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+			rareCropArmorPieces: zod.record(zod.string(), zod.int()),
 			toolId: zod.string().nullish(),
 			petId: zod.string().nullish(),
 		})
@@ -1693,7 +1694,7 @@ export const zodCreateGreenhouseSimulationBody = zod.object({
 				effectiveFarmingFortune: zod.number(),
 				additionalCropFortune: zod.record(zod.string(), zod.number()),
 				overbloom: zod.number(),
-				rareCropArmorPieces: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+				rareCropArmorPieces: zod.record(zod.string(), zod.int()),
 				toolId: zod.string().nullish(),
 				petId: zod.string().nullish(),
 			}),
@@ -1704,7 +1705,7 @@ export const zodCreateGreenhouseSimulationBody = zod.object({
 					level: zod.int(),
 				})
 			),
-			attributes: zod.record(zod.string(), zod.int()).describe('Attribute shards'),
+			attributes: zod.record(zod.string(), zod.int()),
 			customModifiers: zod.record(zod.string(), zod.number()),
 		}),
 		inventory: zod.record(zod.string(), zod.number()),

@@ -8,9 +8,6 @@
  * OpenAPI spec version: v1
  */
 
-/**
- * Attribute shards
- */
 export interface DictionaryOfStringAndInt32 {
 	[key: string]: number;
 }

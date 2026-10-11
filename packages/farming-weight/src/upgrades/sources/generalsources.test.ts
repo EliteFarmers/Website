@@ -4,6 +4,8 @@ import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { GemRarity } from '../../fortune/item.js';
 import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
 import { FarmingPlayer } from '../../player/player.js';
+import { MANUAL_SETTING_IDS } from '../../player/playeroptions.js';
+import { GENERAL_FORTUNE_SOURCES } from './generalsources.js';
 
 test('General fortune sources', () => {
 	const player = new FarmingPlayer({
@@ -74,6 +76,7 @@ test('General fortune sources', () => {
 			max: 40,
 			ratio: 1,
 			api: false,
+			setting: 'communityCenter',
 		},
 		{
 			name: 'Helianthus Relic',
@@ -113,6 +116,7 @@ test('General fortune sources', () => {
 		},
 		{
 			api: false,
+			setting: 'feastBurgers',
 			name: 'Feast Burger with a Side of Deepfries',
 			current: 0,
 			max: 0,
@@ -121,6 +125,7 @@ test('General fortune sources', () => {
 		{
 			name: 'Filled Rosewater Flask',
 			api: false,
+			setting: 'filledRosewaterFlask',
 			current: 0,
 			max: 5,
 			ratio: 0,
@@ -408,4 +413,17 @@ test('Harvest Feast perk levels contribute while feast is active', () => {
 	expect(player.getStat(Stat.Overbloom)).toBe(0);
 	expect(player.getStat(Stat.FarmingFortune)).toBe(20);
 	expect(player.getStat(Stat.BonusPestChance)).toBe(6);
+});
+
+test('Sources missing from the API reference the setting that controls them', () => {
+	const player = new FarmingPlayer({});
+
+	for (const source of GENERAL_FORTUNE_SOURCES) {
+		expect(source.api === false, source.name).toBe(source.setting !== undefined);
+		if (source.setting) expect(MANUAL_SETTING_IDS).toContain(source.setting);
+
+		for (const upgrade of source.upgrades?.(player) ?? []) {
+			expect(upgrade.api === false, upgrade.title).toBe(upgrade.setting !== undefined);
+		}
+	}
 });

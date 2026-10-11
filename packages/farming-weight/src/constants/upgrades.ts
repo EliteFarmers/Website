@@ -2,6 +2,7 @@ import type { EffectOp, Scope } from '../effects/types.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import type { UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { GearSlot } from '../items/armor.js';
+import type { ManualSettingId } from '../player/playeroptions.js';
 import type { FARMING_TOOLS } from '../items/tools.js';
 import type { JacobContestMedal } from '../util/jacob.js';
 import type { Crop } from './crops.js';
@@ -77,6 +78,8 @@ export interface FortuneSourceProgress {
 	nextInfo?: UpgradeableInfo;
 	maxInfo?: UpgradeableInfo;
 	api?: boolean;
+	/** Manual setting that controls this source, set when it isn't available in the Hypixel API */
+	setting?: ManualSettingId;
 	active?: {
 		active: boolean;
 		reason?: string;
@@ -221,6 +224,8 @@ export interface UpgradeInfo<T = number> {
 	category: UpgradeCategory;
 	optional?: boolean;
 	api?: boolean;
+	/** Manual setting that controls this source, set when it isn't available in the Hypixel API */
+	setting?: ManualSettingId;
 	repeatable?: number;
 	deadEnd?: boolean;
 	cost?: UpgradeCost;
@@ -286,6 +291,8 @@ export interface FortuneUpgrade {
 	category: UpgradeCategory;
 	optional?: boolean;
 	api?: boolean;
+	/** Manual setting that controls this source, set when it isn't available in the Hypixel API */
+	setting?: ManualSettingId;
 	repeatable?: number;
 	deadEnd?: boolean;
 	cost?: UpgradeCost;

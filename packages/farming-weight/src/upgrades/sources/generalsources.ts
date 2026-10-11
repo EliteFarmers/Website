@@ -426,6 +426,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: COMMUNITY_CENTER_UPGRADE.name,
 		api: false,
+		setting: 'communityCenter',
 		wiki: () => COMMUNITY_CENTER_UPGRADE.wiki,
 		exists: () => true,
 		max: () => COMMUNITY_CENTER_UPGRADE.maxLevel * COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
@@ -447,6 +448,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					action: UpgradeAction.Upgrade,
 					repeatable: COMMUNITY_CENTER_UPGRADE.maxLevel - current,
 					api: false,
+					setting: 'communityCenter',
 					category: UpgradeCategory.CommunityCenter,
 					wiki: COMMUNITY_CENTER_UPGRADE.wiki,
 					meta: {
@@ -945,6 +947,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: FEAST_BURGER_SOURCE.name,
 		api: false,
+		setting: 'feastBurgers',
 		wiki: () => FEAST_BURGER_SOURCE.wiki,
 		exists: () => true,
 		max: () => 0,
@@ -963,6 +966,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						[Stat.Overbloom]: FEAST_BURGER_SOURCE.statsPerLevel?.[Stat.Overbloom] ?? 0,
 					},
 					api: false,
+					setting: 'feastBurgers',
 					action: UpgradeAction.Consume,
 					repeatable: FEAST_BURGER_SOURCE.maxLevel - consumed,
 					wiki: FEAST_BURGER_SOURCE.wiki,
@@ -984,6 +988,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: FILLED_ROSEWATER_FLASK_SOURCE.name,
 		api: false,
+		setting: 'filledRosewaterFlask',
 		wiki: () => FILLED_ROSEWATER_FLASK_SOURCE.wiki,
 		exists: () => true,
 		max: () => FILLED_ROSEWATER_FLASK_SOURCE.maxLevel * FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel,
@@ -1006,6 +1011,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						[Stat.FarmingFortune]: FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel,
 					},
 					api: false,
+					setting: 'filledRosewaterFlask',
 					action: UpgradeAction.Consume,
 					repeatable: 5 - consumed,
 					wiki: FILLED_ROSEWATER_FLASK_SOURCE.wiki,
@@ -1065,6 +1071,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: SPRAYONATOR_SOURCE.name,
 		api: false,
+		setting: 'sprayedPlot',
 		wiki: () => SPRAYONATOR_SOURCE.wiki,
 		exists: () => true,
 		max: () => 0,
