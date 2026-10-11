@@ -1,12 +1,11 @@
 <script lang="ts">
 	import ItemName from '$comp/items/item-name.svelte';
+	import ManualSettingNotice from '$comp/rates/settings/manual-setting-notice.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import Button from '$ui/button/button.svelte';
-	import * as Popover from '$ui/popover';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Info from '@lucide/svelte/icons/info';
-	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import type { FortuneUpgrade } from 'farming-weight';
 	import UpgradeDescription from './upgrade-description.svelte';
 
@@ -29,17 +28,7 @@
 				<Info size={16} />
 			</a>
 		{/if}
-		{#if upgrade.api === false}
-			<Popover.Mobile>
-				{#snippet trigger()}
-					<TriangleAlert size={16} class="text-completed" />
-				{/snippet}
-				<p class="max-w-sm text-sm">
-					This fortune source is not available in the Hypixel API. Configure settings on this page to mark it
-					as complete.
-				</p>
-			</Popover.Mobile>
-		{/if}
+		<ManualSettingNotice setting={upgrade.setting} api={upgrade.api} />
 	</p>
 	<UpgradeDescription {upgrade} {items} />
 	{#if canExpand && toggleExpanded}

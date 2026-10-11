@@ -10,6 +10,7 @@ import type { FarmingPet } from '../fortune/farmingpet.js';
 import type { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import type { FarmingPetType } from '../items/pets.js';
+import type { GardenWeatherMode } from '../util/weather.js';
 
 export interface FarmingPlayerGardenChips {
 	cropshot?: number | null;
@@ -63,6 +64,13 @@ export interface FortuneMissingFromAPI {
 
 	temporaryFortune?: TemporaryFarmingFortune;
 }
+
+/**
+ * Player options that have to be set manually
+ */
+export const MANUAL_SETTING_IDS = ['communityCenter', 'feastBurgers', 'filledRosewaterFlask', 'sprayedPlot'] as const;
+
+export type ManualSettingId = (typeof MANUAL_SETTING_IDS)[number] & keyof FortuneMissingFromAPI;
 
 export interface HarvestFeastOptions {
 	/** Whether a Harvest Feast (or Mayor Finnegan's Grand Feast) is currently active. */
@@ -134,6 +142,8 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 		enabled: boolean;
 		mode: ZorroMode | `${ZorroMode}`;
 	};
+	/** Garden weather stats to include, none when unset */
+	gardenWeather?: GardenWeatherMode;
 }
 
 export interface FortuneProgress {

@@ -11,12 +11,14 @@ import type {
 import type { Effect } from '../../effects/types.js';
 import type { EliteItemDto } from '../../fortune/item.js';
 import type { UpgradeableInfo } from '../../fortune/upgradeable.js';
+import type { ManualSettingId } from '../../player/playeroptions.js';
 
 export interface DynamicFortuneSource<T> {
 	name: string;
 	sourceType?: FortuneSourceType;
 	crop?: Crop;
 	api?: boolean;
+	setting?: ManualSettingId;
 	conditional?: boolean;
 	alwaysInclude?: true;
 	wiki?: (source: T) => string | undefined;

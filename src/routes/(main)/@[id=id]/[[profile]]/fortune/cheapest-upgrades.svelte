@@ -8,7 +8,7 @@
 	import { findFortunePetPurchaseRecommendations } from '$lib/rates/pet-purchase';
 	import { getRateImpactCoinValue } from '$lib/rates/upgrade-rate-value';
 	import { getItem, getItems } from '$lib/remote/items.remote';
-	import { getRatesData } from '$lib/stores/ratesData';
+	import { getRatesSettingsOpen } from '$lib/stores/ratesData';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
@@ -26,7 +26,7 @@
 	import { Debounced } from 'runed';
 
 	const ctx = getStatsContext();
-	const ratesData = getRatesData();
+	const settingsOpen = getRatesSettingsOpen();
 
 	async function getBazaarData(items: string[]) {
 		if (!browser) return undefined;
@@ -264,7 +264,7 @@
 		<div>
 			<Button
 				onclick={() => {
-					$ratesData.settings = true;
+					$settingsOpen = true;
 					trackAnalytics('fortune.settings_opened');
 				}}
 			>

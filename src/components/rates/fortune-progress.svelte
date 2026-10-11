@@ -1,11 +1,10 @@
 <script lang="ts">
 	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
+	import ManualSettingNotice from '$comp/rates/settings/manual-setting-notice.svelte';
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
 	import { getStatColor } from '$lib/format';
-	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import Info from '@lucide/svelte/icons/info';
-	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { Stat, STAT_ICONS_UNICODE as STAT_ICONS, STAT_NAMES, type FortuneSourceProgress } from 'farming-weight';
 	import EffectSummaryList from './effect-summary-list.svelte';
 	import FortuneActiveNote from './fortune-active-note.svelte';
@@ -109,17 +108,7 @@
 						<Info size={16} />
 					</a>
 				{/if}
-				{#if progress.api === false}
-					<TooltipSimple side="bottom">
-						{#snippet trigger()}
-							<TriangleAlert size={16} class="text-completed" />
-						{/snippet}
-						<p class=" max-w-64 text-sm">
-							This fortune source is not available in the Hypixel API. Configure settings on this page to
-							mark it as complete.
-						</p>
-					</TooltipSimple>
-				{/if}
+				<ManualSettingNotice setting={progress.setting} api={progress.api} />
 			</div>
 			<FortuneActiveNote {progress} />
 		</div>

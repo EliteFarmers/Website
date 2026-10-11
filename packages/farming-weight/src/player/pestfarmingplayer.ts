@@ -1,5 +1,6 @@
 import { CROP_INFO, Crop } from '../constants/crops.js';
 import { FarmingMechanic } from '../constants/mechanics.js';
+import type { SprayonatorTier } from '../constants/specific.js';
 import { CROP_FARMING_STATS, PEST_FARMING_STATS, Stat, type StatBreakdown, VACUUM_STATS } from '../constants/stats.js';
 import type {
 	EffectSummary,
@@ -1018,6 +1019,8 @@ export class PestFarmingPlayer {
 				this.options.feastBurgers = Number(value);
 			} else if (key === 'filledRosewaterFlask' || key === 'filledRosewaterFlasks') {
 				this.options.filledRosewaterFlask = Number(value);
+			} else if (key === 'sprayonatorTier') {
+				this.options.sprayonatorTier = value as SprayonatorTier;
 			} else {
 				return;
 			}

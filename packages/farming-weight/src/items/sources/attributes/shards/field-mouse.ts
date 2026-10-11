@@ -9,7 +9,7 @@ export class PestShard extends FarmingAttributeShard {
 	readonly name = 'Field Mouse Shard';
 	readonly skyblockId = 'SHARD_PEST';
 	readonly rarity = Rarity.Uncommon;
-	readonly wiki = 'https://w.elitesb.gg/Pest';
+	readonly wiki = 'https://w.elitesb.gg/Field_Mouse_Shard';
 	readonly statsPerLevel = { [Stat.Overbloom]: 0.5 };
 
 	getEffects(player: FarmingPlayer, _env: EffectEnvironment): Effect[] {

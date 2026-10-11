@@ -7,7 +7,6 @@
  * Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { DictionaryOfStringAndInt32 } from './DictionaryOfStringAndInt32';
 import type { DictionaryOfStringAndString } from './DictionaryOfStringAndString';
 
 export interface MemberFortuneSettingsDto {
@@ -17,6 +16,9 @@ export interface MemberFortuneSettingsDto {
 	communityCenter: number;
 	/** Consumed Filled Rosewater Flasks */
 	rosewaterFlasks: number;
-	attributes: DictionaryOfStringAndInt32;
+	/** Total speed, used for the Orchid Mantis' Swift Sickles ability */
+	speed: number;
+	/** Consumed Feast Burgers with a Side of Deepfries */
+	feastBurgers: number;
 	chipRarities: DictionaryOfStringAndString;
 }

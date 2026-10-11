@@ -2,7 +2,7 @@ import { GARDEN_CHIPS, getChipInputRarity, getChipLevel, getChipRarity } from '.
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
 import { Rarity } from '../../constants/reforges.js';
-import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
+import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES, REFINED_TRUFFLE_SOURCE } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import type { FarmingAccessory } from '../../fortune/farmingaccessory.js';
@@ -202,6 +202,47 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 						type: 'setting',
 						key: 'cocoaFortuneUpgrade',
 						value: level + 1,
+					},
+				},
+			];
+		},
+	},
+	{
+		name: REFINED_TRUFFLE_SOURCE.name,
+		sourceType: 'crop',
+		exists: ({ crop }) => crop === Crop.CocoaBeans,
+		wiki: () => REFINED_TRUFFLE_SOURCE.wiki,
+		max: () => REFINED_TRUFFLE_SOURCE.maxLevel * REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+		current: ({ player }) => (player.options.refinedTruffles ?? 0) * REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+		maxStat: (_input, stat) =>
+			REFINED_TRUFFLE_SOURCE.maxLevel * (REFINED_TRUFFLE_SOURCE.statsPerLevel?.[stat] ?? 0),
+		currentStat: ({ player }, stat) =>
+			Math.min(player.options.refinedTruffles ?? 0, REFINED_TRUFFLE_SOURCE.maxLevel) *
+			(REFINED_TRUFFLE_SOURCE.statsPerLevel?.[stat] ?? 0),
+		upgrades: ({ player }) => {
+			const consumed = player.options.refinedTruffles ?? 0;
+			if (consumed >= REFINED_TRUFFLE_SOURCE.maxLevel) return [];
+
+			return [
+				{
+					title: REFINED_TRUFFLE_SOURCE.name,
+					increase: REFINED_TRUFFLE_SOURCE.statsPerLevel?.[Stat.CocoaBeanFortune] ?? 0,
+					stats: {
+						[Stat.CocoaBeanFortune]: REFINED_TRUFFLE_SOURCE.statsPerLevel?.[Stat.CocoaBeanFortune] ?? 0,
+					},
+					action: UpgradeAction.Consume,
+					repeatable: REFINED_TRUFFLE_SOURCE.maxLevel - consumed,
+					wiki: REFINED_TRUFFLE_SOURCE.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							REFINED_DARK_CACAO_TRUFFLE: 1,
+						},
+					},
+					meta: {
+						type: 'setting',
+						key: 'refinedTruffles',
+						value: consumed + 1,
 					},
 				},
 			];

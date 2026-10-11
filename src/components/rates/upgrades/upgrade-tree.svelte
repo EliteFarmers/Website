@@ -1,14 +1,13 @@
 <script lang="ts">
 	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
+	import ManualSettingNotice from '$comp/rates/settings/manual-setting-notice.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { Button, buttonVariants } from '$ui/button';
 	import * as Collapsible from '$ui/collapsible';
-	import * as Popover from '$ui/popover';
 	import Check from '@lucide/svelte/icons/check';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Info from '@lucide/svelte/icons/info';
-	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import type { FortuneUpgrade, UpgradeInfo, UpgradeTreeNode } from 'farming-weight';
 	import UpgradeCost from './upgrade-cost.svelte';
 	import UpgradeDescription from './upgrade-description.svelte';
@@ -172,32 +171,12 @@
 		{:else}
 			<div class="hidden flex-row items-center gap-1 sm:flex">
 				<UpgradeFortune {upgrade} class="w-fit" />
-				{#if upgrade.api === false}
-					<Popover.Mobile>
-						{#snippet trigger()}
-							<TriangleAlert size={14} class="text-completed" />
-						{/snippet}
-						<p class="max-w-sm text-sm">
-							This fortune source is not available in the Hypixel API. Configure settings on this page to
-							mark it as complete.
-						</p>
-					</Popover.Mobile>
-				{/if}
+				<ManualSettingNotice setting={upgrade.setting} api={upgrade.api} size={14} />
 			</div>
 
 			<div class="col-start-2 row-start-2 flex flex-row items-start gap-1 sm:hidden">
 				<UpgradeFortune {upgrade} class="w-fit" />
-				{#if upgrade.api === false}
-					<Popover.Mobile>
-						{#snippet trigger()}
-							<TriangleAlert size={14} class="text-completed" />
-						{/snippet}
-						<p class="max-w-sm text-sm">
-							This fortune source is not available in the Hypixel API. Configure settings on this page to
-							mark it as complete.
-						</p>
-					</Popover.Mobile>
-				{/if}
+				<ManualSettingNotice setting={upgrade.setting} api={upgrade.api} size={14} />
 			</div>
 
 			<div class="col-start-3 row-start-2 text-right tabular-nums sm:hidden">

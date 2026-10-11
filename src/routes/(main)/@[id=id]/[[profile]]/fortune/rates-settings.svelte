@@ -1,26 +1,25 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
+	import FortuneSettingsSaveBar from '$comp/rates/settings/fortune-settings-save-bar.svelte';
+	import ManualSetting from '$comp/rates/settings/manual-setting.svelte';
 	import SettingBigSeperator from '$comp/settings/setting-big-seperator.svelte';
 	import SettingHeader from '$comp/settings/setting-header.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
-	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
-	import { Button } from '$ui/button';
 	import { NumberInput } from '$ui/number-input';
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
 	import {
 		compareRarity,
+		GARDEN_WEATHER,
 		GARDEN_CHIP_RARITIES,
 		GARDEN_CHIPS,
 		getChipInputLevel,
 		getChipInputRarity,
 		getChipRarity,
-		SprayonatorTier,
 		Stat,
 		TEMPORARY_FORTUNE,
 		ZorroMode,
@@ -30,11 +29,7 @@
 	} from 'farming-weight';
 
 	const ratesData = getRatesData();
-	const gbl = getGlobalContext();
 	const ctx = getStatsContext();
-
-	const owned = $derived(gbl.authorized && gbl.ownsAccount(ctx.uuid));
-	let loading = $state(false);
 
 	interface Props {
 		tempFortune?: number;
@@ -45,11 +40,6 @@
 	let { tempFortune, tempFortuneBreakdown, pestFarmingPopup = false }: Props = $props();
 
 	const gardenChipEntries = Object.entries(GARDEN_CHIPS) as [GardenChipId, (typeof GARDEN_CHIPS)[GardenChipId]][];
-	const sprayonatorTierOptions = [
-		{ value: SprayonatorTier.Regular, label: 'Sprayonator' },
-		{ value: SprayonatorTier.Juicy, label: 'Juicy Sprayonator' },
-		{ value: SprayonatorTier.Salty, label: 'Salty Sprayonator' },
-	];
 
 	function getDetectedChipLevel(chipId: GardenChipId) {
 		const chips = (ctx.member.current?.memberData?.garden?.chips ?? {}) as Record<
@@ -92,28 +82,7 @@
 <div class="relative w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
 	<SettingHeader class="mt-0 text-2xl">Fortune Settings</SettingHeader>
 	<SettingBigSeperator />
-	<SettingListItem
-		title="Garden Fortune"
-		description="Community center farming fortune upgrade."
-		wiki="https://w.elitesb.gg/Account_%26_Profile_Upgrades#Account_Upgrades"
-	>
-		{#snippet child()}
-			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
-				<div class="flex flex-1 flex-row items-center gap-1">
-					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.communityCenter}</p>
-					{#if $ratesData.communityCenter !== undefined}
-						<SliderSimple
-							class="h-12 flex-1"
-							min={0}
-							max={10}
-							bind:value={$ratesData.communityCenter}
-							step={1}
-						/>
-					{/if}
-				</div>
-			</div>
-		{/snippet}
-	</SettingListItem>
+	<ManualSetting setting="communityCenter" />
 	<SettingSeperator />
 	<SettingListItem
 		title="Strength"
@@ -148,50 +117,10 @@
 	</SettingListItem>
 	<SettingSeperator />
 	{#if !pestFarmingPopup}
-		<SettingListItem
-			title="Feast Burgers"
-			description="Amount of Feast Burgers with a Side of Deepfries you've consumed."
-			wiki="https://w.elitesb.gg/Feast_Burger_with_a_Side_of_Deepfries"
-		>
-			{#snippet child()}
-				<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
-					<div class="flex flex-1 flex-row items-center gap-1">
-						<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.feastBurgers}</p>
-						<SliderSimple
-							class="h-12 flex-1"
-							min={0}
-							max={5}
-							bind:value={$ratesData.feastBurgers}
-							step={1}
-						/>
-					</div>
-				</div>
-			{/snippet}
-		</SettingListItem>
+		<ManualSetting setting="feastBurgers" />
 		<SettingSeperator />
 	{/if}
-	<SettingListItem
-		title="Filled Rosewater Flasks"
-		description="Amount of Filled Rosewater Flasks you've consumed."
-		wiki="https://w.elitesb.gg/Rosewater_Flask"
-	>
-		{#snippet child()}
-			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
-				<div class="flex flex-1 flex-row items-center gap-1">
-					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.rosewaterFlasks}</p>
-					{#if $ratesData.rosewaterFlasks !== undefined}
-						<SliderSimple
-							class="h-12 flex-1"
-							min={0}
-							max={5}
-							bind:value={$ratesData.rosewaterFlasks}
-							step={1}
-						/>
-					{/if}
-				</div>
-			</div>
-		{/snippet}
-	</SettingListItem>
+	<ManualSetting setting="filledRosewaterFlask" />
 	<SettingSeperator />
 
 	{#if !pestFarmingPopup}
@@ -386,23 +315,7 @@
 	<SettingBigSeperator />
 
 	{#if !pestFarmingPopup}
-		<SettingListItem
-			title="Sprayed Plot"
-			description="Sprayer tier controls the material effect and Bonus Pest Chance."
-			wiki="https://w.elitesb.gg/Sprayonator"
-		>
-			<div class="flex items-center gap-2">
-				<Select.Simple
-					class="my-1 h-10 min-w-40"
-					value={$ratesData.sprayonatorTier}
-					change={(value) => ($ratesData.sprayonatorTier = value ?? SprayonatorTier.Regular)}
-					options={sprayonatorTierOptions}
-				/>
-				{#if $ratesData.sprayedPlot !== undefined}
-					<Switch bind:checked={$ratesData.sprayedPlot} />
-				{/if}
-			</div>
-		</SettingListItem>
+		<ManualSetting setting="sprayedPlot" />
 		<SettingSeperator />
 	{/if}
 
@@ -459,6 +372,30 @@
 	</SettingListItem>
 	<SettingSeperator />
 
+	<SettingListItem
+		title="Garden Weather"
+		description="Include garden weather buffs in rates. Averaged spreads Rain and Blooming over the time no weather is active."
+		wiki="https://w.elitesb.gg/Garden_Weather"
+	>
+		{#snippet child()}
+			<div class="flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<Select.Simple
+					value={$ratesData.gardenWeather}
+					change={(value) => {
+						$ratesData.gardenWeather = value ?? $ratesData.gardenWeather;
+					}}
+					options={[
+						{ value: 'off', label: 'Off' },
+						{ value: 'averaged', label: 'Averaged' },
+						{ value: 'mild', label: GARDEN_WEATHER.mild.name },
+						{ value: 'extreme', label: GARDEN_WEATHER.extreme.name },
+					]}
+				/>
+			</div>
+		{/snippet}
+	</SettingListItem>
+	<SettingSeperator />
+
 	<SettingHeader class="mt-8 text-xl">Garden Chips</SettingHeader>
 	<p class="px-1 text-sm text-muted-foreground">Set the rarity of each garden chip you have.</p>
 	<SettingBigSeperator />
@@ -497,46 +434,7 @@
 
 	<SettingBigSeperator />
 
-	{#if !pestFarmingPopup && (owned || ctx.fortuneSettings)}
-		<div class="h-16"></div>
-		<div
-			class="fixed right-0 bottom-0 left-0 z-50 flex w-full max-w-2xl flex-col items-center justify-center gap-2 border-t bg-background p-4 text-foreground"
-		>
-			{#if ctx.fortuneSettings && !owned}
-				<p class="px-1 text-sm text-muted-foreground">
-					Loaded saved settings from {ctx.ignMeta}!
-				</p>
-			{/if}
-			{#if owned}
-				<div class="flex flex-row items-center justify-between gap-2">
-					<form
-						class="flex flex-row items-center justify-between gap-4"
-						action="?/save"
-						method="post"
-						use:enhance={() => {
-							loading = true;
-
-							return async ({ result }) => {
-								await applyAction(result);
-								loading = false;
-							};
-						}}
-					>
-						<p class="max-w-sm text-sm text-muted-foreground">
-							Strength, flasks, and garden fortune can be saved to your profile!
-						</p>
-						<input type="hidden" name="player" value={ctx.uuid} />
-						<input type="hidden" name="profile" value={ctx.selectedProfile?.profileId} />
-						<input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
-						<input type="hidden" name="flasks" value={$ratesData.rosewaterFlasks ?? 0} />
-						<input type="hidden" name="strength" value={$ratesData.strength ?? 0} />
-						{#each Object.entries($ratesData.chipRarities ?? {}) as [chipId, rarity] (chipId)}
-							<input type="hidden" name={`CHIP_RARITY_${chipId}`} value={rarity} />
-						{/each}
-						<Button type="submit" disabled={loading}>Save</Button>
-					</form>
-				</div>
-			{/if}
-		</div>
+	{#if !pestFarmingPopup}
+		<FortuneSettingsSaveBar />
 	{/if}
 </div>

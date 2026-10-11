@@ -90,6 +90,8 @@ export class PlayerStats {
 			ratesData.update((data) => {
 				data.communityCenter = this.fortuneSettings?.communityCenter ?? data.communityCenter;
 				data.strength = this.fortuneSettings?.strength ?? data.strength;
+				data.speed = this.fortuneSettings?.speed ?? data.speed;
+				data.feastBurgers = this.fortuneSettings?.feastBurgers ?? data.feastBurgers;
 				data.rosewaterFlasks = this.fortuneSettings?.rosewaterFlasks ?? data.rosewaterFlasks;
 				data.chipRarities = this.fortuneSettings?.chipRarities ?? data.chipRarities;
 				return data;

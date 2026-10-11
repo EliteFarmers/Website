@@ -14,4 +14,5 @@ export interface FarmingInventoryDto {
 	tools: ListOfItemDto;
 	equipment: ListOfItemDto;
 	accessories: ListOfItemDto;
+	sprayonators: ListOfItemDto;
 }

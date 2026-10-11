@@ -1,9 +1,12 @@
 import { expect, test } from 'vitest';
+import { SprayonatorTier } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { GemRarity } from '../../fortune/item.js';
 import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
 import { FarmingPlayer } from '../../player/player.js';
+import { MANUAL_SETTING_IDS } from '../../player/playeroptions.js';
+import { GENERAL_FORTUNE_SOURCES } from './generalsources.js';
 
 test('General fortune sources', () => {
 	const player = new FarmingPlayer({
@@ -74,6 +77,7 @@ test('General fortune sources', () => {
 			max: 40,
 			ratio: 1,
 			api: false,
+			setting: 'communityCenter',
 		},
 		{
 			name: 'Helianthus Relic',
@@ -113,6 +117,7 @@ test('General fortune sources', () => {
 		},
 		{
 			api: false,
+			setting: 'feastBurgers',
 			name: 'Feast Burger with a Side of Deepfries',
 			current: 0,
 			max: 0,
@@ -121,6 +126,7 @@ test('General fortune sources', () => {
 		{
 			name: 'Filled Rosewater Flask',
 			api: false,
+			setting: 'filledRosewaterFlask',
 			current: 0,
 			max: 5,
 			ratio: 0,
@@ -408,4 +414,40 @@ test('Harvest Feast perk levels contribute while feast is active', () => {
 	expect(player.getStat(Stat.Overbloom)).toBe(0);
 	expect(player.getStat(Stat.FarmingFortune)).toBe(20);
 	expect(player.getStat(Stat.BonusPestChance)).toBe(6);
+});
+
+test('Sources missing from the API reference the setting that controls them', () => {
+	const player = new FarmingPlayer({});
+
+	for (const source of GENERAL_FORTUNE_SOURCES) {
+		if (source.api === false) expect(source.setting, source.name).toBeDefined();
+		if (source.setting) expect(MANUAL_SETTING_IDS).toContain(source.setting);
+
+		for (const upgrade of source.upgrades?.(player) ?? []) {
+			if (upgrade.api === false) expect(upgrade.setting, upgrade.title).toBeDefined();
+		}
+	}
+});
+
+test('Sprayonator offers the next sprayer tier as an upgrade', () => {
+	const sprayonator = GENERAL_FORTUNE_SOURCES.find((source) => source.name === 'Sprayonator')!;
+	const upgradesFor = (options: ConstructorParameters<typeof FarmingPlayer>[0]) =>
+		sprayonator.upgrades?.(new FarmingPlayer(options), [Stat.BonusPestChance]) ?? [];
+
+	const juicy = upgradesFor({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Juicy });
+	expect(juicy).toHaveLength(1);
+	expect(juicy[0]).toMatchObject({
+		title: 'Salty Sprayonator',
+		stats: { [Stat.BonusPestChance]: 25 },
+		cost: { items: { SALTY_SPRAYONATOR: 1 } },
+		meta: { type: 'setting', key: 'sprayonatorTier', value: SprayonatorTier.Salty },
+	});
+	expect(juicy[0]?.api).toBeUndefined();
+
+	const player = new FarmingPlayer({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Juicy });
+	player.applyUpgrade(juicy[0]!);
+	expect(player.options.sprayonatorTier).toBe(SprayonatorTier.Salty);
+
+	expect(upgradesFor({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Salty })).toEqual([]);
+	expect(upgradesFor({ sprayedPlot: false, sprayonatorTier: SprayonatorTier.Juicy })).toEqual([]);
 });
