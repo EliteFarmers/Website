@@ -20,7 +20,7 @@
 		isLoading = true;
 
 		try {
-			const result = await createGuideCommand(selectedType);
+			const result = await createGuideCommand();
 
 			if (!result || result.error || !result.guide?.slug) {
 				return;

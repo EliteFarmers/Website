@@ -7,7 +7,6 @@
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getRatesData } from '$lib/stores/ratesData';
-	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import { NumberInput } from '$ui/number-input';
@@ -27,6 +26,7 @@
 		ZorroMode,
 		type GardenChipId,
 		type GardenChipRarity,
+		type StatBreakdown,
 	} from 'farming-weight';
 
 	const ratesData = getRatesData();
@@ -37,10 +37,12 @@
 	let loading = $state(false);
 
 	interface Props {
-		player: RatesPlayerStore;
+		tempFortune?: number;
+		tempFortuneBreakdown?: StatBreakdown;
+		pestFarmingPopup?: boolean;
 	}
 
-	let { player }: Props = $props();
+	let { tempFortune, tempFortuneBreakdown, pestFarmingPopup = false }: Props = $props();
 
 	const gardenChipEntries = Object.entries(GARDEN_CHIPS) as [GardenChipId, (typeof GARDEN_CHIPS)[GardenChipId]][];
 	const sprayonatorTierOptions = [
@@ -145,21 +147,29 @@
 		/>
 	</SettingListItem>
 	<SettingSeperator />
-	<SettingListItem
-		title="Feast Burgers"
-		description="Amount of Feast Burgers with a Side of Deepfries you've consumed."
-		wiki="https://w.elitesb.gg/Feast_Burger_with_a_Side_of_Deepfries"
-	>
-		{#snippet child()}
-			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
-				<div class="flex flex-1 flex-row items-center gap-1">
-					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.feastBurgers}</p>
-					<SliderSimple class="h-12 flex-1" min={0} max={5} bind:value={$ratesData.feastBurgers} step={1} />
+	{#if !pestFarmingPopup}
+		<SettingListItem
+			title="Feast Burgers"
+			description="Amount of Feast Burgers with a Side of Deepfries you've consumed."
+			wiki="https://w.elitesb.gg/Feast_Burger_with_a_Side_of_Deepfries"
+		>
+			{#snippet child()}
+				<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+					<div class="flex flex-1 flex-row items-center gap-1">
+						<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.feastBurgers}</p>
+						<SliderSimple
+							class="h-12 flex-1"
+							min={0}
+							max={5}
+							bind:value={$ratesData.feastBurgers}
+							step={1}
+						/>
+					</div>
 				</div>
-			</div>
-		{/snippet}
-	</SettingListItem>
-	<SettingSeperator />
+			{/snippet}
+		</SettingListItem>
+		<SettingSeperator />
+	{/if}
 	<SettingListItem
 		title="Filled Rosewater Flasks"
 		description="Amount of Filled Rosewater Flasks you've consumed."
@@ -184,184 +194,217 @@
 	</SettingListItem>
 	<SettingSeperator />
 
-	<SettingHeader class="mt-8 font-normal">
-		<span class="text-xl font-semibold">Temporary Fortune</span>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown
-				total={$player.tempFortune}
-				breakdown={$player.tempFortuneBreakdown}
-				enabled={$ratesData.useTemp}
-			/>
+	{#if !pestFarmingPopup}
+		<SettingHeader class="mt-8 font-normal">
+			<span class="text-xl font-semibold">Temporary Fortune</span>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={tempFortune} breakdown={tempFortuneBreakdown} enabled={$ratesData.useTemp} />
 
-			{#if $ratesData.useTemp !== undefined}
-				<Switch bind:checked={$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingHeader>
-	<SettingBigSeperator />
+				{#if $ratesData.useTemp !== undefined}
+					<Switch bind:checked={$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingHeader>
+		<SettingBigSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.centuryCake.name} wiki={TEMPORARY_FORTUNE.centuryCake.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={5} enabled={$ratesData.temp.centuryCake && $ratesData.useTemp} />
+		<SettingListItem title={TEMPORARY_FORTUNE.centuryCake.name} wiki={TEMPORARY_FORTUNE.centuryCake.wiki}>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={5} enabled={$ratesData.temp.centuryCake && $ratesData.useTemp} />
 
-			{#if $ratesData.temp.centuryCake !== undefined}
-				<Switch bind:checked={$ratesData.temp.centuryCake} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.centuryCake !== undefined}
+					<Switch bind:checked={$ratesData.temp.centuryCake} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title="{TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)" wiki={TEMPORARY_FORTUNE.pestTurnIn.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={200} enabled={$ratesData.temp.pestTurnIn > 0 && $ratesData.useTemp} />
+		<SettingListItem
+			title="{TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)"
+			wiki={TEMPORARY_FORTUNE.pestTurnIn.wiki}
+		>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={200} enabled={$ratesData.temp.pestTurnIn > 0 && $ratesData.useTemp} />
 
-			<Switch
-				checked={$ratesData.temp.pestTurnIn > 0}
-				onCheckedChange={(check) => {
-					$ratesData.temp.pestTurnIn = check ? 200 : 0;
-				}}
-				disabled={!$ratesData.useTemp}
-			/>
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				<Switch
+					checked={$ratesData.temp.pestTurnIn > 0}
+					onCheckedChange={(check) => {
+						$ratesData.temp.pestTurnIn = check ? 200 : 0;
+					}}
+					disabled={!$ratesData.useTemp}
+				/>
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.harvestPotion.name} wiki={TEMPORARY_FORTUNE.harvestPotion.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={50} enabled={$ratesData.temp.harvestPotion && $ratesData.useTemp} />
+		<SettingListItem title={TEMPORARY_FORTUNE.harvestPotion.name} wiki={TEMPORARY_FORTUNE.harvestPotion.wiki}>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={50} enabled={$ratesData.temp.harvestPotion && $ratesData.useTemp} />
 
-			{#if $ratesData.temp.harvestPotion !== undefined}
-				<Switch bind:checked={$ratesData.temp.harvestPotion} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.harvestPotion !== undefined}
+					<Switch bind:checked={$ratesData.temp.harvestPotion} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.magic8Ball.name} wiki={TEMPORARY_FORTUNE.magic8Ball.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={25} enabled={$ratesData.temp.magic8Ball && $ratesData.useTemp} />
+		<SettingListItem title={TEMPORARY_FORTUNE.magic8Ball.name} wiki={TEMPORARY_FORTUNE.magic8Ball.wiki}>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={25} enabled={$ratesData.temp.magic8Ball && $ratesData.useTemp} />
 
-			{#if $ratesData.temp.magic8Ball !== undefined}
-				<Switch bind:checked={$ratesData.temp.magic8Ball} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.magic8Ball !== undefined}
+					<Switch bind:checked={$ratesData.temp.magic8Ball} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.springFilter.name} wiki={TEMPORARY_FORTUNE.springFilter.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={25} enabled={$ratesData.temp.springFilter && $ratesData.useTemp} />
+		<SettingListItem title={TEMPORARY_FORTUNE.springFilter.name} wiki={TEMPORARY_FORTUNE.springFilter.wiki}>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={25} enabled={$ratesData.temp.springFilter && $ratesData.useTemp} />
 
-			{#if $ratesData.temp.springFilter !== undefined}
-				<Switch bind:checked={$ratesData.temp.springFilter} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.springFilter !== undefined}
+					<Switch bind:checked={$ratesData.temp.springFilter} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem
-		title={TEMPORARY_FORTUNE.anitaContest.name}
-		description="Applies Anita's Artifact boosted-contest fortune."
-		wiki={TEMPORARY_FORTUNE.anitaContest.wiki}
-	>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={25} enabled={$ratesData.temp.anitaContest && $ratesData.useTemp} />
+		<SettingListItem
+			title={TEMPORARY_FORTUNE.anitaContest.name}
+			description="Applies Anita's Artifact boosted-contest fortune."
+			wiki={TEMPORARY_FORTUNE.anitaContest.wiki}
+		>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={25} enabled={$ratesData.temp.anitaContest && $ratesData.useTemp} />
 
-			{#if $ratesData.temp.anitaContest !== undefined}
-				<Switch bind:checked={$ratesData.temp.anitaContest} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.anitaContest !== undefined}
+					<Switch bind:checked={$ratesData.temp.anitaContest} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.chocolateTruffle.name} wiki={TEMPORARY_FORTUNE.chocolateTruffle.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown
-				stat={Stat.CocoaBeanFortune}
-				total={30}
-				enabled={$ratesData.temp.chocolateTruffle && $ratesData.useTemp}
-			/>
+		<SettingListItem title={TEMPORARY_FORTUNE.chocolateTruffle.name} wiki={TEMPORARY_FORTUNE.chocolateTruffle.wiki}>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown
+					stat={Stat.CocoaBeanFortune}
+					total={30}
+					enabled={$ratesData.temp.chocolateTruffle && $ratesData.useTemp}
+				/>
 
-			{#if $ratesData.temp.chocolateTruffle !== undefined}
-				<Switch bind:checked={$ratesData.temp.chocolateTruffle} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.chocolateTruffle !== undefined}
+					<Switch bind:checked={$ratesData.temp.chocolateTruffle} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.celestialMasonJar.name} wiki={TEMPORARY_FORTUNE.celestialMasonJar.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={15} enabled={$ratesData.temp.celestialMasonJar && $ratesData.useTemp} />
+		<SettingListItem
+			title={TEMPORARY_FORTUNE.celestialMasonJar.name}
+			wiki={TEMPORARY_FORTUNE.celestialMasonJar.wiki}
+		>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={15} enabled={$ratesData.temp.celestialMasonJar && $ratesData.useTemp} />
 
-			{#if $ratesData.temp.celestialMasonJar !== undefined}
-				<Switch bind:checked={$ratesData.temp.celestialMasonJar} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.celestialMasonJar !== undefined}
+					<Switch bind:checked={$ratesData.temp.celestialMasonJar} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.melonJuiceMixin.name} wiki={TEMPORARY_FORTUNE.melonJuiceMixin.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown total={15} enabled={$ratesData.temp.melonJuiceMixin && $ratesData.useTemp} />
+		<SettingListItem title={TEMPORARY_FORTUNE.melonJuiceMixin.name} wiki={TEMPORARY_FORTUNE.melonJuiceMixin.wiki}>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown total={15} enabled={$ratesData.temp.melonJuiceMixin && $ratesData.useTemp} />
 
-			{#if $ratesData.temp.melonJuiceMixin !== undefined}
-				<Switch bind:checked={$ratesData.temp.melonJuiceMixin} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.melonJuiceMixin !== undefined}
+					<Switch bind:checked={$ratesData.temp.melonJuiceMixin} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.finnsFocaccia.name} wiki={TEMPORARY_FORTUNE.finnsFocaccia.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown
-				breakdown={{ [TEMPORARY_FORTUNE.finnsFocaccia.name]: { value: 5, stat: Stat.Overbloom } }}
-				enabled={$ratesData.temp.finnsFocaccia && $ratesData.useTemp}
-			/>
+		<SettingListItem title={TEMPORARY_FORTUNE.finnsFocaccia.name} wiki={TEMPORARY_FORTUNE.finnsFocaccia.wiki}>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown
+					breakdown={{ [TEMPORARY_FORTUNE.finnsFocaccia.name]: { value: 5, stat: Stat.Overbloom } }}
+					enabled={$ratesData.temp.finnsFocaccia && $ratesData.useTemp}
+				/>
 
-			{#if $ratesData.temp.finnsFocaccia !== undefined}
-				<Switch bind:checked={$ratesData.temp.finnsFocaccia} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.finnsFocaccia !== undefined}
+					<Switch bind:checked={$ratesData.temp.finnsFocaccia} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
 
-	<SettingListItem title={TEMPORARY_FORTUNE.stinkyCheesePotion.name} wiki={TEMPORARY_FORTUNE.stinkyCheesePotion.wiki}>
-		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
-			<FortuneBreakdown
-				breakdown={{
-					[TEMPORARY_FORTUNE.stinkyCheesePotion.name]: { value: 20, stat: Stat.BonusPestChance },
-				}}
-				enabled={$ratesData.temp.stinkyCheesePotion && $ratesData.useTemp}
-			/>
+		<SettingListItem
+			title={TEMPORARY_FORTUNE.stinkyCheesePotion.name}
+			wiki={TEMPORARY_FORTUNE.stinkyCheesePotion.wiki}
+		>
+			<div
+				class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center"
+			>
+				<FortuneBreakdown
+					breakdown={{
+						[TEMPORARY_FORTUNE.stinkyCheesePotion.name]: { value: 20, stat: Stat.BonusPestChance },
+					}}
+					enabled={$ratesData.temp.stinkyCheesePotion && $ratesData.useTemp}
+				/>
 
-			{#if $ratesData.temp.stinkyCheesePotion !== undefined}
-				<Switch bind:checked={$ratesData.temp.stinkyCheesePotion} disabled={!$ratesData.useTemp} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+				{#if $ratesData.temp.stinkyCheesePotion !== undefined}
+					<Switch bind:checked={$ratesData.temp.stinkyCheesePotion} disabled={!$ratesData.useTemp} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
+	{/if}
 
 	<SettingHeader class="mt-8 text-xl">Other Settings</SettingHeader>
 	<SettingBigSeperator />
 
-	<SettingListItem
-		title="Sprayed Plot"
-		description="Sprayer tier controls the material effect and Bonus Pest Chance."
-		wiki="https://w.elitesb.gg/Sprayonator"
-	>
-		<div class="flex items-center gap-2">
-			<Select.Simple
-				class="my-1 h-10 min-w-40"
-				value={$ratesData.sprayonatorTier}
-				change={(value) => ($ratesData.sprayonatorTier = value ?? SprayonatorTier.Regular)}
-				options={sprayonatorTierOptions}
-			/>
-			{#if $ratesData.sprayedPlot !== undefined}
-				<Switch bind:checked={$ratesData.sprayedPlot} />
-			{/if}
-		</div>
-	</SettingListItem>
-	<SettingSeperator />
+	{#if !pestFarmingPopup}
+		<SettingListItem
+			title="Sprayed Plot"
+			description="Sprayer tier controls the material effect and Bonus Pest Chance."
+			wiki="https://w.elitesb.gg/Sprayonator"
+		>
+			<div class="flex items-center gap-2">
+				<Select.Simple
+					class="my-1 h-10 min-w-40"
+					value={$ratesData.sprayonatorTier}
+					change={(value) => ($ratesData.sprayonatorTier = value ?? SprayonatorTier.Regular)}
+					options={sprayonatorTierOptions}
+				/>
+				{#if $ratesData.sprayedPlot !== undefined}
+					<Switch bind:checked={$ratesData.sprayedPlot} />
+				{/if}
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
+	{/if}
 
 	<SettingListItem
 		title="Infested Plot"
@@ -416,16 +459,6 @@
 	</SettingListItem>
 	<SettingSeperator />
 
-	<SettingHeader class="mt-8 text-xl">Attribute Shards</SettingHeader>
-	<p class="px-1 text-sm text-muted-foreground">Set the amount of each attribute shard you have!</p>
-	<SettingBigSeperator />
-
-	<p class="rounded-md border border-completed p-2 text-sm">
-		These settings have been removed! Attribute shards are now automatically detected from your profile data!
-	</p>
-
-	<SettingBigSeperator />
-
 	<SettingHeader class="mt-8 text-xl">Garden Chips</SettingHeader>
 	<p class="px-1 text-sm text-muted-foreground">Set the rarity of each garden chip you have.</p>
 	<SettingBigSeperator />
@@ -464,23 +497,7 @@
 
 	<SettingBigSeperator />
 
-	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
-	<span class="px-1 text-sm text-muted-foreground"
-		>Crop that you've brought items to <a
-			href="https://w.elitesb.gg/Carrolyn"
-			target="_blank"
-			class="text-link underline">Carrolyn</a
-		> for.</span
-	>
-	<SettingBigSeperator />
-
-	<p class="rounded-md border border-completed p-2 text-sm">
-		These toggles have been removed! Exported crops are now automatically detected from your profile data!
-	</p>
-
-	<SettingBigSeperator />
-
-	{#if owned || ctx.fortuneSettings}
+	{#if !pestFarmingPopup && (owned || ctx.fortuneSettings)}
 		<div class="h-16"></div>
 		<div
 			class="fixed right-0 bottom-0 left-0 z-50 flex w-full max-w-2xl flex-col items-center justify-center gap-2 border-t bg-background p-4 text-foreground"

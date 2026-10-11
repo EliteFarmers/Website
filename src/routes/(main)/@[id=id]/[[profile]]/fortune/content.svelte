@@ -972,6 +972,6 @@
 
 <Dialog.Root bind:open={$ratesData.settings}>
 	<Dialog.ScrollContent parentClass="max-w-2xl">
-		<RatesSettings {player} />
+		<RatesSettings tempFortune={$player.tempFortune} tempFortuneBreakdown={$player.tempFortuneBreakdown} />
 	</Dialog.ScrollContent>
 </Dialog.Root>
