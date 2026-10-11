@@ -247,6 +247,7 @@
 				}
 			: undefined,
 
+		gardenWeather: $ratesData.gardenWeather === 'off' ? undefined : $ratesData.gardenWeather,
 		selectedCrop: selectedCropKey,
 	} as PlayerOptions);
 
@@ -536,6 +537,7 @@
 				mode: $ratesData.zorroMode,
 			},
 			harvestFeast: harvestFeastOptions,
+			gardenWeather: $ratesData.gardenWeather === 'off' ? undefined : $ratesData.gardenWeather,
 			selectedCrop: selectedCropKey,
 		};
 

@@ -14,6 +14,7 @@
 	import { Switch } from '$ui/switch';
 	import {
 		compareRarity,
+		GARDEN_WEATHER,
 		GARDEN_CHIP_RARITIES,
 		GARDEN_CHIPS,
 		getChipInputLevel,
@@ -364,6 +365,30 @@
 							value: ZorroMode.Contest,
 							label: 'Inside Contest',
 						},
+					]}
+				/>
+			</div>
+		{/snippet}
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem
+		title="Garden Weather"
+		description="Include garden weather buffs in rates. Averaged spreads Rain and Blooming over the time no weather is active."
+		wiki="https://w.elitesb.gg/Garden_Weather"
+	>
+		{#snippet child()}
+			<div class="flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<Select.Simple
+					value={$ratesData.gardenWeather}
+					change={(value) => {
+						$ratesData.gardenWeather = value ?? $ratesData.gardenWeather;
+					}}
+					options={[
+						{ value: 'off', label: 'Off' },
+						{ value: 'averaged', label: 'Averaged' },
+						{ value: 'mild', label: GARDEN_WEATHER.mild.name },
+						{ value: 'extreme', label: GARDEN_WEATHER.extreme.name },
 					]}
 				/>
 			</div>

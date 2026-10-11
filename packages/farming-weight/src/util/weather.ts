@@ -31,6 +31,32 @@ export const GARDEN_WEATHER = {
 	),
 };
 
+/** Which garden weather to apply to stats. `averaged` spreads Rain and Blooming over the time weather isn't active */
+export type GardenWeatherMode = 'mild' | 'extreme' | 'averaged';
+
+// Weather runs for one SkyBlock day every three days, and every third weather day is the extreme one
+const WEATHER_UPTIME = SKYBLOCK_DAY_SECONDS / WEATHER_INTERVAL_SECONDS;
+const EXTREME_WEATHER_SHARE = 1 / 3;
+
+export function getGardenWeatherStats(mode?: GardenWeatherMode): Partial<Record<Stat, number>> {
+	if (!mode) return {};
+	if (mode !== 'averaged') {
+		return Object.fromEntries(GARDEN_WEATHER[mode].bonuses.map(({ stat, value }) => [stat, value]));
+	}
+
+	const stats: Partial<Record<Stat, number>> = {};
+	const weights = [
+		[GARDEN_WEATHER.mild, 1 - EXTREME_WEATHER_SHARE],
+		[GARDEN_WEATHER.extreme, EXTREME_WEATHER_SHARE],
+	] as const;
+	for (const [weather, share] of weights) {
+		for (const { stat, value } of weather.bonuses) {
+			stats[stat] = (stats[stat] ?? 0) + value * share * WEATHER_UPTIME;
+		}
+	}
+	return stats;
+}
+
 export interface WeatherIsland {
 	id: string;
 	name: string;

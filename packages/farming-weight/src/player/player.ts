@@ -40,6 +40,7 @@ import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPets, type FarmingPetType, isPetItemCompatible } from '../items/pets.js';
 import { FARMING_ATTRIBUTE_SHARDS } from '../items/sources/attributes/index.js';
 import { GARDEN_CHIP_CLASSES } from '../items/sources/chips.js';
+import { statsToEffects } from '../items/sources/effects-util.js';
 import { FARMING_TOOLS } from '../items/tools.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { withGroupedUpgrades } from '../upgrades/groups.js';
@@ -53,6 +54,7 @@ import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { nextRarity } from '../util/itemstats.js';
 import { calculateDetailedDropsFromEffects, type DetailedDropsFromEffectsResult } from '../util/ratecalc-effects.js';
+import { getGardenWeatherStats } from '../util/weather.js';
 import { createFarmingWeightCalculator, type FarmingWeightInfo } from '../weight/weightcalc.js';
 import type { PlayerOptions } from './playeroptions.js';
 
@@ -549,6 +551,8 @@ export class FarmingPlayer {
 		}
 
 		effects.push(...collectCropFortuneSourceEffects(this, env));
+
+		effects.push(...statsToEffects(getGardenWeatherStats(this.options.gardenWeather), 'Garden Weather'));
 
 		return effects;
 	}

@@ -5,6 +5,7 @@ import {
 	Pest,
 	Spray,
 	ZorroMode,
+	type GardenWeatherMode,
 	type PestAttractionSettings,
 	type PestCycleSettings,
 	type TemporaryFarmingFortune,
@@ -41,6 +42,7 @@ export interface RatesData {
 	sprayonator: SprayonatorTierSetting;
 	infestedPlotProbability?: number;
 	zorroMode: ZorroMode;
+	gardenWeather: GardenWeatherMode | 'off';
 	bzMode: 'order' | 'insta';
 	rosewaterFlasks: number;
 	pestFarming: PestFarmingData;
@@ -88,6 +90,7 @@ const defaultData = {
 	sprayonator: 'auto',
 	infestedPlotProbability: 0.2,
 	zorroMode: ZorroMode.Normal,
+	gardenWeather: 'off',
 	pestFarming: {
 		sprayedPlot: true,
 		sprayonator: 'auto',

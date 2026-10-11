@@ -10,6 +10,7 @@ import type { FarmingPet } from '../fortune/farmingpet.js';
 import type { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import type { FarmingPetType } from '../items/pets.js';
+import type { GardenWeatherMode } from '../util/weather.js';
 
 export interface FarmingPlayerGardenChips {
 	cropshot?: number | null;
@@ -141,6 +142,8 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 		enabled: boolean;
 		mode: ZorroMode | `${ZorroMode}`;
 	};
+	/** Garden weather stats to include, none when unset */
+	gardenWeather?: GardenWeatherMode;
 }
 
 export interface FortuneProgress {

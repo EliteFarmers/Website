@@ -1671,6 +1671,7 @@ export class PestFarmingPageContext {
 						mode: rates.zorroMode,
 					}
 				: undefined,
+			gardenWeather: rates.gardenWeather === 'off' ? undefined : rates.gardenWeather,
 		} as PestFarmingPlayerOptions;
 	}
 
