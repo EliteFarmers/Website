@@ -350,6 +350,15 @@ export class GlobalContext {
 		}
 	}
 
+	async markAllAlertsRead() {
+		for (const announcement of this.announcements) {
+			this.dismissAnnouncement(announcement.id);
+		}
+
+		const unread = this.#notifications.filter((n) => !n.isRead);
+		await Promise.all(unread.map((n) => this.markNotificationRead(n.id)));
+	}
+
 	get pendingGifts() {
 		return this.#pendingGifts;
 	}

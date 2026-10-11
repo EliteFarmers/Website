@@ -14,6 +14,7 @@
 	import * as Sidebar from '$ui/sidebar';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Check from '@lucide/svelte/icons/check';
+	import CheckCheck from '@lucide/svelte/icons/check-check';
 	import Info from '@lucide/svelte/icons/info';
 
 	const ctx = getGlobalContext();
@@ -70,7 +71,15 @@
 		sideOffset={4}
 		side={sidebar.isMobile ? 'top' : 'right'}
 	>
-		<DropdownMenu.Label class="py-2 text-sm font-semibold">Alerts</DropdownMenu.Label>
+		<DropdownMenu.Label class="flex flex-row items-center justify-between py-2 text-sm font-semibold">
+			Alerts
+			{#if unreadCount > 0}
+				<Button class="h-auto p-0 text-sm" size="sm" variant="link" onclick={() => ctx.markAllAlertsRead()}>
+					<CheckCheck class="mr-1 size-3" />
+					Mark all as read
+				</Button>
+			{/if}
+		</DropdownMenu.Label>
 		<DropdownMenu.Separator />
 		<ScrollArea class="flex max-h-96 flex-col">
 			{#each sortedItems as item, i (item.kind + item.id)}
