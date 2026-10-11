@@ -207,7 +207,7 @@ export function getPestName(pestId: Pest): string {
 }
 
 export const GARDEN_BESTIARY_BRACKETS: Record<string, Record<number, number>> = {
-	zombuddy_1: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	zombuddy_1: FIELD_MOUSE_BESTIARY_PEST_BRACKET,
 	timestalk_clone_100: TIMESTALK_CLONE_BESTIARY_BRACKET,
 };
 
