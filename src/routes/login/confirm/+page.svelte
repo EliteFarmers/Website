@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import Head from '$comp/seo/head.svelte';
 	import { acceptConfirmationForm } from '$lib/remote/confirmations.remote';
@@ -12,6 +13,7 @@
 
 	let confirmation = $derived(data.confirmation);
 	let id = $derived(+data.id);
+	let acceptAction = $derived(`?/accept${page.url.search.replace(/^\?/, '&')}`);
 
 	function addLinkTarget(node: HTMLElement) {
 		const links = node.querySelectorAll('a');
@@ -36,7 +38,7 @@
 		</div>
 		<div class="flex flex-row justify-center gap-4" data-sveltekit-preload-data="off">
 			<Button variant="secondary" href="/logout" class="flex-1">Logout</Button>
-			<form action="?/accept" method="post" class="contents" use:enhance>
+			<form action={acceptAction} method="post" class="contents" use:enhance>
 				<input type="hidden" name="id" value={id} />
 				<Button type="submit" class="group flex-1"
 					>Accept<ArrowRight class="group-hover:animate-bounce-horizontal" /></Button

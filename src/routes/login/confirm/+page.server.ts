@@ -5,18 +5,8 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ url }) => {
 	const id = url.searchParams.get('id');
-	const attempt = url.searchParams.get('attempt');
-	const redirectParam = url.searchParams.get('redirect');
 
-	const queryParams = new URLSearchParams();
-	if (redirectParam) {
-		queryParams.append('redirect', redirectParam);
-	}
-	if (attempt) {
-		queryParams.append('attempt', attempt);
-	}
-
-	const fallback = `/login${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+	const fallback = loginUrl(url);
 
 	if (!id) {
 		redirect(307, fallback);
@@ -47,20 +37,21 @@ export const actions: Actions = {
 			fail(response.status, e ?? 'Failed to accept confirmation');
 		}
 
-		const attempt = url.searchParams.get('attempt');
-		const redirectParam = url.searchParams.get('redirect');
-
-		const queryParams = new URLSearchParams();
-		queryParams.append('success', 'true');
-		if (redirectParam) {
-			queryParams.append('redirect', redirectParam);
-		}
-		if (attempt) {
-			queryParams.append('attempt', attempt);
-		}
-
-		const fallback = `/login${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-
-		redirect(303, fallback);
+		redirect(303, loginUrl(url, true));
 	},
 };
+
+function loginUrl(url: URL, success = false) {
+	const queryParams = new URLSearchParams();
+	if (success) {
+		queryParams.append('success', 'true');
+	}
+	for (const key of ['redirect', 'attempt', 'first']) {
+		const value = url.searchParams.get(key);
+		if (value) {
+			queryParams.append(key, value);
+		}
+	}
+
+	return `/login${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+}
