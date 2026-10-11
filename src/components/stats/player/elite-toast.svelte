@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
+	import { ELITE_FARMER_GOLD_MEDAL_REQ, ELITE_FARMER_WEIGHT_REQ } from '$lib/constants/data';
 	import { Button } from 'bits-ui';
-	const { PUBLIC_COMMUNITY_INVITE, PUBLIC_WEIGHT_REQ } = env;
+	const { PUBLIC_COMMUNITY_INVITE } = env;
 
 	let { closeToast }: { closeToast: () => void } = $props();
 
@@ -16,7 +17,8 @@
 	<p>
 		Join the <a href={PUBLIC_COMMUNITY_INVITE} target="_blank" class="text-link">Discord</a> and make a ticket to
 		apply for the Elite Farmer Discord role and <a href="/info/badges" class="text-link">badge</a> for reaching
-		<strong>{(+PUBLIC_WEIGHT_REQ).toLocaleString()}</strong> farming weight!
+		<strong>{ELITE_FARMER_WEIGHT_REQ.toLocaleString()}</strong> farming weight and earning
+		<strong>{ELITE_FARMER_GOLD_MEDAL_REQ.toLocaleString()}</strong> gold or better contest medals!
 	</p>
 	<span class="-mt-1 text-xs leading-none text-muted-foreground">Application not guaranteed to be accepted.</span>
 	<Button.Root
