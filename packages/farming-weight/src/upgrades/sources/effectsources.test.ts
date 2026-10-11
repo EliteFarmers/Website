@@ -30,7 +30,16 @@ describe('source-layer effect collection', () => {
 	test('refined cacao truffles emit Cocoa Bean Fortune without global Farming Fortune', () => {
 		const player = new FarmingPlayer({ refinedTruffles: 5 });
 		const env = player.buildEnvironment(Crop.CocoaBeans);
-		const effects = collectGeneralFortuneSourceEffects(player);
+		const effects = collectCropFortuneSourceEffects(player, env);
+
+		expect(collectGeneralFortuneSourceEffects(player).some((e) => e.source === 'Refined Dark Cacao Truffle')).toBe(
+			false
+		);
+		expect(
+			collectCropFortuneSourceEffects(player, player.buildEnvironment(Crop.Wheat)).some(
+				(e) => e.source === 'Refined Dark Cacao Truffle'
+			)
+		).toBe(false);
 
 		expect(
 			resolveStatTotal(effects, Stat.CocoaBeanFortune, {

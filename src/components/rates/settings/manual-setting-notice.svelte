@@ -5,25 +5,35 @@
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import type { ManualSettingId } from 'farming-weight';
 
-	let { setting, size = 16 }: { setting?: ManualSettingId; size?: number } = $props();
+	interface Props {
+		setting?: ManualSettingId;
+		/** `false` when the source isn't available in the Hypixel API */
+		api?: boolean;
+		size?: number;
+	}
+
+	let { setting, api, size = 16 }: Props = $props();
 
 	const manualSettings = getManualSettingContext();
+	const notInApi = $derived(api === false);
 </script>
 
 {#if setting && manualSettings}
 	<button
 		type="button"
 		class="cursor-pointer rounded-sm hover:opacity-70"
-		title="Not available in the Hypixel API, click to set it"
+		title={notInApi ? 'Not available in the Hypixel API, click to set it' : 'Open the settings for this'}
 		onclick={(event) => {
 			event.stopPropagation();
-			manualSettings.open(setting);
+			manualSettings.open({ id: setting, notInApi });
 		}}
 	>
 		<Settings {size} class="text-completed" />
-		<span class="sr-only">Set this value, it isn't available in the Hypixel API</span>
+		<span class="sr-only">
+			{notInApi ? "Set this value, it isn't available in the Hypixel API" : 'Open the settings for this'}
+		</span>
 	</button>
-{:else}
+{:else if notInApi}
 	<Popover.Mobile>
 		{#snippet trigger()}
 			<TriangleAlert {size} class="text-completed" />

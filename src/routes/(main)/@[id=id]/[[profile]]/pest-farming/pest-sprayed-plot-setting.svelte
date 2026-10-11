@@ -2,26 +2,16 @@
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
+	import { getSprayonatorTierOptions } from '$lib/rates/sprayonator';
 	import * as Select from '$ui/select';
 	import { Switch } from '$ui/switch';
-	import { SprayonatorTier, Stat } from 'farming-weight';
+	import { getSprayonatorTierInfo, Stat } from 'farming-weight';
 	import type { PestFarmingPageContext } from './pest-farming-context.svelte';
 
 	let { pest }: { pest: PestFarmingPageContext } = $props();
 
-	const sprayonatorTierOptions = [
-		{ value: SprayonatorTier.Regular, label: 'Sprayonator' },
-		{ value: SprayonatorTier.Juicy, label: 'Juicy Sprayonator' },
-		{ value: SprayonatorTier.Salty, label: 'Salty Sprayonator' },
-	];
-	const sprayonatorBonus = $derived(
-		25 *
-			(pest.rates.pestFarming.sprayonatorTier === SprayonatorTier.Salty
-				? 3
-				: pest.rates.pestFarming.sprayonatorTier === SprayonatorTier.Juicy
-					? 2
-					: 1)
-	);
+	const sprayonatorTierOptions = $derived(getSprayonatorTierOptions(pest.ctx.farmingInventory.current));
+	const sprayonatorBonus = $derived(25 * getSprayonatorTierInfo(pest.sprayonatorTier).effectMultiplier);
 </script>
 
 <SettingListItem
@@ -45,8 +35,8 @@
 <SettingListItem title="Sprayer Tier" description="Juicy and Salty multiply the selected material's base effect.">
 	<Select.Simple
 		class="my-1 h-10 min-w-40"
-		value={pest.rates.pestFarming.sprayonatorTier}
-		change={(value) => pest.setSprayonatorTier(value ?? SprayonatorTier.Regular)}
+		value={pest.rates.pestFarming.sprayonator}
+		change={(value) => pest.setSprayonatorTier(value ?? 'auto')}
 		options={sprayonatorTierOptions}
 	/>
 </SettingListItem>

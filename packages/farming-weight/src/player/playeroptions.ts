@@ -65,8 +65,7 @@ export interface FortuneMissingFromAPI {
 }
 
 /**
- * Player options that can't be read from the Hypixel API and have to be set manually.
- * Fortune sources and upgrades that depend on one reference it with `setting`.
+ * Player options that have to be set manually
  */
 export const MANUAL_SETTING_IDS = ['communityCenter', 'feastBurgers', 'filledRosewaterFlask', 'sprayedPlot'] as const;
 

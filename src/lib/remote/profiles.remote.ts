@@ -38,7 +38,13 @@ export const getMemberInventory = query(zodGetProfileInventoryParams, async (par
 
 export const getVirtualFarmingMemberInventory = query(zodGetVirtualFarmingInventoryParams, async (params) => {
 	const result = await getVirtualFarmingInventory(params.playerUuid, params.profileUuid).then((res) => res.data);
-	return (result ?? { armor: [], tools: [], equipment: [], accessories: [] }) as FarmingInventoryDto;
+	return (result ?? {
+		armor: [],
+		tools: [],
+		equipment: [],
+		accessories: [],
+		sprayonators: [],
+	}) as FarmingInventoryDto;
 });
 
 export const getMemberInventories = query(

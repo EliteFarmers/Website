@@ -42,8 +42,9 @@ import {
 	FILLED_ROSEWATER_FLASK_SOURCE,
 	getSprayonatorTierInfo,
 	PEST_BESTIARY_SOURCE,
-	REFINED_TRUFFLE_SOURCE,
 	SPRAYONATOR_SOURCE,
+	SPRAYONATOR_TIER_INFO,
+	SprayonatorTier,
 	UNLOCKED_PLOTS,
 	WRIGGLING_LARVA_SOURCE,
 } from '../../constants/specific.js';
@@ -905,46 +906,6 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 	},
 	{
-		name: REFINED_TRUFFLE_SOURCE.name,
-		wiki: () => REFINED_TRUFFLE_SOURCE.wiki,
-		exists: () => true,
-		max: () => REFINED_TRUFFLE_SOURCE.maxLevel * REFINED_TRUFFLE_SOURCE.fortunePerLevel,
-		current: (player) => {
-			return (player.options.refinedTruffles ?? 0) * REFINED_TRUFFLE_SOURCE.fortunePerLevel;
-		},
-		maxStat: (_player, stat) => getFortune(REFINED_TRUFFLE_SOURCE.maxLevel, REFINED_TRUFFLE_SOURCE, stat),
-		currentStat: (player, stat) => getFortune(player.options.refinedTruffles ?? 0, REFINED_TRUFFLE_SOURCE, stat),
-		upgrades: (player, stats) => {
-			if (!includesRequestedStat(stats, Stat.CocoaBeanFortune)) return [];
-			const consumed = player.options.refinedTruffles ?? 0;
-			if (consumed >= 5) return [];
-
-			return [
-				{
-					title: 'Refined Dark Cacao Truffle',
-					increase: REFINED_TRUFFLE_SOURCE.statsPerLevel?.[Stat.CocoaBeanFortune] ?? 0,
-					stats: {
-						[Stat.CocoaBeanFortune]: REFINED_TRUFFLE_SOURCE.statsPerLevel?.[Stat.CocoaBeanFortune] ?? 0,
-					},
-					action: UpgradeAction.Consume,
-					repeatable: 5 - consumed,
-					wiki: REFINED_TRUFFLE_SOURCE.wiki,
-					category: UpgradeCategory.Item,
-					cost: {
-						items: {
-							REFINED_DARK_CACAO_TRUFFLE: 1,
-						},
-					},
-					meta: {
-						type: 'setting',
-						key: 'refinedTruffles',
-						value: consumed + 1,
-					},
-				},
-			];
-		},
-	},
-	{
 		name: FEAST_BURGER_SOURCE.name,
 		api: false,
 		setting: 'feastBurgers',
@@ -1070,7 +1031,6 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: SPRAYONATOR_SOURCE.name,
-		api: false,
 		setting: 'sprayedPlot',
 		wiki: () => SPRAYONATOR_SOURCE.wiki,
 		exists: () => true,
@@ -1095,6 +1055,43 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				getSprayonatorTierInfo(player.options.sprayonatorTier).effectMultiplier *
 				(SPRAYONATOR_SOURCE.statsPerLevel?.[stat] ?? 0),
 		}),
+		upgrades: (player, stats) => {
+			// The sprayer tier only matters while farming a sprayed plot
+			if (!stats?.includes(Stat.BonusPestChance) || !player.options.sprayedPlot) return [];
+
+			const current = getSprayonatorTierInfo(player.options.sprayonatorTier);
+			const tiers = Object.values(SprayonatorTier);
+			const nextTier = tiers[tiers.findIndex((tier) => SPRAYONATOR_TIER_INFO[tier] === current) + 1];
+			if (!nextTier) return [];
+
+			const next = SPRAYONATOR_TIER_INFO[nextTier];
+			const bonusPestChance = SPRAYONATOR_SOURCE.statsPerLevel?.[Stat.BonusPestChance] ?? 0;
+
+			return [
+				{
+					title: next.name,
+					increase: 0,
+					stats: {
+						[Stat.BonusPestChance]: (next.effectMultiplier - current.effectMultiplier) * bonusPestChance,
+					},
+					action: UpgradeAction.Purchase,
+					purchase: next.itemId,
+					setting: 'sprayedPlot',
+					wiki: SPRAYONATOR_SOURCE.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							[next.itemId]: 1,
+						},
+					},
+					meta: {
+						type: 'setting',
+						key: 'sprayonatorTier',
+						value: nextTier,
+					},
+				},
+			];
+		},
 	},
 	...createCarnivalHarvestFeastSources(),
 ];

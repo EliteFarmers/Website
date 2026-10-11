@@ -18,7 +18,6 @@ export interface DynamicFortuneSource<T> {
 	sourceType?: FortuneSourceType;
 	crop?: Crop;
 	api?: boolean;
-	/** Manual setting that controls this source, set when it isn't available in the Hypixel API */
 	setting?: ManualSettingId;
 	conditional?: boolean;
 	alwaysInclude?: true;

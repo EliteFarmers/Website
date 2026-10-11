@@ -12,6 +12,7 @@ import { type Crop, CROP_INFO } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
 import type { FarmingMechanic } from '../constants/mechanics.js';
 import { compareRarity, type Rarity } from '../constants/reforge-types.js';
+import type { SprayonatorTier } from '../constants/specific.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import {
@@ -1137,6 +1138,8 @@ export class FarmingPlayer {
 				this.options.wrigglingLarva = Number(value);
 			} else if (key === 'filledRosewaterFlask' || key === 'filledRosewaterFlasks') {
 				this.options.filledRosewaterFlask = Number(value);
+			} else if (key === 'sprayonatorTier') {
+				this.options.sprayonatorTier = value as SprayonatorTier;
 			}
 			this.permFortune = this.getGeneralFortune();
 		} else if (type === 'unlock' && id) {

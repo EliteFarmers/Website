@@ -28,9 +28,7 @@
 				<Info size={16} />
 			</a>
 		{/if}
-		{#if upgrade.api === false}
-			<ManualSettingNotice setting={upgrade.setting} />
-		{/if}
+		<ManualSettingNotice setting={upgrade.setting} api={upgrade.api} />
 	</p>
 	<UpgradeDescription {upgrade} {items} />
 	{#if canExpand && toggleExpanded}

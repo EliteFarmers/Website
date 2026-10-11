@@ -108,9 +108,7 @@
 						<Info size={16} />
 					</a>
 				{/if}
-				{#if progress.api === false}
-					<ManualSettingNotice setting={progress.setting} />
-				{/if}
+				<ManualSettingNotice setting={progress.setting} api={progress.api} />
 			</div>
 			<FortuneActiveNote {progress} />
 		</div>

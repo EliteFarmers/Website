@@ -1,11 +1,10 @@
 import { browser } from '$app/environment';
+import type { SprayonatorTierSetting } from '$lib/rates/sprayonator';
 import {
 	DEFAULT_PEST_CYCLE_SETTINGS,
 	Pest,
 	Spray,
-	SprayonatorTier,
 	ZorroMode,
-	type FarmingTool,
 	type PestAttractionSettings,
 	type PestCycleSettings,
 	type TemporaryFarmingFortune,
@@ -20,7 +19,7 @@ export type PestFarmingTimeOfDay = 'day' | 'night';
 export interface PestFarmingData {
 	selectedCrop?: string;
 	sprayedPlot: boolean;
-	sprayonatorTier: SprayonatorTier;
+	sprayonator: SprayonatorTierSetting;
 	pesthunterAccessoryEnabled: boolean;
 	timeOfDay: PestFarmingTimeOfDay;
 	attraction: PestAttractionSettings;
@@ -29,7 +28,6 @@ export interface PestFarmingData {
 
 export interface RatesData {
 	v: number;
-	tool?: FarmingTool;
 	chipRarities: Record<string, string>;
 	communityCenter: number;
 	selectedPet?: string;
@@ -40,7 +38,7 @@ export interface RatesData {
 	temp: Required<TemporaryFarmingFortune>;
 	overdriveActive: boolean;
 	sprayedPlot: boolean;
-	sprayonatorTier: SprayonatorTier;
+	sprayonator: SprayonatorTierSetting;
 	infestedPlotProbability?: number;
 	zorroMode: ZorroMode;
 	bzMode: 'order' | 'insta';
@@ -62,7 +60,7 @@ export const MissingRatesDataSchema = z.object({
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 11,
+	v: 12,
 	chipRarities: {},
 	communityCenter: 0,
 	strength: 0,
@@ -87,12 +85,12 @@ const defaultData = {
 	},
 	overdriveActive: false,
 	sprayedPlot: true,
-	sprayonatorTier: SprayonatorTier.Regular,
+	sprayonator: 'auto',
 	infestedPlotProbability: 0.2,
 	zorroMode: ZorroMode.Normal,
 	pestFarming: {
 		sprayedPlot: true,
-		sprayonatorTier: SprayonatorTier.Regular,
+		sprayonator: 'auto',
 		pesthunterAccessoryEnabled: true,
 		timeOfDay: 'day',
 		attraction: {
@@ -134,7 +132,7 @@ function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingD
 	return {
 		selectedCrop: data?.selectedCrop,
 		sprayedPlot: data?.sprayedPlot ?? defaultData.pestFarming.sprayedPlot,
-		sprayonatorTier: data?.sprayonatorTier ?? defaultData.pestFarming.sprayonatorTier,
+		sprayonator: data?.sprayonator ?? defaultData.pestFarming.sprayonator,
 		pesthunterAccessoryEnabled: true,
 		timeOfDay: data?.timeOfDay ?? defaultData.pestFarming.timeOfDay,
 		attraction: normalizePestAttractionSettings(data?.attraction),
@@ -145,15 +143,29 @@ function normalizePestFarmingData(data?: Partial<PestFarmingData>): PestFarmingD
 	};
 }
 
+// Settings without a default value, which are still kept when loading saved settings
+const OPTIONAL_RATES_DATA_KEYS = ['selectedPet'] as const satisfies readonly (keyof RatesData)[];
+
+/** Copies only the given keys, so fields that are no longer used drop out of saved settings */
+function pickKnownKeys<T extends object>(data: Partial<T> | null | undefined, keys: readonly (keyof T)[]): Partial<T> {
+	const known: Partial<T> = {};
+	for (const key of keys) {
+		if (data?.[key] !== undefined) known[key] = data[key];
+	}
+	return known;
+}
+
 export function normalizeRatesData(data?: PartialRatesData | null): RatesData {
+	const knownKeys = [...(Object.keys(defaultData) as (keyof RatesData)[]), ...OPTIONAL_RATES_DATA_KEYS];
+
 	return {
 		...defaultData,
-		...(data ?? {}),
+		...pickKnownKeys(data as Partial<RatesData> | null | undefined, knownKeys),
 		v: defaultData.v,
 		chipRarities: data?.chipRarities ?? {},
 		temp: {
 			...defaultData.temp,
-			...(data?.temp ?? {}),
+			...pickKnownKeys(data?.temp, Object.keys(defaultData.temp) as (keyof RatesData['temp'])[]),
 		},
 		pestFarming: normalizePestFarmingData(data?.pestFarming),
 	};
@@ -166,11 +178,7 @@ export function initRatesData(data: PartialRatesData = defaultData) {
 		const savedRatesData = localStorage.getItem('ratesData');
 
 		if (savedRatesData) {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { settings: _settings, ...saved } = JSON.parse(savedRatesData) as PartialRatesData & {
-				settings?: boolean;
-			};
-			initialData = normalizeRatesData(saved);
+			initialData = normalizeRatesData(JSON.parse(savedRatesData) as PartialRatesData);
 		}
 	}
 

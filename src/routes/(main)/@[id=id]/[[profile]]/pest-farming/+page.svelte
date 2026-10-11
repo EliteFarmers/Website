@@ -16,7 +16,7 @@
 	import StatsHead from '$comp/seo/stats-head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { trackAnalytics } from '$lib/analytics';
-	import { setManualSettingContext } from '$lib/hooks/manual-setting';
+	import { setManualSettingContext, type OpenManualSetting } from '$lib/hooks/manual-setting';
 	import { getUpgradeCost } from '$lib/items';
 	import { getRatesSettingsOpen } from '$lib/stores/ratesData';
 	import { Button } from '$ui/button';
@@ -27,7 +27,7 @@
 	import Settings from '@lucide/svelte/icons/settings';
 	import Sprout from '@lucide/svelte/icons/sprout';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { PestFarmingPhase, type ManualSettingId } from 'farming-weight';
+	import { PestFarmingPhase } from 'farming-weight';
 	import { PestFarmingPageContext, PHASE_CONFIG } from './pest-farming-context.svelte';
 	import RatesSettings from '../fortune/rates-settings.svelte';
 	import PestSettings from './pest-settings.svelte';
@@ -37,7 +37,7 @@
 	const ctx = pest.ctx;
 	const settingsOpen = getRatesSettingsOpen();
 
-	let manualSetting = $state<ManualSettingId | null>(null);
+	let manualSetting = $state<OpenManualSetting | null>(null);
 	setManualSettingContext({ open: (setting) => (manualSetting = setting) });
 
 	const hasGardenData = $derived(!!ctx.member.current?.garden);

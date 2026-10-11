@@ -571,7 +571,7 @@ test('getUpgradeRateImpact applies setting-backed stat-specific fortune upgrades
 		.getUpgrades({ stat: Stat.FarmingFortune })
 		.find((u) => u.title === 'DNA Analysis Milestone 5');
 	const truffleUpgrade = player
-		.getUpgrades({ stat: Stat.CocoaBeanFortune })
+		.getCropUpgrades(Crop.CocoaBeans)
 		.find((u) => u.title === 'Refined Dark Cacao Truffle');
 
 	expect(dnaUpgrade).toBeDefined();

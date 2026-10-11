@@ -171,16 +171,12 @@
 		{:else}
 			<div class="hidden flex-row items-center gap-1 sm:flex">
 				<UpgradeFortune {upgrade} class="w-fit" />
-				{#if upgrade.api === false}
-					<ManualSettingNotice setting={upgrade.setting} size={14} />
-				{/if}
+				<ManualSettingNotice setting={upgrade.setting} api={upgrade.api} size={14} />
 			</div>
 
 			<div class="col-start-2 row-start-2 flex flex-row items-start gap-1 sm:hidden">
 				<UpgradeFortune {upgrade} class="w-fit" />
-				{#if upgrade.api === false}
-					<ManualSettingNotice setting={upgrade.setting} size={14} />
-				{/if}
+				<ManualSettingNotice setting={upgrade.setting} api={upgrade.api} size={14} />
 			</div>
 
 			<div class="col-start-3 row-start-2 text-right tabular-nums sm:hidden">

@@ -14,8 +14,9 @@ import {
 	type StoredPestLoadoutPreset,
 } from '$lib/rates/pest-loadouts';
 import { findPestPetPurchaseRecommendations, type PestPetPurchaseRecommendation } from '$lib/rates/pest-pet-purchase';
-import { shouldDisplayPestUpgrade } from '$lib/rates/pest-upgrade-visibility';
 import { getPestStartupPriceItems } from '$lib/rates/pest-startup-prices';
+import { shouldDisplayPestUpgrade } from '$lib/rates/pest-upgrade-visibility';
+import { resolveSprayonatorTier, type SprayonatorTierSetting } from '$lib/rates/sprayonator';
 import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 import { getItems } from '$lib/remote/items.remote';
 import {
@@ -58,7 +59,6 @@ import {
 	PestFarmingPhase,
 	PestFarmingRateCalculator,
 	resolveProfitAwareProgress,
-	SprayonatorTier,
 	Stat,
 	STAT_NAMES,
 	Vacuum,
@@ -81,8 +81,8 @@ import {
 	type TemporaryFarmingFortune,
 	type UpgradeTreeNode,
 } from 'farming-weight';
-import { onMount, untrack } from 'svelte';
-import { fromStore } from 'svelte/store';
+import { onDestroy, onMount, untrack } from 'svelte';
+import { get } from 'svelte/store';
 import { cachePestPrices, PestRateImpactController, readCachedPestPrices } from './pest-rate-impact-controller.svelte';
 
 export const PHASE_CONFIG = [
@@ -161,10 +161,9 @@ export class PestFarmingPageContext {
 	#ratesData = getRatesData();
 	#selectedCrops = getSelectedCrops();
 	#harvestFeast = getHarvestFeast();
-	#rates = fromStore(this.#ratesData);
-	#selectedCropValues = fromStore(this.#selectedCrops);
+	#selectedCropValues = $state.raw(get(this.#selectedCrops));
 
-	rates = $derived(this.#rates.current);
+	rates = $state.raw<RatesData>(get(this.#ratesData));
 	pestVersion = $state(0);
 	selectedVacuumId = $state('');
 	loadoutState = $state<PestLoadoutProfileState>();
@@ -210,6 +209,7 @@ export class PestFarmingPageContext {
 	#pendingPestRateSettingsKey = '';
 	#pendingRateSettingAnalyticsKeys = new Set<keyof PestFarmingRateSettings>();
 	#rateSettingsTimer: ReturnType<typeof setTimeout> | undefined;
+	#optionsRefreshTimer: ReturnType<typeof setTimeout> | undefined;
 	#needsInitialOptimization = false;
 
 	pets = $derived.by(() => (this.ctx.ready ? FarmingPet.fromArray(this.ctx.pets) : []));
@@ -220,15 +220,17 @@ export class PestFarmingPageContext {
 		this.ctx.ready ? FarmingEquipment.fromArray(this.ctx.equipment as EliteItemDto[]) : []
 	);
 
-	selectedCropName = $derived(
-		Object.entries(this.#selectedCropValues.current).find(([, value]) => value)?.[0] ?? 'Wheat'
-	);
+	selectedCropName = $derived(Object.entries(this.#selectedCropValues).find(([, value]) => value)?.[0] ?? 'Wheat');
 	selectedCropKey = $derived(cropKey(this.selectedCropName));
 	selectedVacuum = $derived(
 		this.vacuums.find((vacuum) => vacuum.item.uuid === this.selectedVacuumId) ?? this.vacuums[0]
 	);
 	lockedPestTimeOfDay = $derived(getLockedPestTimeOfDay(this.selectedCropKey));
 	pestTimeOfDay = $derived(this.lockedPestTimeOfDay ?? this.rates.pestFarming.timeOfDay);
+	sprayonatorTier = $derived(
+		resolveSprayonatorTier(this.rates.pestFarming.sprayonator, this.ctx.farmingInventory.current)
+	);
+
 	pestAttraction = $derived.by<PestAttractionSettings>(() => {
 		const settings = this.rates.pestFarming.attraction;
 		const isHooverius = this.selectedVacuum?.item.skyblockId === 'INFINI_VACUUM_HOOVERIUS';
@@ -236,7 +238,7 @@ export class PestFarmingPageContext {
 		return {
 			...settings,
 			sprayonatorMaterial: this.rates.pestFarming.sprayedPlot ? settings.sprayonatorMaterial : undefined,
-			sprayonatorTier: this.rates.pestFarming.sprayonatorTier,
+			sprayonatorTier: this.sprayonatorTier,
 			hooveriusVinylTarget: isHooverius ? settings.hooveriusVinylTarget : undefined,
 			timeOfDay: this.pestTimeOfDay,
 		};
@@ -588,6 +590,9 @@ export class PestFarmingPageContext {
 	);
 
 	constructor() {
+		onDestroy(this.#ratesData.subscribe((rates) => (this.rates = { ...rates })));
+		onDestroy(this.#selectedCrops.subscribe((crops) => (this.#selectedCropValues = { ...crops })));
+
 		this.#commitCalculationPestRateSettings(this.pestRateSettings);
 		this.options = this.#buildOptions({});
 		this.refreshPestPlayer();
@@ -610,6 +615,7 @@ export class PestFarmingPageContext {
 			this.#restoreSavedCrop();
 			return () => {
 				if (this.#rateSettingsTimer !== undefined) clearTimeout(this.#rateSettingsTimer);
+				if (this.#optionsRefreshTimer !== undefined) clearTimeout(this.#optionsRefreshTimer);
 				this.rateImpacts.cancel();
 			};
 		});
@@ -1533,9 +1539,11 @@ export class PestFarmingPageContext {
 		this.refreshPestPlayerWith({ sprayedPlot: checked });
 	}
 
-	setSprayonatorTier(tier: SprayonatorTier): void {
-		this.#updatePestFarmingData({ sprayonatorTier: tier });
-		this.refreshPestPlayerWith({ sprayonatorTier: tier });
+	setSprayonatorTier(tier: SprayonatorTierSetting): void {
+		this.#updatePestFarmingData({ sprayonator: tier });
+		this.refreshPestPlayerWith({
+			sprayonatorTier: resolveSprayonatorTier(tier, this.ctx.farmingInventory.current),
+		});
 	}
 
 	setFeastBurgers(feastBurgers: number): void {
@@ -1648,7 +1656,7 @@ export class PestFarmingPageContext {
 			wrigglingLarva: Number(this.ctx.member.current?.unparsed?.consumed?.wriggling_larva ?? 0),
 			feastBurgers: Number(this.ctx.member.current?.unparsed?.consumed?.feast_burger ?? rates.feastBurgers),
 			sprayedPlot: rates.pestFarming.sprayedPlot,
-			sprayonatorTier: rates.pestFarming.sprayonatorTier,
+			sprayonatorTier: this.sprayonatorTier,
 			pesthunterAccessoryEnabled: true,
 			infestedPlotProbability: rates.infestedPlotProbability,
 			cocoaFortuneUpgrade: this.ctx.member.current?.chocolateFactory?.cocoaFortuneUpgrades,
@@ -1729,8 +1737,20 @@ export class PestFarmingPageContext {
 			this.#skipNextRatesDataRefresh = false;
 			if (!importedLoadouts) return;
 		}
-		this.options = nextOptions;
-		untrack(() => this.refreshPestPlayer());
+
+		if (this.#optionsRefreshTimer !== undefined) clearTimeout(this.#optionsRefreshTimer);
+		this.#optionsRefreshTimer = undefined;
+		if (importedLoadouts) {
+			this.options = nextOptions;
+			untrack(() => this.refreshPestPlayer());
+			return;
+		}
+
+		this.#optionsRefreshTimer = setTimeout(() => {
+			this.#optionsRefreshTimer = undefined;
+			this.options = this.#buildOptions(this.options);
+			this.refreshPestPlayer();
+		}, RATE_SETTINGS_DEBOUNCE_MS);
 	}
 
 	#syncSelectedCrop(): void {

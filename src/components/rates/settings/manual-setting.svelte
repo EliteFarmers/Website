@@ -1,20 +1,19 @@
 <script lang="ts">
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
+	import { getSprayonatorTierOptions } from '$lib/rates/sprayonator';
 	import { getRatesData } from '$lib/stores/ratesData';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
-	import { SprayonatorTier, type ManualSettingId } from 'farming-weight';
+	import type { ManualSettingId } from 'farming-weight';
 
 	let { setting }: { setting: ManualSettingId } = $props();
 
 	const ratesData = getRatesData();
 
-	const sprayonatorTierOptions = [
-		{ value: SprayonatorTier.Regular, label: 'Sprayonator' },
-		{ value: SprayonatorTier.Juicy, label: 'Juicy Sprayonator' },
-		{ value: SprayonatorTier.Salty, label: 'Salty Sprayonator' },
-	];
+	const ctx = getStatsContext();
+	const sprayonatorTierOptions = $derived(getSprayonatorTierOptions(ctx.farmingInventory.current));
 </script>
 
 {#if setting === 'communityCenter'}
@@ -87,8 +86,8 @@
 		<div class="flex items-center gap-2">
 			<Select.Simple
 				class="my-1 h-10 min-w-40"
-				value={$ratesData.sprayonatorTier}
-				change={(value) => ($ratesData.sprayonatorTier = value ?? SprayonatorTier.Regular)}
+				value={$ratesData.sprayonator}
+				change={(value) => ($ratesData.sprayonator = value ?? 'auto')}
 				options={sprayonatorTierOptions}
 			/>
 			{#if $ratesData.sprayedPlot !== undefined}

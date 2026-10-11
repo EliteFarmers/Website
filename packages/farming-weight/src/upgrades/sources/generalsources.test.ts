@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { SprayonatorTier } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { GemRarity } from '../../fortune/item.js';
@@ -419,11 +420,34 @@ test('Sources missing from the API reference the setting that controls them', ()
 	const player = new FarmingPlayer({});
 
 	for (const source of GENERAL_FORTUNE_SOURCES) {
-		expect(source.api === false, source.name).toBe(source.setting !== undefined);
+		if (source.api === false) expect(source.setting, source.name).toBeDefined();
 		if (source.setting) expect(MANUAL_SETTING_IDS).toContain(source.setting);
 
 		for (const upgrade of source.upgrades?.(player) ?? []) {
-			expect(upgrade.api === false, upgrade.title).toBe(upgrade.setting !== undefined);
+			if (upgrade.api === false) expect(upgrade.setting, upgrade.title).toBeDefined();
 		}
 	}
+});
+
+test('Sprayonator offers the next sprayer tier as an upgrade', () => {
+	const sprayonator = GENERAL_FORTUNE_SOURCES.find((source) => source.name === 'Sprayonator')!;
+	const upgradesFor = (options: ConstructorParameters<typeof FarmingPlayer>[0]) =>
+		sprayonator.upgrades?.(new FarmingPlayer(options), [Stat.BonusPestChance]) ?? [];
+
+	const juicy = upgradesFor({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Juicy });
+	expect(juicy).toHaveLength(1);
+	expect(juicy[0]).toMatchObject({
+		title: 'Salty Sprayonator',
+		stats: { [Stat.BonusPestChance]: 25 },
+		cost: { items: { SALTY_SPRAYONATOR: 1 } },
+		meta: { type: 'setting', key: 'sprayonatorTier', value: SprayonatorTier.Salty },
+	});
+	expect(juicy[0]?.api).toBeUndefined();
+
+	const player = new FarmingPlayer({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Juicy });
+	player.applyUpgrade(juicy[0]!);
+	expect(player.options.sprayonatorTier).toBe(SprayonatorTier.Salty);
+
+	expect(upgradesFor({ sprayedPlot: true, sprayonatorTier: SprayonatorTier.Salty })).toEqual([]);
+	expect(upgradesFor({ sprayedPlot: false, sprayonatorTier: SprayonatorTier.Juicy })).toEqual([]);
 });

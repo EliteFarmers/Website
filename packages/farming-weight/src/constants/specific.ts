@@ -366,6 +366,15 @@ export function getSprayonatorTierInfo(tier?: SprayonatorTier | `${SprayonatorTi
 	return SPRAYONATOR_TIER_INFO[tier as SprayonatorTier] ?? SPRAYONATOR_TIER_INFO[SprayonatorTier.Regular];
 }
 
+export function getBestSprayonatorTier(skyblockIds: Iterable<string | null | undefined>): SprayonatorTier {
+	let best = SprayonatorTier.Regular;
+	for (const id of skyblockIds) {
+		if (id === SPRAYONATOR_TIER_INFO[SprayonatorTier.Salty].itemId) return SprayonatorTier.Salty;
+		if (id === SPRAYONATOR_TIER_INFO[SprayonatorTier.Juicy].itemId) best = SprayonatorTier.Juicy;
+	}
+	return best;
+}
+
 export const COCOA_FORTUNE_UPGRADE: FortuneSource = {
 	name: 'Cocoa Fortune Upgrade',
 	cropSpecific: true,

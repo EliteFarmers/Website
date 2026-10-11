@@ -17,8 +17,9 @@
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { formatBoundaryError, getLevelProgress } from '$lib/format';
-	import { setManualSettingContext } from '$lib/hooks/manual-setting';
+	import { setManualSettingContext, type OpenManualSetting } from '$lib/hooks/manual-setting';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
+	import { resolveSprayonatorTier } from '$lib/rates/sprayonator';
 	import { getRateImpactCoinValue } from '$lib/rates/upgrade-rate-value';
 	import { getHarvestFeast } from '$lib/remote/harvest-feast.remote';
 	import { getItems } from '$lib/remote/items.remote';
@@ -43,10 +44,10 @@
 		FarmingPet,
 		FarmingTool,
 		GearSlot,
+		getCompletionUpgradeKey,
 		getCropFromName,
 		getCropMilestoneLevels,
 		getCropUpgrades,
-		getCompletionUpgradeKey,
 		getGardenLevel,
 		getProfitCompletionUpgrades,
 		LotusGear,
@@ -59,7 +60,6 @@
 		type EliteItemDto,
 		type FortuneSourceProgress,
 		type FortuneUpgrade,
-		type ManualSettingId,
 		type PlayerOptions,
 		type UpgradeRateImpact,
 		type UpgradeTreeNode,
@@ -73,7 +73,7 @@
 
 	const ctx = getStatsContext();
 
-	let manualSetting = $state<ManualSettingId | null>(null);
+	let manualSetting = $state<OpenManualSetting | null>(null);
 	setManualSettingContext({ open: (setting) => (manualSetting = setting) });
 
 	let blocksBroken = $state(24_000 * 3);
@@ -230,7 +230,7 @@
 		speed: $ratesData.speed,
 
 		sprayedPlot: $ratesData.sprayedPlot,
-		sprayonatorTier: $ratesData.sprayonatorTier,
+		sprayonatorTier: resolveSprayonatorTier($ratesData.sprayonator, ctx.farmingInventory.current),
 		infestedPlotProbability: $ratesData.infestedPlotProbability,
 
 		cocoaFortuneUpgrade: ctx.member.current?.chocolateFactory?.cocoaFortuneUpgrades,
@@ -503,6 +503,10 @@
 		}
 	});
 
+	// Rebuilding the player recalculates everything, so wait for settings changes (like slider drags) to settle
+	const PLAYER_REBUILD_DEBOUNCE_MS = 150;
+	let builtPlayerFromProfile = false;
+
 	$effect(() => {
 		if (!ctx.ready) return;
 
@@ -525,7 +529,7 @@
 				crop: selectedCropKey,
 			},
 			sprayedPlot: $ratesData.sprayedPlot,
-			sprayonatorTier: $ratesData.sprayonatorTier,
+			sprayonatorTier: resolveSprayonatorTier($ratesData.sprayonator, ctx.farmingInventory.current),
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
 			zorro: {
 				enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
@@ -535,10 +539,24 @@
 			selectedCrop: selectedCropKey,
 		};
 
-		untrack(() => {
-			const nextPlayer = createFarmingPlayer(options);
-			player.update(() => nextPlayer);
-		});
+		const rebuild = () =>
+			untrack(() => {
+				const nextPlayer = createFarmingPlayer({
+					...options,
+					selectedPet: $player.selectedPet,
+					selectedTool: $player.selectedTool,
+				});
+				player.update(() => nextPlayer);
+			});
+
+		if (!builtPlayerFromProfile) {
+			builtPlayerFromProfile = true;
+			rebuild();
+			return;
+		}
+
+		const timer = setTimeout(rebuild, PLAYER_REBUILD_DEBOUNCE_MS);
+		return () => clearTimeout(timer);
 	});
 
 	const selected = $derived.by(() => {
