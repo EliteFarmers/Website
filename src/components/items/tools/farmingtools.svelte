@@ -1,5 +1,9 @@
 <script lang="ts">
+	import ItemDialog from '$comp/items/item-dialog.svelte';
 	import Farmingtool from '$comp/items/tools/farmingtool.svelte';
+	import type { ItemDto } from '$lib/api';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
+	import { getInventoryItemDetails } from '$lib/remote';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import { Skeleton } from '$ui/skeleton';
@@ -13,6 +17,7 @@
 	import { watch } from 'runed';
 
 	const ctx = getStatsContext();
+	const gbl = getGlobalContext();
 
 	const garden = $derived(ctx.garden);
 	let shown = $state(13 - (ctx.member.current?.events?.length ?? 0));
@@ -36,12 +41,34 @@
 			});
 		}
 	);
+
+	let selectedTool = $state<FT | null>(null);
+	let selectedItem = $state<ItemDto | null>(null);
+	let open = $state(false);
+	let itemDetails = $state<ReturnType<typeof getInventoryItemDetails> | null>(null);
+
+	function onSelect(tool: FT) {
+		const item = tool.item as ItemDto;
+		selectedTool = tool;
+		selectedItem = item;
+		open = true;
+
+		itemDetails =
+			item.inventoryId && item.inventorySlot
+				? getInventoryItemDetails({
+						inventoryUuid: item.inventoryId,
+						slotId: item.inventorySlot,
+						skyblockId: item.skyblockId ?? '',
+						packs: gbl.enabledPackIds.join(',') || undefined,
+					})
+				: null;
+	}
 </script>
 
 {#if actualTools.length !== 0 || toolsLoading}
 	<div class="flex flex-1 flex-col items-center gap-2">
 		{#each actualTools.slice(0, currentShown) as tool (tool)}
-			<Farmingtool {tool} />
+			<Farmingtool {tool} {onSelect} />
 		{/each}
 		{#if toolsLoading}
 			{#each { length: 13 }, i (i)}
@@ -79,3 +106,18 @@
 		{/if}
 	</div>
 {/if}
+
+<ItemDialog bind:open bind:selectedItem {itemDetails}>
+	{#if selectedTool?.cultivating}
+		<p>
+			<span class="font-semibold select-none">Cultivating:</span>
+			<span class="select-all">{selectedTool.cultivating.toLocaleString()}</span>
+		</p>
+	{/if}
+	{#if selectedTool?.counter && selectedTool.counter !== selectedTool.cultivating}
+		<p>
+			<span class="font-semibold select-none">Counter:</span>
+			<span class="select-all">{selectedTool.counter.toLocaleString()}</span>
+		</p>
+	{/if}
+</ItemDialog>
