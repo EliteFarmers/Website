@@ -10,6 +10,183 @@
 import * as zod from 'zod';
 
 /**
+ * @summary Create a dashboard in an available slot
+ */
+export const zodCreatePlayerDashboardBody = zod.object({
+	id: zod.uuid(),
+	slot: zod.int(),
+	name: zod.string(),
+	configuration: zod.object({
+		schemaVersion: zod.int(),
+		historyDays: zod.int(),
+		members: zod.array(
+			zod.object({
+				id: zod.string(),
+				playerUuid: zod.string(),
+				profileUuid: zod.string(),
+				color: zod.string().nullish(),
+			})
+		),
+		widgets: zod.array(
+			zod.object({
+				id: zod.string(),
+				type: zod.enum([
+					'summary',
+					'farming-weight',
+					'crop-history',
+					'skill-history',
+					'leaderboard-rank',
+					'earned-medals',
+					'pest-history',
+					'overtake',
+					'recent-contests',
+					'activity',
+					'pace',
+					'milestone',
+					'farming-weight-history',
+				]),
+				width: zod.enum(['quarter', 'half', 'full']),
+				memberIds: zod.array(zod.string()).describe('Name of weight style to unlock.'),
+				historyDays: zod.int().nullish(),
+				metric: zod
+					.object({
+						kind: zod.enum([
+							'crop',
+							'skill',
+							'pest',
+							'farming-weight',
+							'farming-level',
+							'skyblock-level',
+							'earned-medals',
+						]),
+						key: zod.string().nullish(),
+					})
+					.nullish(),
+				metrics: zod
+					.array(
+						zod.object({
+							kind: zod.enum([
+								'crop',
+								'skill',
+								'pest',
+								'farming-weight',
+								'farming-level',
+								'skyblock-level',
+								'earned-medals',
+							]),
+							key: zod.string().nullish(),
+						})
+					)
+					.nullish(),
+				targetValue: zod.number().nullish(),
+				boardId: zod.string().nullish(),
+				mode: zod.string().nullish(),
+				gameMode: zod.string().nullish(),
+			})
+		),
+	}),
+});
+
+/**
+ * @summary Delete an owned dashboard using its current revision
+ */
+export const zodDeletePlayerDashboardParams = zod.object({
+	id: zod.uuid(),
+});
+
+export const zodDeletePlayerDashboardQueryParams = zod.object({
+	revision: zod.int(),
+});
+
+/**
+ * @summary Get an owned dashboard and its current capabilities
+ */
+export const zodGetPlayerDashboardParams = zod.object({
+	id: zod.uuid(),
+});
+
+/**
+ * @summary Replace an owned dashboard using its current revision
+ */
+export const zodUpdatePlayerDashboardParams = zod.object({
+	id: zod.uuid(),
+});
+
+export const zodUpdatePlayerDashboardBody = zod.object({
+	revision: zod.int(),
+	name: zod.string(),
+	configuration: zod.object({
+		schemaVersion: zod.int(),
+		historyDays: zod.int(),
+		members: zod.array(
+			zod.object({
+				id: zod.string(),
+				playerUuid: zod.string(),
+				profileUuid: zod.string(),
+				color: zod.string().nullish(),
+			})
+		),
+		widgets: zod.array(
+			zod.object({
+				id: zod.string(),
+				type: zod.enum([
+					'summary',
+					'farming-weight',
+					'crop-history',
+					'skill-history',
+					'leaderboard-rank',
+					'earned-medals',
+					'pest-history',
+					'overtake',
+					'recent-contests',
+					'activity',
+					'pace',
+					'milestone',
+					'farming-weight-history',
+				]),
+				width: zod.enum(['quarter', 'half', 'full']),
+				memberIds: zod.array(zod.string()).describe('Name of weight style to unlock.'),
+				historyDays: zod.int().nullish(),
+				metric: zod
+					.object({
+						kind: zod.enum([
+							'crop',
+							'skill',
+							'pest',
+							'farming-weight',
+							'farming-level',
+							'skyblock-level',
+							'earned-medals',
+						]),
+						key: zod.string().nullish(),
+					})
+					.nullish(),
+				metrics: zod
+					.array(
+						zod.object({
+							kind: zod.enum([
+								'crop',
+								'skill',
+								'pest',
+								'farming-weight',
+								'farming-level',
+								'skyblock-level',
+								'earned-medals',
+							]),
+							key: zod.string().nullish(),
+						})
+					)
+					.nullish(),
+				targetValue: zod.number().nullish(),
+				boardId: zod.string().nullish(),
+				mode: zod.string().nullish(),
+				gameMode: zod.string().nullish(),
+			})
+		),
+	}),
+});
+
+/**
  * @summary Get account data export by id
  */
 export const zodGetDataExportParams = zod.object({
@@ -2429,6 +2606,14 @@ export const zodRemoveJacobLeaderboardExcludedTimespanParams = zod.object({
 });
 
 /**
+ * Uses crowd-sourced data, which may not be accurate.
+ * @summary Get Harvest Feast rotations for a SkyBlock year
+ */
+export const zodGetHarvestFeastRotationsInYearParams = zod.object({
+	year: zod.int().describe('SkyBlock year'),
+});
+
+/**
  * @summary Get Hypixel Guilds
  */
 export const zodGetHypixelGuildsQueryParams = zod.object({
@@ -2914,6 +3099,14 @@ export const zodGetProfileParams = zod.object({
 });
 
 /**
+ * @summary Get compact current data for a dashboard member
+ */
+export const zodGetDashboardSummaryParams = zod.object({
+	profileUuid: zod.string(),
+	playerUuid: zod.string(),
+});
+
+/**
  * @summary Get virtual farming inventory
  */
 export const zodGetVirtualFarmingInventoryParams = zod.object({
@@ -2970,11 +3163,126 @@ export const zodCreateContentReportBody = zod.object({
 });
 
 /**
+ * Returns a paginated list of auction items ranked by recent trading volume.
+ * @summary List Popular Auction Items
+ */
+export const zodGetPopularAuctionsQueryParams = zod.object({
+	timespan: zod.string().nullish(),
+	page: zod.int(),
+	pageSize: zod.int(),
+});
+
+/**
+ * Fuzzy search across known auctionable items by SkyBlock ID or display name.
+ * @summary Search Auction Items
+ */
+export const zodSearchAuctionItemsQueryParams = zod.object({
+	query: zod.string(),
+	limit: zod.int(),
+});
+
+/**
  * Get a specific auction by id. Will not fetch auction from Hypixel, only returns auctions that exist locally.
  * @summary Get Auction
  */
 export const zodGetAuctionParams = zod.object({
 	auctionId: zod.uuid(),
+});
+
+/**
+ * Returns active BIN listings for an item and optional variant, including pet and rune bundles.
+ * @summary List Active BIN Auctions for Item
+ */
+export const zodGetActiveItemAuctionsParams = zod.object({
+	skyblockId: zod.string(),
+});
+
+export const zodGetActiveItemAuctionsQueryParams = zod.object({
+	variant: zod.string().nullish(),
+	page: zod.int(),
+	pageSize: zod.int(),
+	sort: zod.string().nullish(),
+});
+
+/**
+ * Get recently ended auctions for a specific item and optional variant. Supports bundle: format for pets and runes.
+ * @summary Get Recently Ended Auctions for Item
+ */
+export const zodGetItemEndedAuctionsParams = zod.object({
+	skyblockId: zod.string(),
+});
+
+export const zodGetItemEndedAuctionsQueryParams = zod.object({
+	variant: zod.string().nullish(),
+	limit: zod.int(),
+});
+
+/**
+ * Retrieve aggregated BIN statistics for each tracked variant of a SkyBlock item.
+ * @summary List Auction Variants
+ */
+export const zodGetAuctionVariantsParams = zod.object({
+	skyblockId: zod.string(),
+});
+
+/**
+ * @summary Get Auction History For Item
+ */
+export const zodGetAuctionPriceHistoryParams = zod.object({
+	skyblockId: zod.string(),
+	variantKey: zod.string(),
+});
+
+export const zodGetAuctionPriceHistoryQueryParams = zod.object({
+	timespan: zod.string().nullish(),
+});
+
+/**
+ * Search bazaar products by name or category. Returns all products if no filters provided.
+ * @summary Search Bazaar Products
+ */
+export const zodSearchBazaarProductsQueryParams = zod.object({
+	query: zod.string().nullish(),
+	category: zod.string().nullish(),
+	limit: zod.int(),
+});
+
+/**
+ * Get a specific bazaar product and it's npc price (if it exists)
+ * @summary Get Bazaar Product
+ */
+export const zodGetBazaarProductParams = zod.object({
+	itemId: zod.string(),
+});
+
+/**
+ * Get a specific Bazaar product's history
+ * @summary Get Bazaar Product History
+ */
+export const zodGetBazaarProductHistoryParams = zod.object({
+	itemId: zod.string(),
+});
+
+export const zodGetBazaarProductHistoryQueryParams = zod.object({
+	timespan: zod.string().nullish(),
+});
+
+/**
+ * Get similar items and trend data for a specific item.
+ * @summary Get Related Items and Trends
+ */
+export const zodGetItemRelatedParams = zod.object({
+	skyblockId: zod.string(),
+});
+
+/**
+ * Searches Bazaar products and tracked Auction House items.
+ * @summary Search SkyBlock Markets
+ */
+export const zodSearchMarketsQueryParams = zod.object({
+	query: zod.string(),
+	page: zod.int(),
+	pageSize: zod.int(),
 });
 
 /**

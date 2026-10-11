@@ -15,6 +15,7 @@ import type {
 	AdminOrdersResponseDto,
 	AnalyzeGreenhouseRequest,
 	AuctionHouseDto,
+	AuctionOverviewResponse,
 	AuditLogFiltersResponse,
 	AuthRefreshDto,
 	AuthResponseDto,
@@ -23,6 +24,7 @@ import type {
 	AuthorizedGuildDto,
 	BanParticipationRequestBanParticipationRequestBody,
 	BanPlayerRequestBanPlayerRequestBody,
+	BazaarOverviewResponse,
 	BugReportCommentDto,
 	BugReportDto,
 	ChangeTeamOwnerRequest,
@@ -33,6 +35,7 @@ import type {
 	CreateCommentRequest,
 	CreateConfirmationDto,
 	CreateContentReportRequest,
+	CreateDashboardRequest,
 	CreateEventDto,
 	CreateEventTeamDto,
 	CreateFeedbackCommentRouteRequest,
@@ -45,11 +48,14 @@ import type {
 	CreateTagRequest,
 	CreateTeamAdminParams,
 	CreateTebexCheckoutRequest,
+	DashboardListDto,
+	DashboardSummaryDto,
 	DataExportDownloadUrlResponse,
 	DataExportStatusResponse,
 	DeclineGiftRequest,
 	DeleteContestPingsParams,
 	DeleteMemberAdminParams,
+	DeletePlayerDashboardParams,
 	DictionaryOfInt32AndListOfJacobContestDto,
 	DiscordLoginDto,
 	EditCommentRequest,
@@ -62,15 +68,24 @@ import type {
 	EventTeamWithMembersDto,
 	EventTeamsWordListDto,
 	FarmingInventoryDto,
+	FeatureFlagsResponse,
 	FeedbackAttachmentDto,
 	FeedbackListResponse,
 	FeedbackPostDto,
 	ForceAddMemberAdminParams,
 	FullGuideDto,
+	GetActiveItemAuctionsParams,
+	GetActiveItemAuctionsResponse,
 	GetAdminOrdersParams,
+	GetAuctionPriceHistoryParams,
+	GetAuctionPriceHistoryResponse,
 	GetAuctionResponse,
+	GetAuctionVariantsResponse,
 	GetAuditLogsParams,
 	GetAuditLogsResponse,
+	GetBazaarProductHistoryParams,
+	GetBazaarProductHistoryResponse,
+	GetBazaarProductResponse,
 	GetBazaarProductsResponse,
 	GetBlockTextureParams,
 	GetCategoriesParams,
@@ -82,12 +97,14 @@ import type {
 	GetGlobalProgressSummaryParams,
 	GetGlobalSkillsParams,
 	GetGuideParams,
+	GetGuideRatingsResponse,
 	GetHypixelGuildMembersLeaderboardParams,
 	GetHypixelGuildResponse,
 	GetHypixelGuildsParams,
 	GetHypixelGuildsResponse,
 	GetInventoryItemMetaParams,
 	GetInventoryItemTextureParams,
+	GetItemEndedAuctionsParams,
 	GetItemTextureParams,
 	GetLeaderboardParams,
 	GetNotificationPreferencesResponse,
@@ -98,6 +115,8 @@ import type {
 	GetPlayerLeaderboardRanksParams,
 	GetPlayerRank1Params,
 	GetPlayerRank2Params,
+	GetPopularAuctionsParams,
+	GetPopularAuctionsResponse,
 	GetProfileRank1Params,
 	GetProfileRank2Params,
 	GetSkillGraphsParams,
@@ -118,10 +137,12 @@ import type {
 	GuideDto,
 	GuildMembersLeaderboardDto,
 	HarvestFeastRotationsDto,
+	HarvestFeastYearRotationsDto,
 	HoistCommentRequest,
 	HypixelApiStatus,
 	HypixelInventoryDto,
 	InventoryItemMetaResponse,
+	ItemRelatedResponse,
 	JoinEventParams,
 	LeaderboardDto,
 	LeaderboardPositionDto,
@@ -134,6 +155,7 @@ import type {
 	ListOfAccountSearchResultDto,
 	ListOfAdminEventMemberDto,
 	ListOfAnnouncementDto,
+	ListOfAuctionDto,
 	ListOfBadgeDto,
 	ListOfBugReportSummaryDto,
 	ListOfCommentDto,
@@ -151,7 +173,9 @@ import type {
 	ListOfGlobalProgressPoint,
 	ListOfGlobalSkillProgressPoint,
 	ListOfGuideAssetDto,
+	ListOfGuideCategoryDto,
 	ListOfGuideDto,
+	ListOfGuideRatingDimensionDto,
 	ListOfGuideVersionDto,
 	ListOfGuildDetailsDto,
 	ListOfGuildMemberDto,
@@ -171,6 +195,7 @@ import type {
 	NotificationPushSubscriptionDto,
 	OrderStatusDto,
 	PauseRecurringPaymentRequest,
+	PlayerDashboardDto,
 	ProblemDetails,
 	ProfileMemberDto,
 	PublicGuildDto,
@@ -186,9 +211,16 @@ import type {
 	SaveSuggestionRequest,
 	SchematicViewerStatusDto,
 	SearchAccountsParams,
+	SearchAuctionItemsParams,
+	SearchAuctionItemsResponse,
+	SearchBazaarProductsParams,
+	SearchBazaarProductsResponse,
 	SearchHypixelGuildsParams,
 	SearchHypixelGuildsResponse,
+	SearchMarketsParams,
+	SearchMarketsResponse,
 	SetEventFeatureParams,
+	SetGuideRatingRequest,
 	SetGuildPublicParams,
 	SetJacobFeatureParams,
 	SetTeamOwnerRequest,
@@ -198,6 +230,7 @@ import type {
 	TebexCurrentCheckoutDto,
 	ToggleRecapVisibilityRequestBody,
 	UpdateContestPingsRequestUpdateContestPings,
+	UpdateDashboardRequest,
 	UpdateEventTeamDto,
 	UpdateGuideRequest,
 	UpdateGuideResponse,
@@ -224,8 +257,8 @@ import type {
 	YearlyRecapDto,
 } from '../schemas';
 
-import { env } from '$env/dynamic/private';
 import { customFetch } from '../custom-fetch';
+import { env } from '$env/dynamic/private';
 const { ELITE_API_URL } = env;
 
 export type getAuthAccountResponse200 = {
@@ -258,6 +291,191 @@ export const getAuthAccount = async (options?: RequestInit) => {
 	return customFetch<getAuthAccountResponse>(getGetAuthAccountUrl(), {
 		...options,
 		method: 'GET',
+	});
+};
+
+export type createPlayerDashboardResponse200 = {
+	data: PlayerDashboardDto;
+	status: 200;
+};
+
+export type createPlayerDashboardResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type createPlayerDashboardResponseSuccess = createPlayerDashboardResponse200 & {
+	headers: Headers;
+};
+export type createPlayerDashboardResponseError = createPlayerDashboardResponse401 & {
+	headers: Headers;
+};
+
+export type createPlayerDashboardResponse = createPlayerDashboardResponseSuccess | createPlayerDashboardResponseError;
+
+export const getCreatePlayerDashboardUrl = () => {
+	return `${ELITE_API_URL}/account/dashboards`;
+};
+
+/**
+ * @summary Create a dashboard in an available slot
+ */
+export const createPlayerDashboard = async (createDashboardRequest: CreateDashboardRequest, options?: RequestInit) => {
+	return customFetch<createPlayerDashboardResponse>(getCreatePlayerDashboardUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(createDashboardRequest),
+	});
+};
+
+export type listPlayerDashboardsResponse200 = {
+	data: DashboardListDto;
+	status: 200;
+};
+
+export type listPlayerDashboardsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type listPlayerDashboardsResponseSuccess = listPlayerDashboardsResponse200 & {
+	headers: Headers;
+};
+export type listPlayerDashboardsResponseError = listPlayerDashboardsResponse401 & {
+	headers: Headers;
+};
+
+export type listPlayerDashboardsResponse = listPlayerDashboardsResponseSuccess | listPlayerDashboardsResponseError;
+
+export const getListPlayerDashboardsUrl = () => {
+	return `${ELITE_API_URL}/account/dashboards`;
+};
+
+/**
+ * @summary List the current account's dashboard slots
+ */
+export const listPlayerDashboards = async (options?: RequestInit) => {
+	return customFetch<listPlayerDashboardsResponse>(getListPlayerDashboardsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type deletePlayerDashboardResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deletePlayerDashboardResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deletePlayerDashboardResponseSuccess = deletePlayerDashboardResponse204 & {
+	headers: Headers;
+};
+export type deletePlayerDashboardResponseError = deletePlayerDashboardResponse401 & {
+	headers: Headers;
+};
+
+export type deletePlayerDashboardResponse = deletePlayerDashboardResponseSuccess | deletePlayerDashboardResponseError;
+
+export const getDeletePlayerDashboardUrl = (id: string, params: DeletePlayerDashboardParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/account/dashboards/${id}?${stringifiedParams}`
+		: `${ELITE_API_URL}/account/dashboards/${id}`;
+};
+
+/**
+ * @summary Delete an owned dashboard using its current revision
+ */
+export const deletePlayerDashboard = async (id: string, params: DeletePlayerDashboardParams, options?: RequestInit) => {
+	return customFetch<deletePlayerDashboardResponse>(getDeletePlayerDashboardUrl(id, params), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+export type getPlayerDashboardResponse200 = {
+	data: PlayerDashboardDto;
+	status: 200;
+};
+
+export type getPlayerDashboardResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getPlayerDashboardResponseSuccess = getPlayerDashboardResponse200 & {
+	headers: Headers;
+};
+export type getPlayerDashboardResponseError = getPlayerDashboardResponse401 & {
+	headers: Headers;
+};
+
+export type getPlayerDashboardResponse = getPlayerDashboardResponseSuccess | getPlayerDashboardResponseError;
+
+export const getGetPlayerDashboardUrl = (id: string) => {
+	return `${ELITE_API_URL}/account/dashboards/${id}`;
+};
+
+/**
+ * @summary Get an owned dashboard and its current capabilities
+ */
+export const getPlayerDashboard = async (id: string, options?: RequestInit) => {
+	return customFetch<getPlayerDashboardResponse>(getGetPlayerDashboardUrl(id), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type updatePlayerDashboardResponse200 = {
+	data: PlayerDashboardDto;
+	status: 200;
+};
+
+export type updatePlayerDashboardResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type updatePlayerDashboardResponseSuccess = updatePlayerDashboardResponse200 & {
+	headers: Headers;
+};
+export type updatePlayerDashboardResponseError = updatePlayerDashboardResponse401 & {
+	headers: Headers;
+};
+
+export type updatePlayerDashboardResponse = updatePlayerDashboardResponseSuccess | updatePlayerDashboardResponseError;
+
+export const getUpdatePlayerDashboardUrl = (id: string) => {
+	return `${ELITE_API_URL}/account/dashboards/${id}`;
+};
+
+/**
+ * @summary Replace an owned dashboard using its current revision
+ */
+export const updatePlayerDashboard = async (
+	id: string,
+	updateDashboardRequest: UpdateDashboardRequest,
+	options?: RequestInit
+) => {
+	return customFetch<updatePlayerDashboardResponse>(getUpdatePlayerDashboardUrl(id), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(updateDashboardRequest),
 	});
 };
 
@@ -3528,6 +3746,31 @@ export const getUpcomingEvents = async (params?: GetUpcomingEventsParams, option
 	});
 };
 
+export type getFeatureFlagsResponse200 = {
+	data: FeatureFlagsResponse;
+	status: 200;
+};
+
+export type getFeatureFlagsResponseSuccess = getFeatureFlagsResponse200 & {
+	headers: Headers;
+};
+
+export type getFeatureFlagsResponse = getFeatureFlagsResponseSuccess;
+
+export const getGetFeatureFlagsUrl = () => {
+	return `${ELITE_API_URL}/feature-flags`;
+};
+
+/**
+ * @summary Get enabled feature flags for the current visitor
+ */
+export const getFeatureFlags = async (options?: RequestInit) => {
+	return customFetch<getFeatureFlagsResponse>(getGetFeatureFlagsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
 export type listFeedbackResponse200 = {
 	data: FeedbackListResponse;
 	status: 200;
@@ -4989,11 +5232,19 @@ export type listGuidesResponse200 = {
 	status: 200;
 };
 
+export type listGuidesResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
 export type listGuidesResponseSuccess = listGuidesResponse200 & {
 	headers: Headers;
 };
+export type listGuidesResponseError = listGuidesResponse400 & {
+	headers: Headers;
+};
 
-export type listGuidesResponse = listGuidesResponseSuccess;
+export type listGuidesResponse = listGuidesResponseSuccess | listGuidesResponseError;
 
 export const getListGuidesUrl = (params: ListGuidesParams) => {
 	const normalizedParams = new URLSearchParams();
@@ -5015,6 +5266,56 @@ export const getListGuidesUrl = (params: ListGuidesParams) => {
  */
 export const listGuides = async (params: ListGuidesParams, options?: RequestInit) => {
 	return customFetch<listGuidesResponse>(getListGuidesUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type listGuideCategoriesResponse200 = {
+	data: ListOfGuideCategoryDto;
+	status: 200;
+};
+
+export type listGuideCategoriesResponseSuccess = listGuideCategoriesResponse200 & {
+	headers: Headers;
+};
+
+export type listGuideCategoriesResponse = listGuideCategoriesResponseSuccess;
+
+export const getListGuideCategoriesUrl = () => {
+	return `${ELITE_API_URL}/guides/categories`;
+};
+
+/**
+ * @summary List guide categories
+ */
+export const listGuideCategories = async (options?: RequestInit) => {
+	return customFetch<listGuideCategoriesResponse>(getListGuideCategoriesUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type listGuideRatingDimensionsResponse200 = {
+	data: ListOfGuideRatingDimensionDto;
+	status: 200;
+};
+
+export type listGuideRatingDimensionsResponseSuccess = listGuideRatingDimensionsResponse200 & {
+	headers: Headers;
+};
+
+export type listGuideRatingDimensionsResponse = listGuideRatingDimensionsResponseSuccess;
+
+export const getListGuideRatingDimensionsUrl = () => {
+	return `${ELITE_API_URL}/guides/rating-dimensions`;
+};
+
+/**
+ * @summary List active farm design rating dimensions
+ */
+export const listGuideRatingDimensions = async (options?: RequestInit) => {
+	return customFetch<listGuideRatingDimensionsResponse>(getListGuideRatingDimensionsUrl(), {
 		...options,
 		method: 'GET',
 	});
@@ -5542,6 +5843,113 @@ export const uploadGuideLitematic = async (
 		...options,
 		method: 'POST',
 		body: formData,
+	});
+};
+
+export type getGuideRatingsResponse200 = {
+	data: GetGuideRatingsResponse;
+	status: 200;
+};
+
+export type getGuideRatingsResponseSuccess = getGuideRatingsResponse200 & {
+	headers: Headers;
+};
+
+export type getGuideRatingsResponse = getGuideRatingsResponseSuccess;
+
+export const getGetGuideRatingsUrl = (guideId: string | number) => {
+	return `${ELITE_API_URL}/guides/${guideId}/ratings`;
+};
+
+/**
+ * @summary Get farm design quality ratings
+ */
+export const getGuideRatings = async (guideId: string | number, options?: RequestInit) => {
+	return customFetch<getGuideRatingsResponse>(getGetGuideRatingsUrl(guideId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type deleteGuideRatingResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteGuideRatingResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteGuideRatingResponseSuccess = deleteGuideRatingResponse204 & {
+	headers: Headers;
+};
+export type deleteGuideRatingResponseError = deleteGuideRatingResponse401 & {
+	headers: Headers;
+};
+
+export type deleteGuideRatingResponse = deleteGuideRatingResponseSuccess | deleteGuideRatingResponseError;
+
+export const getDeleteGuideRatingUrl = (guideId: string | number, dimensionId: string | number) => {
+	return `${ELITE_API_URL}/guides/${guideId}/ratings/${dimensionId}`;
+};
+
+/**
+ * @summary Clear your rating for one farm design quality dimension
+ */
+export const deleteGuideRating = async (
+	guideId: string | number,
+	dimensionId: string | number,
+	options?: RequestInit
+) => {
+	return customFetch<deleteGuideRatingResponse>(getDeleteGuideRatingUrl(guideId, dimensionId), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+export type setGuideRatingResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type setGuideRatingResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type setGuideRatingResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type setGuideRatingResponseSuccess = setGuideRatingResponse204 & {
+	headers: Headers;
+};
+export type setGuideRatingResponseError = (setGuideRatingResponse400 | setGuideRatingResponse401) & {
+	headers: Headers;
+};
+
+export type setGuideRatingResponse = setGuideRatingResponseSuccess | setGuideRatingResponseError;
+
+export const getSetGuideRatingUrl = (guideId: string | number, dimensionId: string | number) => {
+	return `${ELITE_API_URL}/guides/${guideId}/ratings/${dimensionId}`;
+};
+
+/**
+ * @summary Set your rating for one farm design quality dimension
+ */
+export const setGuideRating = async (
+	guideId: string | number,
+	dimensionId: string | number,
+	setGuideRatingRequest: SetGuideRatingRequest,
+	options?: RequestInit
+) => {
+	return customFetch<setGuideRatingResponse>(getSetGuideRatingUrl(guideId, dimensionId), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(setGuideRatingRequest),
 	});
 };
 
@@ -7270,6 +7678,42 @@ export const getHarvestFeastRotations = async (options?: RequestInit) => {
 	});
 };
 
+export type getHarvestFeastRotationsInYearResponse200 = {
+	data: HarvestFeastYearRotationsDto;
+	status: 200;
+};
+
+export type getHarvestFeastRotationsInYearResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getHarvestFeastRotationsInYearResponseSuccess = getHarvestFeastRotationsInYearResponse200 & {
+	headers: Headers;
+};
+export type getHarvestFeastRotationsInYearResponseError = getHarvestFeastRotationsInYearResponse400 & {
+	headers: Headers;
+};
+
+export type getHarvestFeastRotationsInYearResponse =
+	| getHarvestFeastRotationsInYearResponseSuccess
+	| getHarvestFeastRotationsInYearResponseError;
+
+export const getGetHarvestFeastRotationsInYearUrl = (year: string | number) => {
+	return `${ELITE_API_URL}/harvest-feast/rotations/${year}`;
+};
+
+/**
+ * Uses crowd-sourced data, which may not be accurate.
+ * @summary Get Harvest Feast rotations for a SkyBlock year
+ */
+export const getHarvestFeastRotationsInYear = async (year: string | number, options?: RequestInit) => {
+	return customFetch<getHarvestFeastRotationsInYearResponse>(getGetHarvestFeastRotationsInYearUrl(year), {
+		...options,
+		method: 'GET',
+	});
+};
+
 export type getHypixelGuildsResponse200 = {
 	data: GetHypixelGuildsResponse;
 	status: 200;
@@ -8454,6 +8898,39 @@ export const getProfile = async (playerUuid: string, profileUuid: string, option
 	});
 };
 
+export type getDashboardSummaryResponse200 = {
+	data: DashboardSummaryDto;
+	status: 200;
+};
+
+export type getDashboardSummaryResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getDashboardSummaryResponseSuccess = getDashboardSummaryResponse200 & {
+	headers: Headers;
+};
+export type getDashboardSummaryResponseError = getDashboardSummaryResponse400 & {
+	headers: Headers;
+};
+
+export type getDashboardSummaryResponse = getDashboardSummaryResponseSuccess | getDashboardSummaryResponseError;
+
+export const getGetDashboardSummaryUrl = (playerUuid: string, profileUuid: string) => {
+	return `${ELITE_API_URL}/profile/${playerUuid}/${profileUuid}/dashboard-summary`;
+};
+
+/**
+ * @summary Get compact current data for a dashboard member
+ */
+export const getDashboardSummary = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
+	return customFetch<getDashboardSummaryResponse>(getGetDashboardSummaryUrl(playerUuid, profileUuid), {
+		...options,
+		method: 'GET',
+	});
+};
+
 export type getVirtualFarmingInventoryResponse200 = {
 	data: FarmingInventoryDto;
 	status: 200;
@@ -8694,6 +9171,108 @@ export const getAuctionHouseProducts = async (options?: RequestInit) => {
 	});
 };
 
+export type getAuctionHouseOverviewResponse200 = {
+	data: AuctionOverviewResponse;
+	status: 200;
+};
+
+export type getAuctionHouseOverviewResponseSuccess = getAuctionHouseOverviewResponse200 & {
+	headers: Headers;
+};
+
+export type getAuctionHouseOverviewResponse = getAuctionHouseOverviewResponseSuccess;
+
+export const getGetAuctionHouseOverviewUrl = () => {
+	return `${ELITE_API_URL}/resources/auctions-overview`;
+};
+
+/**
+ * Get overview of auction house.
+ * @summary Get Auction House Overview
+ */
+export const getAuctionHouseOverview = async (options?: RequestInit) => {
+	return customFetch<getAuctionHouseOverviewResponse>(getGetAuctionHouseOverviewUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getPopularAuctionsResponse200 = {
+	data: GetPopularAuctionsResponse;
+	status: 200;
+};
+
+export type getPopularAuctionsResponseSuccess = getPopularAuctionsResponse200 & {
+	headers: Headers;
+};
+
+export type getPopularAuctionsResponse = getPopularAuctionsResponseSuccess;
+
+export const getGetPopularAuctionsUrl = (params: GetPopularAuctionsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/auctions/popular?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/auctions/popular`;
+};
+
+/**
+ * Returns a paginated list of auction items ranked by recent trading volume.
+ * @summary List Popular Auction Items
+ */
+export const getPopularAuctions = async (params: GetPopularAuctionsParams, options?: RequestInit) => {
+	return customFetch<getPopularAuctionsResponse>(getGetPopularAuctionsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type searchAuctionItemsResponse200 = {
+	data: SearchAuctionItemsResponse;
+	status: 200;
+};
+
+export type searchAuctionItemsResponseSuccess = searchAuctionItemsResponse200 & {
+	headers: Headers;
+};
+
+export type searchAuctionItemsResponse = searchAuctionItemsResponseSuccess;
+
+export const getSearchAuctionItemsUrl = (params: SearchAuctionItemsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/auctions/search?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/auctions/search`;
+};
+
+/**
+ * Fuzzy search across known auctionable items by SkyBlock ID or display name.
+ * @summary Search Auction Items
+ */
+export const searchAuctionItems = async (params: SearchAuctionItemsParams, options?: RequestInit) => {
+	return customFetch<searchAuctionItemsResponse>(getSearchAuctionItemsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
 export type getAuctionResponse200 = {
 	data: GetAuctionResponse;
 	status: 200;
@@ -8720,6 +9299,162 @@ export const getAuction = async (auctionId: string, options?: RequestInit) => {
 	});
 };
 
+export type getActiveItemAuctionsResponse200 = {
+	data: GetActiveItemAuctionsResponse;
+	status: 200;
+};
+
+export type getActiveItemAuctionsResponseSuccess = getActiveItemAuctionsResponse200 & {
+	headers: Headers;
+};
+
+export type getActiveItemAuctionsResponse = getActiveItemAuctionsResponseSuccess;
+
+export const getGetActiveItemAuctionsUrl = (skyblockId: string, params: GetActiveItemAuctionsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/auctions/${skyblockId}/active?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/auctions/${skyblockId}/active`;
+};
+
+/**
+ * Returns active BIN listings for an item and optional variant, including pet and rune bundles.
+ * @summary List Active BIN Auctions for Item
+ */
+export const getActiveItemAuctions = async (
+	skyblockId: string,
+	params: GetActiveItemAuctionsParams,
+	options?: RequestInit
+) => {
+	return customFetch<getActiveItemAuctionsResponse>(getGetActiveItemAuctionsUrl(skyblockId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getItemEndedAuctionsResponse200 = {
+	data: ListOfAuctionDto;
+	status: 200;
+};
+
+export type getItemEndedAuctionsResponseSuccess = getItemEndedAuctionsResponse200 & {
+	headers: Headers;
+};
+
+export type getItemEndedAuctionsResponse = getItemEndedAuctionsResponseSuccess;
+
+export const getGetItemEndedAuctionsUrl = (skyblockId: string, params: GetItemEndedAuctionsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/auctions/${skyblockId}/ended?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/auctions/${skyblockId}/ended`;
+};
+
+/**
+ * Get recently ended auctions for a specific item and optional variant. Supports bundle: format for pets and runes.
+ * @summary Get Recently Ended Auctions for Item
+ */
+export const getItemEndedAuctions = async (
+	skyblockId: string,
+	params: GetItemEndedAuctionsParams,
+	options?: RequestInit
+) => {
+	return customFetch<getItemEndedAuctionsResponse>(getGetItemEndedAuctionsUrl(skyblockId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getAuctionVariantsResponse200 = {
+	data: GetAuctionVariantsResponse;
+	status: 200;
+};
+
+export type getAuctionVariantsResponseSuccess = getAuctionVariantsResponse200 & {
+	headers: Headers;
+};
+
+export type getAuctionVariantsResponse = getAuctionVariantsResponseSuccess;
+
+export const getGetAuctionVariantsUrl = (skyblockId: string) => {
+	return `${ELITE_API_URL}/resources/auctions/${skyblockId}/variants`;
+};
+
+/**
+ * Retrieve aggregated BIN statistics for each tracked variant of a SkyBlock item.
+ * @summary List Auction Variants
+ */
+export const getAuctionVariants = async (skyblockId: string, options?: RequestInit) => {
+	return customFetch<getAuctionVariantsResponse>(getGetAuctionVariantsUrl(skyblockId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getAuctionPriceHistoryResponse200 = {
+	data: GetAuctionPriceHistoryResponse;
+	status: 200;
+};
+
+export type getAuctionPriceHistoryResponseSuccess = getAuctionPriceHistoryResponse200 & {
+	headers: Headers;
+};
+
+export type getAuctionPriceHistoryResponse = getAuctionPriceHistoryResponseSuccess;
+
+export const getGetAuctionPriceHistoryUrl = (
+	skyblockId: string,
+	variantKey: string,
+	params?: GetAuctionPriceHistoryParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/auctions/${skyblockId}/${variantKey}?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/auctions/${skyblockId}/${variantKey}`;
+};
+
+/**
+ * @summary Get Auction History For Item
+ */
+export const getAuctionPriceHistory = async (
+	skyblockId: string,
+	variantKey: string,
+	params?: GetAuctionPriceHistoryParams,
+	options?: RequestInit
+) => {
+	return customFetch<getAuctionPriceHistoryResponse>(getGetAuctionPriceHistoryUrl(skyblockId, variantKey, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
 export type getBazaarProductsResponse200 = {
 	data: GetBazaarProductsResponse;
 	status: 200;
@@ -8741,6 +9476,138 @@ export const getGetBazaarProductsUrl = () => {
  */
 export const getBazaarProducts = async (options?: RequestInit) => {
 	return customFetch<getBazaarProductsResponse>(getGetBazaarProductsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getBazaarOverviewResponse200 = {
+	data: BazaarOverviewResponse;
+	status: 200;
+};
+
+export type getBazaarOverviewResponseSuccess = getBazaarOverviewResponse200 & {
+	headers: Headers;
+};
+
+export type getBazaarOverviewResponse = getBazaarOverviewResponseSuccess;
+
+export const getGetBazaarOverviewUrl = () => {
+	return `${ELITE_API_URL}/resources/bazaar/overview`;
+};
+
+/**
+ * Get overview of bazaar with top movers and most traded items.
+ * @summary Get Bazaar Overview
+ */
+export const getBazaarOverview = async (options?: RequestInit) => {
+	return customFetch<getBazaarOverviewResponse>(getGetBazaarOverviewUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type searchBazaarProductsResponse200 = {
+	data: SearchBazaarProductsResponse;
+	status: 200;
+};
+
+export type searchBazaarProductsResponseSuccess = searchBazaarProductsResponse200 & {
+	headers: Headers;
+};
+
+export type searchBazaarProductsResponse = searchBazaarProductsResponseSuccess;
+
+export const getSearchBazaarProductsUrl = (params: SearchBazaarProductsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/bazaar/search?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/bazaar/search`;
+};
+
+/**
+ * Search bazaar products by name or category. Returns all products if no filters provided.
+ * @summary Search Bazaar Products
+ */
+export const searchBazaarProducts = async (params: SearchBazaarProductsParams, options?: RequestInit) => {
+	return customFetch<searchBazaarProductsResponse>(getSearchBazaarProductsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getBazaarProductResponse200 = {
+	data: GetBazaarProductResponse;
+	status: 200;
+};
+
+export type getBazaarProductResponseSuccess = getBazaarProductResponse200 & {
+	headers: Headers;
+};
+
+export type getBazaarProductResponse = getBazaarProductResponseSuccess;
+
+export const getGetBazaarProductUrl = (itemId: string) => {
+	return `${ELITE_API_URL}/resources/bazaar/${itemId}`;
+};
+
+/**
+ * Get a specific bazaar product and it's npc price (if it exists)
+ * @summary Get Bazaar Product
+ */
+export const getBazaarProduct = async (itemId: string, options?: RequestInit) => {
+	return customFetch<getBazaarProductResponse>(getGetBazaarProductUrl(itemId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getBazaarProductHistoryResponse200 = {
+	data: GetBazaarProductHistoryResponse;
+	status: 200;
+};
+
+export type getBazaarProductHistoryResponseSuccess = getBazaarProductHistoryResponse200 & {
+	headers: Headers;
+};
+
+export type getBazaarProductHistoryResponse = getBazaarProductHistoryResponseSuccess;
+
+export const getGetBazaarProductHistoryUrl = (itemId: string, params?: GetBazaarProductHistoryParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/bazaar/${itemId}/history?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/bazaar/${itemId}/history`;
+};
+
+/**
+ * Get a specific Bazaar product's history
+ * @summary Get Bazaar Product History
+ */
+export const getBazaarProductHistory = async (
+	itemId: string,
+	params?: GetBazaarProductHistoryParams,
+	options?: RequestInit
+) => {
+	return customFetch<getBazaarProductHistoryResponse>(getGetBazaarProductHistoryUrl(itemId, params), {
 		...options,
 		method: 'GET',
 	});
@@ -8819,6 +9686,70 @@ export const getGetSkyblockItemsUrl = () => {
  */
 export const getSkyblockItems = async (options?: RequestInit) => {
 	return customFetch<getSkyblockItemsResponse>(getGetSkyblockItemsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getItemRelatedResponse200 = {
+	data: ItemRelatedResponse;
+	status: 200;
+};
+
+export type getItemRelatedResponseSuccess = getItemRelatedResponse200 & {
+	headers: Headers;
+};
+
+export type getItemRelatedResponse = getItemRelatedResponseSuccess;
+
+export const getGetItemRelatedUrl = (skyblockId: string) => {
+	return `${ELITE_API_URL}/resources/items/${skyblockId}/related`;
+};
+
+/**
+ * Get similar items and trend data for a specific item.
+ * @summary Get Related Items and Trends
+ */
+export const getItemRelated = async (skyblockId: string, options?: RequestInit) => {
+	return customFetch<getItemRelatedResponse>(getGetItemRelatedUrl(skyblockId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type searchMarketsResponse200 = {
+	data: SearchMarketsResponse;
+	status: 200;
+};
+
+export type searchMarketsResponseSuccess = searchMarketsResponse200 & {
+	headers: Headers;
+};
+
+export type searchMarketsResponse = searchMarketsResponseSuccess;
+
+export const getSearchMarketsUrl = (params: SearchMarketsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : String(value));
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/markets/search?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/markets/search`;
+};
+
+/**
+ * Searches Bazaar products and tracked Auction House items.
+ * @summary Search SkyBlock Markets
+ */
+export const searchMarkets = async (params: SearchMarketsParams, options?: RequestInit) => {
+	return customFetch<searchMarketsResponse>(getSearchMarketsUrl(params), {
 		...options,
 		method: 'GET',
 	});

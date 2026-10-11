@@ -12,11 +12,6 @@ export interface GlobalProgressCoverage {
 	samplePairs: bigint;
 	/** @nullable */
 	contributors?: bigint | null;
-	/**
-	 * Weekly mean of daily contributor counts across days with observations in this domain,
-	 *             within the requested date bounds. Includes the current partial day; not unique weekly contributors.
-	 *             Null for other intervals or when no days have observations.
-	 * @nullable
-	 */
+	/** @nullable */
 	averageDailyContributors?: number | null;
 }

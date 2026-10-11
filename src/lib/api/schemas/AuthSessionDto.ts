@@ -28,5 +28,6 @@ export interface AuthSessionDto {
 	uuid: string;
 	roles: StringArray;
 	flags: StringArray;
+	featureFlags: StringArray;
 	pending_confirmation?: ConfirmationDto | null;
 }

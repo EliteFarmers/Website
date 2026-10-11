@@ -8,6 +8,8 @@
  * OpenAPI spec version: v1
  */
 import type { AuthorDto } from './AuthorDto';
+import type { GuideCategoryDto } from './GuideCategoryDto';
+import type { GuideMainSectionType } from './GuideMainSectionType';
 import type { ListOfGuideAuthorDto } from './ListOfGuideAuthorDto';
 import type { ListOfInt32 } from './ListOfInt32';
 import type { ListOfString } from './ListOfString';
@@ -18,6 +20,9 @@ export interface GuideDto {
 	slug: string;
 	title: string;
 	status: string;
+	category?: GuideCategoryDto | null;
+	mainSection: GuideMainSectionType;
+	supportedCrops: ListOfString;
 	/** @nullable */
 	iconSkyblockId?: string | null;
 	author: AuthorDto;

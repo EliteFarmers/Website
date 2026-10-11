@@ -8,6 +8,8 @@
  * OpenAPI spec version: v1
  */
 import type { AuthorDto } from './AuthorDto';
+import type { GuideCategoryDto } from './GuideCategoryDto';
+import type { GuideMainSectionType } from './GuideMainSectionType';
 import type { ListOfGuideAuthorDto } from './ListOfGuideAuthorDto';
 
 export interface UserGuideDto {
@@ -15,7 +17,8 @@ export interface UserGuideDto {
 	slug: string;
 	title: string;
 	description: string;
-	type: string;
+	category?: GuideCategoryDto | null;
+	mainSection: GuideMainSectionType;
 	status: string;
 	score: number;
 	viewCount: number;

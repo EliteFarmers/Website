@@ -7,19 +7,27 @@
  * Use of this API requires following the [Elite API TOS](https://eliteskyblock.com/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { GuideMainSectionType } from './GuideMainSectionType';
 import type { GuideSort } from './GuideSort';
-import type { GuideType } from './GuideType';
 
 export type ListGuidesParams = {
 	/**
 	 * @nullable
 	 */
 	query?: string | null;
-	type?: GuideType;
+	/**
+	 * @nullable
+	 */
+	categoryId?: number | null;
+	mainSection?: GuideMainSectionType;
 	/**
 	 * @nullable
 	 */
 	tags?: number[] | null;
+	/**
+	 * @nullable
+	 */
+	crops?: string[] | null;
 	sort: GuideSort;
 	page: number;
 	pageSize: number;

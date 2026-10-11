@@ -11,9 +11,17 @@ import type { GuideRichData } from './GuideRichData';
 import type { ListOfString } from './ListOfString';
 
 export interface UpdateGuideRequest {
+	/**
+	 * @minimum 1
+	 * @maximum 2147483647
+	 * @nullable
+	 */
+	categoryId?: number | null;
+	/** @maxLength 128 */
 	title: string;
 	/** @nullable */
 	iconSkyblockId?: string | null;
+	/** @maxLength 512 */
 	description: string;
 	markdownContent: string;
 	tags?: ListOfString | null;
