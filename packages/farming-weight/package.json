@@ -46,7 +46,7 @@
   "devDependencies": {
     "@types/madge": "^5.0.3",
     "madge": "^8.0.0",
-    "typescript": "^5.8.3",
+    "typescript": "^7.0.0",
     "vitest": "^4.0.16",
     "oxfmt": "^0.64.0",
     "oxlint": "^1.79.0"
